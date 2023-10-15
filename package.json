@@ -1,0 +1,20 @@
+{
+  "name": "@deanstein/jdg-ui-svelte",
+  "version": "0.0.1",
+  "description": "Typical button for JDG UI",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "svelte": "src/index.js",
+  "repository": "https://github.com/deanstein/jdg-ui-svelte.git",
+  "author": "deanstein <jdeangoldstein@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-svelte": "^7.1.6",
+    "svelte": "^4.2.1"
+  },
+  "scripts": {
+    "build": "rollup-c",
+    "dev": "rollup -c -w"
+  }
+}
