@@ -3,30 +3,30 @@
 
 	import stylingConstants from './styling-constants';
 
-	export let buttonText;
+	export let text;
 	export let isEnabled = true;
 	export let onClickFunction;
-	export let overrideColor = undefined;
-	export let overrideColorHover = undefined;
-	export let overrideBackgroundColor = undefined;
-	export let overrideBackgroundColorHover = undefined;
-	export let overrideFontSize = undefined;
-	export let overridePadding = undefined;
+	export let color = undefined;
+	export let colorHover = undefined;
+	export let backgroundColor = undefined;
+	export let backgroundColorHover = undefined;
+	export let fontSize = undefined;
+	export let padding = undefined;
 
 	let buttonDynamicClass;
 
 	$: {
 		buttonDynamicClass = css`
-			font-size: ${overrideFontSize ? overrideFontSize : '1.5vh'};
-			padding: ${overridePadding ? overridePadding : '1vh'};
-			color: ${overrideColor ? overrideColor : 'white'};
-			background-color: ${overrideBackgroundColor
-				? overrideBackgroundColor
+			font-size: ${fontSize ? fontSize : '1.5vh'};
+			padding: ${padding ? padding : '1vh'};
+			color: ${color ? color : 'white'};
+			background-color: ${backgroundColor
+				? backgroundColor
 				: stylingConstants.colors.buttonColorPrimary};
 			:hover {
-				color: ${overrideColorHover ? overrideColorHover : 'white'};
-				background-color: ${overrideBackgroundColorHover
-					? overrideBackgroundColorHover
+				color: ${colorHover ? colorHover : 'white'};
+				background-color: ${backgroundColorHover
+					? backgroundColorHover
 					: stylingConstants.colors.hoverColor};
 			}
 			:disabled {
@@ -40,7 +40,7 @@
 </script>
 
 <button disabled={!isEnabled} on:click={onClickFunction} class={buttonDynamicClass}>
-	{buttonText}
+	{text}
 </button>
 
 <style>
