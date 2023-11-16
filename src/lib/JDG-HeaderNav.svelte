@@ -1,6 +1,6 @@
 <script>
     import { css } from '@emotion/css'
-    import { breakpoints } from '../../shared-styles.js'
+    import { breakpoints } from './jdg-styling-constants.js'
 
     import navItem from '../schemas/nav-item.js'
     import instantiateObject from '../lib/jdg-utils.js'

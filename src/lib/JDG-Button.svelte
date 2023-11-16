@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import stylingConstants from './styling-constants';
+	import stylingConstants from './jdg-styling-constants';
 
 	export let text;
 	export let isEnabled = true;

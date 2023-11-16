@@ -4,7 +4,7 @@ import {
 	deploymentRepoName,
 	getLatestBuildDateFromPublicRepo,
 	getTotalCommitsInPublicRepo
-} from './persistence-management';
+} from './jdg-persistence-management';
 
 export const decrypt = (encrypted, password) => {
 	try {

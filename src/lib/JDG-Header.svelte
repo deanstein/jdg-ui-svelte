@@ -2,10 +2,9 @@
     import { fade } from 'svelte/transition'
     import { css } from '@emotion/css'
 
-    import { breakpoints } from '../../shared-styles.js' // remove
-    import { sizes } from '../../shared-styles.js' // remove
+    import { breakpoints, sizes } from './jdg-styling-constants.js'
   
-    import HeaderNav from './HeaderNav.svelte'
+    import HeaderNav from './JDG-HeaderNav.svelte'
 
     export let showLogo = true;
     export let showLogoTitle = false;
