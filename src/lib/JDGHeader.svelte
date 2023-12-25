@@ -2,43 +2,41 @@
     import { fade } from 'svelte/transition'
     import { css } from '@emotion/css'
 
-    import { breakpoints, sizes } from './jdg-styling-constants.js'
+    import jdgStylingConstants from './jdg-styling-constants.js';
   
-    import HeaderNav from './JDG-HeaderNav.svelte'
+    //import HeaderNav from './JDG-HeaderNav.svelte'
 
     export let showLogo = true;
     export let showLogoTitle = false;
     export let showNav = true;
-    export let logoSrc;
-    export let logoAlt;
-    export let logoTitle;
+    export let logoAlignment = 'left';
+    export let backgroundColor = 'white';
+    export let backgroundOpacity = '1.0';
+    export let logoSrc = "/jdg-logo.jpg"
+    export let logoAlt = "Logo";
+    export let logoTitle = "JDG Design";
 
     const headerLogoContainerCss = css`
-    align-items: ${headerOptionsFromParent.logo.styleOverrides.alignItems};
+    align-items: ${logoAlignment};
   `
 
     const headerContainerCss = css`
-        @media (max-height: ${breakpoints.height[0]}) {
-          height: ${sizes.headerMaxHeight0};
+        @media (max-height: ${jdgStylingConstants.breakpoints.height[0]}) {
           padding-top: 5vh;
           padding-bottom: 5vh;
         }
-        @media (min-height: ${breakpoints
-            .height[0]}) and (max-height: ${breakpoints.height[1]}) {
-          height: ${sizes.headerMaxHeight1};
+        @media (min-height: ${jdgStylingConstants.breakpoints
+            .height[0]}) and (max-height: ${jdgStylingConstants.breakpoints.height[1]}) {
           padding-top: 3vh;
           padding-bottom: 3vh;
         }
-        @media (min-height: ${breakpoints.height[1]}) {
-          height: ${sizes.headerMaxHeight2};
+        @media (min-height: ${jdgStylingConstants.breakpoints.height[1]}) {
           padding-top: 2vh;
           padding-bottom: 2vh;
         }
-        padding-left: ${headerOptions.container.styleOverrides.paddingLeftRight};
-        padding-right: ${headerOptions.container.styleOverrides.paddingLeftRight};
-        background-color: ${headerOptions.container.styleOverrides
-          .backgroundColor};
-        opacity: ${headerOptions.container.styleOverrides.backgroundOpacity};
+        height: ${jdgStylingConstants.sizes.headerHeight};
+        background-color: ${backgroundColor};
+        opacity: ${backgroundOpacity};
       `
   </script>
   
@@ -64,7 +62,7 @@
           </div>
         {/if}
         {#if showNav}
-          <HeaderNav />
+          <!-- <HeaderNav /> -->
         {/if}
       </div>
   </div>
@@ -79,6 +77,7 @@
       width: 100%;
       width: -moz-available;
       width: -webkit-fill-available;
+      padding: 10px;
   
       -webkit-touch-callout: none;
       -webkit-user-select: none;

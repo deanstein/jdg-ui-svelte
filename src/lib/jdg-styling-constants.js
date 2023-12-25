@@ -1,35 +1,35 @@
-export const breakpoints = {
+const breakpoints = {
 	width: ['768px', '1024px'],
 	height: ['400px', '800px']
 };
 
 const colors = {
-	textColor: '#595959',
-	textColorLight: '#737373',
-	buttonColorPrimary: '#0092e4',
-	buttonColorSecondary: 'darkGray',
-	buttonColorDisabled: '#B5B5B5',
-	buttonColorDone: '#4dc44d',
-	buttonColorDelete: '#FF5757',
-	hoverColor: '#50CBFC',
-	hoverColorSubtle: '#B6EAFF',
-	hoverColorSubtleDark: '#99CBDE',
-	activeColor: '#3399ff',
-	activeColorSubtle: '#e6f3ff',
-	overlayColor: 'gray',
+	text: '#595959',
+	textLight: '#737373',
+	buttonPrimary: '#0092e4',
+	buttonSecondary: 'darkGray',
+	buttonDisabled: '#B5B5B5',
+	buttonDone: '#4dc44d',
+	buttonDelete: '#FF5757',
+	hover: '#50CBFC',
+	hoverSubtle: '#B6EAFF',
+	hoverSubtleDark: '#99CBDE',
+	active: '#3399ff',
+	activeSubtle: '#e6f3ff',
+	overlay: 'gray',
 	overlayOpacity: '75%',
 	modalTitleBackground: 'rgba(220, 220, 220, 1.0)',
 	modalContentBackground: 'rgba(220, 220, 220, 0.4)',
 	formBackgroundLegibleTransparency: '0.8',
-	timelineSpineColor: 'rgba(200, 200, 200, 0.75)',
-	timelineEventTitleBarColor: 'rgba(205, 205, 205, 1)',
-	timelineEventBackgroundHoverColor: 'rgba(255, 255, 255, 0.75)',
-	hyperlinkColor: '#2373a3',
-	notificationColorError: 'palevioletred',
-	notificationColorWarning: 'lightYellow',
-	notificationColorInformation: 'lightBlue',
-	notificationColorInProgress: 'yellow',
-	notificationColorSuccess: '#77FF16'
+	timelineSpine: 'rgba(200, 200, 200, 0.75)',
+	timelineEventTitleBar: 'rgba(205, 205, 205, 1)',
+	timelineEventBackgroundHover: 'rgba(255, 255, 255, 0.75)',
+	hyperlink: '#2373a3',
+	notificationError: 'palevioletred',
+	notificationWarning: 'lightYellow',
+	notificationInformation: 'lightBlue',
+	notificationInProgress: 'yellow',
+	notificationSuccess: '#77FF16'
 };
 
 const sizes = {
