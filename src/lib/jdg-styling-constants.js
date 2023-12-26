@@ -94,7 +94,7 @@ const sizes = {
 	nTimelineEventYearWidth: 4,
 	get timelineEventYearWidth() {
 		return this.nTimelineEventYearWidth + 'vw';
-	},
+	}
 };
 
 const quantities = {

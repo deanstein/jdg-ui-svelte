@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
     import { css } from '@emotion/css'
     import { breakpoints } from './jdg-styling-constants.js'
 
@@ -68,4 +68,4 @@
       font-weight: bold;
     }
   </style>
-  
+   -->
