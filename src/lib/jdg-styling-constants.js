@@ -4,7 +4,7 @@ export const jdgBreakpoints = {
 };
 
 export const jdgColors = {
-	header: '#fafafa',
+	header: 'rgba(250, 250, 250, 0.7)',
 	text: '#595959',
 	textLight: '#737373',
 	buttonPrimary: '#0092e4',

@@ -16,7 +16,7 @@
 	export let showNav = true;
 	export let navItems = [];
 	export let textColor = jdgColors.text;
-	export let backgroundColor = jdgColors.header;
+	export let backgroundColorRgba = jdgColors.header;
 	export let backgroundOpacity = '1.0';
 
 	const headerLogoContainerCss = css`
@@ -38,7 +38,7 @@
 		}
 		height: ${jdgSizes.headerHeight};
 		color: ${textColor};
-		background-color: ${backgroundColor};
+		background-color: ${backgroundColorRgba};
 		opacity: ${backgroundOpacity};
 	`;
 
@@ -116,6 +116,7 @@
 		justify-content: space-between;
 		z-index: 1;
 		padding: 1rem 2rem 1rem 2rem;
+		backdrop-filter: blur(10px);
 
 		-webkit-touch-callout: none;
 		-webkit-user-select: none;

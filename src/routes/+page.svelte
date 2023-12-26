@@ -1,5 +1,7 @@
 <script>
-	import { JDGHeader } from '$lib/index.js';
+	import { JDGBackground, JDGHeader } from '$lib/index.js';
 </script>
+
+<JDGBackground />
 
 <JDGHeader logoTitle={'JDG SVELTE UI'} />
