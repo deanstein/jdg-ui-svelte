@@ -1,9 +1,10 @@
-const breakpoints = {
+export const jdgBreakpoints = {
 	width: ['768px', '1024px'],
 	height: ['400px', '800px']
 };
 
-const colors = {
+export const jdgColors = {
+	header: '#fafafa',
 	text: '#595959',
 	textLight: '#737373',
 	buttonPrimary: '#0092e4',
@@ -32,7 +33,7 @@ const colors = {
 	notificationSuccess: '#77FF16'
 };
 
-const sizes = {
+export const jdgSizes = {
 	nHeaderHeight: 5,
 	get headerHeight() {
 		return this.nHeaderHeight.toString() + 'vh';
@@ -97,20 +98,10 @@ const sizes = {
 	}
 };
 
-const quantities = {
+export const jdgQuantities = {
 	initialTimelineRowCount: 1000
 };
 
-const durations = {
+export const jdgDurations = {
 	transitionDuration: 75 //ms
 };
-
-const jdgStylingConstants = {
-	breakpoints,
-	colors,
-	sizes,
-	quantities,
-	durations
-};
-
-export default jdgStylingConstants;

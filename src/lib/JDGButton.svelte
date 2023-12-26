@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import stylingConstants from './jdg-styling-constants';
+	import { jdgColors } from './jdg-styling-constants.js';
 
 	export let text;
 	export let isEnabled = true;
@@ -20,20 +20,16 @@
 			font-size: ${fontSize ? fontSize : '1.5vh'};
 			padding: ${padding ? padding : '1vh'};
 			color: ${color ? color : 'white'};
-			background-color: ${backgroundColor
-				? backgroundColor
-				: stylingConstants.colors.buttonColorPrimary};
+			background-color: ${backgroundColor ? backgroundColor : jdgColors.buttonColorPrimary};
 			:hover {
 				color: ${colorHover ? colorHover : 'white'};
-				background-color: ${backgroundColorHover
-					? backgroundColorHover
-					: stylingConstants.colors.hoverColor};
+				background-color: ${backgroundColorHover ? backgroundColorHover : jdgColors.hoverColor};
 			}
 			:disabled {
-				background-color: ${stylingConstants.colors.buttonColorDisabled};
+				background-color: ${jdgColors.buttonColorDisabled};
 			}
 			:disabled:hover {
-				background-color: ${stylingConstants.colors.buttonColorDisabled};
+				background-color: ${jdgColors.buttonColorDisabled};
 			}
 		`;
 	}

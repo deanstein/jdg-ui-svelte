@@ -1,7 +1,6 @@
 const navItem = {
 	text: 'Nav Item',
-	url: 'https://www.google.com',
-	page: ''
+	href: 'https://www.google.com'
 };
 
 export default navItem;
