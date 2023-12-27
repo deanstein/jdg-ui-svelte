@@ -3,7 +3,7 @@
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
-	import navItem from '../schemas/nav-item.js';
+	import navItem from './schemas/nav-item.js';
 	import { instantiateObject } from './jdg-utils.js';
 
 	import { jdgColors, jdgBreakpoints, jdgSizes } from './jdg-styling-constants.js';
@@ -46,6 +46,7 @@
 		}
 	`;
 	const headerNavItemCss = css`
+		color: ${jdgColors.text};
 		:hover {
 			color: ${jdgColors.hover};
 		}
@@ -75,15 +76,17 @@
 	});
 </script>
 
-<div class="jdg-header-container {headerContainerCss}" transition:fade 
-  style:height={jdgSizes.headerHeight}
-  style:background-color={backgroundColorRgba}
-  style:color={textColor}
-  style:opacity={backgroundOpacity}>
+<div
+	class="jdg-header-container {headerContainerCss}"
+	transition:fade
+	style:height={jdgSizes.headerHeight}
+	style:background-color={backgroundColorRgba}
+	style:color={textColor}
+	style:opacity={backgroundOpacity}
+>
 	<!-- logo -->
 	{#if showLogo}
-		<div class="jdg-header-logo-container"
-    style:align-items={logoAlignment}>
+		<div class="jdg-header-logo-container" style:align-items={logoAlignment}>
 			<img src={logoSrc} class="jdg-header-logo" alt={logoAlt} />
 			<!-- logo title -->
 			{#if logoTitle}
@@ -97,8 +100,7 @@
 	{#if showNav && navItems.length > 0}
 		<nav class="jdg-header-nav-container {headerNavContainerCss}">
 			{#each navItems as navItem, i}
-				<a class="jdg-header-nav-item {headerNavItemCss}" href={navItem?.href}
-        style:color={jdgColors.text}>{navItem?.text}</a>
+				<a class="jdg-header-nav-item {headerNavItemCss}" href={navItem?.href}>{navItem?.text}</a>
 			{/each}
 		</nav>
 	{/if}
@@ -131,7 +133,7 @@
 
 	.jdg-header-logo {
 		height: 100%; /* fill the header with the logo top-to-bottom */
-    max-height: 5vh;
+		max-height: 5vh;
 	}
 
 	.jdg-header-logo-title {
