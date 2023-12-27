@@ -19,10 +19,6 @@
 	export let backgroundColorRgba = jdgColors.header;
 	export let backgroundOpacity = '1.0';
 
-	const headerLogoContainerCss = css`
-		align-items: ${logoAlignment};
-	`;
-
 	const headerContainerCss = css`
 		@media (max-height: ${jdgBreakpoints.height[0]}) {
 			padding-top: 5vh;
@@ -36,10 +32,6 @@
 			padding-top: 2vh;
 			padding-bottom: 2vh;
 		}
-		height: ${jdgSizes.headerHeight};
-		color: ${textColor};
-		background-color: ${backgroundColorRgba};
-		opacity: ${backgroundOpacity};
 	`;
 
 	const headerNavContainerCss = css`
@@ -54,7 +46,6 @@
 		}
 	`;
 	const headerNavItemCss = css`
-		color: ${jdgColors.text};
 		:hover {
 			color: ${jdgColors.hover};
 		}
@@ -84,10 +75,15 @@
 	});
 </script>
 
-<div class="jdg-header-container {headerContainerCss}" transition:fade>
+<div class="jdg-header-container {headerContainerCss}" transition:fade 
+  style:height={jdgSizes.headerHeight}
+  style:background-color={backgroundColorRgba}
+  style:color={textColor}
+  style:opacity={backgroundOpacity}>
 	<!-- logo -->
 	{#if showLogo}
-		<div class="jdg-header-logo-container {headerLogoContainerCss}">
+		<div class="jdg-header-logo-container"
+    style:align-items={logoAlignment}>
 			<img src={logoSrc} class="jdg-header-logo" alt={logoAlt} />
 			<!-- logo title -->
 			{#if logoTitle}
@@ -101,7 +97,8 @@
 	{#if showNav && navItems.length > 0}
 		<nav class="jdg-header-nav-container {headerNavContainerCss}">
 			{#each navItems as navItem, i}
-				<a class="jdg-header-nav-item {headerNavItemCss}" href={navItem?.href}>{navItem?.text}</a>
+				<a class="jdg-header-nav-item {headerNavItemCss}" href={navItem?.href}
+        style:color={jdgColors.text}>{navItem?.text}</a>
 			{/each}
 		</nav>
 	{/if}
@@ -134,6 +131,7 @@
 
 	.jdg-header-logo {
 		height: 100%; /* fill the header with the logo top-to-bottom */
+    max-height: 5vh;
 	}
 
 	.jdg-header-logo-title {
