@@ -17,6 +17,8 @@ This doesn't build the package, but just runs it for local debugging.
 yarn run dev
 ```
 
+> NOTE: When testing, you may notice that styles flash when the page initially loads. This can be ignored as it shouldn't happen when the final website host is compiled.
+
 # Building
 
 ### Build and preview the final package
@@ -31,9 +33,9 @@ Then host the package (and demo site) locally for viewing:
 ```bash
 yarn preview
 ```
-Note that, if changes are made, cancel the preview server, and run `yarn build` and `yarn preview` again to ensure the latest version of the package is built.
+> NOTE: When testing, you may notice that styles flash when the page initially loads. This can be ignored as it shouldn't happen when the final website host is compiled.
 
-This will also help ensure host apps get the latest version locally when linked (more on that below).
+>NOTE: If changes are made after building, cancel the preview server, and run `yarn build` and `yarn preview` again to ensure the latest version of the package is built. This also helps ensure any linked websites use the latest local package.
 
 # Testing
 
