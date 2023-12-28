@@ -1,5 +1,5 @@
 const navItem = {
-	text: 'Nav Item',
+	label: 'Nav Item',
 	href: 'https://www.google.com'
 };
 

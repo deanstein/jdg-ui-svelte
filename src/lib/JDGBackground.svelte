@@ -1,5 +1,8 @@
 <script>
-	export let backgroundSrc = './jdg-background.jpg';
+    // used only if no background is provided by the host app
+    import placeholderBackgroundSrc from './images/jdg-background.jpg'
+
+	export let backgroundSrc = placeholderBackgroundSrc;
 </script>
 
 <div class="jdg-background-container">

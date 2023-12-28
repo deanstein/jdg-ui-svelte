@@ -8,8 +8,11 @@
 
 	import { jdgColors, jdgBreakpoints, jdgSizes } from './jdg-styling-constants.js';
 
+  // used only if no logo is provided by the host app
+  import placeholderLogoSrc from './images/jdg-logo-ui.jpg'
+
 	export let showLogo = true;
-	export let logoSrc = '/jdg-logo.jpg';
+	export let logoSrc = placeholderLogoSrc;
 	export let logoAlt = 'Logo';
 	export let logoTitle = undefined;
 	export let logoAlignment = 'left';
@@ -32,6 +35,10 @@
 			padding-top: 2vh;
 			padding-bottom: 2vh;
 		}
+    height: ${jdgSizes.headerHeight};
+    background-color: ${backgroundColorRgba};
+    color: ${textColor};
+    opacity: ${backgroundOpacity};
 	`;
 
 	const headerNavContainerCss = css`
@@ -57,18 +64,18 @@
 	`;
 
 	onMount(() => {
-		// show example nav items
+		// show example nav items if requested and not already provided
 		if (showNav && navItems.length === 0) {
 			const newNavItem1 = instantiateObject(navItem);
-			newNavItem1.text = 'HOME';
+			newNavItem1.label = 'HOME';
 			newNavItem1.href = '/';
 
 			const newNavItem2 = instantiateObject(navItem);
-			newNavItem2.text = 'ABOUT';
+			newNavItem2.label = 'ABOUT';
 			newNavItem2.href = '/about';
 
 			const newNavItem3 = instantiateObject(navItem);
-			newNavItem3.text = 'CONTACT';
+			newNavItem3.label = 'CONTACT';
 			newNavItem3.href = '/contact';
 
 			navItems = [newNavItem1, newNavItem2, newNavItem3];
@@ -79,10 +86,6 @@
 <div
 	class="jdg-header-container {headerContainerCss}"
 	transition:fade
-	style:height={jdgSizes.headerHeight}
-	style:background-color={backgroundColorRgba}
-	style:color={textColor}
-	style:opacity={backgroundOpacity}
 >
 	<!-- logo -->
 	{#if showLogo}
@@ -100,7 +103,7 @@
 	{#if showNav && navItems.length > 0}
 		<nav class="jdg-header-nav-container {headerNavContainerCss}">
 			{#each navItems as navItem, i}
-				<a class="jdg-header-nav-item {headerNavItemCss}" href={navItem?.href}>{navItem?.text}</a>
+				<a class="jdg-header-nav-item {headerNavItemCss}" href={navItem?.href}>{navItem?.label}</a>
 			{/each}
 		</nav>
 	{/if}
