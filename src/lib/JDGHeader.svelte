@@ -8,11 +8,8 @@
 
 	import { jdgColors, jdgBreakpoints, jdgSizes } from './jdg-styling-constants.js';
 
-  // used only if no logo is provided by the host app
-  import placeholderLogoSrc from './images/jdg-logo-ui.jpg'
-
 	export let showLogo = true;
-	export let logoSrc = placeholderLogoSrc;
+	export let logoSrc = 'https://raw.githubusercontent.com/deanstein/jdg-website/main/static/jdg-logo.jpg';
 	export let logoAlt = 'Logo';
 	export let logoTitle = undefined;
 	export let logoAlignment = 'left';
