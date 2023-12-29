@@ -1,8 +1,6 @@
 <script>
-    // used only if no background is provided by the host app
-    import placeholderBackgroundSrc from './images/jdg-background.jpg'
-
-	export let backgroundSrc = placeholderBackgroundSrc;
+	export let backgroundSrc =
+		'https://raw.githubusercontent.com/deanstein/jdg-ui-svelte/main/static/jdg-background.jpg'; // default if not passed in from host app
 </script>
 
 <div class="jdg-background-container">

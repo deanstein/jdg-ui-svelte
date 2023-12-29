@@ -6,6 +6,26 @@ import {
 	getTotalCommitsInPublicRepo
 } from './jdg-persistence-management.js';
 
+export const addUniqueValueToArray = (array, value) => {
+	if (!array.includes(value)) {
+		array.push(value);
+	}
+	return array;
+};
+
+export const getIsValueInArray = (array, value) => {
+	const index = array.indexOf(value);
+	return index > -1 ? true : false;
+};
+
+export const removeValueFromArray = (array, value) => {
+	const index = array.indexOf(value);
+	if (index > -1) {
+		array.splice(index, 1);
+	}
+	return array;
+};
+
 export const decrypt = (encrypted, password) => {
 	try {
 		var encryptedWA = CryptoJS.enc.Base64.parse(encrypted);

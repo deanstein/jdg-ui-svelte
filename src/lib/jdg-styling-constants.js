@@ -1,6 +1,6 @@
 export const jdgBreakpoints = {
-	width: ['768px', '1024px'],
-	height: ['400px', '800px']
+	width: [768, 1024],
+	height: [400, 800]
 };
 
 export const jdgColors = {
@@ -34,10 +34,28 @@ export const jdgColors = {
 };
 
 export const jdgSizes = {
-	nHeaderHeight: 5,
-	get headerHeight() {
-		return this.nHeaderHeight.toString() + 'vh';
+	nNotificationHeight: 3,
+	notificationHeightUnit: 'vh',
+	get notificationHeight() {
+		return this.nNotificationHeight.toString() + this.notificationHeightUnit;
 	},
+	nNotificationFontSize: 1.5,
+	notificationFontSizeUnit: 'vh',
+	get notificationFontSize() {
+		return this.nNotificationFontSize.toString() + this.notificationFontSizeUnit;
+	},
+
+	nHeaderHeight: 5,
+	headerHeightUnit: 'vh',
+	get headerHeight() {
+		return this.nHeaderHeight.toString() + this.headerHeightUnit;
+	},
+	nHeaderTopBottomPadding: 2,
+	headerTopBottomPaddingUnit: 'vh',
+	get headerTopBottomPadding() {
+		return this.nHeaderTopBottomPadding.toString() + this.headerTopBottomPaddingUnit;
+	},
+
 	nPadding: 0.75,
 	get padding() {
 		return this.nPadding.toString() + 'vh';
@@ -45,11 +63,6 @@ export const jdgSizes = {
 	nPaddingNarrow: 0.5,
 	get paddingNarrow() {
 		return this.nPaddingNarrow.toString() + 'vh';
-	},
-
-	nNotificationFontSize: 1.5,
-	get notificationFontSize() {
-		return this.nNotificationFontSize.toString() + 'vh';
 	},
 
 	nModalTitleFontSize: 2,
