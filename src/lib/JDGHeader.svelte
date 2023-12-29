@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
-	import { fade } from 'svelte/transition';
+	import { fade, slide } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
 	import uiState from './stores/uiState.js';
@@ -10,7 +10,6 @@
 	import { instantiateObject } from './jdg-utils.js';
 
 	import { jdgColors, jdgBreakpoints, jdgSizes } from './jdg-styling-constants.js';
-	import { incrementHighestZIndex } from './jdg-ui-management.js';
 
 	export let showLogo = true;
 	export let logoSrc =
@@ -59,13 +58,16 @@
 		padding-top: ${jdgSizes.headerTopBottomPadding};
 		padding-bottom: ${jdgSizes.headerTopBottomPadding};
 		background-color: ${backgroundColorRgba};
-		color: ${textColor};
 		opacity: ${backgroundOpacity};
 	`;
 
 	const headerLogoContainerCss = css`
 		align-items: ${logoAlignment};
 	`;
+
+	const headerTitleCss = css`
+		color: ${textColor};
+	`
 
 	const headerMobileNavButtonCss = css`
 		color: ${jdgColors.text};
@@ -135,13 +137,15 @@
 	<!-- logo -->
 	{#if showLogo}
 		<div class="jdg-header-logo-container {headerLogoContainerCss}">
-			<img src={logoSrc} class="jdg-header-logo" alt={logoAlt} />
-			<!-- logo title -->
-			{#if showTitleResult}
-				<div class="jdg-header-logo-title">
-					{logoTitle}
-				</div>
-			{/if}
+			<a href="/">
+				<img src={logoSrc} class="jdg-header-logo" alt={logoAlt} />
+				<!-- logo title -->
+				{#if showTitleResult}
+					<div class="jdg-header-logo-title {headerTitleCss}">
+						{logoTitle}
+					</div>
+				{/if}
+			</a>
 		</div>
 	{/if}
 	<!-- navigation -->
@@ -160,7 +164,7 @@
 					<i class="fa-solid fa-bars" />
 				{/if}
 			</button>
-			<!-- desktop nav -->
+		<!-- desktop nav -->
 		{:else}
 			<nav class="jdg-header-nav-container">
 				{#each navItems as navItem, i}
@@ -174,9 +178,7 @@
 <!-- mobile nav container (outside header container) -->
 {#if useMobileNavResult && isMobileNavExpanded}
 	<div
-		class="jdg-header-nav-container-mobile {headerNavContainerMobileCss} {isMobileNavExpanded
-			? 'slide-in'
-			: 'slide-out'}"
+		class="jdg-header-nav-container-mobile {headerNavContainerMobileCss}" transition:slide="{{duration: 500, delay: 0, axis: 'x'}}"
 	>
 		<nav class="jdg-header-nav-item-container-mobile">
 			{#each navItems as navItem, i}
@@ -189,6 +191,10 @@
 {/if}
 
 <style>
+	a {
+		text-decoration: none;
+	}
+	
 	.jdg-header-container {
 		position: fixed;
 		display: flex;
@@ -280,31 +286,5 @@
 		letter-spacing: 5px;
 		font-weight: bold;
 		text-decoration: none;
-	}
-
-	@keyframes slideInFromRight {
-		0% {
-			transform: translateX(100%);
-		}
-		100% {
-			transform: translateX(0);
-		}
-	}
-
-	@keyframes slideOutToRight {
-		0% {
-			transform: translateX(0);
-		}
-		100% {
-			transform: translateX(100%);
-		}
-	}
-
-	.slide-in {
-		animation: 0.5s ease-in-out 0s 1 slideInFromRight;
-	}
-
-	.slide-out {
-		animation: 0.5s ease-in-out 0s 1 slideOutToRight;
 	}
 </style>
