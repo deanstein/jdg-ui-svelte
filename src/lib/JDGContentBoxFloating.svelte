@@ -19,6 +19,6 @@
 	.jdg-content-box-floating-container {
 		width: -webkit-fill-available;
 		width: -moz-available;
-		height: 200px;
+		height: 400px;
 	}
 </style>
