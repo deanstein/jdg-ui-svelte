@@ -61,6 +61,11 @@ export const jdgSizes = {
 	get headerTopBottomPadding() {
 		return this.nHeaderTopBottomPadding.toString() + this.headerTopBottomPaddingUnit;
 	},
+	nHeaderSidePadding: 2,
+	headerSidePaddingUnit: 'rem',
+	get headerSidePadding() {
+		return this.nHeaderSidePadding.toString() + this.headerSidePaddingUnit;
+	},
 
 	nPadding: 0.75,
 	get padding() {

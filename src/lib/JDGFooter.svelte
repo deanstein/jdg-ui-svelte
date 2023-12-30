@@ -26,6 +26,7 @@
 		background-color: ${backgroundColorRgba};
 		backdrop-filter: blur(10px);
 		font-size: ${jdgSizes.fontSizeSmall};
+        padding: ${jdgSizes.headerTopBottomPadding} ${jdgSizes.headerSidePadding} ${jdgSizes.headerTopBottomPadding} ${jdgSizes.headerSidePadding};
 	`;
 
 	onMount(async () => {
@@ -81,12 +82,11 @@
 		width: 100%;
 		width: -moz-available;
 		width: -webkit-fill-available;
-		padding: 15px;
+        gap: 1.25vh;
 	}
 
 	.jdg-footer-row {
 		display: flex;
 		gap: 7px;
-		padding: 5px 0px 5px 0px;
 	}
 </style>
