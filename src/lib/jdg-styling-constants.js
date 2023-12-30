@@ -4,9 +4,10 @@ export const jdgBreakpoints = {
 };
 
 export const jdgColors = {
-	header: 'rgba(250, 250, 250, 0.7)',
 	text: 'black',
 	textLight: '#737373',
+	header: 'rgba(250, 250, 250, 0.7)',
+	contentBox: 'rgba(252, 252, 252, 0.7)',
 	buttonPrimary: '#0092e4',
 	buttonSecondary: 'darkGray',
 	buttonDisabled: '#B5B5B5',
@@ -38,6 +39,18 @@ export const jdgSizes = {
 	fontSizeSmallUnit: 'vh',
 	get fontSizeSmall() {
 		return this.nFontSizeSmall.toString() + this.fontSizeSmallUnit;
+	},
+
+	nBlurSizeMedium: 10,
+	blurSizeMediumUnit: 'px',
+	get blurSizeMedium() {
+		return this.nBlurSizeMedium.toString() + this.blurSizeMediumUnit;
+	},
+
+	nContentBoxFloatingMargin: 5,
+	contentBoxFloatingMarginUnit: 'vw',
+	get contentBoxFloatingMargin() {
+		return this.nContentBoxFloatingMargin.toString() + this.contentBoxFloatingMarginUnit;
 	},
 
 	nNotificationHeight: 3,

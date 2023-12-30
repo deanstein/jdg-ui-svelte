@@ -26,7 +26,8 @@
 		background-color: ${backgroundColorRgba};
 		backdrop-filter: blur(10px);
 		font-size: ${jdgSizes.fontSizeSmall};
-        padding: ${jdgSizes.headerTopBottomPadding} ${jdgSizes.headerSidePadding} ${jdgSizes.headerTopBottomPadding} ${jdgSizes.headerSidePadding};
+		padding: ${jdgSizes.headerTopBottomPadding} ${jdgSizes.headerSidePadding}
+			${jdgSizes.headerTopBottomPadding} ${jdgSizes.headerSidePadding};
 	`;
 
 	onMount(async () => {
@@ -82,7 +83,7 @@
 		width: 100%;
 		width: -moz-available;
 		width: -webkit-fill-available;
-        gap: 1.25vh;
+		gap: 1.25vh;
 	}
 
 	.jdg-footer-row {

@@ -10,7 +10,7 @@
 	import { instantiateObject } from './jdg-utils.js';
 
 	import { jdgColors, jdgBreakpoints, jdgSizes, jdgDurations } from './jdg-styling-constants.js';
-	import { incrementHighestZIndex } from './jdg-ui-management.js';
+	import { getDistanceToTopOfHeader, incrementHighestZIndex } from './jdg-ui-management.js';
 
 	export let showLogo = true;
 	export let logoSrc =
@@ -111,12 +111,10 @@
 
 	$: {
 		// needs to be recomputed when notifications show/hide
+		const distanceToTopOfHeaderResult = getDistanceToTopOfHeader();
 		headerContainerCss = css`
 			${headerContainerCss}
-			top: ${$uiState.activeNotificationBanners.length > 0
-				? jdgSizes.nNotificationHeight * $uiState.activeNotificationBanners.length +
-					jdgSizes.notificationHeightUnit
-				: 0};
+			top: ${distanceToTopOfHeaderResult.value.toString() + distanceToTopOfHeaderResult.unit};
 		`;
 
 		// needs to be recomputed when notifications show/hide
