@@ -27,6 +27,7 @@
 
 	<JDGContentContainer>
 		<JDGContentBoxFloating />
+		<JDGContentBoxFloating />
 	</JDGContentContainer>
 
 	<JDGFooter {appVersion} disclaimer={disclaimerMessage} />
