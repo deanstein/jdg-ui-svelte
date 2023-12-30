@@ -2,7 +2,14 @@
 	import { css } from '@emotion/css';
 
 	import { jdgColors } from '$lib/jdg-styling-constants.js';
-	import { JDGBackground, JDGContentBoxFloating, JDGContentContainer, JDGFooter, JDGHeader, JDGNotificationBanner } from '$lib/index.js';
+	import {
+		JDGBackground,
+		JDGContentBoxFloating,
+		JDGContentContainer,
+		JDGFooter,
+		JDGHeader,
+		JDGNotificationBanner
+	} from '$lib/index.js';
 
 	// get the app version from package.json
 	//@ts-expect-error
@@ -18,7 +25,7 @@
 
 	<JDGBackground />
 
-	<JDGContentContainer >
+	<JDGContentContainer>
 		<JDGContentBoxFloating />
 	</JDGContentContainer>
 
