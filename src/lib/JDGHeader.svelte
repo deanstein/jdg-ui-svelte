@@ -9,7 +9,7 @@
 
 	import { instantiateObject } from './jdg-utils.js';
 
-	import { jdgColors, jdgBreakpoints, jdgSizes } from './jdg-styling-constants.js';
+	import { jdgColors, jdgBreakpoints, jdgSizes, jdgDurations } from './jdg-styling-constants.js';
 	import { incrementHighestZIndex } from './jdg-ui-management.js';
 
 	export let showLogo = true;
@@ -179,7 +179,7 @@
 {#if useMobileNavResult && isMobileNavExpanded}
 	<div
 		class="jdg-header-nav-container-mobile {headerNavContainerMobileCss}"
-		transition:slide={{ duration: 500, delay: 0, axis: 'x' }}
+		transition:slide={{ duration: jdgDurations.slide, delay: 0, axis: 'x' }}
 	>
 		<nav class="jdg-header-nav-item-container-mobile">
 			{#each navItems as navItem, i}
