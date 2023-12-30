@@ -10,6 +10,7 @@
 	import { instantiateObject } from './jdg-utils.js';
 
 	import { jdgColors, jdgBreakpoints, jdgSizes } from './jdg-styling-constants.js';
+	import { incrementHighestZIndex } from './jdg-ui-management.js';
 
 	export let showLogo = true;
 	export let logoSrc =
@@ -22,7 +23,6 @@
 	export let navItems = [];
 	export let textColor = jdgColors.text;
 	export let backgroundColorRgba = jdgColors.header;
-	export let backgroundOpacity = '1.0';
 
 	let forceHideTitleAtBreakpoint = false; // forces no title below certain breakpoints
 	let showTitleResult; // combined result between intent and breakpoint
@@ -58,7 +58,7 @@
 		padding-top: ${jdgSizes.headerTopBottomPadding};
 		padding-bottom: ${jdgSizes.headerTopBottomPadding};
 		background-color: ${backgroundColorRgba};
-		opacity: ${backgroundOpacity};
+		z-index: ${incrementHighestZIndex()};
 	`;
 
 	const headerLogoContainerCss = css`
@@ -67,7 +67,7 @@
 
 	const headerTitleCss = css`
 		color: ${textColor};
-	`
+	`;
 
 	const headerMobileNavButtonCss = css`
 		color: ${jdgColors.text};
@@ -78,7 +78,7 @@
 	const headerNavItemCss = css`
 		color: ${jdgColors.text};
 		:hover {
-			color: ${jdgColors.hover};
+			background-color: ${jdgColors.hover};
 		}
 		:last-of-type {
 			margin-right: 0rem;
@@ -121,12 +121,12 @@
 
 		// needs to be recomputed when notifications show/hide
 		headerNavContainerMobileCss = css`
-		padding-top: ${(
-			jdgSizes.nHeaderHeight +
-			2 * jdgSizes.nHeaderTopBottomPadding +
-			$uiState.activeNotificationBanners.length * jdgSizes.nNotificationHeight
-		).toString() + jdgSizes.notificationFontSizeUnit};
-	`;
+			padding-top: ${(
+				jdgSizes.nHeaderHeight +
+				2 * jdgSizes.nHeaderTopBottomPadding +
+				$uiState.activeNotificationBanners.length * jdgSizes.nNotificationHeight
+			).toString() + jdgSizes.notificationFontSizeUnit};
+		`;
 
 		showTitleResult = logoTitle && !forceHideTitleAtBreakpoint;
 		useMobileNavResult = useMobileNav || forceUseMobileNavAtBreakpoint;
@@ -155,7 +155,7 @@
 			<button
 				class="jdg-header-nav-button-mobile {headerMobileNavButtonCss}"
 				on:click={onClickMobileNavButton}
-				on:keyup={onClickMobileNavButton}
+				on:keydown={onClickMobileNavButton}
 				title={isMobileNavExpanded ? 'Close menu' : 'Open menu'}
 			>
 				{#if isMobileNavExpanded}
@@ -164,7 +164,7 @@
 					<i class="fa-solid fa-bars" />
 				{/if}
 			</button>
-		<!-- desktop nav -->
+			<!-- desktop nav -->
 		{:else}
 			<nav class="jdg-header-nav-container">
 				{#each navItems as navItem, i}
@@ -178,7 +178,8 @@
 <!-- mobile nav container (outside header container) -->
 {#if useMobileNavResult && isMobileNavExpanded}
 	<div
-		class="jdg-header-nav-container-mobile {headerNavContainerMobileCss}" transition:slide="{{duration: 500, delay: 0, axis: 'x'}}"
+		class="jdg-header-nav-container-mobile {headerNavContainerMobileCss}"
+		transition:slide={{ duration: 500, delay: 0, axis: 'x' }}
 	>
 		<nav class="jdg-header-nav-item-container-mobile">
 			{#each navItems as navItem, i}
@@ -194,7 +195,7 @@
 	a {
 		text-decoration: none;
 	}
-	
+
 	.jdg-header-container {
 		position: fixed;
 		display: flex;
@@ -248,6 +249,15 @@
 		line-height: 0px; /* not sure why, but required to get text at bottom of div */
 	}
 
+	.jdg-header-nav-item:hover {
+		align-items: baseline;
+		display: flex;
+		letter-spacing: 5px;
+		font-weight: bold;
+		text-decoration: none;
+		line-height: 0px; /* not sure why, but required to get text at bottom of div */
+	}
+
 	.jdg-header-nav-button-mobile {
 		display: flex;
 		align-items: center;
@@ -256,6 +266,7 @@
 		cursor: pointer;
 		font-size: 25px;
 		border: none;
+		outline: none;
 		background-color: transparent;
 	}
 

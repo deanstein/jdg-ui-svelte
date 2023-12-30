@@ -5,14 +5,14 @@ export const jdgBreakpoints = {
 
 export const jdgColors = {
 	header: 'rgba(250, 250, 250, 0.7)',
-	text: '#595959',
+	text: 'black',
 	textLight: '#737373',
 	buttonPrimary: '#0092e4',
 	buttonSecondary: 'darkGray',
 	buttonDisabled: '#B5B5B5',
 	buttonDone: '#4dc44d',
 	buttonDelete: '#FF5757',
-	hover: '#50CBFC',
+	hover: 'white',
 	hoverSubtle: '#B6EAFF',
 	hoverSubtleDark: '#99CBDE',
 	active: '#3399ff',
@@ -34,6 +34,12 @@ export const jdgColors = {
 };
 
 export const jdgSizes = {
+	nFontSizeSmall: 1.25,
+	fontSizeSmallUnit: 'vh',
+	get fontSizeSmall() {
+		return this.nFontSizeSmall.toString() + this.fontSizeSmallUnit;
+	},
+
 	nNotificationHeight: 3,
 	notificationHeightUnit: 'vh',
 	get notificationHeight() {

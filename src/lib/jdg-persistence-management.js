@@ -1,8 +1,12 @@
-import { decrypt } from './jdg-utils';
+import { decrypt } from './jdg-utils.js';
 
 export const repoOwner = 'deanstein';
-export const dataRepoName = 'family-tree-data';
-export const deploymentRepoName = 'family-tree-deploy';
+export const jdgUiRepoName = 'jdg-ui-svelte';
+export const jdgWebsiteRepoName = 'jdg-website';
+export const pmx3dWebsiteRepoName = 'pmx3d-website';
+export const ccpWebsiteRepoName = 'ccp-website';
+export const familyTreeDataRepoName = 'family-tree-data';
+export const familyTreeDeployRepoName = 'family-tree-deploy';
 export const bioPhotoFileName = 'bio-photo';
 export const encryptedPAT =
 	'U2FsdGVkX19E4XXmu4s1Y76A+iKILjKYG1n92+pqbtzdoJpeMyl6Pit0H8Kq8G28M+ZuqmdhHEfb/ud4GEe5gw==';
@@ -83,183 +87,6 @@ export const getFileFromRepo = async (repoOwner, repoName, fileName, password) =
 		});
 
 	return fileData;
-};
-
-export const getFamilyTreeDataFromRepo = async (
-	familyTreeDataId,
-	password,
-	showNotifications = true
-) => {
-	if (!familyTreeDataId || !password) {
-		setRepoState(repoStateStrings.saveFailed);
-		return;
-	}
-
-	if (showNotifications === true) {
-		setRepoState(repoStateStrings.loading);
-	}
-
-	// get the file name from which to read the json data
-	const familyTreeDataFileName = await getFamilyTreeDataFileName(
-		repoOwner,
-		dataRepoName,
-		familyTreeDataId,
-		password
-	);
-
-	// the final family tree data is a json object
-	const familyTreeData = await getFileFromRepo(
-		repoOwner,
-		dataRepoName,
-		familyTreeDataFileName,
-		password
-	);
-
-	if (showNotifications === true) {
-		setRepoState(repoStateStrings.loadSuccessful);
-	}
-
-	return familyTreeData;
-};
-
-export const getFamilyTreeDataFileName = async (
-	repoOwner,
-	reponame,
-	familyTreeDataId,
-	password
-) => {
-	// first, get the family tree data map
-	const familyTreeDataMap = await getFileFromRepo(
-		repoOwner,
-		reponame,
-		'family-tree-data-map.json',
-		password
-	);
-
-	// get the family tree data from the map by id
-	const foundMapData = Object.values(familyTreeDataMap).find(
-		(item) => item.id === familyTreeDataId
-	);
-
-	// get the file name from which to read the json data
-	const familyTreeDataFileName = foundMapData.fileName;
-
-	return familyTreeDataFileName;
-};
-
-export const writeCurrentFamilyTreeDataToRepo = async (password) => {
-	if (!password) {
-		console.error('No password was provided!');
-		return;
-	}
-
-	// get the file name to write to given the family tree id in ui state
-	let familyTreeId = undefined;
-	let familyTreeDataFileName = undefined;
-	let currentFamilyTreeData = undefined;
-	uiState.subscribe((currentValue) => {
-		familyTreeId = currentValue.activeFamilyTreeDataId;
-	});
-
-	familyTreeData.subscribe((currentValue) => {
-		currentFamilyTreeData = currentValue;
-	});
-
-	familyTreeDataFileName = await getFamilyTreeDataFileName(
-		repoOwner,
-		dataRepoName,
-		familyTreeId,
-		password
-	);
-
-	setRepoState(repoStateStrings.saving);
-
-	const response = await fetch('https://api.github.com/user/repos', {
-		headers: {
-			Authorization: `Bearer ${decrypt(encryptedPAT, password)}`,
-			Accept: 'application/vnd.github.v3+json'
-		}
-	});
-
-	const repos = await response.json();
-	const repo = repos.find((repo) => repo.name === dataRepoName);
-
-	if (!repo) {
-		setRepoState(repoStateStrings.saveFailed);
-		console.error('Repository not found: ' + dataRepoName);
-		return;
-	}
-
-	const content = JSON.stringify(currentFamilyTreeData, null, 2);
-
-	const fileResponse = await fetch(
-		`https://api.github.com/repos/${repoOwner}/${dataRepoName}/contents/${familyTreeDataFileName}`,
-		{
-			method: 'HEAD',
-			headers: {
-				Authorization: `Bearer ${decrypt(encryptedPAT, password)}`,
-				Accept: 'application/vnd.github.v3+json'
-			}
-		}
-	);
-
-	if (!fileResponse.ok) {
-		console.error(`Failed to get file ${familyTreeDataFileName}`);
-		setRepoState(repoStateStrings.saveFailed);
-		return;
-	}
-
-	const fileSHA = fileResponse.headers.get('etag').replace(/"/g, '');
-
-	const updateResponse = await fetch(
-		`https://api.github.com/repos/${repoOwner}/${dataRepoName}/contents/${familyTreeDataFileName}`,
-		{
-			method: 'PUT',
-			headers: {
-				Authorization: `Bearer ${decrypt(encryptedPAT, password)}`,
-				Accept: 'application/vnd.github.v3+json',
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				message: `Update ${familyTreeDataFileName}`,
-				content: btoa(content),
-				sha: fileSHA
-			})
-		}
-	);
-
-	if (updateResponse.ok) {
-		setRepoState(repoStateStrings.saveSuccessful);
-		console.log(`File ${familyTreeDataFileName} updated successfully!`);
-
-		// required to ensure the latest version of the file is used for the next update
-		getRepoFamilyTreeAndSetActive(familyTreeId, password, false);
-	} else {
-		setRepoState(repoStateStrings.saveFailed);
-		console.error(`Failed to update file ${familyTreeDataFileName}.`);
-	}
-};
-
-export const readFileFromRepo = async (repoOwner, repoName, password, filePath) => {
-	const url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`;
-
-	try {
-		const response = await fetch(url, {
-			headers: {
-				Authorization: `Bearer ${decrypt(encryptedPAT, password)}`
-			}
-		});
-
-		if (response.ok) {
-			const data = await response.json();
-			const fileContent = atob(data.content); // Decode file content from Base64
-			return fileContent;
-		} else {
-			console.log('Bad response: ' + response);
-		}
-	} catch (error) {
-		console.error(error);
-	}
 };
 
 // for binary large objects (blobs)

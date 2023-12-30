@@ -11,3 +11,6 @@ export { JDGHeader };
 
 import JDGButton from './JDGButton.svelte';
 export { JDGButton };
+
+import JDGFooter from './JDGFooter.svelte';
+export { JDGFooter };

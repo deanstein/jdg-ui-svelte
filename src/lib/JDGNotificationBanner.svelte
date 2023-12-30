@@ -6,7 +6,6 @@
 	import uiState from './stores/uiState.js';
 
 	import {
-		getHighestZIndex,
 		addNotificationBannerToState,
 		removeNotificationBannerFromState,
 		incrementHighestZIndex
@@ -60,9 +59,9 @@
 					faIcon={'fa-circle-xmark'}
 					label={null}
 					color={jdgColors.buttonPrimary}
-					colorHover={jdgColors.hover}
+					colorHover={jdgColors.buttonPrimary}
 					backgroundColor="transparent"
-					backgroundColorHover="transparent"
+					backgroundColorHover={jdgColors.hover}
 					tooltip="Dismiss"
 				/>
 			{/if}

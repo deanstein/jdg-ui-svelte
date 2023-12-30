@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 
 const uiState = {
-	highestZIndex: 0,
+	highestZIndex: 1,
 	activeNotificationBanners: []
 };
 

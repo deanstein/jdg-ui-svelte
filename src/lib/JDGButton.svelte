@@ -55,6 +55,7 @@
 		align-items: center;
 		justify-content: center;
 		border: none;
+		outline: none;
 		font-weight: bold;
 		border-radius: 5px;
 		cursor: pointer;

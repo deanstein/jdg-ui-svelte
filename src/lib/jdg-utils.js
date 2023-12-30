@@ -1,9 +1,9 @@
 import CryptoJS from 'crypto-js';
 import {
 	repoOwner,
-	deploymentRepoName,
 	getLatestBuildDateFromPublicRepo,
-	getTotalCommitsInPublicRepo
+	getTotalCommitsInPublicRepo,
+	getLatestCommitDateFromPublicRepo
 } from './jdg-persistence-management.js';
 
 export const addUniqueValueToArray = (array, value) => {
@@ -213,9 +213,13 @@ export const getNumberOfYearsBetweenEvents = (startDate, endDate) => {
 // build code is in this format:
 // yyyymmdd.nn where yyyymmdd is the date and nn is amount of commits
 // (only because it's apparently hard to get the total amount of deployments?)
-export const getBuildCode = async () => {
-	const buildDate = await getLatestBuildDateFromPublicRepo(repoOwner, deploymentRepoName);
-	const buildNumber = await getTotalCommitsInPublicRepo(repoOwner, deploymentRepoName);
+export const getBuildCode = async (repoName) => {
+	// buildDate is either the latest build date or the latest commit date
+	const buildDate =
+		(await getLatestBuildDateFromPublicRepo(repoOwner, repoName)) ??
+		(await getLatestCommitDateFromPublicRepo(repoOwner, repoName));
+	// buildNumber is number of commits
+	const buildNumber = await getTotalCommitsInPublicRepo(repoOwner, repoName);
 	const newDate = new Date(buildDate);
 	const year = newDate.getFullYear().toString();
 	let month = (newDate.getMonth() + 1).toString();
