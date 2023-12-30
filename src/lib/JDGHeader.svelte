@@ -286,7 +286,6 @@
 	.jdg-header-nav-item-container-mobile {
 		display: flex;
 		flex-direction: column;
-		gap: 15px;
 		padding: 15px;
 	}
 
@@ -297,5 +296,6 @@
 		letter-spacing: 5px;
 		font-weight: bold;
 		text-decoration: none;
+		padding: 15px;
 	}
 </style>

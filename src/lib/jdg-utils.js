@@ -211,14 +211,13 @@ export const getNumberOfYearsBetweenEvents = (startDate, endDate) => {
 };
 
 // build code is in this format:
-// yyyymmdd.nn where yyyymmdd is the date and nn is amount of commits
-// (only because it's apparently hard to get the total amount of deployments?)
+// yyyymmdd.nn where yyyymmdd is the "build date" and nn is the "build number" (see below)
 export const getBuildCode = async (repoName) => {
-	// buildDate is either the latest build date or the latest commit date
+	// build date is either the latest build date or the latest commit date
 	const buildDate =
 		(await getLatestBuildDateFromPublicRepo(repoOwner, repoName)) ??
 		(await getLatestCommitDateFromPublicRepo(repoOwner, repoName));
-	// buildNumber is number of commits
+	// build number is number of commits
 	const buildNumber = await getTotalCommitsInPublicRepo(repoOwner, repoName);
 	const newDate = new Date(buildDate);
 	const year = newDate.getFullYear().toString();
