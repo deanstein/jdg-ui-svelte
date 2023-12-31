@@ -42,13 +42,14 @@
 			// force the mobile nav on
 			forceUseMobileNavAtBreakpoint = true;
 			// force the title off
-			forceHideTitleAtBreakpoint = true;
-			// between smallest and largest breakpoint - tablet
-		} else if (
+			forceHideTitleAtBreakpoint = true;	
+		} 
+		// between smallest and largest breakpoint - tablet
+		else if (
 			window.innerWidth >= jdgBreakpoints.width[0] &&
 			window.innerWidth <= jdgBreakpoints.width[1]
 		) {
-			// largest breakpoint - desktop
+		// largest breakpoint - desktop
 		} else {
 			forceUseMobileNavAtBreakpoint = false;
 			forceHideTitleAtBreakpoint = false;
@@ -124,11 +125,12 @@
 
 		// needs to be recomputed when notifications show/hide
 		headerNavContainerMobileCss = css`
-			padding-top: ${(
+			top: ${(
 				jdgSizes.nHeaderHeight +
 				2 * jdgSizes.nHeaderTopBottomPadding +
 				$uiState.activeNotificationBanners.length * jdgSizes.nNotificationHeight
 			).toString() + jdgSizes.notificationFontSizeUnit};
+			z-index: ${incrementHighestZIndex()};
 		`;
 
 		showTitleResult = logoTitle && !forceHideTitleAtBreakpoint;
