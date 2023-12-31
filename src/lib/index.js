@@ -23,3 +23,6 @@ export { JDGFooter };
 
 import JDGHeader from './JDGHeader.svelte';
 export { JDGHeader };
+
+import JDGStripesHorizontal from './JDGStripesHorizontal.svelte';
+export { JDGStripesHorizontal };

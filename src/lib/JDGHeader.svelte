@@ -12,6 +12,8 @@
 	import { jdgColors, jdgBreakpoints, jdgSizes, jdgDurations } from './jdg-styling-constants.js';
 	import { getDistanceToTopOfHeader, incrementHighestZIndex } from './jdg-ui-management.js';
 
+	import { JDGStripesHorizontal } from './index.js';
+
 	export let showLogo = true;
 	export let logoSrc =
 		'https://raw.githubusercontent.com/deanstein/jdg-ui-svelte/main/static/jdg-logo-ui.jpg'; // default if not passed in from host app
@@ -23,7 +25,6 @@
 	export let navItems = [];
 	export let textColor = jdgColors.text;
 	export let backgroundColorRgba = jdgColors.header;
-	export let stripeColors = jdgColors.accentStripesJDG;
 
 	let forceHideTitleAtBreakpoint = false; // forces no title below certain breakpoints
 	let showTitleResult; // combined result between intent and breakpoint
@@ -88,10 +89,6 @@
 			margin-right: 0rem;
 			padding-right: 0rem;
 		}
-	`;
-
-	const headerStripeCss = css`
-		height: ${jdgSizes.headerStripeHeight};
 	`;
 
 	onMount(() => {
@@ -184,11 +181,7 @@
 		{/if}
 	</div>
 	<!-- stripes at bottom of header -->
-	<div class="jdg-header-stripes-container">
-		{#each stripeColors as stripeColor, i}
-			<div style:background-color={stripeColor} class={headerStripeCss} />
-		{/each}
-	</div>
+	<JDGStripesHorizontal />
 </div>
 <!-- mobile nav container (outside header container) -->
 {#if useMobileNavResult && isMobileNavExpanded}
@@ -317,10 +310,5 @@
 		font-weight: bold;
 		text-decoration: none;
 		padding: 15px;
-	}
-
-	.jdg-header-stripes-container {
-		display: flex;
-		flex-direction: column;
 	}
 </style>
