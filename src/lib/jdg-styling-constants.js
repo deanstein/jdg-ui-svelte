@@ -4,6 +4,7 @@ export const jdgBreakpoints = {
 };
 
 export const jdgColors = {
+	accentStripesJDG: ['#BF3A0A', '#D98014', '#D7CD76'],
 	text: 'black',
 	textLight: '#737373',
 	header: 'rgba(250, 250, 250, 0.7)',
@@ -78,6 +79,11 @@ export const jdgSizes = {
 	headerSidePaddingUnit: 'rem',
 	get headerSidePadding() {
 		return this.nHeaderSidePadding.toString() + this.headerSidePaddingUnit;
+	},
+	nHeaderStripeHeight: 0.5,
+	headerStripeHeightUnit: 'vh',
+	get headerStripeHeight() {
+		return this.nHeaderStripeHeight.toString() + this.headerStripeHeightUnit;
 	},
 
 	nPadding: 0.75,

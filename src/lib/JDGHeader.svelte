@@ -23,6 +23,7 @@
 	export let navItems = [];
 	export let textColor = jdgColors.text;
 	export let backgroundColorRgba = jdgColors.header;
+	export let stripeColors = jdgColors.accentStripesJDG;
 
 	let forceHideTitleAtBreakpoint = false; // forces no title below certain breakpoints
 	let showTitleResult; // combined result between intent and breakpoint
@@ -53,12 +54,15 @@
 		}
 	};
 
-	let headerContainerCss = css`
+	let headerContainerOuterCss = css`
+		z-index: ${incrementHighestZIndex()};
+	`;
+
+	let headerContainerInnerCss = css`
 		height: ${jdgSizes.headerHeight};
 		padding-top: ${jdgSizes.headerTopBottomPadding};
 		padding-bottom: ${jdgSizes.headerTopBottomPadding};
 		background-color: ${backgroundColorRgba};
-		z-index: ${incrementHighestZIndex()};
 	`;
 
 	const headerLogoContainerCss = css`
@@ -84,6 +88,10 @@
 			margin-right: 0rem;
 			padding-right: 0rem;
 		}
+	`;
+
+	const headerStripeCss = css`
+		height: ${jdgSizes.headerStripeHeight};
 	`;
 
 	onMount(() => {
@@ -112,8 +120,8 @@
 	$: {
 		// needs to be recomputed when notifications show/hide
 		const distanceToTopOfHeaderResult = getDistanceToTopOfHeader();
-		headerContainerCss = css`
-			${headerContainerCss}
+		headerContainerOuterCss = css`
+			${headerContainerOuterCss}
 			top: ${distanceToTopOfHeaderResult.value.toString() + distanceToTopOfHeaderResult.unit};
 		`;
 
@@ -131,47 +139,56 @@
 	}
 </script>
 
-<div class="jdg-header-container {headerContainerCss}" transition:fade>
-	<!-- logo -->
-	{#if showLogo}
-		<div class="jdg-header-logo-container {headerLogoContainerCss}">
-			<a href="/">
-				<img src={logoSrc} class="jdg-header-logo" alt={logoAlt} />
-				<!-- logo title -->
-				{#if showTitleResult}
-					<div class="jdg-header-logo-title {headerTitleCss}">
-						{logoTitle}
-					</div>
-				{/if}
-			</a>
-		</div>
-	{/if}
-	<!-- navigation -->
-	{#if showNav && navItems.length > 0}
-		<!-- mobile nav -->
-		{#if useMobileNavResult}
-			<button
-				class="jdg-header-nav-button-mobile {headerMobileNavButtonCss}"
-				on:click={onClickMobileNavButton}
-				on:keydown={onClickMobileNavButton}
-				title={isMobileNavExpanded ? 'Close menu' : 'Open menu'}
-			>
-				{#if isMobileNavExpanded}
-					<i class="fa-solid fa-xmark" />
-				{:else}
-					<i class="fa-solid fa-bars" />
-				{/if}
-			</button>
-			<!-- desktop nav -->
-		{:else}
-			<nav class="jdg-header-nav-container">
-				{#each navItems as navItem, i}
-					<a class="jdg-header-nav-item {headerNavItemCss}" href={navItem?.href}>{navItem?.label}</a
-					>
-				{/each}
-			</nav>
+<div class="jdg-header-outer-container {headerContainerOuterCss}" transition:fade>
+	<div class="jdg-header-inner-container {headerContainerInnerCss}">
+		<!-- logo -->
+		{#if showLogo}
+			<div class="jdg-header-logo-container {headerLogoContainerCss}">
+				<a href="/">
+					<img src={logoSrc} class="jdg-header-logo" alt={logoAlt} />
+					<!-- logo title -->
+					{#if showTitleResult}
+						<div class="jdg-header-logo-title {headerTitleCss}">
+							{logoTitle}
+						</div>
+					{/if}
+				</a>
+			</div>
 		{/if}
-	{/if}
+		<!-- navigation -->
+		{#if showNav && navItems.length > 0}
+			<!-- mobile nav -->
+			{#if useMobileNavResult}
+				<button
+					class="jdg-header-nav-button-mobile {headerMobileNavButtonCss}"
+					on:click={onClickMobileNavButton}
+					on:keydown={onClickMobileNavButton}
+					title={isMobileNavExpanded ? 'Close menu' : 'Open menu'}
+				>
+					{#if isMobileNavExpanded}
+						<i class="fa-solid fa-xmark" />
+					{:else}
+						<i class="fa-solid fa-bars" />
+					{/if}
+				</button>
+				<!-- desktop nav -->
+			{:else}
+				<nav class="jdg-header-nav-container">
+					{#each navItems as navItem, i}
+						<a class="jdg-header-nav-item {headerNavItemCss}" href={navItem?.href}
+							>{navItem?.label}</a
+						>
+					{/each}
+				</nav>
+			{/if}
+		{/if}
+	</div>
+	<!-- stripes at bottom of header -->
+	<div class="jdg-header-stripes-container">
+		{#each stripeColors as stripeColor, i}
+			<div style:background-color={stripeColor} class={headerStripeCss} />
+		{/each}
+	</div>
 </div>
 <!-- mobile nav container (outside header container) -->
 {#if useMobileNavResult && isMobileNavExpanded}
@@ -194,13 +211,18 @@
 		text-decoration: none;
 	}
 
-	.jdg-header-container {
+	.jdg-header-outer-container {
 		position: fixed;
 		display: flex;
+		flex-direction: column;
 		width: -moz-available;
 		width: -webkit-fill-available;
-		justify-content: space-between;
 		z-index: 1;
+	}
+
+	.jdg-header-inner-container {
+		display: flex;
+		justify-content: space-between;
 		padding: 1rem 2rem 1rem 2rem;
 		backdrop-filter: blur(10px);
 
@@ -295,5 +317,10 @@
 		font-weight: bold;
 		text-decoration: none;
 		padding: 15px;
+	}
+
+	.jdg-header-stripes-container {
+		display: flex;
+		flex-direction: column;
 	}
 </style>

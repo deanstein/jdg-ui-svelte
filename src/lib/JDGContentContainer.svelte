@@ -23,9 +23,9 @@
 
 <style>
 	.jdg-content-container {
-        display: flex;
-        flex-direction: column;
-        gap: 10vh;
+		display: flex;
+		flex-direction: column;
+		gap: 10vh;
 		width: -webkit-fill-available;
 		width: -moz-available;
 		padding: 10vh 0 10vh 0;

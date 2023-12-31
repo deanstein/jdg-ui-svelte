@@ -1,8 +1,7 @@
 <script>
-	import { css } from '@emotion/css';
-
 	import { jdgColors } from '$lib/jdg-styling-constants.js';
 	import {
+		JDGAccentBlock,
 		JDGBackground,
 		JDGContentBoxFloating,
 		JDGContentContainer,
@@ -21,13 +20,18 @@
 <div class="jdg-ui-demo-container">
 	<JDGNotificationBanner message={disclaimerMessage} color={jdgColors.notificationInformation} />
 
-	<JDGHeader logoTitle={'JDG SVELTE UI'} useMobileNav={true} />
+	<JDGHeader logoTitle={'JDG SVELTE UI'} useMobileNav={false} />
 
 	<JDGBackground />
 
 	<JDGContentContainer>
 		<JDGContentBoxFloating />
+		<JDGAccentBlock blockQuote="This is a block quote." />
 		<JDGContentBoxFloating />
+		<JDGAccentBlock
+			blockQuote="This is another block quote."
+			backgroundColor={jdgColors.accentStripesJDG[1]}
+		/>
 	</JDGContentContainer>
 
 	<JDGFooter {appVersion} disclaimer={disclaimerMessage} />
