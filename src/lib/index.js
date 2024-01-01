@@ -24,5 +24,8 @@ export { JDGFooter };
 import JDGHeader from './JDGHeader.svelte';
 export { JDGHeader };
 
+import JDGImageTile from './JDGImageTile.svelte';
+export { JDGImageTile };
+
 import JDGStripesHorizontal from './JDGStripesHorizontal.svelte';
 export { JDGStripesHorizontal };

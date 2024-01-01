@@ -7,6 +7,7 @@
 		JDGContentContainer,
 		JDGFooter,
 		JDGHeader,
+		JDGImageTile,
 		JDGNotificationBanner
 	} from '$lib/index.js';
 
@@ -25,7 +26,9 @@
 	<JDGBackground />
 
 	<JDGContentContainer>
-		<JDGContentBoxFloating />
+		<JDGContentBoxFloating>
+			<JDGImageTile />
+		</JDGContentBoxFloating>
 		<JDGAccentBlock blockQuote="This is a block quote." />
 		<JDGContentBoxFloating />
 		<JDGAccentBlock

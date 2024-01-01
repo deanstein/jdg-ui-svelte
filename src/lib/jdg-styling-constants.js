@@ -48,6 +48,8 @@ export const jdgSizes = {
 		return this.nBlurSizeMedium.toString() + this.blurSizeMediumUnit;
 	},
 
+	horizontalStripeLengths: ['100%', '90%', '80%'],
+
 	nContentBoxFloatingMargin: 5,
 	contentBoxFloatingMarginUnit: 'vw',
 	get contentBoxFloatingMargin() {

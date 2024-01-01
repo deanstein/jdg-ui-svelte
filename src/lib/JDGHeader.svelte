@@ -34,6 +34,9 @@
 
 	let isMobileNavExpanded;
 
+	let stripesParent;
+	let isHovering;
+
 	const onClickMobileNavButton = () => (isMobileNavExpanded = !isMobileNavExpanded);
 
 	const mediaQueryHandler = () => {
@@ -42,14 +45,14 @@
 			// force the mobile nav on
 			forceUseMobileNavAtBreakpoint = true;
 			// force the title off
-			forceHideTitleAtBreakpoint = true;	
-		} 
+			forceHideTitleAtBreakpoint = true;
+		}
 		// between smallest and largest breakpoint - tablet
 		else if (
 			window.innerWidth >= jdgBreakpoints.width[0] &&
 			window.innerWidth <= jdgBreakpoints.width[1]
 		) {
-		// largest breakpoint - desktop
+			// largest breakpoint - desktop
 		} else {
 			forceUseMobileNavAtBreakpoint = false;
 			forceHideTitleAtBreakpoint = false;
@@ -138,7 +141,14 @@
 	}
 </script>
 
-<div class="jdg-header-outer-container {headerContainerOuterCss}" transition:fade>
+<div
+	class="jdg-header-outer-container {headerContainerOuterCss}"
+	transition:fade
+	bind:this={stripesParent}
+	on:mouseenter={() => (isHovering = true)}
+	on:mouseleave={() => (isHovering = false)}
+	role="banner"
+>
 	<div class="jdg-header-inner-container {headerContainerInnerCss}">
 		<!-- logo -->
 		{#if showLogo}
@@ -183,7 +193,7 @@
 		{/if}
 	</div>
 	<!-- stripes at bottom of header -->
-	<JDGStripesHorizontal />
+	<JDGStripesHorizontal {isHovering} />
 </div>
 <!-- mobile nav container (outside header container) -->
 {#if useMobileNavResult && isMobileNavExpanded}
