@@ -1,6 +1,7 @@
 export const jdgBreakpoints = {
 	width: [768, 1024],
-	height: [400, 800]
+	height: [400, 800],
+	unit: 'px'
 };
 
 export const jdgColors = {

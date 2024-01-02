@@ -1,13 +1,11 @@
 <script>
 	import { JDGStripesHorizontal } from './index.js';
 
-	let stripesParent;
 	let isHovering;
 </script>
 
 <div
 	class="jdg-image-tile"
-	bind:this={stripesParent}
 	on:mouseenter={() => (isHovering = true)}
 	on:mouseleave={() => (isHovering = false)}
 	role="banner"
@@ -26,7 +24,6 @@
 		display: flex;
 		flex-direction: column;
 		height: 300px;
-		width: 600px;
 	}
 
 	img {

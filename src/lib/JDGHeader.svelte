@@ -60,7 +60,11 @@
 	};
 
 	let headerContainerOuterCss = css`
+		color: ${jdgColors.text};
 		z-index: ${incrementHighestZIndex()};
+		a:before {
+			width: 0; /* header links don't have highlight initially */
+		}
 	`;
 
 	let headerContainerInnerCss = css`
@@ -76,26 +80,21 @@
 
 	const headerTitleCss = css`
 		color: ${textColor};
-		:hover {
-			color: ${jdgColors.accentStripesJDG[0]};
-		}
 	`;
 
 	const headerMobileNavButtonCss = css`
 		color: ${jdgColors.text};
+		background-color: transparent;
 		:hover {
-			color: ${jdgColors.accentStripesJDG[0]};
 			background-color: ${jdgColors.hoverBackground};
 		}
 	`;
 
-	let headerNavContainerMobileCss;
+	let headerNavContainerMobileCss = css`
+		background-color: ${jdgColors.headerBackground};
+	`;
 
 	const headerNavItemCss = css`
-		color: ${jdgColors.text};
-		:hover {
-			color: ${jdgColors.accentStripesJDG[0]};
-		}
 		:last-of-type {
 			margin-right: 0rem;
 			padding-right: 0rem;
@@ -103,9 +102,10 @@
 	`;
 
 	const headerNavItemMobileCss = css`
-		color: ${jdgColors.text};
+		a:before {
+			width: 0; /* header links don't have highlight initially */
+		}
 		:hover {
-			color: ${jdgColors.accentStripesJDG[0]};
 			background-color: ${jdgColors.hoverBackground};
 		}
 	`;
@@ -143,6 +143,7 @@
 
 		// needs to be recomputed when notifications show/hide
 		headerNavContainerMobileCss = css`
+			${headerNavContainerMobileCss}
 			top: ${(
 				jdgSizes.nHeaderHeight +
 				2 * jdgSizes.nHeaderTopBottomPadding +
@@ -218,19 +219,17 @@
 	>
 		<nav class="jdg-header-nav-item-container-mobile">
 			{#each navItems as navItem, i}
-				<a class="jdg-header-nav-item-mobile {headerNavItemMobileCss}" href={navItem?.href}
-					>{navItem?.label}</a
-				>
+				<div class="jdg-header-nav-item-mobile-container">
+					<a class="jdg-header-nav-item-mobile {headerNavItemMobileCss}" href={navItem?.href}
+						>{navItem?.label}</a
+					>
+				</div>
 			{/each}
 		</nav>
 	</div>
 {/if}
 
 <style>
-	a {
-		text-decoration: none;
-	}
-
 	.jdg-header-outer-container {
 		position: fixed;
 		display: flex;
@@ -260,6 +259,10 @@
 		font-family: sans-serif;
 	}
 
+	.jdg-header-logo-container a {
+		height: 100%;
+	}
+
 	.jdg-header-logo {
 		height: 100%; /* fill the header with the logo top-to-bottom */
 		max-height: 5vh;
@@ -285,16 +288,6 @@
 		display: flex;
 		letter-spacing: 5px;
 		font-weight: bold;
-		text-decoration: none;
-		line-height: 0px; /* not sure why, but required to get text at bottom of div */
-	}
-
-	.jdg-header-nav-item:hover {
-		align-items: baseline;
-		display: flex;
-		letter-spacing: 5px;
-		font-weight: bold;
-		text-decoration: none;
 		line-height: 0px; /* not sure why, but required to get text at bottom of div */
 	}
 
@@ -307,7 +300,6 @@
 		font-size: 25px;
 		border: none;
 		outline: none;
-		background-color: transparent;
 	}
 
 	.jdg-header-nav-container-mobile {
@@ -315,7 +307,6 @@
 		right: 0;
 		width: 250px;
 		height: 100%;
-		background-color: rgba(255, 255, 255, 0.7);
 		backdrop-filter: blur(10px);
 	}
 
@@ -331,7 +322,6 @@
 		justify-content: center;
 		letter-spacing: 5px;
 		font-weight: bold;
-		text-decoration: none;
 		padding: 15px;
 	}
 </style>
