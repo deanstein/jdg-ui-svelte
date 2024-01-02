@@ -91,6 +91,10 @@
 	`;
 
 	let headerNavContainerMobileCss = css`
+	a:before {
+			width: 0; /* header links don't have highlight initially */
+			background-color: transparent;
+		}
 		background-color: ${jdgColors.headerBackground};
 	`;
 
@@ -277,7 +281,6 @@
 		margin-left: 15px;
 		display: inline;
 		font-weight: bold;
-		letter-spacing: 5px;
 	}
 
 	.jdg-header-nav-container {
@@ -326,5 +329,9 @@
 		justify-content: center;
 		font-weight: bold;
 		padding: 15px;
+	}
+
+	.jdg-header-nav-item-mobile a::before {
+		background-color: transparent;
 	}
 </style>
