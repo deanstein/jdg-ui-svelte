@@ -61,7 +61,7 @@
 					color={jdgColors.buttonPrimary}
 					colorHover={jdgColors.buttonPrimary}
 					backgroundColor="transparent"
-					backgroundColorHover={jdgColors.hover}
+					backgroundColorHover={jdgColors.hoverBackground}
 					tooltip="Dismiss"
 				/>
 			{/if}

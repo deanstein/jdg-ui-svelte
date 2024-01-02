@@ -24,7 +24,7 @@
 	export let useMobileNav = false;
 	export let navItems = [];
 	export let textColor = jdgColors.text;
-	export let backgroundColorRgba = jdgColors.header;
+	export let backgroundColorRgba = jdgColors.headerBackground;
 
 	let forceHideTitleAtBreakpoint = false; // forces no title below certain breakpoints
 	let showTitleResult; // combined result between intent and breakpoint
@@ -76,10 +76,17 @@
 
 	const headerTitleCss = css`
 		color: ${textColor};
+		:hover {
+			color: ${jdgColors.accentStripesJDG[0]};
+		}
 	`;
 
 	const headerMobileNavButtonCss = css`
 		color: ${jdgColors.text};
+		:hover {
+			color: ${jdgColors.accentStripesJDG[0]};
+			background-color: ${jdgColors.hoverBackground};
+		}
 	`;
 
 	let headerNavContainerMobileCss;
@@ -87,11 +94,19 @@
 	const headerNavItemCss = css`
 		color: ${jdgColors.text};
 		:hover {
-			background-color: ${jdgColors.hover};
+			color: ${jdgColors.accentStripesJDG[0]};
 		}
 		:last-of-type {
 			margin-right: 0rem;
 			padding-right: 0rem;
+		}
+	`;
+
+	const headerNavItemMobileCss = css`
+		color: ${jdgColors.text};
+		:hover {
+			color: ${jdgColors.accentStripesJDG[0]};
+			background-color: ${jdgColors.hoverBackground};
 		}
 	`;
 
@@ -193,7 +208,7 @@
 		{/if}
 	</div>
 	<!-- stripes at bottom of header -->
-	<JDGStripesHorizontal {isHovering} />
+	<JDGStripesHorizontal />
 </div>
 <!-- mobile nav container (outside header container) -->
 {#if useMobileNavResult && isMobileNavExpanded}
@@ -203,7 +218,7 @@
 	>
 		<nav class="jdg-header-nav-item-container-mobile">
 			{#each navItems as navItem, i}
-				<a class="jdg-header-nav-item-mobile {headerNavItemCss}" href={navItem?.href}
+				<a class="jdg-header-nav-item-mobile {headerNavItemMobileCss}" href={navItem?.href}
 					>{navItem?.label}</a
 				>
 			{/each}
@@ -293,10 +308,6 @@
 		border: none;
 		outline: none;
 		background-color: transparent;
-	}
-
-	.jdg-header-nav-button-mobile:hover {
-		background-color: white;
 	}
 
 	.jdg-header-nav-container-mobile {

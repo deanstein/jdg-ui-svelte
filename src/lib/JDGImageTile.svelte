@@ -17,7 +17,7 @@
 		alt="Temporary"
 	/>
 	{#if isHovering}
-		<JDGStripesHorizontal {isHovering} />
+		<JDGStripesHorizontal />
 	{/if}
 </div>
 

@@ -7,16 +7,14 @@ export const jdgColors = {
 	accentStripesJDG: ['#BF3A0A', '#D98014', '#D7CD76'],
 	text: 'black',
 	textLight: '#737373',
-	header: 'rgba(250, 250, 250, 0.7)',
-	contentBox: 'rgba(252, 252, 252, 0.7)',
+	headerBackground: 'rgba(250, 250, 250, 0.7)',
+	contentBoxBackground: 'rgba(252, 252, 252, 0.7)',
 	buttonPrimary: '#0092e4',
 	buttonSecondary: 'darkGray',
 	buttonDisabled: '#B5B5B5',
 	buttonDone: '#4dc44d',
 	buttonDelete: '#FF5757',
-	hover: 'white',
-	hoverSubtle: '#B6EAFF',
-	hoverSubtleDark: '#99CBDE',
+	hoverBackground: 'white',
 	active: '#3399ff',
 	activeSubtle: '#e6f3ff',
 	overlay: 'gray',
@@ -42,14 +40,19 @@ export const jdgSizes = {
 		return this.nFontSizeSmall.toString() + this.fontSizeSmallUnit;
 	},
 
-	nBlurSizeMedium: 10,
-	blurSizeMediumUnit: 'px',
-	get blurSizeMedium() {
-		return this.nBlurSizeMedium.toString() + this.blurSizeMediumUnit;
+	nBlurSizeSmall: 10,
+	blurSizeSmallUnit: 'px',
+	get blurSizeSmall() {
+		return this.nBlurSizeSmall.toString() + this.blurSizeSmallUnit;
 	},
 
 	horizontalStripeLengths: ['100%', '90%', '80%'],
 
+	nContentBoxPadding: 2,
+	contentBoxPaddingUnit: 'rem',
+	get contentBoxPadding() {
+		return this.nContentBoxPadding.toString() + this.contentBoxPaddingUnit;
+	},
 	nContentBoxFloatingMargin: 5,
 	contentBoxFloatingMarginUnit: 'vw',
 	get contentBoxFloatingMargin() {

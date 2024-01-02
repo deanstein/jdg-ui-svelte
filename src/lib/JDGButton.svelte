@@ -24,7 +24,7 @@
 		background-color: ${backgroundColor ? backgroundColor : jdgColors.buttonPrimary};
 		:hover {
 			color: ${colorHover ? colorHover : 'white'};
-			background-color: ${backgroundColorHover ? backgroundColorHover : jdgColors.hover};
+			background-color: ${backgroundColorHover ? backgroundColorHover : jdgColors.hoverBackground};
 		}
 		:disabled {
 			background-color: ${jdgColors.buttonDisabled};
