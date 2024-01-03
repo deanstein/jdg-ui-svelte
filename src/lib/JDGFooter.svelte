@@ -42,7 +42,7 @@
 
 <div class="jdg-footer-outer-container {footerOuterContainerCss}">
 	<!-- horizontal stripes at top of footer -->
-	<JDGStripesHorizontal />
+	<JDGStripesHorizontal reverseColors={true}/>
 	<div class="jdg-footer-content-container {footerContentContainerCss}">
 		<!-- copyright and versions row -->
 		<div class="jdg-footer-row">
