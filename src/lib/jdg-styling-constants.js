@@ -49,6 +49,11 @@ export const jdgSizes = {
 	},
 
 	horizontalStripeLengths: ['100%', '90%', '80%'],
+	nHorizontalStripeHeight: 5,
+	horizontalStripeHeightUnit: 'px',
+	get horizontalStripeHeight() {
+		return this.nHorizontalStripeHeight.toString() + this.horizontalStripeHeightUnit;
+	},
 
 	nContentBoxPadding: 2,
 	contentBoxPaddingUnit: 'rem',
@@ -86,11 +91,6 @@ export const jdgSizes = {
 	headerSidePaddingUnit: 'rem',
 	get headerSidePadding() {
 		return this.nHeaderSidePadding.toString() + this.headerSidePaddingUnit;
-	},
-	nHeaderStripeHeight: 0.5,
-	headerStripeHeightUnit: 'vh',
-	get headerStripeHeight() {
-		return this.nHeaderStripeHeight.toString() + this.headerStripeHeightUnit;
 	},
 
 	nPadding: 0.75,

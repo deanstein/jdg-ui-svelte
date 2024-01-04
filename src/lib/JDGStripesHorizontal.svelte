@@ -15,7 +15,7 @@
 	`;
 
 	let stripeCss = css`
-		height: ${jdgSizes.headerStripeHeight};
+		height: ${jdgSizes.horizontalStripeHeight};
 	`;
 </script>
 
