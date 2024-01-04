@@ -44,7 +44,7 @@
 	{/if}
 	{#if isHovering}
 		<div class="stripes-container">
-			<JDGStripesHorizontal />
+			<JDGStripesHorizontal stripeHeight='3px'/>
 		</div>
 	{/if}
 	<img
