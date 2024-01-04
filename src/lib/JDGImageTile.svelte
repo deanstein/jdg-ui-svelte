@@ -1,4 +1,6 @@
 <script>
+	import { fade } from 'svelte/transition';
+
 	import { JDGStripesHorizontal } from './index.js';
 
 	let isHovering;
@@ -9,6 +11,7 @@
 	on:mouseenter={() => (isHovering = true)}
 	on:mouseleave={() => (isHovering = false)}
 	role="banner"
+	in:fade={{ duration: 500 }}
 >
 	<img
 		src="https://raw.githubusercontent.com/deanstein/jdg-ui-svelte/main/static/jdg-image-placeholder.jpg"

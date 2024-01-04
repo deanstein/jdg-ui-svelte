@@ -91,7 +91,7 @@
 	`;
 
 	let headerNavContainerMobileCss = css`
-	a:before {
+		a:before {
 			width: 0; /* header links don't have highlight initially */
 			background-color: transparent;
 		}

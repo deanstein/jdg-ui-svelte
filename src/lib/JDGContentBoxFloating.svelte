@@ -18,6 +18,9 @@
 
 <style>
 	.jdg-content-box-floating-container {
+		display: flex;
+		flex-direction: column;
+		gap: 15px;
 		width: -webkit-fill-available;
 		width: -moz-available;
 		min-height: 200px;
