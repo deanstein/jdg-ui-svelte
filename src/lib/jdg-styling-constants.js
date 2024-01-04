@@ -20,6 +20,7 @@ export const jdgColors = {
 	activeSubtle: '#e6f3ff',
 	overlay: 'gray',
 	overlayOpacity: '75%',
+	overlayMedia: 'rgba(220, 220, 220, 0.5)',
 	modalTitleBackground: 'rgba(220, 220, 220, 1.0)',
 	modalContentBackground: 'rgba(220, 220, 220, 0.4)',
 	formBackgroundLegibleTransparency: '0.8',
@@ -117,6 +118,13 @@ export const jdgSizes = {
 	get modalFormHeight() {
 		return this.nModalFormHeight.toString() + 'vh';
 	},
+
+	nImageTileLabelFontSize: 3,
+	imageTileLabelFontUnit: 'vh',
+	get imageTileLabelFontSize() {
+		return this.nImageTileLabelFontSize.toString() + this.imageTileLabelFontUnit;
+	},
+
 	nBioFieldFontSize: 1.5,
 	get bioFieldFontSize() {
 		return this.nBioFieldFontSize + 'vh';

@@ -44,8 +44,8 @@
 				This is a <a href="www.google.com">hyperlink test.</a>
 			</div>
 			<JDGGridLayout>
-				<JDGImageTile />
-				<JDGImageTile />
+				<JDGImageTile label={'SOME PROJECT 1'} />
+				<JDGImageTile label={'SOME PROJECT 2'} />
 				<JDGImageTile />
 				<JDGImageTile />
 				<JDGImageTile />

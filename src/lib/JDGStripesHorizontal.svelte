@@ -5,32 +5,32 @@
 	export let stripeColors = jdgColors.accentStripesJDG;
 	export let reverseColors = false;
 
-	let headerStripeContainerAnimation = keyframes`
+	let stripeContainerAnimation = keyframes`
         0% { width: 0; }
         100% { width: 100%; }
     `;
 
-	let headerStripeContainerCss = css`
-		animation: ${headerStripeContainerAnimation} 0.5s ease-out forwards;
+	let stripeContainerCss = css`
+		animation: ${stripeContainerAnimation} 0.5s ease-out forwards;
 	`;
 
-	let headerStripeCss = css`
+	let stripeCss = css`
 		height: ${jdgSizes.headerStripeHeight};
 	`;
 </script>
 
-<div class="jdg-header-stripes-container {headerStripeContainerCss}">
+<div class="jdg-stripes-container {stripeContainerCss}">
 	{#each reverseColors ? stripeColors.reverse() : stripeColors as stripeColor, i}
 		<div
 			style:background-color={stripeColor}
 			style:width={jdgSizes.horizontalStripeLengths[i]}
-			class={headerStripeCss}
+			class={stripeCss}
 		/>
 	{/each}
 </div>
 
 <style>
-	.jdg-header-stripes-container {
+	.jdg-stripes-container {
 		display: flex;
 		flex-direction: column;
 	}
