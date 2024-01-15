@@ -246,6 +246,7 @@
 		width: -moz-available;
 		width: -webkit-fill-available;
 		z-index: 1;
+		font-weight: 900;
 	}
 
 	.jdg-header-inner-container {
@@ -265,7 +266,6 @@
 		display: flex;
 		align-items: baseline;
 		height: 100%;
-		font-family: sans-serif;
 	}
 
 	.jdg-header-logo-container a {

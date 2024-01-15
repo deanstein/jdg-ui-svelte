@@ -3,7 +3,7 @@
 	import { jdgColors, jdgSizes } from './jdg-styling-constants.js';
 
 	export let stripeColors = jdgColors.accentStripesJDG;
-    export let stripeHeight = jdgSizes.horizontalStripeHeight;
+	export let stripeHeight = jdgSizes.horizontalStripeHeight;
 	export let reverseColors = false;
 
 	let stripeContainerAnimation = keyframes`
