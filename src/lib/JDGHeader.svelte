@@ -77,11 +77,12 @@
 	`;
 
 	const headerLogoSupertitleCss = css`
-		font-size: ${jdgSizes.fontSizeSupertitle};
+		font-size: ${jdgSizes.fontSizeHeaderSupertitle};
 		color: ${jdgColors.textLight};
 	`;
 
 	const headerLogoTitleCss = css`
+		font-size: ${jdgSizes.fontSizeHeaderTitle};
 		color: ${textColor};
 	`;
 
@@ -102,6 +103,7 @@
 	`;
 
 	const headerNavItemCss = css`
+		font-size: ${jdgSizes.fontSizeHeaderTitle};
 		:last-of-type {
 			margin-right: 0rem;
 			padding-right: 0rem;
@@ -109,6 +111,7 @@
 	`;
 
 	const headerNavItemMobileCss = css`
+		font-size: ${jdgSizes.fontSizeHeaderTitle};
 		a:before {
 			width: 0; /* header links don't have highlight initially */
 		}
@@ -155,7 +158,7 @@
 				jdgSizes.nHeaderHeight +
 				2 * jdgSizes.nHeaderTopBottomPadding +
 				$uiState.activeNotificationBanners.length * jdgSizes.nNotificationHeight
-			).toString() + jdgSizes.notificationFontSizeUnit};
+			).toString() + jdgSizes.fontUnitNotification};
 			z-index: ${incrementHighestZIndex()};
 		`;
 

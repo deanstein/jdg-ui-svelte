@@ -6,7 +6,7 @@ import { addUniqueValueToArray, removeValueFromArray } from './jdg-utils.js';
 
 // account for any active notifications for the header's top positioning
 export const getDistanceToTopOfHeader = () => {
-	let distanceToTop = { value: 0, unit: jdgSizes.notificationFontSizeUnit };
+	let distanceToTop = { value: 0, unit: jdgSizes.fontUnitNotification };
 	uiState.subscribe((currentValue) => {
 		distanceToTop.value =
 			currentValue.activeNotificationBanners.length > 0

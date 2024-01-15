@@ -27,9 +27,10 @@
 		removeNotificationBannerFromState(bannerId);
 	};
 
-	const headerContainerCss = css`
+	const notificationContainerCss = css`
 		position: ${standalone ? 'fixed' : 'relative'};
 		height: ${jdgSizes.notificationHeight};
+		font-size: ${jdgSizes.fontSizeNotification};
 		z-index: ${forceOnTop ? incrementHighestZIndex() : 1};
 		background-color: ${color};
 		color: ${jdgColors.text};
@@ -49,7 +50,7 @@
 </script>
 
 {#if showBanner}
-	<div class="notification-banner-outer-container {headerContainerCss}">
+	<div class="notification-banner-outer-container {notificationContainerCss}">
 		{message}
 		<div class="notification-button-container">
 			<slot />
@@ -74,7 +75,6 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		font-size: 1.5vh;
 		height: 3vh;
 		width: 100%;
 		width: -moz-available;

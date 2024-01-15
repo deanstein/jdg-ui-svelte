@@ -21,7 +21,7 @@
 	`;
 
 	const imageTileLabelCss = css`
-		font-size: ${jdgSizes.nImageTileLabelFontSize};
+		font-size: ${jdgSizes.fontSizeImageTileLabel};
 	`;
 </script>
 

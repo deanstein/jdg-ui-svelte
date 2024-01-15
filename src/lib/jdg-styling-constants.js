@@ -37,14 +37,53 @@ export const jdgColors = {
 
 export const jdgSizes = {
 	nFontSizeSmall: 1.25,
-	fontSizeSmallUnit: 'vh',
+	fontUnitSmall: 'vh',
 	get fontSizeSmall() {
-		return this.nFontSizeSmall.toString() + this.fontSizeSmallUnit;
+		return this.nFontSizeSmall.toString() + this.fontUnitSmall;
 	},
-	nFontSizeSupertitle: 0.8,
-	fontSizeSupertitleUnit: 'vh',
-	get fontSizeSupertitle() {
-		return this.nFontSizeSupertitle.toString() + this.fontSizeSupertitleUnit;
+	nFontSizeNotification: 1.2,
+	fontUnitNotification: 'vh',
+	get fontSizeNotification() {
+		return this.nFontSizeNotification.toString() + this.fontUnitNotification;
+	},
+	nFontSizeHeaderSupertitle: 0.8,
+	fontUnitHeaderSupertitle: 'vh',
+	get fontSizeHeaderSupertitle() {
+		return this.nFontSizeHeaderSupertitle.toString() + this.fontUnitHeaderSupertitle;
+	},
+	nFontSizeHeaderTitle: 1.5,
+	fontUnitHeaderTitle: 'vh',
+	get fontSizeHeaderTitle() {
+		return this.nFontSizeHeaderTitle.toString() + this.fontUnitHeaderTitle;
+	},
+	nFontSizeModalTitle: 2,
+	fontUnitModalTitle: 'vh',
+	get fontSizeModalTitle() {
+		return this.nFontSizeModalTitle.toString() + this.fontUnitModalTitle;
+	},
+	nFontSizeModalSubtitle: 1.5,
+	get fontSizeModalSubtitle() {
+		return this.nFontSizeModalSubtitle.toString() + 'vh';
+	},
+	fontSizeImageTileLabel: 3,
+	fontUnitImageTileLabel: 'vh',
+	get imageTileLabelFontSize() {
+		return this.fontSizeImageTileLabel.toString() + this.fontUnitImageTileLabel;
+	},
+	nFontSizeBioField: 1.5,
+	fontUnitBioField: 'vh',
+	get fontSizeBioField() {
+		return this.nFontSizeBioField.toString() + this.fontUnitBioField;
+	},
+	nFontSizeTimelineDate: 1.5,
+	fontUnitTimelineDate: 'vh',
+	get fontSizeTimelineDate() {
+		return this.nFontSizeTimelineDate.toString() + this.fontUnitTimelineDate;
+	},
+	nFontSizeTimelineYear: 2.5,
+	fontUnitTimelineYear: 'vh',
+	get fontSizeTimelineYear() {
+		return this.nFontSizeTimelineYear.toString() + this.fontUnitTimelineYear;
 	},
 
 	nBlurSizeSmall: 10,
@@ -76,11 +115,6 @@ export const jdgSizes = {
 	get notificationHeight() {
 		return this.nNotificationHeight.toString() + this.notificationHeightUnit;
 	},
-	nNotificationFontSize: 1.5,
-	notificationFontSizeUnit: 'vh',
-	get notificationFontSize() {
-		return this.nNotificationFontSize.toString() + this.notificationFontSizeUnit;
-	},
 
 	nHeaderHeight: 5,
 	headerHeightUnit: 'vh',
@@ -107,14 +141,6 @@ export const jdgSizes = {
 		return this.nPaddingNarrow.toString() + 'vh';
 	},
 
-	nModalTitleFontSize: 2,
-	get modalTitleFontSize() {
-		return this.nModalTitleFontSize.toString() + 'vh';
-	},
-	nModalSubtitleFontSize: 1.5,
-	get modalSubtitleFontSize() {
-		return this.nModalSubtitleFontSize.toString() + 'vh';
-	},
 	nModalFormWidth: 25,
 	get modalFormWidth() {
 		return this.nModalFormWidth.toString() + 'vw';
@@ -124,24 +150,6 @@ export const jdgSizes = {
 		return this.nModalFormHeight.toString() + 'vh';
 	},
 
-	nImageTileLabelFontSize: 3,
-	imageTileLabelFontUnit: 'vh',
-	get imageTileLabelFontSize() {
-		return this.nImageTileLabelFontSize.toString() + this.imageTileLabelFontUnit;
-	},
-
-	nBioFieldFontSize: 1.5,
-	get bioFieldFontSize() {
-		return this.nBioFieldFontSize + 'vh';
-	},
-	nTimelineDateFontSize: 1.5,
-	get timelineDateFontSize() {
-		return this.nTimelineDateFontSize + 'vh';
-	},
-	nTimelineYearFontSize: 2.5,
-	get timelineYearFontSize() {
-		return this.nTimelineYearFontSize + 'vh';
-	},
 	nTimelineSpineLineThickness: 0.9,
 	get timelineSpineThickness() {
 		return this.nTimelineSpineLineThickness + 'vw';
