@@ -294,13 +294,13 @@
 	}
 
 	.jdg-header-logo-supertitle {
-		line-height: 20px;
+		line-height: 2vh;
 	}
 
 	.jdg-header-logo-title {
 		display: inline;
 		font-weight: bold;
-		line-height: 12px;
+		line-height: 1vh;
 	}
 
 	.jdg-header-nav-container {
