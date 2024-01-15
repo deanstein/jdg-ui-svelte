@@ -18,6 +18,7 @@
 	export let logoSrc =
 		'https://raw.githubusercontent.com/deanstein/jdg-ui-svelte/main/static/jdg-logo-ui.jpg'; // default if not passed in from host app
 	export let logoAlt = 'Logo';
+	export let logoSupertitle = undefined;
 	export let logoTitle = undefined;
 	export let logoAlignment = 'left';
 	export let showNav = true;
@@ -33,9 +34,6 @@
 	let useMobileNavResult; // combined result between intent and breakpoint
 
 	let isMobileNavExpanded;
-
-	let stripesParent;
-	let isHovering;
 
 	const onClickMobileNavButton = () => (isMobileNavExpanded = !isMobileNavExpanded);
 
@@ -78,7 +76,12 @@
 		align-items: ${logoAlignment};
 	`;
 
-	const headerTitleCss = css`
+	const headerLogoSupertitleCss = css`
+		font-size: ${jdgSizes.fontSizeSupertitle};
+		color: ${jdgColors.textLight};
+	`;
+
+	const headerLogoTitleCss = css`
 		color: ${textColor};
 	`;
 
@@ -161,14 +164,7 @@
 	}
 </script>
 
-<div
-	class="jdg-header-outer-container {headerContainerOuterCss}"
-	transition:fade
-	bind:this={stripesParent}
-	on:mouseenter={() => (isHovering = true)}
-	on:mouseleave={() => (isHovering = false)}
-	role="banner"
->
+<div class="jdg-header-outer-container {headerContainerOuterCss}" transition:fade role="banner">
 	<div class="jdg-header-inner-container {headerContainerInnerCss}">
 		<!-- logo -->
 		{#if showLogo}
@@ -177,8 +173,15 @@
 					<img src={logoSrc} class="jdg-header-logo" alt={logoAlt} />
 					<!-- logo title -->
 					{#if showTitleResult}
-						<div class="jdg-header-logo-title {headerTitleCss}">
-							{logoTitle}
+						<div class="jdg-header-logo-title-container">
+							{#if logoSupertitle}
+								<div class="jdg-header-logo-supertitle {headerLogoSupertitleCss}">
+									{logoSupertitle}
+								</div>
+							{/if}
+							<div class="jdg-header-logo-title {headerLogoTitleCss}">
+								{logoTitle}
+							</div>
 						</div>
 					{/if}
 				</a>
@@ -269,6 +272,7 @@
 	}
 
 	.jdg-header-logo-container a {
+		display: flex;
 		height: 100%;
 	}
 
@@ -277,10 +281,23 @@
 		max-height: 5vh;
 	}
 
-	.jdg-header-logo-title {
+	.jdg-header-logo-title-container {
+		display: flex;
 		margin-left: 15px;
+		flex-direction: column;
+		align-items: baseline;
+		height: 100%;
+		justify-content: end;
+	}
+
+	.jdg-header-logo-supertitle {
+		line-height: 20px;
+	}
+
+	.jdg-header-logo-title {
 		display: inline;
 		font-weight: bold;
+		line-height: 12px;
 	}
 
 	.jdg-header-nav-container {

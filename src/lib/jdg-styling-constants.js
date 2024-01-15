@@ -41,6 +41,11 @@ export const jdgSizes = {
 	get fontSizeSmall() {
 		return this.nFontSizeSmall.toString() + this.fontSizeSmallUnit;
 	},
+	nFontSizeSupertitle: 0.8,
+	fontSizeSupertitleUnit: 'vh',
+	get fontSizeSupertitle() {
+		return this.nFontSizeSupertitle.toString() + this.fontSizeSupertitleUnit;
+	},
 
 	nBlurSizeSmall: 10,
 	blurSizeSmallUnit: 'px',
