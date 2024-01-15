@@ -46,7 +46,7 @@ export const jdgSizes = {
 	get fontSizeNotification() {
 		return this.nFontSizeNotification.toString() + this.fontUnitNotification;
 	},
-	nFontSizeHeaderSupertitle: 0.8,
+	nFontSizeHeaderSupertitle: 0.9,
 	fontUnitHeaderSupertitle: 'vh',
 	get fontSizeHeaderSupertitle() {
 		return this.nFontSizeHeaderSupertitle.toString() + this.fontUnitHeaderSupertitle;
