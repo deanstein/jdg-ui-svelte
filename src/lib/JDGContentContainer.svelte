@@ -28,6 +28,7 @@
 		gap: 10vh;
 		width: -webkit-fill-available;
 		width: -moz-available;
+		min-height: 70vh;
 		padding: 10vh 0 10vh 0;
 	}
 </style>
