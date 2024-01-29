@@ -17,6 +17,12 @@
 
 	const divider = '|';
 
+	// for debugging: show additional version info
+	const forceShowAdditionalVersionData = false;
+	if (forceShowAdditionalVersionData) {
+		additionalVersionData = `Additional Version: ${additionalVersionData}`;
+	}
+
 	let buildCode = 'yyymmdd.nnn'; // date and number of commits
 
 	// ensure the copyright is always the current year
@@ -59,16 +65,20 @@
 					</div>
 				{/if}
 			{/if}
-			<div>{divider}</div>
-			<div class="jdg-footer-item">
-				{buildCode}
-			</div>
 			{#if additionalVersionData}
 				<div>{divider}</div>
 				<div class="jdg-footer-item">
 					{additionalVersionData}
 				</div>
 			{/if}
+			<div>{divider}</div>
+			<div class="jdg-footer-item">
+				{#if additionalVersionData}
+					Build: {buildCode}
+				{:else}
+					{buildCode}
+				{/if}
+			</div>
 		</div>
 		<!-- disclaimer row -->
 		{#if disclaimer}
