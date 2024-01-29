@@ -7,6 +7,7 @@
 	import { JDGStripesHorizontal } from './index.js';
 
 	export let label = undefined;
+	export let labelJustification = 'left';
 
 	let isHovering;
 
@@ -22,6 +23,7 @@
 
 	const imageTileLabelCss = css`
 		font-size: ${jdgSizes.fontSizeImageTileLabel};
+		text-align: ${labelJustification};
 	`;
 </script>
 
