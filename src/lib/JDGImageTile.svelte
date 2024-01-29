@@ -71,6 +71,7 @@
 		position: relative;
 		display: flex;
 		flex-direction: column;
+		min-width: 0;
 		height: 300px;
 		cursor: pointer;
 	}
