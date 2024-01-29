@@ -8,6 +8,7 @@
 
 	export let label = undefined;
 	export let labelJustification = 'left';
+	export let labelContainerVerticalAlign = 'bottom';
 
 	let isHovering;
 
@@ -19,6 +20,10 @@
 		color: ${jdgColors.text};
 		background-color: ${jdgColors.headerBackground};
 		backdrop-filter: blur(${jdgSizes.blurSizeSmall});
+		${labelContainerVerticalAlign === 'center'
+			? `top: 50%;
+		transform: translate(0, -50%);`
+			: `${labelContainerVerticalAlign}: 0;`}
 	`;
 
 	const imageTileLabelCss = css`
@@ -72,7 +77,6 @@
 
 	.jdg-image-tile-label-container {
 		position: absolute;
-		bottom: 0;
 		padding: 15px;
 		width: -webkit-fill-available;
 		width: -moz-available;
