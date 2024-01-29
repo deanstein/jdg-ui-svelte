@@ -19,11 +19,10 @@
 
 	// for debugging: show additional version info
 	const forceShowAdditionalVersionData = false;
-	if (forceShowAdditionalVersionData) {
-		additionalVersionData = `Additional Version: ${additionalVersionData}`;
-	}
+	forceShowAdditionalVersionData ? additionalVersionData = `Additional Version: ${additionalVersionData}` : additionalVersionData = undefined;
 
-	let buildCode = 'yyymmdd.nnn'; // date and number of commits
+	// date and number of commits is in this format
+	let buildCode = 'yyymmdd.nnn';
 
 	// ensure the copyright is always the current year
 	const copyrightYear = new Date().getFullYear();
