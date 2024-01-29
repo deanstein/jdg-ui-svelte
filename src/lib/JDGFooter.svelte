@@ -19,7 +19,9 @@
 
 	// for debugging: show additional version info
 	const forceShowAdditionalVersionData = false;
-	forceShowAdditionalVersionData ? additionalVersionData = `Additional Version: ${additionalVersionData}` : additionalVersionData = undefined;
+	forceShowAdditionalVersionData
+		? (additionalVersionData = `Additional Version: ${additionalVersionData}`)
+		: (additionalVersionData = undefined);
 
 	// date and number of commits is in this format
 	let buildCode = 'yyymmdd.nnn';
