@@ -2,7 +2,6 @@
 	import { jdgColors } from '$lib/jdg-styling-constants.js';
 	import {
 		JDGAccentBlock,
-		JDGBackgroundImage,
 		JDGContentBoxFloating,
 		JDGContentContainer,
 		JDGGridLayout,
@@ -29,5 +28,4 @@
 		blockQuote="This is another block quote."
 		backgroundColor={jdgColors.accentStripesJDG[1]}
 	/>
-	<JDGBackgroundImage />
 </JDGContentContainer>

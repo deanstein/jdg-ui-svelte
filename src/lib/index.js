@@ -6,8 +6,8 @@ export { JDGAccentBlock };
 import JDGBackground from './JDGBackground.svelte';
 export { JDGBackground };
 
-import JDGBackgroundImage from './JDGBackgroundImage.svelte';
-export { JDGBackgroundImage };
+import JDGSVGRandomDelaunay from './JDGSVGRandomDelaunay.svelte';
+export { JDGSVGRandomDelaunay };
 
 import JDGButton from './JDGButton.svelte';
 export { JDGButton };
