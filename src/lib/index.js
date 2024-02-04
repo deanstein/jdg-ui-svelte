@@ -6,6 +6,9 @@ export { JDGAccentBlock };
 import JDGBackground from './JDGBackground.svelte';
 export { JDGBackground };
 
+import JDGBackgroundImage from './JDGBackgroundImage.svelte';
+export { JDGBackgroundImage };
+
 import JDGButton from './JDGButton.svelte';
 export { JDGButton };
 
