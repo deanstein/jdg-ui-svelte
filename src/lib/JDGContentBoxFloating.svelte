@@ -4,6 +4,8 @@
 	import { jdgColors, jdgSizes } from './jdg-styling-constants.js';
 
 	export let title = undefined;
+	// @ts-expect-error
+	export let anchorTag = title?.replace(/ /g, '-');
 
 	const floatingBoxTitleCss = css`
 		color: ${jdgColors.contentBoxBackground};
@@ -18,7 +20,7 @@
 	`;
 </script>
 
-<div class="jdg-content-box-floating-container {floatingBoxContainerCss}">
+<div id={anchorTag} class="jdg-content-box-floating-container {floatingBoxContainerCss}">
 	{#if title}
 		<div class="jdg-content-box-floating-title {floatingBoxTitleCss}">
 			{title}

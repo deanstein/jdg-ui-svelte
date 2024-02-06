@@ -12,7 +12,7 @@
 <JDGContentContainer>
 	<JDGContentBoxFloating title="SECTION TITLE">
 		<div>
-			This is a <a href="www.google.com">hyperlink test.</a>
+			This is a <a href="#ANOTHER-SECTION">hyperlink test.</a>
 		</div>
 		<JDGGridLayout>
 			<JDGImageTile label={'SOME PROJECT 1'} />
@@ -23,7 +23,7 @@
 		</JDGGridLayout>
 	</JDGContentBoxFloating>
 	<JDGAccentBlock blockQuote="This is a block quote." />
-	<JDGContentBoxFloating />
+	<JDGContentBoxFloating title="ANOTHER SECTION" />
 	<JDGAccentBlock
 		blockQuote="This is another block quote."
 		backgroundColor={jdgColors.accentStripesJDG[1]}
