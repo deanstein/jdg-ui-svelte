@@ -4,6 +4,13 @@ import { jdgSizes } from './jdg-styling-constants.js';
 
 import { addUniqueValueToArray, removeValueFromArray } from './jdg-utils.js';
 
+export const getScreenCentroid = () => {
+	return {
+		x: document.documentElement.clientWidth / 2,
+		y: window.innerHeight / 2
+	};
+};
+
 // account for any active notifications for the header's top positioning
 export const getDistanceToTopOfHeader = () => {
 	let distanceToTop = { value: 0, unit: jdgSizes.fontUnitNotification };
