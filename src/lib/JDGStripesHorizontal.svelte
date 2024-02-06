@@ -4,6 +4,7 @@
 
 	export let stripeColors = jdgColors.accentStripesJDG;
 	export let stripeHeight = jdgSizes.horizontalStripeHeight;
+	export let staggeredStripeWidth = false;
 	export let reverseColors = false;
 
 	let stripeContainerAnimation = keyframes`
@@ -24,7 +25,7 @@
 	{#each reverseColors ? stripeColors.reverse() : stripeColors as stripeColor, i}
 		<div
 			style:background-color={stripeColor}
-			style:width={jdgSizes.horizontalStripeLengths[i]}
+			style:width={staggeredStripeWidth ? jdgSizes.horizontalStripeLengths[i] : '100%'}
 			class={stripeCss}
 		/>
 	{/each}
