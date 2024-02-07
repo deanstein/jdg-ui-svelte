@@ -1,5 +1,5 @@
 <script>
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { fade, slide } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
@@ -13,19 +13,21 @@
 	import { getDistanceToTopOfHeader, incrementHighestZIndex } from './jdg-ui-management.js';
 
 	import { JDGStripesHorizontal } from './index.js';
+	import { getAlphaFromRgbaString, setAlphaInRgbaString } from './jdg-graphics-factory.js';
 
 	export let showLogo = true;
 	export let logoSrc =
 		'https://raw.githubusercontent.com/deanstein/jdg-ui-svelte/main/static/jdg-logo-ui.jpg'; // default if not passed in from host app
-	export let logoAlt = 'Logo';
-	export let logoSupertitle = undefined;
-	export let logoTitle = undefined;
-	export let logoAlignment = 'left';
+	export let logoAlt = 'Logo'; // alt text for logo image
+	export let logoSupertitle = undefined; // text above title
+	export let logoTitle = undefined; // title next to logo
+	export let logoAlignment = 'left'; // TODO: rename to justification
 	export let showNav = true;
-	export let useMobileNav = false;
+	export let useMobileNav = false; // force use mobile nav at all breakpoints
 	export let navItems = [];
 	export let textColor = jdgColors.text;
 	export let backgroundColorRgba = jdgColors.headerBackground;
+	export let suppressAlphaOnScroll = false; // disable alpha past some scroll threshold
 
 	let forceHideTitleAtBreakpoint = false; // forces no title below certain breakpoints
 	let showTitleResult; // combined result between intent and breakpoint
@@ -55,6 +57,31 @@
 			forceUseMobileNavAtBreakpoint = false;
 			forceHideTitleAtBreakpoint = false;
 		}
+	};
+
+	const setHeaderBackgroundColorAlphaAtPos = () => {
+		// Calculate the scroll position as a percentage of the total document height
+		const scrollPercent = window.scrollY / (document.body.offsetHeight - window.innerHeight);
+
+		// Define the threshold for changing the transparency
+		const threshold = 0.1;
+
+		// Get the original alpha value from the rgba string
+		const originalAlpha = getAlphaFromRgbaString(backgroundColorRgba);
+
+		// Calculate the new alpha value based on the scroll percentage and the threshold
+		let newAlpha;
+		if (scrollPercent <= threshold) {
+			newAlpha = originalAlpha + (1 - originalAlpha) * (scrollPercent / threshold);
+		} else {
+			newAlpha = 1;
+		}
+
+		// Update the background color with the new alpha value
+		headerContainerInnerCss = css`
+			${headerContainerInnerCss}
+			background-color: ${setAlphaInRgbaString(backgroundColorRgba, newAlpha)};
+		`;
 	};
 
 	let headerContainerOuterCss = css`
@@ -122,6 +149,9 @@
 
 	onMount(() => {
 		window.addEventListener('resize', mediaQueryHandler);
+		if (suppressAlphaOnScroll) {
+			window.addEventListener('scroll', setHeaderBackgroundColorAlphaAtPos);
+		}
 		// Call the handler once to handle the current screen size
 		mediaQueryHandler();
 
@@ -140,6 +170,15 @@
 			newNavItem3.href = '/contact';
 
 			navItems = [newNavItem1, newNavItem2, newNavItem3];
+		}
+	});
+
+	onDestroy(() => {
+		if (typeof window !== 'undefined') {
+			window.removeEventListener('resize', mediaQueryHandler);
+			if (suppressAlphaOnScroll) {
+				window.removeEventListener('scroll', setHeaderBackgroundColorAlphaAtPos);
+			}
 		}
 	});
 

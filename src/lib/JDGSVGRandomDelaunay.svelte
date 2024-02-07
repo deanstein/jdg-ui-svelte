@@ -15,7 +15,7 @@
 			.select('#jdg-random-delaunay')
 			.append('svg')
 			.attr('width', '100%')
-			.attr('height', '100%');
+			.attr('height', '150%');
 
 		// Define a buffer to prevent points from being too close to the edges
 		const buffer = 150;

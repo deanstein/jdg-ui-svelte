@@ -3,7 +3,26 @@ import { crossfade } from 'svelte/transition';
 
 import { getScreenCentroid } from './jdg-ui-management.js';
 
-export const parseRgbaColorString = (rgbaColorString) => {
+export const getAlphaFromRgbaString = (rgba) => {
+	let components = parseRgbaString(rgba);
+	if (components) {
+		return components[3] ? components[3] : 1;
+	}
+	return null;
+};
+
+export const setAlphaInRgbaString = (rgba, newAlpha) => {
+	let components = parseRgbaString(rgba);
+	if (components) {
+		// Replace the alpha component with the new value
+		components[3] = newAlpha;
+		// Construct a new rgba string
+		return `rgba(${components[0]}, ${components[1]}, ${components[2]}, ${components[3]})`;
+	}
+	return null;
+};
+
+export const parseRgbaString = (rgbaColorString) => {
 	const match = rgbaColorString.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)/i);
 	if (match) {
 		return [parseInt(match[1]), parseInt(match[2]), parseInt(match[3]), parseFloat(match[4] || 1)];
@@ -12,9 +31,9 @@ export const parseRgbaColorString = (rgbaColorString) => {
 };
 
 export const generateGradient = (steps, colorString1, colorString2, colorString3) => {
-	const startColor = parseRgbaColorString(colorString1);
-	const midColor = parseRgbaColorString(colorString2);
-	const endColor = colorString3 ? parseRgbaColorString(colorString3) : midColor;
+	const startColor = parseRgbaString(colorString1);
+	const midColor = parseRgbaString(colorString2);
+	const endColor = colorString3 ? parseRgbaString(colorString3) : midColor;
 	const colors = [];
 	const halfSteps = Math.floor(steps / 2);
 

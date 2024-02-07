@@ -24,7 +24,7 @@
 <div class="jdg-ui-demo-container {demoContainerCss}">
 	<JDGNotificationBanner message={disclaimerMessage} color={jdgColors.notificationInformation} />
 
-	<JDGHeader logoTitle={'JDG SVELTE UI'} logoSupertitle={'INTRODUCING'} useMobileNav={false} />
+	<JDGHeader logoTitle={'JDG SVELTE UI'} logoSupertitle={'INTRODUCING'} useMobileNav={false} suppressAlphaOnScroll={true}/>
 
 	<JDGBackground />
 
