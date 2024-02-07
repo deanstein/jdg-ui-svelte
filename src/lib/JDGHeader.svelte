@@ -24,6 +24,7 @@
 	export let showNav = true;
 	export let useMobileNav = false; // force use mobile nav at all breakpoints
 	export let navItems = [];
+	export let showStripes = true;
 	export let textColor = jdgColors.text;
 	export let backgroundColorRgba = jdgColors.headerBackground;
 	export let suppressAlphaOnScroll = true; // disable alpha past some scroll threshold
@@ -253,7 +254,9 @@
 		{/if}
 	</div>
 	<!-- stripes at bottom of header -->
-	<JDGStripesHorizontal />
+	{#if showStripes}
+		<JDGStripesHorizontal />
+	{/if}
 </div>
 <!-- mobile nav container (outside header container) -->
 {#if useMobileNavResult && isMobileNavExpanded}
