@@ -21,7 +21,6 @@
 	export let logoAlt = 'Logo'; // alt text for logo image
 	export let logoSupertitle = undefined; // text above title
 	export let logoTitle = undefined; // title next to logo
-	export let logoAlignment = 'left'; // TODO: rename to justification
 	export let showNav = true;
 	export let useMobileNav = false; // force use mobile nav at all breakpoints
 	export let navItems = [];
@@ -97,10 +96,6 @@
 		padding-top: ${jdgSizes.headerTopBottomPadding};
 		padding-bottom: ${jdgSizes.headerTopBottomPadding};
 		background-color: ${backgroundColorRgba};
-	`;
-
-	const headerLogoContainerCss = css`
-		align-items: ${logoAlignment};
 	`;
 
 	const headerLogoSupertitleCss = css`
@@ -210,7 +205,7 @@
 	<div class="jdg-header-inner-container {headerContainerInnerCss}">
 		<!-- logo -->
 		{#if showLogo}
-			<div class="jdg-header-logo-container {headerLogoContainerCss}">
+			<div class="jdg-header-logo-container">
 				<a href="/">
 					<img src={logoSrc} class="jdg-header-logo" alt={logoAlt} />
 					<!-- logo title -->
