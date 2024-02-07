@@ -27,7 +27,7 @@
 	export let navItems = [];
 	export let textColor = jdgColors.text;
 	export let backgroundColorRgba = jdgColors.headerBackground;
-	export let suppressAlphaOnScroll = false; // disable alpha past some scroll threshold
+	export let suppressAlphaOnScroll = true; // disable alpha past some scroll threshold
 
 	let forceHideTitleAtBreakpoint = false; // forces no title below certain breakpoints
 	let showTitleResult; // combined result between intent and breakpoint
