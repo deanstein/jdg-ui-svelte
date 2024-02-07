@@ -7,9 +7,9 @@ export const jdgBreakpoints = {
 export const jdgColors = {
 	accentStripesJDG: ['#BF3A0A', '#D98014', '#D7CD76'],
 	backgroundFillRangeLM: [
-		'rgba(100, 100, 100, 1)',
+		'rgba(150, 150, 150, 1)',
 		'rgba(175, 175, 175, 1)',
-		'rgba(175, 175, 175, 1)'
+		'rgba(190, 190, 190, 1)'
 	],
 	text: 'black',
 	textLight: '#737373',
