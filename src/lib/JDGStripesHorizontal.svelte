@@ -4,7 +4,7 @@
 
 	export let stripeColors = jdgColors.accentStripesJDG;
 	export let stripeHeight = jdgSizes.horizontalStripeHeight;
-	export let staggeredStripeWidth = false;
+	export let staggeredStripeWidth = true;
 	export let reverseColors = false;
 
 	let stripeContainerAnimation = keyframes`

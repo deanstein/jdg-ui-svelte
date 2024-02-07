@@ -10,12 +10,14 @@
 
 	export let drawBorders = false;
 
+	export let heightMultiplier = 1; // set to > 1 if this image is used in a parallax context
+
 	onMount(() => {
 		const svg = d3
 			.select('#jdg-random-delaunay')
 			.append('svg')
 			.attr('width', '100%')
-			.attr('height', '150%');
+			.attr('height', '100%');
 
 		// Define a buffer to prevent points from being too close to the edges
 		const buffer = 150;
@@ -24,22 +26,22 @@
 		let points = d3.range(numberOfPoints).map(() => {
 			return [
 				d3.randomUniform(buffer, window.innerWidth - buffer)(),
-				d3.randomUniform(buffer, window.innerHeight - buffer)()
+				d3.randomUniform(buffer, window.innerHeight * heightMultiplier - buffer)()
 			];
 		});
 
 		// Add corners of the SVG
 		points.push([0, 0]); // Top-left corner
 		points.push([window.innerWidth, 0]); // Top-right corner
-		points.push([0, window.innerHeight]); // Bottom-left corner
-		points.push([window.innerWidth, window.innerHeight]); // Bottom-right corner
+		points.push([0, window.innerHeight * heightMultiplier]); // Bottom-left corner
+		points.push([window.innerWidth, window.innerHeight * heightMultiplier]); // Bottom-right corner
 
 		// Divide each side into 4 segments and add those points
 		for (let i = 1; i < 4; i++) {
 			points.push([(i * window.innerWidth) / 4, 0]); // Top side
-			points.push([(i * window.innerWidth) / 4, window.innerHeight]); // Bottom side
-			points.push([0, (i * window.innerHeight) / 4]); // Left side
-			points.push([window.innerWidth, (i * window.innerHeight) / 4]); // Right side
+			points.push([(i * window.innerWidth) / 4, window.innerHeight * heightMultiplier]); // Bottom side
+			points.push([0, (i * window.innerHeight * heightMultiplier) / 4]); // Left side
+			points.push([window.innerWidth, (i * window.innerHeight * heightMultiplier) / 4]); // Right side
 		}
 
 		// Create Delaunay triangulation
@@ -83,7 +85,7 @@
 
 <style>
 	.jdg-random-delaunay {
-		height: 100%;
+		height: 150%;
 		width: 100%;
 		opacity: 50%;
 	}

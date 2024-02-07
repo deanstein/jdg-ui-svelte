@@ -1,19 +1,31 @@
 <script>
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { JDGSVGRandomDelaunay } from './index.js';
+
+	export let isParallax = false; // parallax could affect performance, use with caution
+
+	const setBackgroundPositionYOnScroll = () => {
+		let offset = window.scrollY;
+		backgroundContainerDiv.style.transform = `translateY(${offset * -0.2}px)`;
+	};
 
 	let backgroundContainerDiv;
 
 	onMount(() => {
-		window?.addEventListener('scroll', () => {
-			let offset = window.scrollY;
-			backgroundContainerDiv.style.backgroundPositionY = offset * 0.7 + 'px';
-		});
+		if (isParallax) {
+			window?.addEventListener('scroll', setBackgroundPositionYOnScroll);
+		}
+	});
+
+	onDestroy(() => {
+		if (isParallax && typeof window !== 'undefined') {
+			window?.removeEventListener('scroll', setBackgroundPositionYOnScroll);
+		}
 	});
 </script>
 
 <div class="jdg-background-container" bind:this={backgroundContainerDiv}>
-	<JDGSVGRandomDelaunay />
+	<JDGSVGRandomDelaunay heightMultiplier={isParallax ? 1.5 : 1.0} />
 </div>
 
 <style>
@@ -22,7 +34,6 @@
 		z-index: -1;
 		width: 100%;
 		height: 100%;
-		background-attachment: fixed;
 		background-position: center;
 	}
 </style>
