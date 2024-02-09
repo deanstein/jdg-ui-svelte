@@ -74,6 +74,10 @@
 		all: unset;
 	}
 
+	a {
+		min-width: 0;
+	}
+
 	.jdg-image-tile-overlay {
 		position: absolute;
 		width: 100%;
