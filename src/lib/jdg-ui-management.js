@@ -66,3 +66,22 @@ export const removeNotificationBannerFromState = (bannerId) => {
 		return currentValue;
 	});
 };
+
+export const scrollToAnchor = (anchorId) => {
+	const element = document.querySelector(`#${anchorId}`);
+	if (element) {
+		window.scrollTo({
+			//@ts-expect-error
+			top: element.offsetTop,
+			behavior: 'smooth'
+		});
+	}
+};
+
+export const openUrl = (url, newTab) => {
+	if (newTab) {
+		window.open(url, '_blank');
+	} else {
+		window.location.href = url;
+	}
+};

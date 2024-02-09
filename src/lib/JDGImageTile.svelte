@@ -9,6 +9,11 @@
 	export let label = undefined;
 	export let labelJustification = 'left';
 	export let labelContainerVerticalAlign = 'bottom';
+	export let imgSrc =
+		'https://raw.githubusercontent.com/deanstein/jdg-ui-svelte/main/static/jdg-image-placeholder.jpg';
+	export let imgAlt = 'Image Tile';
+	export let href = undefined;
+	export let onClickFunction = () => {};
 
 	let isHovering;
 
@@ -32,35 +37,43 @@
 	`;
 </script>
 
-<div
-	class="jdg-image-tile"
-	on:mouseenter={() => (isHovering = true)}
-	on:mouseleave={() => (isHovering = false)}
-	role="banner"
-	in:fade={{ duration: 500 }}
->
-	{#if isHovering}
-		<div class="jdg-image-tile-overlay {imageTileOverlayCss}" />
-	{/if}
-	{#if label}
-		<div class="jdg-image-tile-label-container {imageTileLabelContainerCss}">
-			<div class="jdg-image-tile-label {imageTileLabelCss}">
-				{label}
+<a {href}>
+	<div
+		class="jdg-image-tile"
+		on:mouseenter={() => (isHovering = true)}
+		on:mouseleave={() => (isHovering = false)}
+		role="button"
+		tabindex="0"
+		in:fade={{ duration: 500 }}
+		on:click={onClickFunction}
+		on:keydown={onClickFunction}
+	>
+		{#if isHovering}
+			<div class="jdg-image-tile-overlay {imageTileOverlayCss}" />
+		{/if}
+		{#if label}
+			<div class="jdg-image-tile-label-container {imageTileLabelContainerCss}">
+				<div class="jdg-image-tile-label {imageTileLabelCss}">
+					{label}
+				</div>
 			</div>
-		</div>
-	{/if}
-	{#if isHovering}
-		<div class="stripes-container">
-			<JDGStripesHorizontal stripeHeight="3px" />
-		</div>
-	{/if}
-	<img
-		src="https://raw.githubusercontent.com/deanstein/jdg-ui-svelte/main/static/jdg-image-placeholder.jpg"
-		alt="Temporary"
-	/>
-</div>
+		{/if}
+		{#if isHovering}
+			<div class="stripes-container">
+				<JDGStripesHorizontal stripeHeight="3px" />
+			</div>
+		{/if}
+		<img src={imgSrc} alt={imgAlt} />
+	</div>
+</a>
 
 <style>
+	/* ignore the global a styles */
+	a::before,
+	a:hover::before {
+		all: unset;
+	}
+
 	.jdg-image-tile-overlay {
 		position: absolute;
 		width: 100%;

@@ -7,17 +7,28 @@
 		JDGGridLayout,
 		JDGImageTile
 	} from '$lib/index.js';
+	import { openUrl, scrollToAnchor } from '$lib/jdg-ui-management.js';
 </script>
 
 <JDGContentContainer>
-	<JDGContentBoxFloating title="SECTION TITLE">
+	<JDGContentBoxFloating title="ARCHITECTURE">
 		<div>
-			This is a <a href="#ANOTHER-SECTION">hyperlink test.</a>
+			This is a <a href="#ARCHITECTURE">hyperlink test.</a>
 		</div>
 		<JDGGridLayout>
-			<JDGImageTile label={'SOME PROJECT 1'} />
-			<JDGImageTile label={'SOME PROJECT 2'} />
-			<JDGImageTile />
+			<JDGImageTile
+				label={'SCROLL EXAMPLE'}
+				onClickFunction={() => {
+					scrollToAnchor('ANOTHER-SECTION');
+				}}
+			/>
+			<JDGImageTile label={'PAGE EXAMPLE'} href="/about" />
+			<JDGImageTile
+				label={'EXTERNAL EXAMPLE'}
+				onClickFunction={() => {
+					openUrl('http://www.google.com', true);
+				}}
+			/>
 			<JDGImageTile />
 			<JDGImageTile />
 		</JDGGridLayout>
