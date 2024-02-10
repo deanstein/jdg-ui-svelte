@@ -92,10 +92,10 @@ export const scrollToAnchor = (anchorId, accountForHeader = true, additionalOffs
 	const element = document.querySelector(`#${anchorId}`);
 	if (element) {
 		const topValue = accountForHeader
-			//@ts-expect-error
-			? element.offsetTop - getDistanceToBottomOfHeader().value - additionalOffset
-			//@ts-expect-error
-			: element.offsetTop - additionalOffset;
+			? //@ts-expect-error
+				element.offsetTop - getDistanceToBottomOfHeader().value - additionalOffset
+			: //@ts-expect-error
+				element.offsetTop - additionalOffset;
 		window.scrollTo({
 			top: topValue,
 			behavior: 'smooth'
