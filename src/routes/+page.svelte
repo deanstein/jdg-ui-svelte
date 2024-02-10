@@ -7,19 +7,19 @@
 		JDGGridLayout,
 		JDGImageTile
 	} from '$lib/index.js';
-	import { openUrl, scrollToAnchor } from '$lib/jdg-ui-management.js';
+	import { openUrl, scrollToAnchorFloatingContentBox } from '$lib/jdg-ui-management.js';
 </script>
 
 <JDGContentContainer>
 	<JDGContentBoxFloating title="ARCHITECTURE">
 		<div>
-			This is a <a href="#ARCHITECTURE">hyperlink test.</a>
+			This is a <a href="#ANOTHER-SECTION">hyperlink test.</a>
 		</div>
 		<JDGGridLayout>
 			<JDGImageTile
 				label={'SCROLL EXAMPLE'}
 				onClickFunction={() => {
-					scrollToAnchor('ANOTHER-SECTION');
+					scrollToAnchorFloatingContentBox('ANOTHER-SECTION');
 				}}
 			/>
 			<JDGImageTile label={'PAGE EXAMPLE'} href="/about" />
@@ -39,4 +39,10 @@
 		blockQuote="This is another block quote."
 		backgroundColor={jdgColors.accentStripesJDG[1]}
 	/>
+	<JDGContentBoxFloating title="A THIRD SECTION" />
+	<JDGAccentBlock
+		blockQuote="This is another block quote."
+		backgroundColor={jdgColors.accentStripesJDG[0]}
+	/>
+	<JDGContentBoxFloating title="A FOURTH SECTION" />
 </JDGContentContainer>

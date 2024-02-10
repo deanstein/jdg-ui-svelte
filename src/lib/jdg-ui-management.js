@@ -11,25 +11,46 @@ export const getScreenCentroid = () => {
 	};
 };
 
+export const convertFromVhToPixels = (vhValue) => {
+	if (typeof window === 'undefined') {
+		return 0;
+	} else {
+		return (vhValue / 100) * window.innerHeight;
+	}
+};
+
+export const convertFromRemToPixels = (remValue) => {
+	return (
+		remValue * parseFloat(getComputedStyle(document.documentElement).getPropertyValue('font-size'))
+	);
+};
+
 // account for any active notifications for the header's top positioning
+// returns value in pixels
 export const getDistanceToTopOfHeader = () => {
-	let distanceToTop = { value: 0, unit: jdgSizes.fontUnitNotification };
+	let distanceToTop = { value: 0, unit: 'px' };
 	uiState.subscribe((currentValue) => {
 		distanceToTop.value =
 			currentValue.activeNotificationBanners.length > 0
-				? jdgSizes.nNotificationHeight * currentValue.activeNotificationBanners.length
+				? convertFromVhToPixels(jdgSizes.nNotificationHeight) *
+					currentValue.activeNotificationBanners.length
 				: 0;
 	});
 	return distanceToTop;
 };
 
 // get the bottom of the header so any main content can start there
+// returns value in pixels
 export const getDistanceToBottomOfHeader = () => {
-	let distanceToBottom = { value: 0, unit: jdgSizes.headerHeightUnit };
-	distanceToBottom.value =
-		getDistanceToTopOfHeader().value +
-		jdgSizes.nHeaderHeight +
-		2 * jdgSizes.nHeaderTopBottomPadding;
+	let distanceToBottom = {
+		value: 0,
+		unit: 'px'
+	};
+	const notificationHeight = getDistanceToTopOfHeader().value;
+	const headerHeight = convertFromVhToPixels(jdgSizes.nHeaderHeight);
+	const headerPadding = 2 * convertFromVhToPixels(jdgSizes.nHeaderTopBottomPadding);
+	const stripeHeight = 3 * jdgSizes.nHorizontalStripeHeight;
+	distanceToBottom.value = notificationHeight + headerHeight + headerPadding + stripeHeight;
 	return distanceToBottom;
 };
 
@@ -67,15 +88,24 @@ export const removeNotificationBannerFromState = (bannerId) => {
 	});
 };
 
-export const scrollToAnchor = (anchorId) => {
+export const scrollToAnchor = (anchorId, accountForHeader = true, additionalOffset = 0) => {
 	const element = document.querySelector(`#${anchorId}`);
 	if (element) {
-		window.scrollTo({
+		const topValue = accountForHeader
 			//@ts-expect-error
-			top: element.offsetTop,
+			? element.offsetTop - getDistanceToBottomOfHeader().value - additionalOffset
+			//@ts-expect-error
+			: element.offsetTop - additionalOffset;
+		window.scrollTo({
+			top: topValue,
 			behavior: 'smooth'
 		});
 	}
+};
+
+export const scrollToAnchorFloatingContentBox = (anchorId) => {
+	const additionalOffset = convertFromRemToPixels(jdgSizes.nFontSizeFloatingContentBoxTitle);
+	scrollToAnchor(anchorId, true, additionalOffset);
 };
 
 export const openUrl = (url, newTab) => {

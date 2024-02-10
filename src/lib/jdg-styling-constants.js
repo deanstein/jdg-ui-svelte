@@ -61,6 +61,11 @@ export const jdgSizes = {
 	get fontSizeHeaderTitle() {
 		return this.nFontSizeHeaderTitle.toString() + this.fontUnitHeaderTitle;
 	},
+	nFontSizeFloatingContentBoxTitle: 2,
+	fontUnitFloatingContentBoxTitle: 'rem',
+	get fontSizeFloatingContentBoxTitle() {
+		return this.nFontSizeFloatingContentBoxTitle + this.fontUnitFloatingContentBoxTitle;
+	},
 	nFontSizeModalTitle: 2,
 	fontUnitModalTitle: 'vh',
 	get fontSizeModalTitle() {

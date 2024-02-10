@@ -55,7 +55,7 @@
 			jdgColors.backgroundFillRangeLM[1],
 			jdgColors.backgroundFillRangeLM[2]
 		);
-		console.log(fillColors.length, triangles.length);
+		// console.log("created " + triangles.length + " delaunay triangles for background image.")
 		const borderColors = jdgColors.accentStripesJDG;
 
 		// Draw triangles

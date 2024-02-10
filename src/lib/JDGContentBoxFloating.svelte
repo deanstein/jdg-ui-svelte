@@ -8,6 +8,7 @@
 	export let anchorTag = title?.replace(/ /g, '-');
 
 	const floatingBoxTitleCss = css`
+		font-size: ${jdgSizes.fontSizeFloatingContentBoxTitle};
 		color: ${jdgColors.contentBoxBackground};
 	`;
 
@@ -34,7 +35,6 @@
 		position: absolute;
 		bottom: 100%;
 		left: 0;
-		font-size: 2rem;
 		font-weight: bold;
 		line-height: 0.68;
 	}
