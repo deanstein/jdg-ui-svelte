@@ -17,6 +17,7 @@
 		</div>
 		<JDGGridLayout>
 			<JDGImageTile
+				imgSrc={'./project-tiles/architecture.jpg'}
 				label={'SCROLL EXAMPLE'}
 				onClickFunction={() => {
 					scrollToAnchorFloatingContentBox('ANOTHER-SECTION');
