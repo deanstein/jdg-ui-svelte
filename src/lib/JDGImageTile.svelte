@@ -1,10 +1,13 @@
 <script>
 	import { fade } from 'svelte/transition';
+	import { cubicOut } from 'svelte/easing';
 	import { css } from '@emotion/css';
 
 	import { jdgColors, jdgSizes } from './jdg-styling-constants.js';
 
 	import { JDGStripesHorizontal } from './index.js';
+
+	import { scale } from 'svelte/transition';
 
 	export let label = undefined;
 	export let labelJustification = 'left';
@@ -14,6 +17,7 @@
 	export let imgAlt = 'Image Tile';
 	export let href = undefined;
 	export let onClickFunction = () => {};
+	export let showHorizontalStripesOnHover = true;
 
 	let isHovering;
 
@@ -35,6 +39,18 @@
 		font-size: ${jdgSizes.fontSizeImageTileLabel};
 		text-align: ${labelJustification};
 	`;
+
+	const fadeAndScale = (node, { delay = 0, duration = 400 }) => {
+		return {
+			delay,
+			duration,
+			css: (t, u) => `
+        opacity: ${fade(node, { duration }).css(t, u)};
+        transform: ${scale(node, { duration }).css(t, u)};
+      `,
+			easing: cubicOut
+		};
+	};
 </script>
 
 <a {href}>
@@ -44,13 +60,10 @@
 		on:mouseleave={() => (isHovering = false)}
 		role="button"
 		tabindex="0"
-		in:fade={{ duration: 500 }}
 		on:click={onClickFunction}
 		on:keydown={onClickFunction}
+		transition:fadeAndScale={{ duration: 500 }}
 	>
-		{#if isHovering}
-			<div class="jdg-image-tile-overlay {imageTileOverlayCss}" />
-		{/if}
 		{#if label}
 			<div class="jdg-image-tile-label-container {imageTileLabelContainerCss}">
 				<div class="jdg-image-tile-label {imageTileLabelCss}">
@@ -58,9 +71,9 @@
 				</div>
 			</div>
 		{/if}
-		{#if isHovering}
+		{#if isHovering && showHorizontalStripesOnHover}
 			<div class="stripes-container">
-				<JDGStripesHorizontal stripeHeight="3px" />
+				<JDGStripesHorizontal stripeHeight="3px" staggeredStripeWidth={false} />
 			</div>
 		{/if}
 		<img src={imgSrc} alt={imgAlt} />
@@ -78,12 +91,6 @@
 		min-width: 0;
 	}
 
-	.jdg-image-tile-overlay {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-	}
-
 	.jdg-image-tile {
 		position: relative;
 		display: flex;
@@ -91,6 +98,20 @@
 		min-width: 0;
 		height: 300px;
 		cursor: pointer;
+		transition:
+			transform 0.3s ease-in-out,
+			box-shadow 0.3s ease-in-out;
+		box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+		overflow: hidden;
+	}
+
+	.jdg-image-tile:hover {
+		transform: scale(0.98);
+		box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+	}
+
+	.jdg-image-tile:active {
+		box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 	}
 
 	.jdg-image-tile-label-container {
@@ -114,5 +135,11 @@
 		width: -moz-available;
 		flex-grow: 1;
 		object-fit: cover;
+		transition: transform 0.3s ease-in-out;
+		z-index: -1;
+	}
+
+	.jdg-image-tile:hover img {
+		transform: scale(1.05); /* Scale the image up to create a zoom effect */
 	}
 </style>
