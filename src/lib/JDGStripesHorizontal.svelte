@@ -13,7 +13,7 @@
     `;
 
 	let stripeContainerCss = css`
-		animation: ${stripeContainerAnimation} 0.5s ease-out forwards;
+		animation: ${stripeContainerAnimation} 0.3s ease-out forwards;
 	`;
 
 	let stripeCss = css`

@@ -106,11 +106,11 @@
 	}
 
 	.jdg-image-tile:hover {
-		transform: scale(0.98);
 		box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 	}
 
 	.jdg-image-tile:active {
+		transform: scale(0.98);
 		box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 	}
 
@@ -140,6 +140,6 @@
 	}
 
 	.jdg-image-tile:hover img {
-		transform: scale(1.05); /* Scale the image up to create a zoom effect */
+		transform: scale(1.04); /* Scale the image up to create a zoom effect */
 	}
 </style>
