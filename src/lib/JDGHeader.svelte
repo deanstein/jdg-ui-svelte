@@ -27,7 +27,7 @@
 	export let textColor = jdgColors.text;
 	export let backgroundColorRgba = jdgColors.headerBackground;
 	export let showHorizontalStripes = false;
-	export let suppressAlphaOnScroll = true; // disable alpha past some scroll threshold
+	export let suppressAlphaOnScroll = false; // disable alpha past some scroll threshold
 
 	let forceHideTitleAtBreakpoint = false; // forces no title below certain breakpoints
 	let showTitleResult; // combined result between intent and breakpoint
@@ -78,6 +78,7 @@
 		}
 
 		// Update the background color with the new alpha value
+		// TODO: THIS CAUSES DUPLICATE CSS STYLES - FIX!
 		headerContainerInnerCss = css`
 			${headerContainerInnerCss}
 			background-color: ${setAlphaInRgbaString(backgroundColorRgba, newAlpha)};
@@ -87,9 +88,6 @@
 	let headerContainerOuterCss = css`
 		color: ${jdgColors.text};
 		z-index: ${incrementHighestZIndex()};
-		a:before {
-			width: 0; /* header links don't have highlight initially */
-		}
 	`;
 
 	let headerContainerInnerCss = css`
@@ -119,7 +117,6 @@
 
 	let headerNavContainerMobileCss = css`
 		a:before {
-			width: 0; /* header links don't have highlight initially */
 			background-color: transparent;
 		}
 		background-color: ${jdgColors.headerBackground};
@@ -135,9 +132,6 @@
 
 	const headerNavItemMobileCss = css`
 		font-size: ${jdgSizes.fontSizeHeaderTitle};
-		a:before {
-			width: 0; /* header links don't have highlight initially */
-		}
 		:hover {
 			background-color: ${jdgColors.hoverBackground};
 		}
@@ -207,7 +201,7 @@
 		<!-- logo -->
 		{#if showLogo}
 			<div class="jdg-header-logo-container">
-				<a href="/">
+				<a href="/" class="no-initial-underline">
 					<img src={logoSrc} class="jdg-header-logo" alt={logoAlt} />
 					<!-- logo title -->
 					{#if showTitleResult}
@@ -245,8 +239,9 @@
 			{:else}
 				<nav class="jdg-header-nav-container">
 					{#each navItems as navItem, i}
-						<a class="jdg-header-nav-item {headerNavItemCss}" href={navItem?.href}
-							>{navItem?.label}</a
+						<a
+							class="jdg-header-nav-item no-initial-underline {headerNavItemCss}"
+							href={navItem?.href}>{navItem?.label}</a
 						>
 					{/each}
 				</nav>
@@ -297,7 +292,7 @@
 		display: flex;
 		justify-content: space-between;
 		padding: 1rem 2rem 1rem 2rem;
-		backdrop-filter: blur(10px);
+		backdrop-filter: blur(60px);
 
 		-webkit-touch-callout: none;
 		-webkit-user-select: none;
