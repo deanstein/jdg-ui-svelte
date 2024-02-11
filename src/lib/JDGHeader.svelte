@@ -24,7 +24,7 @@
 	export let showNav = true;
 	export let useMobileNav = false; // force use mobile nav at all breakpoints
 	export let navItems = [];
-	export let showStripes = true;
+	export let showStripes = false;
 	export let textColor = jdgColors.text;
 	export let backgroundColorRgba = jdgColors.headerBackground;
 	export let suppressAlphaOnScroll = true; // disable alpha past some scroll threshold
@@ -290,6 +290,7 @@
 		width: -webkit-fill-available;
 		z-index: 1;
 		font-weight: 900;
+		box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
 	}
 
 	.jdg-header-inner-container {

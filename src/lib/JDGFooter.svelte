@@ -14,6 +14,7 @@
 	export let disclaimer = undefined; // optional disclaimer, applicable to some sites
 	export let alignItems = 'left';
 	export let backgroundColorRgba = jdgColors.headerBackground;
+	export let showHorizontalStripes = false;
 
 	const divider = '|';
 
@@ -48,7 +49,9 @@
 
 <div class="jdg-footer-outer-container {footerOuterContainerCss}">
 	<!-- horizontal stripes at top of footer -->
-	<JDGStripesHorizontal reverseColors={true} />
+	{#if showHorizontalStripes}
+		<JDGStripesHorizontal reverseColors={true} />
+	{/if}
 	<div class="jdg-footer-content-container {footerContentContainerCss}">
 		<!-- copyright and versions row -->
 		<div class="jdg-footer-row">
@@ -97,6 +100,7 @@
 		flex-direction: column;
 		width: -moz-available;
 		width: -webkit-fill-available;
+		box-shadow: -3px -3px 5px rgba(0, 0, 0, 0.3);
 	}
 
 	.jdg-footer-content-container {
