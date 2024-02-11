@@ -24,9 +24,9 @@
 	export let showNav = true;
 	export let useMobileNav = false; // force use mobile nav at all breakpoints
 	export let navItems = [];
-	export let showStripes = false;
 	export let textColor = jdgColors.text;
 	export let backgroundColorRgba = jdgColors.headerBackground;
+	export let showHorizontalStripes = false;
 	export let suppressAlphaOnScroll = true; // disable alpha past some scroll threshold
 
 	let forceHideTitleAtBreakpoint = false; // forces no title below certain breakpoints
@@ -254,7 +254,7 @@
 		{/if}
 	</div>
 	<!-- stripes at bottom of header -->
-	{#if showStripes}
+	{#if showHorizontalStripes}
 		<JDGStripesHorizontal />
 	{/if}
 </div>
