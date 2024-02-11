@@ -7,21 +7,18 @@
 	export let staggeredStripeWidth = true;
 	export let reverseColors = false;
 
-	let stripeContainerAnimation = keyframes`
-        0% { width: 0; }
-        100% { width: 100%; }
-    `;
-
-	let stripeContainerCss = css`
-		animation: ${stripeContainerAnimation} 0.3s ease-out forwards;
-	`;
+	let stripeAnimation = keyframes`
+		0% { height: 0; }
+        100% { height: 3px}
+		`;
 
 	let stripeCss = css`
 		height: ${stripeHeight};
+		animation: ${stripeAnimation} 0.3s ease-out forwards;
 	`;
 </script>
 
-<div class="jdg-stripes-container {stripeContainerCss}">
+<div class="jdg-stripes-container">
 	{#each reverseColors ? stripeColors.reverse() : stripeColors as stripeColor, i}
 		<div
 			style:background-color={stripeColor}

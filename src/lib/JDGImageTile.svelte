@@ -40,7 +40,7 @@
 		text-align: ${labelJustification};
 	`;
 
-	const fadeAndScale = (node, { delay = 0, duration = 400 }) => {
+	const fadeAndScale = (node, { delay = 0, duration = 300 }) => {
 		return {
 			delay,
 			duration,
@@ -51,6 +51,15 @@
 			easing: cubicOut
 		};
 	};
+
+	function verticalSlide(node, { delay = 0, duration = 300 }) {
+		return {
+			delay,
+			duration,
+			css: (t) => `transform: translateY(${(1 - t) * 100}%);`,
+			easing: cubicOut
+		};
+	}
 </script>
 
 <a {href}>
@@ -62,7 +71,7 @@
 		tabindex="0"
 		on:click={onClickFunction}
 		on:keydown={onClickFunction}
-		transition:fadeAndScale={{ duration: 500 }}
+		transition:fadeAndScale={{ duration: 300 }}
 	>
 		{#if label}
 			<div class="jdg-image-tile-label-container {imageTileLabelContainerCss}">
@@ -72,7 +81,7 @@
 			</div>
 		{/if}
 		{#if isHovering && showHorizontalStripesOnHover}
-			<div class="stripes-container">
+			<div class="stripes-container" transition:verticalSlide={{ duration: 300 }}>
 				<JDGStripesHorizontal stripeHeight="3px" staggeredStripeWidth={false} />
 			</div>
 		{/if}
