@@ -10,7 +10,7 @@
 	import { instantiateObject } from './jdg-utils.js';
 
 	import { jdgColors, jdgBreakpoints, jdgSizes, jdgDurations } from './jdg-styling-constants.js';
-	import { getDistanceToTopOfHeader, incrementHighestZIndex } from './jdg-ui-management.js';
+	import { convertFromPixelsToVh, getDistanceToBottomOfHeader, getDistanceToTopOfHeader, incrementHighestZIndex } from './jdg-ui-management.js';
 
 	import { JDGStripesHorizontal } from './index.js';
 	import { getAlphaFromRgbaString, setAlphaInRgbaString } from './jdg-graphics-factory.js';
@@ -173,6 +173,7 @@
 	});
 
 	$: {
+		$uiState.activeNotificationBanners
 		// needs to be recomputed when notifications show/hide
 		const distanceToTopOfHeaderResult = getDistanceToTopOfHeader();
 		headerContainerOuterCss = css`
@@ -183,11 +184,7 @@
 		// needs to be recomputed when notifications show/hide
 		headerNavContainerMobileCss = css`
 			${headerNavContainerMobileCss}
-			top: ${(
-				jdgSizes.nHeaderHeight +
-				2 * jdgSizes.nHeaderTopBottomPadding +
-				$uiState.activeNotificationBanners.length * jdgSizes.nNotificationHeight
-			).toString() + jdgSizes.fontUnitNotification};
+			top: ${`${convertFromPixelsToVh(getDistanceToBottomOfHeader().value)}`};
 			z-index: ${incrementHighestZIndex()};
 		`;
 
@@ -239,8 +236,7 @@
 			{:else}
 				<nav class="jdg-header-nav-container">
 					{#each navItems as navItem, i}
-						<a
-							class="jdg-header-nav-item no-initial-underline {headerNavItemCss}"
+						<a class="jdg-header-nav-item no-initial-underline {headerNavItemCss}"
 							href={navItem?.href}>{navItem?.label}</a
 						>
 					{/each}
@@ -263,6 +259,9 @@
 			{#each navItems as navItem, i}
 				<div class="jdg-header-nav-item-mobile-container">
 					<a class="jdg-header-nav-item-mobile {headerNavItemMobileCss}" href={navItem?.href}
+					on:click={() => {
+						isMobileNavExpanded = false;
+					}}
 						>{navItem?.label}</a
 					>
 				</div>
@@ -291,7 +290,8 @@
 	.jdg-header-inner-container {
 		display: flex;
 		justify-content: space-between;
-		padding: 1rem 2rem 1rem 2rem;
+		padding-right: 2rem;
+		padding-left: 2rem;
 		backdrop-filter: blur(60px);
 
 		-webkit-touch-callout: none;

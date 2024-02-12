@@ -183,5 +183,5 @@ export const jdgQuantities = {
 };
 
 export const jdgDurations = {
-	slide: 500 //ms
+	slide: 300 //ms
 };

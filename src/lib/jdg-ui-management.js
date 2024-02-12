@@ -19,6 +19,14 @@ export const convertFromVhToPixels = (vhValue) => {
 	}
 };
 
+export const convertFromPixelsToVh = (pixelValue) => {
+	if (typeof window === 'undefined') {
+		return 0;
+	} else {
+		return ((pixelValue / window.innerHeight) * 100).toString() + 'vh';
+	}
+};
+
 export const convertFromRemToPixels = (remValue) => {
 	return (
 		remValue * parseFloat(getComputedStyle(document.documentElement).getPropertyValue('font-size'))
@@ -41,7 +49,7 @@ export const getDistanceToTopOfHeader = () => {
 
 // get the bottom of the header so any main content can start there
 // returns value in pixels
-export const getDistanceToBottomOfHeader = () => {
+export const getDistanceToBottomOfHeader = (includeStripes = false) => {
 	let distanceToBottom = {
 		value: 0,
 		unit: 'px'
@@ -49,7 +57,7 @@ export const getDistanceToBottomOfHeader = () => {
 	const notificationHeight = getDistanceToTopOfHeader().value;
 	const headerHeight = convertFromVhToPixels(jdgSizes.nHeaderHeight);
 	const headerPadding = 2 * convertFromVhToPixels(jdgSizes.nHeaderTopBottomPadding);
-	const stripeHeight = 3 * jdgSizes.nHorizontalStripeHeight;
+	const stripeHeight = includeStripes ? 3 * jdgSizes.nHorizontalStripeHeight : 0;
 	distanceToBottom.value = notificationHeight + headerHeight + headerPadding + stripeHeight;
 	return distanceToBottom;
 };
