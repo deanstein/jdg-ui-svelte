@@ -10,7 +10,12 @@
 	import { instantiateObject } from './jdg-utils.js';
 
 	import { jdgColors, jdgBreakpoints, jdgSizes, jdgDurations } from './jdg-styling-constants.js';
-	import { convertFromPixelsToVh, getDistanceToBottomOfHeader, getDistanceToTopOfHeader, incrementHighestZIndex } from './jdg-ui-management.js';
+	import {
+		convertFromPixelsToVh,
+		getDistanceToBottomOfHeader,
+		getDistanceToTopOfHeader,
+		incrementHighestZIndex
+	} from './jdg-ui-management.js';
 
 	import { JDGStripesHorizontal } from './index.js';
 	import { getAlphaFromRgbaString, setAlphaInRgbaString } from './jdg-graphics-factory.js';
@@ -83,6 +88,10 @@
 			${headerContainerInnerCss}
 			background-color: ${setAlphaInRgbaString(backgroundColorRgba, newAlpha)};
 		`;
+	};
+
+	const hideMobileNav = () => {
+		isMobileNavExpanded = false;
 	};
 
 	let headerContainerOuterCss = css`
@@ -173,7 +182,7 @@
 	});
 
 	$: {
-		$uiState.activeNotificationBanners
+		$uiState.activeNotificationBanners;
 		// needs to be recomputed when notifications show/hide
 		const distanceToTopOfHeaderResult = getDistanceToTopOfHeader();
 		headerContainerOuterCss = css`
@@ -236,7 +245,8 @@
 			{:else}
 				<nav class="jdg-header-nav-container">
 					{#each navItems as navItem, i}
-						<a class="jdg-header-nav-item no-initial-underline {headerNavItemCss}"
+						<a
+							class="jdg-header-nav-item no-initial-underline {headerNavItemCss}"
 							href={navItem?.href}>{navItem?.label}</a
 						>
 					{/each}
@@ -258,16 +268,24 @@
 		<nav class="jdg-header-nav-item-container-mobile">
 			{#each navItems as navItem, i}
 				<div class="jdg-header-nav-item-mobile-container">
-					<a class="jdg-header-nav-item-mobile {headerNavItemMobileCss}" href={navItem?.href}
-					on:click={() => {
-						isMobileNavExpanded = false;
-					}}
-						>{navItem?.label}</a
+					<a
+						class="jdg-header-nav-item-mobile {headerNavItemMobileCss}"
+						href={navItem?.href}
+						on:click={() => {
+							isMobileNavExpanded = false;
+						}}>{navItem?.label}</a
 					>
 				</div>
 			{/each}
 		</nav>
 	</div>
+	<div
+		class="jdg-header-nav-mobile-click-underlay"
+		on:click={hideMobileNav}
+		on:keydown={hideMobileNav}
+		role="button"
+		tabindex="0"
+	></div>
 {/if}
 
 <style>
@@ -364,6 +382,7 @@
 
 	.jdg-header-nav-container-mobile {
 		position: fixed;
+		z-index: 2;
 		right: 0;
 		width: 250px;
 		height: 100%;
@@ -386,5 +405,13 @@
 
 	.jdg-header-nav-item-mobile a::before {
 		background-color: transparent;
+	}
+
+	.jdg-header-nav-mobile-click-underlay {
+		position: absolute;
+		z-index: 1;
+		width: -webkit-fill-available;
+		width: -moz-available;
+		height: -webkit-fill-available;
 	}
 </style>
