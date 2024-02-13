@@ -19,16 +19,15 @@
 			color: ${jdgColors.text};
 		}
 		a.no-initial-underline::before {
-			background: ${useStripedHyperlinkHoverStyle ? 
-			`linear-gradient(
+			background: ${useStripedHyperlinkHoverStyle
+				? `linear-gradient(
 				to bottom,
 				${convertHexToRGBA(jdgColors.accentStripesJDG[0], hyperlinkColorOpacity)} 33%,
 				${convertHexToRGBA(jdgColors.accentStripesJDG[1], hyperlinkColorOpacity)} 33%,
 				${convertHexToRGBA(jdgColors.accentStripesJDG[1], hyperlinkColorOpacity)} 66%,
 				${convertHexToRGBA(jdgColors.accentStripesJDG[2], hyperlinkColorOpacity)} 66%
-			)` : 
-			`${jdgColors.accentStripesJDG[0]}`
-		};
+			)`
+				: `${jdgColors.accentStripesJDG[0]}`};
 		}
 		a:before {
 			background: ${jdgColors.accentStripesJDG[0]};
