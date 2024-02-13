@@ -294,3 +294,33 @@ export const getMIMEType = (binaryData) => {
 
 	return 'data:image/png'; // Unknown format
 };
+
+export const convertFromVhToPixels = (vhValue) => {
+	if (typeof window === 'undefined') {
+		return 0;
+	} else {
+		return (vhValue / 100) * window.innerHeight;
+	}
+};
+
+export const convertFromPixelsToVh = (pixelValue) => {
+	if (typeof window === 'undefined') {
+		return 0;
+	} else {
+		return ((pixelValue / window.innerHeight) * 100).toString() + 'vh';
+	}
+};
+
+export const convertFromRemToPixels = (remValue) => {
+	return (
+		remValue * parseFloat(getComputedStyle(document.documentElement).getPropertyValue('font-size'))
+	);
+};
+
+export const convertHexToRGBA = (hexColor, alpha = 1) => {
+	const r = parseInt(hexColor.slice(1, 3), 16);
+	const g = parseInt(hexColor.slice(3, 5), 16);
+	const b = parseInt(hexColor.slice(5, 7), 16);
+
+	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};

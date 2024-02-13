@@ -2,35 +2,18 @@ import uiState from './stores/uiState.js';
 
 import { jdgSizes } from './jdg-styling-constants.js';
 
-import { addUniqueValueToArray, removeValueFromArray } from './jdg-utils.js';
+import {
+	addUniqueValueToArray,
+	convertFromRemToPixels,
+	convertFromVhToPixels,
+	removeValueFromArray
+} from './jdg-utils.js';
 
 export const getScreenCentroid = () => {
 	return {
 		x: document.documentElement.clientWidth / 2,
 		y: window.innerHeight / 2
 	};
-};
-
-export const convertFromVhToPixels = (vhValue) => {
-	if (typeof window === 'undefined') {
-		return 0;
-	} else {
-		return (vhValue / 100) * window.innerHeight;
-	}
-};
-
-export const convertFromPixelsToVh = (pixelValue) => {
-	if (typeof window === 'undefined') {
-		return 0;
-	} else {
-		return ((pixelValue / window.innerHeight) * 100).toString() + 'vh';
-	}
-};
-
-export const convertFromRemToPixels = (remValue) => {
-	return (
-		remValue * parseFloat(getComputedStyle(document.documentElement).getPropertyValue('font-size'))
-	);
 };
 
 // account for any active notifications for the header's top positioning

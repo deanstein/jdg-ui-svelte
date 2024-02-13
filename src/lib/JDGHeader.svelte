@@ -7,11 +7,10 @@
 
 	import navItem from './schemas/nav-item.js';
 
-	import { instantiateObject } from './jdg-utils.js';
+	import { convertFromPixelsToVh, instantiateObject } from './jdg-utils.js';
 
 	import { jdgColors, jdgBreakpoints, jdgSizes, jdgDurations } from './jdg-styling-constants.js';
 	import {
-		convertFromPixelsToVh,
 		getDistanceToBottomOfHeader,
 		getDistanceToTopOfHeader,
 		incrementHighestZIndex
