@@ -123,6 +123,10 @@
 		}
 	`;
 
+	const mobileNavOverlayCss = css`
+		top: ${`${convertFromPixelsToVh(getDistanceToBottomOfHeader().value)}`};
+	`;
+
 	let headerNavContainerMobileCss = css`
 		a:before {
 			background-color: transparent;
@@ -279,7 +283,7 @@
 		</nav>
 	</div>
 	<div
-		class="jdg-header-nav-mobile-click-underlay"
+		class="jdg-header-nav-mobile-click-overlay {mobileNavOverlayCss}"
 		on:click={hideMobileNav}
 		on:keydown={hideMobileNav}
 		role="button"
@@ -406,7 +410,7 @@
 		background-color: transparent;
 	}
 
-	.jdg-header-nav-mobile-click-underlay {
+	.jdg-header-nav-mobile-click-overlay {
 		position: absolute;
 		z-index: 1;
 		width: -webkit-fill-available;
