@@ -232,19 +232,14 @@
 					on:keydown={onClickMobileNavButton}
 					title={isMobileNavExpanded ? 'Close menu' : 'Open menu'}
 				>
-					{#if isMobileNavExpanded}
-						<div class="jdg-highlight-container">
-							<span class="jdg-highlight no-initial-highlight">
-								<i class="fa-solid fa-xmark" />
-							</span>
-						</div>
-					{:else}
-						<div class="jdg-highlight-container">
-							<span class="jdg-highlight no-initial-highlight">
-								<i class="fa-solid fa-bars" />
-							</span>
-						</div>
-					{/if}
+					<div class="jdg-highlight-container">
+						<span class="jdg-highlight {isMobileNavExpanded ? '' : 'no-initial-highlight'}">
+							<i
+								class={isMobileNavExpanded ? 'fa-solid fa-xmark' : 'fa-solid fa-bars'}
+								transition:fade={{ duration: 200 }}
+							/>
+						</span>
+					</div>
 				</button>
 				<!-- desktop nav -->
 			{:else}
@@ -384,10 +379,9 @@
 		justify-content: center;
 		aspect-ratio: 1;
 		cursor: pointer;
-		font-size: 25px;
+		font-size: 35px;
 		border: none;
 		outline: none;
-		transition: background-color 0.3s ease-in-out;
 	}
 
 	.jdg-header-nav-container-mobile {
