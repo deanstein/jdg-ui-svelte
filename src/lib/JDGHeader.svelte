@@ -272,27 +272,19 @@
 	>
 		<nav class="jdg-header-nav-item-container-mobile">
 			{#each navItems as navItem, i}
-				<div class="jdg-highlight-container jdg-highlight no-initial-highlight">
-					<span class="jdg-header-nav-item-mobile {headerNavItemMobileCss}">
-						<a
-							class="jdg-header-nav-item-mobile {headerNavItemMobileCss} no-initial-highlight"
-							href={navItem?.href}
-							on:click={() => {
-								isMobileNavExpanded = false;
-							}}>{navItem?.label}</a
-						>
-					</span>
-				</div>
-
-				<!-- <div class="jdg-header-nav-item-mobile-container">
-					<a
-						class="jdg-header-nav-item-mobile {headerNavItemMobileCss} no-initial-highlight"
-						href={navItem?.href}
-						on:click={() => {
-							isMobileNavExpanded = false;
-						}}>{navItem?.label}</a
-					>
-				</div> -->
+				<a
+					class="jdg-header-nav-item-mobile {headerNavItemMobileCss}"
+					href={navItem?.href}
+					on:click={() => {
+						isMobileNavExpanded = false;
+					}}
+				>
+					<div class="jdg-header-nav-item-mobile {headerNavItemMobileCss} jdg-highlight-container">
+						<span class="jdg-highlight no-initial-highlight">
+							{navItem?.label}
+						</span>
+					</div></a
+				>
 			{/each}
 		</nav>
 	</div>
@@ -409,8 +401,9 @@
 
 	.jdg-header-nav-item-container-mobile {
 		display: flex;
+		margin-top: 30px;
+		gap: 30px;
 		flex-direction: column;
-		padding: 15px;
 	}
 
 	.jdg-header-nav-item-mobile {
@@ -418,7 +411,6 @@
 		display: flex;
 		justify-content: center;
 		font-weight: bold;
-		padding: 15px;
 	}
 
 	.jdg-header-nav-mobile-click-overlay {

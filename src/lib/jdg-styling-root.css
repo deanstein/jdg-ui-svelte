@@ -43,7 +43,7 @@ a::before, .jdg-highlight-container .jdg-highlight::before {
     transition: all .3s ease-in-out;
 }
 
-a:hover::before, .jdg-highlight-container .jdg-highlight:hover::before {
+a:hover::before, .jdg-highlight-container:hover .jdg-highlight::before {
     animation: slide-right 0.3s forwards;
 }
 
@@ -71,7 +71,7 @@ a.no-initial-highlight:hover::before, .jdg-highlight-container:hover .jdg-highli
 
 @keyframes slide-right {
     0% { width: 0; } 
-    100% { width: 100%; }
+    100% { width: 104%; }
 }
 
 @keyframes slide-up {
