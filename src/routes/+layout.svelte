@@ -18,7 +18,8 @@
 		a {
 			color: ${jdgColors.text};
 		}
-		a.no-initial-underline::before {
+		a.no-initial-highlight::before,
+		.jdg-highlight-container .jdg-highlight::before {
 			background: ${useStripedHyperlinkHoverStyle
 				? `linear-gradient(
 				to bottom,

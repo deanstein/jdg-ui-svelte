@@ -118,9 +118,6 @@
 	const headerMobileNavButtonCss = css`
 		color: ${jdgColors.text};
 		background-color: transparent;
-		:hover {
-			background-color: ${jdgColors.hoverBackground};
-		}
 	`;
 
 	const mobileNavOverlayCss = css`
@@ -144,9 +141,6 @@
 
 	const headerNavItemMobileCss = css`
 		font-size: ${jdgSizes.fontSizeHeaderTitle};
-		:hover {
-			background-color: ${jdgColors.hoverBackground};
-		}
 	`;
 
 	onMount(() => {
@@ -210,7 +204,7 @@
 		<!-- logo -->
 		{#if showLogo}
 			<div class="jdg-header-logo-container">
-				<a href="/" class="no-initial-underline">
+				<a href="/" class="no-initial-highlight">
 					<img src={logoSrc} class="jdg-header-logo" alt={logoAlt} />
 					<!-- logo title -->
 					{#if showTitleResult}
@@ -239,9 +233,17 @@
 					title={isMobileNavExpanded ? 'Close menu' : 'Open menu'}
 				>
 					{#if isMobileNavExpanded}
-						<i class="fa-solid fa-xmark" />
+						<div class="jdg-highlight-container">
+							<span class="jdg-highlight no-initial-highlight">
+								<i class="fa-solid fa-xmark" />
+							</span>
+						</div>
 					{:else}
-						<i class="fa-solid fa-bars" />
+						<div class="jdg-highlight-container">
+							<span class="jdg-highlight no-initial-highlight">
+								<i class="fa-solid fa-bars" />
+							</span>
+						</div>
 					{/if}
 				</button>
 				<!-- desktop nav -->
@@ -249,7 +251,7 @@
 				<nav class="jdg-header-nav-container">
 					{#each navItems as navItem, i}
 						<a
-							class="jdg-header-nav-item no-initial-underline {headerNavItemCss}"
+							class="jdg-header-nav-item no-initial-highlight {headerNavItemCss}"
 							href={navItem?.href}>{navItem?.label}</a
 						>
 					{/each}
@@ -270,15 +272,27 @@
 	>
 		<nav class="jdg-header-nav-item-container-mobile">
 			{#each navItems as navItem, i}
-				<div class="jdg-header-nav-item-mobile-container">
+				<div class="jdg-highlight-container jdg-highlight no-initial-highlight">
+					<span class="jdg-header-nav-item-mobile {headerNavItemMobileCss}">
+						<a
+							class="jdg-header-nav-item-mobile {headerNavItemMobileCss} no-initial-highlight"
+							href={navItem?.href}
+							on:click={() => {
+								isMobileNavExpanded = false;
+							}}>{navItem?.label}</a
+						>
+					</span>
+				</div>
+
+				<!-- <div class="jdg-header-nav-item-mobile-container">
 					<a
-						class="jdg-header-nav-item-mobile {headerNavItemMobileCss}"
+						class="jdg-header-nav-item-mobile {headerNavItemMobileCss} no-initial-highlight"
 						href={navItem?.href}
 						on:click={() => {
 							isMobileNavExpanded = false;
 						}}>{navItem?.label}</a
 					>
-				</div>
+				</div> -->
 			{/each}
 		</nav>
 	</div>
@@ -381,6 +395,7 @@
 		font-size: 25px;
 		border: none;
 		outline: none;
+		transition: background-color 0.3s ease-in-out;
 	}
 
 	.jdg-header-nav-container-mobile {
@@ -404,10 +419,6 @@
 		justify-content: center;
 		font-weight: bold;
 		padding: 15px;
-	}
-
-	.jdg-header-nav-item-mobile a::before {
-		background-color: transparent;
 	}
 
 	.jdg-header-nav-mobile-click-overlay {

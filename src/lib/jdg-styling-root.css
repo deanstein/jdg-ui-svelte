@@ -19,28 +19,23 @@ a {
     text-decoration: none;
 }
 
-a.no-underline::before {
+a.no-initial-highlight::before, .jdg-highlight-container .jdg-highlight.no-initial-highlight::before {
     content: "";
     position: absolute;
     z-index: -1;
-    width: 100%;
+    width: calc(100% + 8px);
     height: 0;
     bottom: -0.225rem;
-    left: 0;
+    left: -4px;
     /* background-color: this needs to be specified using emotion css */
     transition: all .3s ease-in-out;
 }
 
-@keyframes slide-up {
-    0% { height: 0; } 
-    100% { height: 10px; }
-}
-
-a::before {
+a::before, .jdg-highlight-container .jdg-highlight::before {
     content: "";
     position: absolute;
     z-index: -1;
-    width: calc(100% + 2px);
+    width: calc(100% + 4px);
     height: 10px;
     bottom: -0.225rem;
     left: -2px;
@@ -48,19 +43,38 @@ a::before {
     transition: all .3s ease-in-out;
 }
 
-a:hover::before {
+a:hover::before, .jdg-highlight-container .jdg-highlight:hover::before {
     animation: slide-right 0.3s forwards;
 }
 
 /* certain elements like header logo and nav get a different <a> treatment */
-a.no-initial-underline::before {
+a.no-initial-highlight::before, .jdg-highlight.no-initial-highlight::before {
     height: 0;
 }
-a.no-initial-underline:hover::before {
+
+a.no-initial-highlight:hover::before, .jdg-highlight-container:hover .jdg-highlight.no-initial-highlight::before {
     animation: slide-up 0.3s forwards;
+}
+
+.jdg-highlight-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.jdg-highlight {
+    position: relative;
 }
 
 @keyframes slide-right {
     0% { width: 0; } 
     100% { width: 100%; }
+}
+
+@keyframes slide-up {
+    0% { height: 0; } 
+    100% { height: 10px; }
 }
