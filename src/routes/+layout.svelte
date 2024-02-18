@@ -39,7 +39,12 @@
 <div class="jdg-ui-demo-container {demoContainerCss}">
 	<JDGNotificationBanner message={disclaimerMessage} color={jdgColors.notificationInformation} />
 
-	<JDGHeader logoTitle={'JDG SVELTE UI'} logoSupertitle={'INTRODUCING'} useMobileNav={true} />
+	<JDGHeader
+		logoTitle={'JDG SVELTE UI'}
+		logoSupertitle={'INTRODUCING'}
+		useMobileNav={true}
+		logoJustification="center"
+	/>
 
 	<JDGBackground />
 

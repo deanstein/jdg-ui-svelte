@@ -25,6 +25,7 @@
 	export let logoAlt = 'Logo'; // alt text for logo image
 	export let logoSupertitle = undefined; // text above title
 	export let logoTitle = undefined; // title next to logo
+	export let logoJustification = 'left';
 	export let showNav = true;
 	export let useMobileNav = false; // force use mobile nav at all breakpoints
 	export let navItems = [];
@@ -103,6 +104,12 @@
 		padding-top: ${jdgSizes.headerTopBottomPadding};
 		padding-bottom: ${jdgSizes.headerTopBottomPadding};
 		background-color: ${backgroundColorRgba};
+	`;
+
+	let headerLogoSpacingContainerCss = css`
+		display: flex;
+		width: 100%;
+		justify-content: ${logoJustification};
 	`;
 
 	const headerLogoSupertitleCss = css`
@@ -203,23 +210,26 @@
 	<div class="jdg-header-inner-container {headerContainerInnerCss}">
 		<!-- logo -->
 		{#if showLogo}
-			<div class="jdg-header-logo-container">
-				<a href="/" class="no-initial-highlight">
-					<img src={logoSrc} class="jdg-header-logo" alt={logoAlt} />
-					<!-- logo title -->
-					{#if showTitleResult}
-						<div class="jdg-header-logo-title-container">
-							{#if logoSupertitle}
-								<div class="jdg-header-logo-supertitle {headerLogoSupertitleCss}">
-									{logoSupertitle}
+			<!-- wrap the logo in an additional div that can go full width when logo is centered -->
+			<div class="jdg-header-logo-spacing-container {headerLogoSpacingContainerCss}">
+				<div class="jdg-header-logo-container">
+					<a href="/" class="no-initial-highlight">
+						<img src={logoSrc} class="jdg-header-logo" alt={logoAlt} />
+						<!-- logo title -->
+						{#if showTitleResult}
+							<div class="jdg-header-logo-title-container">
+								{#if logoSupertitle}
+									<div class="jdg-header-logo-supertitle {headerLogoSupertitleCss}">
+										{logoSupertitle}
+									</div>
+								{/if}
+								<div class="jdg-header-logo-title {headerLogoTitleCss}">
+									{logoTitle}
 								</div>
-							{/if}
-							<div class="jdg-header-logo-title {headerLogoTitleCss}">
-								{logoTitle}
 							</div>
-						</div>
-					{/if}
-				</a>
+						{/if}
+					</a>
+				</div>
 			</div>
 		{/if}
 		<!-- navigation -->
