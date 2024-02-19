@@ -20,7 +20,7 @@
 			"types": "./dist/index.d.ts",
 			"svelte": "./dist/index.js"
 		},
-		"./nav-item.js": "./dist/schemas/nav-item.js",
+		"./schemas/nav-item.js": "./dist/schemas/nav-item.js",
 		"./jdg-persistence-management.js": "./dist/jdg-persistence-management.js",
 		"./jdg-ui-management.js": "./dist/jdg-ui-management.js",
 		"./jdg-utils.js": "./dist/jdg-utils.js",
