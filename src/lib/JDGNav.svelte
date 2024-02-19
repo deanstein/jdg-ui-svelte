@@ -10,6 +10,7 @@
 	} from './jdg-ui-management.js';
 	import { jdgColors, jdgDurations, jdgSizes } from './jdg-styling-constants.js';
 	import { onDestroy, onMount } from 'svelte';
+	import uiState from './stores/uiState.js';
 
 	// nav items are an array of objects
 	export let navItems = [];
@@ -46,7 +47,7 @@
 	let forceUseMobileNavAtBreakpoint = true;
 
 	const mobileNavButtonJustificationContainerCss = css`
-		width: calc(100% - ${jdgSizes.headerSidePadding});
+		width: calc(100vw - ${jdgSizes.headerSidePadding});
 	`;
 
 	const mobileNavButtonCss = css`
@@ -93,7 +94,7 @@
 		// needs to be recomputed when notifications show/hide
 		mobileNavContainerCss = css`
 			${mobileNavContainerCss}
-			top: ${`${convertPixelsToVh(getDistanceToBottomOfHeader().value)}`};
+			top: ${`${convertPixelsToVh(getDistanceToBottomOfHeader(false, false).value)}`};
 			z-index: ${incrementHighestZIndex()};
 		`;
 
@@ -125,13 +126,15 @@
 			{/each}
 		</nav>
 	</div>
-	<div
-		class="mobile-nav-click-overlay {mobileNavOverlayCss}"
-		on:click={hideMobileNav}
-		on:keydown={hideMobileNav}
-		role="button"
-		tabindex="0"
-	></div>
+	<div class="mobile-nav-click-overlay-alignment-container">
+		<div
+			class="mobile-nav-click-overlay {mobileNavOverlayCss}"
+			on:click={hideMobileNav}
+			on:keydown={hideMobileNav}
+			role="button"
+			tabindex="0"
+		/>
+	</div>
 {/if}
 <!-- mobile nav -->
 {#if useMobileNavResult}
@@ -152,6 +155,7 @@
 			</div>
 		</button>
 	</div>
+
 	<!-- desktop nav -->
 {:else}
 	<nav class="desktop-nav-container">
@@ -185,6 +189,14 @@
 		line-height: 0px; /* not sure why, but required to get text at bottom of div */
 	}
 
+	.mobile-nav-click-overlay-alignment-container {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+	}
+
 	.mobile-nav-button-justification-container {
 		display: flex;
 		justify-content: right;
@@ -208,7 +220,7 @@
 		z-index: 2;
 		right: 0;
 		width: 250px;
-		height: 100%;
+		height: 100vh;
 		backdrop-filter: blur(10px);
 	}
 

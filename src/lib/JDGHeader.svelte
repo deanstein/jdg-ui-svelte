@@ -32,7 +32,7 @@
 	export let suppressAlphaOnScroll = false; // disable alpha past some scroll threshold
 
 	let forceHideTitleAtBreakpoint = false; // forces no title below certain breakpoints
-	let forceMobileNavOnCenteredLogo = true; // forces mobile nav when title is centered
+	let forceMobileNavOnCenteredTitle = false; // forces mobile nav when title is centered
 	let showTitleResult; // combined result between intent and breakpoint
 
 	// set certain flags at certain breakpoints
@@ -141,6 +141,7 @@
 		`;
 
 		showTitleResult = logoTitle && !forceHideTitleAtBreakpoint && logoJustification !== 'center';
+		forceMobileNavOnCenteredTitle = logoJustification === 'center';
 	}
 </script>
 
@@ -172,7 +173,7 @@
 		{/if}
 		<!-- navigation -->
 		{#if showNav && navItems.length > 0}
-			<JDGNav {navItems} useMobileNav={useMobileNav || forceMobileNavOnCenteredLogo} />
+			<JDGNav {navItems} useMobileNav={useMobileNav || forceMobileNavOnCenteredTitle} />
 		{/if}
 	</div>
 	<!-- stripes at bottom of header -->

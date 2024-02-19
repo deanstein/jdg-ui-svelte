@@ -32,12 +32,15 @@ export const getDistanceToTopOfHeader = () => {
 
 // get the bottom of the header so any main content can start there
 // returns value in pixels
-export const getDistanceToBottomOfHeader = (includeStripes = false) => {
+export const getDistanceToBottomOfHeader = (
+	includeStripes = false,
+	includingNotificationBanners = true
+) => {
 	let distanceToBottom = {
 		value: 0,
 		unit: 'px'
 	};
-	const notificationHeight = getDistanceToTopOfHeader().value;
+	const notificationHeight = includingNotificationBanners ? getDistanceToTopOfHeader().value : 0;
 	const headerHeight = convertVhToPixels(jdgSizes.nHeaderHeight);
 	const headerPadding = 2 * convertVhToPixels(jdgSizes.nHeaderTopBottomPadding);
 	const stripeHeight = includeStripes ? 3 * jdgSizes.nHorizontalStripeHeight : 0;
