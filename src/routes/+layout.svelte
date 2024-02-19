@@ -56,11 +56,12 @@
 	<JDGNotificationBanner message={disclaimerMessage} color={jdgColors.notificationInformation} />
 
 	<JDGHeader
+		logoJustification="left"
 		logoSupertitle={'INTRODUCING'}
 		logoTitle={'JDG SVELTE UI'}
+		logoAlt="JDG SVELTE UI"
 		{navItems}
 		useMobileNav={false}
-		logoJustification="center"
 	/>
 
 	<JDGBackground />
