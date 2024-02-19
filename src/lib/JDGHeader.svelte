@@ -95,13 +95,20 @@
 		justify-content: ${logoJustification};
 	`;
 
+	const logoTitleLinkCss = css`
+		flex-direction: ${logoJustification === 'center' ? 'column' : 'row'};
+		align-items: ${logoJustification === 'center' ? 'center' : 'left'};
+	`;
+
 	const headerLogoSupertitleCss = css`
 		font-size: ${jdgSizes.fontSizeHeaderSupertitle};
+		text-align: ${logoJustification === 'center' ? 'center' : 'left'};
 		color: ${jdgColors.textLight};
 	`;
 
 	const headerLogoTitleCss = css`
 		font-size: ${jdgSizes.fontSizeHeaderTitle};
+		text-align: ${logoJustification === 'center' ? 'center' : 'left'};
 		color: ${textColor};
 	`;
 
@@ -143,7 +150,7 @@
 			<!-- wrap the logo in an additional div that can go full width when logo is centered -->
 			<div class="logo-justification-container {logoJustificationContainerCss}">
 				<div class="logo-container">
-					<a href="/" class="no-initial-highlight">
+					<a href="/" class="no-initial-highlight {logoTitleLinkCss}">
 						<img src={logoSrc} class="logo" alt={logoAlt} />
 						<!-- logo title -->
 						{#if showTitleResult}
@@ -177,6 +184,10 @@
 	a {
 		letter-spacing: 5px;
 		padding-left: 2.5px; /* letter-spacing adds an extra space at the end; account for this by shifting 1/2 letter spacing on left */
+	}
+
+	img {
+		width: min-content;
 	}
 
 	.jdg-header-outer-container {
@@ -233,11 +244,13 @@
 	}
 
 	.logo-supertitle {
+		width: 100%;
 		line-height: 2vh;
 	}
 
 	.logo-title {
 		display: inline;
+		width: 100%;
 		font-weight: bold;
 		line-height: 1vh;
 	}
