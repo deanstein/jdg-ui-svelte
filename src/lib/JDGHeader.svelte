@@ -1,23 +1,24 @@
 <script>
 	import { onDestroy, onMount } from 'svelte';
-	import { fade, slide } from 'svelte/transition';
+	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
 	import uiState from './stores/uiState.js';
 
 	import navItem from './schemas/nav-item.js';
 
-	import { convertFromPixelsToVh, instantiateObject } from './jdg-utils.js';
+	import { instantiateObject } from './jdg-utils.js';
 
-	import { jdgColors, jdgBreakpoints, jdgSizes, jdgDurations } from './jdg-styling-constants.js';
+	import { jdgColors, jdgSizes } from './jdg-styling-constants.js';
 	import {
-		getDistanceToBottomOfHeader,
+		breakpointHandler,
 		getDistanceToTopOfHeader,
 		incrementHighestZIndex
 	} from './jdg-ui-management.js';
 
-	import { JDGStripesHorizontal } from './index.js';
 	import { getAlphaFromRgbaString, setAlphaInRgbaString } from './jdg-graphics-factory.js';
+
+	import { JDGNav, JDGStripesHorizontal } from './index.js';
 
 	export let showLogo = true;
 	export let logoSrc =
@@ -37,31 +38,21 @@
 	let forceHideTitleAtBreakpoint = false; // forces no title below certain breakpoints
 	let showTitleResult; // combined result between intent and breakpoint
 
-	let forceUseMobileNavAtBreakpoint = false; // forces mobile nav below certain breakpoints
-	let useMobileNavResult; // combined result between intent and breakpoint
-
-	let isMobileNavExpanded;
-
-	const onClickMobileNavButton = () => (isMobileNavExpanded = !isMobileNavExpanded);
-
-	const mediaQueryHandler = () => {
-		// less than smallest breakpoint - mobile
-		if (window.innerWidth < jdgBreakpoints.width[0]) {
-			// force the mobile nav on
-			forceUseMobileNavAtBreakpoint = true;
-			// force the title off
-			forceHideTitleAtBreakpoint = true;
-		}
-		// between smallest and largest breakpoint - tablet
-		else if (
-			window.innerWidth >= jdgBreakpoints.width[0] &&
-			window.innerWidth <= jdgBreakpoints.width[1]
-		) {
-			// largest breakpoint - desktop
-		} else {
-			forceUseMobileNavAtBreakpoint = false;
-			forceHideTitleAtBreakpoint = false;
-		}
+	// set certain flags at certain breakpoints
+	const headerBreakpointHandler = () => {
+		breakpointHandler(
+			// breakpoint 0
+			() => {
+				// force the title off
+				forceHideTitleAtBreakpoint = true;
+			},
+			// breakpoint 1
+			() => {},
+			// breakpoint 2
+			() => {
+				forceHideTitleAtBreakpoint = false;
+			}
+		);
 	};
 
 	const setHeaderBackgroundColorAlphaAtPos = () => {
@@ -90,10 +81,6 @@
 		`;
 	};
 
-	const hideMobileNav = () => {
-		isMobileNavExpanded = false;
-	};
-
 	let headerContainerOuterCss = css`
 		color: ${jdgColors.text};
 		z-index: ${incrementHighestZIndex()};
@@ -106,7 +93,7 @@
 		background-color: ${backgroundColorRgba};
 	`;
 
-	let headerLogoSpacingContainerCss = css`
+	let logoJustificationContainerCss = css`
 		display: flex;
 		width: 100%;
 		justify-content: ${logoJustification};
@@ -122,63 +109,18 @@
 		color: ${textColor};
 	`;
 
-	const headerMobileNavButtonCss = css`
-		color: ${jdgColors.text};
-		background-color: transparent;
-	`;
-
-	const mobileNavOverlayCss = css`
-		top: ${`${convertFromPixelsToVh(getDistanceToBottomOfHeader().value)}`};
-	`;
-
-	let headerNavContainerMobileCss = css`
-		a:before {
-			background-color: transparent;
-		}
-		background-color: ${jdgColors.headerBackground};
-	`;
-
-	const headerNavItemCss = css`
-		font-size: ${jdgSizes.fontSizeHeaderTitle};
-		:last-of-type {
-			margin-right: 0rem;
-			padding-right: 0rem;
-		}
-	`;
-
-	const headerNavItemMobileCss = css`
-		font-size: ${jdgSizes.fontSizeHeaderTitle};
-	`;
-
 	onMount(() => {
-		window.addEventListener('resize', mediaQueryHandler);
+		window.addEventListener('resize', headerBreakpointHandler);
 		if (suppressAlphaOnScroll) {
 			window.addEventListener('scroll', setHeaderBackgroundColorAlphaAtPos);
 		}
 		// Call the handler once to handle the current screen size
-		mediaQueryHandler();
-
-		// show example nav items if requested and not already provided
-		if (showNav && navItems.length === 0) {
-			const newNavItem1 = instantiateObject(navItem);
-			newNavItem1.label = 'HOME';
-			newNavItem1.href = '/';
-
-			const newNavItem2 = instantiateObject(navItem);
-			newNavItem2.label = 'ABOUT';
-			newNavItem2.href = '/about';
-
-			const newNavItem3 = instantiateObject(navItem);
-			newNavItem3.label = 'CONTACT';
-			newNavItem3.href = '/contact';
-
-			navItems = [newNavItem1, newNavItem2, newNavItem3];
-		}
+		headerBreakpointHandler();
 	});
 
 	onDestroy(() => {
 		if (typeof window !== 'undefined') {
-			window.removeEventListener('resize', mediaQueryHandler);
+			window.removeEventListener('resize', headerBreakpointHandler);
 			if (suppressAlphaOnScroll) {
 				window.removeEventListener('scroll', setHeaderBackgroundColorAlphaAtPos);
 			}
@@ -194,15 +136,7 @@
 			top: ${distanceToTopOfHeaderResult.value.toString() + distanceToTopOfHeaderResult.unit};
 		`;
 
-		// needs to be recomputed when notifications show/hide
-		headerNavContainerMobileCss = css`
-			${headerNavContainerMobileCss}
-			top: ${`${convertFromPixelsToVh(getDistanceToBottomOfHeader().value)}`};
-			z-index: ${incrementHighestZIndex()};
-		`;
-
 		showTitleResult = logoTitle && !forceHideTitleAtBreakpoint;
-		useMobileNavResult = useMobileNav || forceUseMobileNavAtBreakpoint;
 	}
 </script>
 
@@ -211,8 +145,8 @@
 		<!-- logo -->
 		{#if showLogo}
 			<!-- wrap the logo in an additional div that can go full width when logo is centered -->
-			<div class="jdg-header-logo-spacing-container {headerLogoSpacingContainerCss}">
-				<div class="jdg-header-logo-container">
+			<div class="logo-justification-container {logoJustificationContainerCss}">
+				<div class="logo-container">
 					<a href="/" class="no-initial-highlight">
 						<img src={logoSrc} class="jdg-header-logo" alt={logoAlt} />
 						<!-- logo title -->
@@ -234,34 +168,7 @@
 		{/if}
 		<!-- navigation -->
 		{#if showNav && navItems.length > 0}
-			<!-- mobile nav -->
-			{#if useMobileNavResult}
-				<button
-					class="jdg-header-nav-button-mobile {headerMobileNavButtonCss}"
-					on:click={onClickMobileNavButton}
-					on:keydown={onClickMobileNavButton}
-					title={isMobileNavExpanded ? 'Close menu' : 'Open menu'}
-				>
-					<div class="jdg-highlight-container">
-						<span class="jdg-highlight {isMobileNavExpanded ? '' : 'no-initial-highlight'}">
-							<i
-								class={isMobileNavExpanded ? 'fa-solid fa-xmark' : 'fa-solid fa-bars'}
-								transition:fade={{ duration: 200 }}
-							/>
-						</span>
-					</div>
-				</button>
-				<!-- desktop nav -->
-			{:else}
-				<nav class="jdg-header-nav-container">
-					{#each navItems as navItem, i}
-						<a
-							class="jdg-header-nav-item no-initial-highlight {headerNavItemCss}"
-							href={navItem?.href}>{navItem?.label}</a
-						>
-					{/each}
-				</nav>
-			{/if}
+			<JDGNav {navItems} {useMobileNav} />
 		{/if}
 	</div>
 	<!-- stripes at bottom of header -->
@@ -269,38 +176,6 @@
 		<JDGStripesHorizontal />
 	{/if}
 </div>
-<!-- mobile nav container (outside header container) -->
-{#if useMobileNavResult && isMobileNavExpanded}
-	<div
-		class="jdg-header-nav-container-mobile {headerNavContainerMobileCss}"
-		transition:slide={{ duration: jdgDurations.slide, delay: 0, axis: 'x' }}
-	>
-		<nav class="jdg-header-nav-item-container-mobile">
-			{#each navItems as navItem, i}
-				<a
-					class="jdg-header-nav-item-mobile {headerNavItemMobileCss}"
-					href={navItem?.href}
-					on:click={() => {
-						isMobileNavExpanded = false;
-					}}
-				>
-					<div class="jdg-header-nav-item-mobile {headerNavItemMobileCss} jdg-highlight-container">
-						<span class="jdg-highlight no-initial-highlight">
-							{navItem?.label}
-						</span>
-					</div></a
-				>
-			{/each}
-		</nav>
-	</div>
-	<div
-		class="jdg-header-nav-mobile-click-overlay {mobileNavOverlayCss}"
-		on:click={hideMobileNav}
-		on:keydown={hideMobileNav}
-		role="button"
-		tabindex="0"
-	></div>
-{/if}
 
 <style>
 	a {
@@ -333,13 +208,13 @@
 		user-select: none;
 	}
 
-	.jdg-header-logo-container {
+	.logo-container {
 		display: flex;
 		align-items: baseline;
 		height: 100%;
 	}
 
-	.jdg-header-logo-container a {
+	.logo-container a {
 		display: flex;
 		height: 100%;
 	}
@@ -366,62 +241,5 @@
 		display: inline;
 		font-weight: bold;
 		line-height: 1vh;
-	}
-
-	.jdg-header-nav-container {
-		height: 100%;
-		display: flex;
-		float: right;
-		align-items: flex-end;
-		gap: 4rem;
-	}
-
-	.jdg-header-nav-item {
-		align-items: baseline;
-		display: flex;
-		font-weight: bold;
-		line-height: 0px; /* not sure why, but required to get text at bottom of div */
-	}
-
-	.jdg-header-nav-button-mobile {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		aspect-ratio: 1;
-		cursor: pointer;
-		font-size: 35px;
-		border: none;
-		outline: none;
-	}
-
-	.jdg-header-nav-container-mobile {
-		position: fixed;
-		z-index: 2;
-		right: 0;
-		width: 250px;
-		height: 100%;
-		backdrop-filter: blur(10px);
-	}
-
-	.jdg-header-nav-item-container-mobile {
-		display: flex;
-		margin-top: 30px;
-		gap: 30px;
-		flex-direction: column;
-	}
-
-	.jdg-header-nav-item-mobile {
-		align-items: baseline;
-		display: flex;
-		justify-content: center;
-		font-weight: bold;
-	}
-
-	.jdg-header-nav-mobile-click-overlay {
-		position: absolute;
-		z-index: 1;
-		width: -webkit-fill-available;
-		width: -moz-available;
-		height: -webkit-fill-available;
 	}
 </style>

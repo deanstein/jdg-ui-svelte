@@ -12,9 +12,6 @@ export { JDGSVGRandomDelaunay };
 import JDGButton from './JDGButton.svelte';
 export { JDGButton };
 
-import JDGNotificationBanner from './JDGNotificationBanner.svelte';
-export { JDGNotificationBanner };
-
 import JDGContentBoxFloating from './JDGContentBoxFloating.svelte';
 export { JDGContentBoxFloating };
 
@@ -32,6 +29,12 @@ export { JDGHeader };
 
 import JDGImageTile from './JDGImageTile.svelte';
 export { JDGImageTile };
+
+import JDGNav from './JDGNav.svelte';
+export { JDGNav };
+
+import JDGNotificationBanner from './JDGNotificationBanner.svelte';
+export { JDGNotificationBanner };
 
 import JDGStripesHorizontal from './JDGStripesHorizontal.svelte';
 export { JDGStripesHorizontal };

@@ -295,7 +295,7 @@ export const getMIMEType = (binaryData) => {
 	return 'data:image/png'; // Unknown format
 };
 
-export const convertFromVhToPixels = (vhValue) => {
+export const convertVhToPixels = (vhValue) => {
 	if (typeof window === 'undefined') {
 		return 0;
 	} else {
@@ -303,7 +303,7 @@ export const convertFromVhToPixels = (vhValue) => {
 	}
 };
 
-export const convertFromPixelsToVh = (pixelValue) => {
+export const convertPixelsToVh = (pixelValue) => {
 	if (typeof window === 'undefined') {
 		return 0;
 	} else {
@@ -311,7 +311,7 @@ export const convertFromPixelsToVh = (pixelValue) => {
 	}
 };
 
-export const convertFromRemToPixels = (remValue) => {
+export const convertRemToPixels = (remValue) => {
 	return (
 		remValue * parseFloat(getComputedStyle(document.documentElement).getPropertyValue('font-size'))
 	);

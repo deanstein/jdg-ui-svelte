@@ -1,11 +1,11 @@
 import uiState from './stores/uiState.js';
 
-import { jdgSizes } from './jdg-styling-constants.js';
+import { jdgBreakpoints, jdgSizes } from './jdg-styling-constants.js';
 
 import {
 	addUniqueValueToArray,
-	convertFromRemToPixels,
-	convertFromVhToPixels,
+	convertRemToPixels,
+	convertVhToPixels,
 	removeValueFromArray
 } from './jdg-utils.js';
 
@@ -23,7 +23,7 @@ export const getDistanceToTopOfHeader = () => {
 	uiState.subscribe((currentValue) => {
 		distanceToTop.value =
 			currentValue.activeNotificationBanners.length > 0
-				? convertFromVhToPixels(jdgSizes.nNotificationHeight) *
+				? convertVhToPixels(jdgSizes.nNotificationHeight) *
 					currentValue.activeNotificationBanners.length
 				: 0;
 	});
@@ -38,8 +38,8 @@ export const getDistanceToBottomOfHeader = (includeStripes = false) => {
 		unit: 'px'
 	};
 	const notificationHeight = getDistanceToTopOfHeader().value;
-	const headerHeight = convertFromVhToPixels(jdgSizes.nHeaderHeight);
-	const headerPadding = 2 * convertFromVhToPixels(jdgSizes.nHeaderTopBottomPadding);
+	const headerHeight = convertVhToPixels(jdgSizes.nHeaderHeight);
+	const headerPadding = 2 * convertVhToPixels(jdgSizes.nHeaderTopBottomPadding);
 	const stripeHeight = includeStripes ? 3 * jdgSizes.nHorizontalStripeHeight : 0;
 	distanceToBottom.value = notificationHeight + headerHeight + headerPadding + stripeHeight;
 	return distanceToBottom;
@@ -95,7 +95,7 @@ export const scrollToAnchor = (anchorId, accountForHeader = true, additionalOffs
 };
 
 export const scrollToAnchorFloatingContentBox = (anchorId) => {
-	const additionalOffset = convertFromRemToPixels(jdgSizes.nFontSizeFloatingContentBoxTitle);
+	const additionalOffset = convertRemToPixels(jdgSizes.nFontSizeFloatingContentBoxTitle);
 	scrollToAnchor(anchorId, true, additionalOffset);
 };
 
@@ -104,5 +104,26 @@ export const openUrl = (url, newTab) => {
 		window.open(url, '_blank');
 	} else {
 		window.location.href = url;
+	}
+};
+
+// do stuff at each breakpoint
+export const breakpointHandler = (
+	breakpoint0Function,
+	breakpoint1Function,
+	breakpoint2Function
+) => {
+	if (window.innerWidth < jdgBreakpoints.width[0]) {
+		// less than smallest breakpoint - mobile
+		breakpoint0Function();
+	} else if (
+		window.innerWidth >= jdgBreakpoints.width[0] &&
+		window.innerWidth <= jdgBreakpoints.width[1]
+	) {
+		// between smallest and largest breakpoint - tablet
+		breakpoint1Function();
+	} else {
+		// largest breakpoint - desktop
+		breakpoint2Function();
 	}
 };
