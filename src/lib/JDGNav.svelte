@@ -13,7 +13,7 @@
 
 	// nav items are an array of objects
 	export let navItems = [];
-	// mobile nav can be set to always on regardless of breakpoint
+	// mobile nav can be always on, regardless of breakpoint
 	export let useMobileNav = false;
 
 	// set certain flags at certain breakpoints
