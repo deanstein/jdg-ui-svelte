@@ -5,10 +5,6 @@
 
 	import uiState from './stores/uiState.js';
 
-	import navItem from './schemas/nav-item.js';
-
-	import { instantiateObject } from './jdg-utils.js';
-
 	import { jdgColors, jdgSizes } from './jdg-styling-constants.js';
 	import {
 		breakpointHandler,
@@ -95,7 +91,7 @@
 
 	let logoJustificationContainerCss = css`
 		display: flex;
-		width: 100%;
+		width: calc(100% - 2 * ${jdgSizes.headerSidePadding});
 		justify-content: ${logoJustification};
 	`;
 
@@ -148,16 +144,16 @@
 			<div class="logo-justification-container {logoJustificationContainerCss}">
 				<div class="logo-container">
 					<a href="/" class="no-initial-highlight">
-						<img src={logoSrc} class="jdg-header-logo" alt={logoAlt} />
+						<img src={logoSrc} class="logo" alt={logoAlt} />
 						<!-- logo title -->
 						{#if showTitleResult}
-							<div class="jdg-header-logo-title-container">
+							<div class="logo-title-container">
 								{#if logoSupertitle}
-									<div class="jdg-header-logo-supertitle {headerLogoSupertitleCss}">
+									<div class="logo-supertitle {headerLogoSupertitleCss}">
 										{logoSupertitle}
 									</div>
 								{/if}
-								<div class="jdg-header-logo-title {headerLogoTitleCss}">
+								<div class="logo-title {headerLogoTitleCss}">
 									{logoTitle}
 								</div>
 							</div>
@@ -208,6 +204,10 @@
 		user-select: none;
 	}
 
+	.logo-justification-container {
+		position: absolute;
+	}
+
 	.logo-container {
 		display: flex;
 		align-items: baseline;
@@ -219,25 +219,24 @@
 		height: 100%;
 	}
 
-	.jdg-header-logo {
+	.logo {
 		height: 100%; /* fill the header with the logo top-to-bottom */
 		max-height: 5vh;
 	}
 
-	.jdg-header-logo-title-container {
+	.logo-title-container {
 		display: flex;
 		margin-left: 15px;
 		flex-direction: column;
 		align-items: baseline;
-		height: 100%;
 		justify-content: end;
 	}
 
-	.jdg-header-logo-supertitle {
+	.logo-supertitle {
 		line-height: 2vh;
 	}
 
-	.jdg-header-logo-title {
+	.logo-title {
 		display: inline;
 		font-weight: bold;
 		line-height: 1vh;

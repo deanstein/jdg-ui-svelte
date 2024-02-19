@@ -9,6 +9,7 @@
 		incrementHighestZIndex
 	} from './jdg-ui-management.js';
 	import { jdgColors, jdgDurations, jdgSizes } from './jdg-styling-constants.js';
+	import { onDestroy, onMount } from 'svelte';
 
 	// nav items are an array of objects
 	export let navItems = [];
@@ -21,13 +22,15 @@
 			// breakpoint 0
 			() => {
 				// force the mobile nav on
-				useMobileNav = true;
+				forceUseMobileNavAtBreakpoint = true;
 			},
 			// breakpoint 1
-			() => {},
+			() => {
+				forceUseMobileNavAtBreakpoint = true;
+			},
 			// breakpoint 2
 			() => {
-				useMobileNav = false;
+				forceUseMobileNavAtBreakpoint = false;
 			}
 		);
 	};
@@ -39,6 +42,12 @@
 	};
 
 	let isMobileNavExpanded;
+	let useMobileNavResult;
+	let forceUseMobileNavAtBreakpoint = true;
+
+	const mobileNavButtonJustificationContainerCss = css`
+		width: calc(100% - ${jdgSizes.headerSidePadding});
+	`;
 
 	const mobileNavButtonCss = css`
 		color: ${jdgColors.text};
@@ -68,6 +77,18 @@
 		font-size: ${jdgSizes.fontSizeHeaderTitle};
 	`;
 
+	onMount(() => {
+		window.addEventListener('resize', navBreakpointHandler);
+		// Call the handler once to handle the current screen size
+		navBreakpointHandler();
+	});
+
+	onDestroy(() => {
+		if (typeof window !== 'undefined') {
+			window.removeEventListener('resize', navBreakpointHandler);
+		}
+	});
+
 	$: {
 		// needs to be recomputed when notifications show/hide
 		mobileNavContainerCss = css`
@@ -75,52 +96,27 @@
 			top: ${`${convertPixelsToVh(getDistanceToBottomOfHeader().value)}`};
 			z-index: ${incrementHighestZIndex()};
 		`;
+
+		useMobileNavResult = useMobileNav || forceUseMobileNavAtBreakpoint;
 	}
 </script>
 
-<!-- mobile nav -->
-{#if useMobileNav}
-	<button
-		class="jdg-header-nav-button-mobile {mobileNavButtonCss}"
-		on:click={onClickMobileNavButton}
-		on:keydown={onClickMobileNavButton}
-		title={isMobileNavExpanded ? 'Close menu' : 'Open menu'}
-	>
-		<div class="jdg-highlight-container">
-			<span class="jdg-highlight {isMobileNavExpanded ? '' : 'no-initial-highlight'}">
-				<i
-					class={isMobileNavExpanded ? 'fa-solid fa-xmark' : 'fa-solid fa-bars'}
-					transition:fade={{ duration: 200 }}
-				/>
-			</span>
-		</div>
-	</button>
-	<!-- desktop nav -->
-{:else}
-	<nav class="jdg-header-nav-container">
-		{#each navItems as navItem, i}
-			<a class="jdg-header-nav-item no-initial-highlight {navItemCss}" href={navItem?.href}
-				>{navItem?.label}</a
-			>
-		{/each}
-	</nav>
-{/if}
 <!-- mobile nav container (outside header container) -->
-{#if useMobileNav && isMobileNavExpanded}
+{#if useMobileNavResult && isMobileNavExpanded}
 	<div
-		class="jdg-header-nav-container-mobile {mobileNavContainerCss}"
+		class="mobile-nav-container {mobileNavContainerCss}"
 		transition:slide={{ duration: jdgDurations.slide, delay: 0, axis: 'x' }}
 	>
-		<nav class="jdg-header-nav-item-container-mobile">
+		<nav class="mobile-nav-item-container">
 			{#each navItems as navItem, i}
 				<a
-					class="jdg-header-nav-item-mobile {mobileNavItemCss}"
+					class="mobile-nav-item {mobileNavItemCss}"
 					href={navItem?.href}
 					on:click={() => {
 						isMobileNavExpanded = false;
 					}}
 				>
-					<div class="jdg-header-nav-item-mobile {mobileNavItemCss} jdg-highlight-container">
+					<div class="mobile-nav-item {mobileNavItemCss} jdg-highlight-container">
 						<span class="jdg-highlight no-initial-highlight">
 							{navItem?.label}
 						</span>
@@ -130,12 +126,41 @@
 		</nav>
 	</div>
 	<div
-		class="jdg-header-nav-mobile-click-overlay {mobileNavOverlayCss}"
+		class="mobile-nav-click-overlay {mobileNavOverlayCss}"
 		on:click={hideMobileNav}
 		on:keydown={hideMobileNav}
 		role="button"
 		tabindex="0"
 	></div>
+{/if}
+<!-- mobile nav -->
+{#if useMobileNavResult}
+	<div class="mobile-nav-button-justification-container {mobileNavButtonJustificationContainerCss}">
+		<button
+			class="mobile-nav-button {mobileNavButtonCss}"
+			on:click={onClickMobileNavButton}
+			on:keydown={onClickMobileNavButton}
+			title={isMobileNavExpanded ? 'Close menu' : 'Open menu'}
+		>
+			<div class="jdg-highlight-container">
+				<span class="jdg-highlight {isMobileNavExpanded ? '' : 'no-initial-highlight'}">
+					<i
+						class={isMobileNavExpanded ? 'fa-solid fa-xmark' : 'fa-solid fa-bars'}
+						transition:fade={{ duration: 200 }}
+					/>
+				</span>
+			</div>
+		</button>
+	</div>
+	<!-- desktop nav -->
+{:else}
+	<nav class="desktop-nav-container">
+		{#each navItems as navItem, i}
+			<a class="desktop-nav-item no-initial-highlight {navItemCss}" href={navItem?.href}
+				>{navItem?.label}</a
+			>
+		{/each}
+	</nav>
 {/if}
 
 <style>
@@ -144,22 +169,30 @@
 		padding-left: 2.5px; /* letter-spacing adds an extra space at the end; account for this by shifting 1/2 letter spacing on left */
 	}
 
-	.jdg-header-nav-container {
-		height: 100%;
+	.desktop-nav-container {
 		display: flex;
-		float: right;
+		width: 100%;
+		height: 100%;
 		align-items: flex-end;
+		justify-content: end;
 		gap: 4rem;
 	}
 
-	.jdg-header-nav-item {
+	.desktop-nav-item {
 		align-items: baseline;
 		display: flex;
 		font-weight: bold;
 		line-height: 0px; /* not sure why, but required to get text at bottom of div */
 	}
 
-	.jdg-header-nav-button-mobile {
+	.mobile-nav-button-justification-container {
+		display: flex;
+		justify-content: right;
+		align-items: center;
+	}
+
+	.mobile-nav-button {
+		right: 0;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -170,7 +203,7 @@
 		outline: none;
 	}
 
-	.jdg-header-nav-container-mobile {
+	.mobile-nav-container {
 		position: fixed;
 		z-index: 2;
 		right: 0;
@@ -179,21 +212,21 @@
 		backdrop-filter: blur(10px);
 	}
 
-	.jdg-header-nav-item-container-mobile {
+	.mobile-nav-item-container {
 		display: flex;
 		margin-top: 30px;
 		gap: 30px;
 		flex-direction: column;
 	}
 
-	.jdg-header-nav-item-mobile {
+	.mobile-nav-item {
 		align-items: baseline;
 		display: flex;
 		justify-content: center;
 		font-weight: bold;
 	}
 
-	.jdg-header-nav-mobile-click-overlay {
+	.mobile-nav-click-overlay {
 		position: absolute;
 		z-index: 1;
 		width: -webkit-fill-available;
