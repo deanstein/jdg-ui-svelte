@@ -204,7 +204,6 @@
 	}
 
 	.mobile-nav-button {
-		right: 0;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -213,6 +212,8 @@
 		font-size: 35px;
 		border: none;
 		outline: none;
+        padding: 0;
+        margin: 0;
 	}
 
 	.mobile-nav-container {
