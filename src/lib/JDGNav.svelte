@@ -139,7 +139,9 @@
 <!-- mobile nav -->
 {#if useMobileNavResult}
 	<div class="mobile-nav-button-justification-container {mobileNavButtonJustificationContainerCss}">
-		<button
+		<div
+            role="button"
+            tabindex="0"
 			class="mobile-nav-button {mobileNavButtonCss}"
 			on:click={onClickMobileNavButton}
 			on:keydown={onClickMobileNavButton}
@@ -153,7 +155,7 @@
 					/>
 				</span>
 			</div>
-		</button>
+		</div>
 	</div>
 
 	<!-- desktop nav -->
