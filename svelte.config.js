@@ -9,7 +9,10 @@ const config = {
 			fallback: undefined,
 			precompress: false,
 			strict: true
-		})
+		}),
+		paths: {
+			base: process.env.GITHUB_ACTION ? '/' + process.env.GITHUB_REPOSITORY.split('/')[1] : ''
+		  }		  
 	}
 };
 
