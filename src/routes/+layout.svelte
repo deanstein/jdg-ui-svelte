@@ -1,10 +1,15 @@
 <script>
 	import { css } from '@emotion/css';
 
+	import { JDGLoadingOverlay } from '$lib/index.js';
+	import { onMount } from 'svelte';
+
 	import { jdgColors } from '$lib/jdg-styling-constants.js';
 	import { JDGBackground, JDGFooter, JDGHeader, JDGNotificationBanner } from '$lib/index.js';
 	import { convertHexToRGBA, instantiateObject } from '$lib/jdg-utils.js';
 	import navItem from '$lib/schemas/nav-item.js';
+
+	let showLoadingOverlay = true;
 
 	// define the nav items in the header
 	const newNavItem1 = instantiateObject(navItem);
@@ -50,13 +55,20 @@
 			background: ${jdgColors.accentStripesJDG[0]};
 		}
 	`;
+
+	// Hide the overlay once the page has finished loading
+	onMount(() => {
+		setTimeout(() => {
+			showLoadingOverlay = false;
+		}, 500); // 500ms delay
+	});
 </script>
 
 <div class="jdg-ui-demo-container {demoContainerCss}">
 	<JDGNotificationBanner message={disclaimerMessage} color={jdgColors.notificationInformation} />
 
 	<JDGHeader
-		logoJustification="left"
+		logoJustification="center"
 		logoSupertitle={'INTRODUCING'}
 		logoTitle={'JDG SVELTE UI'}
 		logoAlt="JDG SVELTE UI"
@@ -70,6 +82,8 @@
 
 	<JDGFooter {appVersion} disclaimer={disclaimerMessage} />
 </div>
+
+<JDGLoadingOverlay isLoading={showLoadingOverlay} />
 
 <style>
 	.jdg-ui-demo-container {

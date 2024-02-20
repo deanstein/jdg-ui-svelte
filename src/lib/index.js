@@ -30,11 +30,17 @@ export { JDGHeader };
 import JDGImageTile from './JDGImageTile.svelte';
 export { JDGImageTile };
 
+import JDGLoadingOverlay from './JDGLoadingOverlay.svelte';
+export { JDGLoadingOverlay };
+
 import JDGNav from './JDGNav.svelte';
 export { JDGNav };
 
 import JDGNotificationBanner from './JDGNotificationBanner.svelte';
 export { JDGNotificationBanner };
+
+import JDGOverlay from './JDGOverlay.svelte';
+export { JDGOverlay };
 
 import JDGStripesHorizontal from './JDGStripesHorizontal.svelte';
 export { JDGStripesHorizontal };
