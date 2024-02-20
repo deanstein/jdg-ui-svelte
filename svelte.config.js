@@ -11,8 +11,9 @@ const config = {
 			strict: true
 		}),
 		paths: {
-			base: '/jdg-ui-svelte'
-		}
+			base: process.env.GITHUB_ACTION ? '/' + '/jdg-ui-svelte' : ''
+		  }
+		  
 	}
 };
 
