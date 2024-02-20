@@ -56,8 +56,8 @@ export const jdgSizes = {
 	get fontSizeHeaderSupertitle() {
 		return this.nFontSizeHeaderSupertitle.toString() + this.fontUnitHeaderSupertitle;
 	},
-	nFontSizeHeaderTitle: 1.5,
-	fontUnitHeaderTitle: 'vh',
+	nFontSizeHeaderTitle: 1,
+	fontUnitHeaderTitle: 'rem',
 	get fontSizeHeaderTitle() {
 		return this.nFontSizeHeaderTitle.toString() + this.fontUnitHeaderTitle;
 	},
