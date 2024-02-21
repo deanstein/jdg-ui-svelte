@@ -56,7 +56,7 @@
 	`;
 
 	const mobileNavOverlayCss = css`
-		top: ${`${convertPixelsToVh(getDistanceToBottomOfHeader().value)}`};
+		top: ${`${getDistanceToBottomOfHeader()}px`};
 	`;
 
 	let mobileNavContainerCss = css`
@@ -201,6 +201,7 @@
 
 	.mobile-nav-button-justification-container {
 		display: flex;
+        height: 100%;
 		justify-content: right;
 		align-items: center;
 	}
