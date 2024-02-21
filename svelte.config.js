@@ -9,10 +9,7 @@ const config = {
 			fallback: undefined,
 			precompress: false,
 			strict: true
-		}),
-		paths: {
-			base: process.env.GITHUB_ACTION ? '/' + '/jdg-ui-svelte' : ''
-		  }
+		})
 	}
 };
 
