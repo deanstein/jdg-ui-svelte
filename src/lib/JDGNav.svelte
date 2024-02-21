@@ -56,10 +56,11 @@
 	`;
 
 	const mobileNavOverlayCss = css`
-		top: ${`${getDistanceToBottomOfHeader()}px`};
+		top: ${`${getDistanceToBottomOfHeader().value}px`};
 	`;
 
 	let mobileNavContainerCss = css`
+        top: ${`${getDistanceToBottomOfHeader().value}px`};
 		a:before {
 			background-color: transparent;
 		}
@@ -94,7 +95,6 @@
 		// needs to be recomputed when notifications show/hide
 		mobileNavContainerCss = css`
 			${mobileNavContainerCss}
-			top: ${`${convertPixelsToVh(getDistanceToBottomOfHeader(false).value)}`};
 			z-index: ${incrementHighestZIndex()};
 		`;
 
@@ -195,7 +195,7 @@
 		position: absolute;
 		top: 0;
 		left: 0;
-		width: 100vw;
+		width: 100%;
 		height: 100vh;
 	}
 

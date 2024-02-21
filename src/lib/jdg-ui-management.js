@@ -24,7 +24,7 @@ export const getDistanceToBottomOfHeader = (includeStripes = false) => {
 		unit: 'px'
 	};
 	const headerHeight = jdgSizes.nHeaderHeight;
-	const headerPadding = jdgSizes.nHeaderTopBottomPadding;
+	const headerPadding = jdgSizes.nHeaderTopBottomPadding * 2;
 	const stripeHeight = includeStripes ? 3 * jdgSizes.nHorizontalStripeHeight : 0;
 	distanceToBottom.value = headerHeight + headerPadding + stripeHeight;
 	return distanceToBottom;
