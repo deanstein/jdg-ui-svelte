@@ -41,13 +41,13 @@ export const jdgColors = {
 };
 
 export const jdgSizes = {
-	nFontSizeSmall: 1.25,
-	fontUnitSmall: 'vh',
+	nFontSizeSmall: 12,
+	fontUnitSmall: 'px',
 	get fontSizeSmall() {
 		return this.nFontSizeSmall.toString() + this.fontUnitSmall;
 	},
-	nFontSizeNotification: 1.2,
-	fontUnitNotification: 'vh',
+	nFontSizeNotification: 12,
+	fontUnitNotification: 'px',
 	get fontSizeNotification() {
 		return this.nFontSizeNotification.toString() + this.fontUnitNotification;
 	},
@@ -80,8 +80,8 @@ export const jdgSizes = {
 	get imageTileLabelFontSize() {
 		return this.fontSizeImageTileLabel.toString() + this.fontUnitImageTileLabel;
 	},
-	nFontSizeBioField: 1.5,
-	fontUnitBioField: 'vh',
+	nFontSizeBioField: 12,
+	fontUnitBioField: 'px',
 	get fontSizeBioField() {
 		return this.nFontSizeBioField.toString() + this.fontUnitBioField;
 	},

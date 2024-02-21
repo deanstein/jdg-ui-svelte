@@ -60,7 +60,7 @@
 	`;
 
 	let mobileNavContainerCss = css`
-        top: ${`${getDistanceToBottomOfHeader().value}px`};
+		top: ${`${getDistanceToBottomOfHeader().value}px`};
 		a:before {
 			background-color: transparent;
 		}
@@ -201,7 +201,7 @@
 
 	.mobile-nav-button-justification-container {
 		display: flex;
-        height: 100%;
+		height: 100%;
 		justify-content: right;
 		align-items: center;
 	}

@@ -34,6 +34,10 @@
 		color: ${jdgColors.text};
 	`;
 
+	const notificationMessageContainerCss = css`
+		margin: 0 ${jdgSizes.headerSidePadding} 0 ${jdgSizes.headerSidePadding};
+	`;
+
 	onMount(() => {
 		if (standalone) {
 			// give this banner a unique id
@@ -49,7 +53,9 @@
 
 {#if showBanner}
 	<div class="notification-banner-outer-container {notificationContainerCss}">
-		{message}
+		<div class="notification-banner-message-container {notificationMessageContainerCss}">
+			{message}
+		</div>
 		<div class="notification-button-container">
 			<slot />
 			{#if showCloseButton}
@@ -73,15 +79,18 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		text-align: center;
 		width: 100%;
 		width: -moz-available;
 		width: -webkit-fill-available;
 		padding: 5px;
 	}
 
+	.notification-banner-message-container {
+		flex-grow: 1;
+	}
+
 	.notification-button-container {
-		display: grid;
-		margin-left: 0.75vw;
-		gap: 0.75vw;
+		right: 15px;
 	}
 </style>
