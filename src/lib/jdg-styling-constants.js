@@ -126,13 +126,21 @@ export const jdgSizes = {
 		return this.nNotificationHeight.toString() + this.notificationHeightUnit;
 	},
 
-	nHeaderHeight: 5,
-	headerHeightUnit: 'vh',
+	nHeaderLogoHeight: 50,
+	headerLogoHeightUnit: 'px',
+	get headerLogoHeight() {
+		return this.nHeaderLogoHeight.toString() + this.headerLogoHeightUnit;
+	},
+	// header height is logo + 2x top or bottom padding
+	get nHeaderHeight() {
+		return this.nHeaderLogoHeight;
+	},
+	headerHeightUnit: 'px',
 	get headerHeight() {
 		return this.nHeaderHeight.toString() + this.headerHeightUnit;
 	},
-	nHeaderTopBottomPadding: 2,
-	headerTopBottomPaddingUnit: 'vh',
+	nHeaderTopBottomPadding: 15,
+	headerTopBottomPaddingUnit: 'px',
 	get headerTopBottomPadding() {
 		return this.nHeaderTopBottomPadding.toString() + this.headerTopBottomPaddingUnit;
 	},

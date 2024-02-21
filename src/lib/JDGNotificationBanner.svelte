@@ -28,8 +28,6 @@
 	};
 
 	const notificationContainerCss = css`
-		position: ${standalone ? 'fixed' : 'relative'};
-		height: ${jdgSizes.notificationHeight};
 		font-size: ${jdgSizes.fontSizeNotification};
 		z-index: ${forceOnTop ? incrementHighestZIndex() : 1};
 		background-color: ${color};
@@ -75,10 +73,10 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		height: 3vh;
 		width: 100%;
 		width: -moz-available;
 		width: -webkit-fill-available;
+		padding: 5px;
 	}
 
 	.notification-button-container {

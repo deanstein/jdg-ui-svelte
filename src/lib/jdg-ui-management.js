@@ -16,35 +16,17 @@ export const getScreenCentroid = () => {
 	};
 };
 
-// account for any active notifications for the header's top positioning
-// returns value in pixels
-export const getDistanceToTopOfHeader = () => {
-	let distanceToTop = { value: 0, unit: 'px' };
-	uiState.subscribe((currentValue) => {
-		distanceToTop.value =
-			currentValue.activeNotificationBanners.length > 0
-				? convertVhToPixels(jdgSizes.nNotificationHeight) *
-					currentValue.activeNotificationBanners.length
-				: 0;
-	});
-	return distanceToTop;
-};
-
 // get the bottom of the header so any main content can start there
 // returns value in pixels
-export const getDistanceToBottomOfHeader = (
-	includeStripes = false,
-	includingNotificationBanners = true
-) => {
+export const getDistanceToBottomOfHeader = (includeStripes = false) => {
 	let distanceToBottom = {
 		value: 0,
 		unit: 'px'
 	};
-	const notificationHeight = includingNotificationBanners ? getDistanceToTopOfHeader().value : 0;
-	const headerHeight = convertVhToPixels(jdgSizes.nHeaderHeight);
-	const headerPadding = 2 * convertVhToPixels(jdgSizes.nHeaderTopBottomPadding);
+	const headerHeight = jdgSizes.nHeaderHeight;
+	const headerPadding = jdgSizes.nHeaderTopBottomPadding;
 	const stripeHeight = includeStripes ? 3 * jdgSizes.nHorizontalStripeHeight : 0;
-	distanceToBottom.value = notificationHeight + headerHeight + headerPadding + stripeHeight;
+	distanceToBottom.value = headerHeight + headerPadding + stripeHeight;
 	return distanceToBottom;
 };
 

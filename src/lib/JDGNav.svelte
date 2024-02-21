@@ -94,7 +94,7 @@
 		// needs to be recomputed when notifications show/hide
 		mobileNavContainerCss = css`
 			${mobileNavContainerCss}
-			top: ${`${convertPixelsToVh(getDistanceToBottomOfHeader(false, false).value)}`};
+			top: ${`${convertPixelsToVh(getDistanceToBottomOfHeader(false).value)}`};
 			z-index: ${incrementHighestZIndex()};
 		`;
 
@@ -140,8 +140,8 @@
 {#if useMobileNavResult}
 	<div class="mobile-nav-button-justification-container {mobileNavButtonJustificationContainerCss}">
 		<div
-            role="button"
-            tabindex="0"
+			role="button"
+			tabindex="0"
 			class="mobile-nav-button {mobileNavButtonCss}"
 			on:click={onClickMobileNavButton}
 			on:keydown={onClickMobileNavButton}
@@ -214,8 +214,8 @@
 		font-size: 35px;
 		border: none;
 		outline: none;
-        padding: 0;
-        margin: 0;
+		padding: 0;
+		margin: 0;
 	}
 
 	.mobile-nav-container {

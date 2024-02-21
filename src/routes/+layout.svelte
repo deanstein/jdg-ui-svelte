@@ -64,29 +64,36 @@
 	});
 </script>
 
-<div class="jdg-ui-demo-container {demoContainerCss}">
+<div class="jdg-app-container">
 	<JDGNotificationBanner message={disclaimerMessage} color={jdgColors.notificationInformation} />
+	<div class="jdg-ui-demo-container {demoContainerCss}">
+		<JDGHeader
+			logoJustification="left"
+			logoSupertitle={'INTRODUCING'}
+			logoTitle={'JDG SVELTE UI'}
+			logoAlt="JDG SVELTE UI"
+			{navItems}
+			useMobileNav={false}
+		/>
 
-	<JDGHeader
-		logoJustification="center"
-		logoSupertitle={'INTRODUCING'}
-		logoTitle={'JDG SVELTE UI'}
-		logoAlt="JDG SVELTE UI"
-		{navItems}
-		useMobileNav={false}
-	/>
+		<JDGBackground />
 
-	<JDGBackground />
+		<slot />
 
-	<slot />
-
-	<JDGFooter {appVersion} disclaimer={disclaimerMessage} />
+		<JDGFooter {appVersion} disclaimer={disclaimerMessage} />
+	</div>
 </div>
 
 <JDGLoadingOverlay isLoading={showLoadingOverlay} />
 
 <style>
+	.jdg-app-container {
+		display: flex;
+		flex-direction: column;
+	}
+
 	.jdg-ui-demo-container {
+		position: relative;
 		display: flex;
 		flex-direction: column;
 	}

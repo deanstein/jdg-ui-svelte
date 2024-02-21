@@ -3,14 +3,8 @@
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
-	import uiState from './stores/uiState.js';
-
 	import { jdgColors, jdgSizes } from './jdg-styling-constants.js';
-	import {
-		breakpointHandler,
-		getDistanceToTopOfHeader,
-		incrementHighestZIndex
-	} from './jdg-ui-management.js';
+	import { breakpointHandler, incrementHighestZIndex } from './jdg-ui-management.js';
 
 	import { getAlphaFromRgbaString, setAlphaInRgbaString } from './jdg-graphics-factory.js';
 
@@ -96,6 +90,10 @@
 		justify-content: ${logoJustification};
 	`;
 
+	const headerLogoImgCss = css`
+		max-height: ${jdgSizes.headerLogoHeight};
+	`;
+
 	const logoTitleLinkCss = css`
 		flex-direction: ${logoJustification === 'center' ? 'column' : 'row'};
 		align-items: ${logoJustification === 'center' ? 'center' : 'left'};
@@ -132,14 +130,6 @@
 	});
 
 	$: {
-		$uiState.activeNotificationBanners;
-		// needs to be recomputed when notifications show/hide
-		const distanceToTopOfHeaderResult = getDistanceToTopOfHeader();
-		headerContainerOuterCss = css`
-			${headerContainerOuterCss}
-			top: ${distanceToTopOfHeaderResult.value.toString() + distanceToTopOfHeaderResult.unit};
-		`;
-
 		showTitleResult = logoTitle && !forceHideTitleAtBreakpoint && logoJustification !== 'center';
 		forceMobileNavOnCenteredTitle = logoJustification === 'center';
 	}
@@ -153,7 +143,7 @@
 			<div class="logo-justification-container {logoJustificationContainerCss}">
 				<div class="logo-container">
 					<a href="/" class="no-initial-highlight {logoTitleLinkCss}">
-						<img src={logoSrc} class="logo" alt={logoAlt} />
+						<img src={logoSrc} class="logo-img {headerLogoImgCss}" alt={logoAlt} />
 						<!-- logo title -->
 						{#if showTitleResult}
 							<div class="logo-title-container">
@@ -189,7 +179,8 @@
 	}
 
 	.jdg-header-outer-container {
-		position: fixed;
+		position: sticky;
+		top: 0;
 		display: flex;
 		flex-direction: column;
 		width: -moz-available;
@@ -202,6 +193,7 @@
 	.jdg-header-inner-container {
 		display: flex;
 		justify-content: space-between;
+		align-items: end;
 		padding-right: 2rem;
 		padding-left: 2rem;
 		backdrop-filter: blur(60px);
@@ -228,9 +220,8 @@
 		height: 100%;
 	}
 
-	.logo {
-		height: 100%; /* fill the header with the logo top-to-bottom */
-		max-height: 5vh;
+	.logo-img {
+		height: 100%;
 	}
 
 	.logo-title-container {
