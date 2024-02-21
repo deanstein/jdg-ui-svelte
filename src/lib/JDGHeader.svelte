@@ -191,6 +191,7 @@
 	}
 
 	.jdg-header-inner-container {
+		position: relative;
 		display: flex;
 		justify-content: space-between;
 		align-items: end;
