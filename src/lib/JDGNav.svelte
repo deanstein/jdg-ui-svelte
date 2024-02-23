@@ -65,6 +65,7 @@
 			background-color: transparent;
 		}
 		background-color: ${jdgColors.headerBackground};
+		backdrop-filter: blur(${jdgSizes.blurSizeMedium});
 	`;
 
 	const navItemCss = css`
@@ -225,7 +226,6 @@
 		right: 0;
 		width: 250px;
 		height: 100vh;
-		backdrop-filter: blur(10px);
 	}
 
 	.mobile-nav-item-container {

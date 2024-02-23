@@ -82,6 +82,7 @@
 		padding-top: ${jdgSizes.headerTopBottomPadding};
 		padding-bottom: ${jdgSizes.headerTopBottomPadding};
 		background-color: ${backgroundColorRgba};
+		backdrop-filter: blur(${jdgSizes.blurSizeMedium});
 	`;
 
 	let logoJustificationContainerCss = css`
@@ -197,7 +198,6 @@
 		align-items: end;
 		padding-right: 2rem;
 		padding-left: 2rem;
-		backdrop-filter: blur(60px);
 
 		-webkit-touch-callout: none;
 		-webkit-user-select: none;

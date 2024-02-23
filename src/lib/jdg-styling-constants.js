@@ -101,6 +101,16 @@ export const jdgSizes = {
 	get blurSizeSmall() {
 		return this.nBlurSizeSmall.toString() + this.blurSizeSmallUnit;
 	},
+	nBlurSizeMedium: 30,
+	blurSizeMediumUnit: 'px',
+	get blurSizeMedium() {
+		return this.nBlurSizeMedium.toString() + this.blurSizeMediumUnit;
+	},
+	nBlurSizeLarge: 30,
+	blurSizeLargeUnit: 'px',
+	get blurSizeLarge() {
+		return this.nBlurSizeLarge.toString() + this.blurSizeLargeUnit;
+	},
 
 	horizontalStripeLengths: ['100%', '90%', '80%'],
 	nHorizontalStripeHeight: 5,
