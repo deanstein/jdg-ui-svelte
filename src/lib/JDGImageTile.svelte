@@ -138,10 +138,8 @@
 	}
 
 	img {
-		height: -webkit-fill-available;
-		height: -moz-available;
-		width: -webkit-fill-available;
-		width: -moz-available;
+		height: 100%;
+		width: 100%;
 		object-fit: cover;
 		transition: transform 0.3s ease-in-out;
 		z-index: -1;
