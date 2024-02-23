@@ -103,41 +103,46 @@
 	}
 </script>
 
-<!-- mobile nav container (outside header container) -->
-{#if useMobileNavResult && isMobileNavExpanded}
-	<div
-		class="mobile-nav-container {mobileNavContainerCss}"
-		transition:slide={{ duration: jdgDurations.slide, delay: 0, axis: 'x' }}
-	>
-		<nav class="mobile-nav-item-container">
-			{#each navItems as navItem, i}
-				<a
-					class="mobile-nav-item {mobileNavItemCss}"
-					href={navItem?.href}
-					on:click={() => {
-						isMobileNavExpanded = false;
-					}}
-				>
-					<div class="mobile-nav-item {mobileNavItemCss} jdg-highlight-container">
-						<span class="jdg-highlight no-initial-highlight">
-							{navItem?.label}
-						</span>
-					</div></a
-				>
-			{/each}
-		</nav>
+<!-- mobile nav container -->
+<div style="position: relative;">
+	<div style="position: absolute; top: 0; left: 0;">
+		{#if useMobileNavResult && isMobileNavExpanded}
+			<div
+				class="mobile-nav-container {mobileNavContainerCss}"
+				transition:slide={{ duration: jdgDurations.slide, delay: 0, axis: 'x' }}
+			>
+				<nav class="mobile-nav-item-container">
+					{#each navItems as navItem, i}
+						<a
+							class="mobile-nav-item {mobileNavItemCss}"
+							href={navItem?.href}
+							on:click={() => {
+								isMobileNavExpanded = false;
+							}}
+						>
+							<div class="mobile-nav-item {mobileNavItemCss} jdg-highlight-container">
+								<span class="jdg-highlight no-initial-highlight">
+									{navItem?.label}
+								</span>
+							</div></a
+						>
+					{/each}
+				</nav>
+			</div>
+			<div class="mobile-nav-click-overlay-alignment-container">
+				<div
+					class="mobile-nav-click-overlay {mobileNavOverlayCss}"
+					on:click={hideMobileNav}
+					on:keydown={hideMobileNav}
+					role="button"
+					tabindex="0"
+				/>
+			</div>
+		{/if}
 	</div>
-	<div class="mobile-nav-click-overlay-alignment-container">
-		<div
-			class="mobile-nav-click-overlay {mobileNavOverlayCss}"
-			on:click={hideMobileNav}
-			on:keydown={hideMobileNav}
-			role="button"
-			tabindex="0"
-		/>
-	</div>
-{/if}
-<!-- mobile nav -->
+</div>
+
+<!-- mobile nav button -->
 {#if useMobileNavResult}
 	<div class="mobile-nav-button-justification-container {mobileNavButtonJustificationContainerCss}">
 		<div
