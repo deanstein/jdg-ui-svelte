@@ -112,6 +112,7 @@
 			box-shadow 0.3s ease-in-out;
 		box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
 		overflow: hidden;
+		background-position: center;
 	}
 
 	.jdg-image-tile:hover {
