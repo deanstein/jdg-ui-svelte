@@ -8,7 +8,7 @@
 
 	export let navItems;
 
-	let mobileNavContainerCss = css`
+	let jdgNavSidebarContainerCss = css`
 		a:before {
 			background-color: transparent;
 		}
@@ -16,7 +16,7 @@
 		backdrop-filter: blur(${jdgSizes.blurSizeMedium});
 	`;
 
-	const mobileNavItemCss = css`
+	const jdgNavSidebarItemCss = css`
 		font-size: ${jdgSizes.fontSizeHeaderTitle};
 	`;
 </script>
@@ -25,19 +25,19 @@
 	<!-- mobile nav container -->
 	<div style="position: relative;">
 		<div
-			class="mobile-nav-container {mobileNavContainerCss}"
+			class="jdg-nav-sidebar-container {jdgNavSidebarContainerCss}"
 			transition:slide={{ duration: jdgDurations.slide, delay: 0, axis: 'x' }}
 		>
-			<nav class="mobile-nav-item-container">
+			<nav class="jdg-nav-sidebar-item-container">
 				{#each navItems as navItem, i}
 					<a
-						class="mobile-nav-item {mobileNavItemCss}"
+						class="jdg-nav-sidebar-item {jdgNavSidebarItemCss}"
 						href={navItem?.href}
 						on:click={() => {
 							setNavSidebarOpen(false);
 						}}
 					>
-						<div class="mobile-nav-item {mobileNavItemCss} jdg-highlight-container">
+						<div class="jdg-nav-sidebar-item {jdgNavSidebarItemCss} jdg-highlight-container">
 							<span class="jdg-highlight no-initial-highlight">
 								{navItem?.label}
 							</span>
@@ -46,9 +46,9 @@
 				{/each}
 			</nav>
 		</div>
-		<div class="mobile-nav-click-overlay-alignment-container">
+		<div class="jdg-nav-sidebar-click-overlay-alignment-container">
 			<div
-				class="mobile-nav-click-overlay"
+				class="jdg-nav-sidebar-click-overlay"
 				on:click={() => {
 					setNavSidebarOpen(false);
 				}}
@@ -63,29 +63,29 @@
 {/if}
 
 <style>
-	.mobile-nav-container {
-		position: fixed;
+	.jdg-nav-sidebar-container {
+		position: absolute;
 		z-index: 2;
 		right: 0;
 		width: 250px;
 		height: 100vh;
 	}
 
-	.mobile-nav-item-container {
+	.jdg-nav-sidebar-item-container {
 		display: flex;
 		margin-top: 30px;
 		gap: 30px;
 		flex-direction: column;
 	}
 
-	.mobile-nav-item {
+	.jdg-nav-sidebar-item {
 		align-items: baseline;
 		display: flex;
 		justify-content: center;
 		font-weight: bold;
 	}
 
-	.mobile-nav-click-overlay-alignment-container {
+	.jdg-nav-sidebar-click-overlay-alignment-container {
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -93,7 +93,7 @@
 		height: 100vh;
 	}
 
-	.mobile-nav-click-overlay {
+	.jdg-nav-sidebar-click-overlay {
 		position: absolute;
 		z-index: 1;
 		width: -webkit-fill-available;
