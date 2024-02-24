@@ -1,16 +1,14 @@
 <script>
-	import { fade, slide } from 'svelte/transition';
+	import { onDestroy, onMount } from 'svelte';
+	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
-	import { convertPixelsToVh } from './jdg-utils.js';
 	import {
 		breakpointHandler,
-		getDistanceToBottomOfHeader,
-		incrementHighestZIndex
+		getIsNavSideBarOpen,
+		setNavSidebarOpen
 	} from './jdg-ui-management.js';
-	import { jdgColors, jdgDurations, jdgSizes } from './jdg-styling-constants.js';
-	import { onDestroy, onMount } from 'svelte';
-	import uiState from './stores/uiState.js';
+	import { jdgColors, jdgSizes } from './jdg-styling-constants.js';
 
 	// nav items are an array of objects
 	export let navItems = [];
@@ -36,10 +34,9 @@
 		);
 	};
 
-	const onClickMobileNavButton = () => (isMobileNavExpanded = !isMobileNavExpanded);
-
-	const hideMobileNav = () => {
-		isMobileNavExpanded = false;
+	const onClickMobileNavButton = () => {
+		const isOpen = getIsNavSideBarOpen();
+		setNavSidebarOpen(!isOpen);
 	};
 
 	let isMobileNavExpanded;
@@ -55,29 +52,12 @@
 		background-color: transparent;
 	`;
 
-	const mobileNavOverlayCss = css`
-		top: ${`${getDistanceToBottomOfHeader().value}px`};
-	`;
-
-	let mobileNavContainerCss = css`
-		top: ${`${getDistanceToBottomOfHeader().value}px`};
-		a:before {
-			background-color: transparent;
-		}
-		background-color: ${jdgColors.headerBackground};
-		backdrop-filter: blur(${jdgSizes.blurSizeMedium});
-	`;
-
 	const navItemCss = css`
 		font-size: ${jdgSizes.fontSizeHeaderTitle};
 		:last-of-type {
 			margin-right: 0rem;
 			padding-right: 0rem;
 		}
-	`;
-
-	const mobileNavItemCss = css`
-		font-size: ${jdgSizes.fontSizeHeaderTitle};
 	`;
 
 	onMount(() => {
@@ -93,61 +73,14 @@
 	});
 
 	$: {
-		// needs to be recomputed when notifications show/hide
-		mobileNavContainerCss = css`
-			${mobileNavContainerCss}
-			z-index: ${incrementHighestZIndex()};
-		`;
-
 		useMobileNavResult = useMobileNav || forceUseMobileNavAtBreakpoint;
 	}
 </script>
 
-<!-- mobile nav container -->
-<div style="position: relative;">
-	<div style="position: absolute; top: 0; left: 0;">
-		{#if useMobileNavResult && isMobileNavExpanded}
-			<div
-				class="mobile-nav-container {mobileNavContainerCss}"
-				transition:slide={{ duration: jdgDurations.slide, delay: 0, axis: 'x' }}
-			>
-				<nav class="mobile-nav-item-container">
-					{#each navItems as navItem, i}
-						<a
-							class="mobile-nav-item {mobileNavItemCss}"
-							href={navItem?.href}
-							on:click={() => {
-								isMobileNavExpanded = false;
-							}}
-						>
-							<div class="mobile-nav-item {mobileNavItemCss} jdg-highlight-container">
-								<span class="jdg-highlight no-initial-highlight">
-									{navItem?.label}
-								</span>
-							</div></a
-						>
-					{/each}
-				</nav>
-			</div>
-			<div class="mobile-nav-click-overlay-alignment-container">
-				<div
-					class="mobile-nav-click-overlay {mobileNavOverlayCss}"
-					on:click={hideMobileNav}
-					on:keydown={hideMobileNav}
-					role="button"
-					tabindex="0"
-				/>
-			</div>
-		{/if}
-	</div>
-</div>
-
 <!-- mobile nav button -->
 {#if useMobileNavResult}
 	<div class="mobile-nav-button-justification-container {mobileNavButtonJustificationContainerCss}">
-		<div
-			role="button"
-			tabindex="0"
+		<button
 			class="mobile-nav-button {mobileNavButtonCss}"
 			on:click={onClickMobileNavButton}
 			on:keydown={onClickMobileNavButton}
@@ -161,7 +94,7 @@
 					/>
 				</span>
 			</div>
-		</div>
+		</button>
 	</div>
 
 	<!-- desktop nav -->
@@ -197,14 +130,6 @@
 		line-height: 0px; /* not sure why, but required to get text at bottom of div */
 	}
 
-	.mobile-nav-click-overlay-alignment-container {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100vh;
-	}
-
 	.mobile-nav-button-justification-container {
 		display: flex;
 		height: 100%;
@@ -223,35 +148,5 @@
 		outline: none;
 		padding: 0;
 		margin: 0;
-	}
-
-	.mobile-nav-container {
-		position: fixed;
-		z-index: 2;
-		right: 0;
-		width: 250px;
-		height: 100vh;
-	}
-
-	.mobile-nav-item-container {
-		display: flex;
-		margin-top: 30px;
-		gap: 30px;
-		flex-direction: column;
-	}
-
-	.mobile-nav-item {
-		align-items: baseline;
-		display: flex;
-		justify-content: center;
-		font-weight: bold;
-	}
-
-	.mobile-nav-click-overlay {
-		position: absolute;
-		z-index: 1;
-		width: -webkit-fill-available;
-		width: -moz-available;
-		height: -webkit-fill-available;
 	}
 </style>

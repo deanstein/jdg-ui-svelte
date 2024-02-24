@@ -33,8 +33,11 @@ export { JDGImageTile };
 import JDGLoadingOverlay from './JDGLoadingOverlay.svelte';
 export { JDGLoadingOverlay };
 
-import JDGNav from './JDGNav.svelte';
-export { JDGNav };
+import JDGNavHeader from './JDGNavHeader.svelte';
+export { JDGNavHeader };
+
+import JDGNavSidebar from './JDGNavSidebar.svelte';
+export { JDGNavSidebar };
 
 import JDGNotificationBanner from './JDGNotificationBanner.svelte';
 export { JDGNotificationBanner };

@@ -8,7 +8,7 @@
 
 	import { getAlphaFromRgbaString, setAlphaInRgbaString } from './jdg-graphics-factory.js';
 
-	import { JDGNav, JDGStripesHorizontal } from './index.js';
+	import { JDGNavHeader, JDGNavSidebar, JDGStripesHorizontal } from './index.js';
 
 	export let showLogo = true;
 	export let logoSrc =
@@ -28,6 +28,7 @@
 	let forceHideTitleAtBreakpoint = false; // forces no title below certain breakpoints
 	let forceMobileNavOnCenteredTitle = false; // forces mobile nav when title is centered
 	let showTitleResult; // combined result between intent and breakpoint
+	let isNavSidebarOpen = false;
 
 	// set certain flags at certain breakpoints
 	const headerBreakpointHandler = () => {
@@ -162,11 +163,15 @@
 				</div>
 			</div>
 		{/if}
-		<!-- navigation -->
+		<!-- navigation: in header -->
 		{#if showNav && navItems.length > 0}
-			<JDGNav {navItems} useMobileNav={useMobileNav || forceMobileNavOnCenteredTitle} />
+			<JDGNavHeader {navItems} useMobileNav={useMobileNav || forceMobileNavOnCenteredTitle} />
 		{/if}
 	</div>
+	<!-- navigation: sidebar -->
+	{#if showNav && navItems.length > 0}
+		<JDGNavSidebar {navItems} />
+	{/if}
 	<!-- stripes at bottom of header -->
 	{#if showHorizontalStripes}
 		<JDGStripesHorizontal />

@@ -2,12 +2,24 @@ import uiState from './stores/uiState.js';
 
 import { jdgBreakpoints, jdgSizes } from './jdg-styling-constants.js';
 
-import {
-	addUniqueValueToArray,
-	convertRemToPixels,
-	convertVhToPixels,
-	removeValueFromArray
-} from './jdg-utils.js';
+import { addUniqueValueToArray, convertRemToPixels, removeValueFromArray } from './jdg-utils.js';
+
+export const getIsNavSideBarOpen = () => {
+	let isOpen;
+
+	uiState.subscribe((currentValue) => {
+		isOpen = currentValue.isNavSidebarOpen;
+	});
+
+	return isOpen;
+};
+
+export const setNavSidebarOpen = (sidebarOpenState) => {
+	uiState.update((currentValue) => {
+		currentValue.isNavSidebarOpen = sidebarOpenState;
+		return currentValue;
+	});
+};
 
 export const getScreenCentroid = () => {
 	return {
