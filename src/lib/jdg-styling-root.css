@@ -56,13 +56,6 @@ a.no-initial-highlight:hover::before, .jdg-highlight-container:hover .jdg-highli
     animation: slide-up 0.3s forwards;
 }
 
-.jdg-letter-spacing-title {
-    letter-spacing: 5px;
-    /* letter-spacing adds an extra space at the end */ 
-    /* account for this by shifting 1/2 letter spacing on left */
-    padding-left: 2.5px; 
-}
-
 .jdg-highlight-container {
     position: relative;
     display: flex;
