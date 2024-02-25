@@ -143,7 +143,7 @@
 		{#if showLogo}
 			<!-- wrap the logo in an additional div that can go full width when logo is centered -->
 			<div class="logo-justification-container {logoJustificationContainerCss}">
-				<div class="logo-container">
+				<div class="logo-container jdg-letter-spacing-title">
 					<a href="/" class="no-initial-highlight {logoTitleLinkCss}">
 						<img src={logoSrc} class="logo-img {headerLogoImgCss}" alt={logoAlt} />
 						<!-- logo title -->

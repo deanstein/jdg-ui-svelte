@@ -10,6 +10,8 @@
 	} from './jdg-ui-management.js';
 	import { jdgColors, jdgSizes } from './jdg-styling-constants.js';
 
+	import uiState from './stores/uiState.js';
+
 	// nav items are an array of objects
 	export let navItems = [];
 	// mobile nav can be always on, regardless of breakpoint
@@ -39,7 +41,6 @@
 		setNavSidebarOpen(!isOpen);
 	};
 
-	let isMobileNavExpanded;
 	let useMobileNavResult;
 	let forceUseMobileNavAtBreakpoint = true;
 
@@ -84,12 +85,12 @@
 			class="mobile-nav-button {mobileNavButtonCss}"
 			on:click={onClickMobileNavButton}
 			on:keydown={onClickMobileNavButton}
-			title={isMobileNavExpanded ? 'Close menu' : 'Open menu'}
+			title={$uiState.isNavSidebarOpen ? 'Close menu' : 'Open menu'}
 		>
 			<div class="jdg-highlight-container">
-				<span class="jdg-highlight {isMobileNavExpanded ? '' : 'no-initial-highlight'}">
+				<span class="jdg-highlight {$uiState.isNavSidebarOpen ? '' : 'no-initial-highlight'}">
 					<i
-						class={isMobileNavExpanded ? 'fa-solid fa-xmark' : 'fa-solid fa-bars'}
+						class={$uiState.isNavSidebarOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars'}
 						transition:fade={{ duration: 200 }}
 					/>
 				</span>
@@ -99,7 +100,7 @@
 
 	<!-- desktop nav -->
 {:else}
-	<nav class="desktop-nav-container">
+	<nav class="desktop-nav-container jdg-letter-spacing-title">
 		{#each navItems as navItem, i}
 			<a class="desktop-nav-item no-initial-highlight {navItemCss}" href={navItem?.href}
 				>{navItem?.label}</a
@@ -146,7 +147,5 @@
 		font-size: 35px;
 		border: none;
 		outline: none;
-		padding: 0;
-		margin: 0;
 	}
 </style>
