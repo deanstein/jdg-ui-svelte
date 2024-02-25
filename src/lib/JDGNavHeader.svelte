@@ -109,11 +109,6 @@
 {/if}
 
 <style>
-	a {
-		letter-spacing: 5px;
-		padding-left: 2.5px; /* letter-spacing adds an extra space at the end; account for this by shifting 1/2 letter spacing on left */
-	}
-
 	.desktop-nav-container {
 		display: flex;
 		width: 100%;
