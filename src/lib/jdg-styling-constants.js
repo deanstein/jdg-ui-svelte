@@ -153,6 +153,12 @@ export const jdgSizes = {
 		return this.nHeaderSidePadding.toString() + this.headerSidePaddingUnit;
 	},
 
+	nNavMobileIconHeight: 35,
+	navMobileIconHeightUnit: 'px',
+	get navMobileIconHeight() {
+		return this.nNavMobileIconHeight.toString() + this.navMobileIconHeightUnit;
+	},
+
 	nPadding: 0.75,
 	get padding() {
 		return this.nPadding.toString() + 'vh';

@@ -1,6 +1,5 @@
 <script>
 	import { onDestroy, onMount } from 'svelte';
-	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
 	import {
@@ -11,6 +10,8 @@
 	import { jdgColors, jdgSizes } from './jdg-styling-constants.js';
 
 	import uiState from './stores/uiState.js';
+
+	import jdgMenuIcon from './jdg-menu.svg';
 
 	// nav items are an array of objects
 	export let navItems = [];
@@ -53,6 +54,11 @@
 		background-color: transparent;
 	`;
 
+	const mobileNavImageCss = css`
+		height: ${jdgSizes.navMobileIconHeight};
+		width: ${jdgSizes.navMobileIconHeight};
+	`;
+
 	const navItemCss = css`
 		font-size: ${jdgSizes.fontSizeHeaderTitle};
 		:last-of-type {
@@ -88,11 +94,15 @@
 			title={$uiState.isNavSidebarOpen ? 'Close menu' : 'Open menu'}
 		>
 			<div class="jdg-highlight-container">
-				<span class="jdg-highlight {$uiState.isNavSidebarOpen ? '' : 'no-initial-highlight'}">
-					<i
+				<span
+					class="jdg-highlight {$uiState.isNavSidebarOpen ? '' : 'no-initial-highlight'}"
+					style="display: flex;"
+				>
+					<img src={jdgMenuIcon} alt="" class={mobileNavImageCss} />
+					<!-- <i
 						class={$uiState.isNavSidebarOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars'}
 						transition:fade={{ duration: 200 }}
-					/>
+					/> -->
 				</span>
 			</div>
 		</button>
@@ -144,7 +154,6 @@
 		justify-content: center;
 		aspect-ratio: 1;
 		cursor: pointer;
-		font-size: 35px;
 		border: none;
 		outline: none;
 	}

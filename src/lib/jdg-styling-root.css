@@ -24,6 +24,7 @@ a.no-initial-highlight::before, .jdg-highlight-container .jdg-highlight.no-initi
     position: absolute;
     z-index: -1;
     width: calc(100% + 8px);
+    left: -4px;
     height: 0;
     bottom: -0.225rem;
     /* background-color: this needs to be specified using emotion css */
