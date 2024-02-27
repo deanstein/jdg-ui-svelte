@@ -26,7 +26,13 @@
 			width="100%"
 			transform={isOpen ? 'rotate(45, 0, 0) translate(25, -25)' : ''}
 		/>
-		<rect class="bar" y="43%" height="13%" width="100%" opacity={isOpen ? '0' : '1'} />
+		<rect
+			class="bar"
+			y="43%"
+			height="13%"
+			width="100%"
+			transform={isOpen ? 'translate(0, 100)' : ''}
+		/>
 		<rect
 			class="bar"
 			y="71%"
@@ -39,8 +45,6 @@
 
 <style>
 	.bar {
-		transition:
-			transform 0.3s ease,
-			opacity 0.3s ease;
+		transition: transform 0.3s ease;
 	}
 </style>
