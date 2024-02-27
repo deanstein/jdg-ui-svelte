@@ -13,7 +13,7 @@
 			background-color: transparent;
 		}
 		background-color: ${jdgColors.headerBackground};
-		backdrop-filter: blur(${jdgSizes.blurSizeMedium});
+		backdrop-filter: blur(${jdgSizes.blurSizeSmall});
 	`;
 
 	const jdgNavSidebarItemCss = css`
