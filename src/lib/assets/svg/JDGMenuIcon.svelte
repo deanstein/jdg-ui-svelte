@@ -45,6 +45,6 @@
 
 <style>
 	.bar {
-		transition: transform 0.3s ease;
+		transition: transform 0.3s ease-in-out;
 	}
 </style>
