@@ -1,4 +1,4 @@
-import uiState from './stores/uiState.js';
+import uiState from './states/ui-state.js';
 
 import { jdgBreakpoints, jdgSizes } from './jdg-styling-constants.js';
 

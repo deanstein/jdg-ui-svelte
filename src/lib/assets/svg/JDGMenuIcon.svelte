@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import uiState from '$lib/stores/uiState.js';
+	import uiState from '$lib/states/ui-state.js';
 
 	import { jdgSizes } from '$lib/jdg-styling-constants.js';
 

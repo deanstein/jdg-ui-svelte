@@ -9,7 +9,7 @@
 	} from './jdg-ui-management.js';
 	import { jdgColors, jdgSizes } from './jdg-styling-constants.js';
 
-	import uiState from './stores/uiState.js';
+	import uiState from './states/ui-state.js';
 
 	import { JDGMenuIcon } from './index.js';
 

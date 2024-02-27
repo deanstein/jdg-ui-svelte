@@ -3,7 +3,7 @@
 	import { css } from '@emotion/css';
 	import { v4 as uuidv4 } from 'uuid';
 
-	import uiState from './stores/uiState.js';
+	import uiState from './states/ui-state.js';
 
 	import {
 		addNotificationBannerToState,

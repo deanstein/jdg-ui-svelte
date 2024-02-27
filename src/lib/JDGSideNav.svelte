@@ -2,7 +2,7 @@
 	import { css } from '@emotion/css';
 	import { slide } from 'svelte/transition';
 
-	import uiState from './stores/uiState.js';
+	import uiState from './states/ui-state.js';
 	import { setNavSidebarOpen } from './jdg-ui-management.js';
 	import { jdgColors, jdgDurations, jdgSizes } from './jdg-styling-constants.js';
 
