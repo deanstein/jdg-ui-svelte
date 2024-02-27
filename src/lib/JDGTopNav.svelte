@@ -11,7 +11,7 @@
 
 	import uiState from './stores/uiState.js';
 
-	import jdgMenuIcon from './jdg-menu.svg';
+	import { JDGMenuIcon } from './index.js';
 
 	// nav items are an array of objects
 	export let navItems = [];
@@ -54,11 +54,6 @@
 		background-color: transparent;
 	`;
 
-	const mobileNavImageCss = css`
-		height: ${jdgSizes.navMobileIconHeight};
-		width: ${jdgSizes.navMobileIconHeight};
-	`;
-
 	const navItemCss = css`
 		font-size: ${jdgSizes.fontSizeHeaderTitle};
 		:last-of-type {
@@ -94,15 +89,8 @@
 			title={$uiState.isNavSidebarOpen ? 'Close menu' : 'Open menu'}
 		>
 			<div class="jdg-highlight-container">
-				<span
-					class="jdg-highlight {$uiState.isNavSidebarOpen ? '' : 'no-initial-highlight'}"
-					style="display: flex;"
-				>
-					<img src={jdgMenuIcon} alt="" class={mobileNavImageCss} />
-					<!-- <i
-						class={$uiState.isNavSidebarOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars'}
-						transition:fade={{ duration: 200 }}
-					/> -->
+				<span class="jdg-highlight no-initial-highlight" style="display: flex;">
+					<JDGMenuIcon />
 				</span>
 			</div>
 		</button>

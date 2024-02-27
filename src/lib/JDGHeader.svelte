@@ -8,7 +8,7 @@
 
 	import { getAlphaFromRgbaString, setAlphaInRgbaString } from './jdg-graphics-factory.js';
 
-	import { JDGNavHeader, JDGNavSidebar, JDGStripesHorizontal } from './index.js';
+	import { JDGTopNav, JDGSideNav, JDGStripesHorizontal } from './index.js';
 
 	export let showLogo = true;
 	export let logoSrc =
@@ -165,12 +165,12 @@
 		{/if}
 		<!-- navigation: in header -->
 		{#if showNav && navItems.length > 0}
-			<JDGNavHeader {navItems} useMobileNav={useMobileNav || forceMobileNavOnCenteredTitle} />
+			<JDGTopNav {navItems} useMobileNav={useMobileNav || forceMobileNavOnCenteredTitle} />
 		{/if}
 	</div>
 	<!-- navigation: sidebar -->
 	{#if showNav && navItems.length > 0}
-		<JDGNavSidebar {navItems} />
+		<JDGSideNav {navItems} />
 	{/if}
 	<!-- stripes at bottom of header -->
 	{#if showHorizontalStripes}

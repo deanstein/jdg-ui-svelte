@@ -33,17 +33,21 @@ export { JDGImageTile };
 import JDGLoadingOverlay from './JDGLoadingOverlay.svelte';
 export { JDGLoadingOverlay };
 
-import JDGNavHeader from './JDGNavHeader.svelte';
-export { JDGNavHeader };
-
-import JDGNavSidebar from './JDGNavSidebar.svelte';
-export { JDGNavSidebar };
-
 import JDGNotificationBanner from './JDGNotificationBanner.svelte';
 export { JDGNotificationBanner };
 
 import JDGOverlay from './JDGOverlay.svelte';
 export { JDGOverlay };
 
+import JDGSideNav from './JDGSideNav.svelte';
+export { JDGSideNav };
+
 import JDGStripesHorizontal from './JDGStripesHorizontal.svelte';
 export { JDGStripesHorizontal };
+
+import JDGTopNav from './JDGTopNav.svelte';
+export { JDGTopNav };
+
+// SVG components
+import JDGMenuIcon from './assets/svg/JDGMenuIcon.svelte';
+export { JDGMenuIcon };
