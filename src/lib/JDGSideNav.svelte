@@ -65,7 +65,6 @@
 <style>
 	.jdg-nav-sidebar-container {
 		position: absolute;
-		z-index: 2;
 		right: 0;
 		width: 250px;
 		height: 100vh;
