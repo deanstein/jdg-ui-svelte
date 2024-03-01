@@ -24,29 +24,7 @@
 {#if $uiState.isNavSidebarOpen}
 	<!-- mobile nav container -->
 	<div style="position: relative;">
-		<div
-			class="jdg-nav-sidebar-container {jdgNavSidebarContainerCss} jdg-letter-spacing-title"
-			transition:slide={{ duration: jdgDurations.slide, delay: 0, axis: 'x' }}
-		>
-			<nav class="jdg-nav-sidebar-item-container">
-				{#each navItems as navItem, i}
-					<a
-						class="jdg-nav-sidebar-item {jdgNavSidebarItemCss}"
-						href={navItem?.href}
-						on:click={() => {
-							setNavSidebarOpen(false);
-						}}
-					>
-						<div class="jdg-nav-sidebar-item {jdgNavSidebarItemCss} jdg-highlight-container">
-							<span class="jdg-highlight no-initial-highlight">
-								{navItem?.label}
-							</span>
-						</div></a
-					>
-				{/each}
-			</nav>
-		</div>
-		<div class="jdg-nav-sidebar-click-overlay-alignment-container">
+		<div class="jdg-nav-sidebar-alignment-container">
 			<div
 				class="jdg-nav-sidebar-click-overlay"
 				on:click={() => {
@@ -58,14 +36,42 @@
 				role="button"
 				tabindex="0"
 			/>
+			<div
+				class="jdg-nav-sidebar-container {jdgNavSidebarContainerCss} jdg-letter-spacing-title"
+				transition:slide={{ duration: jdgDurations.slide, delay: 0, axis: 'x' }}
+			>
+				<nav class="jdg-nav-sidebar-item-container">
+					{#each navItems as navItem, i}
+						<a
+							class="jdg-nav-sidebar-item {jdgNavSidebarItemCss}"
+							href={navItem?.href}
+							on:click={() => {
+								setNavSidebarOpen(false);
+							}}
+						>
+							<div class="jdg-nav-sidebar-item {jdgNavSidebarItemCss} jdg-highlight-container">
+								<span class="jdg-highlight no-initial-highlight">
+									{navItem?.label}
+								</span>
+							</div></a
+						>
+					{/each}
+				</nav>
+			</div>
 		</div>
 	</div>
 {/if}
 
 <style>
-	.jdg-nav-sidebar-container {
+	.jdg-nav-sidebar-alignment-container {
 		position: absolute;
-		right: 0;
+		height: 100%;
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+	}
+
+	.jdg-nav-sidebar-container {
 		width: 250px;
 		height: 100vh;
 	}
@@ -84,18 +90,8 @@
 		font-weight: bold;
 	}
 
-	.jdg-nav-sidebar-click-overlay-alignment-container {
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 250px;
-		height: 100vh;
-	}
-
 	.jdg-nav-sidebar-click-overlay {
-		position: absolute;
-		width: -webkit-fill-available;
-		width: -moz-available;
-		height: -webkit-fill-available;
+		flex-grow: 1;
+		height: 100vh;
 	}
 </style>
