@@ -8,8 +8,8 @@
 	let isOpen;
 
 	const mobileNavImageCss = css`
-		height: ${jdgSizes.navMobileIconHeight};
-		width: ${jdgSizes.navMobileIconHeight};
+		height: ${jdgSizes.navMobileIconHeightLg};
+		width: ${jdgSizes.navMobileIconHeightLg};
 	`;
 
 	$: {

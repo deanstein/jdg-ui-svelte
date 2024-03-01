@@ -130,18 +130,39 @@ export const jdgSizes = {
 		return this.nContentBoxFloatingMargin.toString() + this.contentBoxFloatingMarginUnit;
 	},
 
-	nHeaderLogoHeight: 50,
+	nHeaderLogoHeightSm: 30,
 	headerLogoHeightUnit: 'px',
-	get headerLogoHeight() {
-		return this.nHeaderLogoHeight.toString() + this.headerLogoHeightUnit;
+	get headerLogoHeightSm() {
+		return this.nHeaderLogoHeightSm.toString() + this.headerLogoHeightUnit;
 	},
-	get nHeaderHeight() {
-		return this.nHeaderLogoHeight;
+	nHeaderLogoHeightLg: 50,
+	get headerLogoHeightLg() {
+		return this.nHeaderLogoHeightLg.toString() + this.headerLogoHeightUnit;
 	},
+	nNavMobileIconHeightSm: 20,
+	navMobileIconHeightUnit: 'px',
+	get navMobileIconHeightSm() {
+		return this.nNavMobileIconHeightSm.toString() + this.navMobileIconHeightUnit;
+	},
+	nNavMobileIconHeightLg: 35,
+	get navMobileIconHeightLg() {
+		return this.nNavMobileIconHeightLg.toString() + this.navMobileIconHeightUnit;
+	},
+
 	headerHeightUnit: 'px',
-	get headerHeight() {
-		return this.nHeaderHeight.toString() + this.headerHeightUnit;
+	get nHeaderHeightSm() {
+		return 2 * this.nHeaderTopBottomPadding + this.nHeaderLogoHeightSm;
 	},
+	get headerHeightSm() {
+		return this.nHeaderHeightSm.toString() + this.headerHeightUnit;
+	},
+	get nHeaderHeightLg() {
+		return 2 * this.nHeaderTopBottomPadding + this.nHeaderLogoHeightLg;
+	},
+	get headerHeightLg() {
+		return this.nHeaderHeightLg.toString() + this.headerHeightUnit;
+	},
+
 	nHeaderTopBottomPadding: 20,
 	headerTopBottomPaddingUnit: 'px',
 	get headerTopBottomPadding() {
@@ -151,12 +172,6 @@ export const jdgSizes = {
 	headerSidePaddingUnit: 'rem',
 	get headerSidePadding() {
 		return this.nHeaderSidePadding.toString() + this.headerSidePaddingUnit;
-	},
-
-	nNavMobileIconHeight: 35,
-	navMobileIconHeightUnit: 'px',
-	get navMobileIconHeight() {
-		return this.nNavMobileIconHeight.toString() + this.navMobileIconHeightUnit;
 	},
 
 	nPadding: 0.75,

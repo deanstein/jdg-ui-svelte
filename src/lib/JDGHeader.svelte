@@ -3,7 +3,7 @@
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
-	import { jdgColors, jdgSizes } from './jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgColors, jdgSizes } from './jdg-styling-constants.js';
 	import { breakpointHandler, incrementHighestZIndex } from './jdg-ui-management.js';
 
 	import { getAlphaFromRgbaString, setAlphaInRgbaString } from './jdg-graphics-factory.js';
@@ -79,7 +79,17 @@
 	`;
 
 	let headerContainerInnerCss = css`
-		height: ${jdgSizes.headerHeight};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			height: ${jdgSizes.headerHeightSm};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			height: ${jdgSizes.headerHeightLg};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			height: ${jdgSizes.headerHeightLg};
+		}
 		padding-top: ${jdgSizes.headerTopBottomPadding};
 		padding-bottom: ${jdgSizes.headerTopBottomPadding};
 		background-color: ${backgroundColorRgba};
@@ -93,7 +103,17 @@
 	`;
 
 	const headerLogoImgCss = css`
-		max-height: ${jdgSizes.headerLogoHeight};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			max-height: ${jdgSizes.headerLogoHeightSm};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			max-height: ${jdgSizes.headerLogoHeightLg};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			max-height: ${jdgSizes.headerLogoHeightLg};
+		}
 	`;
 
 	const logoTitleLinkCss = css`
@@ -203,6 +223,7 @@
 		align-items: end;
 		padding-right: 2rem;
 		padding-left: 2rem;
+		box-sizing: border-box;
 
 		-webkit-touch-callout: none;
 		-webkit-user-select: none;
