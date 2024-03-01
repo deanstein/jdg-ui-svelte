@@ -65,7 +65,6 @@
 <style>
 	.jdg-nav-sidebar-container {
 		position: absolute;
-		z-index: 2;
 		right: 0;
 		width: 250px;
 		height: 100vh;
@@ -89,13 +88,12 @@
 		position: absolute;
 		top: 0;
 		left: 0;
-		width: 100%;
+		right: 250px;
 		height: 100vh;
 	}
 
 	.jdg-nav-sidebar-click-overlay {
 		position: absolute;
-		z-index: 1;
 		width: -webkit-fill-available;
 		width: -moz-available;
 		height: -webkit-fill-available;
