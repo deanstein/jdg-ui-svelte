@@ -23,7 +23,7 @@
 
 {#if $uiState.isNavSidebarOpen}
 	<!-- mobile nav container -->
-	<div class="jdg-nav-sidebar-layout" >
+	<div class="jdg-nav-sidebar-layout">
 		<div class="jdg-nav-sidebar-alignment-container">
 			<div
 				class="jdg-nav-sidebar-click-overlay"
