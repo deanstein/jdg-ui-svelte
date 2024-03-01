@@ -3,13 +3,25 @@
 
 	import uiState from '$lib/states/ui-state.js';
 
-	import { jdgSizes } from '$lib/jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-styling-constants.js';
 
 	let isOpen;
 
 	const mobileNavImageCss = css`
-		height: ${jdgSizes.navMobileIconHeightLg};
-		width: ${jdgSizes.navMobileIconHeightLg};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			height: ${jdgSizes.navMobileIconHeightSm};
+			width: ${jdgSizes.navMobileIconHeightSm};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			height: ${jdgSizes.navMobileIconHeightLg};
+			width: ${jdgSizes.navMobileIconHeightLg};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			height: ${jdgSizes.navMobileIconHeightLg};
+			width: ${jdgSizes.navMobileIconHeightLg};
+		}
 	`;
 
 	$: {

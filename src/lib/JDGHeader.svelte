@@ -25,22 +25,21 @@
 	export let showHorizontalStripes = false;
 	export let suppressAlphaOnScroll = false; // disable alpha past some scroll threshold
 
-	let forceHideTitleAtBreakpoint = false; // forces no title below certain breakpoints
+	let forceHideTitleAtBreakpoint = true; // forces no title below certain breakpoints
 	let forceMobileNavOnCenteredTitle = false; // forces mobile nav when title is centered
 	let showTitleResult; // combined result between intent and breakpoint
-	let isNavSidebarOpen = false;
 
 	// set certain flags at certain breakpoints
 	const headerBreakpointHandler = () => {
 		breakpointHandler(
-			// breakpoint 0
+			// BREAKPOINT 0
 			() => {
 				// force the title off
 				forceHideTitleAtBreakpoint = true;
 			},
-			// breakpoint 1
+			// BREAKPOINT 1
 			() => {},
-			// breakpoint 2
+			// BREAKPOINT 2
 			() => {
 				forceHideTitleAtBreakpoint = false;
 			}

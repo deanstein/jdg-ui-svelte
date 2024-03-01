@@ -130,7 +130,7 @@ export const jdgSizes = {
 		return this.nContentBoxFloatingMargin.toString() + this.contentBoxFloatingMarginUnit;
 	},
 
-	nHeaderLogoHeightSm: 30,
+	nHeaderLogoHeightSm: 40,
 	headerLogoHeightUnit: 'px',
 	get headerLogoHeightSm() {
 		return this.nHeaderLogoHeightSm.toString() + this.headerLogoHeightUnit;
@@ -139,7 +139,7 @@ export const jdgSizes = {
 	get headerLogoHeightLg() {
 		return this.nHeaderLogoHeightLg.toString() + this.headerLogoHeightUnit;
 	},
-	nNavMobileIconHeightSm: 20,
+	nNavMobileIconHeightSm: 30,
 	navMobileIconHeightUnit: 'px',
 	get navMobileIconHeightSm() {
 		return this.nNavMobileIconHeightSm.toString() + this.navMobileIconHeightUnit;
