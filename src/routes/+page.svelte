@@ -11,7 +11,7 @@
 	import { openUrl, scrollToAnchorFloatingContentBox } from '$lib/jdg-ui-management.js';
 </script>
 
-<JDGContentContainer>
+<JDGContentContainer overlapWithHeader={true}>
 	<JDGFullWidthImage />
 	<JDGContentBoxFloating title="ARCHITECTURE">
 		<div>
