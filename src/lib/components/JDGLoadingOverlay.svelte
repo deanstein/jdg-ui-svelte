@@ -3,7 +3,7 @@
 
 	export let isLoading = false;
 	export let loadingIconSrc =
-		'https://raw.githubusercontent.com/deanstein/jdg-ui-svelte/main/static/jdg-logo-ui.jpg';
+		'https://raw.githubusercontent.com/deanstein/jdg-ui-svelte/main/static/jdg-ui-logo.jpg';
 </script>
 
 {#if isLoading}

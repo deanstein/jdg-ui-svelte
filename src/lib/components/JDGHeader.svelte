@@ -12,7 +12,7 @@
 
 	export let showLogo = true;
 	export let logoSrc =
-		'https://raw.githubusercontent.com/deanstein/jdg-ui-svelte/main/static/jdg-logo-ui.jpg'; // default if not passed in from host app
+		'https://raw.githubusercontent.com/deanstein/jdg-ui-svelte/main/static/jdg-ui-logo.jpg'; // default if not passed in from host app
 	export let logoAlt = 'Logo'; // alt text for logo image
 	export let logoSupertitle = undefined; // text above title
 	export let logoTitle = undefined; // title next to logo
