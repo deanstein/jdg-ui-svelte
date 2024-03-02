@@ -18,6 +18,9 @@ export { JDGContentContainer };
 import JDGFooter from './components/JDGFooter.svelte';
 export { JDGFooter };
 
+import JDGFullWidthImage from './components/JDGFullWidthImage.svelte';
+export { JDGFullWidthImage };
+
 import JDGGridLayout from './components/JDGGridLayout.svelte';
 export { JDGGridLayout };
 

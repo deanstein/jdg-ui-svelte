@@ -4,6 +4,7 @@
 		JDGAccentBlock,
 		JDGContentBoxFloating,
 		JDGContentContainer,
+		JDGFullWidthImage,
 		JDGGridLayout,
 		JDGImageTile
 	} from '$lib/index.js';
@@ -11,6 +12,7 @@
 </script>
 
 <JDGContentContainer>
+	<JDGFullWidthImage />
 	<JDGContentBoxFloating title="ARCHITECTURE">
 		<div>
 			This is a <a href="#ANOTHER-SECTION">hyperlink test.</a>
