@@ -79,7 +79,6 @@
 		position: relative;
 		width: 250px;
 		height: 100vh;
-		overflow: auto;
 	}
 
 	.jdg-nav-sidebar-item-container {
