@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { jdgColors, jdgSizes } from './jdg-styling-constants.js';
+	import { jdgColors, jdgSizes } from '../jdg-styling-constants.js';
 
 	export let title = undefined;
 	// @ts-expect-error

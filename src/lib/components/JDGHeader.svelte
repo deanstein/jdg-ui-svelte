@@ -3,12 +3,12 @@
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
-	import { jdgBreakpoints, jdgColors, jdgSizes } from './jdg-styling-constants.js';
-	import { breakpointHandler, incrementHighestZIndex } from './jdg-ui-management.js';
+	import { jdgBreakpoints, jdgColors, jdgSizes } from '../jdg-styling-constants.js';
+	import { breakpointHandler, incrementHighestZIndex } from '../jdg-ui-management.js';
 
-	import { getAlphaFromRgbaString, setAlphaInRgbaString } from './jdg-graphics-factory.js';
+	import { getAlphaFromRgbaString, setAlphaInRgbaString } from '../jdg-graphics-factory.js';
 
-	import { JDGTopNav, JDGSideNav, JDGStripesHorizontal } from './index.js';
+	import { JDGTopNav, JDGSideNav, JDGStripesHorizontal } from '../index.js';
 
 	export let showLogo = true;
 	export let logoSrc =

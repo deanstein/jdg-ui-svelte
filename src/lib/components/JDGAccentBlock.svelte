@@ -1,6 +1,6 @@
 <script>
 	import { css } from '@emotion/css';
-	import { jdgColors } from './jdg-styling-constants.js';
+	import { jdgColors } from '../jdg-styling-constants.js';
 
 	export let blockQuote = undefined;
 	export let backgroundColor = jdgColors.accentStripesJDG[0];

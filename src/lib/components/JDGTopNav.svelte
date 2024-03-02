@@ -6,12 +6,12 @@
 		breakpointHandler,
 		getIsNavSideBarOpen,
 		setNavSidebarOpen
-	} from './jdg-ui-management.js';
-	import { jdgColors, jdgSizes } from './jdg-styling-constants.js';
+	} from '../jdg-ui-management.js';
+	import { jdgColors, jdgSizes } from '../jdg-styling-constants.js';
 
-	import uiState from './states/ui-state.js';
+	import uiState from '../states/ui-state.js';
 
-	import { JDGMenuIcon } from './index.js';
+	import { JDGMenuIcon } from '../index.js';
 
 	// nav items are an array of objects
 	export let navItems = [];

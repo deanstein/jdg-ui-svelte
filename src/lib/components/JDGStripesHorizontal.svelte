@@ -1,6 +1,6 @@
 <script>
 	import { css, keyframes } from '@emotion/css';
-	import { jdgColors, jdgSizes } from './jdg-styling-constants.js';
+	import { jdgColors, jdgSizes } from '../jdg-styling-constants.js';
 
 	export let stripeColors = jdgColors.accentStripesJDG;
 	export let stripeHeight = jdgSizes.horizontalStripeHeight;

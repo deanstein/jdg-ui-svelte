@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { jdgBreakpoints } from './jdg-styling-constants.js';
+	import { jdgBreakpoints } from '../jdg-styling-constants.js';
 
 	const gridContainerCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {

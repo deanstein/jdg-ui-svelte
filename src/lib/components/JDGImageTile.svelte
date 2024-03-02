@@ -3,9 +3,9 @@
 	import { cubicOut } from 'svelte/easing';
 	import { css } from '@emotion/css';
 
-	import { jdgColors, jdgSizes } from './jdg-styling-constants.js';
+	import { jdgColors, jdgSizes } from '../jdg-styling-constants.js';
 
-	import { JDGStripesHorizontal } from './index.js';
+	import { JDGStripesHorizontal } from '../index.js';
 
 	import { scale } from 'svelte/transition';
 

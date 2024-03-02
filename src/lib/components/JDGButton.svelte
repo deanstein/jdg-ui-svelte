@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { jdgColors } from './jdg-styling-constants.js';
+	import { jdgColors } from '../jdg-styling-constants.js';
 
 	export let label = 'This is a button'; // set null if no label is desired
 	export let faClass = 'fa-regular';

@@ -1,8 +1,8 @@
 <script>
 	import { css } from '@emotion/css';
 	import { fade } from 'svelte/transition';
-	import { getHighestZIndex } from './jdg-ui-management.js';
-	import { jdgDurations } from './jdg-styling-constants.js';
+	import { getHighestZIndex } from '../jdg-ui-management.js';
+	import { jdgDurations } from '../jdg-styling-constants.js';
 
 	export let opacity = 1.0;
 	export let color = 'white';

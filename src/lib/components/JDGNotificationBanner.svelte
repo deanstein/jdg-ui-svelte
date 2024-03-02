@@ -3,16 +3,16 @@
 	import { css } from '@emotion/css';
 	import { v4 as uuidv4 } from 'uuid';
 
-	import uiState from './states/ui-state.js';
+	import uiState from '../states/ui-state.js';
 
 	import {
 		addNotificationBannerToState,
 		removeNotificationBannerFromState,
 		incrementHighestZIndex
-	} from './jdg-ui-management.js';
-	import { jdgSizes, jdgColors } from './jdg-styling-constants.js';
-	import { getIsValueInArray } from './jdg-utils.js';
-	import { JDGButton } from './index.js';
+	} from '../jdg-ui-management.js';
+	import { jdgSizes, jdgColors } from '../jdg-styling-constants.js';
+	import { getIsValueInArray } from '../jdg-utils.js';
+	import { JDGButton } from '../index.js';
 
 	export let message = 'This is a notification banner.';
 	export let color = jdgColors.notificationInformation;

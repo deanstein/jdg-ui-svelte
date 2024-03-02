@@ -1,5 +1,5 @@
 <script>
-	import { JDGOverlay } from './index.js';
+	import { JDGOverlay } from '../index.js';
 
 	export let isLoading = false;
 	export let loadingIconSrc =

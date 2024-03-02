@@ -2,11 +2,11 @@
 	import { onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { getBuildCode } from './jdg-utils.js';
-	import { jdgUiRepoName } from './jdg-persistence-management.js';
+	import { getBuildCode } from '../jdg-utils.js';
+	import { jdgUiRepoName } from '../jdg-persistence-management.js';
 
-	import { jdgColors, jdgSizes } from './jdg-styling-constants.js';
-	import { JDGStripesHorizontal } from './index.js';
+	import { jdgColors, jdgSizes } from '../jdg-styling-constants.js';
+	import { JDGStripesHorizontal } from '../index.js';
 
 	export let repoName = jdgUiRepoName;
 	export let appVersion = undefined;
