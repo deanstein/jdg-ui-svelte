@@ -2,14 +2,15 @@
 	import { css } from '@emotion/css';
 
 	import { JDGLoadingOverlay } from '$lib/index.js';
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 
 	import { jdgColors } from '$lib/jdg-styling-constants.js';
 	import { JDGBackground, JDGFooter, JDGHeader, JDGNotificationBanner } from '$lib/index.js';
 	import { convertHexToRGBA, instantiateObject } from '$lib/jdg-utils.js';
 	import navItem from '$lib/schemas/nav-item.js';
 
-	let showLoadingOverlay = true;
+	// flag to show a loading overlay to prevent FOUC (flash of unstyled content)
+	let isLayoutLoaded = false;
 
 	// define the nav items in the header
 	const newNavItem1 = instantiateObject(navItem);
@@ -29,8 +30,7 @@
 	// get the app version from package.json
 	//@ts-expect-error
 	const appVersion = packageJson.version;
-	const disclaimerMessage =
-		'This is a UI library demo site. UI may load slowly and flash while loading because this is using raw UI library components, not compiled code.';
+	const disclaimerMessage = 'This is a notification banner.';
 
 	// global styles, but using emotion css
 	const useStripedHyperlinkHoverStyle = false;
@@ -56,35 +56,36 @@
 		}
 	`;
 
-	// Hide the overlay once the page has finished loading
-	onMount(() => {
-		setTimeout(() => {
-			showLoadingOverlay = false;
-		}, 500); // 500ms delay
+	onMount(async () => {
+		await tick(); // apparently isn't set to true until layout and all children are loaded
+		isLayoutLoaded = true;
 	});
 </script>
 
 <div class="jdg-app-container">
-	<JDGNotificationBanner message={disclaimerMessage} color={jdgColors.notificationInformation} />
-	<div class="jdg-ui-demo-container {demoContainerCss}">
-		<JDGHeader
-			logoJustification="left"
-			logoSupertitle={'INTRODUCING'}
-			logoTitle={'JDG SVELTE UI'}
-			logoAlt="JDG SVELTE UI"
-			{navItems}
-			useMobileNav={false}
-		/>
+	{#if isLayoutLoaded}
+		<JDGNotificationBanner message={disclaimerMessage} color={jdgColors.notificationInformation} />
+		<div class="jdg-ui-demo-container {demoContainerCss}">
+			<JDGHeader
+				logoJustification="left"
+				logoSupertitle={'INTRODUCING'}
+				logoTitle={'JDG SVELTE UI'}
+				logoAlt="JDG SVELTE UI"
+				{navItems}
+				useMobileNav={false}
+			/>
 
-		<JDGBackground />
+			<JDGBackground />
 
-		<slot />
+			<slot />
 
-		<JDGFooter {appVersion} disclaimer={disclaimerMessage} />
-	</div>
+			<JDGFooter {appVersion} disclaimer={disclaimerMessage} />
+		</div>
+	{/if}
 </div>
 
-<JDGLoadingOverlay isLoading={showLoadingOverlay} />
+<!-- loading overlay - only shown before layout is fully loaded -->
+<JDGLoadingOverlay isLoading={!isLayoutLoaded} />
 
 <style>
 	.jdg-app-container {
