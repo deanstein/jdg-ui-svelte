@@ -18,14 +18,14 @@ export { JDGContentContainer };
 import JDGFooter from './components/JDGFooter.svelte';
 export { JDGFooter };
 
-import JDGFullWidthImage from './components/JDGFullWidthImage.svelte';
-export { JDGFullWidthImage };
-
 import JDGGridLayout from './components/JDGGridLayout.svelte';
 export { JDGGridLayout };
 
 import JDGHeader from './components/JDGHeader.svelte';
 export { JDGHeader };
+
+import JDGImageFullWidth from './components/JDGImageFullWidth.svelte';
+export { JDGImageFullWidth };
 
 import JDGImageTile from './components/JDGImageTile.svelte';
 export { JDGImageTile };

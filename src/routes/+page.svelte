@@ -4,15 +4,15 @@
 		JDGAccentBlock,
 		JDGContentBoxFloating,
 		JDGContentContainer,
-		JDGFullWidthImage,
+		JDGImageFullWidth,
+		JDGImageTile,
 		JDGGridLayout,
-		JDGImageTile
 	} from '$lib/index.js';
 	import { openUrl, scrollToAnchorFloatingContentBox } from '$lib/jdg-ui-management.js';
 </script>
 
 <JDGContentContainer overlapWithHeader={true}>
-	<JDGFullWidthImage />
+	<JDGImageFullWidth />
 	<JDGContentBoxFloating title="ARCHITECTURE">
 		<div>
 			This is a <a href="#ANOTHER-SECTION">hyperlink test.</a>
