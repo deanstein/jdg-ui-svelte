@@ -3,9 +3,12 @@
 	import { css } from '@emotion/css';
 
 	export let overlapWithHeader = false;
+	export let topBottomPadding = '60px';
+	export let gap = '60px';
 
 	const jdgContentContainerCss = css`
-		padding: ${overlapWithHeader ? '0vh' : '10vh'} 0 10vh 0;
+		padding: ${overlapWithHeader ? '0' : topBottomPadding} 0 ${topBottomPadding} 0;
+		gap: ${gap};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			margin-top: ${overlapWithHeader ? '-' + jdgSizes.headerHeightSm : '0'};
 		}
@@ -28,7 +31,6 @@
 	.jdg-content-container {
 		display: flex;
 		flex-direction: column;
-		gap: 10vh;
 		width: -webkit-fill-available;
 		width: -moz-available;
 		min-height: 70vh;

@@ -1,11 +1,13 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { jdgColors, jdgSizes } from '../jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgColors, jdgSizes } from '../jdg-styling-constants.js';
 
 	export let title = undefined;
 	// @ts-expect-error
 	export let anchorTag = title?.replace(/ /g, '-');
+	export let isForBodyCopy = false; // if true, padding is adjusted to compress content width
+	export let paddingLeftRight = jdgSizes.contentBoxPaddingSm;
 
 	const floatingBoxTitleCss = css`
 		font-size: ${jdgSizes.fontSizeFloatingContentBoxTitle};
@@ -15,9 +17,26 @@
 	const floatingBoxContainerCss = css`
 		margin-left: ${jdgSizes.contentBoxFloatingMargin};
 		margin-right: ${jdgSizes.contentBoxFloatingMargin};
-		padding: ${jdgSizes.contentBoxPadding};
 		background-color: ${jdgColors.contentBoxBackground};
 		backdrop-filter: blur(${jdgSizes.blurSizeSmall});
+
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			padding: ${jdgSizes.contentBoxPaddingSm};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			padding: ${jdgSizes.contentBoxPaddingSm}
+				${isForBodyCopy ? jdgSizes.contentBoxVerticalPaddingLg : jdgSizes.contentBoxPaddingSm}
+				${jdgSizes.contentBoxPaddingSm}
+				${isForBodyCopy ? jdgSizes.contentBoxVerticalPaddingLg : jdgSizes.contentBoxPaddingSm};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			padding: ${jdgSizes.contentBoxPaddingSm}
+				${isForBodyCopy ? jdgSizes.contentBoxVerticalPaddingMax : jdgSizes.contentBoxPaddingSm}
+				${jdgSizes.contentBoxPaddingSm}
+				${isForBodyCopy ? jdgSizes.contentBoxVerticalPaddingMax : jdgSizes.contentBoxPaddingSm};
+		}
 	`;
 </script>
 

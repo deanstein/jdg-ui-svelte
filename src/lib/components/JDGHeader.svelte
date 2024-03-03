@@ -78,6 +78,10 @@
 	`;
 
 	let headerContainerInnerCss = css`
+		padding-top: ${jdgSizes.headerTopBottomPadding};
+		padding-bottom: ${jdgSizes.headerTopBottomPadding};
+		background-color: ${backgroundColorRgba};
+		backdrop-filter: blur(${jdgSizes.blurSizeMedium});
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			height: ${jdgSizes.headerHeightSm};
 		}
@@ -89,10 +93,6 @@
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 			height: ${jdgSizes.headerHeightLg};
 		}
-		padding-top: ${jdgSizes.headerTopBottomPadding};
-		padding-bottom: ${jdgSizes.headerTopBottomPadding};
-		background-color: ${backgroundColorRgba};
-		backdrop-filter: blur(${jdgSizes.blurSizeMedium});
 	`;
 
 	let logoJustificationContainerCss = css`
