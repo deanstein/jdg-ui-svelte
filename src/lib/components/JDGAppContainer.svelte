@@ -1,0 +1,59 @@
+<script>
+	import { onMount, tick } from 'svelte';
+	import { css } from '@emotion/css';
+
+	import { JDGLoadingOverlay } from '$lib/index.js';
+
+	import { jdgColors } from '$lib/jdg-styling-constants.js';
+	import { convertHexToRGBA } from '$lib/jdg-utils.js';
+
+	// flag to show a loading overlay before app is loaded
+	// to prevent flash of unstyled content
+	let isAppLoaded = false;
+
+	// global hyperlink style options
+	const hyperlinkColorOpacity = 0.75;
+	const useStripedHyperlinkHoverStyle = false;
+
+	// global styles, but using emotion css
+	const appContainerCss = css`
+		a {
+			color: ${jdgColors.text};
+		}
+		a.no-initial-highlight::before,
+		.jdg-highlight-container .jdg-highlight::before {
+			background: ${useStripedHyperlinkHoverStyle
+				? `linear-gradient(
+				to bottom,
+				${convertHexToRGBA(jdgColors.accentStripesJDG[0], hyperlinkColorOpacity)} 33%,
+				${convertHexToRGBA(jdgColors.accentStripesJDG[1], hyperlinkColorOpacity)} 33%,
+				${convertHexToRGBA(jdgColors.accentStripesJDG[1], hyperlinkColorOpacity)} 66%,
+				${convertHexToRGBA(jdgColors.accentStripesJDG[2], hyperlinkColorOpacity)} 66%
+			)`
+				: `${jdgColors.accentStripesJDG[0]}`};
+		}
+		a:before {
+			background: ${jdgColors.accentStripesJDG[0]};
+		}
+	`;
+
+	onMount(async () => {
+		await tick(); // delay until layout and all children are loaded
+		isAppLoaded = true;
+	});
+</script>
+
+<div class="jdg-app-container {appContainerCss}">
+	<!-- loading overlay - only shown before layout is fully loaded -->
+	<JDGLoadingOverlay isLoading={!isAppLoaded} />
+	{#if isAppLoaded}
+		<slot />
+	{/if}
+</div>
+
+<style>
+	.jdg-app-container {
+		display: flex;
+		flex-direction: column;
+	}
+</style>

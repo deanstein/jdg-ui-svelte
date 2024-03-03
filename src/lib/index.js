@@ -3,6 +3,9 @@ import './jdg-styling-root.css';
 import JDGAccentBlock from './components/JDGAccentBlock.svelte';
 export { JDGAccentBlock };
 
+import JDGAppContainer from './components/JDGAppContainer.svelte';
+export { JDGAppContainer };
+
 import JDGBackground from './components/JDGBackground.svelte';
 export { JDGBackground };
 

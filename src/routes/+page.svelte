@@ -6,7 +6,7 @@
 		JDGContentContainer,
 		JDGImageFullWidth,
 		JDGImageTile,
-		JDGGridLayout,
+		JDGGridLayout
 	} from '$lib/index.js';
 	import { openUrl, scrollToAnchorFloatingContentBox } from '$lib/jdg-ui-management.js';
 </script>
