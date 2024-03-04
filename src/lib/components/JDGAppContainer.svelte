@@ -7,6 +7,8 @@
 	import { jdgColors } from '$lib/jdg-styling-constants.js';
 	import { convertHexToRGBA } from '$lib/jdg-utils.js';
 
+    export let appLoadingIconSrc = 'https://raw.githubusercontent.com/deanstein/jdg-ui-svelte/main/static/jdg-ui-logo.jpg';
+
 	// flag to show a loading overlay before app is loaded
 	// to prevent flash of unstyled content
 	let isAppLoaded = false;
@@ -45,7 +47,7 @@
 
 <div class="jdg-app-container {appContainerCss}">
 	<!-- loading overlay - only shown before layout is fully loaded -->
-	<JDGLoadingOverlay isLoading={!isAppLoaded} />
+	<JDGLoadingOverlay isLoading={!isAppLoaded} loadingIconSrc={appLoadingIconSrc}/>
 	{#if isAppLoaded}
 		<slot />
 	{/if}
