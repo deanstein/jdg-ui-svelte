@@ -7,7 +7,6 @@
 	// @ts-expect-error
 	export let anchorTag = title?.replace(/ /g, '-');
 	export let isForBodyCopy = false; // if true, padding is adjusted to compress content width
-	export let paddingLeftRight = jdgSizes.contentBoxPaddingSm;
 
 	const floatingBoxTitleCss = css`
 		font-size: ${jdgSizes.fontSizeFloatingContentBoxTitle};

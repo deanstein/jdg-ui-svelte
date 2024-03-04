@@ -133,11 +133,11 @@ export const jdgSizes = {
 	get contentBoxVerticalPaddingMd() {
 		return this.nContentBoxVerticalPaddingMd.toString() + this.contentBoxVerticalPaddingUnit;
 	},
-	nContentBoxVerticalPaddingLg: 20,
+	nContentBoxVerticalPaddingLg: 15,
 	get contentBoxVerticalPaddingLg() {
 		return this.nContentBoxVerticalPaddingLg.toString() + this.contentBoxVerticalPaddingUnit;
 	},
-	nContentBoxVerticalPaddingMax: 30,
+	nContentBoxVerticalPaddingMax: 22,
 	get contentBoxVerticalPaddingMax() {
 		return this.nContentBoxVerticalPaddingMax.toString() + this.contentBoxVerticalPaddingUnit;
 	},

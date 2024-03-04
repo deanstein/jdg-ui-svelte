@@ -44,7 +44,7 @@
 		logoTitle={'JDG SVELTE UI'}
 		logoAlt="JDG SVELTE UI"
 		{navItems}
-		useMobileNav={false}
+		useMobileNav={true}
 	/>
 	<JDGBackground />
 	<!-- all content goes in this slot -->

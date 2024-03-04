@@ -96,7 +96,7 @@
 		justify-content: center;
 		font-weight: bold;
 	}
-	
+
 	.jdg-nav-sidebar-click-overlay {
 		flex-grow: 1;
 		height: 100vh;
