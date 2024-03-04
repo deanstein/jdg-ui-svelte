@@ -83,9 +83,11 @@
 
 	.jdg-nav-sidebar-item-container {
 		display: flex;
+		padding: 15px;
 		margin-top: 30px;
 		gap: 30px;
 		flex-direction: column;
+		text-align: center;
 	}
 
 	.jdg-nav-sidebar-item {
@@ -94,7 +96,7 @@
 		justify-content: center;
 		font-weight: bold;
 	}
-
+	
 	.jdg-nav-sidebar-click-overlay {
 		flex-grow: 1;
 		height: 100vh;
