@@ -3,12 +3,16 @@
 	import { cubicOut } from 'svelte/easing';
 	import { css } from '@emotion/css';
 
-	import { jdgColors, jdgSizes } from '../jdg-styling-constants.js';
+	import { jdgColors, jdgSizes, jdgDurations } from '../jdg-styling-constants.js';
 
 	import { JDGStripesHorizontal } from '../index.js';
 
 	import { scale } from 'svelte/transition';
 
+	export let nHeight = jdgSizes.nImageHeightSm;
+	export let heightUnit = jdgSizes.imageHeightUnit;
+	export let aspectRatio = null; // if not defined, tile will fill available space
+	export let objectFit = 'cover';
 	export let label = undefined;
 	export let labelJustification = 'left';
 	export let labelContainerVerticalAlign = 'bottom';
@@ -21,8 +25,17 @@
 
 	let isHovering;
 
-	const imageTileOverlayCss = css`
-		background-color: ${jdgColors.overlayMedia};
+	const aCss = css`
+		display: ${aspectRatio ? 'flex' : 'auto'};
+	`;
+
+	const imageTileCss = css`
+		height: ${nHeight.toString() + heightUnit};
+		width: ${aspectRatio ? (nHeight * aspectRatio).toString() + heightUnit : 'auto'};
+	`;
+
+	const imgCss = css`
+		object-fit: ${objectFit};
 	`;
 
 	const imageTileLabelContainerCss = css`
@@ -62,16 +75,16 @@
 	}
 </script>
 
-<a {href}>
+<a {href} class={aCss}>
 	<div
-		class="jdg-image-tile"
+		class="jdg-image-tile {imageTileCss}"
 		on:mouseenter={() => (isHovering = true)}
 		on:mouseleave={() => (isHovering = false)}
 		role="button"
 		tabindex="0"
 		on:click={onClickFunction}
 		on:keydown={onClickFunction}
-		transition:fadeAndScale={{ duration: 300 }}
+		transition:fadeAndScale={{ duration: jdgDurations.default }}
 	>
 		{#if label}
 			<div class="jdg-image-tile-label-container {imageTileLabelContainerCss}">
@@ -85,7 +98,7 @@
 				<JDGStripesHorizontal stripeHeight="3px" staggeredStripeWidth={false} />
 			</div>
 		{/if}
-		<img src={imgSrc} alt={imgAlt} />
+		<img class={imgCss} src={imgSrc} alt={imgAlt} />
 	</div>
 </a>
 
@@ -98,6 +111,8 @@
 
 	a {
 		min-width: 0;
+		justify-content: center;
+		align-items: center;
 	}
 
 	.jdg-image-tile {
@@ -105,7 +120,6 @@
 		display: flex;
 		flex-direction: column;
 		min-width: 0;
-		height: 300px;
 		cursor: pointer;
 		transition:
 			transform 0.3s ease-in-out,
@@ -140,7 +154,6 @@
 	img {
 		height: 100%;
 		width: 100%;
-		object-fit: cover;
 		transition: transform 0.3s ease-in-out;
 		z-index: -1;
 	}

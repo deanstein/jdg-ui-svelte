@@ -55,6 +55,9 @@
 			<JDGImageTile />
 		</JDGGridLayout>
 	</JDGContentBoxFloating>
+	<JDGContentBoxFloating isForBodyCopy={true}>
+		<JDGImageTile aspectRatio="1.77" label={'PAGE EXAMPLE'} href="/about" />
+	</JDGContentBoxFloating>
 	<JDGAccentBlock blockQuote="This is a block quote." />
 	<JDGContentBoxFloating title="ANOTHER SECTION" />
 	<JDGAccentBlock

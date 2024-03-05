@@ -38,7 +38,7 @@
 			/>
 			<div
 				class="jdg-nav-sidebar-container {jdgNavSidebarContainerCss} jdg-letter-spacing-title"
-				transition:slide={{ duration: jdgDurations.slide, delay: 0, axis: 'x' }}
+				transition:slide={{ duration: jdgDurations.default, delay: 0, axis: 'x' }}
 			>
 				<nav class="jdg-nav-sidebar-item-container">
 					{#each navItems as navItem, i}

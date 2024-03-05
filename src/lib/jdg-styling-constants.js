@@ -147,6 +147,12 @@ export const jdgSizes = {
 		return this.nContentBoxFloatingMargin.toString() + this.contentBoxFloatingMarginUnit;
 	},
 
+	nImageHeightSm: 300,
+	imageHeightUnit: 'px',
+	get imageHeightSm() {
+		return this.nImageHeightSm.toString() + this.imageHeightUnit;
+	},
+
 	nHeaderLogoHeightSm: 40,
 	headerLogoHeightUnit: 'px',
 	get headerLogoHeightSm() {
@@ -232,5 +238,5 @@ export const jdgQuantities = {
 };
 
 export const jdgDurations = {
-	slide: 300 //ms
+	default: 300 //ms
 };
