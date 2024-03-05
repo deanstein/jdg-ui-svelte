@@ -30,8 +30,9 @@
 	`;
 
 	const imageTileCss = css`
-		height: ${nHeight.toString() + heightUnit};
+		height: ${aspectRatio ? 'auto' : nHeight.toString() + heightUnit};
 		width: ${aspectRatio ? (nHeight * aspectRatio).toString() + heightUnit : 'auto'};
+		aspect-ratio: ${aspectRatio};
 	`;
 
 	const imgCss = css`
