@@ -51,6 +51,10 @@ a:hover::before, .jdg-highlight-container:hover .jdg-highlight::before {
     animation: slide-right 0.3s forwards;
 }
 
+a::before:hover {
+    background-color: none;
+}
+
 /* certain elements like header logo and nav get a different <a> treatment */
 a.no-initial-highlight::before, .jdg-highlight.no-initial-highlight::before {
     height: 0;

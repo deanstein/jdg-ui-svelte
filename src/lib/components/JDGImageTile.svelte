@@ -1,17 +1,15 @@
 <script>
-	import { fade } from 'svelte/transition';
-	import { cubicOut } from 'svelte/easing';
+	import { onMount } from 'svelte';
 	import { css } from '@emotion/css';
-
-	import { jdgColors, jdgSizes, jdgDurations } from '../jdg-styling-constants.js';
 
 	import { JDGStripesHorizontal } from '../index.js';
 
-	import { scale } from 'svelte/transition';
+	import { fadeAndScale, verticalSlide } from '$lib/jdg-graphics-factory.js';
+	import { jdgColors, jdgSizes, jdgDurations } from '../jdg-styling-constants.js';
 
 	export let nHeight = jdgSizes.nImageHeightSm;
 	export let heightUnit = jdgSizes.imageHeightUnit;
-	export let aspectRatio = null; // if not defined, tile will fill available space
+	export let matchAspectRatio = false; // if false, image fills available tile width
 	export let objectFit = 'cover';
 	export let label = undefined;
 	export let labelJustification = 'left';
@@ -23,17 +21,15 @@
 	export let onClickFunction = () => {};
 	export let showHorizontalStripesOnHover = true;
 
+	let imgRef;
+	let aspectRatio;
 	let isHovering;
 
 	const aCss = css`
-		display: ${aspectRatio ? 'flex' : 'auto'};
+		display: ${matchAspectRatio ? 'flex' : 'auto'};
 	`;
 
-	const imageTileCss = css`
-		height: ${aspectRatio ? 'auto' : nHeight.toString() + heightUnit};
-		width: ${aspectRatio ? (nHeight * aspectRatio).toString() + heightUnit : 'auto'};
-		aspect-ratio: ${aspectRatio};
-	`;
+	let imageTileCss;
 
 	const imgCss = css`
 		object-fit: ${objectFit};
@@ -54,26 +50,14 @@
 		text-align: ${labelJustification};
 	`;
 
-	const fadeAndScale = (node, { delay = 0, duration = 300 }) => {
-		return {
-			delay,
-			duration,
-			css: (t, u) => `
-        opacity: ${fade(node, { duration }).css(t, u)};
-        transform: ${scale(node, { duration }).css(t, u)};
-      `,
-			easing: cubicOut
-		};
-	};
-
-	function verticalSlide(node, { delay = 0, duration = 300 }) {
-		return {
-			delay,
-			duration,
-			css: (t) => `transform: translateY(${(1 - t) * 100}%);`,
-			easing: cubicOut
-		};
-	}
+	onMount(() => {
+		aspectRatio = imgRef.naturalWidth / imgRef.naturalHeight;
+		imageTileCss = css`
+			height: ${nHeight.toString() + heightUnit};
+			width: ${matchAspectRatio ? (nHeight * aspectRatio).toString() + heightUnit : 'auto'};
+			aspect-ratio: ${matchAspectRatio ? aspectRatio : 'auto'};
+		`;
+	});
 </script>
 
 <a {href} class={aCss}>
@@ -99,7 +83,7 @@
 				<JDGStripesHorizontal stripeHeight="3px" staggeredStripeWidth={false} />
 			</div>
 		{/if}
-		<img class={imgCss} src={imgSrc} alt={imgAlt} />
+		<img bind:this={imgRef} class={imgCss} src={imgSrc} alt={imgAlt} />
 	</div>
 </a>
 

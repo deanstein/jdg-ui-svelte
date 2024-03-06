@@ -1,5 +1,5 @@
-import { quintOut } from 'svelte/easing';
-import { crossfade } from 'svelte/transition';
+import { cubicOut, quintOut } from 'svelte/easing';
+import { crossfade, fade, scale } from 'svelte/transition';
 
 import { getScreenCentroid } from './jdg-ui-management.js';
 
@@ -88,4 +88,25 @@ export const drawCrossfade = (duration) => {
 			};
 		}
 	});
+};
+
+export const fadeAndScale = (node, { delay = 0, duration = 300 }) => {
+	return {
+		delay,
+		duration,
+		css: (t, u) => `
+	opacity: ${fade(node, { duration }).css(t, u)};
+	transform: ${scale(node, { duration }).css(t, u)};
+  `,
+		easing: cubicOut
+	};
+};
+
+export const verticalSlide = (node, { delay = 0, duration = 300 }) => {
+	return {
+		delay,
+		duration,
+		css: (t) => `transform: translateY(${(1 - t) * 100}%);`,
+		easing: cubicOut
+	};
 };
