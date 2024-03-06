@@ -79,6 +79,7 @@
 		position: relative;
 		width: 250px;
 		height: 100vh;
+		z-index: -1;
 	}
 
 	.jdg-nav-sidebar-item-container {
