@@ -21,6 +21,7 @@
 	export let onClickFunction = () => {};
 	export let showHorizontalStripesOnHover = true;
 
+	let containerRef;
 	let imgRef;
 	let aspectRatio;
 	let isHovering;
@@ -52,8 +53,11 @@
 
 	onMount(() => {
 		aspectRatio = imgRef.naturalWidth / imgRef.naturalHeight;
+		const requiredWidth = nHeight * aspectRatio;
 		imageTileCss = css`
-			height: ${nHeight.toString() + heightUnit};
+			height: ${containerRef.clientWidth < requiredWidth
+				? nHeight.toString() + heightUnit
+				: 'auto'};
 			width: ${matchAspectRatio ? (nHeight * aspectRatio).toString() + heightUnit : 'auto'};
 			aspect-ratio: ${matchAspectRatio ? aspectRatio : 'auto'};
 		`;
@@ -62,6 +66,7 @@
 
 <a {href} class={aCss}>
 	<div
+		bind:this={containerRef}
 		class="jdg-image-tile {imageTileCss}"
 		on:mouseenter={() => (isHovering = true)}
 		on:mouseleave={() => (isHovering = false)}
