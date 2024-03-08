@@ -56,10 +56,12 @@
 		</JDGGridLayout>
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating isForBodyCopy={true}>
-		<JDGImageTile cropToFit={false} label={'PAGE EXAMPLE'} href="/about" />
+		<JDGImageTile cropToFit={false} href="/about" />
 	</JDGContentBoxFloating>
 	<JDGAccentBlock blockQuote="This is a block quote." />
-	<JDGContentBoxFloating title="ANOTHER SECTION" />
+	<JDGContentBoxFloating title="ANOTHER SECTION" isForBodyCopy={true}>
+		<JDGImageTile imgSrc={'./history/lakeside-1.jpg'} cropToFit={false} />
+	</JDGContentBoxFloating>
 	<JDGAccentBlock
 		blockQuote="This is another block quote."
 		backgroundColor={jdgColors.accentStripesJDG[1]}

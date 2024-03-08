@@ -36,6 +36,17 @@
 		}
 	};
 
+	const updateContainerHeight = () => {
+		if (imgRef && containerRef) {
+			imgAspectRatio = imgRef.naturalWidth / imgRef.naturalHeight;
+			containerAspectRatio = containerRef.clientWidth / containerRef.clientHeight;
+
+			imageTileCss = css`
+				height: ${calculateImageContainerHeight(cropToFit, imgAspectRatio, containerAspectRatio)};
+			`;
+		}
+	};
+
 	const aCss = css`
 		display: ${cropToFit ? 'auto' : 'flex'};
 	`;
@@ -63,6 +74,8 @@
 			imgRef.addEventListener('load', onImgLoad);
 			window.addEventListener('resize', onPageResize);
 		}
+
+		updateContainerHeight();
 	});
 
 	onDestroy(() => {
@@ -73,20 +86,11 @@
 	});
 
 	const onImgLoad = () => {
-		imgAspectRatio = imgRef.naturalWidth / imgRef.naturalHeight;
-		containerAspectRatio = containerRef.clientWidth / containerRef.clientHeight;
-
-		imageTileCss = css`
-			height: ${calculateImageContainerHeight(cropToFit, imgAspectRatio, containerAspectRatio)};
-		`;
+		updateContainerHeight();
 	};
 
 	const onPageResize = () => {
-		containerAspectRatio = containerRef.clientWidth / containerRef.clientHeight;
-
-		imageTileCss = css`
-			height: ${calculateImageContainerHeight(cropToFit, imgAspectRatio, containerAspectRatio)};
-		`;
+		updateContainerHeight();
 	};
 </script>
 
