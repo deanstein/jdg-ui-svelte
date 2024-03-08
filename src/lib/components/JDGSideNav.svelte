@@ -1,24 +1,38 @@
 <script>
-	import { css } from '@emotion/css';
+	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
+	import { css } from '@emotion/css';
 
 	import uiState from '../states/ui-state.js';
 	import { setNavSidebarOpen } from '../jdg-ui-management.js';
+
 	import { jdgColors, jdgDurations, jdgSizes } from '../jdg-styling-constants.js';
 
 	export let navItems;
 
-	let jdgNavSidebarContainerCss = css`
-		a:before {
-			background-color: transparent;
-		}
-		background-color: ${jdgColors.headerBackground};
-		backdrop-filter: blur(${jdgSizes.blurSizeSmall});
-	`;
+	let isTransitioned = false;
+
+	onMount(() => {
+		setTimeout(() => {
+			isTransitioned = true;
+		}, jdgDurations.default);
+	});
+
+	let jdgNavSidebarContainerCss;
 
 	const jdgNavSidebarItemCss = css`
 		font-size: ${jdgSizes.fontSizeHeaderTitle};
 	`;
+
+	$: {
+		jdgNavSidebarContainerCss = css`
+			a:before {
+				background-color: transparent;
+			}
+			background-color: ${jdgColors.headerBackground};
+			${isTransitioned && `backdrop-filter: blur(${jdgSizes.blurSizeSmall});`}
+		`;
+	}
 </script>
 
 {#if $uiState.isNavSidebarOpen}
@@ -38,6 +52,7 @@
 			/>
 			<div
 				class="jdg-nav-sidebar-container {jdgNavSidebarContainerCss} jdg-letter-spacing-title"
+				transition:slide={{ duration: jdgDurations.default, delay: 0, axis: 'x' }}
 			>
 				<nav class="jdg-nav-sidebar-item-container">
 					{#each navItems as navItem, i}
@@ -78,7 +93,6 @@
 		position: relative;
 		width: 250px;
 		height: 100vh;
-		z-index: -1;
 	}
 
 	.jdg-nav-sidebar-item-container {
