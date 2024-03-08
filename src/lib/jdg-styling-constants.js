@@ -96,17 +96,17 @@ export const jdgSizes = {
 		return this.nFontSizeTimelineYear.toString() + this.fontUnitTimelineYear;
 	},
 
-	nBlurSizeSmall: 10,
+	nBlurSizeSmall: 5,
 	blurSizeSmallUnit: 'px',
 	get blurSizeSmall() {
 		return this.nBlurSizeSmall.toString() + this.blurSizeSmallUnit;
 	},
-	nBlurSizeMedium: 30,
+	nBlurSizeMedium: 8,
 	blurSizeMediumUnit: 'px',
 	get blurSizeMedium() {
 		return this.nBlurSizeMedium.toString() + this.blurSizeMediumUnit;
 	},
-	nBlurSizeLarge: 30,
+	nBlurSizeLarge: 12,
 	blurSizeLargeUnit: 'px',
 	get blurSizeLarge() {
 		return this.nBlurSizeLarge.toString() + this.blurSizeLargeUnit;
