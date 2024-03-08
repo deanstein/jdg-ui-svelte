@@ -1,5 +1,5 @@
 <script>
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import { css } from '@emotion/css';
 
 	import { JDGStripesHorizontal } from '../index.js';
@@ -7,10 +7,8 @@
 	import { fadeAndScale, verticalSlide } from '$lib/jdg-graphics-factory.js';
 	import { jdgColors, jdgSizes, jdgDurations } from '../jdg-styling-constants.js';
 
-	export let nHeight = jdgSizes.nImageHeightSm;
-	export let heightUnit = jdgSizes.imageHeightUnit;
-	export let matchAspectRatio = false; // if false, image fills available tile width
-	export let objectFit = 'cover';
+	export let height = '300px';
+	export let cropToFit = true; // if false, entire image always shown
 	export let label = undefined;
 	export let labelJustification = 'left';
 	export let labelContainerVerticalAlign = 'bottom';
@@ -22,19 +20,27 @@
 	export let showHorizontalStripesOnHover = true;
 
 	let containerRef;
+	let containerAspectRatio;
 	let imgRef;
-	let aspectRatio;
+	let imgAspectRatio;
 	let isHovering;
 
+	const calculateImageContainerHeight = (allowCropping, imgAspectRatio, containerAspectRatio) => {
+		switch (true) {
+			case !allowCropping && imgAspectRatio >= containerAspectRatio:
+				return 'auto';
+			case !allowCropping && imgAspectRatio < containerAspectRatio:
+				return height;
+			default:
+				return height;
+		}
+	};
+
 	const aCss = css`
-		display: ${matchAspectRatio ? 'flex' : 'auto'};
+		display: ${cropToFit ? 'auto' : 'flex'};
 	`;
 
 	let imageTileCss;
-
-	const imgCss = css`
-		object-fit: ${objectFit};
-	`;
 
 	const imageTileLabelContainerCss = css`
 		color: ${jdgColors.text};
@@ -52,21 +58,39 @@
 	`;
 
 	onMount(() => {
-		aspectRatio = imgRef.naturalWidth / imgRef.naturalHeight;
-		const requiredWidth = nHeight * aspectRatio;
-		imageTileCss = css`
-			height: ${containerRef.clientWidth < requiredWidth
-				? nHeight.toString() + heightUnit
-				: 'auto'};
-			width: ${matchAspectRatio ? (nHeight * aspectRatio).toString() + heightUnit : 'auto'};
-			aspect-ratio: ${matchAspectRatio ? aspectRatio : 'auto'};
-		`;
+		if (imgRef && containerRef) {
+			imgRef.addEventListener('load', onImgLoad);
+			window.addEventListener('resize', onPageResize);
+		}
 	});
+
+	onDestroy(() => {
+		if (imgRef && containerRef) {
+			imgRef.removeEventListener('load', onImgLoad);
+			window.removeEventListener('resize', onPageResize);
+		}
+	});
+
+	const onImgLoad = () => {
+		imgAspectRatio = imgRef.naturalWidth / imgRef.naturalHeight;
+		containerAspectRatio = containerRef.clientWidth / containerRef.clientHeight;
+
+		imageTileCss = css`
+			height: ${calculateImageContainerHeight(cropToFit, imgAspectRatio, containerAspectRatio)};
+		`;
+	};
+
+	const onPageResize = () => {
+		containerAspectRatio = containerRef.clientWidth / containerRef.clientHeight;
+
+		imageTileCss = css`
+			height: ${calculateImageContainerHeight(cropToFit, imgAspectRatio, containerAspectRatio)};
+		`;
+	};
 </script>
 
-<a {href} class={aCss}>
+<a {href} class={aCss} bind:this={containerRef}>
 	<div
-		bind:this={containerRef}
 		class="jdg-image-tile {imageTileCss}"
 		on:mouseenter={() => (isHovering = true)}
 		on:mouseleave={() => (isHovering = false)}
@@ -88,7 +112,7 @@
 				<JDGStripesHorizontal stripeHeight="3px" staggeredStripeWidth={false} />
 			</div>
 		{/if}
-		<img bind:this={imgRef} class={imgCss} src={imgSrc} alt={imgAlt} />
+		<img bind:this={imgRef} src={imgSrc} alt={imgAlt} />
 	</div>
 </a>
 
@@ -103,6 +127,14 @@
 		min-width: 0;
 		justify-content: center;
 		align-items: center;
+	}
+
+	img {
+		height: 100%;
+		width: 100%;
+		transition: transform 0.3s ease-in-out;
+		z-index: -1;
+		object-fit: cover;
 	}
 
 	.jdg-image-tile {
@@ -139,13 +171,6 @@
 		position: absolute;
 		bottom: 0;
 		width: 100%;
-	}
-
-	img {
-		height: 100%;
-		width: 100%;
-		transition: transform 0.3s ease-in-out;
-		z-index: -1;
 	}
 
 	.jdg-image-tile:hover img {

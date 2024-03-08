@@ -56,7 +56,7 @@
 		</JDGGridLayout>
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating isForBodyCopy={true}>
-		<JDGImageTile matchAspectRatio={true} label={'PAGE EXAMPLE'} href="/about" />
+		<JDGImageTile cropToFit={false} label={'PAGE EXAMPLE'} href="/about" />
 	</JDGContentBoxFloating>
 	<JDGAccentBlock blockQuote="This is a block quote." />
 	<JDGContentBoxFloating title="ANOTHER SECTION" />
