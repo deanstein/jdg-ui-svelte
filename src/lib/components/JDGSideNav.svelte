@@ -8,8 +8,6 @@
 
 	export let navItems;
 
-	let isTransitioned = false;
-
 	let jdgNavSidebarContainerCss = css`
 		a:before {
 			background-color: transparent;
@@ -17,26 +15,22 @@
 		background-color: ${jdgColors.headerBackground};
 	`;
 
-	let blurCss = css`
-		backdrop-filter: blur(${jdgSizes.blurSizeSmall});
-	`;
-
 	const jdgNavSidebarItemCss = css`
 		font-size: ${jdgSizes.fontSizeHeaderTitle};
 	`;
 
+	// set dynamically, only after the slide animation is complete
+	let blurCss;
+
+	// only apply the blur after the animation is complete
 	$: if ($uiState.isNavSidebarOpen) {
 		setTimeout(() => {
-			isTransitioned = true;
+			blurCss = css`
+				backdrop-filter: blur(${jdgSizes.blurSizeSmall});
+			`;
 		}, jdgDurations.default);
 	} else {
-		isTransitioned = false;
-	}
-
-	$: {
-		blurCss = css`
-			${isTransitioned ? `backdrop-filter: blur(${jdgSizes.blurSizeSmall});` : ''}
-		`;
+		blurCss = css``;
 	}
 </script>
 
