@@ -90,7 +90,7 @@
 	};
 
 	const onPageResize = () => {
-		updateContainerHeight();
+		//updateContainerHeight();
 	};
 </script>
 
