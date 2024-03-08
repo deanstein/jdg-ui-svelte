@@ -40,8 +40,6 @@
 		display: ${cropToFit ? 'auto' : 'flex'};
 	`;
 
-	let imageTileCss;
-
 	const imageTileLabelContainerCss = css`
 		color: ${jdgColors.text};
 		background-color: ${jdgColors.headerBackground};
@@ -56,6 +54,9 @@
 		font-size: ${jdgSizes.fontSizeImageTileLabel};
 		text-align: ${labelJustification};
 	`;
+
+	// this is set dynamically
+	let imageTileCss;
 
 	onMount(() => {
 		if (imgRef && containerRef) {
