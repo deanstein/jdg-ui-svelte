@@ -27,7 +27,7 @@
 
 	const calculateImageContainerHeight = (allowCropping, imgAspectRatio, containerAspectRatio) => {
 		switch (true) {
-			case !allowCropping && imgAspectRatio >= containerAspectRatio:
+			case !allowCropping && imgAspectRatio > containerAspectRatio:
 				return 'auto';
 			case !allowCropping && imgAspectRatio < containerAspectRatio:
 				return height;
