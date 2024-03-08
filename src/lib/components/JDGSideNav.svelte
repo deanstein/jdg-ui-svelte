@@ -1,6 +1,6 @@
 <script>
 	import { css } from '@emotion/css';
-	import { slide } from 'svelte/transition';
+	import { fade } from 'svelte/transition';
 
 	import uiState from '../states/ui-state.js';
 	import { setNavSidebarOpen } from '../jdg-ui-management.js';
@@ -38,6 +38,7 @@
 			/>
 			<div
 				class="jdg-nav-sidebar-container {jdgNavSidebarContainerCss} jdg-letter-spacing-title"
+				transition:fade={{ duration: jdgDurations.default }}
 			>
 				<nav class="jdg-nav-sidebar-item-container">
 					{#each navItems as navItem, i}
