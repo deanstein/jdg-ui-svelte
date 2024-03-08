@@ -7,24 +7,13 @@
 	import { jdgColors, jdgDurations, jdgSizes } from '../jdg-styling-constants.js';
 
 	export let navItems;
+
 	let jdgNavSidebarContainerCss = css`
-		position: relative;
-		background-color: ${jdgColors.headerBackground};
-
-		&::before {
-			content: '';
-			position: absolute;
-			top: 0;
-			right: 0;
-			bottom: 0;
-			left: 0;
-			backdrop-filter: blur(${jdgSizes.blurSizeSmall});
-			z-index: -1;
-		}
-
 		a:before {
 			background-color: transparent;
 		}
+		background-color: ${jdgColors.headerBackground};
+		backdrop-filter: blur(${jdgSizes.blurSizeSmall});
 	`;
 
 	const jdgNavSidebarItemCss = css`
