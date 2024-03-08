@@ -36,17 +36,6 @@
 		}
 	};
 
-	const updateContainerHeight = () => {
-		if (imgRef && containerRef) {
-			imgAspectRatio = imgRef.naturalWidth / imgRef.naturalHeight;
-			containerAspectRatio = containerRef.clientWidth / containerRef.clientHeight;
-
-			imageTileCss = css`
-				height: ${calculateImageContainerHeight(cropToFit, imgAspectRatio, containerAspectRatio)};
-			`;
-		}
-	};
-
 	const aCss = css`
 		display: ${cropToFit ? 'auto' : 'flex'};
 	`;
@@ -75,7 +64,11 @@
 			window.addEventListener('resize', onPageResize);
 		}
 
-		updateContainerHeight();
+		containerAspectRatio = containerRef.clientWidth / containerRef.clientHeight;
+
+		imageTileCss = css`
+			height: ${calculateImageContainerHeight(cropToFit, imgAspectRatio, containerAspectRatio)};
+		`;
 	});
 
 	onDestroy(() => {
@@ -86,11 +79,20 @@
 	});
 
 	const onImgLoad = () => {
-		updateContainerHeight();
+		imgAspectRatio = imgRef.naturalWidth / imgRef.naturalHeight;
+		containerAspectRatio = containerRef.clientWidth / containerRef.clientHeight;
+
+		imageTileCss = css`
+			height: ${calculateImageContainerHeight(cropToFit, imgAspectRatio, containerAspectRatio)};
+		`;
 	};
 
 	const onPageResize = () => {
-		updateContainerHeight();
+		containerAspectRatio = containerRef.clientWidth / containerRef.clientHeight;
+
+		imageTileCss = css`
+			height: ${calculateImageContainerHeight(cropToFit, imgAspectRatio, containerAspectRatio)};
+		`;
 	};
 </script>
 
