@@ -43,7 +43,8 @@
 		if (cropToFit) {
 			return;
 		}
-		if (containerRef) {
+		if (containerRef && imgRef) {
+			imgAspectRatio = imgRef.naturalWidth / imgRef.naturalHeight;
 			containerAspectRatio = containerRef.clientWidth / nHeightPx;
 
 			imageTileCss = css`
@@ -81,8 +82,6 @@
 			imgRef.addEventListener('load', onImgLoad);
 			updateContainerHeight();
 		}
-
-		imgAspectRatio = imgRef.naturalWidth / imgRef.naturalHeight;
 	});
 
 	onDestroy(() => {
