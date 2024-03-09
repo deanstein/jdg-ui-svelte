@@ -82,6 +82,7 @@
 		}
 
 		imgAspectRatio = imgRef.naturalWidth / imgRef.naturalHeight;
+		updateContainerHeight();
 	});
 
 	onDestroy(() => {
