@@ -28,7 +28,6 @@
 	let isHovering;
 
 	const calculateImageContainerHeight = (allowCropping, imgAspectRatio, containerAspectRatio) => {
-		console.log('calculating...');
 		switch (true) {
 			case !allowCropping && imgAspectRatio > containerAspectRatio:
 				return 'auto';
