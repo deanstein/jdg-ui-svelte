@@ -80,7 +80,6 @@
 	onMount(() => {
 		if (imgRef && !cropToFit) {
 			imgRef.addEventListener('load', onImgLoad);
-			updateContainerHeight();
 		}
 	});
 
