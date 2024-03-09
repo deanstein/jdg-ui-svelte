@@ -2,6 +2,8 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { css } from '@emotion/css';
 
+	import uiState from '$lib/states/ui-state.js';
+
 	import { JDGStripesHorizontal } from '../index.js';
 
 	import { fadeAndScale, verticalSlide } from '$lib/jdg-graphics-factory.js';
@@ -26,6 +28,7 @@
 	let isHovering;
 
 	const calculateImageContainerHeight = (allowCropping, imgAspectRatio, containerAspectRatio) => {
+		console.log('calculating...');
 		switch (true) {
 			case !allowCropping && imgAspectRatio > containerAspectRatio:
 				return 'auto';
@@ -41,8 +44,7 @@
 		if (cropToFit) {
 			return;
 		}
-		if (imgRef && containerRef) {
-			imgAspectRatio = imgRef.naturalWidth / imgRef.naturalHeight;
+		if (containerRef) {
 			containerAspectRatio = containerRef.clientWidth / nHeightPx;
 
 			imageTileCss = css`
@@ -72,30 +74,30 @@
 
 	// this is possibly set dynamically depending on cropToFit
 	let imageTileCss = css`
-		height: ${nHeightPx.toString() + 'px'}
+		height: ${nHeightPx.toString() + 'px'};
 	`;
 
 	onMount(() => {
 		if (imgRef && containerRef && !cropToFit) {
 			imgRef.addEventListener('load', onImgLoad);
-			window.addEventListener('resize', onPageResize);
 		}
 
-		updateContainerHeight();
+		imgAspectRatio = imgRef.naturalWidth / imgRef.naturalHeight;
 	});
 
 	onDestroy(() => {
 		if (imgRef && containerRef && !cropToFit) {
 			imgRef.removeEventListener('load', onImgLoad);
-			window.removeEventListener('resize', onPageResize);
 		}
 	});
 
-	const onImgLoad = () => {
+	$: {
+		// ensure the image tile is updated when the window width state
+		$uiState.windowWidth;
 		updateContainerHeight();
-	};
+	}
 
-	const onPageResize = () => {
+	const onImgLoad = () => {
 		updateContainerHeight();
 	};
 </script>

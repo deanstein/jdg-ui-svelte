@@ -2,8 +2,9 @@
 	import { onMount, tick } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { JDGLoadingOverlay } from '$lib/index.js';
+	import { setWindowWidth } from '$lib/jdg-ui-management.js';
 
+	import { JDGLoadingOverlay } from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-styling-constants.js';
 	import { convertHexToRGBA } from '$lib/jdg-utils.js';
 
@@ -17,6 +18,12 @@
 	// global hyperlink style options
 	const hyperlinkColorOpacity = 0.75;
 	const useStripedHyperlinkHoverStyle = false;
+
+	// app sets window width in the ui state
+	//  so children don't have to add event handlers
+	const onPageResize = () => {
+		setWindowWidth(window.innerWidth);
+	};
 
 	// global styles, but using emotion css
 	const appContainerCss = css`
@@ -43,6 +50,8 @@
 	onMount(async () => {
 		await tick(); // delay until layout and all children are loaded
 		isAppLoaded = true;
+
+		window.addEventListener('resize', onPageResize);
 	});
 </script>
 
