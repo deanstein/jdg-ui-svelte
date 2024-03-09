@@ -15,7 +15,7 @@
 	`;
 </script>
 
-<JDGOverlay>
+<JDGOverlay colorRgba="rgba(255, 255, 255, 0.6)">
 	<div class="image-modal-content">
 		<div class="image-modal-title-bar {modalTitleBarCss}">
 			<div
@@ -58,7 +58,6 @@
 	}
 
 	.image-container {
-		background-color: white;
 		display: flex;
 		padding: 10px;
 		align-items: center;

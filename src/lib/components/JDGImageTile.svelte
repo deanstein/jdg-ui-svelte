@@ -54,7 +54,7 @@
 	};
 
 	const aCss = css`
-		display: ${cropToFit ? 'auto' : 'flex'};
+		display: ${cropToFit ? 'relative' : 'flex'};
 	`;
 
 	const imageTileLabelContainerCss = css`

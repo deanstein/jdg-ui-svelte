@@ -4,21 +4,16 @@
 	import { getHighestZIndex } from '../jdg-ui-management.js';
 	import { jdgDurations, jdgSizes } from '../jdg-styling-constants.js';
 
-	export let opacity = 0.5;
-	export let color = 'white';
+	export let colorRgba = 'rgba(255, 255, 255, 1.0)';
 
 	const overlayCss = css`
 		z-index: ${getHighestZIndex()};
-		background-color: ${color};
-		opacity: ${opacity};
+		background-color: ${colorRgba};
 		backdrop-filter: blur(${jdgSizes.blurSizeMedium});
 	`;
 </script>
 
-<div
-	transition:fade={{ duration: jdgDurations.transitionDuration }}
-	class="jdg-overlay {overlayCss}"
->
+<div transition:fade={{ duration: jdgDurations.default }} class="jdg-overlay {overlayCss}">
 	<slot />
 </div>
 
