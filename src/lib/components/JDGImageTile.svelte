@@ -7,7 +7,7 @@
 	import { fadeAndScale, verticalSlide } from '$lib/jdg-graphics-factory.js';
 	import { jdgColors, jdgSizes, jdgDurations } from '../jdg-styling-constants.js';
 
-	export let height = '300px';
+	export let nHeightPx = 300;
 	export let cropToFit = true; // if false, entire image always shown
 	export let label = undefined;
 	export let labelJustification = 'left';
@@ -30,16 +30,20 @@
 			case !allowCropping && imgAspectRatio > containerAspectRatio:
 				return 'auto';
 			case !allowCropping && imgAspectRatio < containerAspectRatio:
-				return height;
+				return nHeightPx.toString() + 'px';
 			default:
-				return height;
+				return nHeightPx.toString() + 'px';
 		}
 	};
 
 	const updateContainerHeight = () => {
+		// no need to update if cropping
+		if (cropToFit) {
+			return;
+		}
 		if (imgRef && containerRef) {
 			imgAspectRatio = imgRef.naturalWidth / imgRef.naturalHeight;
-			containerAspectRatio = containerRef.clientWidth / containerRef.clientHeight;
+			containerAspectRatio = containerRef.clientWidth / nHeightPx;
 
 			imageTileCss = css`
 				height: ${calculateImageContainerHeight(cropToFit, imgAspectRatio, containerAspectRatio)};
@@ -66,11 +70,13 @@
 		text-align: ${labelJustification};
 	`;
 
-	// this is set dynamically
-	let imageTileCss;
+	// this is possibly set dynamically depending on cropToFit
+	let imageTileCss = css`
+		height: ${nHeightPx.toString() + 'px'}
+	`;
 
 	onMount(() => {
-		if (imgRef && containerRef) {
+		if (imgRef && containerRef && !cropToFit) {
 			imgRef.addEventListener('load', onImgLoad);
 			window.addEventListener('resize', onPageResize);
 		}
@@ -79,7 +85,7 @@
 	});
 
 	onDestroy(() => {
-		if (imgRef && containerRef) {
+		if (imgRef && containerRef && !cropToFit) {
 			imgRef.removeEventListener('load', onImgLoad);
 			window.removeEventListener('resize', onPageResize);
 		}
@@ -90,12 +96,13 @@
 	};
 
 	const onPageResize = () => {
-		//updateContainerHeight();
+		updateContainerHeight();
 	};
 </script>
 
-<a {href} class={aCss} bind:this={containerRef}>
+<a {href} class={aCss}>
 	<div
+		bind:this={containerRef}
 		class="jdg-image-tile {imageTileCss}"
 		on:mouseenter={() => (isHovering = true)}
 		on:mouseleave={() => (isHovering = false)}
