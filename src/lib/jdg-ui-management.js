@@ -11,11 +11,18 @@ export const setWindowWidth = (windowWidth) => {
 	});
 };
 
+export const setShowImageDetailModal = (showImageDetailModal) => {
+	uiState.update((currentValue) => {
+		currentValue.showImageDetailModal = showImageDetailModal;
+		return currentValue;
+	});
+};
+
 export const getIsNavSideBarOpen = () => {
 	let isOpen;
 
 	uiState.subscribe((currentValue) => {
-		isOpen = currentValue.isNavSidebarOpen;
+		isOpen = currentValue.showNavSidebar;
 	});
 
 	return isOpen;
@@ -23,7 +30,7 @@ export const getIsNavSideBarOpen = () => {
 
 export const setNavSidebarOpen = (sidebarOpenState) => {
 	uiState.update((currentValue) => {
-		currentValue.isNavSidebarOpen = sidebarOpenState;
+		currentValue.showNavSidebar = sidebarOpenState;
 		return currentValue;
 	});
 };

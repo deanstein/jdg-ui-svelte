@@ -27,6 +27,9 @@ export { JDGGridLayout };
 import JDGHeader from './components/JDGHeader.svelte';
 export { JDGHeader };
 
+import JDGImageDetailModal from './components/JDGImageDetailModal.svelte';
+export { JDGImageDetailModal };
+
 import JDGImageFullWidth from './components/JDGImageFullWidth.svelte';
 export { JDGImageFullWidth };
 
@@ -52,6 +55,9 @@ import JDGTopNav from './components/JDGTopNav.svelte';
 export { JDGTopNav };
 
 // SVG components
+import JDGCloseIcon from './assets/svg/JDGCloseIcon.svelte';
+export { JDGCloseIcon };
+
 import JDGMenuIcon from './assets/svg/JDGMenuIcon.svelte';
 export { JDGMenuIcon };
 

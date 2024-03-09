@@ -25,7 +25,7 @@
 	`;
 
 	$: {
-		isOpen = $uiState.isNavSidebarOpen;
+		isOpen = $uiState.showNavSidebar;
 	}
 </script>
 

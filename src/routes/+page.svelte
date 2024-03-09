@@ -1,14 +1,21 @@
 <script>
-	import { jdgColors, jdgSizes } from '$lib/jdg-styling-constants.js';
+	import {
+		openUrl,
+		scrollToAnchorFloatingContentBox,
+		setShowImageDetailModal
+	} from '$lib/jdg-ui-management.js';
+
 	import {
 		JDGAccentBlock,
 		JDGContentBoxFloating,
 		JDGContentContainer,
 		JDGImageFullWidth,
 		JDGImageTile,
-		JDGGridLayout
+		JDGGridLayout,
+		JDGImageDetailModal
 	} from '$lib/index.js';
-	import { openUrl, scrollToAnchorFloatingContentBox } from '$lib/jdg-ui-management.js';
+	import { jdgColors } from '$lib/jdg-styling-constants.js';
+	import uiState from '$lib/states/ui-state.js';
 </script>
 
 <JDGContentContainer overlapWithHeader={true} topBottomPadding="0" gap="0">
@@ -60,7 +67,13 @@
 	</JDGContentBoxFloating>
 	<JDGAccentBlock blockQuote="This is a block quote." />
 	<JDGContentBoxFloating title="ANOTHER SECTION" isForBodyCopy={true}>
-		<JDGImageTile imgSrc={'./history/lakeside-1.jpg'} cropToFit={false} />
+		<JDGImageTile
+			onClickFunction={() => {
+				setShowImageDetailModal(true);
+			}}
+			imgSrc={'./history/lakeside-1.jpg'}
+			cropToFit={false}
+		/>
 	</JDGContentBoxFloating>
 	<JDGAccentBlock
 		blockQuote="This is another block quote."
@@ -73,3 +86,6 @@
 	/>
 	<JDGContentBoxFloating title="A FOURTH SECTION" />
 </JDGContentContainer>
+{#if $uiState.showImageDetailModal}
+	<JDGImageDetailModal />
+{/if}

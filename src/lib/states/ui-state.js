@@ -1,10 +1,12 @@
 import { writable } from 'svelte/store';
 
 const uiState = {
-	isNavSidebarOpen: false,
+	windowWidth: 0,
+	showImageDetailModal: false,
+	imageDetails: {},
+	showNavSidebar: false,
 	highestZIndex: 1,
-	activeNotificationBanners: [],
-	windowWidth: 0
+	activeNotificationBanners: []
 };
 
 export default writable(uiState);

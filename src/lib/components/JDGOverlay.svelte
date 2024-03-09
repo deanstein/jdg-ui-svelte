@@ -2,15 +2,16 @@
 	import { css } from '@emotion/css';
 	import { fade } from 'svelte/transition';
 	import { getHighestZIndex } from '../jdg-ui-management.js';
-	import { jdgDurations } from '../jdg-styling-constants.js';
+	import { jdgDurations, jdgSizes } from '../jdg-styling-constants.js';
 
-	export let opacity = 1.0;
+	export let opacity = 0.5;
 	export let color = 'white';
 
 	const overlayCss = css`
 		z-index: ${getHighestZIndex()};
 		background-color: ${color};
 		opacity: ${opacity};
+		backdrop-filter: blur(${jdgSizes.blurSizeMedium});
 	`;
 </script>
 
@@ -23,7 +24,7 @@
 
 <style>
 	.jdg-overlay {
-		position: absolute;
+		position: fixed;
 		top: 0;
 		left: 0;
 		width: 100%;

@@ -23,7 +23,7 @@
 	let blurCss;
 
 	// only apply the blur after the animation is complete
-	$: if ($uiState.isNavSidebarOpen) {
+	$: if ($uiState.showNavSidebar) {
 		setTimeout(() => {
 			blurCss = css`
 				backdrop-filter: blur(${jdgSizes.blurSizeSmall});
@@ -34,7 +34,7 @@
 	}
 </script>
 
-{#if $uiState.isNavSidebarOpen}
+{#if $uiState.showNavSidebar}
 	<!-- mobile nav container -->
 	<div class="jdg-nav-sidebar-layout">
 		<div class="jdg-nav-sidebar-alignment-container">

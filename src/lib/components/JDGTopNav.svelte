@@ -88,7 +88,7 @@
 			class="mobile-nav-button {mobileNavButtonCss}"
 			on:click={onClickMobileNavButton}
 			on:keydown={onClickMobileNavButton}
-			title={$uiState.isNavSidebarOpen ? 'Close menu' : 'Open menu'}
+			title={$uiState.showNavSidebar ? 'Close menu' : 'Open menu'}
 		>
 			<div class="jdg-highlight-container">
 				<span class="jdg-highlight no-initial-highlight" style="display: flex;">
