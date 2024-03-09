@@ -73,20 +73,20 @@
 
 	// this is possibly set dynamically depending on cropToFit
 	let imageTileCss = css`
-		height: ${nHeightPx.toString() + 'px'};
+		height: ${cropToFit ? nHeightPx.toString() + 'px' : 'auto'};
 	`;
 
 	onMount(() => {
-		if (imgRef && containerRef && !cropToFit) {
+		if (imgRef && !cropToFit) {
 			imgRef.addEventListener('load', onImgLoad);
+			updateContainerHeight();
 		}
 
 		imgAspectRatio = imgRef.naturalWidth / imgRef.naturalHeight;
-		updateContainerHeight();
 	});
 
 	onDestroy(() => {
-		if (imgRef && containerRef && !cropToFit) {
+		if (imgRef && !cropToFit) {
 			imgRef.removeEventListener('load', onImgLoad);
 		}
 	});
