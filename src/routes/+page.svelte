@@ -55,7 +55,7 @@
 			<JDGImageTile />
 		</JDGGridLayout>
 	</JDGContentBoxFloating>
-	<JDGContentBoxFloating isForBodyCopy={true}>
+	<JDGContentBoxFloating title="TEST SECTION" isForBodyCopy={true}>
 		<JDGImageTile cropToFit={false} href="/about" />
 	</JDGContentBoxFloating>
 	<JDGAccentBlock blockQuote="This is a block quote." />
