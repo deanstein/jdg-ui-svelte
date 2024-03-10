@@ -3,8 +3,12 @@
 
 	import { setShowImageDetailModal } from '$lib/jdg-ui-management.js';
 
-	import { JDGCloseIcon, JDGImageTile, JDGOverlay } from '$lib/index.js';
+	import { JDGCloseIcon, JDGOverlay } from '$lib/index.js';
 	import { jdgSizes } from '$lib/jdg-styling-constants.js';
+	import { instantiateObject } from '$lib/jdg-utils.js';
+	import jdgImageDetails from '$lib/schemas/image-details.js';
+
+	export let imageDetails = instantiateObject(jdgImageDetails);
 
 	const onClickCloseButton = () => {
 		setShowImageDetailModal(false);
@@ -29,7 +33,7 @@
 			</div>
 		</div>
 		<div class="image-container">
-			<JDGImageTile />
+			<img src={imageDetails.imgSrc} alt={imageDetails.imgAlt}>
 		</div>
 	</div>
 </JDGOverlay>
