@@ -23,11 +23,14 @@
 </JDGOverlay>
 
 <style>
+	img {
+		width: 100%;
+	}
+
 	.image-container {
 		display: flex;
-		padding: 10px;
 		align-items: center;
 		justify-content: center;
-		flex-grow: 1;
+		padding: 10px;
 	}
 </style>
