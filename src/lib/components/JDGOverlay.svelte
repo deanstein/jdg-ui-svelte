@@ -5,6 +5,7 @@
 	import { jdgDurations, jdgSizes } from '../jdg-styling-constants.js';
 
 	export let colorRgba = 'rgba(255, 255, 255, 1.0)';
+	export let onClickFunction = () => {};
 
 	const overlayCss = css`
 		z-index: ${getHighestZIndex()};
@@ -13,7 +14,14 @@
 	`;
 </script>
 
-<div transition:fade={{ duration: jdgDurations.default }} class="jdg-overlay {overlayCss}">
+<div
+	on:click={onClickFunction}
+	on:keydown={onClickFunction}
+	role="button"
+	tabindex="0"
+	transition:fade={{ duration: jdgDurations.default }}
+	class="jdg-overlay {overlayCss}"
+>
 	<slot />
 </div>
 

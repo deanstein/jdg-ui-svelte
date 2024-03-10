@@ -49,7 +49,12 @@
 	`;
 </script>
 
-<JDGOverlay colorRgba="rgba(255, 255, 255, 0.6)">
+<JDGOverlay
+	onClickFunction={() => {
+		setShowImageDetailModal(false);
+	}}
+	colorRgba="rgba(255, 255, 255, 0.6)"
+>
 	<div class="image-modal-content">
 		<div class="image-modal-title-bar {modalTitleBarCss}">
 			<div
