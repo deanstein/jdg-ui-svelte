@@ -42,32 +42,6 @@ export const getScreenCentroid = () => {
 	};
 };
 
-export const getHeaderHeightAtCurrentBreakpoint = () => {
-	switch (true) {
-		case window.innerWidth < jdgBreakpoints.width[0]:
-			return jdgSizes.headerHeightSm;
-		case window.innerWidth > jdgBreakpoints.width[0] && window.innerWidth < jdgBreakpoints.width[1]:
-			return jdgSizes.headerSizeMd;
-		case window.innerWidth > jdgBreakpoints.width[1]:
-			return jdgSizes.headerHeightLg;
-		default:
-			return jdgSizes.headerHeightMd;
-	}
-};
-
-export const getMobileNavIconHeightAtCurrentBreakpoint = () => {
-	switch (true) {
-		case window.innerWidth < jdgBreakpoints.width[0]:
-			return jdgSizes.navMobileIconHeightSm;
-		case window.innerWidth > jdgBreakpoints.width[0] && window.innerWidth < jdgBreakpoints.width[1]:
-			return jdgSizes.navMobileIconHeightMd;
-		case window.innerWidth > jdgBreakpoints.width[1]:
-			return jdgSizes.navMobileIconHeightLg;
-		default:
-			return jdgSizes.headerHeightMd;
-	}
-};
-
 // get the bottom of the header so any main content can start there
 // returns value in pixels
 export const getDistanceToBottomOfHeader = (includeStripes = false) => {

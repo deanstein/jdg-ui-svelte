@@ -1,14 +1,10 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import {
-		getHeaderHeightAtCurrentBreakpoint,
-		getMobileNavIconHeightAtCurrentBreakpoint,
-		setShowImageDetailModal
-	} from '$lib/jdg-ui-management.js';
+	import { setShowImageDetailModal } from '$lib/jdg-ui-management.js';
 
 	import { JDGCloseIcon, JDGOverlay } from '$lib/index.js';
-	import { jdgColors, jdgSizes } from '$lib/jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-styling-constants.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
 	import jdgImageDetails from '$lib/schemas/image-details.js';
 
@@ -19,17 +15,37 @@
 	};
 
 	const modalTitleBarCss = css`
-		height: ${getHeaderHeightAtCurrentBreakpoint()};
 		padding-left: ${jdgSizes.headerSidePadding};
 		padding-right: ${jdgSizes.headerSidePadding};
 		padding-top: ${jdgSizes.headerTopBottomPadding};
 		padding-bottom: ${jdgSizes.headerTopBottomPadding};
 		background-color: ${jdgColors.headerBackground};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			height: ${jdgSizes.headerHeightSm};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) and (max-width: ${
+			jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit
+		}) {
+			height: ${jdgSizes.headerHeightMd};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			height: ${jdgSizes.headerHeightLg};
 	`;
 
 	const closeButtonCss = css`
-		width: ${getMobileNavIconHeightAtCurrentBreakpoint()};
-		height: ${getMobileNavIconHeightAtCurrentBreakpoint()};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			width: ${jdgSizes.navMobileIconHeightSm};
+			height: ${jdgSizes.navMobileIconHeightSm};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) and (max-width: ${
+			jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit
+		}) {
+			width: ${jdgSizes.navMobileIconHeightMd};
+			height: ${jdgSizes.navMobileIconHeightMd};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			width: ${jdgSizes.navMobileIconHeightLg};
+			height: ${jdgSizes.navMobileIconHeightLg};
 	`;
 </script>
 
