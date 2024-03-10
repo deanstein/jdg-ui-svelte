@@ -2,7 +2,7 @@ import { writable } from 'svelte/store';
 
 const uiState = {
 	windowWidth: 0,
-	showImageDetailModal: false,
+	showImageDetailOverlay: false,
 	imageDetails: {},
 	showNavSidebar: false,
 	highestZIndex: 1,

@@ -12,7 +12,7 @@
 		JDGImageFullWidth,
 		JDGImageTile,
 		JDGGridLayout,
-		JDGImageDetailModal
+		JDGImageDetailOverlay
 	} from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-styling-constants.js';
 	import uiState from '$lib/states/ui-state.js';
@@ -86,6 +86,6 @@
 	/>
 	<JDGContentBoxFloating title="A FOURTH SECTION" />
 </JDGContentContainer>
-{#if $uiState.showImageDetailModal}
-	<JDGImageDetailModal />
+{#if $uiState.showImageDetailOverlay}
+	<JDGImageDetailOverlay />
 {/if}

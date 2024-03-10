@@ -13,7 +13,7 @@ export const setWindowWidth = (windowWidth) => {
 
 export const setShowImageDetailModal = (showImageDetailModal) => {
 	uiState.update((currentValue) => {
-		currentValue.showImageDetailModal = showImageDetailModal;
+		currentValue.showImageDetailOverlay = showImageDetailModal;
 		return currentValue;
 	});
 };

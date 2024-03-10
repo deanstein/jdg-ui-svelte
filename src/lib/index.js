@@ -27,8 +27,8 @@ export { JDGGridLayout };
 import JDGHeader from './components/JDGHeader.svelte';
 export { JDGHeader };
 
-import JDGImageDetailModal from './components/JDGImageDetailModal.svelte';
-export { JDGImageDetailModal };
+import JDGImageDetailOverlay from './components/JDGImageDetailOverlay.svelte';
+export { JDGImageDetailOverlay };
 
 import JDGImageFullWidth from './components/JDGImageFullWidth.svelte';
 export { JDGImageFullWidth };
