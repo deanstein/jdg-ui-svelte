@@ -82,7 +82,7 @@
 		class="jdg-overlay-content"
 		role="button"
 		tabindex="0"
-		on:click|self={onCloseFunction}
+		on:click|self={closeOnOverlayClick ? onCloseFunction : () => {}}
 		on:keypress={() => {}}
 	>
 		<slot />
