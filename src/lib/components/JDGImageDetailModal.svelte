@@ -1,7 +1,11 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { setShowImageDetailModal } from '$lib/jdg-ui-management.js';
+	import {
+		getHeaderHeightAtCurrentBreakpoint,
+		getMobileNavIconHeightAtCurrentBreakpoint,
+		setShowImageDetailModal
+	} from '$lib/jdg-ui-management.js';
 
 	import { JDGCloseIcon, JDGOverlay } from '$lib/index.js';
 	import { jdgSizes } from '$lib/jdg-styling-constants.js';
@@ -15,7 +19,16 @@
 	};
 
 	const modalTitleBarCss = css`
-		height: ${jdgSizes.headerHeightLg};
+		height: ${getHeaderHeightAtCurrentBreakpoint()};
+		padding-left: ${jdgSizes.headerSidePadding};
+		padding-right: ${jdgSizes.headerSidePadding};
+		padding-top: ${jdgSizes.headerTopBottomPadding};
+		padding-bottom: ${jdgSizes.headerTopBottomPadding};
+	`;
+
+	const closeButtonCss = css`
+		width: ${getMobileNavIconHeightAtCurrentBreakpoint()};
+		height: ${getMobileNavIconHeightAtCurrentBreakpoint()};
 	`;
 </script>
 
@@ -23,17 +36,21 @@
 	<div class="image-modal-content">
 		<div class="image-modal-title-bar {modalTitleBarCss}">
 			<div
-				class="image-modal-close-button"
+				class="image-modal-close-button {closeButtonCss}"
 				role="button"
 				tabindex="0"
 				on:click={onClickCloseButton}
 				on:keydown={onClickCloseButton}
 			>
-				<JDGCloseIcon />
+				<div class="jdg-highlight-container">
+					<span class="jdg-highlight no-initial-highlight" style="display: flex;">
+						<JDGCloseIcon />
+					</span>
+				</div>
 			</div>
 		</div>
 		<div class="image-container">
-			<img src={imageDetails.imgSrc} alt={imageDetails.imgAlt}>
+			<img src={imageDetails.imgSrc} alt={imageDetails.imgAlt} />
 		</div>
 	</div>
 </JDGOverlay>
@@ -50,10 +67,10 @@
 
 	.image-modal-title-bar {
 		display: flex;
+		box-sizing: border-box;
 		align-items: center;
 		justify-content: end;
 		width: 100%;
-		padding: 15px;
 	}
 
 	.image-modal-close-button {

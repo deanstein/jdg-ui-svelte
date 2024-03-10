@@ -88,7 +88,7 @@
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-			height: ${jdgSizes.headerHeightLg};
+			height: ${jdgSizes.headerHeightMd};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 			height: ${jdgSizes.headerHeightLg};
@@ -108,7 +108,7 @@
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-			max-height: ${jdgSizes.headerLogoHeightLg};
+			max-height: ${jdgSizes.headerLogoHeightMd};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 			max-height: ${jdgSizes.headerLogoHeightLg};

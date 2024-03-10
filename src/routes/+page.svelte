@@ -48,7 +48,7 @@
 				imgSrc={'./project-tiles/architecture.jpg'}
 				label={'SCROLL EXAMPLE'}
 				onClickFunction={() => {
-					scrollToAnchorFloatingContentBox('ANOTHER-SECTION');
+					scrollToAnchorFloatingContentBox('ANOTHER-SECTION', true);
 				}}
 			/>
 			<JDGImageTile label={'PAGE EXAMPLE'} href="/about" />

@@ -158,6 +158,10 @@ export const jdgSizes = {
 	get headerLogoHeightSm() {
 		return this.nHeaderLogoHeightSm.toString() + this.headerLogoHeightUnit;
 	},
+	nHeaderLogoHeightMd: 45,
+	get headerLogoHeightMd() {
+		return this.nHeaderLogoHeightMd.toString() + this.headerLogoHeightUnit;
+	},
 	nHeaderLogoHeightLg: 50,
 	get headerLogoHeightLg() {
 		return this.nHeaderLogoHeightLg.toString() + this.headerLogoHeightUnit;
@@ -178,6 +182,12 @@ export const jdgSizes = {
 	},
 	get headerHeightSm() {
 		return this.nHeaderHeightSm.toString() + this.headerHeightUnit;
+	},
+	get nHeaderHeightMd() {
+		return 2 * this.nHeaderTopBottomPadding + this.nHeaderLogoHeightMd;
+	},
+	get headerHeightMd() {
+		return this.nHeaderHeightMd.toString() + this.headerHeightUnit;
 	},
 	get nHeaderHeightLg() {
 		return 2 * this.nHeaderTopBottomPadding + this.nHeaderLogoHeightLg;
