@@ -8,7 +8,7 @@
 
 {#if isLoading}
 	<div class="jdg-loading-overlay-container">
-		<JDGOverlay>
+		<JDGOverlay showTitleBar={false}>
 			<img src={loadingIconSrc} class="jdg-loading-overlay-icon" alt="Loading..." />
 		</JDGOverlay>
 	</div>
