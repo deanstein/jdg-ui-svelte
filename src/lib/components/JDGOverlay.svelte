@@ -15,8 +15,8 @@
 </script>
 
 <div
-	on:click={onClickFunction}
-	on:keydown={onClickFunction}
+	on:click|self={onClickFunction}
+	on:keypress|self={() => {}}
 	role="button"
 	tabindex="0"
 	transition:fade={{ duration: jdgDurations.default }}

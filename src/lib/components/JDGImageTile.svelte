@@ -109,7 +109,7 @@
 		role="button"
 		tabindex="0"
 		on:click={onClickFunction}
-		on:keydown={onClickFunction}
+		on:keypress={() => {}}
 		transition:fadeAndScale={{ duration: jdgDurations.default }}
 	>
 		{#if label}

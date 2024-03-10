@@ -87,7 +87,7 @@
 			tabindex="0"
 			class="mobile-nav-button {mobileNavButtonCss}"
 			on:click={onClickMobileNavButton}
-			on:keydown={onClickMobileNavButton}
+			on:keypress={() => {}}
 			title={$uiState.showNavSidebar ? 'Close menu' : 'Open menu'}
 		>
 			<div class="jdg-highlight-container">

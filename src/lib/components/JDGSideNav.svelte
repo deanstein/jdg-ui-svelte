@@ -43,8 +43,8 @@
 				on:click={() => {
 					setNavSidebarOpen(false);
 				}}
-				on:keydown={() => {
-					setNavSidebarOpen(false);
+				on:keypress={() => {
+					() => {};
 				}}
 				role="button"
 				tabindex="0"

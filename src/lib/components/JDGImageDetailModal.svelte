@@ -62,7 +62,7 @@
 				role="button"
 				tabindex="0"
 				on:click={onClickCloseButton}
-				on:keydown={onClickCloseButton}
+				on:keypress={() => {}}
 			>
 				<div class="jdg-highlight-container">
 					<span class="jdg-highlight no-initial-highlight" style="display: flex;">
