@@ -8,7 +8,7 @@
 	} from '$lib/jdg-ui-management.js';
 
 	import { JDGCloseIcon, JDGOverlay } from '$lib/index.js';
-	import { jdgSizes } from '$lib/jdg-styling-constants.js';
+	import { jdgColors, jdgSizes } from '$lib/jdg-styling-constants.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
 	import jdgImageDetails from '$lib/schemas/image-details.js';
 
@@ -24,6 +24,7 @@
 		padding-right: ${jdgSizes.headerSidePadding};
 		padding-top: ${jdgSizes.headerTopBottomPadding};
 		padding-bottom: ${jdgSizes.headerTopBottomPadding};
+		background-color: ${jdgColors.headerBackground};
 	`;
 
 	const closeButtonCss = css`
