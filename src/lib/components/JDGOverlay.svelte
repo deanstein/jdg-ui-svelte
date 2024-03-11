@@ -6,6 +6,7 @@
 
 	import { JDGCloseIcon } from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgDurations, jdgSizes } from '../jdg-styling-constants.js';
+	import { onDestroy, onMount } from 'svelte';
 
 	export let colorRgba = 'rgba(255, 255, 255, 1.0)';
 	export let showTitleBar = true;
@@ -51,6 +52,21 @@
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 			height: ${jdgSizes.headerHeightLg};
 	`;
+
+	onMount(() => {
+		if (typeof document === 'undefined') return;
+		let scrollPos = window.scrollY;
+		document.body.style.paddingRight = '15px'; // account for scrollbar disappearing
+		document.body.style.overflow = "hidden";
+		document.body.style.top = `${scrollPos}px`;
+	})
+
+	onDestroy(() => {
+		if (typeof document === 'undefined') return;
+		document.body.style.paddingRight = '0px';
+		document.body.style.overflow = '';
+		document.body.style.top = '';
+	})
 </script>
 
 <div
