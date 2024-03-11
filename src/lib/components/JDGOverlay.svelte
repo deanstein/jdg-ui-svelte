@@ -15,7 +15,7 @@
 	export let closeOnOverlayClick = false;
 
 	let overlayRef;
-	const preventScroll = function(event) {
+	const preventScroll = function (event) {
 		event.preventDefault();
 	};
 
@@ -60,17 +60,9 @@
 	`;
 
 	onMount(() => {
-		overlayRef.addEventListener(
-			'wheel',
-			preventScroll,
-			{ passive: false }
-		);
+		overlayRef.addEventListener('wheel', preventScroll, { passive: false });
 
-		overlayRef.addEventListener(
-			'touchmove',
-			preventScroll,
-			{ passive: false }
-		);
+		overlayRef.addEventListener('touchmove', preventScroll, { passive: false });
 	});
 </script>
 
