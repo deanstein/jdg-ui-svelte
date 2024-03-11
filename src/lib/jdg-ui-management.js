@@ -105,13 +105,6 @@ export const scrollToAnchor = (anchorId, accountForHeader = true, additionalOffs
 	}
 };
 
-export const scrollToAnchorFloatingContentBox = (anchorId, hasTitle = false) => {
-	const additionalOffset = hasTitle
-		? convertRemToPixels(jdgSizes.nFontSizeFloatingContentBoxTitle)
-		: 0;
-	scrollToAnchor(anchorId, true, additionalOffset);
-};
-
 export const openUrl = (url, newTab) => {
 	if (newTab) {
 		window.open(url, '_blank');

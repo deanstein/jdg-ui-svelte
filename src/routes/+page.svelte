@@ -1,7 +1,6 @@
 <script>
 	import {
 		openUrl,
-		scrollToAnchorFloatingContentBox,
 		setShowImageDetailModal
 	} from '$lib/jdg-ui-management.js';
 
@@ -47,9 +46,7 @@
 			<JDGImageTile
 				imgSrc={'./project-tiles/architecture.jpg'}
 				label={'SCROLL EXAMPLE'}
-				onClickFunction={() => {
-					scrollToAnchorFloatingContentBox('ANOTHER-SECTION', true);
-				}}
+				href="#ANOTHER-SECTION"
 			/>
 			<JDGImageTile label={'PAGE EXAMPLE'} href="/about" />
 			<JDGImageTile
