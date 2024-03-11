@@ -8,6 +8,7 @@
 		JDGImageFullWidth,
 		JDGImageTile,
 		JDGGridLayout,
+		JDGImageCarousel,
 		JDGImageDetailOverlay
 	} from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-styling-constants.js';
@@ -32,6 +33,10 @@
 		<br /><br />
 		Follow along as we dive into Cinderella City’s fairytale from beginning to end, including rare photos
 		and little-known details of each mall.
+	</JDGContentBoxFloating>
+	<JDGContentBoxFloating isForBodyCopy={true}>
+		<JDGImageCarousel />
+		Some more text...
 	</JDGContentBoxFloating>
 </JDGContentContainer>
 <JDGContentContainer>

@@ -5,9 +5,11 @@
 		'https://raw.githubusercontent.com/deanstein/jdg-ui-svelte/main/static/history/CCP1.jpg';
 	export let imgAlt = 'Full-width';
 	export let heightVh = '80vh';
+	export let objectFit = 'cover';
 
 	let fullWidthImageCss = css`
 		height: ${heightVh};
+		object-fit: ${objectFit};
 	`;
 </script>
 
@@ -26,6 +28,5 @@
 
 	.jdg-full-width-image {
 		width: 100%;
-		object-fit: cover;
 	}
 </style>
