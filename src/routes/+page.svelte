@@ -1,8 +1,5 @@
 <script>
-	import {
-		openUrl,
-		setShowImageDetailModal
-	} from '$lib/jdg-ui-management.js';
+	import { openUrl, setShowImageDetailModal } from '$lib/jdg-ui-management.js';
 
 	import {
 		JDGAccentBlock,

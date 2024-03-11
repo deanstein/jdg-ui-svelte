@@ -1,5 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
+
+	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 
 	import { getHighestZIndex } from '../jdg-ui-management.js';
@@ -11,6 +13,11 @@
 	export let showTitleBar = true;
 	export let onCloseFunction = () => {};
 	export let closeOnOverlayClick = false;
+
+	let overlayRef;
+	const preventScroll = function(event) {
+		event.preventDefault();
+	};
 
 	const overlayCss = css`
 		z-index: ${getHighestZIndex()};
@@ -51,9 +58,24 @@
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 			height: ${jdgSizes.headerHeightLg};
 	`;
+
+	onMount(() => {
+		overlayRef.addEventListener(
+			'wheel',
+			preventScroll,
+			{ passive: false }
+		);
+
+		overlayRef.addEventListener(
+			'touchmove',
+			preventScroll,
+			{ passive: false }
+		);
+	});
 </script>
 
 <div
+	bind:this={overlayRef}
 	class="jdg-overlay {overlayCss}"
 	on:click|self={onCloseFunction}
 	on:keypress|self={() => {}}
