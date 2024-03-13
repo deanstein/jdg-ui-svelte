@@ -5,16 +5,16 @@
 	import { convertVhToPixels } from '$lib/jdg-utils.js';
 
 	export let imageDetailObjects = [];
-	export let height = '50vh';
+	export let maxHeight = '50vh';
 
 	let activeImageObject;
 </script>
 
 <div class="jdg-image-carousel-container">
-	<JDGImage imgSrc={'./history/cc-2.jpg'} nMaxHeightPx={convertVhToPixels(50)} cropToFit={false} />
+	<JDGImage imgSrc={'./history/cc-2.jpg'} {maxHeight} cropToFit={false} />
 	<div class="carousel-thumbnail-container">
-		<JDGImageTile nHeightPx={50} />
-		<JDGImageTile nHeightPx={50} />
+		<JDGImageTile maxHeight="50px" />
+		<JDGImageTile maxHeight="50px" />
 	</div>
 </div>
 

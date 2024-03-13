@@ -3,8 +3,9 @@
 	import { css } from '@emotion/css';
 
 	import uiState from '$lib/states/ui-state.js';
+	import { convertVhToPixels } from '$lib/jdg-utils.js';
 
-	export let nMaxHeightPx = 300; // image will never exceed this height, but could be less
+	export let maxHeight = '300px'; // image will never exceed this height, but could be less depending on cropToFit
 	export let cropToFit = true; // if true, image may be cropped to fill its container
 	export let showHoverEffect = false; // consumers can offer this and additional zoom effects
 	export let imgSrc =
@@ -16,56 +17,74 @@
 	let imageRef;
 	let imageAspectRatio;
 
+	// height can be in vh or px
+	// if in vh, convert to pixels for calculations
+	let [maxHeightValue, maxHeightUnit] = maxHeight.match(/^(\d+)(\D+)$/).slice(1);
+	let maxHeightPx;
+	const maxHeightParsed = parseFloat(maxHeightValue);
+	// get the max height in px for calculations
+	if (maxHeightUnit === 'vh') {
+		maxHeightPx = convertVhToPixels(maxHeightParsed);
+	} else if (maxHeightUnit === 'px') {
+		maxHeightPx = maxHeightParsed;
+	}
+
 	// calculate the aspect ratio of the image container and the image (if not already known)
 	const updateAspectRatios = () => {
 		if (containerRef && imageRef) {
-			containerAspectRatio = containerRef.clientWidth / nMaxHeightPx;
+			containerAspectRatio = containerRef.clientWidth / maxHeightPx;
 			imageAspectRatio = imageAspectRatio ?? imageRef.naturalWidth / imageRef.naturalHeight;
-			console.log(imageAspectRatio, containerAspectRatio);
+			console.log(imgSrc, cropToFit, imageAspectRatio, containerAspectRatio);
 		}
 	};
 
 	const getPreferredContainerHeight = (imageAspectRatio, containerAspectRatio) => {
-		if (imageRef && containerRef) {
+		if (containerRef && imageRef) {
+			// if we're cropping, height is always the max height
+			if (cropToFit) {
+				return maxHeight;
+			}
+			// else, need to determine crop based on aspect ratios
 			switch (true) {
-				// image is wider than container - crop
-				case cropToFit && imageAspectRatio > containerAspectRatio:
-					return nMaxHeightPx.toString() + 'px';
-				// image is wider than container - no crop
-				case !cropToFit && imageAspectRatio > containerAspectRatio:
+				// image is wider than container
+				case imageAspectRatio > containerAspectRatio:
 					return 'auto';
-				// image is taller than container - crop
-				case cropToFit && imageAspectRatio < containerAspectRatio:
-					return nMaxHeightPx.toString() + 'px';
-				// image is taller than container - no crop
+				// image is taller than container
 				case !cropToFit && imageAspectRatio < containerAspectRatio:
-					return nMaxHeightPx.toString() + 'px';
+					return maxHeight;
 				default:
-					return nMaxHeightPx.toString() + 'px';
+					return maxHeight;
 			}
 		}
 	};
 
 	const getPreferredObjectFit = (imageAspectRatio, containerAspectRatio) => {
 		if (imageRef && containerRef) {
-			console.log(imageAspectRatio, containerAspectRatio);
+			// if we're cropping, fit is always cover
+			if (cropToFit) {
+				return 'cover';
+			}
+			// else, need to determine fit based on aspect ratios
 			switch (true) {
-				// image is wider than container - crop
-				case cropToFit && imageAspectRatio > containerAspectRatio:
-					return 'cover';
-				// image is wider than container - no crop
-				case !cropToFit && imageAspectRatio > containerAspectRatio:
+				// image is wider than container
+				case imageAspectRatio > containerAspectRatio:
 					return 'contain';
-				// image is taller than container - crop
-				case cropToFit && imageAspectRatio < containerAspectRatio:
-					return 'cover';
-				// image is taller than container - no crop
-				case !cropToFit && imageAspectRatio < containerAspectRatio:
+				// image is taller than container
+				case imageAspectRatio < containerAspectRatio:
 					return 'contain';
 				default:
 					return 'cover';
 			}
 		}
+	};
+
+	const setDynamicStyles = () => {
+		imageContainerCss = css`
+			height: ${getPreferredContainerHeight(imageAspectRatio, containerAspectRatio)};
+		`;
+		imageCss = css`
+			object-fit: ${getPreferredObjectFit(imageAspectRatio, containerAspectRatio)};
+		`;
 	};
 
 	const onImageLoad = () => {
@@ -77,6 +96,8 @@
 	let imageContainerCss = css`
 		height: ${getPreferredContainerHeight(imageAspectRatio, containerAspectRatio)};
 	`;
+
+	// set dynamically depending on cropToFit
 	let imageCss = css`
 		object-fit: ${getPreferredObjectFit(imageAspectRatio, containerAspectRatio)};
 	`;
@@ -92,6 +113,7 @@
 		if (imageRef && !cropToFit) {
 			imageRef.addEventListener('load', onImageLoad);
 		}
+		setDynamicStyles();
 	});
 
 	onDestroy(() => {
@@ -101,16 +123,11 @@
 	});
 
 	$: {
-		// ensure the aspect ratios are updated when the window width changes in state
-		if (true) {
+		if (!cropToFit) {
+			// ensure the aspect ratios are updated when the window width changes in state
 			$uiState.windowWidth;
 			updateAspectRatios();
-			imageContainerCss = css`
-				height: ${getPreferredContainerHeight(imageAspectRatio, containerAspectRatio)};
-			`;
-			imageCss = css`
-				object-fit: ${getPreferredObjectFit(imageAspectRatio, containerAspectRatio)};
-			`;
+			setDynamicStyles();
 		}
 	}
 </script>

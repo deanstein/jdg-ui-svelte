@@ -6,7 +6,7 @@
 	import { fadeAndScale, verticalSlide } from '$lib/jdg-graphics-factory.js';
 	import { jdgColors, jdgSizes, jdgDurations } from '../jdg-styling-constants.js';
 
-	export let nHeightPx = 300;
+	export let maxHeight = '300px';
 	export let cropToFit = true; // if false, entire image always shown
 	export let label = undefined;
 	export let labelJustification = 'left';
@@ -59,11 +59,11 @@
 			</div>
 		{/if}
 		{#if isHovering && showHorizontalStripesOnHover}
-			<div class="stripes-container" transition:verticalSlide={{ duration: 300 }}>
+			<div class="stripes-container" transition:verticalSlide={{ duration: jdgDurations.default }}>
 				<JDGStripesHorizontal stripeHeight="3px" staggeredStripeWidth={false} />
 			</div>
 		{/if}
-		<JDGImage nMaxHeightPx={nHeightPx} {imgSrc} {imgAlt} showHoverEffect={true} />
+		<JDGImage {maxHeight} {imgSrc} {imgAlt} showHoverEffect={true} {cropToFit} />
 	</div>
 </a>
 
