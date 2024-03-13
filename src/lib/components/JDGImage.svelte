@@ -6,6 +6,7 @@
 
 	export let nMaxHeightPx = 300; // image will never exceed this height, but could be less
 	export let cropToFit = true; // if true, image may be cropped to fill its container
+	export let showHoverEffect = false; // consumers can offer this and additional zoom effects
 	export let imgSrc =
 		'https://raw.githubusercontent.com/deanstein/jdg-ui-svelte/main/static/jdg-image-placeholder.jpg';
 	export let imgAlt = 'Image Tile';
@@ -80,6 +81,13 @@
 		object-fit: ${getPreferredObjectFit(imageAspectRatio, containerAspectRatio)};
 	`;
 
+	// only set from the parent, once
+	let imageCssStatic = css`
+		:hover {
+			transform: ${showHoverEffect ? 'scale(1.04);' : ''};
+		}
+	`;
+
 	onMount(() => {
 		if (imageRef && !cropToFit) {
 			imageRef.addEventListener('load', onImageLoad);
@@ -108,7 +116,7 @@
 </script>
 
 <div bind:this={containerRef} class="jdg-image-container {imageContainerCss}">
-	<img bind:this={imageRef} class={imageCss} src={imgSrc} alt={imgAlt} />
+	<img bind:this={imageRef} class={`${imageCss} ${imageCssStatic}`} src={imgSrc} alt={imgAlt} />
 </div>
 
 <style>
@@ -126,5 +134,6 @@
 		flex-direction: column;
 		min-width: 0;
 		overflow: hidden;
+		transition: transform 0.3s ease-in-out;
 	}
 </style>

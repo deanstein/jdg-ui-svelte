@@ -1,10 +1,7 @@
 <script>
-	import { onMount, onDestroy } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import uiState from '$lib/states/ui-state.js';
-
-	import { JDGStripesHorizontal } from '../index.js';
+	import { JDGImage, JDGStripesHorizontal } from '../index.js';
 
 	import { fadeAndScale, verticalSlide } from '$lib/jdg-graphics-factory.js';
 	import { jdgColors, jdgSizes, jdgDurations } from '../jdg-styling-constants.js';
@@ -21,45 +18,7 @@
 	export let onClickFunction = () => {};
 	export let showHorizontalStripesOnHover = true;
 
-	let containerRef;
-	let containerAspectRatio;
-	let imgRef;
-	let imgAspectRatio;
 	let isHovering;
-
-	const getPreferredImageContainerHeight = (cropToFit, imgAspectRatio, containerAspectRatio) => {
-		if (!cropToFit) {
-			switch (true) {
-				case imgAspectRatio > containerAspectRatio:
-					return 'auto';
-				case imgAspectRatio < containerAspectRatio:
-					return nHeightPx.toString() + 'px';
-				default:
-					return nHeightPx.toString() + 'px';
-			}
-		} else {
-			return nHeightPx.toString() + 'px';
-		}
-	};
-
-	const updateContainerHeight = () => {
-		// no need to update if cropping
-		if (cropToFit) {
-			return;
-		}
-		if (containerRef && imgRef) {
-			imgAspectRatio = imgRef.naturalWidth / imgRef.naturalHeight;
-			containerAspectRatio = containerRef.clientWidth / nHeightPx;
-
-			imageTileCss = css`
-				height: ${getPreferredImageContainerHeight(
-					cropToFit,
-					imgAspectRatio,
-					containerAspectRatio
-				)};
-			`;
-		}
-	};
 
 	const aCss = css`
 		display: ${cropToFit ? 'relative' : 'flex'};
@@ -79,39 +38,11 @@
 		font-size: ${jdgSizes.fontSizeImageTileLabel};
 		text-align: ${labelJustification};
 	`;
-
-	// this is possibly set dynamically depending on cropToFit
-	let imageTileCss = css`
-		height: ${cropToFit ? nHeightPx.toString() + 'px' : 'auto'};
-	`;
-
-	onMount(() => {
-		if (imgRef && !cropToFit) {
-			imgRef.addEventListener('load', onImgLoad);
-		}
-	});
-
-	onDestroy(() => {
-		if (imgRef && !cropToFit) {
-			imgRef.removeEventListener('load', onImgLoad);
-		}
-	});
-
-	$: {
-		// ensure the image tile is updated when the window width state
-		$uiState.windowWidth;
-		updateContainerHeight();
-	}
-
-	const onImgLoad = () => {
-		updateContainerHeight();
-	};
 </script>
 
 <a {href} class={aCss}>
 	<div
-		bind:this={containerRef}
-		class="jdg-image-tile {imageTileCss}"
+		class="jdg-image-tile"
 		on:mouseenter={() => (isHovering = true)}
 		on:mouseleave={() => (isHovering = false)}
 		role="button"
@@ -132,7 +63,7 @@
 				<JDGStripesHorizontal stripeHeight="3px" staggeredStripeWidth={false} />
 			</div>
 		{/if}
-		<img bind:this={imgRef} src={imgSrc} alt={imgAlt} />
+		<JDGImage nMaxHeightPx={nHeightPx} {imgSrc} {imgAlt} showHoverEffect={true} />
 	</div>
 </a>
 
@@ -147,14 +78,6 @@
 		min-width: 0;
 		justify-content: center;
 		align-items: center;
-	}
-
-	img {
-		height: 100%;
-		width: 100%;
-		transition: transform 0.3s ease-in-out;
-		z-index: -1;
-		object-fit: cover;
 	}
 
 	.jdg-image-tile {
@@ -185,15 +108,14 @@
 		width: -webkit-fill-available;
 		width: -moz-available;
 		font-weight: bold;
+		z-index: 1;
+		pointer-events: none;
 	}
 
 	.stripes-container {
 		position: absolute;
 		bottom: 0;
 		width: 100%;
-	}
-
-	.jdg-image-tile:hover img {
-		transform: scale(1.04); /* Scale the image up to create a zoom effect */
+		z-index: 2;
 	}
 </style>

@@ -18,7 +18,7 @@
 </script>
 
 <div class="jdg-image-hero-container">
-	<JDGImage {imgSrc} nMaxHeightPx={convertVhToPixels(nHeightVh)} />
+	<JDGImage {imgSrc} {imgAlt} nMaxHeightPx={convertVhToPixels(nHeightVh)} />
 	{#if showOverlay}
 		<div class="jdg-image-hero-overlay {heroImageOverlayContainerCss}"></div>
 	{/if}
