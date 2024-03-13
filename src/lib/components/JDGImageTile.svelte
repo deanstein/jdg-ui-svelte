@@ -27,14 +27,18 @@
 	let imgAspectRatio;
 	let isHovering;
 
-	const calculateImageContainerHeight = (allowCropping, imgAspectRatio, containerAspectRatio) => {
-		switch (true) {
-			case !allowCropping && imgAspectRatio > containerAspectRatio:
-				return 'auto';
-			case !allowCropping && imgAspectRatio < containerAspectRatio:
-				return nHeightPx.toString() + 'px';
-			default:
-				return nHeightPx.toString() + 'px';
+	const getPreferredImageContainerHeight = (cropToFit, imgAspectRatio, containerAspectRatio) => {
+		if (!cropToFit) {
+			switch (true) {
+				case imgAspectRatio > containerAspectRatio:
+					return 'auto';
+				case imgAspectRatio < containerAspectRatio:
+					return nHeightPx.toString() + 'px';
+				default:
+					return nHeightPx.toString() + 'px';
+			}
+		} else {
+			return nHeightPx.toString() + 'px';
 		}
 	};
 
@@ -48,7 +52,11 @@
 			containerAspectRatio = containerRef.clientWidth / nHeightPx;
 
 			imageTileCss = css`
-				height: ${calculateImageContainerHeight(cropToFit, imgAspectRatio, containerAspectRatio)};
+				height: ${getPreferredImageContainerHeight(
+					cropToFit,
+					imgAspectRatio,
+					containerAspectRatio
+				)};
 			`;
 		}
 	};

@@ -9,7 +9,8 @@
 		JDGImageTile,
 		JDGGridLayout,
 		JDGImageCarousel,
-		JDGImageDetailOverlay
+		JDGImageDetailOverlay,
+		JDGImage
 	} from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-styling-constants.js';
 	import uiState from '$lib/states/ui-state.js';
@@ -71,6 +72,13 @@
 				setShowImageDetailModal(true);
 			}}
 			imgSrc={'./history/lakeside-1.jpg'}
+			cropToFit={false}
+		/>
+		<JDGImageTile
+			onClickFunction={() => {
+				setShowImageDetailModal(true);
+			}}
+			imgSrc={'./history/cc-2.jpg'}
 			cropToFit={false}
 		/>
 	</JDGContentBoxFloating>

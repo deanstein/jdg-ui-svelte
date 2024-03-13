@@ -2,7 +2,7 @@ import uiState from './states/ui-state.js';
 
 import { jdgBreakpoints, jdgSizes } from './jdg-styling-constants.js';
 
-import { addUniqueValueToArray, convertRemToPixels, removeValueFromArray } from './jdg-utils.js';
+import { addUniqueValueToArray, removeValueFromArray } from './jdg-utils.js';
 
 export const setWindowWidth = (windowWidth) => {
 	uiState.update((currentValue) => {

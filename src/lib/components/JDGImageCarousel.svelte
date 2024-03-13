@@ -1,7 +1,8 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { JDGImageFullWidth, JDGImageTile } from '$lib/index.js';
+	import { JDGImage, JDGImageTile } from '$lib/index.js';
+	import { convertVhToPixels } from '$lib/jdg-utils.js';
 
 	export let imageDetailObjects = [];
 	export let height = '50vh';
@@ -10,8 +11,7 @@
 </script>
 
 <div class="jdg-image-carousel-container">
-	<!-- <JDGImageTile imgSrc={'./history/cc-2.jpg'} nHeightPx={1000} cropToFit={false} /> -->
-	<JDGImageFullWidth imgSrc={'./history/cc-2.jpg'} heightVh={'50vh'} />
+	<JDGImage imgSrc={'./history/cc-2.jpg'} nMaxHeightPx={convertVhToPixels(50)} cropToFit={false} />
 	<div class="carousel-thumbnail-container">
 		<JDGImageTile nHeightPx={50} />
 		<JDGImageTile nHeightPx={50} />

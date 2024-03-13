@@ -27,6 +27,9 @@ export { JDGGridLayout };
 import JDGHeader from './components/JDGHeader.svelte';
 export { JDGHeader };
 
+import JDGImage from './components/JDGImage.svelte';
+export { JDGImage };
+
 import JDGImageCarousel from './components/JDGImageCarousel.svelte';
 export { JDGImageCarousel };
 
