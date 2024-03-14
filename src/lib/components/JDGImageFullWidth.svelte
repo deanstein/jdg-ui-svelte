@@ -1,13 +1,11 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import uiState from '$lib/states/ui-state.js';
-
-	import { convertVhToPixels } from '$lib/jdg-utils.js';
 	import { JDGImage } from '$lib/index.js';
+	import { instantiateObject } from '$lib/jdg-utils.js';
+	import jdgImageDetails from '$lib/schemas/image-details.js';
 
-	export let imgSrc = './history/CCP1.jpg';
-	export let imgAlt = 'Full-width';
+	export let imageDetails = instantiateObject(jdgImageDetails);
 	export let maxHeight = '80vh';
 	export let showOverlay = false;
 	export let overlayColorRgba = 'rgba(50, 50, 50, 0.2)';
@@ -18,7 +16,7 @@
 </script>
 
 <div class="jdg-image-hero-container">
-	<JDGImage {imgSrc} {imgAlt} {maxHeight} />
+	<JDGImage {imageDetails} {maxHeight} />
 	{#if showOverlay}
 		<div class="jdg-image-hero-overlay {heroImageOverlayContainerCss}"></div>
 	{/if}

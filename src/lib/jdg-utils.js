@@ -101,8 +101,8 @@ export const areObjectsEqual = (obj1, obj2) => {
 	return obj1 === obj2;
 };
 
-export const instantiateObject = (object) => {
-	return JSON.parse(JSON.stringify(object)); // required to make a deep copy
+export const instantiateObject = (object, overrides = {}) => {
+	return { ...JSON.parse(JSON.stringify(object)), ...overrides };
 };
 
 export const deepMatchObjects = (dataToMatch, dataToChange, forceChangeToType = undefined) => {

@@ -1,5 +1,12 @@
 <script>
-	import { openUrl, setShowImageDetailModal } from '$lib/jdg-ui-management.js';
+	import {
+		getImageDetailsBySrc,
+		openUrl,
+		setImageDetails,
+		setShowImageDetailModal
+	} from '$lib/jdg-ui-management.js';
+
+	import uiState from '$lib/states/ui-state.js';
 
 	import {
 		JDGAccentBlock,
@@ -9,15 +16,13 @@
 		JDGImageTile,
 		JDGGridLayout,
 		JDGImageCarousel,
-		JDGImageDetailOverlay,
-		JDGImage
+		JDGImageDetailOverlay
 	} from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-styling-constants.js';
-	import uiState from '$lib/states/ui-state.js';
 </script>
 
 <JDGContentContainer overlapWithHeader={true} topBottomPadding="0" gap="0">
-	<JDGImageFullWidth />
+	<JDGImageFullWidth imageDetails={getImageDetailsBySrc('./history/CCP1.jpg')} />
 	<JDGContentBoxFloating isForBodyCopy={true}>
 		In 1968, Englewood changed forever when mall magnate Gerri Von Frellick opened a 1.35
 		million-square foot shopping center on the site of Englewood’s beloved City Park. Cinderella
@@ -47,7 +52,7 @@
 		</div>
 		<JDGGridLayout>
 			<JDGImageTile
-				imgSrc={'./project-tiles/architecture.jpg'}
+				imageDetails={getImageDetailsBySrc('./project-tiles/architecture.jpg')}
 				label={'SCROLL EXAMPLE'}
 				href="#ANOTHER-SECTION"
 			/>
@@ -70,15 +75,17 @@
 		<JDGImageTile
 			onClickFunction={() => {
 				setShowImageDetailModal(true);
+				setImageDetails(getImageDetailsBySrc('./history/lakeside-1.jpg'));
 			}}
-			imgSrc={'./history/lakeside-1.jpg'}
+			imageDetails={getImageDetailsBySrc('./history/lakeside-1.jpg')}
 			cropToFit={false}
 		/>
 		<JDGImageTile
 			onClickFunction={() => {
 				setShowImageDetailModal(true);
+				setImageDetails(getImageDetailsBySrc('./history/cc-2.jpg'));
 			}}
-			imgSrc={'./history/cc-2.jpg'}
+			imageDetails={getImageDetailsBySrc('./history/cc-2.jpg')}
 			cropToFit={false}
 		/>
 	</JDGContentBoxFloating>
@@ -94,5 +101,5 @@
 	<JDGContentBoxFloating title="A FOURTH SECTION" />
 </JDGContentContainer>
 {#if $uiState.showImageDetailOverlay}
-	<JDGImageDetailOverlay />
+	<JDGImageDetailOverlay imageDetails={$uiState.imageDetails} />
 {/if}

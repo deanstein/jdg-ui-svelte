@@ -1,20 +1,21 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { JDGImage, JDGStripesHorizontal } from '../index.js';
+	import jdgImageDetails from './../schemas/image-details.js';
 
+	import { instantiateObject } from './../jdg-utils.js';
+
+	import { JDGImage, JDGStripesHorizontal } from '../index.js';
 	import { fadeAndScale, verticalSlide } from '$lib/jdg-graphics-factory.js';
 	import { jdgColors, jdgSizes, jdgDurations } from '../jdg-styling-constants.js';
 
+	export let imageDetails = instantiateObject(jdgImageDetails); // one object to hold all details
 	export let maxWidth = undefined; // if not defined, takes available space
 	export let maxHeight = '300px';
 	export let cropToFit = true; // crop image to fit its container?
 	export let label = undefined;
 	export let labelJustification = 'left';
 	export let labelContainerVerticalAlign = 'bottom';
-	export let imgSrc =
-		'https://raw.githubusercontent.com/deanstein/jdg-ui-svelte/main/static/jdg-image-placeholder.jpg';
-	export let imgAlt = 'Image Tile';
 	export let href = undefined;
 	export let onClickFunction = () => {};
 	export let showHorizontalStripesOnHover = true;
@@ -64,7 +65,7 @@
 				<JDGStripesHorizontal stripeHeight="3px" staggeredStripeWidth={false} />
 			</div>
 		{/if}
-		<JDGImage {maxHeight} {maxWidth} {imgSrc} {imgAlt} showHoverEffect={true} {cropToFit} />
+		<JDGImage {maxHeight} {maxWidth} {imageDetails} showHoverEffect={true} {cropToFit} />
 	</div>
 </a>
 

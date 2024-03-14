@@ -2,16 +2,15 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { css } from '@emotion/css';
 
+	import jdgImageDetails from '$lib/schemas/image-details.js';
 	import uiState from '$lib/states/ui-state.js';
-	import { convertVhToPixels } from '$lib/jdg-utils.js';
+	import { convertVhToPixels, instantiateObject } from '$lib/jdg-utils.js';
 
+	export let imageDetails = instantiateObject(jdgImageDetails);
 	export let maxHeight = '300px'; // image will never exceed this height, but could be less depending on cropToFit
 	export let maxWidth = undefined; // if not defined, takes available space
 	export let cropToFit = true; // if true, image may be cropped to fill its container
 	export let showHoverEffect = false; // consumers can offer this and additional zoom effects
-	export let imgSrc =
-		'https://raw.githubusercontent.com/deanstein/jdg-ui-svelte/main/static/jdg-image-placeholder.jpg';
-	export let imgAlt = 'Image Tile';
 
 	let containerRef;
 	let containerAspectRatio;
@@ -135,7 +134,12 @@
 </script>
 
 <div bind:this={containerRef} class="jdg-image-container {imageContainerCss}">
-	<img bind:this={imageRef} class={`${imageCss} ${imageCssStatic}`} src={imgSrc} alt={imgAlt} />
+	<img
+		bind:this={imageRef}
+		class={`${imageCss} ${imageCssStatic}`}
+		src={imageDetails.imgSrc}
+		alt={imageDetails.imgAlt}
+	/>
 </div>
 
 <style>
