@@ -17,17 +17,25 @@
 	let imageRef;
 	let imageAspectRatio;
 
-	// height can be in vh or px
+	// height can be in vh or px or even auto
 	// if in vh, convert to pixels for calculations
-	let [maxHeightValue, maxHeightUnit] = maxHeight.match(/^(\d+)(\D+)$/).slice(1);
+	let maxHeightValue;
+	let maxHeightUnit;
 	let maxHeightPx;
-	const maxHeightParsed = parseFloat(maxHeightValue);
-	// get the max height in px for calculations
-	if (maxHeightUnit === 'vh') {
-		maxHeightPx = convertVhToPixels(maxHeightParsed);
-	} else if (maxHeightUnit === 'px') {
-		maxHeightPx = maxHeightParsed;
-	}
+	const getMaxHeightPxFromProp = (() => {
+		// if height is auto, skip all this
+		if (maxHeight !== 'auto') {
+			[maxHeightValue, maxHeightUnit] = maxHeight.match(/^(\d+)(\D+)$/).slice(1);
+			maxHeightPx;
+			const maxHeightParsed = parseFloat(maxHeightValue);
+			// get the max height in px for calculations
+			if (maxHeightUnit === 'vh') {
+				maxHeightPx = convertVhToPixels(maxHeightParsed);
+			} else if (maxHeightUnit === 'px') {
+				maxHeightPx = maxHeightParsed;
+			}
+		}
+	})();
 
 	// calculate the aspect ratio of the image container and the image (if not already known)
 	const getAspectRatios = () => {
@@ -40,7 +48,7 @@
 	};
 
 	const getPreferredContainerHeight = (imageAspectRatio, containerAspectRatio) => {
-		if (containerRef && imageRef) {
+		if (containerRef && imageRef && maxHeight !== 'auto') {
 			// if we're cropping, height is always the max height
 			if (cropToFit) {
 				return maxHeight;
