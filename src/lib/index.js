@@ -27,6 +27,9 @@ export { JDGGridLayout };
 import JDGHeader from './components/JDGHeader.svelte';
 export { JDGHeader };
 
+import JDGHeroImage from './components/JDGHeroImage.svelte';
+export { JDGHeroImage };
+
 import JDGImage from './components/JDGImage.svelte';
 export { JDGImage };
 
@@ -35,9 +38,6 @@ export { JDGImageCarousel };
 
 import JDGImageDetailOverlay from './components/JDGImageDetailOverlay.svelte';
 export { JDGImageDetailOverlay };
-
-import JDGImageFullWidth from './components/JDGImageFullWidth.svelte';
-export { JDGImageFullWidth };
 
 import JDGImageTile from './components/JDGImageTile.svelte';
 export { JDGImageTile };
