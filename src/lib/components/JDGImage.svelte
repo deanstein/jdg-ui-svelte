@@ -5,6 +5,7 @@
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 	import uiState from '$lib/states/ui-state.js';
 	import { convertVhToPixels, instantiateObject } from '$lib/jdg-utils.js';
+	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-styling-constants.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object for all image data
 	export let maxHeight = '300px'; // image will never exceed this height, but could be less depending on cropToFit
@@ -116,6 +117,19 @@
 	let imageCssStatic = css`
 		:hover {
 			transform: ${showHoverEffect ? 'scale(1.04);' : ''};
+		}
+
+		/* if max height is not specified, use all available space below the header */
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			max-height: ${maxHeight === 'auto' ? `calc(100vh - ${jdgSizes.headerHeightSm})` : ''};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			max-height: ${maxHeight === 'auto' ? `calc(100vh - ${jdgSizes.headerHeightMd})` : ''};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			max-height: ${maxHeight === 'auto' ? `calc(100vh - ${jdgSizes.headerHeightLg})` : ''};
 		}
 	`;
 
