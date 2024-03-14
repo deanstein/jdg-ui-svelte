@@ -1,8 +1,6 @@
-import imageDetailsCollection from '../routes/image-details-collection.js';
-
 import uiState from './states/ui-state.js';
 
-import { addUniqueValueToArray, getObjectByKeyValue, removeValueFromArray } from './jdg-utils.js';
+import { addUniqueValueToArray, removeValueFromArray } from './jdg-utils.js';
 
 import { jdgBreakpoints, jdgSizes } from './jdg-styling-constants.js';
 
@@ -20,9 +18,9 @@ export const setShowImageDetailModal = (showImageDetailModal) => {
 	});
 };
 
-export const setImageDetails = (imageDetailObject) => {
+export const setImageDetailAttributes = (imageDetailObject) => {
 	uiState.update((currentValue) => {
-		currentValue.imageDetails = imageDetailObject;
+		currentValue.imageDetailAttributes = imageDetailObject;
 		return currentValue;
 	});
 };
@@ -141,8 +139,4 @@ export const breakpointHandler = (
 		// largest breakpoint - desktop
 		breakpoint2Function();
 	}
-};
-
-export const getImageDetailsBySrc = (imageSrc) => {
-	return getObjectByKeyValue(imageDetailsCollection, 'imgSrc', imageSrc);
 };

@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import jdgImageDetails from './../schemas/image-details.js';
+	import jdgImageAttributes from '../schemas/jdg-image-attributes.js';
 
 	import { instantiateObject } from './../jdg-utils.js';
 
@@ -9,7 +9,7 @@
 	import { fadeAndScale, verticalSlide } from '$lib/jdg-graphics-factory.js';
 	import { jdgColors, jdgSizes, jdgDurations } from '../jdg-styling-constants.js';
 
-	export let imageDetails = instantiateObject(jdgImageDetails); // one object to hold all details
+	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object to hold all details
 	export let maxWidth = undefined; // if not defined, takes available space
 	export let maxHeight = '300px';
 	export let cropToFit = true; // crop image to fit its container?
@@ -65,7 +65,7 @@
 				<JDGStripesHorizontal stripeHeight="3px" staggeredStripeWidth={false} />
 			</div>
 		{/if}
-		<JDGImage {maxHeight} {maxWidth} {imageDetails} showHoverEffect={true} {cropToFit} />
+		<JDGImage {maxHeight} {maxWidth} {imageAttributes} showHoverEffect={true} {cropToFit} />
 	</div>
 </a>
 

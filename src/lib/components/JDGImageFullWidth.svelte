@@ -3,9 +3,9 @@
 
 	import { JDGImage } from '$lib/index.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
-	import jdgImageDetails from '$lib/schemas/image-details.js';
+	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 
-	export let imageDetails = instantiateObject(jdgImageDetails);
+	export let imageAttributes = instantiateObject(jdgImageAttributes);
 	export let maxHeight = '80vh';
 	export let showOverlay = false;
 	export let overlayColorRgba = 'rgba(50, 50, 50, 0.2)';
@@ -16,7 +16,7 @@
 </script>
 
 <div class="jdg-image-hero-container">
-	<JDGImage {imageDetails} {maxHeight} />
+	<JDGImage {imageAttributes} {maxHeight} />
 	{#if showOverlay}
 		<div class="jdg-image-hero-overlay {heroImageOverlayContainerCss}"></div>
 	{/if}

@@ -4,8 +4,8 @@
 
 	import { JDGImage, JDGOverlay } from '$lib/index.js';
 
-	import jdgImageDetails from '$lib/schemas/image-details.js';
-	export let imageDetails = instantiateObject(jdgImageDetails);
+	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
+	export let imageAttributes = instantiateObject(jdgImageAttributes);
 </script>
 
 <JDGOverlay
@@ -16,5 +16,5 @@
 	closeOnOverlayClick={true}
 	colorRgba="rgba(255, 255, 255, 0.6)"
 >
-	<JDGImage {imageDetails} maxHeight="600px" />
+	<JDGImage {imageAttributes} maxHeight="600px" />
 </JDGOverlay>

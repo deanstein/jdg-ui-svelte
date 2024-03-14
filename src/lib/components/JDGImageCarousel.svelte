@@ -1,24 +1,18 @@
 <script>
-	import imageDetailsCollection from '../../routes/image-details-collection.js';
+	import imageAttributesCollection from '../../routes/image-attributes-collection.js';
 
 	import { JDGImage, JDGImageTile } from '$lib/index.js';
-	import { getObjectByKeyValue } from '$lib/jdg-utils.js';
 
 	export let imageDetailObjects = [];
 	export let maxHeight = '50vh';
-
-	let activeImageObject;
 </script>
 
 <div class="jdg-image-carousel-container">
-	<JDGImage
-		imageDetails={getObjectByKeyValue(imageDetailsCollection, 'imgSrc', './history/cc-2.jpg')}
-		{maxHeight}
-		cropToFit={false}
-	/>
+	<JDGImage imageAttributes={imageAttributesCollection.get('cc-2')} {maxHeight} cropToFit={false} />
 	<div class="carousel-thumbnail-container">
-		<JDGImageTile maxHeight="50px" maxWidth="75px" />
-		<JDGImageTile maxHeight="50px" maxWidth="75px" />
+		{#each imageDetailObjects as imageAttributesObject, i}
+			<JDGImageTile imageAttributes={imageAttributesObject} maxHeight="50px" maxWidth="75px" />
+		{/each}
 	</div>
 </div>
 

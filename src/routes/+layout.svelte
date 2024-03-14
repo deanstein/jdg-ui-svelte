@@ -1,5 +1,5 @@
 <script>
-	import navItem from '$lib/schemas/nav-item.js';
+	import navItem from '$lib/schemas/jdg-nav-item.js';
 
 	import { instantiateObject } from '$lib/jdg-utils.js';
 

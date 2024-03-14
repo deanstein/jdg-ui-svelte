@@ -2,11 +2,11 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import jdgImageDetails from '$lib/schemas/image-details.js';
+	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 	import uiState from '$lib/states/ui-state.js';
 	import { convertVhToPixels, instantiateObject } from '$lib/jdg-utils.js';
 
-	export let imageDetails = instantiateObject(jdgImageDetails);
+	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object for all image data
 	export let maxHeight = '300px'; // image will never exceed this height, but could be less depending on cropToFit
 	export let maxWidth = undefined; // if not defined, takes available space
 	export let cropToFit = true; // if true, image may be cropped to fill its container
@@ -137,8 +137,8 @@
 	<img
 		bind:this={imageRef}
 		class={`${imageCss} ${imageCssStatic}`}
-		src={imageDetails.imgSrc}
-		alt={imageDetails.imgAlt}
+		src={imageAttributes.imgSrc}
+		alt={imageAttributes.imgAlt}
 	/>
 </div>
 

@@ -1,8 +1,7 @@
 <script>
 	import {
-		getImageDetailsBySrc,
 		openUrl,
-		setImageDetails,
+		setImageDetailAttributes,
 		setShowImageDetailModal
 	} from '$lib/jdg-ui-management.js';
 
@@ -19,10 +18,11 @@
 		JDGImageDetailOverlay
 	} from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-styling-constants.js';
+	import imageAttributesCollection from './image-attributes-collection.js';
 </script>
 
 <JDGContentContainer overlapWithHeader={true} topBottomPadding="0" gap="0">
-	<JDGImageFullWidth imageDetails={getImageDetailsBySrc('./history/CCP1.jpg')} />
+	<JDGImageFullWidth imageAttributes={imageAttributesCollection.get('cc-1')} />
 	<JDGContentBoxFloating isForBodyCopy={true}>
 		In 1968, Englewood changed forever when mall magnate Gerri Von Frellick opened a 1.35
 		million-square foot shopping center on the site of Englewood’s beloved City Park. Cinderella
@@ -41,7 +41,12 @@
 		and little-known details of each mall.
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating isForBodyCopy={true}>
-		<JDGImageCarousel />
+		<JDGImageCarousel
+			imageDetailObjects={[
+				imageAttributesCollection.get('cc-1'),
+				imageAttributesCollection.get('cc-2')
+			]}
+		/>
 		Some more text...
 	</JDGContentBoxFloating>
 </JDGContentContainer>
@@ -52,7 +57,7 @@
 		</div>
 		<JDGGridLayout>
 			<JDGImageTile
-				imageDetails={getImageDetailsBySrc('./project-tiles/architecture.jpg')}
+				imageAttributes={imageAttributesCollection.get('architecture-1')}
 				label={'SCROLL EXAMPLE'}
 				href="#ANOTHER-SECTION"
 			/>
@@ -75,17 +80,17 @@
 		<JDGImageTile
 			onClickFunction={() => {
 				setShowImageDetailModal(true);
-				setImageDetails(getImageDetailsBySrc('./history/lakeside-1.jpg'));
+				setImageDetailAttributes(imageAttributesCollection.get('lakeside-1'));
 			}}
-			imageDetails={getImageDetailsBySrc('./history/lakeside-1.jpg')}
+			imageAttributes={imageAttributesCollection.get('lakeside-1')}
 			cropToFit={false}
 		/>
 		<JDGImageTile
 			onClickFunction={() => {
 				setShowImageDetailModal(true);
-				setImageDetails(getImageDetailsBySrc('./history/cc-2.jpg'));
+				setImageDetailAttributes(imageAttributesCollection.get('cc-2'));
 			}}
-			imageDetails={getImageDetailsBySrc('./history/cc-2.jpg')}
+			imageAttributes={imageAttributesCollection.get('cc-2')}
 			cropToFit={false}
 		/>
 	</JDGContentBoxFloating>
@@ -101,5 +106,5 @@
 	<JDGContentBoxFloating title="A FOURTH SECTION" />
 </JDGContentContainer>
 {#if $uiState.showImageDetailOverlay}
-	<JDGImageDetailOverlay imageDetails={$uiState.imageDetails} />
+	<JDGImageDetailOverlay imageAttributes={$uiState.imageDetailAttributes} />
 {/if}
