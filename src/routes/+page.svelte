@@ -40,14 +40,13 @@
 		Follow along as we dive into Cinderella City’s fairytale from beginning to end, including rare photos
 		and little-known details of each mall.
 	</JDGContentBoxFloating>
-	<JDGContentBoxFloating isForBodyCopy={true}>
+	<JDGContentBoxFloating>
 		<JDGImageCarousel
-			imageDetailObjects={[
+			imageAttributeObjects={[
 				imageAttributesCollection.get('cc-1'),
 				imageAttributesCollection.get('cc-2')
 			]}
 		/>
-		Some more text...
 	</JDGContentBoxFloating>
 </JDGContentContainer>
 <JDGContentContainer>

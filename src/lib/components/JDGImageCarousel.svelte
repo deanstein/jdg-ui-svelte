@@ -1,17 +1,26 @@
 <script>
-	import imageAttributesCollection from '../../routes/image-attributes-collection.js';
-
 	import { JDGImage, JDGImageTile } from '$lib/index.js';
 
-	export let imageDetailObjects = [];
+	export let imageAttributeObjects = []; // all images shown in thumbnail collection
 	export let maxHeight = '50vh';
+
+	let activeImage = imageAttributeObjects[0]; // start with the first image
+
+	const setActiveImage = (imageAttributesObject) => {
+		activeImage = imageAttributesObject;
+	};
 </script>
 
 <div class="jdg-image-carousel-container">
-	<JDGImage imageAttributes={imageAttributesCollection.get('cc-2')} {maxHeight} cropToFit={false} />
+	<JDGImage imageAttributes={activeImage} {maxHeight} cropToFit={false} />
 	<div class="carousel-thumbnail-container">
-		{#each imageDetailObjects as imageAttributesObject, i}
-			<JDGImageTile imageAttributes={imageAttributesObject} maxHeight="50px" maxWidth="75px" />
+		{#each imageAttributeObjects as imageAttributesObject, i}
+			<JDGImageTile
+				onClickFunction={() => setActiveImage(imageAttributesObject)}
+				imageAttributes={imageAttributesObject}
+				maxHeight="50px"
+				maxWidth="75px"
+			/>
 		{/each}
 	</div>
 </div>
@@ -28,9 +37,5 @@
 	.carousel-thumbnail-container {
 		display: flex;
 		gap: 1rem;
-	}
-
-	.carousel-thumbnail-container > div {
-		max-width: 200px;
 	}
 </style>
