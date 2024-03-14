@@ -30,10 +30,12 @@
 	}
 
 	// calculate the aspect ratio of the image container and the image (if not already known)
-	const updateAspectRatios = () => {
+	const getAspectRatios = () => {
 		if (containerRef && imageRef) {
 			containerAspectRatio = containerRef.clientWidth / maxHeightPx;
-			imageAspectRatio = imageAspectRatio ?? imageRef.naturalWidth / imageRef.naturalHeight;
+			if (!imageAspectRatio) {
+				imageAspectRatio = imageRef.naturalWidth / imageRef.naturalHeight;
+			}
 			console.log(imgSrc, cropToFit, imageAspectRatio, containerAspectRatio);
 		}
 	};
@@ -50,7 +52,7 @@
 				case imageAspectRatio > containerAspectRatio:
 					return 'auto';
 				// image is taller than container
-				case !cropToFit && imageAspectRatio < containerAspectRatio:
+				case imageAspectRatio < containerAspectRatio:
 					return maxHeight;
 				default:
 					return maxHeight;
@@ -78,7 +80,7 @@
 		}
 	};
 
-	const setDynamicStyles = () => {
+	const setDynamicStyles = (imageAspectRatio, containerAspectRatio) => {
 		imageContainerCss = css`
 			height: ${getPreferredContainerHeight(imageAspectRatio, containerAspectRatio)};
 		`;
@@ -89,17 +91,17 @@
 
 	const onImageLoad = () => {
 		// ensure that the image aspect ratio is captured once the image loads
-		updateAspectRatios();
+		getAspectRatios();
 	};
 
-	// set dynamically depending on cropToFit
+	// may be updated dynamically depending on cropToFit
 	let imageContainerCss = css`
-		height: ${getPreferredContainerHeight(imageAspectRatio, containerAspectRatio)};
+		height: ${maxHeight};
 	`;
 
-	// set dynamically depending on cropToFit
+	// may be updated dynamically depending on cropToFit
 	let imageCss = css`
-		object-fit: ${getPreferredObjectFit(imageAspectRatio, containerAspectRatio)};
+		object-fit: cover;
 	`;
 
 	// only set from the parent, once
@@ -113,7 +115,6 @@
 		if (imageRef && !cropToFit) {
 			imageRef.addEventListener('load', onImageLoad);
 		}
-		setDynamicStyles();
 	});
 
 	onDestroy(() => {
@@ -126,8 +127,8 @@
 		if (!cropToFit) {
 			// ensure the aspect ratios are updated when the window width changes in state
 			$uiState.windowWidth;
-			updateAspectRatios();
-			setDynamicStyles();
+			getAspectRatios();
+			setDynamicStyles(imageAspectRatio, containerAspectRatio);
 		}
 	}
 </script>

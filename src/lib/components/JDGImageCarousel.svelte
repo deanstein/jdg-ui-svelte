@@ -2,7 +2,6 @@
 	import { css } from '@emotion/css';
 
 	import { JDGImage, JDGImageTile } from '$lib/index.js';
-	import { convertVhToPixels } from '$lib/jdg-utils.js';
 
 	export let imageDetailObjects = [];
 	export let maxHeight = '50vh';
