@@ -12,8 +12,8 @@
 <div class="jdg-image-carousel-container">
 	<JDGImage imgSrc={'./history/cc-2.jpg'} {maxHeight} cropToFit={false} />
 	<div class="carousel-thumbnail-container">
-		<JDGImageTile maxHeight="50px" />
-		<JDGImageTile maxHeight="50px" />
+		<JDGImageTile maxHeight="50px" maxWidth="75px" />
+		<JDGImageTile maxHeight="50px" maxWidth="75px" />
 	</div>
 </div>
 
@@ -29,5 +29,9 @@
 	.carousel-thumbnail-container {
 		display: flex;
 		gap: 1rem;
+	}
+
+	.carousel-thumbnail-container > div {
+		max-width: 200px;
 	}
 </style>

@@ -6,8 +6,9 @@
 	import { fadeAndScale, verticalSlide } from '$lib/jdg-graphics-factory.js';
 	import { jdgColors, jdgSizes, jdgDurations } from '../jdg-styling-constants.js';
 
+	export let maxWidth = undefined; // if not defined, takes available space
 	export let maxHeight = '300px';
-	export let cropToFit = true; // if false, entire image always shown
+	export let cropToFit = true; // crop image to fit its container?
 	export let label = undefined;
 	export let labelJustification = 'left';
 	export let labelContainerVerticalAlign = 'bottom';
@@ -63,7 +64,7 @@
 				<JDGStripesHorizontal stripeHeight="3px" staggeredStripeWidth={false} />
 			</div>
 		{/if}
-		<JDGImage {maxHeight} {imgSrc} {imgAlt} showHoverEffect={true} {cropToFit} />
+		<JDGImage {maxHeight} {maxWidth} {imgSrc} {imgAlt} showHoverEffect={true} {cropToFit} />
 	</div>
 </a>
 

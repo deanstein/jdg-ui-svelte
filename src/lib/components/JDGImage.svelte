@@ -6,6 +6,7 @@
 	import { convertVhToPixels } from '$lib/jdg-utils.js';
 
 	export let maxHeight = '300px'; // image will never exceed this height, but could be less depending on cropToFit
+	export let maxWidth = undefined; // if not defined, takes available space
 	export let cropToFit = true; // if true, image may be cropped to fill its container
 	export let showHoverEffect = false; // consumers can offer this and additional zoom effects
 	export let imgSrc =
@@ -36,7 +37,6 @@
 			if (!imageAspectRatio) {
 				imageAspectRatio = imageRef.naturalWidth / imageRef.naturalHeight;
 			}
-			console.log(imgSrc, cropToFit, imageAspectRatio, containerAspectRatio);
 		}
 	};
 
@@ -97,6 +97,7 @@
 	// may be updated dynamically depending on cropToFit
 	let imageContainerCss = css`
 		height: ${maxHeight};
+		width: ${maxWidth ?? 'auto'};
 	`;
 
 	// may be updated dynamically depending on cropToFit
