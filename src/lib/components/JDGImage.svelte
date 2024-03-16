@@ -155,23 +155,21 @@
 	}
 </script>
 
-<div style="position: relative; width: 100%;">
-	<div bind:this={containerRef} class="jdg-image-container {imageContainerCss}">
+<div bind:this={containerRef} class="jdg-image-container {imageContainerCss}">
+	<img
+		bind:this={imageRef}
+		class={`${imageCss} ${imageCssStatic}`}
+		src={imageAttributes.imgSrc}
+		alt={imageAttributes.imgAlt}
+	/>
+	<div style="position: absolute; z-index: -1;">
 		<img
 			bind:this={imageRef}
 			class={`${imageCss} ${imageCssStatic}`}
 			src={imageAttributes.imgSrc}
 			alt={imageAttributes.imgAlt}
 		/>
-		<div style="position: absolute; z-index: -1;">
-			<img
-				bind:this={imageRef}
-				class={`${imageCss} ${imageCssStatic}`}
-				src={imageAttributes.imgSrc}
-				alt={imageAttributes.imgAlt}
-			/>
-			<div class="jdg-image-blur"></div>
-		</div>
+		<div class="jdg-image-blur"></div>
 	</div>
 </div>
 
