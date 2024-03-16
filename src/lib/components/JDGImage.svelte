@@ -155,13 +155,24 @@
 	}
 </script>
 
-<div bind:this={containerRef} class="jdg-image-container {imageContainerCss}">
-	<img
-		bind:this={imageRef}
-		class={`${imageCss} ${imageCssStatic}`}
-		src={imageAttributes.imgSrc}
-		alt={imageAttributes.imgAlt}
-	/>
+<div style="position: relative; width: 100%;">
+	<div bind:this={containerRef} class="jdg-image-container {imageContainerCss}">
+		<img
+			bind:this={imageRef}
+			class={`${imageCss} ${imageCssStatic}`}
+			src={imageAttributes.imgSrc}
+			alt={imageAttributes.imgAlt}
+		/>
+		<div style="position: absolute; z-index: -1;">
+			<img
+				bind:this={imageRef}
+				class={`${imageCss} ${imageCssStatic}`}
+				src={imageAttributes.imgSrc}
+				alt={imageAttributes.imgAlt}
+			/>
+			<div class="jdg-image-blur"></div>
+		</div>
+	</div>
 </div>
 
 <style>
@@ -180,5 +191,17 @@
 		min-width: 0;
 		overflow: hidden;
 		transition: transform 0.3s ease-in-out;
+	}
+
+	.jdg-image-blur {
+		background-color: rgba(200, 200, 200, 0.2);
+		backdrop-filter: blur(10px);
+		object-fit: cover;
+		height: 100%;
+		width: 100%;
+		/* z-index: 1; */
+		position: absolute;
+		top: 0;
+		left: 0;
 	}
 </style>

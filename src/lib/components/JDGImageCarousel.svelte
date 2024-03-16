@@ -20,7 +20,7 @@
 			<div
 				class="carousel-thumbnail-wrapper"
 				style={imageAttributesObject === activeImage
-					? `outline: 5px solid ${activeThumbnailColor}`
+					? `outline: 3px solid ${activeThumbnailColor}`
 					: ''}
 			>
 				<JDGImageTile
@@ -41,6 +41,7 @@
 		align-items: center;
 		justify-content: center;
 		gap: 1rem;
+		width: 100%;
 	}
 
 	.carousel-thumbnail-container {
