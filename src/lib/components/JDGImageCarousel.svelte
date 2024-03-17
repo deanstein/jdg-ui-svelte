@@ -14,7 +14,7 @@
 </script>
 
 <div class="jdg-image-carousel-container">
-	<JDGImage imageAttributes={activeImage} {maxHeight} cropToFit={false} />
+	<JDGImage imageAttributes={activeImage} {maxHeight} fillContainer={false} />
 	<div class="carousel-thumbnail-container">
 		{#each imageAttributeObjects as imageAttributesObject, i}
 			<div

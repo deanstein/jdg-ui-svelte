@@ -16,5 +16,5 @@
 	closeOnOverlayClick={true}
 	colorRgba="rgba(255, 255, 255, 0.6)"
 >
-	<JDGImage {imageAttributes} maxHeight="auto" cropToFit={false} />
+	<JDGImage {imageAttributes} maxHeight="auto" fillContainer={false} />
 </JDGOverlay>

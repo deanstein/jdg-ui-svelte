@@ -72,7 +72,7 @@
 		</JDGGridLayout>
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="TEST SECTION" isForBodyCopy={true}>
-		<JDGImageTile cropToFit={false} href="/about" />
+		<JDGImageTile fillContainer={false} href="/about" />
 	</JDGContentBoxFloating>
 	<JDGAccentBlock blockQuote="This is a block quote." />
 	<JDGContentBoxFloating title="ANOTHER SECTION" isForBodyCopy={true}>
@@ -82,7 +82,7 @@
 				setImageDetailAttributes(imageAttributesCollection.get('lakeside-1'));
 			}}
 			imageAttributes={imageAttributesCollection.get('lakeside-1')}
-			cropToFit={false}
+			fillContainer={false}
 		/>
 		<JDGImageTile
 			onClickFunction={() => {
@@ -90,7 +90,7 @@
 				setImageDetailAttributes(imageAttributesCollection.get('cc-2'));
 			}}
 			imageAttributes={imageAttributesCollection.get('cc-2')}
-			cropToFit={false}
+			fillContainer={false}
 		/>
 	</JDGContentBoxFloating>
 	<JDGAccentBlock
