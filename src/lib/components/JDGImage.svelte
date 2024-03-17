@@ -93,6 +93,7 @@
 	const setDynamicStyles = (imageAspectRatio, containerAspectRatio) => {
 		imageContainerCss = css`
 			height: ${getPreferredContainerHeight(imageAspectRatio, containerAspectRatio)};
+			width: ${showBlurInUnfilledSpace ? '100%' : maxWidth ?? 'auto'};
 		`;
 		imageCss = css`
 			object-fit: ${getPreferredObjectFit(imageAspectRatio, containerAspectRatio)};
