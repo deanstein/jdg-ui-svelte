@@ -159,7 +159,7 @@
 	}
 </script>
 
-<div transition:fade={{ duration: 300 }} bind:this={containerRef} class="jdg-image-container {imageContainerCss}">
+<div bind:this={containerRef} class="jdg-image-container {imageContainerCss}">
 	<img
 		bind:this={imageRef}
 		class={`${imageCss} ${imageCssStatic}`}
@@ -209,7 +209,6 @@
 	.jdg-image-blur-overlay {
 		background-color: rgba(200, 200, 200, 0.2);
 		backdrop-filter: blur(10px);
-		object-fit: cover;
 		height: 100%;
 		width: 100%;
 		z-index: 1;
