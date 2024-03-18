@@ -1,5 +1,6 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
+	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
@@ -158,7 +159,7 @@
 	}
 </script>
 
-<div bind:this={containerRef} class="jdg-image-container {imageContainerCss}">
+<div transition:fade={{ duration: 300 }} bind:this={containerRef} class="jdg-image-container {imageContainerCss}">
 	<img
 		bind:this={imageRef}
 		class={`${imageCss} ${imageCssStatic}`}

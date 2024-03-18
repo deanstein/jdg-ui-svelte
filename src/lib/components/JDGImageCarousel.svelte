@@ -7,6 +7,7 @@
 	export let activeThumbnailColor = jdgColors.accentStripesJDG[0];
 
 	let activeImage = imageAttributeObjects[0]; // start with the first image
+	let show = true;
 
 	const setActiveImage = (imageAttributesObject) => {
 		activeImage = imageAttributesObject;
@@ -14,12 +15,27 @@
 </script>
 
 <div class="jdg-image-carousel-container">
-	<JDGImage
-		imageAttributes={activeImage}
-		{maxHeight}
-		fillContainer={false}
-		showBlurInUnfilledSpace={true}
-	/>
+	<div style="position: relative; height: 50vh; width: 100%;">
+		{#if show}
+			<div style="position: absolute; width: 100%;">
+				<JDGImage
+					imageAttributes={activeImage}
+					{maxHeight}
+					fillContainer={false}
+					showBlurInUnfilledSpace={true}
+				/>
+			</div>
+		{:else}
+			<div style="position: absolute; width: 100%;">
+				<JDGImage
+					imageAttributes={activeImage}
+					{maxHeight}
+					fillContainer={false}
+					showBlurInUnfilledSpace={true}
+				/>
+			</div>
+		{/if}
+	</div>
 	<div class="carousel-thumbnail-container">
 		{#each imageAttributeObjects as imageAttributesObject, i}
 			<div
@@ -29,7 +45,10 @@
 					: ''}
 			>
 				<JDGImageTile
-					onClickFunction={() => setActiveImage(imageAttributesObject)}
+					onClickFunction={() => {
+						setActiveImage(imageAttributesObject);
+						show = !show;
+					}}
 					imageAttributes={imageAttributesObject}
 					maxHeight="50px"
 					maxWidth="75px"
@@ -41,6 +60,7 @@
 
 <style>
 	.jdg-image-carousel-container {
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
