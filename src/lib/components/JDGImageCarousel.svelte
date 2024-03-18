@@ -14,7 +14,12 @@
 </script>
 
 <div class="jdg-image-carousel-container">
-	<JDGImage imageAttributes={activeImage} {maxHeight} cropToFit={false} />
+	<JDGImage
+		imageAttributes={activeImage}
+		{maxHeight}
+		fillContainer={false}
+		showBlurInUnfilledSpace={true}
+	/>
 	<div class="carousel-thumbnail-container">
 		{#each imageAttributeObjects as imageAttributesObject, i}
 			<div
@@ -41,6 +46,7 @@
 		align-items: center;
 		justify-content: center;
 		gap: 1rem;
+		width: 100%;
 	}
 
 	.carousel-thumbnail-container {

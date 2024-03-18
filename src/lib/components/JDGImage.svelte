@@ -8,10 +8,11 @@
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-styling-constants.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object for all image data
-	export let maxHeight = '300px'; // image will never exceed this height, but could be less depending on cropToFit
+	export let maxHeight = '300px'; // image will never exceed this height, but could be less depending on fillContainer
 	export let maxWidth = undefined; // if not defined, takes available space
-	export let cropToFit = true; // if true, image may be cropped to fill its container
-	export let showHoverEffect = false; // consumers can offer this and additional zoom effects
+	export let fillContainer = true; // if true, image may be cropped to fill its container in both axes
+	export let showBlurInUnfilledSpace = false; // if true, shows the image blurred in the unfilled space - only applies if fillContainer is false
+	export let showHoverEffect = false; // zoom image slightly on hover
 
 	let containerRef;
 	let containerAspectRatio;
@@ -23,6 +24,7 @@
 	let maxHeightValue;
 	let maxHeightUnit;
 	let maxHeightPx;
+	// self-executing function that gets the pixel height from maxHeight prop
 	const getMaxHeightPxFromProp = (() => {
 		// if height is auto, skip all this
 		if (maxHeight !== 'auto') {
@@ -50,8 +52,8 @@
 
 	const getPreferredContainerHeight = (imageAspectRatio, containerAspectRatio) => {
 		if (containerRef && imageRef && maxHeight !== 'auto') {
-			// if we're cropping, height is always the max height
-			if (cropToFit) {
+			// if we're cropping, or showing the blur behind, height is always the max height
+			if (fillContainer || showBlurInUnfilledSpace) {
 				return maxHeight;
 			}
 			// else, need to determine crop based on aspect ratios
@@ -71,7 +73,7 @@
 	const getPreferredObjectFit = (imageAspectRatio, containerAspectRatio) => {
 		if (imageRef && containerRef) {
 			// if we're cropping, fit is always cover
-			if (cropToFit) {
+			if (fillContainer) {
 				return 'cover';
 			}
 			// else, need to determine fit based on aspect ratios
@@ -91,6 +93,7 @@
 	const setDynamicStyles = (imageAspectRatio, containerAspectRatio) => {
 		imageContainerCss = css`
 			height: ${getPreferredContainerHeight(imageAspectRatio, containerAspectRatio)};
+			width: ${showBlurInUnfilledSpace ? '100%' : maxWidth ?? 'auto'};
 		`;
 		imageCss = css`
 			object-fit: ${getPreferredObjectFit(imageAspectRatio, containerAspectRatio)};
@@ -102,13 +105,13 @@
 		getAspectRatios();
 	};
 
-	// may be updated dynamically depending on cropToFit
+	// may be updated dynamically depending on fillContainer
 	let imageContainerCss = css`
 		height: ${maxHeight};
-		width: ${maxWidth ?? 'auto'};
+		width: ${showBlurInUnfilledSpace ? '100%' : maxWidth ?? 'auto'};
 	`;
 
-	// may be updated dynamically depending on cropToFit
+	// may be updated dynamically depending on fillContainer
 	let imageCss = css`
 		object-fit: cover;
 	`;
@@ -134,19 +137,19 @@
 	`;
 
 	onMount(() => {
-		if (imageRef && !cropToFit) {
+		if (imageRef && !fillContainer) {
 			imageRef.addEventListener('load', onImageLoad);
 		}
 	});
 
 	onDestroy(() => {
-		if (imageRef && !cropToFit) {
+		if (imageRef && !fillContainer) {
 			imageRef.removeEventListener('load', onImageLoad);
 		}
 	});
 
 	$: {
-		if (!cropToFit) {
+		if (!fillContainer) {
 			// ensure the aspect ratios are updated when the window width changes in state
 			$uiState.windowWidth;
 			getAspectRatios();
@@ -162,6 +165,19 @@
 		src={imageAttributes.imgSrc}
 		alt={imageAttributes.imgAlt}
 	/>
+	<!-- only show blurred image behind if blurUnfilledSpace is true -->
+	{#if showBlurInUnfilledSpace && !fillContainer}
+		<div class="jdg-image-blur">
+			<img
+				bind:this={imageRef}
+				style="object-fit: cover;"
+				class={`${imageCssStatic}`}
+				src={imageAttributes.imgSrc}
+				alt={imageAttributes.imgAlt}
+			/>
+			<div class="jdg-image-blur-overlay"></div>
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -180,5 +196,24 @@
 		min-width: 0;
 		overflow: hidden;
 		transition: transform 0.3s ease-in-out;
+	}
+
+	.jdg-image-blur {
+		position: absolute;
+		z-index: -1;
+		width: 100%;
+		height: 100%;
+	}
+
+	.jdg-image-blur-overlay {
+		background-color: rgba(200, 200, 200, 0.2);
+		backdrop-filter: blur(10px);
+		object-fit: cover;
+		height: 100%;
+		width: 100%;
+		/* z-index: 1; */
+		position: absolute;
+		top: 0;
+		left: 0;
 	}
 </style>

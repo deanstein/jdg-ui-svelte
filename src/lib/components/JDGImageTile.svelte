@@ -12,7 +12,8 @@
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object to hold all details
 	export let maxWidth = undefined; // if not defined, takes available space
 	export let maxHeight = '300px';
-	export let cropToFit = true; // crop image to fit its container?
+	export let fillContainer = true; // if true, image may be cropped to fill container in both axes
+	export let showBlurInUnfilledSpace = false; // if true, shows the image blurred in the unfilled space - only applies if fillContainer is false
 	export let label = undefined;
 	export let labelJustification = 'left';
 	export let labelContainerVerticalAlign = 'bottom';
@@ -23,7 +24,11 @@
 	let isHovering;
 
 	const aCss = css`
-		display: ${cropToFit ? 'relative' : 'flex'};
+		display: ${fillContainer ? 'relative' : 'flex'};
+	`;
+
+	const imageTileCss = css`
+		width: ${showBlurInUnfilledSpace ? '100%' : 'auto'};
 	`;
 
 	const imageTileLabelContainerCss = css`
@@ -44,7 +49,7 @@
 
 <a {href} class={aCss}>
 	<div
-		class="jdg-image-tile"
+		class="jdg-image-tile {imageTileCss}"
 		on:mouseenter={() => (isHovering = true)}
 		on:mouseleave={() => (isHovering = false)}
 		role="button"
@@ -65,7 +70,14 @@
 				<JDGStripesHorizontal stripeHeight="3px" staggeredStripeWidth={false} />
 			</div>
 		{/if}
-		<JDGImage {maxHeight} {maxWidth} {imageAttributes} showHoverEffect={true} {cropToFit} />
+		<JDGImage
+			{maxHeight}
+			{maxWidth}
+			{imageAttributes}
+			showHoverEffect={true}
+			{fillContainer}
+			{showBlurInUnfilledSpace}
+		/>
 	</div>
 </a>
 
