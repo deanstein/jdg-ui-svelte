@@ -52,8 +52,8 @@
 
 	const getPreferredContainerHeight = (imageAspectRatio, containerAspectRatio) => {
 		if (containerRef && imageRef && maxHeight !== 'auto') {
-			// if we're cropping, height is always the max height
-			if (fillContainer) {
+			// if we're cropping, or showing the blur behind, height is always the max height
+			if (fillContainer || showBlurInUnfilledSpace) {
 				return maxHeight;
 			}
 			// else, need to determine crop based on aspect ratios
@@ -165,16 +165,17 @@
 		src={imageAttributes.imgSrc}
 		alt={imageAttributes.imgAlt}
 	/>
-	<!-- onlyl show blurred image behind if blurUnfilledSpace is true -->
+	<!-- only show blurred image behind if blurUnfilledSpace is true -->
 	{#if showBlurInUnfilledSpace && !fillContainer}
-		<div style="position: absolute; z-index: -1;">
+		<div class="jdg-image-blur">
 			<img
 				bind:this={imageRef}
-				class={`${imageCss} ${imageCssStatic}`}
+				style="object-fit: cover;"
+				class={`${imageCssStatic}`}
 				src={imageAttributes.imgSrc}
 				alt={imageAttributes.imgAlt}
 			/>
-			<div class="jdg-image-blur"></div>
+			<div class="jdg-image-blur-overlay"></div>
 		</div>
 	{/if}
 </div>
@@ -198,6 +199,13 @@
 	}
 
 	.jdg-image-blur {
+		position: absolute;
+		z-index: -1;
+		width: 100%;
+		height: 100%;
+	}
+
+	.jdg-image-blur-overlay {
 		background-color: rgba(200, 200, 200, 0.2);
 		backdrop-filter: blur(10px);
 		object-fit: cover;

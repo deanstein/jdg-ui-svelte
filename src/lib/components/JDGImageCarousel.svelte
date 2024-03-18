@@ -25,7 +25,7 @@
 			<div
 				class="carousel-thumbnail-wrapper"
 				style={imageAttributesObject === activeImage
-					? `outline: 3px solid ${activeThumbnailColor}`
+					? `outline: 5px solid ${activeThumbnailColor}`
 					: ''}
 			>
 				<JDGImageTile
