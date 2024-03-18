@@ -83,6 +83,7 @@
 			}}
 			imageAttributes={imageAttributesCollection.get('lakeside-1')}
 			fillContainer={false}
+			showBlurInUnfilledSpace={true}
 		/>
 		<JDGImageTile
 			onClickFunction={() => {
