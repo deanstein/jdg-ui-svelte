@@ -95,6 +95,7 @@
 		imageContainerCss = css`
 			height: ${getPreferredContainerHeight(imageAspectRatio, containerAspectRatio)};
 			width: ${showBlurInUnfilledSpace ? '100%' : maxWidth ?? 'auto'};
+			background-image: url(${imageAttributes.imgSrc};;
 		`;
 		imageCss = css`
 			object-fit: ${getPreferredObjectFit(imageAspectRatio, containerAspectRatio)};
@@ -139,6 +140,10 @@
 		}
 	`;
 
+	const imageBlurCss = css`
+		background-image: url(${imageAttributes.imgSrc});
+	`;
+
 	onMount(() => {
 		if (imageRef && !fillContainer) {
 			imageRef.addEventListener('load', onImageLoad);
@@ -174,16 +179,7 @@
 	/>
 	<!-- only show blurred image behind if blurUnfilledSpace is true -->
 	{#if showBlurInUnfilledSpace && !fillContainer}
-		<div class="jdg-image-blur">
-			<div class="jdg-image-blur-overlay" />
-			<img
-				bind:this={imageRef}
-				style="position: relative; object-fit: cover; z-index: 0;"
-				class={`${imageCssStatic}`}
-				src={imageAttributes.imgSrc}
-				alt={imageAttributes.imgAlt}
-			/>
-		</div>
+		<div class="jdg-image-blur {imageBlurCss}"></div>
 	{/if}
 </div>
 
@@ -214,6 +210,8 @@
 		z-index: -1;
 		width: 100%;
 		height: 100%;
+		filter: blur(5px);
+		background-size: cover;
 	}
 
 	.jdg-image-blur-overlay {
