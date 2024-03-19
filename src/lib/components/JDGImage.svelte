@@ -205,7 +205,6 @@
 		flex-direction: column;
 		min-width: 0;
 		overflow: hidden;
-		transition: transform 0.3s ease-in-out;
 	}
 
 	.jdg-image-blur {
