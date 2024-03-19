@@ -162,6 +162,7 @@
 </script>
 
 <div
+	transition:fade={{ duration: 300 }}
 	bind:this={containerRef}
 	class="jdg-image-container {imageContainerCss}"
 >
