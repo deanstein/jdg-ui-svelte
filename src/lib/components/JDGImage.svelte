@@ -95,7 +95,6 @@
 		imageContainerCss = css`
 			height: ${getPreferredContainerHeight(imageAspectRatio, containerAspectRatio)};
 			width: ${showBlurInUnfilledSpace ? '100%' : maxWidth ?? 'auto'};
-			background-image: url(${imageAttributes.imgSrc};;
 		`;
 		imageCss = css`
 			object-fit: ${getPreferredObjectFit(imageAspectRatio, containerAspectRatio)};
@@ -184,15 +183,6 @@
 </div>
 
 <style>
-	img {
-		height: 100%;
-		width: 100%;
-	}
-
-	.jdg-image {
-		transition: transform 0.3s ease-in-out;
-	}
-
 	.jdg-image-container {
 		position: relative;
 		display: flex;
@@ -201,6 +191,12 @@
 		flex-direction: column;
 		min-width: 0;
 		overflow: hidden;
+	}
+
+	.jdg-image {
+		height: 100%;
+		width: 100%;
+		transition: transform 0.3s ease-in-out;
 	}
 
 	.jdg-image-blur {
@@ -212,16 +208,5 @@
 		height: 100%;
 		filter: blur(5px);
 		background-size: cover;
-	}
-
-	.jdg-image-blur-overlay {
-		position: absolute;
-		top: 0;
-		left: 0;
-		height: 100%;
-		width: 100%;
-		z-index: 1;
-		background-color: rgba(200, 200, 200, 0.2);
-		backdrop-filter: blur(10px);
 	}
 </style>
