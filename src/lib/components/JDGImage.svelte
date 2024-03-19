@@ -166,7 +166,7 @@
 >
 	<img
 		bind:this={imageRef}
-		class={`${imageCss} ${imageCssStatic}`}
+		class={`jdg-image ${imageCss} ${imageCssStatic}`}
 		src={imageAttributes.imgSrc}
 		alt={imageAttributes.imgAlt}
 	/>
@@ -189,6 +189,9 @@
 	img {
 		height: 100%;
 		width: 100%;
+	}
+
+	.jdg-image {
 		transition: transform 0.3s ease-in-out;
 	}
 
