@@ -206,7 +206,7 @@
 		z-index: -1;
 		width: 100%;
 		height: 100%;
-		filter: blur(8px);
+		filter: blur(5px);
 		background-size: cover;
 	}
 </style>
