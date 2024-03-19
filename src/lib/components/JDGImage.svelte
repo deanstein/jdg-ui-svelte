@@ -175,12 +175,12 @@
 		<div class="jdg-image-blur">
 			<img
 				bind:this={imageRef}
-				style="object-fit: cover;"
+				style="object-fit: cover; z-index: 0;"
 				class={`${imageCssStatic}`}
 				src={imageAttributes.imgSrc}
 				alt={imageAttributes.imgAlt}
 			/>
-			<div class="jdg-image-blur-overlay"></div>
+			<div class="jdg-image-blur-overlay" />
 		</div>
 	{/if}
 </div>
