@@ -173,6 +173,7 @@
 	<!-- only show blurred image behind if blurUnfilledSpace is true -->
 	{#if showBlurInUnfilledSpace && !fillContainer}
 		<div class="jdg-image-blur">
+			<div class="jdg-image-blur-overlay" />
 			<img
 				bind:this={imageRef}
 				style="position: relative; object-fit: cover; z-index: 0;"
@@ -180,7 +181,6 @@
 				src={imageAttributes.imgSrc}
 				alt={imageAttributes.imgAlt}
 			/>
-			<div class="jdg-image-blur-overlay" />
 		</div>
 	{/if}
 </div>
@@ -209,6 +209,11 @@
 		width: 100%;
 		height: 100%;
 	}
+
+	.jdg-image-blur img {
+	position: relative;
+	z-index: 0;
+}
 
 	.jdg-image-blur-overlay {
 		background-color: rgba(200, 200, 200, 0.2);
