@@ -119,10 +119,6 @@
 
 	// only set from the parent, once
 	let imageCssStatic = css`
-		:hover {
-			transform: ${showHoverEffect ? 'scale(1.04);' : ''};
-		}
-
 		/* if max height is not specified, use all available space below the header */
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			max-height: ${maxHeight === 'auto' ? `calc(100vh - ${jdgSizes.headerHeightSm})` : ''};
@@ -134,6 +130,12 @@
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 			max-height: ${maxHeight === 'auto' ? `calc(100vh - ${jdgSizes.headerHeightLg})` : ''};
+		}
+	`;
+
+	const imageAnimationCss = css`
+		:hover {
+			transform: ${showHoverEffect ? 'scale(1.04);' : ''};
 		}
 	`;
 
@@ -166,7 +168,7 @@
 >
 	<img
 		bind:this={imageRef}
-		class={`jdg-image ${imageCss} ${imageCssStatic}`}
+		class={`${imageCss} ${imageCssStatic} ${imageAnimationCss}`}
 		src={imageAttributes.imgSrc}
 		alt={imageAttributes.imgAlt}
 	/>
@@ -189,9 +191,6 @@
 	img {
 		height: 100%;
 		width: 100%;
-	}
-
-	.jdg-image {
 		transition: transform 0.3s ease-in-out;
 	}
 
