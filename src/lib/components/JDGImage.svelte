@@ -159,7 +159,11 @@
 	}
 </script>
 
-<div transition:fade={{ duration: 300 }} bind:this={containerRef} class="jdg-image-container {imageContainerCss}">
+<div
+	transition:fade={{ duration: 300 }}
+	bind:this={containerRef}
+	class="jdg-image-container {imageContainerCss}"
+>
 	<img
 		bind:this={imageRef}
 		class={`${imageCss} ${imageCssStatic}`}

@@ -1,4 +1,6 @@
 <script>
+	import { css } from '@emotion/css';
+
 	import { JDGImage, JDGImageTile } from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-styling-constants.js';
 
@@ -12,12 +14,16 @@
 	const setActiveImage = (imageAttributesObject) => {
 		activeImage = imageAttributesObject;
 	};
+
+	const crossfadeWrapperCss = css`
+		height: ${maxHeight};
+	`;
 </script>
 
 <div class="jdg-image-carousel-container">
-	<div style="position: relative; height: 50vh; width: 100%;">
+	<div class="carousel-crossfade-wrapper-relative {crossfadeWrapperCss}">
 		{#if show}
-			<div style="position: absolute; width: 100%;">
+			<div class="carousel-crossfade-wrapper-absolute">
 				<JDGImage
 					imageAttributes={activeImage}
 					{maxHeight}
@@ -26,7 +32,7 @@
 				/>
 			</div>
 		{:else}
-			<div style="position: absolute; width: 100%;">
+			<div class="carousel-crossfade-wrapper-absolute">
 				<JDGImage
 					imageAttributes={activeImage}
 					{maxHeight}
@@ -66,6 +72,16 @@
 		align-items: center;
 		justify-content: center;
 		gap: 1rem;
+		width: 100%;
+	}
+
+	.carousel-crossfade-wrapper-relative {
+		position: relative;
+		width: 100%;
+	}
+
+	.carousel-crossfade-wrapper-absolute {
+		position: absolute;
 		width: 100%;
 	}
 
