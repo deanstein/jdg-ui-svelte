@@ -217,7 +217,7 @@
 		height: 100%;
 		width: 100%;
 		z-index: 1;
-		background-color: rgba(200, 0, 0, 0.2);
+		background-color: rgba(200, 200, 200, 0.2);
 		backdrop-filter: blur(10px);
 	}
 </style>
