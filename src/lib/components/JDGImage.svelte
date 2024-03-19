@@ -210,19 +210,14 @@
 		height: 100%;
 	}
 
-	.jdg-image-blur img {
-	position: relative;
-	z-index: 0;
-}
-
 	.jdg-image-blur-overlay {
-		background-color: rgba(200, 200, 200, 0.2);
-		backdrop-filter: blur(10px);
-		height: 100%;
-		width: 100%;
-		z-index: 1;
 		position: absolute;
 		top: 0;
 		left: 0;
+		height: 100%;
+		width: 100%;
+		z-index: 1;
+		background-color: rgba(200, 0, 0, 0.2);
+		backdrop-filter: blur(10px);
 	}
 </style>
