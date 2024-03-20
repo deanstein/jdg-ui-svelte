@@ -14,13 +14,14 @@
 	let carouselRef; // used for only auto-advancing when carousel is visible
 	let activeImage = imageAttributeObjects[0]; // start with the first image
 	let kludge = true; // kludge to force a "crossfade" effect by swapping divs via flag
-	let intervalId;
+	let intervalId; // identifier for the auto-advance setInterval() call
 
 	const setActiveImage = (imageAttributesObject, endAutoAdvance = false) => {
 		activeImage = imageAttributesObject;
 		kludge = !kludge;
+		// when user clicks on a thumbnail, auto advance stops
 		if (endAutoAdvance) {
-			clearInterval(intervalId); // clear the interval
+			clearInterval(intervalId);
 			autoAdvance = false;
 		}
 	};
