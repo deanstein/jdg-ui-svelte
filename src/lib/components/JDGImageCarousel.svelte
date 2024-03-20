@@ -9,8 +9,9 @@
 	export let maxHeight = '50vh';
 	export let activeThumbnailColor = jdgColors.accentStripesJDG[0];
 	export let autoAdvance = true; // if true, auto advance through images at given interval
-	export let autoAdvanceInterval = 6000; // ms, interval between auto-advances
+	export let autoAdvanceInterval = 5000; // ms, interval between auto-advances
 
+	let carouselRef; // used for only auto-advancing when carousel is visible
 	let activeImage = imageAttributeObjects[0]; // start with the first image
 	let kludge = true; // kludge to force a "crossfade" effect by swapping divs via flag
 	let intervalId;
@@ -18,10 +19,9 @@
 	const setActiveImage = (imageAttributesObject, endAutoAdvance = false) => {
 		activeImage = imageAttributesObject;
 		kludge = !kludge;
-		// when user clicks, autoAdvance will be set to false
 		if (endAutoAdvance) {
+			clearInterval(intervalId); // clear the interval
 			autoAdvance = false;
-			clearInterval(intervalId);
 		}
 	};
 
@@ -31,22 +31,32 @@
 
 	onMount(() => {
 		if (autoAdvance) {
-			intervalId = setInterval(() => {
-				let currentIndex = imageAttributeObjects.indexOf(activeImage);
-				currentIndex = (currentIndex + 1) % imageAttributeObjects.length;
-				setActiveImage(imageAttributeObjects[currentIndex]);
-			}, autoAdvanceInterval);
+			// only start auto-advancing if carousel is visible
+			const observer = new IntersectionObserver(
+				([entry]) => {
+					if (entry.isIntersecting) {
+						intervalId = setInterval(() => {
+							let currentIndex = imageAttributeObjects.indexOf(activeImage);
+							currentIndex = (currentIndex + 1) % imageAttributeObjects.length;
+							setActiveImage(imageAttributeObjects[currentIndex]);
+						}, autoAdvanceInterval);
+					} else {
+						clearInterval(intervalId);
+					}
+				},
+				{ threshold: 0.5 /* ensure carousel is 50% visible */ }
+			);
+
+			observer.observe(carouselRef);
 		}
 	});
 
 	onDestroy(() => {
-		if (autoAdvance) {
-			clearInterval(intervalId);
-		}
+		clearInterval(intervalId);
 	});
 </script>
 
-<div class="jdg-image-carousel-container">
+<div bind:this={carouselRef} class="jdg-image-carousel-container">
 	<div class="carousel-crossfade-wrapper-relative {crossfadeWrapperCss}">
 		<!-- kludge to force a "crossfade" effect by swapping divs via flag -->
 		{#if kludge}
