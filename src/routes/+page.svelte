@@ -74,7 +74,7 @@
 	<JDGContentBoxFloating title="TEST SECTION" isForBodyCopy={true}>
 		<JDGImageTile fillContainer={false} href="/about" />
 	</JDGContentBoxFloating>
-	<JDGAccentBlock blockQuote="This is a block quote." />
+	<JDGAccentBlock primaryText="This is a block quote." />
 	<JDGContentBoxFloating title="ANOTHER SECTION" isForBodyCopy={true}>
 		<JDGImageTile
 			onClickFunction={() => {
@@ -95,12 +95,13 @@
 		/>
 	</JDGContentBoxFloating>
 	<JDGAccentBlock
-		blockQuote="This is another block quote."
+		primaryText="The people of the City of Englewood want this mall in their community."
+		secondaryText="Gerri Von Frellick, 1960"
 		backgroundColor={jdgColors.accentStripesJDG[1]}
 	/>
 	<JDGContentBoxFloating title="A THIRD SECTION" />
 	<JDGAccentBlock
-		blockQuote="This is another block quote."
+		primaryText="This is another block quote."
 		backgroundColor={jdgColors.accentStripesJDG[0]}
 	/>
 	<JDGContentBoxFloating title="A FOURTH SECTION" />

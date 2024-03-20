@@ -2,7 +2,8 @@
 	import { css } from '@emotion/css';
 	import { jdgColors } from '../jdg-styling-constants.js';
 
-	export let blockQuote = undefined;
+	export let primaryText = undefined; // main content or quote
+	export let secondaryText = undefined; // secondary content or quote attribution
 	export let backgroundColor = jdgColors.accentStripesJDG[0];
 
 	const accentBlockCss = css`
@@ -11,26 +12,39 @@
 </script>
 
 <div class="jdg-accent-block-container {accentBlockCss}">
-	{#if blockQuote}
-		<div class="jdg-accent-block-quote">
-			{blockQuote}
+	{#if primaryText}
+		<div class="accent-block-primary-text">
+			{primaryText}
 		</div>
 	{/if}
+	{#if secondaryText}
+	<div class="accent-block-secondary-text">
+		{secondaryText}
+	</div>
+{/if}
 	<slot />
 </div>
 
 <style>
 	.jdg-accent-block-container {
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 		width: -webkit-fill-available;
 		width: -moz-available;
-		height: 200px;
+		min-height: 200px;
+		padding: 25px;
 	}
 
-	.jdg-accent-block-quote {
-		font-size: 5vh;
+	.accent-block-primary-text {
+		font-size: 3rem;
+		color: white;
+		text-align: center;
+	}
+
+	.accent-block-secondary-text {
+		font-size: 1rem;
 		color: white;
 		text-align: center;
 	}
