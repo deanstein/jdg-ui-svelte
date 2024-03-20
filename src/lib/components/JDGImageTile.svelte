@@ -54,7 +54,12 @@
 		on:mouseleave={() => (isHovering = false)}
 		role="button"
 		tabindex="0"
-		on:click={onClickFunction}
+		on:click={() => {
+			onClickFunction();
+			setTimeout(() => {
+				isHovering=false;
+			}, 600)
+			}}
 		on:keypress={() => {}}
 		transition:fadeAndScale={{ duration: jdgDurations.default }}
 	>
