@@ -1,4 +1,5 @@
 <script>
+	import { onDestroy, onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
 	import { JDGImage, JDGImageTile } from '$lib/index.js';
@@ -7,22 +8,48 @@
 	export let imageAttributeObjects = []; // all images shown in thumbnail collection
 	export let maxHeight = '50vh';
 	export let activeThumbnailColor = jdgColors.accentStripesJDG[0];
+	export let autoAdvance = true; // if true, auto advance through images at given interval
+	export let autoAdvanceInterval = 6000; // ms, interval between auto-advances
 
 	let activeImage = imageAttributeObjects[0]; // start with the first image
-	let show = true;
+	let kludge = true; // kludge to force a "crossfade" effect by swapping divs via flag
+	let intervalId;
 
-	const setActiveImage = (imageAttributesObject) => {
+	const setActiveImage = (imageAttributesObject, endAutoAdvance = false) => {
 		activeImage = imageAttributesObject;
+		kludge = !kludge;
+		// when user clicks, autoAdvance will be set to false
+		if (endAutoAdvance) {
+			autoAdvance = false;
+			clearInterval(intervalId);
+		}
 	};
 
 	const crossfadeWrapperCss = css`
 		height: ${maxHeight};
 	`;
+
+	onMount(() => {
+		if (autoAdvance) {
+			intervalId = setInterval(() => {
+				let currentIndex = imageAttributeObjects.indexOf(activeImage);
+				currentIndex = (currentIndex + 1) % imageAttributeObjects.length;
+				setActiveImage(imageAttributeObjects[currentIndex]);
+			}, autoAdvanceInterval);
+		}
+	});
+
+	onDestroy(() => {
+		if (autoAdvance) {
+			clearInterval(intervalId);
+		}
+	});
 </script>
 
 <div class="jdg-image-carousel-container">
 	<div class="carousel-crossfade-wrapper-relative {crossfadeWrapperCss}">
-		{#if show}
+		<!-- kludge to force a "crossfade" effect by swapping divs via flag -->
+		{#if kludge}
 			<div class="carousel-crossfade-wrapper-absolute">
 				<JDGImage
 					imageAttributes={activeImage}
@@ -31,6 +58,7 @@
 					showBlurInUnfilledSpace={true}
 				/>
 			</div>
+			<!-- kludge to force a "crossfade" effect by swapping divs via flag -->
 		{:else}
 			<div class="carousel-crossfade-wrapper-absolute">
 				<JDGImage
@@ -52,8 +80,7 @@
 			>
 				<JDGImageTile
 					onClickFunction={() => {
-						setActiveImage(imageAttributesObject);
-						show = !show;
+						setActiveImage(imageAttributesObject, true);
 					}}
 					imageAttributes={imageAttributesObject}
 					maxHeight="50px"
