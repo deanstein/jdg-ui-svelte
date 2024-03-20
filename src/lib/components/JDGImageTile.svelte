@@ -9,6 +9,32 @@
 	import { fadeAndScale, verticalSlide } from '$lib/jdg-graphics-factory.js';
 	import { jdgColors, jdgSizes, jdgDurations } from '../jdg-styling-constants.js';
 
+	import { onMount } from 'svelte';
+
+	let canHover = false;
+
+	onMount(() => {
+		const mediaQueryList = window.matchMedia('(hover: hover)');
+		canHover = mediaQueryList.matches;
+
+		// Optional: Add a listener to update 'canHover' if the media query result changes
+		mediaQueryList.addListener((event) => {
+			canHover = event.matches;
+		});
+	});
+
+	function handleMouseEnter() {
+		if (canHover) {
+			isHovering = true;
+		}
+	}
+
+	function handleMouseLeave() {
+		if (canHover) {
+			isHovering = false;
+		}
+	}
+
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object to hold all details
 	export let maxWidth = undefined; // if not defined, takes available space
 	export let maxHeight = '300px';
@@ -50,8 +76,8 @@
 <a {href} class={aCss}>
 	<div
 		class="jdg-image-tile {imageTileCss}"
-		on:mouseenter={() => (isHovering = true)}
-		on:mouseleave={() => (isHovering = false)}
+		on:mouseenter={handleMouseEnter}
+		on:mouseleave={handleMouseLeave}
 		role="button"
 		tabindex="0"
 		on:click={onClickFunction}
