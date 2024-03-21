@@ -46,7 +46,7 @@ export const jdgSizes = {
 	get fontSizeSmall() {
 		return this.nFontSizeSmall.toString() + this.fontUnit;
 	},
-	nFontSizeNotification: 12,
+	nFontSizeNotification: 0.75,
 	get fontSizeNotification() {
 		return this.nFontSizeNotification.toString() + this.fontUnit;
 	},
