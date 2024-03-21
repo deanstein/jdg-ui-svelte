@@ -41,59 +41,39 @@ export const jdgColors = {
 };
 
 export const jdgSizes = {
-	nFontSizeSmall: 12,
-	fontUnitSmall: 'px',
+	nFontSizeSmall: 0.5,
+	fontUnit: 'rem',
 	get fontSizeSmall() {
-		return this.nFontSizeSmall.toString() + this.fontUnitSmall;
+		return this.nFontSizeSmall.toString() + this.fontUnit;
 	},
 	nFontSizeNotification: 12,
-	fontUnitNotification: 'px',
 	get fontSizeNotification() {
-		return this.nFontSizeNotification.toString() + this.fontUnitNotification;
+		return this.nFontSizeNotification.toString() + this.fontUnit;
 	},
-	nFontSizeHeaderSupertitle: 0.9,
-	fontUnitHeaderSupertitle: 'vh',
+	nFontSizeHeaderSupertitle: 0.6,
 	get fontSizeHeaderSupertitle() {
-		return this.nFontSizeHeaderSupertitle.toString() + this.fontUnitHeaderSupertitle;
+		return this.nFontSizeHeaderSupertitle.toString() + this.fontUnit;
 	},
 	nFontSizeHeaderTitle: 1,
-	fontUnitHeaderTitle: 'rem',
 	get fontSizeHeaderTitle() {
-		return this.nFontSizeHeaderTitle.toString() + this.fontUnitHeaderTitle;
+		return this.nFontSizeHeaderTitle.toString() + this.fontUnit;
 	},
 	nFontSizeFloatingContentBoxTitle: 2,
-	fontUnitFloatingContentBoxTitle: 'rem',
 	get fontSizeFloatingContentBoxTitle() {
-		return this.nFontSizeFloatingContentBoxTitle + this.fontUnitFloatingContentBoxTitle;
+		return this.nFontSizeFloatingContentBoxTitle + this.fontUnit;
 	},
-	nFontSizeModalTitle: 2,
-	fontUnitModalTitle: 'vh',
+	nFontSizeModalTitle: 0.75,
 	get fontSizeModalTitle() {
-		return this.nFontSizeModalTitle.toString() + this.fontUnitModalTitle;
+		return this.nFontSizeModalTitle.toString() + this.fontUnit;
 	},
-	nFontSizeModalSubtitle: 1.5,
+	nFontSizeModalSubtitle: 0.6,
 	get fontSizeModalSubtitle() {
-		return this.nFontSizeModalSubtitle.toString() + 'vh';
+		return this.nFontSizeModalSubtitle.toString() + this.fontUnit;
 	},
 	fontSizeImageTileLabel: 3,
 	fontUnitImageTileLabel: 'vh',
 	get imageTileLabelFontSize() {
 		return this.fontSizeImageTileLabel.toString() + this.fontUnitImageTileLabel;
-	},
-	nFontSizeBioField: 12,
-	fontUnitBioField: 'px',
-	get fontSizeBioField() {
-		return this.nFontSizeBioField.toString() + this.fontUnitBioField;
-	},
-	nFontSizeTimelineDate: 1.5,
-	fontUnitTimelineDate: 'vh',
-	get fontSizeTimelineDate() {
-		return this.nFontSizeTimelineDate.toString() + this.fontUnitTimelineDate;
-	},
-	nFontSizeTimelineYear: 2.5,
-	fontUnitTimelineYear: 'vh',
-	get fontSizeTimelineYear() {
-		return this.nFontSizeTimelineYear.toString() + this.fontUnitTimelineYear;
 	},
 
 	nBlurSizeSmall: 5,
