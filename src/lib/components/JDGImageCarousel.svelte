@@ -9,7 +9,7 @@
 	export let maxHeight = '50vh';
 	export let activeThumbnailColor = jdgColors.accentStripesJDG[0];
 	export let autoAdvance = true; // if true, auto advance through images at given interval
-	export let autoAdvanceInterval = 5000; // ms, interval between auto-advances
+	export let autoAdvanceInterval = 4500; // ms, interval between auto-advances
 
 	let carouselRef; // used for only auto-advancing when carousel is visible
 	let activeImage = imageAttributeObjects[0]; // start with the first image
