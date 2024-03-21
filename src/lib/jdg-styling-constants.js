@@ -118,6 +118,10 @@ export const jdgSizes = {
 	get horizontalStripeHeightLg() {
 		return this.nHorizontalStripeHeightLg.toString() + this.horizontalStripeHeightUnit;
 	},
+	nHorizontalStripeHeightMd: 4,
+	get horizontalStripeHeightMd() {
+		return this.nHorizontalStripeHeightMd.toString() + this.horizontalStripeHeightUnit;
+	},
 	nHorizontalStripeHeightSm: 3,
 	get horizontalStripeHeightSm() {
 		return this.nHorizontalStripeHeightSm.toString() + this.horizontalStripeHeightUnit;

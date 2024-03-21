@@ -1,9 +1,9 @@
 <script>
 	import { css, keyframes } from '@emotion/css';
-	import { jdgColors, jdgSizes } from '../jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgColors, jdgSizes } from '../jdg-styling-constants.js';
 
 	export let stripeColors = jdgColors.accentStripesJDG;
-	export let stripeHeight = jdgSizes.horizontalStripeHeightLg;
+	export let stripeHeight = undefined; // if not provided, changes per breakpoint
 	export let staggeredStripeWidth = false;
 	export let reverseColors = false;
 	export let animationDirection = 'vertical';
@@ -19,8 +19,21 @@
     `;
 
 	let stripeCss = css`
-		height: ${stripeHeight};
-		animation: ${animationDirection === 'horizontal' ? stripeAnimationHorizontal : stripeAnimationVertical} 0.3s ease-out forwards;
+		animation: ${animationDirection === 'horizontal'
+				? stripeAnimationHorizontal
+				: stripeAnimationVertical}
+			0.3s ease-out forwards;
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			height: ${stripeHeight ?? jdgSizes.horizontalStripeHeightSm};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			height: ${stripeHeight ?? jdgSizes.horizontalStripeHeightMd};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			height: ${stripeHeight ?? jdgSizes.horizontalStripeHeightLg};
+		}
 	`;
 </script>
 
