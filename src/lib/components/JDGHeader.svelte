@@ -138,7 +138,7 @@
 			window.addEventListener('scroll', setHeaderBackgroundColorAlphaAtPos);
 		}
 		// Call the handler once to handle the current screen size
-		headerBreakpointHandler();
+		headerBreakpointHandler()
 	});
 
 	onDestroy(() => {
@@ -193,7 +193,7 @@
 	{/if}
 	<!-- stripes at bottom of header -->
 	{#if showHorizontalStripes}
-		<JDGStripesHorizontal />
+		<JDGStripesHorizontal reverseColors={true}/>
 	{/if}
 </div>
 
