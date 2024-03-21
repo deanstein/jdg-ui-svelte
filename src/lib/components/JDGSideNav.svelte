@@ -7,15 +7,21 @@
 	import { jdgColors, jdgDurations, jdgSizes } from '../jdg-styling-constants.js';
 
 	export let navItems;
+	export let sideNavWidth = '250px';
 
-	let jdgNavSidebarContainerCss = css`
+	const sideNavContainerCss = css`
+		width: ${sideNavWidth};
 		a:before {
 			background-color: transparent;
 		}
 		background-color: ${jdgColors.headerBackground};
 	`;
 
-	const jdgNavSidebarItemCss = css`
+	const sideNavSlideWrapperCss = css`
+		width: ${sideNavWidth};
+	`;
+
+	const sideNavItemCss = css`
 		font-size: ${jdgSizes.fontSizeHeaderTitle};
 	`;
 
@@ -50,26 +56,29 @@
 				tabindex="0"
 			/>
 			<div
-				class="jdg-nav-sidebar-container {jdgNavSidebarContainerCss} {blurCss} jdg-letter-spacing-title"
+				class="jdg-nav-sidebar-container {sideNavContainerCss} {blurCss} jdg-letter-spacing-title"
 				transition:slide={{ duration: jdgDurations.default, delay: 0, axis: 'x' }}
 			>
-				<nav class="jdg-nav-sidebar-item-container">
-					{#each navItems as navItem, i}
-						<a
-							class="jdg-nav-sidebar-item {jdgNavSidebarItemCss}"
-							href={navItem?.href}
-							on:click={() => {
-								setNavSidebarOpen(false);
-							}}
-						>
-							<div class="jdg-nav-sidebar-item {jdgNavSidebarItemCss} jdg-highlight-container">
-								<span class="jdg-highlight no-initial-highlight">
-									{navItem?.label}
-								</span>
-							</div></a
-						>
-					{/each}
-				</nav>
+				<div class="jdg-nav-sidebar-slide-wrapper {sideNavSlideWrapperCss}">
+					<nav class="jdg-nav-sidebar-item-container">
+						{#each navItems as navItem, i}
+							<a
+								class="jdg-nav-sidebar-item {sideNavItemCss}"
+								href={navItem?.href}
+								on:click={() => {
+									setNavSidebarOpen(false);
+								}}
+							>
+								<div class="jdg-nav-sidebar-item {sideNavItemCss} jdg-highlight-container">
+									<span class="jdg-highlight no-initial-highlight">
+										{navItem?.label}
+									</span>
+								</div></a
+							>
+						{/each}
+					</nav>
+				</div>
+				<!-- Add this line -->
 			</div>
 		</div>
 	</div>
@@ -90,7 +99,6 @@
 
 	.jdg-nav-sidebar-container {
 		position: relative;
-		width: 250px;
 		height: 100vh;
 		z-index: -1;
 	}
