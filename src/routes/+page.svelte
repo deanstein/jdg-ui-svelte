@@ -15,7 +15,8 @@
 		JDGImageTile,
 		JDGGridLayout,
 		JDGImageCarousel,
-		JDGImageDetailOverlay
+		JDGImageDetailOverlay,
+		JDGPullQuote
 	} from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-styling-constants.js';
 	import imageAttributesCollection from './image-attributes-collection.js';
@@ -74,7 +75,9 @@
 	<JDGContentBoxFloating title="TEST SECTION" isForBodyCopy={true}>
 		<JDGImageTile fillContainer={false} href="/about" />
 	</JDGContentBoxFloating>
-	<JDGAccentBlock primaryText="This is a block quote." />
+	<JDGAccentBlock>
+		<JDGPullQuote quote="Another quote." quoteAttribution="Another Someone, 1998" />
+	</JDGAccentBlock>
 	<JDGContentBoxFloating title="ANOTHER SECTION" isForBodyCopy={true}>
 		<JDGImageTile
 			onClickFunction={() => {
@@ -94,16 +97,14 @@
 			fillContainer={false}
 		/>
 	</JDGContentBoxFloating>
-	<JDGAccentBlock
-		primaryText="The people of the City of Englewood want this mall in their community."
-		secondaryText="Gerri Von Frellick, 1960"
-		backgroundColor={jdgColors.accentStripesJDG[1]}
-	/>
+	<JDGAccentBlock backgroundColor={jdgColors.accentStripesJDG[1]}>
+		<JDGPullQuote
+			quote="The people of the City of Englewood want this mall in their community."
+			quoteAttribution="Gerri Von Frellick, 1960"
+		/>
+	</JDGAccentBlock>
 	<JDGContentBoxFloating title="A THIRD SECTION" />
-	<JDGAccentBlock
-		primaryText="This is another block quote."
-		backgroundColor={jdgColors.accentStripesJDG[0]}
-	/>
+	<JDGAccentBlock backgroundColor={jdgColors.accentStripesJDG[2]} />
 	<JDGContentBoxFloating title="A FOURTH SECTION" />
 </JDGContentContainer>
 {#if $uiState.showImageDetailOverlay}

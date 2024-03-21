@@ -51,6 +51,9 @@ export { JDGNotificationBanner };
 import JDGOverlay from './components/JDGOverlay.svelte';
 export { JDGOverlay };
 
+import JDGPullQuote from './components/JDGPullQuote.svelte';
+export { JDGPullQuote };
+
 import JDGSideNav from './components/JDGSideNav.svelte';
 export { JDGSideNav };
 
