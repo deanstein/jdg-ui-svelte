@@ -45,9 +45,10 @@
 		logoAlt="JDG SVELTE UI"
 		{navItems}
 		useMobileNav={true}
+		showHorizontalStripes={true}
 	/>
 	<JDGBackground />
 	<!-- all content goes in this slot -->
 	<slot />
-	<JDGFooter {appVersion} disclaimer={disclaimerMessage} />
+	<JDGFooter {appVersion} disclaimer={disclaimerMessage} showHorizontalStripes={true}/>
 </JDGAppContainer>
