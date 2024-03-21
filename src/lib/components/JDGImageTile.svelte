@@ -24,7 +24,7 @@
 	let isHovering;
 
 	const aCss = css`
-		display: ${fillContainer ? 'relative' : 'flex'};
+		display: ${fillContainer ? 'initial' : 'flex'};
 	`;
 
 	const imageTileCss = css`
@@ -72,7 +72,7 @@
 		{/if}
 		{#if isHovering && showHorizontalStripesOnHover}
 			<div class="stripes-container" transition:verticalSlide={{ duration: jdgDurations.default }}>
-				<JDGStripesHorizontal stripeHeight="3px" staggeredStripeWidth={false} />
+				<JDGStripesHorizontal stripeHeight={jdgSizes.horizontalStripeHeightSm} staggeredStripeWidth={false} />
 			</div>
 		{/if}
 		<JDGImage
@@ -110,6 +110,7 @@
 			box-shadow 0.3s ease-in-out;
 		box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
 		overflow: hidden;
+		outline: none;
 	}
 
 	.jdg-image-tile:hover {

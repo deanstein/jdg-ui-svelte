@@ -113,10 +113,14 @@ export const jdgSizes = {
 	},
 
 	horizontalStripeLengths: ['100%', '90%', '80%'],
-	nHorizontalStripeHeight: 5,
+	nHorizontalStripeHeightLg: 5,
 	horizontalStripeHeightUnit: 'px',
-	get horizontalStripeHeight() {
-		return this.nHorizontalStripeHeight.toString() + this.horizontalStripeHeightUnit;
+	get horizontalStripeHeightLg() {
+		return this.nHorizontalStripeHeightLg.toString() + this.horizontalStripeHeightUnit;
+	},
+	nHorizontalStripeHeightSm: 3,
+	get horizontalStripeHeightSm() {
+		return this.nHorizontalStripeHeightSm.toString() + this.horizontalStripeHeightUnit;
 	},
 
 	nContentBoxPaddingSm: 2,

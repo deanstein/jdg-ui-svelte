@@ -193,7 +193,7 @@
 	{/if}
 	<!-- stripes at bottom of header -->
 	{#if showHorizontalStripes}
-		<JDGStripesHorizontal reverseColors={true}/>
+		<JDGStripesHorizontal reverseColors={true} animationDirection='horizontal'/>
 	{/if}
 </div>
 

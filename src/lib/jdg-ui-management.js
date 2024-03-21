@@ -58,7 +58,7 @@ export const getDistanceToBottomOfHeader = (includeStripes = false) => {
 	};
 	const headerHeight = jdgSizes.nHeaderHeightLg;
 	const headerPadding = jdgSizes.nHeaderTopBottomPadding * 2;
-	const stripeHeight = includeStripes ? 3 * jdgSizes.nHorizontalStripeHeight : 0;
+	const stripeHeight = includeStripes ? 3 * jdgSizes.nHorizontalStripeHeightLg : 0;
 	distanceToBottom.value = headerHeight + headerPadding + stripeHeight;
 	return distanceToBottom;
 };
