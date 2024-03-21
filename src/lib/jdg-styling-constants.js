@@ -41,7 +41,7 @@ export const jdgColors = {
 };
 
 export const jdgSizes = {
-	nFontSizeSmall: 0.5,
+	nFontSizeSmall: 0.75,
 	fontUnit: 'rem',
 	get fontSizeSmall() {
 		return this.nFontSizeSmall.toString() + this.fontUnit;
