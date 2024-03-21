@@ -50,5 +50,5 @@
 	<JDGBackground />
 	<!-- all content goes in this slot -->
 	<slot />
-	<JDGFooter {appVersion} disclaimer={disclaimerMessage} showHorizontalStripes={true}/>
+	<JDGFooter {appVersion} disclaimer={disclaimerMessage} showHorizontalStripes={true} />
 </JDGAppContainer>

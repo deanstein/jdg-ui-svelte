@@ -18,10 +18,10 @@
 		</div>
 	{/if}
 	{#if secondaryText}
-	<div class="accent-block-secondary-text">
-		{secondaryText}
-	</div>
-{/if}
+		<div class="accent-block-secondary-text">
+			{secondaryText}
+		</div>
+	{/if}
 	<slot />
 </div>
 

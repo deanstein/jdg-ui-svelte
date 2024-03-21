@@ -57,9 +57,9 @@
 		on:click={() => {
 			onClickFunction();
 			setTimeout(() => {
-				isHovering=false;
-			}, 600)
-			}}
+				isHovering = false;
+			}, 600);
+		}}
 		on:keypress={() => {}}
 		transition:fadeAndScale={{ duration: jdgDurations.default }}
 	>
@@ -72,7 +72,10 @@
 		{/if}
 		{#if isHovering && showHorizontalStripesOnHover}
 			<div class="stripes-container" transition:verticalSlide={{ duration: jdgDurations.default }}>
-				<JDGStripesHorizontal stripeHeight={jdgSizes.horizontalStripeHeightSm} staggeredStripeWidth={false} />
+				<JDGStripesHorizontal
+					stripeHeight={jdgSizes.horizontalStripeHeightSm}
+					staggeredStripeWidth={false}
+				/>
 			</div>
 		{/if}
 		<JDGImage
