@@ -1,6 +1,6 @@
-const navItem = {
+const jdgNavItem = {
 	label: 'Nav Item',
 	href: 'https://www.google.com'
 };
 
-export default navItem;
+export default jdgNavItem;

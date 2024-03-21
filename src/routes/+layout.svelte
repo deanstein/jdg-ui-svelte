@@ -1,5 +1,5 @@
 <script>
-	import navItem from '$lib/schemas/jdg-nav-item.js';
+	import jdgNavItem from '$lib/schemas/jdg-nav-item.js';
 
 	import { instantiateObject } from '$lib/jdg-utils.js';
 
@@ -14,15 +14,15 @@
 	import { jdgColors } from '$lib/jdg-styling-constants.js';
 
 	// define the nav items in the header
-	const newNavItem1 = instantiateObject(navItem);
+	const newNavItem1 = instantiateObject(jdgNavItem);
 	newNavItem1.label = 'HOME';
 	newNavItem1.href = '/';
 
-	const newNavItem2 = instantiateObject(navItem);
+	const newNavItem2 = instantiateObject(jdgNavItem);
 	newNavItem2.label = 'ABOUT';
 	newNavItem2.href = '/about';
 
-	const newNavItem3 = instantiateObject(navItem);
+	const newNavItem3 = instantiateObject(jdgNavItem);
 	newNavItem3.label = 'CONTACT';
 	newNavItem3.href = '/contact';
 
