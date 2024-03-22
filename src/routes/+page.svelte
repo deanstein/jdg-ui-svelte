@@ -80,7 +80,7 @@
 		<JDGImageTile fillContainer={false} href="/about" />
 	</JDGContentBoxFloating>
 	<JDGAccentBlock>
-		<JDGAccentText primaryText={`"Another quote.`} secondaryText="Another Someone, 1998" />
+		<JDGAccentText primaryText={`"Another quote."`} secondaryText="Another Someone, 1998" />
 	</JDGAccentBlock>
 	<JDGContentBoxFloating title="ANOTHER SECTION" isForBodyCopy={true}>
 		<JDGImageTile

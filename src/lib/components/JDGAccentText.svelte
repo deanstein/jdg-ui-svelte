@@ -41,7 +41,7 @@
 	}
 
 	.accent-text-secondary {
-		font-size: 1.25rem;
+		font-size: 1.5rem;
 		color: white;
 		text-align: center;
 	}
