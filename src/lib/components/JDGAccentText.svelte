@@ -31,7 +31,7 @@
 	.jdg-accent-text-container {
 		display: flex;
 		flex-direction: column;
-		gap: 0.8rem;
+		gap: 0.5rem;
 	}
 
 	.accent-text-primary {
