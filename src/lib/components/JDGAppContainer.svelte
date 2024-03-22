@@ -8,6 +8,7 @@
 	import { jdgColors } from '$lib/jdg-styling-constants.js';
 	import { convertHexToRGBA } from '$lib/jdg-utils.js';
 
+	export let fontFamily = 'REM';
 	export let appLoadingIconSrc =
 		'https://raw.githubusercontent.com/deanstein/jdg-ui-svelte/main/static/jdg-ui-logo.jpg';
 
@@ -45,6 +46,8 @@
 		a:before {
 			background: ${jdgColors.accentStripesJDG[0]};
 		}
+
+		font-family: ${fontFamily};
 	`;
 
 	onMount(async () => {

@@ -4,9 +4,14 @@
 	export let superText = undefined; // appears above the main text, like a quote segment
 	export let primaryText = 'Accent text'; // main text in large font
 	export let secondaryText = undefined; // appears below the main text, like a quote attribution
+	export let fontFamily = 'Anta';
+
+	const accentTextContainerCss = css`
+		font-family: ${fontFamily};
+	`;
 </script>
 
-<div class="jdg-accent-text-container">
+<div class="jdg-accent-text-container {accentTextContainerCss}">
 	{#if superText}
 		<div class="accent-text-secondary">
 			{superText}
