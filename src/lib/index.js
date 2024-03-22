@@ -3,6 +3,9 @@ import './jdg-styling-root.css';
 import JDGAccentBlock from './components/JDGAccentBlock.svelte';
 export { JDGAccentBlock };
 
+import JDGAccentText from './components/JDGAccentText.svelte';
+export { JDGAccentText };
+
 import JDGAppContainer from './components/JDGAppContainer.svelte';
 export { JDGAppContainer };
 
@@ -50,9 +53,6 @@ export { JDGNotificationBanner };
 
 import JDGOverlay from './components/JDGOverlay.svelte';
 export { JDGOverlay };
-
-import JDGPullQuote from './components/JDGPullQuote.svelte';
-export { JDGPullQuote };
 
 import JDGSideNav from './components/JDGSideNav.svelte';
 export { JDGSideNav };

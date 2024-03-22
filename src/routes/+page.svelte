@@ -9,21 +9,25 @@
 
 	import {
 		JDGAccentBlock,
+		JDGAccentText,
 		JDGContentBoxFloating,
 		JDGContentContainer,
 		JDGImageFullWidth,
 		JDGImageTile,
 		JDGGridLayout,
 		JDGImageCarousel,
-		JDGImageDetailOverlay,
-		JDGPullQuote
+		JDGImageDetailOverlay
 	} from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-styling-constants.js';
 	import imageAttributesCollection from './image-attributes-collection.js';
 </script>
 
 <JDGContentContainer overlapWithHeader={true} topBottomPadding="0" gap="0">
-	<JDGImageFullWidth imageAttributes={imageAttributesCollection.get('cc-1')} />
+	<JDGImageFullWidth
+		imageAttributes={imageAttributesCollection.get('cc-1')}
+		primaryText="STEP BACK IN TIME"
+		secondaryText="to Cinderella City Mall"
+	/>
 	<JDGContentBoxFloating isForBodyCopy={true}>
 		In 1968, Englewood changed forever when mall magnate Gerri Von Frellick opened a 1.35
 		million-square foot shopping center on the site of Englewood’s beloved City Park. Cinderella
@@ -76,7 +80,7 @@
 		<JDGImageTile fillContainer={false} href="/about" />
 	</JDGContentBoxFloating>
 	<JDGAccentBlock>
-		<JDGPullQuote quote="Another quote." quoteAttribution="Another Someone, 1998" />
+		<JDGAccentText primaryText={`"Another quote.`} secondaryText="Another Someone, 1998" />
 	</JDGAccentBlock>
 	<JDGContentBoxFloating title="ANOTHER SECTION" isForBodyCopy={true}>
 		<JDGImageTile
@@ -98,9 +102,9 @@
 		/>
 	</JDGContentBoxFloating>
 	<JDGAccentBlock backgroundColor={jdgColors.accentStripesJDG[1]}>
-		<JDGPullQuote
-			quote="The people of the City of Englewood want this mall in their community."
-			quoteAttribution="Gerri Von Frellick, 1960"
+		<JDGAccentText
+			primaryText={`"The people of the City of Englewood want this mall in their community."`}
+			secondaryText="Gerri Von Frellick, 1960"
 		/>
 	</JDGAccentBlock>
 	<JDGContentBoxFloating title="A THIRD SECTION" />

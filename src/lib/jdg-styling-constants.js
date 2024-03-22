@@ -46,10 +46,6 @@ export const jdgSizes = {
 	get fontSizeSmall() {
 		return this.nFontSizeSmall.toString() + this.fontUnit;
 	},
-	nFontSizeNotification: 0.75,
-	get fontSizeNotification() {
-		return this.nFontSizeNotification.toString() + this.fontUnit;
-	},
 	nFontSizeHeaderSupertitle: 0.6,
 	get fontSizeHeaderSupertitle() {
 		return this.nFontSizeHeaderSupertitle.toString() + this.fontUnit;
@@ -61,14 +57,6 @@ export const jdgSizes = {
 	nFontSizeFloatingContentBoxTitle: 2,
 	get fontSizeFloatingContentBoxTitle() {
 		return this.nFontSizeFloatingContentBoxTitle + this.fontUnit;
-	},
-	nFontSizeModalTitle: 0.75,
-	get fontSizeModalTitle() {
-		return this.nFontSizeModalTitle.toString() + this.fontUnit;
-	},
-	nFontSizeModalSubtitle: 0.6,
-	get fontSizeModalSubtitle() {
-		return this.nFontSizeModalSubtitle.toString() + this.fontUnit;
 	},
 	fontSizeImageTileLabel: 3,
 	fontUnitImageTileLabel: 'vh',
