@@ -2,26 +2,34 @@
 	import { css } from '@emotion/css';
 
 	export let superText = undefined; // appears above the main text, like a quote segment
+	export let superTextFontFamily = 'REM';
 	export let primaryText = 'Accent text'; // main text in large font
+	export let primaryTextFontFamily = 'REM';
 	export let secondaryText = undefined; // appears below the main text, like a quote attribution
-	export let fontFamily = 'Anta';
+	export let secondaryTextFontFamily = 'REM';
 
-	const accentTextContainerCss = css`
-		font-family: ${fontFamily};
+	const superTextCss = css`
+		font-family: ${superTextFontFamily};
+	`;
+	const primaryTextCss = css`
+		font-family: ${primaryTextFontFamily};
+	`;
+	const secondaryTextCss = css`
+		font-family: ${secondaryTextFontFamily};
 	`;
 </script>
 
-<div class="jdg-accent-text-container {accentTextContainerCss}">
+<div class="jdg-accent-text-container">
 	{#if superText}
-		<div class="accent-text-secondary">
+		<div class="accent-text-secondary {superTextCss}">
 			{superText}
 		</div>
 	{/if}
-	<div class="accent-text-primary">
+	<div class="accent-text-primary {primaryTextCss}">
 		{`${primaryText}`}
 	</div>
 	{#if secondaryText}
-		<div class="accent-text-secondary">
+		<div class="accent-text-secondary {secondaryTextCss}">
 			{secondaryText}
 		</div>
 	{/if}
