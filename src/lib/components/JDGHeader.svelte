@@ -156,7 +156,7 @@
 	}
 </script>
 
-<div class="jdg-header-outer-container {headerContainerOuterCss}" transition:fade role="banner">
+<header class="jdg-header-outer-container {headerContainerOuterCss}" transition:fade role="banner">
 	<div class="jdg-header-inner-container {headerContainerInnerCss}">
 		<!-- logo -->
 		{#if showLogo}
@@ -195,7 +195,7 @@
 	{#if showHorizontalStripes}
 		<JDGStripesHorizontal reverseColors={true} animationDirection="horizontal" />
 	{/if}
-</div>
+</header>
 
 <style>
 	a {

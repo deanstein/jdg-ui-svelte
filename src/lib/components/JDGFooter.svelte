@@ -47,7 +47,7 @@
 	});
 </script>
 
-<div class="jdg-footer-outer-container {footerOuterContainerCss}">
+<footer class="jdg-footer-outer-container {footerOuterContainerCss}">
 	<!-- horizontal stripes at top of footer -->
 	{#if showHorizontalStripes}
 		<JDGStripesHorizontal reverseColors={true} />
@@ -92,7 +92,7 @@
 			</div>
 		{/if}
 	</div>
-</div>
+</footer>
 
 <style>
 	.jdg-footer-outer-container {
