@@ -26,7 +26,7 @@ export const jdgColors = {
 	overlay: 'gray',
 	overlayOpacity: '75%',
 	overlayMedia: 'rgba(220, 220, 220, 0.5)',
-	modalTitleBackground: 'rgba(220, 220, 220, 1.0)',
+	modalTitleBccackground: 'rgba(220, 220, 220, 1.0)',
 	modalContentBackground: 'rgba(220, 220, 220, 0.4)',
 	formBackgroundLegibleTransparency: '0.8',
 	timelineSpine: 'rgba(200, 200, 200, 0.75)',
