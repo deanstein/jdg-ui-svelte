@@ -50,7 +50,7 @@
 <footer class="jdg-footer-outer-container {footerOuterContainerCss}">
 	<!-- horizontal stripes at top of footer -->
 	{#if showHorizontalStripes}
-		<JDGStripesHorizontal reverseColors={true} />
+		<JDGStripesHorizontal />
 	{/if}
 	<div class="jdg-footer-content-container {footerContentContainerCss}">
 		<!-- copyright and versions row -->
