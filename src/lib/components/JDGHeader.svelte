@@ -156,7 +156,7 @@
 	}
 </script>
 
-<header class="jdg-header-outer-container {headerContainerOuterCss}" transition:fade role="banner">
+<header class="jdg-header-outer-container {headerContainerOuterCss}" transition:fade>
 	<div class="jdg-header-inner-container {headerContainerInnerCss}">
 		<!-- logo -->
 		{#if showLogo}
