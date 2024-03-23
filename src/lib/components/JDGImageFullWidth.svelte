@@ -27,7 +27,14 @@
 	{#if showOverlay || primaryText || secondaryText}
 		<div class="image-overlay {imageOverlayCss}">
 			{#if primaryText || secondaryText}
-				<JDGAccentText {superText} {superTextFontFamily} {primaryText} {primaryTextFontFamily} {secondaryText} {secondaryTextFontFamily}/>
+				<JDGAccentText
+					{superText}
+					{superTextFontFamily}
+					{primaryText}
+					{primaryTextFontFamily}
+					{secondaryText}
+					{secondaryTextFontFamily}
+				/>
 			{/if}
 		</div>
 	{/if}
