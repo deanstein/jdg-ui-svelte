@@ -11,8 +11,11 @@
 	export let showOverlay = false;
 	export let overlayColorRgba = 'rgba(50, 50, 50, 0.2)';
 	export let superText = undefined;
+	export let superTextFontFamily = 'REM';
 	export let primaryText = undefined;
+	export let primaryTextFontFamily = 'REM';
 	export let secondaryText = undefined;
+	export let secondaryTextFontFamily = 'REM';
 
 	const imageOverlayCss = css`
 		background-color: ${overlayColorRgba};
@@ -24,7 +27,7 @@
 	{#if showOverlay || primaryText || secondaryText}
 		<div class="image-overlay {imageOverlayCss}">
 			{#if primaryText || secondaryText}
-				<JDGAccentText {superText} {primaryText} {secondaryText} />
+				<JDGAccentText {superText} {superTextFontFamily} {primaryText} {primaryTextFontFamily} {secondaryText} {secondaryTextFontFamily}/>
 			{/if}
 		</div>
 	{/if}
