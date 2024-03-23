@@ -23,7 +23,7 @@
 		},
 		"./schemas/jdg-image-attributes.js": "./dist/schemas/jdg-image-attributes.js",
 		"./schemas/jdg-nav-item.js": "./dist/schemas/jdg-nav-item.js",
-		"./stores/ui-state.js": "./dist/states/ui-state.js",
+		"./states/ui-state.js": "./dist/states/ui-state.js",
 		"./jdg-persistence-management.js": "./dist/jdg-persistence-management.js",
 		"./jdg-ui-management.js": "./dist/jdg-ui-management.js",
 		"./jdg-utils.js": "./dist/jdg-utils.js",
