@@ -53,9 +53,9 @@
 		// Define fill colors and border colors
 		const fillColors = generateGradient(
 			triangles.length,
-			jdgColors.backgroundFillRangeLM[0],
-			jdgColors.backgroundFillRangeLM[1],
-			jdgColors.backgroundFillRangeLM[2]
+			jdgColors.backgroundFillRangeLm[0],
+			jdgColors.backgroundFillRangeLm[1],
+			jdgColors.backgroundFillRangeLm[2]
 		);
 		// console.log("created " + triangles.length + " delaunay triangles for background image.")
 		const borderColors = jdgColors.accentStripesJDG;
