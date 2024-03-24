@@ -6,10 +6,10 @@
 	import uiState from '../states/ui-state.js';
 
 	import {
-		addNotificationBannerToState,
-		removeNotificationBannerFromState,
+		addNotificationBanner,
+		removeNotificationBanner,
 		incrementHighestZIndex
-	} from '../jdg-ui-management.js';
+	} from '../jdg-state-management.js';
 	import { jdgSizes, jdgColors } from '../jdg-styling-constants.js';
 	import { getIsValueInArray } from '../jdg-utils.js';
 	import { JDGButton } from '../index.js';
@@ -24,7 +24,7 @@
 	let showBanner;
 
 	const onClickCloseButton = () => {
-		removeNotificationBannerFromState(bannerId);
+		removeNotificationBanner(bannerId);
 	};
 
 	const notificationContainerCss = css`
@@ -42,7 +42,7 @@
 		if (standalone) {
 			// give this banner a unique id
 			bannerId = uuidv4();
-			addNotificationBannerToState(bannerId);
+			addNotificationBanner(bannerId);
 		}
 	});
 

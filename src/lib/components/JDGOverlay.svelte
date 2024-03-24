@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 
-	import { getHighestZIndex } from '../jdg-ui-management.js';
+	import { getHighestZIndex } from '../jdg-state-management.js';
 
 	import { JDGCloseIcon } from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgDurations, jdgSizes } from '../jdg-styling-constants.js';

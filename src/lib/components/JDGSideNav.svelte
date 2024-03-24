@@ -3,7 +3,7 @@
 	import { slide } from 'svelte/transition';
 
 	import uiState from '../states/ui-state.js';
-	import { setNavSidebarOpen } from '../jdg-ui-management.js';
+	import { setNavSidebarOpen } from '../jdg-state-management.js';
 	import { jdgColors, jdgDurations, jdgSizes } from '../jdg-styling-constants.js';
 
 	export let navItems;

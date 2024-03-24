@@ -4,7 +4,8 @@
 	import { css } from '@emotion/css';
 
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '../jdg-styling-constants.js';
-	import { breakpointHandler, incrementHighestZIndex } from '../jdg-ui-management.js';
+	import { incrementHighestZIndex } from '$lib/jdg-state-management.js';
+	import { breakpointHandler } from '../jdg-ui-management.js';
 
 	import { getAlphaFromRgbaString, setAlphaInRgbaString } from '../jdg-graphics-factory.js';
 

@@ -1,5 +1,5 @@
 <script>
-	import { setShowImageDetailModal } from '$lib/jdg-ui-management.js';
+	import { setShowImageDetailModal } from '$lib/jdg-state-management.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
 
 	import { JDGImage, JDGOverlay } from '$lib/index.js';

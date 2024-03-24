@@ -1,9 +1,6 @@
 <script>
-	import {
-		openUrl,
-		setImageDetailAttributes,
-		setShowImageDetailModal
-	} from '$lib/jdg-ui-management.js';
+	import { setImageDetailAttributes, setShowImageDetailModal } from '$lib/jdg-state-management.js';
+	import { openUrl } from '$lib/jdg-ui-management.js';
 
 	import uiState from '$lib/states/ui-state.js';
 
@@ -57,7 +54,7 @@
 <JDGContentContainer>
 	<JDGContentBoxFloating title="ARCHITECTURE">
 		<div>
-			This is a <a href="#ANOTHER-SECTION">hyperlink test.</a>
+			This is a <a href="#ANOTHER-SECTION">hyperlink test.</a> And these are more words!
 		</div>
 		<JDGGridLayout>
 			<JDGImageTile
@@ -74,7 +71,7 @@
 			/>
 			<JDGImageTile />
 			<JDGImageTile />
-		</JDGGridLayout>
+		</JDGGridLayout>accentColorsJDG
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="TEST SECTION" isForBodyCopy={true}>
 		<JDGImageTile fillContainer={false} href="/about" />
@@ -101,14 +98,14 @@
 			fillContainer={false}
 		/>
 	</JDGContentBoxFloating>
-	<JDGAccentBlock backgroundColor={jdgColors.accentStripesJDG[1]}>
+	<JDGAccentBlock backgroundColor={jdgColors.accentColorsJDG[1]}>
 		<JDGAccentText
 			primaryText={`"The people of the City of Englewood want this mall in their community."`}
 			secondaryText="Gerri Von Frellick, 1960"
 		/>
 	</JDGAccentBlock>
 	<JDGContentBoxFloating title="A THIRD SECTION" />
-	<JDGAccentBlock backgroundColor={jdgColors.accentStripesJDG[2]} />
+	<JDGAccentBlock backgroundColor={jdgColors.accentColorsJDG[2]} />
 	<JDGContentBoxFloating title="A FOURTH SECTION" />
 </JDGContentContainer>
 {#if $uiState.showImageDetailOverlay}

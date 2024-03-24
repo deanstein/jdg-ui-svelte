@@ -2,7 +2,7 @@
 	import { css, keyframes } from '@emotion/css';
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '../jdg-styling-constants.js';
 
-	export let stripeColors = jdgColors.accentStripesJDG;
+	export let stripeColors = jdgColors.accentColorsCCP;
 	export let stripeHeight = undefined; // if not provided, changes per breakpoint
 	export let staggeredStripeWidth = false;
 	export let reverseColors = false;

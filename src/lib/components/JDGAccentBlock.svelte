@@ -2,7 +2,7 @@
 	import { css } from '@emotion/css';
 	import { jdgColors } from '../jdg-styling-constants.js';
 
-	export let backgroundColor = jdgColors.accentStripesJDG[0];
+	export let backgroundColor = jdgColors.accentColorsJDG[0];
 
 	const accentBlockCss = css`
 		background-color: ${backgroundColor};

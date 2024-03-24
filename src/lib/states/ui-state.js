@@ -1,12 +1,15 @@
 import { writable } from 'svelte/store';
 
+import { jdgColors } from '$lib/jdg-styling-constants.js';
+
 const uiState = {
-	windowWidth: 0,
-	showImageDetailOverlay: false,
-	imageDetailAttributes: {},
-	showNavSidebar: false,
+	accentColors: jdgColors.accentColorsJDG,
+	activeNotificationBanners: [],
 	highestZIndex: 1,
-	activeNotificationBanners: []
+	imageDetailAttributes: {},
+	showImageDetailOverlay: false,
+	showNavSidebar: false,
+	windowWidth: 0
 };
 
 export default writable(uiState);
