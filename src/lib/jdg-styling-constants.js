@@ -7,7 +7,7 @@ export const jdgBreakpoints = {
 export const jdgColors = {
 	/* these colors define the accent colors for different sites */
 	/* lm = lightmode; dm = darkmode */
-	accentColorsCCP: ['#79B0E1', '#519D2B', '#C79B16'],
+	accentColorsCCP: ['#d5c073', '#80b75a', '#85c1ff'],
 	accentColorsJDG: ['#E1D779', '#D98014', '#BF3A0A'],
 	backgroundFillRangeLm: [
 		'rgba(150, 150, 150, 1)',
