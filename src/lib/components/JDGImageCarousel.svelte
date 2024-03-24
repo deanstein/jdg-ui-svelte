@@ -3,11 +3,11 @@
 	import { css } from '@emotion/css';
 
 	import { JDGImage, JDGImageTile } from '$lib/index.js';
-	import { jdgColors } from '$lib/jdg-styling-constants.js';
+	import { getAccentColors } from '$lib/jdg-state-management.js';
 
 	export let imageAttributeObjects = []; // all images shown in thumbnail collection
 	export let maxHeight = '50vh';
-	export let activeThumbnailColor = jdgColors.accentColorsJDG[0];
+	export let activeThumbnailColor = getAccentColors()[0];
 	export let autoAdvance = true; // if true, auto advance through images at given interval
 	export let autoAdvanceInterval = 4500; // ms, interval between auto-advances
 

@@ -5,12 +5,15 @@
 
 	import { jdgColors } from '../../jdg-styling-constants.js';
 	import { generateGradient } from '../../jdg-graphics-factory.js';
+	import { getAccentColors } from '$lib/jdg-state-management.js';
 
 	export let numberOfPoints = 16;
 
 	export let drawBorders = false;
 
 	export let heightMultiplier = 1; // set to > 1 if this image is used in a parallax context
+
+	let borderColors = []; // only used if drawBorders is true
 
 	onMount(() => {
 		const svg = d3
@@ -57,8 +60,11 @@
 			jdgColors.backgroundFillRangeLm[1],
 			jdgColors.backgroundFillRangeLm[2]
 		);
+
 		// console.log("created " + triangles.length + " delaunay triangles for background image.")
-		const borderColors = jdgColors.accentColorsJDG;
+		if (drawBorders) {
+			borderColors = getAccentColors();
+		}
 
 		// Draw triangles
 		for (let i = 0; i < triangles.length; i += 3) {

@@ -1,12 +1,17 @@
 <script>
 	import { css } from '@emotion/css';
-	import { jdgColors } from '../jdg-styling-constants.js';
+	import { getAccentColors } from '$lib/jdg-state-management.js';
+	import { onMount } from 'svelte';
 
-	export let backgroundColor = jdgColors.accentColorsJDG[0];
+	export let backgroundColor = getAccentColors()[0];
 
 	const accentBlockCss = css`
 		background-color: ${backgroundColor};
 	`;
+
+	onMount(() => {
+		backgroundColor = getAccentColors()[0];
+	});
 </script>
 
 <div class="jdg-accent-block-container {accentBlockCss}">

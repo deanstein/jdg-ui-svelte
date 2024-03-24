@@ -1,5 +1,22 @@
+import { jdgColors } from './jdg-styling-constants.js';
 import { addUniqueValueToArray, removeValueFromArray } from './jdg-utils.js';
 import uiState from './states/ui-state.js';
+
+export const getAccentColors = () => {
+	let accentColors = jdgColors.accentColorsJDG;
+	uiState.subscribe((currentValue) => {
+		accentColors = currentValue.accentColors;
+	});
+	console.log(accentColors);
+	return accentColors;
+};
+
+export const setAccentColors = (accentColors) => {
+	uiState.update((currentValue) => {
+		currentValue.accentColors = accentColors;
+		return currentValue;
+	});
+};
 
 export const setWindowWidth = (windowWidth) => {
 	uiState.update((currentValue) => {

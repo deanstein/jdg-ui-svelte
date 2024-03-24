@@ -36,7 +36,7 @@
 		'This is text for the footer! It could be a disclaimer or something else.';
 </script>
 
-<JDGAppContainer>
+<JDGAppContainer accentColors={jdgColors.accentColorsCCP}>
 	<JDGNotificationBanner message={bannerMessage} color={jdgColors.notificationInformation} />
 	<JDGHeader
 		logoJustification="left"

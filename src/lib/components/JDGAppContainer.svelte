@@ -2,7 +2,7 @@
 	import { onMount, tick } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { setWindowWidth } from '$lib/jdg-state-management.js';
+	import { setAccentColors, setWindowWidth } from '$lib/jdg-state-management.js';
 
 	import { JDGLoadingOverlay } from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-styling-constants.js';
@@ -11,7 +11,7 @@
 	export let fontFamily = 'REM';
 	export let appLoadingIconSrc =
 		'https://raw.githubusercontent.com/deanstein/jdg-ui-svelte/main/static/jdg-ui-logo.jpg';
-	export let accentStripeColors = jdgColors.accentColorsJDG;
+	export let accentColors = jdgColors.accentColorsJDG;
 
 	// flag to show a loading overlay before app is loaded
 	// to prevent flash of unstyled content
@@ -37,15 +37,15 @@
 			background: ${useStripedHyperlinkHoverStyle
 				? `linear-gradient(
 				to bottom,
-				${convertHexToRGBA(accentStripeColors[0], hyperlinkColorOpacity)} 33%,
-				${convertHexToRGBA(accentStripeColors[1], hyperlinkColorOpacity)} 33%,
-				${convertHexToRGBA(accentStripeColors[1], hyperlinkColorOpacity)} 66%,
-				${convertHexToRGBA(accentStripeColors[2], hyperlinkColorOpacity)} 66%
+				${convertHexToRGBA(accentColors[0], hyperlinkColorOpacity)} 33%,
+				${convertHexToRGBA(accentColors[1], hyperlinkColorOpacity)} 33%,
+				${convertHexToRGBA(accentColors[1], hyperlinkColorOpacity)} 66%,
+				${convertHexToRGBA(accentColors[2], hyperlinkColorOpacity)} 66%
 			)`
-				: `${accentStripeColors[0]}`};
+				: `${accentColors[0]}`};
 		}
 		a:before {
-			background: ${accentStripeColors[0]};
+			background: ${accentColors[0]};
 		}
 
 		font-family: ${fontFamily};
@@ -56,6 +56,7 @@
 		isAppLoaded = true;
 
 		window.addEventListener('resize', onPageResize);
+		setAccentColors(accentColors);
 	});
 </script>
 

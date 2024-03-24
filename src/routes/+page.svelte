@@ -15,7 +15,6 @@
 		JDGImageCarousel,
 		JDGImageDetailOverlay
 	} from '$lib/index.js';
-	import { jdgColors } from '$lib/jdg-styling-constants.js';
 	import imageAttributesCollection from './image-attributes-collection.js';
 </script>
 
@@ -98,14 +97,14 @@
 			fillContainer={false}
 		/>
 	</JDGContentBoxFloating>
-	<JDGAccentBlock backgroundColor={jdgColors.accentColorsJDG[1]}>
+	<JDGAccentBlock backgroundColor={$uiState.accentColors[1]}>
 		<JDGAccentText
 			primaryText={`"The people of the City of Englewood want this mall in their community."`}
 			secondaryText="Gerri Von Frellick, 1960"
 		/>
 	</JDGAccentBlock>
 	<JDGContentBoxFloating title="A THIRD SECTION" />
-	<JDGAccentBlock backgroundColor={jdgColors.accentColorsJDG[2]} />
+	<JDGAccentBlock backgroundColor={$uiState.accentColors[2]} />
 	<JDGContentBoxFloating title="A FOURTH SECTION" />
 </JDGContentContainer>
 {#if $uiState.showImageDetailOverlay}

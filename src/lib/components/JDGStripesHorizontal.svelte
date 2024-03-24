@@ -1,8 +1,10 @@
 <script>
 	import { css, keyframes } from '@emotion/css';
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '../jdg-styling-constants.js';
+	import { onMount } from 'svelte';
+	import { getAccentColors } from '$lib/jdg-state-management.js';
 
-	export let stripeColors = jdgColors.accentColorsCCP;
+	export let stripeColors = jdgColors.accentColorsJDG;
 	export let stripeHeight = undefined; // if not provided, changes per breakpoint
 	export let staggeredStripeWidth = false;
 	export let reverseColors = false;
@@ -35,6 +37,10 @@
 			height: ${stripeHeight ?? jdgSizes.horizontalStripeHeightLg};
 		}
 	`;
+
+	onMount(() => {
+		stripeColors = getAccentColors();
+	});
 </script>
 
 <div class="jdg-stripes-container">
