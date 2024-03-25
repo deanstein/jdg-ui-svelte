@@ -44,7 +44,9 @@
 	// calculate the aspect ratio of the image container and the image (if not already known)
 	const getAspectRatios = () => {
 		if (containerRef && imageRef) {
-			containerAspectRatio = alternateFitRef ? alternateFitRef.clientWidth / maxHeightPx : containerRef.clientWidth / maxHeightPx;
+			containerAspectRatio = alternateFitRef
+				? alternateFitRef.clientWidth / maxHeightPx
+				: containerRef.clientWidth / maxHeightPx;
 			if (!imageAspectRatio) {
 				imageAspectRatio = imageRef.naturalWidth / imageRef.naturalHeight;
 			}

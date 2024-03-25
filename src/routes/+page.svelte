@@ -65,10 +65,14 @@
 				label={'SCROLL EXAMPLE'}
 				href="#ANOTHER-SECTION"
 			/>
-			<JDGImageTile imageAttributes={imageAttributesCollection.get('rose-mall-60s70s-1')} label={'IMAGE DETAIL EXAMPLE'} 			onClickFunction={() => {
-				setShowImageDetailModal(true);
-				setImageDetailAttributes(imageAttributesCollection.get('rose-mall-60s70s-1'));
-			}}/>
+			<JDGImageTile
+				imageAttributes={imageAttributesCollection.get('rose-mall-60s70s-1')}
+				label={'IMAGE DETAIL EXAMPLE'}
+				onClickFunction={() => {
+					setShowImageDetailModal(true);
+					setImageDetailAttributes(imageAttributesCollection.get('rose-mall-60s70s-1'));
+				}}
+			/>
 			<JDGImageTile
 				label={'EXTERNAL EXAMPLE'}
 				onClickFunction={() => {

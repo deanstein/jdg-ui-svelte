@@ -45,7 +45,7 @@ const imageAttributesCollection = new Map([
 		})
 	],
 	[
-	'rose-mall-60s70s-1',
+		'rose-mall-60s70s-1',
 		instantiateObject(jdgImageAttributes, {
 			imgSrc: './history/rose-mall-60s70s-1.jpg',
 			imgAlt: 'Lakeside Mall in 1956.',
