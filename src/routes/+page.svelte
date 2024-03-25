@@ -45,23 +45,30 @@
 		<JDGImageCarousel
 			imageAttributeObjects={[
 				imageAttributesCollection.get('cc-1'),
-				imageAttributesCollection.get('cc-2')
+				imageAttributesCollection.get('rose-mall-60s70s-1')
 			]}
 		/>
 	</JDGContentBoxFloating>
 </JDGContentContainer>
 <JDGContentContainer>
 	<JDGContentBoxFloating title="ARCHITECTURE">
-		<div>
+		<span>
+			Some text above.
+			<br /><br />
 			This is a <a href="#ANOTHER-SECTION">hyperlink test.</a> And these are more words!
-		</div>
+			<br /><br />
+			Some text below
+		</span>
 		<JDGGridLayout>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.get('architecture-1')}
 				label={'SCROLL EXAMPLE'}
 				href="#ANOTHER-SECTION"
 			/>
-			<JDGImageTile label={'PAGE EXAMPLE'} href="/about" />
+			<JDGImageTile imageAttributes={imageAttributesCollection.get('rose-mall-60s70s-1')} label={'IMAGE DETAIL EXAMPLE'} 			onClickFunction={() => {
+				setShowImageDetailModal(true);
+				setImageDetailAttributes(imageAttributesCollection.get('rose-mall-60s70s-1'));
+			}}/>
 			<JDGImageTile
 				label={'EXTERNAL EXAMPLE'}
 				onClickFunction={() => {
@@ -70,9 +77,17 @@
 			/>
 			<JDGImageTile />
 			<JDGImageTile />
-		</JDGGridLayout>accentColorsJDG
+		</JDGGridLayout>
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="TEST SECTION" isForBodyCopy={true}>
+		<JDGImageTile
+			onClickFunction={() => {
+				setShowImageDetailModal(true);
+				setImageDetailAttributes(imageAttributesCollection.get('aerial-60s70s-1'));
+			}}
+			imageAttributes={imageAttributesCollection.get('aerial-60s70s-1')}
+			fillContainer={false}
+		/>
 		<JDGImageTile fillContainer={false} href="/about" />
 	</JDGContentBoxFloating>
 	<JDGAccentBlock>
@@ -91,9 +106,9 @@
 		<JDGImageTile
 			onClickFunction={() => {
 				setShowImageDetailModal(true);
-				setImageDetailAttributes(imageAttributesCollection.get('cc-2'));
+				setImageDetailAttributes(imageAttributesCollection.get('aerial-60s70s-1'));
 			}}
-			imageAttributes={imageAttributesCollection.get('cc-2')}
+			imageAttributes={imageAttributesCollection.get('aerial-60s70s-1')}
 			fillContainer={false}
 		/>
 	</JDGContentBoxFloating>

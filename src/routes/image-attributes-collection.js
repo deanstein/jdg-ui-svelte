@@ -5,6 +5,14 @@ import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 // new images with a caption must be added here
 const imageAttributesCollection = new Map([
 	[
+		'aerial-60s70s-1',
+		instantiateObject(jdgImageAttributes, {
+			imgSrc: './history/aerial-60s70s-1.jpg',
+			imgAlt: 'Cinderella City as it appeared in 1968',
+			imgCaption: 'Cinderella City as it appeared in 1968'
+		})
+	],
+	[
 		'architecture-1',
 		instantiateObject(jdgImageAttributes, {
 			imgSrc: './project-tiles/architecture.jpg',
@@ -21,9 +29,9 @@ const imageAttributesCollection = new Map([
 		})
 	],
 	[
-		'cc-2',
+		'aerial-60s70s-1',
 		instantiateObject(jdgImageAttributes, {
-			imgSrc: './history/cc-2.jpg',
+			imgSrc: './history/aerial-60s70s-1.jpg',
 			imgAlt: 'The Blue Mall as seen in 1968.',
 			imgCaption: 'The Blue Mall as seen in 1968.'
 		})
@@ -32,6 +40,14 @@ const imageAttributesCollection = new Map([
 		'lakeside-1',
 		instantiateObject(jdgImageAttributes, {
 			imgSrc: './history/lakeside-1.jpg',
+			imgAlt: 'Lakeside Mall in 1956.',
+			imgCaption: 'Lakeside Mall in 1956.'
+		})
+	],
+	[
+	'rose-mall-60s70s-1',
+		instantiateObject(jdgImageAttributes, {
+			imgSrc: './history/rose-mall-60s70s-1.jpg',
 			imgAlt: 'Lakeside Mall in 1956.',
 			imgCaption: 'Lakeside Mall in 1956.'
 		})
