@@ -1,6 +1,8 @@
 <script>
 	import jdgNavItem from '$lib/schemas/jdg-nav-item.js';
 
+	import uiState from '$lib/states/ui-state.js';
+
 	import { instantiateObject } from '$lib/jdg-utils.js';
 
 	import {
@@ -8,9 +10,9 @@
 		JDGBackground,
 		JDGFooter,
 		JDGHeader,
+		JDGImageDetailOverlay,
 		JDGNotificationBanner
 	} from '$lib/index.js';
-
 	import { jdgColors } from '$lib/jdg-styling-constants.js';
 
 	// define the nav items in the header
@@ -51,4 +53,8 @@
 	<!-- all content goes in this slot -->
 	<slot />
 	<JDGFooter {appVersion} disclaimer={disclaimerMessage} showHorizontalStripes={true} />
+	<!-- show the image detail overlay when appropriate -->
+	{#if $uiState.showImageDetailOverlay}
+		<JDGImageDetailOverlay imageAttributes={$uiState.imageDetailAttributes} />
+	{/if}
 </JDGAppContainer>

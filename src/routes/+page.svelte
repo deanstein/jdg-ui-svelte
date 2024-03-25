@@ -12,8 +12,7 @@
 		JDGImageFullWidth,
 		JDGImageTile,
 		JDGGridLayout,
-		JDGImageCarousel,
-		JDGImageDetailOverlay
+		JDGImageCarousel
 	} from '$lib/index.js';
 	import imageAttributesCollection from './image-attributes-collection.js';
 </script>
@@ -147,6 +146,3 @@
 	<JDGAccentBlock backgroundColor={$uiState.accentColors[2]} />
 	<JDGContentBoxFloating title="A FOURTH SECTION" />
 </JDGContentContainer>
-{#if $uiState.showImageDetailOverlay}
-	<JDGImageDetailOverlay imageAttributes={$uiState.imageDetailAttributes} />
-{/if}
