@@ -210,5 +210,6 @@
 		height: 100%;
 		filter: blur(5px);
 		background-size: cover;
+		background-position: center;
 	}
 </style>
