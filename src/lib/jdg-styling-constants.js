@@ -66,6 +66,30 @@ export const jdgSizes = {
 	get imageTileLabelFontSize() {
 		return this.fontSizeImageTileLabel.toString() + this.fontUnitImageTileLabel;
 	},
+	nFontSizeAccentTextPrimarySm: 1.75,
+	get fontSizeAccentTextPrimarySm() {
+		return this.nFontSizeAccentTextPrimarySm.toString() + this.fontUnit;
+	},
+	nFontSizeAccentTextPrimaryMd: 2.25,
+	get fontSizeAccentTextPrimaryMd() {
+		return this.nFontSizeAccentTextPrimaryMd.toString() + this.fontUnit;
+	},
+	nFontSizeAccentTextPrimaryLg: 3,
+	get fontSizeAccentTextPrimaryLg() {
+		return this.nFontSizeAccentTextPrimaryLg.toString() + this.fontUnit;
+	},
+	nFontSizeAccentTextSecondarySm: 1,
+	get fontSizeAccentTextSecondarySm() {
+		return this.nFontSizeAccentTextSecondarySm.toString() + this.fontUnit;
+	},
+	nFontSizeAccentTextSecondaryMd: 1.25,
+	get fontSizeAccentTextSecondaryMd() {
+		return this.nFontSizeAccentTextSecondaryMd.toString() + this.fontUnit;
+	},
+	nFontSizeAccentTextSecondaryLg: 1.5,
+	get fontSizeAccentTextSecondaryLg() {
+		return this.nFontSizeAccentTextSecondaryLg.toString() + this.fontUnit;
+	},
 
 	nBlurSizeSmall: 5,
 	blurSizeSmallUnit: 'px',

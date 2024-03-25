@@ -1,4 +1,5 @@
 <script>
+	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-styling-constants.js';
 	import { css } from '@emotion/css';
 
 	export let superText = undefined; // appears above the main text, like a quote segment
@@ -10,12 +11,47 @@
 
 	const superTextCss = css`
 		font-family: ${superTextFontFamily};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.fontSizeAccentTextSecondarySm};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.fontSizeAccentTextSecondaryMd};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.fontSizeAccentTextSecondaryMd};
+		}
 	`;
+
 	const primaryTextCss = css`
 		font-family: ${primaryTextFontFamily};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.fontSizeAccentTextPrimarySm};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.fontSizeAccentTextPrimaryMd};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.fontSizeAccentTextPrimaryLg};
+		}
 	`;
+
 	const secondaryTextCss = css`
 		font-family: ${secondaryTextFontFamily};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.fontSizeAccentTextSecondarySm};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.fontSizeAccentTextSecondaryMd};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.fontSizeAccentTextSecondaryMd};
+		}
 	`;
 </script>
 
@@ -43,13 +79,11 @@
 	}
 
 	.accent-text-primary {
-		font-size: 3rem;
 		color: white;
 		text-align: center;
 	}
 
 	.accent-text-secondary {
-		font-size: 1.5rem;
 		color: white;
 		text-align: center;
 	}
