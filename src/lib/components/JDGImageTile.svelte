@@ -22,6 +22,7 @@
 	export let showHorizontalStripesOnHover = true;
 
 	let isHovering;
+	let alternateFitRef; // use this div to determine aspect ratios
 
 	const aCss = css`
 		display: ${fillContainer ? 'initial' : 'flex'};
@@ -47,7 +48,7 @@
 	`;
 </script>
 
-<a {href} class={aCss}>
+<a bind:this={alternateFitRef} {href} class={aCss}>
 	<div
 		class="jdg-image-tile {imageTileCss}"
 		on:mouseenter={() => (isHovering = true)}
@@ -81,6 +82,7 @@
 		<JDGImage
 			{maxHeight}
 			{maxWidth}
+			{alternateFitRef}
 			{imageAttributes}
 			showHoverEffect={true}
 			{fillContainer}

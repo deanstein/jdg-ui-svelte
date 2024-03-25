@@ -7,7 +7,6 @@ export const getAccentColors = () => {
 	uiState.subscribe((currentValue) => {
 		accentColors = currentValue.accentColors;
 	});
-	console.log(accentColors);
 	return accentColors;
 };
 

@@ -11,7 +11,8 @@
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object for all image data
 	export let maxHeight = '300px'; // image will never exceed this height, but could be less depending on fillContainer
 	export let maxWidth = undefined; // if not defined, takes available space
-	export let fillContainer = true; // if true, image may be cropped to fill its container in both axes
+	export let alternateFitRef = undefined; // optionally use another element for image fit calcs
+	export let fillContainer = true; // if true, image may be cropped to fill its container in both directions
 	export let showBlurInUnfilledSpace = false; // if true, shows the image blurred in the unfilled space - only applies if fillContainer is false
 	export let showHoverEffect = false; // zoom image slightly on hover
 
@@ -30,7 +31,6 @@
 		// if height is auto, skip all this
 		if (maxHeight !== 'auto') {
 			[maxHeightValue, maxHeightUnit] = maxHeight.match(/^(\d+)(\D+)$/).slice(1);
-			maxHeightPx;
 			const maxHeightParsed = parseFloat(maxHeightValue);
 			// get the max height in px for calculations
 			if (maxHeightUnit === 'vh') {
@@ -44,7 +44,7 @@
 	// calculate the aspect ratio of the image container and the image (if not already known)
 	const getAspectRatios = () => {
 		if (containerRef && imageRef) {
-			containerAspectRatio = containerRef.clientWidth / maxHeightPx;
+			containerAspectRatio = alternateFitRef ? alternateFitRef.clientWidth / maxHeightPx : containerRef.clientWidth / maxHeightPx;
 			if (!imageAspectRatio) {
 				imageAspectRatio = imageRef.naturalWidth / imageRef.naturalHeight;
 			}

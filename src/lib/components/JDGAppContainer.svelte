@@ -22,7 +22,7 @@
 	const useStripedHyperlinkHoverStyle = false;
 
 	// app sets window width in the ui state
-	//  so children don't have to add event handlers
+	// so children don't have to add event handlers
 	const onPageResize = () => {
 		setWindowWidth(window.innerWidth);
 	};
