@@ -144,10 +144,18 @@ export const jdgSizes = {
 	get contentBoxVerticalPaddingMax() {
 		return this.nContentBoxVerticalPaddingMax.toString() + this.contentBoxVerticalPaddingUnit;
 	},
-	nContentBoxFloatingMargin: 5,
+	nContentBoxFloatingMarginSm: 3,
+	get contentBoxFloatingMarginSm() {
+		return this.nContentBoxFloatingMarginSm.toString() + this.contentBoxFloatingMarginUnit;
+	},
+	nContentBoxFloatingMarginMd: 4,
+	get contentBoxFloatingMarginMd() {
+		return this.nContentBoxFloatingMarginMd.toString() + this.contentBoxFloatingMarginUnit;
+	},
+	nContentBoxFloatingMarginLg: 5,
 	contentBoxFloatingMarginUnit: 'vw',
-	get contentBoxFloatingMargin() {
-		return this.nContentBoxFloatingMargin.toString() + this.contentBoxFloatingMarginUnit;
+	get contentBoxFloatingMarginLg() {
+		return this.nContentBoxFloatingMarginLg.toString() + this.contentBoxFloatingMarginUnit;
 	},
 
 	nImageHeightSm: 300,

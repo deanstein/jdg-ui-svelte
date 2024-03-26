@@ -18,8 +18,8 @@
 	`;
 
 	const floatingBoxContainerCss = css`
-		margin-left: ${jdgSizes.contentBoxFloatingMargin};
-		margin-right: ${jdgSizes.contentBoxFloatingMargin};
+		margin-left: ${jdgSizes.contentBoxFloatingMarginLg};
+		margin-right: ${jdgSizes.contentBoxFloatingMarginLg};
 		background-color: ${jdgColors.contentBoxBackground};
 		backdrop-filter: blur(${jdgSizes.blurSizeSmall});
 
