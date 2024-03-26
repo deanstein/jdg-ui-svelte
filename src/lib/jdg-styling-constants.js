@@ -90,6 +90,18 @@ export const jdgSizes = {
 	get fontSizeAccentTextSecondaryLg() {
 		return this.nFontSizeAccentTextSecondaryLg.toString() + this.fontUnit;
 	},
+	nFonSizeCaptionAttributionSm: 0.5,
+	get fontSizeCaptionAttributionSm() {
+		return this.nFonSizeCaptionAttributionSm.toString() + this.fontUnit;
+	},
+	nFonSizeCaptionAttributionMd: 0.6,
+	get fontSizeCaptionAttributionMd() {
+		return this.nFonSizeCaptionAttributionMd.toString() + this.fontUnit;
+	},
+	nFonSizeCaptionAttributionLg: 0.75,
+	get fontSizeCaptionAttributionLg() {
+		return this.nFonSizeCaptionAttributionLg.toString() + this.fontUnit;
+	},
 
 	nBlurSizeSmall: 5,
 	blurSizeSmallUnit: 'px',

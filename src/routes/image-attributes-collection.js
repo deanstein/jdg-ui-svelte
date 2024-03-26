@@ -7,7 +7,8 @@ const imageAttributesCollection = {
 	aerial_60s70s_1: instantiateObject(jdgImageAttributes, {
 		imgSrc: './history/aerial-60s70s-1.jpg',
 		imgAlt: 'Cinderella City as it appeared in 1968',
-		imgCaption: 'Cinderella City as it appeared in 1968'
+		imgCaption: 'Cinderella City as it appeared in 1968.',
+		imgAttribution: 'Englewood Public Library (AI recolored)'
 	}),
 	architecture_1: instantiateObject(jdgImageAttributes, {
 		imgSrc: './project-tiles/architecture.jpg',

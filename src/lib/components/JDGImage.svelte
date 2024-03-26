@@ -1,12 +1,12 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
-	import { fade } from 'svelte/transition';
+	import { fade, scale } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 	import uiState from '$lib/states/ui-state.js';
 	import { convertVhToPixels, instantiateObject } from '$lib/jdg-utils.js';
-	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-styling-constants.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object for all image data
 	export let maxHeight = '300px'; // image will never exceed this height, but could be less depending on fillContainer
@@ -14,7 +14,11 @@
 	export let alternateFitRef = undefined; // optionally use another element for image fit calcs
 	export let fillContainer = true; // if true, image may be cropped to fill its container in both directions
 	export let showBlurInUnfilledSpace = false; // if true, shows the image blurred in the unfilled space - only applies if fillContainer is false
+	export let isHovering = false; // parent can let image know of hover
 	export let showHoverEffect = false; // zoom image slightly on hover
+	export let showCaption = false;
+	export let showAttribution = false;
+	export let transition = fade; // fade or scale depending on usage
 
 	let containerRef;
 	let containerAspectRatio;
@@ -93,12 +97,12 @@
 		}
 	};
 
-	const setDynamicStyles = (imageAspectRatio, containerAspectRatio) => {
-		imageContainerCss = css`
+	const setImageSizeAndFit = (imageAspectRatio, containerAspectRatio) => {
+		imageContainerCssDynamic = css`
 			height: ${getPreferredContainerHeight(imageAspectRatio, containerAspectRatio)};
 			width: ${showBlurInUnfilledSpace ? '100%' : maxWidth ?? 'auto'};
 		`;
-		imageCss = css`
+		imageCssDynamic = css`
 			object-fit: ${getPreferredObjectFit(imageAspectRatio, containerAspectRatio)};
 		`;
 	};
@@ -108,19 +112,7 @@
 		getAspectRatios();
 	};
 
-	// may be updated dynamically depending on fillContainer
-	let imageContainerCss = css`
-		height: ${maxHeight};
-		width: ${showBlurInUnfilledSpace ? '100%' : maxWidth ?? 'auto'};
-	`;
-
-	// may be updated dynamically depending on fillContainer
-	let imageCss = css`
-		object-fit: cover;
-	`;
-
-	// only set from the parent, once
-	let imageCssStatic = css`
+	const imageCssStatic = css`
 		/* if max height is not specified, use all available space below the header */
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			max-height: ${maxHeight === 'auto' ? `calc(100vh - ${jdgSizes.headerHeightSm})` : ''};
@@ -145,6 +137,37 @@
 		background-image: url(${imageAttributes.imgSrc});
 	`;
 
+	const captionAttributionContainerCss = css`
+		background-color: ${jdgColors.headerBackground};
+		backdrop-filter: blur(${jdgSizes.blurSizeSmall});
+	`;
+
+	const captionAttributionCss = css`
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.fontSizeCaptionAttributionSm};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.fontSizeCaptionAttributionMd};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.fontSizeCaptionAttributionLg};
+		}
+	`;
+
+	// may be updated dynamically by setImageSizeAndFit
+	let imageContainerCssDynamic = css`
+		height: ${maxHeight};
+		width: ${showBlurInUnfilledSpace ? '100%' : maxWidth ?? 'auto'};
+	`;
+	let imageCssDynamic = css`
+		object-fit: cover;
+	`;
+
+	// set dynamically by isHovering and showHoverEffect
+	let captionAttributionContainerCssDynamic = css``;
+
 	onMount(() => {
 		if (imageRef && !fillContainer) {
 			imageRef.addEventListener('load', onImageLoad);
@@ -162,27 +185,49 @@
 			// ensure the aspect ratios are updated when the window width changes in state
 			$uiState.windowWidth;
 			getAspectRatios();
-			setDynamicStyles(imageAspectRatio, containerAspectRatio);
+			setImageSizeAndFit(imageAspectRatio, containerAspectRatio);
 		}
+		captionAttributionContainerCssDynamic = css`
+			bottom: ${isHovering && showHoverEffect ? '9px' : '0px'};
+			transition: bottom ${isHovering && showHoverEffect ? '400ms' : '200ms'};
+		`;
 	}
 </script>
 
 <div
-	transition:fade={{ duration: 300 }}
+	transition:transition={{ duration: 300 }}
 	bind:this={containerRef}
-	class="jdg-image-container {imageContainerCss}"
+	class="jdg-image-container {imageContainerCssDynamic}"
 >
 	<img
 		bind:this={imageRef}
-		class={`jdg-image ${imageCss} ${imageCssStatic} ${imageAnimationCss}`}
+		class={`image ${imageCssDynamic} ${imageCssStatic} ${imageAnimationCss}`}
 		src={imageAttributes.imgSrc}
 		alt={imageAttributes.imgAlt}
 	/>
 	<!-- only show blurred image behind if blurUnfilledSpace is true -->
 	{#if showBlurInUnfilledSpace && !fillContainer}
-		<div class="jdg-image-blur {imageBlurCss}"></div>
+		<div class="image-blur {imageBlurCss}"></div>
 	{/if}
 </div>
+<!-- caption and attribution -->
+{#if showCaption || showAttribution}
+	<div
+		class="caption-attribution-container {captionAttributionContainerCss}
+		{captionAttributionContainerCssDynamic}"
+	>
+		{#if showCaption}
+			<div class="caption-attribution {captionAttributionCss}">
+				{imageAttributes.imgCaption}
+			</div>
+		{/if}
+		{#if showAttribution}
+			<div class="caption-attribution {captionAttributionCss}">
+				{imageAttributes.imgAttribution}
+			</div>
+		{/if}
+	</div>
+{/if}
 
 <style>
 	.jdg-image-container {
@@ -195,13 +240,13 @@
 		overflow: hidden;
 	}
 
-	.jdg-image {
+	.image {
 		height: 100%;
 		width: 100%;
 		transition: transform 0.3s ease-in-out;
 	}
 
-	.jdg-image-blur {
+	.image-blur {
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -211,5 +256,12 @@
 		filter: blur(5px);
 		background-size: cover;
 		background-position: center;
+	}
+
+	.caption-attribution-container {
+		position: absolute;
+		display: flex;
+		gap: 1rem;
+		padding: 3px 8px 3px 8px;
 	}
 </style>

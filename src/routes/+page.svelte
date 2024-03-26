@@ -48,6 +48,8 @@
 				maxHeight="400px"
 				imageAttributes={imageAttributesCollection.aerial_60s70s_1}
 				fillContainer={false}
+				showCaption={true}
+				showAttribution={true}
 			/>
 			<br /><br />
 			From concept to layout, Cinderella City was quirky, thematic, and unconventional in its every detail,

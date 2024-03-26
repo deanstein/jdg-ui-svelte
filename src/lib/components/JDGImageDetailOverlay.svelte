@@ -1,4 +1,6 @@
 <script>
+	import { scale } from 'svelte/transition';
+
 	import { setShowImageDetailModal } from '$lib/jdg-state-management.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
 
@@ -16,5 +18,6 @@
 	closeOnOverlayClick={true}
 	colorRgba="rgba(255, 255, 255, 0.6)"
 >
-	<JDGImage {imageAttributes} maxHeight="auto" fillContainer={false} />
+	<div in:scale={{ duration: 300 }}></div>
+	<JDGImage {imageAttributes} maxHeight="auto" fillContainer={false} transition={scale} />
 </JDGOverlay>

@@ -22,6 +22,8 @@
 	export let href = undefined;
 	export let onClickFunction = undefined;
 	export let showHorizontalStripesOnHover = true;
+	export let showCaption = false;
+	export let showAttribution = false;
 
 	const showImageDetailModal = () => {
 		setShowImageDetailModal(true);
@@ -66,18 +68,16 @@
 			// if provided, use the onclick prop
 			if (onClickFunction) {
 				onClickFunction();
-			}
-			else if (href) {
-					// if href is provided, do nothing
-			}		
-			else {
+			} else if (href) {
+				// if href is provided, do nothing
+			} else {
 				// otherwise, the default behavior is to show image detail modal
 				showImageDetailModal();
 			}
 			// in any case, ensure the hover goes away eventually
 			setTimeout(() => {
-					isHovering = false;
-				}, 600);
+				isHovering = false;
+			}, 600);
 		}}
 		on:keypress={() => {}}
 		transition:fadeAndScale={{ duration: jdgDurations.default }}
@@ -103,8 +103,11 @@
 			{alternateFitRef}
 			{imageAttributes}
 			showHoverEffect={true}
+			{isHovering}
 			{fillContainer}
 			{showBlurInUnfilledSpace}
+			{showCaption}
+			{showAttribution}
 		/>
 	</div>
 </a>
