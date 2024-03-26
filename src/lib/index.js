@@ -33,6 +33,9 @@ export { JDGHeader };
 import JDGImage from './components/JDGImage.svelte';
 export { JDGImage };
 
+import JDGImageCaptionAttribution from './components/JDGImageCaptionAttribution.svelte';
+export { JDGImageCaptionAttribution };
+
 import JDGImageCarousel from './components/JDGImageCarousel.svelte';
 export { JDGImageCarousel };
 

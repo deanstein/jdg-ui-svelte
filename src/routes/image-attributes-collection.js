@@ -23,12 +23,13 @@ const imageAttributesCollection = {
 	lakeside_1: instantiateObject(jdgImageAttributes, {
 		imgSrc: './history/lakeside-1.jpg',
 		imgAlt: 'Lakeside Mall in 1956.',
-		imgCaption: 'Lakeside Mall in 1956.'
+		imgCaption: 'Lakeside Mall in 1956.',
+		imgAttribution: 'Denver Public Library'
 	}),
 	rose_mall_60s70s_1: instantiateObject(jdgImageAttributes, {
 		imgSrc: './history/rose-mall-60s70s-1.jpg',
-		imgAlt: 'Lakeside Mall in 1956.',
-		imgCaption: 'Lakeside Mall in 1956.'
+		imgAlt: 'Rose Mall as it appeared before grand opening in 1968.',
+		imgCaption: 'Rose Mall as it appeared before grand opening in 1968.'
 	})
 };
 

@@ -112,10 +112,14 @@
 			imageAttributes={imageAttributesCollection.lakeside_1}
 			fillContainer={false}
 			showBlurInUnfilledSpace={true}
+			showCaption={true}
+			showAttribution={true}
 		/>
 		<JDGImageTile
 			imageAttributes={imageAttributesCollection.aerial_60s70s_1}
 			fillContainer={false}
+			showCaption={true}
+			showAttribution={true}
 		/>
 	</JDGContentBoxFloating>
 	<JDGAccentBlock backgroundColor={$uiState.accentColors[1]}>

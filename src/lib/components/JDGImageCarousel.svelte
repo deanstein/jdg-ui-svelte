@@ -2,7 +2,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { JDGImage, JDGImageTile } from '$lib/index.js';
+	import { JDGImage, JDGImageCaptionAttribution, JDGImageTile } from '$lib/index.js';
 	import { getAccentColors } from '$lib/jdg-state-management.js';
 
 	export let imageAttributeObjects = []; // all images shown in thumbnail collection
@@ -80,6 +80,13 @@
 				/>
 			</div>
 		{/if}
+	</div>
+	<div class="caption-attribution-wrapper">
+		<JDGImageCaptionAttribution
+			imageAttributes={activeImage}
+			showCaption={true}
+			showAttribution={true}
+		/>
 	</div>
 	<div class="carousel-thumbnail-container">
 		{#each imageAttributeObjects as imageAttributesObject, i}

@@ -7,7 +7,7 @@
 
 	import jdgImageAttributes from '../schemas/jdg-image-attributes.js';
 
-	import { JDGImage, JDGStripesHorizontal } from '../index.js';
+	import { JDGImage, JDGImageCaptionAttribution, JDGStripesHorizontal } from '../index.js';
 	import { fadeAndScale, verticalSlide } from '$lib/jdg-graphics-factory.js';
 	import { jdgColors, jdgSizes, jdgDurations } from '../jdg-styling-constants.js';
 
@@ -57,60 +57,70 @@
 	`;
 </script>
 
-<a bind:this={alternateFitRef} {href} class={aCss}>
-	<div
-		class="jdg-image-tile {imageTileCss}"
-		on:mouseenter={() => (isHovering = true)}
-		on:mouseleave={() => (isHovering = false)}
-		role="button"
-		tabindex="0"
-		on:click={() => {
-			// if provided, use the onclick prop
-			if (onClickFunction) {
-				onClickFunction();
-			} else if (href) {
-				// if href is provided, do nothing
-			} else {
-				// otherwise, the default behavior is to show image detail modal
-				showImageDetailModal();
-			}
-			// in any case, ensure the hover goes away eventually
-			setTimeout(() => {
-				isHovering = false;
-			}, 600);
-		}}
-		on:keypress={() => {}}
-		transition:fadeAndScale={{ duration: jdgDurations.default }}
-	>
-		{#if label}
-			<div class="jdg-image-tile-label-container {imageTileLabelContainerCss}">
-				<div class="jdg-image-tile-label {imageTileLabelCss}">
-					{label}
+<div class="jdg-image-tile-container">
+	<a bind:this={alternateFitRef} {href} class={aCss}>
+		<div
+			class="image-tile {imageTileCss}"
+			on:mouseenter={() => (isHovering = true)}
+			on:mouseleave={() => (isHovering = false)}
+			role="button"
+			tabindex="0"
+			on:click={() => {
+				// if provided, use the onclick prop
+				if (onClickFunction) {
+					onClickFunction();
+				} else if (href) {
+					// if href is provided, do nothing
+				} else {
+					// otherwise, the default behavior is to show image detail modal
+					showImageDetailModal();
+				}
+				// in any case, ensure the hover goes away eventually
+				setTimeout(() => {
+					isHovering = false;
+				}, 600);
+			}}
+			on:keypress={() => {}}
+			transition:fadeAndScale={{ duration: jdgDurations.default }}
+		>
+			{#if label}
+				<div class="image-tile-label-container {imageTileLabelContainerCss}">
+					<div class="image-tile-label {imageTileLabelCss}">
+						{label}
+					</div>
 				</div>
-			</div>
-		{/if}
-		{#if isHovering && showHorizontalStripesOnHover}
-			<div class="stripes-container" transition:verticalSlide={{ duration: jdgDurations.default }}>
-				<JDGStripesHorizontal
-					stripeHeight={jdgSizes.horizontalStripeHeightSm}
-					staggeredStripeWidth={false}
-				/>
-			</div>
-		{/if}
-		<JDGImage
-			{maxHeight}
-			{maxWidth}
-			{alternateFitRef}
-			{imageAttributes}
-			showHoverEffect={true}
-			{isHovering}
-			{fillContainer}
-			{showBlurInUnfilledSpace}
-			{showCaption}
-			{showAttribution}
-		/>
-	</div>
-</a>
+			{/if}
+			{#if isHovering && showHorizontalStripesOnHover}
+				<div
+					class="stripes-container"
+					transition:verticalSlide={{ duration: jdgDurations.default }}
+				>
+					<JDGStripesHorizontal
+						stripeHeight={jdgSizes.horizontalStripeHeightSm}
+						staggeredStripeWidth={false}
+					/>
+				</div>
+			{/if}
+			<JDGImage
+				{maxHeight}
+				{maxWidth}
+				{alternateFitRef}
+				{imageAttributes}
+				showHoverEffect={true}
+				{isHovering}
+				{fillContainer}
+				{showBlurInUnfilledSpace}
+				showCaption={showCaption && !showBlurInUnfilledSpace}
+				showAttribution={showAttribution && !showBlurInUnfilledSpace}
+			/>
+		</div>
+	</a>
+	{#if (showCaption || showAttribution) && (fillContainer || showBlurInUnfilledSpace)}
+		<div class="image-caption-attribution-wrapper">
+			<JDGImageCaptionAttribution {imageAttributes} {showCaption} {showAttribution} />
+		</div>
+	{/if}
+</div>
 
 <style>
 	/* ignore the global a styles */
@@ -125,7 +135,12 @@
 		align-items: center;
 	}
 
-	.jdg-image-tile {
+	.jdg-image-tile-container {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.image-tile {
 		position: relative;
 		display: flex;
 		flex-direction: column;
@@ -139,16 +154,16 @@
 		outline: none;
 	}
 
-	.jdg-image-tile:hover {
+	.image-tile:hover {
 		box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 	}
 
-	.jdg-image-tile:active {
+	.image-tile:active {
 		transform: scale(0.98);
 		box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 	}
 
-	.jdg-image-tile-label-container {
+	.image-tile-label-container {
 		position: absolute;
 		padding: 15px;
 		width: -webkit-fill-available;
@@ -156,6 +171,10 @@
 		font-weight: bold;
 		z-index: 1;
 		pointer-events: none;
+	}
+
+	.image-caption-attribution-wrapper {
+		position: relative;
 	}
 
 	.stripes-container {

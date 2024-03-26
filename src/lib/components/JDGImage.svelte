@@ -1,12 +1,13 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
-	import { fade, scale } from 'svelte/transition';
+	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 	import uiState from '$lib/states/ui-state.js';
 	import { convertVhToPixels, instantiateObject } from '$lib/jdg-utils.js';
-	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-styling-constants.js';
+	import { JDGImageCaptionAttribution } from '$lib/index.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object for all image data
 	export let maxHeight = '300px'; // image will never exceed this height, but could be less depending on fillContainer
@@ -137,25 +138,6 @@
 		background-image: url(${imageAttributes.imgSrc});
 	`;
 
-	const captionAttributionContainerCss = css`
-		background-color: ${jdgColors.headerBackground};
-		backdrop-filter: blur(${jdgSizes.blurSizeSmall});
-	`;
-
-	const captionAttributionCss = css`
-		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			font-size: ${jdgSizes.fontSizeCaptionAttributionSm};
-		}
-		@media (min-width: ${jdgBreakpoints.width[0].toString() +
-			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
-			jdgBreakpoints.unit}) {
-			font-size: ${jdgSizes.fontSizeCaptionAttributionMd};
-		}
-		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			font-size: ${jdgSizes.fontSizeCaptionAttributionLg};
-		}
-	`;
-
 	// may be updated dynamically by setImageSizeAndFit
 	let imageContainerCssDynamic = css`
 		height: ${maxHeight};
@@ -166,7 +148,7 @@
 	`;
 
 	// set dynamically by isHovering and showHoverEffect
-	let captionAttributionContainerCssDynamic = css``;
+	let captionAttributionWrapperCssDynamic = css``;
 
 	onMount(() => {
 		if (imageRef && !fillContainer) {
@@ -187,7 +169,7 @@
 			getAspectRatios();
 			setImageSizeAndFit(imageAspectRatio, containerAspectRatio);
 		}
-		captionAttributionContainerCssDynamic = css`
+		captionAttributionWrapperCssDynamic = css`
 			bottom: ${isHovering && showHoverEffect ? '9px' : '0px'};
 			transition: bottom ${isHovering && showHoverEffect ? '400ms' : '200ms'};
 		`;
@@ -209,25 +191,13 @@
 	{#if showBlurInUnfilledSpace && !fillContainer}
 		<div class="image-blur {imageBlurCss}"></div>
 	{/if}
+	<!-- caption and attribution -->
+	{#if showCaption || showAttribution}
+		<div class="caption-attribution-wrapper {captionAttributionWrapperCssDynamic}">
+			<JDGImageCaptionAttribution {imageAttributes} {showCaption} {showAttribution} />
+		</div>
+	{/if}
 </div>
-<!-- caption and attribution -->
-{#if showCaption || showAttribution}
-	<div
-		class="caption-attribution-container {captionAttributionContainerCss}
-		{captionAttributionContainerCssDynamic}"
-	>
-		{#if showCaption}
-			<div class="caption-attribution {captionAttributionCss}">
-				{imageAttributes.imgCaption}
-			</div>
-		{/if}
-		{#if showAttribution}
-			<div class="caption-attribution {captionAttributionCss}">
-				{imageAttributes.imgAttribution}
-			</div>
-		{/if}
-	</div>
-{/if}
 
 <style>
 	.jdg-image-container {
@@ -258,10 +228,8 @@
 		background-position: center;
 	}
 
-	.caption-attribution-container {
+	.caption-attribution-wrapper {
 		position: absolute;
-		display: flex;
-		gap: 1rem;
-		padding: 3px 8px 3px 8px;
+		left: 0;
 	}
 </style>
