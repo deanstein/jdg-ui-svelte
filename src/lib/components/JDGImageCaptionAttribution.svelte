@@ -28,12 +28,12 @@
 </script>
 
 <div class="caption-attribution-container {captionAttributionContainerCss}">
-	{#if showCaption}
+	{#if showCaption && imageAttributes.imgCaption}
 		<div class="caption-attribution {captionAttributionCss}">
 			{imageAttributes.imgCaption}
 		</div>
 	{/if}
-	{#if showAttribution}
+	{#if showAttribution && imageAttributes.imgAttribution}
 		<div class="caption-attribution {captionAttributionCss}">
 			{imageAttributes.imgAttribution}
 		</div>
