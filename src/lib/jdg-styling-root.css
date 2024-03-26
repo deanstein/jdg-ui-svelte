@@ -39,8 +39,8 @@ a::before, .jdg-highlight-container .jdg-highlight::before {
     position: absolute;
     z-index: -1;
     width: calc(100% + 4px);
-    height: 10px;
-    bottom: -0.225rem;
+    height: 8px;
+    bottom: -0.1rem;
     left: -2px;
     /* background-color: this needs to be specified using emotion css */
     transition: all .3s ease-in-out;
