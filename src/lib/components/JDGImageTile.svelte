@@ -1,9 +1,11 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import jdgImageAttributes from '../schemas/jdg-image-attributes.js';
+	import { setImageDetailAttributes, setShowImageDetailModal } from '$lib/jdg-state-management.js';
 
 	import { instantiateObject } from './../jdg-utils.js';
+
+	import jdgImageAttributes from '../schemas/jdg-image-attributes.js';
 
 	import { JDGImage, JDGStripesHorizontal } from '../index.js';
 	import { fadeAndScale, verticalSlide } from '$lib/jdg-graphics-factory.js';
@@ -18,8 +20,13 @@
 	export let labelJustification = 'left';
 	export let labelContainerVerticalAlign = 'bottom';
 	export let href = undefined;
-	export let onClickFunction = () => {};
+	export let onClickFunction = undefined;
 	export let showHorizontalStripesOnHover = true;
+
+	const showImageDetailModal = () => {
+		setShowImageDetailModal(true);
+		setImageDetailAttributes(imageAttributes);
+	};
 
 	let isHovering;
 	let alternateFitRef; // use this div to determine aspect ratios
@@ -56,10 +63,21 @@
 		role="button"
 		tabindex="0"
 		on:click={() => {
-			onClickFunction();
+			// if provided, use the onclick prop
+			if (onClickFunction) {
+				onClickFunction();
+			}
+			else if (href) {
+					// if href is provided, do nothing
+			}		
+			else {
+				// otherwise, the default behavior is to show image detail modal
+				showImageDetailModal();
+			}
+			// in any case, ensure the hover goes away eventually
 			setTimeout(() => {
-				isHovering = false;
-			}, 600);
+					isHovering = false;
+				}, 600);
 		}}
 		on:keypress={() => {}}
 		transition:fadeAndScale={{ duration: jdgDurations.default }}

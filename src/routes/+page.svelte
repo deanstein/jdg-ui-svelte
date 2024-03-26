@@ -47,10 +47,6 @@
 			<JDGImageTile
 				maxHeight="400px"
 				imageAttributes={imageAttributesCollection.aerial_60s70s_1}
-				onClickFunction={() => {
-					setShowImageDetailModal(true);
-					setImageDetailAttributes(imageAttributesCollection.aerial_60s70s_1);
-				}}
 				fillContainer={false}
 			/>
 			<br /><br />
@@ -88,10 +84,6 @@
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
 				label={'IMAGE DETAIL EXAMPLE'}
-				onClickFunction={() => {
-					setShowImageDetailModal(true);
-					setImageDetailAttributes(imageAttributesCollection.rose_mall_60s70s_1);
-				}}
 			/>
 			<JDGImageTile
 				label={'EXTERNAL EXAMPLE'}
@@ -105,10 +97,6 @@
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="TEST SECTION" isForBodyCopy={true}>
 		<JDGImageTile
-			onClickFunction={() => {
-				setShowImageDetailModal(true);
-				setImageDetailAttributes(imageAttributesCollection.aerial_60s70s_1);
-			}}
 			imageAttributes={imageAttributesCollection.aerial_60s70s_1}
 			fillContainer={false}
 		/>
@@ -119,19 +107,11 @@
 	</JDGAccentBlock>
 	<JDGContentBoxFloating title="ANOTHER SECTION" isForBodyCopy={true}>
 		<JDGImageTile
-			onClickFunction={() => {
-				setShowImageDetailModal(true);
-				setImageDetailAttributes(imageAttributesCollection.lakeside_1);
-			}}
 			imageAttributes={imageAttributesCollection.lakeside_1}
 			fillContainer={false}
 			showBlurInUnfilledSpace={true}
 		/>
 		<JDGImageTile
-			onClickFunction={() => {
-				setShowImageDetailModal(true);
-				setImageDetailAttributes(imageAttributesCollection.aerial_60s70s_1);
-			}}
 			imageAttributes={imageAttributesCollection.aerial_60s70s_1}
 			fillContainer={false}
 		/>
