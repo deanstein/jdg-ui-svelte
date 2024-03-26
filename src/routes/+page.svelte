@@ -19,7 +19,7 @@
 
 <JDGContentContainer overlapWithHeader={true} topBottomPadding="0" gap="0">
 	<JDGImageFullWidth
-		imageAttributes={imageAttributesCollection.get('cc-1')}
+		imageAttributes={imageAttributesCollection.cc_1}
 		primaryText="STEP BACK IN TIME"
 		secondaryText="to Cinderella City Mall"
 	/>
@@ -46,10 +46,10 @@
 			<br /><br />
 			<JDGImageTile
 				maxHeight="400px"
-				imageAttributes={imageAttributesCollection.get('aerial-60s70s-1')}
+				imageAttributes={imageAttributesCollection.aerial_60s70s_1}
 				onClickFunction={() => {
 					setShowImageDetailModal(true);
-					setImageDetailAttributes(imageAttributesCollection.get('aerial-60s70s-1'));
+					setImageDetailAttributes(imageAttributesCollection.aerial_60s70s_1);
 				}}
 				fillContainer={false}
 			/>
@@ -64,8 +64,8 @@
 		</span>
 		<JDGImageCarousel
 			imageAttributeObjects={[
-				imageAttributesCollection.get('cc-1'),
-				imageAttributesCollection.get('rose-mall-60s70s-1')
+				imageAttributesCollection.cc_1,
+				imageAttributesCollection.rose_mall_60s70s_1
 			]}
 		/>
 	</JDGContentBoxFloating>
@@ -81,16 +81,16 @@
 		</span>
 		<JDGGridLayout>
 			<JDGImageTile
-				imageAttributes={imageAttributesCollection.get('architecture-1')}
+				imageAttributes={imageAttributesCollection.architecture_1}
 				label={'SCROLL EXAMPLE'}
 				href="#ANOTHER-SECTION"
 			/>
 			<JDGImageTile
-				imageAttributes={imageAttributesCollection.get('rose-mall-60s70s-1')}
+				imageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
 				label={'IMAGE DETAIL EXAMPLE'}
 				onClickFunction={() => {
 					setShowImageDetailModal(true);
-					setImageDetailAttributes(imageAttributesCollection.get('rose-mall-60s70s-1'));
+					setImageDetailAttributes(imageAttributesCollection.rose_mall_60s70s_1);
 				}}
 			/>
 			<JDGImageTile
@@ -107,9 +107,9 @@
 		<JDGImageTile
 			onClickFunction={() => {
 				setShowImageDetailModal(true);
-				setImageDetailAttributes(imageAttributesCollection.get('aerial-60s70s-1'));
+				setImageDetailAttributes(imageAttributesCollection.aerial_60s70s_1);
 			}}
-			imageAttributes={imageAttributesCollection.get('aerial-60s70s-1')}
+			imageAttributes={imageAttributesCollection.aerial_60s70s_1}
 			fillContainer={false}
 		/>
 		<JDGImageTile fillContainer={false} href="/about" />
@@ -121,18 +121,18 @@
 		<JDGImageTile
 			onClickFunction={() => {
 				setShowImageDetailModal(true);
-				setImageDetailAttributes(imageAttributesCollection.get('lakeside-1'));
+				setImageDetailAttributes(imageAttributesCollection.lakeside_1);
 			}}
-			imageAttributes={imageAttributesCollection.get('lakeside-1')}
+			imageAttributes={imageAttributesCollection.lakeside_1}
 			fillContainer={false}
 			showBlurInUnfilledSpace={true}
 		/>
 		<JDGImageTile
 			onClickFunction={() => {
 				setShowImageDetailModal(true);
-				setImageDetailAttributes(imageAttributesCollection.get('aerial-60s70s-1'));
+				setImageDetailAttributes(imageAttributesCollection.aerial_60s70s_1);
 			}}
-			imageAttributes={imageAttributesCollection.get('aerial-60s70s-1')}
+			imageAttributes={imageAttributesCollection.aerial_60s70s_1}
 			fillContainer={false}
 		/>
 	</JDGContentBoxFloating>
