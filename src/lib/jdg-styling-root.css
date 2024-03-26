@@ -22,7 +22,7 @@ a.no-initial-highlight::before, .jdg-highlight-container .jdg-highlight.no-initi
     content: "";
     position: absolute;
     z-index: -1;
-    width: calc(100% + 8px);
+    width: calc(100% + 4px);
     left: -4px;
     height: 0;
     bottom: -0.225rem;
@@ -82,7 +82,7 @@ a.no-initial-highlight:hover::before, .jdg-highlight-container:hover .jdg-highli
 
 @keyframes slide-right {
     0% { width: 0; } 
-    100% { width: 104%; }
+    100% { width: calc(100% + 4px); }
 }
 
 @keyframes slide-up {
