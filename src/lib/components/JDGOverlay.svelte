@@ -123,7 +123,6 @@
 		justify-content: center;
 		flex-grow: 1;
 		height: 100%;
-		width: 100%;
 	}
 
 	.jdg-overlay-title-bar {

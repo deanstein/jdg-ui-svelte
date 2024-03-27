@@ -4,8 +4,8 @@
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-styling-constants.js';
 
 	export let imageAttributes;
-	export let showCaption = false;
-	export let showAttribution = false;
+	export let showCaption = true;
+	export let showAttribution = true;
 
 	const attributionPrefix = 'Image Source: ';
 
@@ -64,5 +64,6 @@
 		justify-content: center;
 		gap: 0.1rem;
 		padding: 3px 8px 3px 8px;
+		width: 100%;
 	}
 </style>

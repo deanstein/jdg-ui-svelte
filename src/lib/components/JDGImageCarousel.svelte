@@ -81,13 +81,7 @@
 			</div>
 		{/if}
 	</div>
-	<div class="caption-attribution-wrapper">
-		<JDGImageCaptionAttribution
-			imageAttributes={activeImage}
-			showCaption={true}
-			showAttribution={true}
-		/>
-	</div>
+	<JDGImageCaptionAttribution imageAttributes={activeImage} />
 	<div class="carousel-thumbnail-container">
 		{#each imageAttributeObjects as imageAttributesObject, i}
 			<div
@@ -137,9 +131,5 @@
 
 	.carousel-thumbnail-wrapper {
 		box-sizing: border-box;
-	}
-
-	.caption-attribution-wrapper {
-		width: 100%;
 	}
 </style>

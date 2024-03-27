@@ -4,7 +4,7 @@
 	import { setShowImageDetailModal } from '$lib/jdg-state-management.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
 
-	import { JDGImage, JDGOverlay } from '$lib/index.js';
+	import { JDGImage, JDGImageCaptionAttribution, JDGOverlay } from '$lib/index.js';
 
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 	export let imageAttributes = instantiateObject(jdgImageAttributes);
@@ -20,4 +20,5 @@
 >
 	<div in:scale={{ duration: 300 }}></div>
 	<JDGImage {imageAttributes} maxHeight="auto" fillContainer={false} transition={scale} />
+	<JDGImageCaptionAttribution {imageAttributes} />
 </JDGOverlay>
