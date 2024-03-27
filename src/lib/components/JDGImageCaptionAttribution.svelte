@@ -65,5 +65,6 @@
 		gap: 0.1rem;
 		padding: 3px 8px 3px 8px;
 		width: 100%;
+		box-sizing: border-box;
 	}
 </style>
