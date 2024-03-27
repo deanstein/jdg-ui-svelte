@@ -116,7 +116,6 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		gap: 1rem;
 		width: 100%;
 	}
 
@@ -132,10 +131,15 @@
 
 	.carousel-thumbnail-container {
 		display: flex;
+		padding: 0.75rem;
 		gap: 1rem;
 	}
 
 	.carousel-thumbnail-wrapper {
 		box-sizing: border-box;
+	}
+
+	.caption-attribution-wrapper {
+		width: 100%;
 	}
 </style>

@@ -90,17 +90,29 @@ export const jdgSizes = {
 	get fontSizeAccentTextSecondaryLg() {
 		return this.nFontSizeAccentTextSecondaryLg.toString() + this.fontUnit;
 	},
-	nFonSizeCaptionAttributionSm: 0.5,
-	get fontSizeCaptionAttributionSm() {
-		return this.nFonSizeCaptionAttributionSm.toString() + this.fontUnit;
+	nFonSizeCaptionSm: 0.5,
+	get fontSizeCaptionSm() {
+		return this.nFonSizeCaptionSm.toString() + this.fontUnit;
 	},
-	nFonSizeCaptionAttributionMd: 0.6,
-	get fontSizeCaptionAttributionMd() {
-		return this.nFonSizeCaptionAttributionMd.toString() + this.fontUnit;
+	nFonSizeCaptionMd: 0.6,
+	get fontSizeMd() {
+		return this.nFonSizeCaptionMd.toString() + this.fontUnit;
 	},
-	nFonSizeCaptionAttributionLg: 0.75,
-	get fontSizeCaptionAttributionLg() {
-		return this.nFonSizeCaptionAttributionLg.toString() + this.fontUnit;
+	nFonSizeCaptionLg: 0.75,
+	get fontSizeCaptionLg() {
+		return this.nFonSizeCaptionLg.toString() + this.fontUnit;
+	},
+	nFonSizeAttributionSm: 0.3,
+	get fontSizeAttributionSm() {
+		return this.nFonSizeAttributionSm.toString() + this.fontUnit;
+	},
+	nFonSizeAttributionMd: 0.4,
+	get fontSizeAttributionMd() {
+		return this.nFonSizeAttributionMd.toString() + this.fontUnit;
+	},
+	nFonSizeAttributionLg: 0.5,
+	get fontSizeAttributionLg() {
+		return this.nFonSizeAttributionLg.toString() + this.fontUnit;
 	},
 
 	nBlurSizeSmall: 5,

@@ -66,6 +66,13 @@
 				imageAttributesCollection.rose_mall_60s70s_1
 			]}
 		/>
+		<JDGImageTile
+			imageAttributes={imageAttributesCollection.lakeside_1}
+			fillContainer={false}
+			showBlurInUnfilledSpace={true}
+			showCaption={true}
+			showAttribution={true}
+		/>
 	</JDGContentBoxFloating>
 </JDGContentContainer>
 <JDGContentContainer>

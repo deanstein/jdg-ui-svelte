@@ -18,7 +18,8 @@ const imageAttributesCollection = {
 	cc_1: instantiateObject(jdgImageAttributes, {
 		imgSrc: './history/CCP1.jpg',
 		imgAlt: 'The Blue Mall as seen in 1968.',
-		imgCaption: 'The Blue Mall as seen in 1968.'
+		imgCaption: 'The Blue Mall as seen in 1968.',
+		imgAttribution: 'Englewood Public Library'
 	}),
 	lakeside_1: instantiateObject(jdgImageAttributes, {
 		imgSrc: './history/lakeside-1.jpg',
@@ -29,7 +30,8 @@ const imageAttributesCollection = {
 	rose_mall_60s70s_1: instantiateObject(jdgImageAttributes, {
 		imgSrc: './history/rose-mall-60s70s-1.jpg',
 		imgAlt: 'Rose Mall as it appeared before grand opening in 1968.',
-		imgCaption: 'Rose Mall as it appeared before grand opening in 1968.'
+		imgCaption: 'Rose Mall as it appeared before grand opening in 1968.',
+		imgAttribution: 'Denver Public Library'
 	})
 };
 

@@ -230,6 +230,5 @@
 
 	.caption-attribution-wrapper {
 		position: absolute;
-		left: 0;
 	}
 </style>
