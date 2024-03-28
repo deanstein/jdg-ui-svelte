@@ -49,8 +49,9 @@
 			/>
 		</JDGGridLayout>
 		<JDGBodyCopy>
-			From concept to layout, Cinderella City was quirky, thematic, and unconventional in its every detail,
-			and its short 30-year life provided lessons in retail design, architecture, and placemaking.
+			From concept to layout, Cinderella City was quirky, thematic, and unconventional in its every
+			detail, and its short 30-year life provided lessons in retail design, architecture, and
+			placemaking.
 			<br /><br />
 			Take a trip into history and see the good, the bad, and the ugly of Cinderella City through
 			<a href="./history">historic photographs</a>
@@ -121,6 +122,8 @@
 				showCaption={true}
 				showAttribution={true}
 			/>
+		</JDGBodyCopy>
+		<JDGBodyCopy>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.aerial_60s70s_1}
 				fillContainer={false}
