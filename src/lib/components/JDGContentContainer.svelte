@@ -33,6 +33,5 @@
 		flex-direction: column;
 		width: -webkit-fill-available;
 		width: -moz-available;
-		min-height: 70vh;
 	}
 </style>
