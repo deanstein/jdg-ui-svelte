@@ -6,8 +6,10 @@ import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 const imageAttributesCollection = {
 	aerial_60s70s_1: instantiateObject(jdgImageAttributes, {
 		imgSrc: './history/aerial-60s70s-1.jpg',
-		imgAlt: 'Cinderella City as it appeared in 1968',
-		imgCaption: 'Cinderella City as it appeared in 1968.',
+		imgAlt:
+			'Cinderella City as it appeared in 1968. And a bunch of other words to test long captions!',
+		imgCaption:
+			'Cinderella City as it appeared in 1968. And a bunch of other words to test long captions!',
 		imgAttribution: 'Englewood Public Library (AI recolored)'
 	}),
 	architecture_1: instantiateObject(jdgImageAttributes, {
@@ -29,8 +31,10 @@ const imageAttributesCollection = {
 	}),
 	rose_mall_60s70s_1: instantiateObject(jdgImageAttributes, {
 		imgSrc: './history/rose-mall-60s70s-1.jpg',
-		imgAlt: 'Rose Mall as it appeared before grand opening in 1968.',
-		imgCaption: 'Rose Mall as it appeared before grand opening in 1968.',
+		imgAlt:
+			'Rose Mall as it appeared before grand opening in 1968. And a bunch of other words to test long captions!',
+		imgCaption:
+			'Rose Mall as it appeared before grand opening in 1968. And a bunch of other words to test long captions!',
 		imgAttribution: 'Denver Public Library'
 	})
 };
