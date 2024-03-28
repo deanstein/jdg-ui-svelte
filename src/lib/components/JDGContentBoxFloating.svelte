@@ -18,6 +18,7 @@
 
 	const floatingBoxContainerCss = css`
 		padding: ${jdgSizes.contentBoxPaddingSm};
+		gap: ${jdgSizes.contentBoxPaddingSm};
 		margin-left: ${jdgSizes.contentBoxFloatingMarginLg};
 		margin-right: ${jdgSizes.contentBoxFloatingMarginLg};
 		background-color: ${jdgColors.contentBoxBackground};
@@ -62,7 +63,6 @@
 		display: flex;
 		flex-direction: column;
 		position: relative;
-		gap: 15px;
 		width: -webkit-fill-available;
 		width: -moz-available;
 		min-height: 200px;
