@@ -12,6 +12,9 @@ export { JDGAppContainer };
 import JDGBackground from './components/JDGBackground.svelte';
 export { JDGBackground };
 
+import JDGBodyCopy from './components/JDGBodyCopy.svelte';
+export { JDGBodyCopy };
+
 import JDGButton from './components/JDGButton.svelte';
 export { JDGButton };
 

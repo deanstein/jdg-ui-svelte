@@ -8,7 +8,6 @@
 	export let title = undefined;
 	// @ts-expect-error
 	export let anchorTag = title?.replace(/ /g, '-');
-	export let isForBodyCopy = false; // if true, padding is adjusted to compress content width
 
 	const titleScrollMultiplier = 1.75; // when scrolling to this anchor tag, account for the height of the title and then some
 
@@ -18,28 +17,11 @@
 	`;
 
 	const floatingBoxContainerCss = css`
+		padding: ${jdgSizes.contentBoxPaddingSm};
 		margin-left: ${jdgSizes.contentBoxFloatingMarginLg};
 		margin-right: ${jdgSizes.contentBoxFloatingMarginLg};
 		background-color: ${jdgColors.contentBoxBackground};
 		backdrop-filter: blur(${jdgSizes.blurSizeSmall});
-
-		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			padding: ${jdgSizes.contentBoxPaddingSm};
-		}
-		@media (min-width: ${jdgBreakpoints.width[0].toString() +
-			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
-			jdgBreakpoints.unit}) {
-			padding: ${jdgSizes.contentBoxPaddingSm}
-				${isForBodyCopy ? jdgSizes.contentBoxVerticalPaddingLg : jdgSizes.contentBoxPaddingSm}
-				${jdgSizes.contentBoxPaddingSm}
-				${isForBodyCopy ? jdgSizes.contentBoxVerticalPaddingLg : jdgSizes.contentBoxPaddingSm};
-		}
-		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			padding: ${jdgSizes.contentBoxPaddingSm}
-				${isForBodyCopy ? jdgSizes.contentBoxVerticalPaddingMax : jdgSizes.contentBoxPaddingSm}
-				${jdgSizes.contentBoxPaddingSm}
-				${isForBodyCopy ? jdgSizes.contentBoxVerticalPaddingMax : jdgSizes.contentBoxPaddingSm};
-		}
 	`;
 
 	const floatingBoxAnchorTagCss = css`

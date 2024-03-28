@@ -146,27 +146,23 @@ export const jdgSizes = {
 		return this.nHorizontalStripeHeightSm.toString() + this.horizontalStripeHeightUnit;
 	},
 
-	nContentBoxPaddingSm: 2,
+	nBodyCopyVerticalPaddingSm: 5,
+	bodyCopyVerticalPaddingUnit: 'vw',
+	get bodyCopyVerticalPaddingSm() {
+		return this.nBodyCopyVerticalPaddingSm.toString() + this.bodyCopyVerticalPaddingUnit;
+	},
+	nBodyCopyVerticalPaddingMd: 15,
+	get bodyCopyVerticalPaddingMd() {
+		return this.nBodyCopyVerticalPaddingMd.toString() + this.bodyCopyVerticalPaddingUnit;
+	},
+	nBodyCopyVerticalPaddingLg: 22,
+	get bodyCopyVerticalPaddingLg() {
+		return this.nBodyCopyVerticalPaddingLg.toString() + this.bodyCopyVerticalPaddingUnit;
+	},
+	nContentBoxPaddingSm: 1,
 	contentBoxPaddingUnit: 'rem',
 	get contentBoxPaddingSm() {
 		return this.nContentBoxPaddingSm.toString() + this.contentBoxPaddingUnit;
-	},
-	nContentBoxVerticalPaddingSm: 5,
-	contentBoxVerticalPaddingUnit: 'vw',
-	get contentBoxVerticalPaddingSm() {
-		return this.nContentBoxPaddingSm.toString() + this.contentBoxPaddingUnit;
-	},
-	nContentBoxVerticalPaddingMd: 10,
-	get contentBoxVerticalPaddingMd() {
-		return this.nContentBoxVerticalPaddingMd.toString() + this.contentBoxVerticalPaddingUnit;
-	},
-	nContentBoxVerticalPaddingLg: 15,
-	get contentBoxVerticalPaddingLg() {
-		return this.nContentBoxVerticalPaddingLg.toString() + this.contentBoxVerticalPaddingUnit;
-	},
-	nContentBoxVerticalPaddingMax: 22,
-	get contentBoxVerticalPaddingMax() {
-		return this.nContentBoxVerticalPaddingMax.toString() + this.contentBoxVerticalPaddingUnit;
 	},
 	nContentBoxFloatingMarginSm: 3,
 	get contentBoxFloatingMarginSm() {
