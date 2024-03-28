@@ -28,7 +28,7 @@
 		<JDGBodyCopy>
 			The Cinderella City Project is an examination of a unique mid-century shopping destination,
 			developed by its creator as a "city under a roof", which became both a fairtyale and a
-			nightmare for its actual city: Englewood, Colorado.
+			nightmare for the actual city of Englewood, Colorado.
 		</JDGBodyCopy>
 		<JDGGridLayout>
 			<JDGImageTile
@@ -49,9 +49,11 @@
 			/>
 		</JDGGridLayout>
 		<JDGBodyCopy>
-			From concept to layout, Cinderella City was quirky, thematic, and unconventional in its every
-			detail, and its short 30-year life provided lessons in retail design, architecture, and
-			placemaking.
+			From concept to details, Cinderella City was unconventional and unexpected. Originally planned
+			for another location, it settled on an unwitting community, replacing a beloved park and
+			ushering in an era of prosperity never seen in Englewood before.
+			<br /><br />
+			and its short 30-year life provided lessons in retail design, architecture, and placemaking.
 			<br /><br />
 			Take a trip into history and see the good, the bad, and the ugly of Cinderella City through
 			<a href="./history">historic photographs</a>
