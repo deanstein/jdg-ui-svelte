@@ -90,7 +90,13 @@
 	transition:fade={{ duration: jdgDurations.default }}
 >
 	{#if showTitleBar}
-		<div class="jdg-overlay-title-bar {overlayTitleBarCss}">
+		<div
+			class="jdg-overlay-title-bar {overlayTitleBarCss}"
+			on:click|self={closeOnOverlayClick ? onCloseFunction : () => {}}
+			on:keypress={() => {}}
+			role="button"
+			tabindex="0"
+		>
 			<div
 				class="jdg-overlay-close-button {closeButtonCss}"
 				role="button"
