@@ -29,7 +29,6 @@
 			The Cinderella City Project is an examination of a unique mid-century shopping destination,
 			developed by its creator as a "city under a roof", which became both a fairtyale and a
 			nightmare for its actual city: Englewood, Colorado.
-			<br /><br />
 		</JDGBodyCopy>
 		<JDGGridLayout>
 			<JDGImageTile
@@ -50,7 +49,6 @@
 			/>
 		</JDGGridLayout>
 		<JDGBodyCopy>
-			<br /><br />
 			From concept to layout, Cinderella City was quirky, thematic, and unconventional in its every detail,
 			and its short 30-year life provided lessons in retail design, architecture, and placemaking.
 			<br /><br />
@@ -59,18 +57,19 @@
 			and an accurate digital 3D re-creation called the
 			<a href="./simulation">Cinderella City Simulation.</a>
 		</JDGBodyCopy>
+		<JDGBodyCopy>
+			<JDGImageTile
+				imageAttributes={imageAttributesCollection.lakeside_1}
+				fillContainer={false}
+				showCaption={true}
+				showAttribution={true}
+			/>
+		</JDGBodyCopy>
 		<JDGImageCarousel
 			imageAttributeObjects={[
 				imageAttributesCollection.cc_1,
 				imageAttributesCollection.rose_mall_60s70s_1
 			]}
-		/>
-		<JDGImageTile
-			imageAttributes={imageAttributesCollection.lakeside_1}
-			fillContainer={false}
-			showBlurInUnfilledSpace={true}
-			showCaption={true}
-			showAttribution={true}
 		/>
 	</JDGContentBoxFloating>
 </JDGContentContainer>
@@ -114,19 +113,21 @@
 		<JDGAccentText primaryText={`"Another quote."`} secondaryText="Another Someone, 1998" />
 	</JDGAccentBlock>
 	<JDGContentBoxFloating title="ANOTHER SECTION">
-		<JDGImageTile
-			imageAttributes={imageAttributesCollection.lakeside_1}
-			fillContainer={false}
-			showBlurInUnfilledSpace={true}
-			showCaption={true}
-			showAttribution={true}
-		/>
-		<JDGImageTile
-			imageAttributes={imageAttributesCollection.aerial_60s70s_1}
-			fillContainer={false}
-			showCaption={true}
-			showAttribution={true}
-		/>
+		<JDGBodyCopy>
+			<JDGImageTile
+				imageAttributes={imageAttributesCollection.lakeside_1}
+				fillContainer={false}
+				showBlurInUnfilledSpace={true}
+				showCaption={true}
+				showAttribution={true}
+			/>
+			<JDGImageTile
+				imageAttributes={imageAttributesCollection.aerial_60s70s_1}
+				fillContainer={false}
+				showCaption={true}
+				showAttribution={true}
+			/>
+		</JDGBodyCopy>
 	</JDGContentBoxFloating>
 	<JDGAccentBlock backgroundColor={$uiState.accentColors[1]}>
 		<JDGAccentText
