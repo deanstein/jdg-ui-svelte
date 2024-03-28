@@ -59,6 +59,20 @@
 			height: ${jdgSizes.headerHeightLg};
 	`;
 
+	const overlayContentCss = css`
+	padding: ${jdgSizes.contentBoxPaddingSm};
+	@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			max-height: calc(100vh - ${jdgSizes.headerHeightSm});
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) and (max-width: ${
+			jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit
+		}) {
+			max-height: calc(100vh - ${jdgSizes.headerHeightMd});
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			max-height: calc(100vh - ${jdgSizes.headerHeightLg});
+		`;
+
 	onMount(() => {
 		overlayRef.addEventListener('wheel', preventScroll, { passive: false });
 
@@ -93,7 +107,7 @@
 		</div>
 	{/if}
 	<div
-		class="jdg-overlay-content"
+		class="jdg-overlay-content {overlayContentCss}"
 		role="button"
 		tabindex="0"
 		on:click|self={closeOnOverlayClick ? onCloseFunction : () => {}}
@@ -122,7 +136,7 @@
 		align-items: center;
 		justify-content: center;
 		flex-grow: 1;
-		height: 100%;
+		box-sizing: border-box;
 	}
 
 	.jdg-overlay-title-bar {

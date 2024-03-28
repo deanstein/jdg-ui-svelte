@@ -159,7 +159,7 @@ export const jdgSizes = {
 	get bodyCopyVerticalPaddingLg() {
 		return this.nBodyCopyVerticalPaddingLg.toString() + this.bodyCopyVerticalPaddingUnit;
 	},
-	nContentBoxPaddingSm: 1,
+	nContentBoxPaddingSm: 2,
 	contentBoxPaddingUnit: 'rem',
 	get contentBoxPaddingSm() {
 		return this.nContentBoxPaddingSm.toString() + this.contentBoxPaddingUnit;

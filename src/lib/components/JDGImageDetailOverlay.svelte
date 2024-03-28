@@ -18,7 +18,12 @@
 	closeOnOverlayClick={true}
 	colorRgba="rgba(255, 255, 255, 0.6)"
 >
-	<div in:scale={{ duration: 300 }}></div>
-	<JDGImage {imageAttributes} maxHeight="auto" fillContainer={false} transition={scale} />
+	<JDGImage
+		{imageAttributes}
+		maxHeight="auto"
+		fillContainer={false}
+		showBlurInUnfilledSpace={true}
+		transition={scale}
+	/>
 	<JDGImageCaptionAttribution {imageAttributes} />
 </JDGOverlay>
