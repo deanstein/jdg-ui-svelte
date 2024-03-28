@@ -62,6 +62,7 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+		text-align: center;
 		gap: 0.1rem;
 		padding: 3px 8px 3px 8px;
 		width: 100%;
