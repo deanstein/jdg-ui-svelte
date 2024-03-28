@@ -24,8 +24,3 @@
 <div class="jdg-body-copy-container {bodyCopyContainerCss}">
 	<slot />
 </div>
-
-<style>
-	.jdg-body-copy-container {
-	}
-</style>
