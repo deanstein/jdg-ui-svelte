@@ -226,6 +226,7 @@
 		filter: blur(5px);
 		background-size: cover;
 		background-position: center;
+		opacity: 0.5;
 	}
 
 	.caption-attribution-wrapper {
