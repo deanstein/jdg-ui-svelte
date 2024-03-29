@@ -52,7 +52,6 @@
 	`;
 
 	const imageTileLabelCss = css`
-		font-size: ${jdgSizes.fontSizeImageTileLabel};
 		text-align: ${labelJustification};
 	`;
 </script>
@@ -171,6 +170,10 @@
 		font-weight: bold;
 		z-index: 1;
 		pointer-events: none;
+	}
+
+	.image-title-label {
+		font-size: 3vh;
 	}
 
 	.image-caption-attribution-wrapper {

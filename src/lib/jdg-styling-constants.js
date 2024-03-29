@@ -57,15 +57,6 @@ export const jdgSizes = {
 	get fontSizeHeaderTitle() {
 		return this.nFontSizeHeaderTitle.toString() + this.fontUnit;
 	},
-	nFontSizeFloatingContentBoxTitle: 2,
-	get fontSizeFloatingContentBoxTitle() {
-		return this.nFontSizeFloatingContentBoxTitle + this.fontUnit;
-	},
-	fontSizeImageTileLabel: 3,
-	fontUnitImageTileLabel: 'vh',
-	get imageTileLabelFontSize() {
-		return this.fontSizeImageTileLabel.toString() + this.fontUnitImageTileLabel;
-	},
 	nFontSizeAccentTextPrimarySm: 1.75,
 	get fontSizeAccentTextPrimarySm() {
 		return this.nFontSizeAccentTextPrimarySm.toString() + this.fontUnit;
@@ -89,30 +80,6 @@ export const jdgSizes = {
 	nFontSizeAccentTextSecondaryLg: 1.5,
 	get fontSizeAccentTextSecondaryLg() {
 		return this.nFontSizeAccentTextSecondaryLg.toString() + this.fontUnit;
-	},
-	nFonSizeCaptionSm: 0.5,
-	get fontSizeCaptionSm() {
-		return this.nFonSizeCaptionSm.toString() + this.fontUnit;
-	},
-	nFonSizeCaptionMd: 0.6,
-	get fontSizeMd() {
-		return this.nFonSizeCaptionMd.toString() + this.fontUnit;
-	},
-	nFonSizeCaptionLg: 0.75,
-	get fontSizeCaptionLg() {
-		return this.nFonSizeCaptionLg.toString() + this.fontUnit;
-	},
-	nFonSizeAttributionSm: 0.3,
-	get fontSizeAttributionSm() {
-		return this.nFonSizeAttributionSm.toString() + this.fontUnit;
-	},
-	nFonSizeAttributionMd: 0.4,
-	get fontSizeAttributionMd() {
-		return this.nFonSizeAttributionMd.toString() + this.fontUnit;
-	},
-	nFonSizeAttributionLg: 0.5,
-	get fontSizeAttributionLg() {
-		return this.nFonSizeAttributionLg.toString() + this.fontUnit;
 	},
 
 	nBlurSizeSmall: 5,
@@ -159,11 +126,12 @@ export const jdgSizes = {
 	get bodyCopyVerticalPaddingLg() {
 		return this.nBodyCopyVerticalPaddingLg.toString() + this.bodyCopyVerticalPaddingUnit;
 	},
-	nContentBoxPaddingSm: 2,
 	contentBoxPaddingUnit: 'rem',
+	nContentBoxPaddingSm: 2,
 	get contentBoxPaddingSm() {
 		return this.nContentBoxPaddingSm.toString() + this.contentBoxPaddingUnit;
 	},
+	contentBoxFloatingMarginUnit: 'vw',
 	nContentBoxFloatingMarginSm: 3,
 	get contentBoxFloatingMarginSm() {
 		return this.nContentBoxFloatingMarginSm.toString() + this.contentBoxFloatingMarginUnit;
@@ -173,7 +141,6 @@ export const jdgSizes = {
 		return this.nContentBoxFloatingMarginMd.toString() + this.contentBoxFloatingMarginUnit;
 	},
 	nContentBoxFloatingMarginLg: 5,
-	contentBoxFloatingMarginUnit: 'vw',
 	get contentBoxFloatingMarginLg() {
 		return this.nContentBoxFloatingMarginLg.toString() + this.contentBoxFloatingMarginUnit;
 	},

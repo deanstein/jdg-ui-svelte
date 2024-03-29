@@ -16,29 +16,29 @@
 
 	const captionCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			font-size: ${jdgSizes.fontSizeCaptionSm};
+			font-size: 10px;
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-			font-size: ${jdgSizes.fontSizeCaptionMd};
+			font-size: 11px;
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			font-size: ${jdgSizes.fontSizeCaptionLg};
+			font-size: 12px;
 		}
 	`;
 
 	const attributionCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			font-size: ${jdgSizes.fontSizeAttributionSm};
+			font-size: 7px;
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-			font-size: ${jdgSizes.fontSizeAttributionMd};
+			font-size: 8px;
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			font-size: ${jdgSizes.fontSizeAttributionLg};
+			font-size: 9px;
 		}
 	`;
 </script>
