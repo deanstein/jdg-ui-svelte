@@ -32,18 +32,17 @@
 		</JDGBodyCopy>
 		<JDGGridLayout>
 			<JDGImageTile
-				maxHeight="400px"
 				imageAttributes={imageAttributesCollection.aerial_60s70s_1}
-				fillContainer={false}
-				showBlurInUnfilledSpace={true}
 				showCaption={true}
 				showAttribution={true}
 			/>
 			<JDGImageTile
-				maxHeight="400px"
 				imageAttributes={imageAttributesCollection.cc_1}
-				fillContainer={false}
-				showBlurInUnfilledSpace={true}
+				showCaption={true}
+				showAttribution={true}
+			/>
+			<JDGImageTile
+				imageAttributes={imageAttributesCollection.architecture_1}
 				showCaption={true}
 				showAttribution={true}
 			/>
