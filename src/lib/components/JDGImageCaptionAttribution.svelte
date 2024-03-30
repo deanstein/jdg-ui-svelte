@@ -69,10 +69,10 @@
 		box-sizing: border-box;
 	}
 
-	.caption-attribution {
+	/* .caption-attribution {
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		width: 100%;
-	}
+	} */
 </style>
