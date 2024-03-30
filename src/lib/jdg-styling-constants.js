@@ -153,12 +153,6 @@ export const jdgSizes = {
 		return this.nContentBoxFloatingMarginLg.toString() + this.contentBoxFloatingMarginUnit;
 	},
 
-	nImageHeightSm: 300,
-	imageHeightUnit: 'px',
-	get imageHeightSm() {
-		return this.nImageHeightSm.toString() + this.imageHeightUnit;
-	},
-
 	nHeaderLogoHeightSm: 40,
 	headerLogoHeightUnit: 'px',
 	get headerLogoHeightSm() {
