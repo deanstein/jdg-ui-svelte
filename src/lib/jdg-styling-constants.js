@@ -81,6 +81,10 @@ export const jdgSizes = {
 	get fontSizeAccentTextSecondaryLg() {
 		return this.nFontSizeAccentTextSecondaryLg.toString() + this.fontUnit;
 	},
+	nFontSizeFloatingContentBoxTitle: 2,
+	get fontSizeFloatingContentBoxTitle() {
+		return this.nFontSizeFloatingContentBoxTitle.toString() + this.fontUnit;
+	},
 
 	nBlurSizeSmall: 5,
 	blurSizeSmallUnit: 'px',

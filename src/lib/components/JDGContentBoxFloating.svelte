@@ -12,6 +12,7 @@
 	const titleScrollMultiplier = 1.75; // when scrolling to this anchor tag, account for the height of the title and then some
 
 	const floatingBoxTitleCss = css`
+		font-size: ${jdgSizes.fontSizeFloatingContentBoxTitle};
 		color: ${jdgColors.contentBoxBackground};
 	`;
 
@@ -72,7 +73,6 @@
 		left: 0;
 		font-weight: bold;
 		line-height: 0.68;
-		font-size: 2rem;
 	}
 
 	.jdg-content-box-floating-container {
