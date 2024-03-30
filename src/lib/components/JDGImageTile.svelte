@@ -132,7 +132,7 @@
 				{fillContainer}
 				{showBlurInUnfilledSpace}
 				showCaption={showCaption && !(showBlurInUnfilledSpace || fillContainer)}
-				showAttribution={showAttribution && !showBlurInUnfilledSpace}
+				showAttribution={showAttribution && !(fillContainer || showBlurInUnfilledSpace)}
 			/>
 		</div>
 	</a>
