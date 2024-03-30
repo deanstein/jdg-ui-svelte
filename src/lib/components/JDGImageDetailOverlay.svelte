@@ -4,7 +4,7 @@
 
 	import { setShowImageDetailModal } from '$lib/jdg-state-management.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
-	
+
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGOverlay } from '$lib/index.js';

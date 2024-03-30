@@ -9,8 +9,7 @@
 	const accentBlockCss = css`
 		background-color: ${backgroundColor};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			padding: 25px ${jdgSizes.contentBoxPaddingSm} 25px
-				${jdgSizes.contentBoxPaddingSm};
+			padding: 25px ${jdgSizes.contentBoxPaddingSm} 25px ${jdgSizes.contentBoxPaddingSm};
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +

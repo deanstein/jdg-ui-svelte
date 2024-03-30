@@ -26,9 +26,9 @@
 	/>
 	<JDGContentBoxFloating>
 		<JDGBodyCopy>
-			The <strong>Cinderella City Project</strong> is an examination of a unique mid-century shopping destination,
-			developed by its creator as a "city under a roof", which became both a fairtyale and a
-			nightmare for the actual city of Englewood, Colorado.
+			The <strong>Cinderella City Project</strong> is an examination of a unique mid-century shopping
+			destination, developed by its creator as a "city under a roof", which became both a fairtyale and
+			a nightmare for the actual city of Englewood, Colorado.
 		</JDGBodyCopy>
 		<JDGGridLayout>
 			<JDGImageTile
