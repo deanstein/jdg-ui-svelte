@@ -6,17 +6,17 @@
 	const bodyCopyContainerCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: 15px;
-			padding: 0 ${jdgSizes.bodyCopyVerticalPaddingSm} 0 ${jdgSizes.bodyCopyVerticalPaddingSm};
+			padding: ${jdgSizes.contentBoxPaddingSm} ${jdgSizes.bodyCopyVerticalPaddingSm} ${jdgSizes.contentBoxPaddingSm} ${jdgSizes.bodyCopyVerticalPaddingSm};
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
 			font-size: 16px;
-			padding: 0 ${jdgSizes.bodyCopyVerticalPaddingMd} 0 ${jdgSizes.bodyCopyVerticalPaddingMd};
+			padding: ${jdgSizes.contentBoxPaddingMd} ${jdgSizes.bodyCopyVerticalPaddingMd} ${jdgSizes.contentBoxPaddingMd} ${jdgSizes.bodyCopyVerticalPaddingMd};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 			font-size: 18px;
-			padding: 1rem ${jdgSizes.bodyCopyVerticalPaddingLg} 1rem ${jdgSizes.bodyCopyVerticalPaddingLg};
+			padding: ${jdgSizes.contentBoxPaddingLg} ${jdgSizes.bodyCopyVerticalPaddingLg} ${jdgSizes.contentBoxPaddingLg} ${jdgSizes.bodyCopyVerticalPaddingLg};
 		}
 	`;
 </script>
