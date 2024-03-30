@@ -10,6 +10,8 @@
 	import { JDGImage, JDGImageCaptionAttribution, JDGStripesHorizontal } from '../index.js';
 	import { fadeAndScale, verticalSlide } from '$lib/jdg-graphics-factory.js';
 	import { jdgColors, jdgSizes, jdgDurations, jdgBreakpoints } from '../jdg-styling-constants.js';
+	import { breakpointHandler } from '$lib/jdg-ui-management.js';
+	import { onMount } from 'svelte';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object to hold all details
 	export let maxWidth = undefined; // if not defined, takes available space
@@ -28,6 +30,22 @@
 	const showImageDetailModal = () => {
 		setShowImageDetailModal(true);
 		setImageDetailAttributes(imageAttributes);
+	};
+
+	// set certain flags at certain breakpoints
+	const imageTileBreakpointHandler = () => {
+		breakpointHandler(
+			// BREAKPOINT 0
+			() => {
+				// force the title off
+				showBlurInUnfilledSpace = false;
+				fillContainer = true;
+			},
+			// BREAKPOINT 1
+			() => {},
+			// BREAKPOINT 2
+			() => {}
+		);
 	};
 
 	let isHovering;
@@ -76,6 +94,12 @@
 			font-size: 16px;
 		}
 	`;
+
+	onMount(() => {
+		window.addEventListener('resize', imageTileBreakpointHandler);
+		// Call the handler once to handle the current screen size
+		imageTileBreakpointHandler();
+	});
 </script>
 
 <div class="jdg-image-tile-container">
