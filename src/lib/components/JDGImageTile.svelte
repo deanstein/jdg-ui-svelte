@@ -131,7 +131,7 @@
 				{isHovering}
 				{fillContainer}
 				{showBlurInUnfilledSpace}
-				showCaption={showCaption && !showBlurInUnfilledSpace}
+				showCaption={showCaption && !(showBlurInUnfilledSpace || fillContainer)}
 				showAttribution={showAttribution && !showBlurInUnfilledSpace}
 			/>
 		</div>
