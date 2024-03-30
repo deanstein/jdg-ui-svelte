@@ -50,7 +50,7 @@
 		</div>
 	{/if}
 	{#if showAttribution && imageAttributes.imgAttribution}
-		<div class="caption-attribution {attributionCss}">
+		<div class="attribution-attribution {attributionCss}">
 			{attributionPrefix + imageAttributes.imgAttribution}
 		</div>
 	{/if}
@@ -67,5 +67,12 @@
 		padding: 3px 8px 3px 8px;
 		width: 100%;
 		box-sizing: border-box;
+	}
+
+	.caption-attribution {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		width: 100%;
 	}
 </style>
