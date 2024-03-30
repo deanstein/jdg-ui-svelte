@@ -45,3 +45,13 @@
 		<JDGImageCaptionAttribution {imageAttributes} />
 	</div>
 </JDGOverlay>
+
+<style>
+	.image-wrapper {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		height: 100%;
+		box-sizing: border-box;
+	}
+</style>
