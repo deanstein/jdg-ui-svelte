@@ -11,11 +11,11 @@
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-			gap: ${jdgSizes.contentBoxPaddingMd};
+			gap: ${(jdgSizes.nContentBoxPaddingMd / 2).toString() + jdgSizes.contentBoxFloatingMarginUnit};
 			grid-template-columns: repeat(2, 1fr);
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			gap: ${jdgSizes.contentBoxPaddingLg};
+			gap: ${(jdgSizes.nContentBoxPaddingLg / 2).toString() + jdgSizes.contentBoxFloatingMarginUnit};
 			grid-template-columns: repeat(3, 1fr);
 		}
 	`;
