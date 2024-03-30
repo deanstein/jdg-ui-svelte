@@ -211,46 +211,7 @@ export const jdgSizes = {
 	headerSidePaddingUnit: 'rem',
 	get headerSidePadding() {
 		return this.nHeaderSidePadding.toString() + this.headerSidePaddingUnit;
-	},
-
-	nPadding: 0.75,
-	get padding() {
-		return this.nPadding.toString() + 'vh';
-	},
-	nPaddingNarrow: 0.5,
-	get paddingNarrow() {
-		return this.nPaddingNarrow.toString() + 'vh';
-	},
-
-	nModalFormWidth: 25,
-	get modalFormWidth() {
-		return this.nModalFormWidth.toString() + 'vw';
-	},
-	nModalFormHeight: 80,
-	get modalFormHeight() {
-		return this.nModalFormHeight.toString() + 'vh';
-	},
-
-	nTimelineSpineLineThickness: 0.9,
-	get timelineSpineThickness() {
-		return this.nTimelineSpineLineThickness + 'vw';
-	},
-	nTimelineEventGapSize: 1,
-	get timelineEventGapSize() {
-		return this.nTimelineEventGapSize + 'vw';
-	},
-	nTimelineEventNodeSize: 0.9,
-	get timelineEventNodeSize() {
-		return this.nTimelineEventNodeSize + 'vw';
-	},
-	nTimelineEventYearWidth: 4,
-	get timelineEventYearWidth() {
-		return this.nTimelineEventYearWidth + 'vw';
 	}
-};
-
-export const jdgQuantities = {
-	initialTimelineRowCount: 1000
 };
 
 export const jdgDurations = {
