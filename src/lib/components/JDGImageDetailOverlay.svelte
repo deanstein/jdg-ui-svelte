@@ -4,14 +4,15 @@
 
 	import { setShowImageDetailModal } from '$lib/jdg-state-management.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
+	
+	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGOverlay } from '$lib/index.js';
-
-	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 	import { jdgBreakpoints } from '$lib/jdg-styling-constants.js';
+
 	export let imageAttributes = instantiateObject(jdgImageAttributes);
 
-	const imageWrapperCss = css`
+	const imageAndCaptionWrapperCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			padding: 0px;
 		}
@@ -34,7 +35,7 @@
 	closeOnOverlayClick={true}
 	colorRgba="rgba(255, 255, 255, 0.6)"
 >
-	<div class="image-wrapper {imageWrapperCss}">
+	<div class="image-and-caption-wrapper {imageAndCaptionWrapperCss}">
 		<JDGImage
 			{imageAttributes}
 			maxHeight="auto"
@@ -47,7 +48,7 @@
 </JDGOverlay>
 
 <style>
-	.image-wrapper {
+	.image-and-caption-wrapper {
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -55,5 +56,7 @@
 		width: 100%;
 		height: 100%;
 		box-sizing: border-box;
+		z-index: 1;
+		pointer-events: none;
 	}
 </style>

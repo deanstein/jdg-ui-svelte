@@ -117,7 +117,7 @@ export const jdgSizes = {
 		return this.nHorizontalStripeHeightSm.toString() + this.horizontalStripeHeightUnit;
 	},
 
-	nBodyCopyVerticalPaddingSm: 5,
+	nBodyCopyVerticalPaddingSm: 10,
 	bodyCopyVerticalPaddingUnit: 'vw',
 	get bodyCopyVerticalPaddingSm() {
 		return this.nBodyCopyVerticalPaddingSm.toString() + this.bodyCopyVerticalPaddingUnit;
@@ -144,7 +144,7 @@ export const jdgSizes = {
 		return this.nContentBoxPaddingLg.toString() + this.contentBoxPaddingUnit;
 	},
 	contentBoxFloatingMarginUnit: 'vw',
-	nContentBoxFloatingMarginSm: 3,
+	nContentBoxFloatingMarginSm: 3.5,
 	get contentBoxFloatingMarginSm() {
 		return this.nContentBoxFloatingMarginSm.toString() + this.contentBoxFloatingMarginUnit;
 	},
