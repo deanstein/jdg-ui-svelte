@@ -9,7 +9,7 @@
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGStripesHorizontal } from '../index.js';
 	import { fadeAndScale, verticalSlide } from '$lib/jdg-graphics-factory.js';
-	import { jdgColors, jdgSizes, jdgDurations } from '../jdg-styling-constants.js';
+	import { jdgColors, jdgSizes, jdgDurations, jdgBreakpoints } from '../jdg-styling-constants.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object to hold all details
 	export let maxWidth = undefined; // if not defined, takes available space
@@ -48,11 +48,33 @@
 		${labelContainerVerticalAlign === 'center'
 			? `top: 50%;
 		transform: translate(0, -50%);`
-			: `${labelContainerVerticalAlign}: 0;`}
+			: `${labelContainerVerticalAlign}: 0;`};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			padding: 8px;
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			padding: 10px;
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			padding: 12px;
+		}
 	`;
 
 	const imageTileLabelCss = css`
 		text-align: ${labelJustification};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			font-size: 12px;
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			font-size: 14px;
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			font-size: 16px;
+		}
 	`;
 </script>
 
@@ -164,16 +186,11 @@
 
 	.image-tile-label-container {
 		position: absolute;
-		padding: 15px;
 		width: -webkit-fill-available;
 		width: -moz-available;
 		font-weight: bold;
 		z-index: 1;
 		pointer-events: none;
-	}
-
-	.image-title-label {
-		font-size: 3vh;
 	}
 
 	.image-caption-attribution-wrapper {

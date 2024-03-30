@@ -16,12 +16,28 @@
 	`;
 
 	const floatingBoxContainerCss = css`
-		padding: ${jdgSizes.contentBoxPaddingSm};
-		gap: ${jdgSizes.contentBoxPaddingSm};
+		gap: ${jdgSizes.contentBoxPaddingLg};
 		margin-left: ${jdgSizes.contentBoxFloatingMarginLg};
 		margin-right: ${jdgSizes.contentBoxFloatingMarginLg};
 		background-color: ${jdgColors.contentBoxBackground};
 		backdrop-filter: blur(${jdgSizes.blurSizeSmall});
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			padding: 2rem ${jdgSizes.contentBoxPaddingSm} 2rem ${jdgSizes.contentBoxPaddingSm};
+			margin-left: ${jdgSizes.contentBoxFloatingMarginSm};
+			margin-right: ${jdgSizes.contentBoxFloatingMarginSm};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			padding: 2rem ${jdgSizes.contentBoxPaddingMd} 2rem ${jdgSizes.contentBoxPaddingMd};
+			margin-left: ${jdgSizes.contentBoxFloatingMarginMd};
+			margin-right: ${jdgSizes.contentBoxFloatingMarginMd};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			padding: 2rem ${jdgSizes.contentBoxPaddingLg} 2rem ${jdgSizes.contentBoxPaddingLg};
+			margin-left: ${jdgSizes.contentBoxFloatingMarginLg};
+			margin-right: ${jdgSizes.contentBoxFloatingMarginLg};
+		}
 	`;
 
 	const floatingBoxAnchorTagCss = css`

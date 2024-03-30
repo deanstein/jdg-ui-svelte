@@ -127,9 +127,17 @@ export const jdgSizes = {
 		return this.nBodyCopyVerticalPaddingLg.toString() + this.bodyCopyVerticalPaddingUnit;
 	},
 	contentBoxPaddingUnit: 'rem',
-	nContentBoxPaddingSm: 2,
+	nContentBoxPaddingSm: 1,
 	get contentBoxPaddingSm() {
 		return this.nContentBoxPaddingSm.toString() + this.contentBoxPaddingUnit;
+	},
+	nContentBoxPaddingMd: 1.5,
+	get contentBoxPaddingMd() {
+		return this.nContentBoxPaddingMd.toString() + this.contentBoxPaddingUnit;
+	},
+	nContentBoxPaddingLg: 2,
+	get contentBoxPaddingLg() {
+		return this.nContentBoxPaddingLg.toString() + this.contentBoxPaddingUnit;
 	},
 	contentBoxFloatingMarginUnit: 'vw',
 	nContentBoxFloatingMarginSm: 3,

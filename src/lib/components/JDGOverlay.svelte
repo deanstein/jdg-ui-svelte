@@ -60,7 +60,6 @@
 	`;
 
 	const overlayContentCss = css`
-	padding: ${jdgSizes.contentBoxPaddingSm};
 	@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			max-height: calc(100vh - ${jdgSizes.headerHeightSm});
 		}

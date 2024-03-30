@@ -5,17 +5,17 @@
 
 	const bodyCopyContainerCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-            font-size: 12px;
+			font-size: 12px;
 			padding: 0 ${jdgSizes.bodyCopyVerticalPaddingSm} 0 ${jdgSizes.bodyCopyVerticalPaddingSm};
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-            font-size: 14px;
+			font-size: 14px;
 			padding: 0 ${jdgSizes.bodyCopyVerticalPaddingMd} 0 ${jdgSizes.bodyCopyVerticalPaddingMd};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-            font-size: 16px;
+			font-size: 18px;
 			padding: 1rem ${jdgSizes.bodyCopyVerticalPaddingLg} 1rem ${jdgSizes.bodyCopyVerticalPaddingLg};
 		}
 	`;
