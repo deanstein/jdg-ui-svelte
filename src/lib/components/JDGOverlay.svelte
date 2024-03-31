@@ -142,6 +142,7 @@
 		justify-content: center;
 		flex-grow: 1;
 		box-sizing: border-box;
+		width: 100%;
 	}
 
 	.jdg-overlay-title-bar {

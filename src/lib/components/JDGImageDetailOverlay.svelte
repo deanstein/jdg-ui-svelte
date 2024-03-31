@@ -43,7 +43,7 @@
 			showBlurInUnfilledSpace={true}
 			transition={scale}
 		/>
-		<JDGImageCaptionAttribution {imageAttributes} />
+		<JDGImageCaptionAttribution {imageAttributes} truncateText={false} />
 	</div>
 </JDGOverlay>
 

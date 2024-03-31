@@ -6,6 +6,7 @@
 	export let imageAttributes;
 	export let showCaption = true;
 	export let showAttribution = true;
+    export let truncateText = true;
 
 	const attributionPrefix = 'Image Source: ';
 
@@ -13,6 +14,12 @@
 		background-color: ${jdgColors.headerBackground};
 		backdrop-filter: blur(${jdgSizes.blurSizeSmall});
 	`;
+
+    const captionAttributionCss = css`
+        text-overflow: ${truncateText ? 'ellipsis' : 'clip'};
+        white-space: ${truncateText ? 'nowrap' : 'normal'};
+        }
+    `;
 
 	const captionCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
@@ -45,12 +52,12 @@
 
 <div class="caption-attribution-container {captionAttributionContainerCss}">
 	{#if showCaption && imageAttributes.imgCaption}
-		<div class="caption-attribution {captionCss}">
+		<div class="caption-attribution {captionAttributionCss} {captionCss}">
 			{imageAttributes.imgCaption}
 		</div>
 	{/if}
 	{#if showAttribution && imageAttributes.imgAttribution}
-		<div class="attribution-attribution {attributionCss}">
+		<div class="caption-attribution {captionAttributionCss} {attributionCss}">
 			{attributionPrefix + imageAttributes.imgAttribution}
 		</div>
 	{/if}
@@ -72,7 +79,5 @@
 	.caption-attribution {
 		width: 100%;
 		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
 	}
 </style>
