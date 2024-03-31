@@ -6,7 +6,7 @@
 	export let imageAttributes;
 	export let showCaption = true;
 	export let showAttribution = true;
-    export let truncateText = true;
+	export let truncateText = true;
 
 	const attributionPrefix = 'Image Source: ';
 
@@ -15,7 +15,7 @@
 		backdrop-filter: blur(${jdgSizes.blurSizeSmall});
 	`;
 
-    const captionAttributionCss = css`
+	const captionAttributionCss = css`
         text-overflow: ${truncateText ? 'ellipsis' : 'clip'};
         white-space: ${truncateText ? 'nowrap' : 'normal'};
         }
