@@ -2,7 +2,7 @@
 	import { onMount, tick } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { setAccentColors, setWindowWidth } from '$lib/jdg-state-management.js';
+	import { setAccentColors, setClientWidth, setWindowWidth } from '$lib/jdg-state-management.js';
 
 	import { JDGLoadingOverlay } from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-styling-constants.js';
@@ -17,14 +17,18 @@
 	// to prevent flash of unstyled content
 	let isAppLoaded = false;
 
+	// used for determining the "client width" - width w/o scrollbars
+	let appContainerRef;
+
 	// global hyperlink style options
 	const hyperlinkColorOpacity = 0.75;
 	const useStripedHyperlinkHoverStyle = false;
 
-	// app sets window width in the ui state
+	// app sets window and client width in the ui state
 	// so children don't have to add event handlers
 	const onPageResize = () => {
 		setWindowWidth(window.innerWidth);
+		setClientWidth(appContainerRef.clientWidth);
 	};
 
 	// global styles, but using emotion css
@@ -57,10 +61,12 @@
 
 		window.addEventListener('resize', onPageResize);
 		setAccentColors(accentColors);
+		// update the client and window width at the end so they're accurate
+		setTimeout(onPageResize, 0);
 	});
 </script>
 
-<div class="jdg-app-container {appContainerCss}">
+<div class="jdg-app-container {appContainerCss}" bind:this={appContainerRef}>
 	<!-- loading overlay - only shown before layout is fully loaded -->
 	<JDGLoadingOverlay isLoading={!isAppLoaded} loadingIconSrc={appLoadingIconSrc} />
 	{#if isAppLoaded}

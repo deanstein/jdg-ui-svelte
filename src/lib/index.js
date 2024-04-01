@@ -27,6 +27,9 @@ export { JDGContentContainer };
 import JDGFooter from './components/JDGFooter.svelte';
 export { JDGFooter };
 
+import JDGFullWidthContainer from './components/JDGFullWidthContainer.svelte';
+export { JDGFullWidthContainer };
+
 import JDGGridLayout from './components/JDGGridLayout.svelte';
 export { JDGGridLayout };
 

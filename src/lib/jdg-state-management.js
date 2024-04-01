@@ -24,6 +24,13 @@ export const setWindowWidth = (windowWidth) => {
 	});
 };
 
+export const setClientWidth = (clientWidth) => {
+	uiState.update((currentValue) => {
+		currentValue.clientWidth = clientWidth;
+		return currentValue;
+	});
+};
+
 export const setShowImageDetailModal = (showImageDetailModal) => {
 	uiState.update((currentValue) => {
 		currentValue.showImageDetailOverlay = showImageDetailModal;
