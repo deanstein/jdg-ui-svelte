@@ -11,10 +11,10 @@
 		JDGContentBoxFloating,
 		JDGContentContainer,
 		JDGFullWidthContainer,
+		JDGImageCarousel,
 		JDGImageFullWidth,
 		JDGImageTile,
-		JDGGridLayout,
-		JDGImageCarousel
+		JDGGridLayout
 	} from '$lib/index.js';
 	import imageAttributesCollection from './image-attributes-collection.js';
 </script>
@@ -75,12 +75,14 @@
 				showAttribution={true}
 			/>
 		</JDGBodyCopy>
-		<JDGImageCarousel
-			imageAttributeObjects={[
-				imageAttributesCollection.cc_1,
-				imageAttributesCollection.rose_mall_60s70s_1
-			]}
-		/>
+		<JDGFullWidthContainer>
+			<JDGImageCarousel
+				imageAttributeObjects={[
+					imageAttributesCollection.cc_1,
+					imageAttributesCollection.rose_mall_60s70s_1
+				]}
+			/>
+		</JDGFullWidthContainer>
 	</JDGContentBoxFloating>
 </JDGContentContainer>
 <JDGContentContainer>
