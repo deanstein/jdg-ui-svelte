@@ -74,6 +74,7 @@
 					imageAttributesCollection.cc_1,
 					imageAttributesCollection.rose_mall_60s70s_1
 				]}
+				maxHeight="70vh"
 			/>
 		</JDGFullWidthContainer>
 	</JDGContentBoxFloating>
