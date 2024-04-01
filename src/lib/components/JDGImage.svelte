@@ -131,8 +131,10 @@
 	`;
 
 	const imageAnimationCss = css`
-		:hover {
+		@ media (hover: hover)  {
+			:hover {
 			transform: ${showHoverEffect ? 'scale(1.04);' : ''};
+		}
 		}
 	`;
 
