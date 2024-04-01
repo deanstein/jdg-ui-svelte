@@ -8,7 +8,7 @@
 	import jdgImageAttributes from '../schemas/jdg-image-attributes.js';
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGStripesHorizontal } from '../index.js';
-	import { fadeAndScale, verticalSlide } from '$lib/jdg-graphics-factory.js';
+	import { verticalSlide } from '$lib/jdg-graphics-factory.js';
 	import { jdgColors, jdgSizes, jdgDurations, jdgBreakpoints } from '../jdg-styling-constants.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object to hold all details
@@ -102,7 +102,6 @@
 				}, 600);
 			}}
 			on:keypress={() => {}}
-			transition:fadeAndScale={{ duration: jdgDurations.default }}
 		>
 			{#if label}
 				<div class="image-tile-label-container {imageTileLabelContainerCss}">
@@ -175,13 +174,15 @@
 		outline: none;
 	}
 
-	.image-tile:hover {
-		box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-	}
+	@media (hover: hover) {
+		.image-tile:hover {
+			box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+		}
 
-	.image-tile:active {
-		transform: scale(0.98);
-		box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+		.image-tile:active {
+			transform: scale(0.98);
+			box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+		}
 	}
 
 	.image-tile-label-container {
