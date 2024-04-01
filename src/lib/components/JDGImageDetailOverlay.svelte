@@ -35,7 +35,7 @@
 	closeOnOverlayClick={true}
 	colorRgba="rgba(255, 255, 255, 0.6)"
 >
-	<div class="image-and-caption-wrapper {imageAndCaptionWrapperCss}">
+	<div class="image-and-caption-wrapper {imageAndCaptionWrapperCss}" transition:scale>
 		<JDGImage
 			{imageAttributes}
 			maxHeight="auto"
