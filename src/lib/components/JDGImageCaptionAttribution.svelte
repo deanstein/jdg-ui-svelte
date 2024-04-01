@@ -8,18 +8,16 @@
 	export let showAttribution = true;
 	export let truncateText = true;
 
+    const toggleTruncate = () => {
+        truncateText = !truncateText;
+    }
+
 	const attributionPrefix = 'Image Source: ';
 
 	const captionAttributionContainerCss = css`
 		background-color: ${jdgColors.headerBackground};
 		backdrop-filter: blur(${jdgSizes.blurSizeSmall});
 	`;
-
-	const captionAttributionCss = css`
-        text-overflow: ${truncateText ? 'ellipsis' : 'clip'};
-        white-space: ${truncateText ? 'nowrap' : 'normal'};
-        }
-    `;
 
 	const captionCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
@@ -48,23 +46,36 @@
 			font-size: 9px;
 		}
 	`;
+
+    // dynamic - updated whenever the container is clicked
+    let captionAttributionDynamicCss = css`
+        }
+    `;
+
+    $: {
+        captionAttributionDynamicCss = css`
+        text-overflow: ${truncateText ? 'ellipsis' : 'clip'};
+        white-space: ${truncateText ? 'nowrap' : 'normal'};
+        }
+    `;
+    }
 </script>
 
-<div class="caption-attribution-container {captionAttributionContainerCss}">
+<div class="jdg-caption-attribution-container {captionAttributionContainerCss}" on:click={toggleTruncate} on:keypress={() => {}} role="button" tabindex="0">
 	{#if showCaption && imageAttributes.imgCaption}
-		<div class="caption-attribution {captionAttributionCss} {captionCss}">
+		<div class="caption-attribution {captionAttributionDynamicCss} {captionCss}">
 			{imageAttributes.imgCaption}
 		</div>
 	{/if}
 	{#if showAttribution && imageAttributes.imgAttribution}
-		<div class="caption-attribution {captionAttributionCss} {attributionCss}">
+		<div class="caption-attribution {captionAttributionDynamicCss} {attributionCss}">
 			{attributionPrefix + imageAttributes.imgAttribution}
 		</div>
 	{/if}
 </div>
 
 <style>
-	.caption-attribution-container {
+	.jdg-caption-attribution-container {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
