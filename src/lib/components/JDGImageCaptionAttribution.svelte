@@ -2,6 +2,7 @@
 	import { css } from '@emotion/css';
 
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-styling-constants.js';
+	import { setAlphaInRgbaString } from '$lib/jdg-graphics-factory.js';
 
 	export let imageAttributes;
 	export let showCaption = true;
@@ -15,7 +16,7 @@
 	const attributionPrefix = 'Image Source: ';
 
 	const captionAttributionContainerCss = css`
-		background-color: ${jdgColors.headerBackground};
+		background-color: ${setAlphaInRgbaString(jdgColors.headerBackground, 1.0)};
 		backdrop-filter: blur(${jdgSizes.blurSizeSmall});
 	`;
 

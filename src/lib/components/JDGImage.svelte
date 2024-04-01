@@ -190,6 +190,7 @@
 	<!-- only show blurred image behind if blurUnfilledSpace is true -->
 	{#if showBlurInUnfilledSpace && !fillContainer}
 		<div class="image-blur {imageBlurCss}"></div>
+		<div class="image-blur-background"></div>
 	{/if}
 	<!-- caption and attribution -->
 	{#if showCaption || showAttribution}
@@ -227,6 +228,16 @@
 		background-size: cover;
 		background-position: center;
 		opacity: 0.5;
+	}
+
+	.image-blur-background {
+		background-color: white;
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: -2;
+		width: 100%;
+		height: 100%;
 	}
 
 	.caption-attribution-wrapper {
