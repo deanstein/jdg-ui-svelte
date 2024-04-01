@@ -80,33 +80,10 @@
 		}
 	};
 
-	const getPreferredObjectFit = (imageAspectRatio, containerAspectRatio) => {
-		if (imageRef && containerRef) {
-			// if we're cropping, fit is always cover
-			if (fillContainer) {
-				return 'cover';
-			}
-			// else, need to determine fit based on aspect ratios
-			switch (true) {
-				// image is wider than container
-				case imageAspectRatio > containerAspectRatio:
-					return 'contain';
-				// image is taller than container
-				case imageAspectRatio < containerAspectRatio:
-					return 'contain';
-				default:
-					return 'cover';
-			}
-		}
-	};
-
 	const setImageSizeAndFit = (imageAspectRatio, containerAspectRatio) => {
 		imageContainerCssDynamic = css`
 			height: ${getPreferredContainerHeight(imageAspectRatio, containerAspectRatio)};
 			width: ${showBlurInUnfilledSpace ? '100%' : maxWidth ?? 'auto'};
-		`;
-		imageCssDynamic = css`
-			object-fit: ${getPreferredObjectFit(imageAspectRatio, containerAspectRatio)};
 		`;
 	};
 
@@ -116,6 +93,7 @@
 	};
 
 	const imageCssStatic = css`
+		object-fit: ${fillContainer ? 'cover' : 'contain'};
 		/* if max height is not specified, use all available space below the header */
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			max-height: ${maxHeight === 'auto' ? `calc(100vh - ${jdgSizes.headerHeightSm})` : ''};
@@ -146,9 +124,6 @@
 	let imageContainerCssDynamic = css`
 		height: ${maxHeight};
 		width: ${showBlurInUnfilledSpace ? '100%' : maxWidth ?? 'auto'};
-	`;
-	let imageCssDynamic = css`
-		object-fit: cover;
 	`;
 
 	// set dynamically by isHovering and showHoverEffect
@@ -187,7 +162,7 @@
 >
 	<img
 		bind:this={imageRef}
-		class={`image ${imageCssDynamic} ${imageCssStatic} ${imageAnimationCss}`}
+		class={`image ${imageCssStatic} ${imageAnimationCss}`}
 		src={imageAttributes.imgSrc}
 		alt={imageAttributes.imgAlt}
 	/>
