@@ -8,9 +8,9 @@
 	export let showAttribution = true;
 	export let truncateText = true;
 
-    const toggleTruncate = () => {
-        truncateText = !truncateText;
-    }
+	const toggleTruncate = () => {
+		truncateText = !truncateText;
+	};
 
 	const attributionPrefix = 'Image Source: ';
 
@@ -47,21 +47,27 @@
 		}
 	`;
 
-    // dynamic - updated whenever the container is clicked
-    let captionAttributionDynamicCss = css`
+	// dynamic - updated whenever the container is clicked
+	let captionAttributionDynamicCss = css`
         }
     `;
 
-    $: {
-        captionAttributionDynamicCss = css`
+	$: {
+		captionAttributionDynamicCss = css`
         text-overflow: ${truncateText ? 'ellipsis' : 'clip'};
         white-space: ${truncateText ? 'nowrap' : 'normal'};
         }
     `;
-    }
+	}
 </script>
 
-<div class="jdg-caption-attribution-container {captionAttributionContainerCss}" on:click={toggleTruncate} on:keypress={() => {}} role="button" tabindex="0">
+<div
+	class="jdg-caption-attribution-container {captionAttributionContainerCss}"
+	on:click={toggleTruncate}
+	on:keypress={() => {}}
+	role="button"
+	tabindex="0"
+>
 	{#if showCaption && imageAttributes.imgCaption}
 		<div class="caption-attribution {captionAttributionDynamicCss} {captionCss}">
 			{imageAttributes.imgCaption}
