@@ -26,13 +26,6 @@
 		secondaryText="to Cinderella City Mall"
 	/>
 	<JDGContentBoxFloating>
-		<JDGFullWidthContainer>
-			<JDGImageFullWidth
-				imageAttributes={imageAttributesCollection.cc_1}
-				primaryText="STEP BACK IN TIME"
-				secondaryText="to Cinderella City Mall"
-			/>
-		</JDGFullWidthContainer>
 		<JDGBodyCopy>
 			The <strong>Cinderella City Project</strong> is an examination of a unique mid-century shopping
 			destination, developed by its creator as a "city under a roof", which became both a fairtyale and

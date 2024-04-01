@@ -4,7 +4,7 @@
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
 
-	import { JDGAccentText, JDGImage } from '$lib/index.js';
+	import { JDGAccentText, JDGFullWidthContainer, JDGImage } from '$lib/index.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes);
 	export let maxHeight = '80vh';
@@ -22,7 +22,7 @@
 	`;
 </script>
 
-<div class="jdg-full-width-image-container">
+<JDGFullWidthContainer>
 	<JDGImage {imageAttributes} {maxHeight} />
 	{#if showOverlay || primaryText || secondaryText}
 		<div class="image-overlay {imageOverlayCss}">
@@ -38,15 +38,9 @@
 			{/if}
 		</div>
 	{/if}
-</div>
+</JDGFullWidthContainer>
 
 <style>
-	.jdg-full-width-image-container {
-		position: relative;
-		width: -webkit-fill-available;
-		width: -moz-available;
-	}
-
 	.image-overlay {
 		position: absolute;
 		top: 0;
