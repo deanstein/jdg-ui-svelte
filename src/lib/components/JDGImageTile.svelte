@@ -8,7 +8,7 @@
 	import jdgImageAttributes from '../schemas/jdg-image-attributes.js';
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGStripesHorizontal } from '../index.js';
-	import { verticalSlide } from '$lib/jdg-graphics-factory.js';
+	import { setAlphaInRgbaString, verticalSlide } from '$lib/jdg-graphics-factory.js';
 	import { jdgColors, jdgSizes, jdgDurations, jdgBreakpoints } from '../jdg-styling-constants.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object to hold all details
@@ -137,7 +137,12 @@
 	</a>
 	{#if (showCaption || showAttribution) && (fillContainer || showBlurInUnfilledSpace)}
 		<div class="image-caption-attribution-wrapper">
-			<JDGImageCaptionAttribution {imageAttributes} {showCaption} {showAttribution} />
+			<JDGImageCaptionAttribution
+				{imageAttributes}
+				{showCaption}
+				{showAttribution}
+				backgroundColorRgba={setAlphaInRgbaString(jdgColors.headerBackground, 1.0)}
+			/>
 		</div>
 	{/if}
 </div>

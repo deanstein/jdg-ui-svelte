@@ -2,12 +2,12 @@
 	import { css } from '@emotion/css';
 
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-styling-constants.js';
-	import { setAlphaInRgbaString } from '$lib/jdg-graphics-factory.js';
 
 	export let imageAttributes;
 	export let showCaption = true;
 	export let showAttribution = true;
 	export let truncateText = true;
+	export let backgroundColorRgba = jdgColors.headerBackground;
 
 	const toggleTruncate = () => {
 		truncateText = !truncateText;
@@ -16,7 +16,7 @@
 	const attributionPrefix = 'Image Source: ';
 
 	const captionAttributionContainerCss = css`
-		background-color: ${setAlphaInRgbaString(jdgColors.headerBackground, 1.0)};
+		background-color: ${backgroundColorRgba};
 		backdrop-filter: blur(${jdgSizes.blurSizeSmall});
 	`;
 

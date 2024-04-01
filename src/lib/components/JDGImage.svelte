@@ -5,7 +5,9 @@
 
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 	import uiState from '$lib/states/ui-state.js';
+
 	import { convertVhToPixels, instantiateObject } from '$lib/jdg-utils.js';
+
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-styling-constants.js';
 	import { JDGImageCaptionAttribution } from '$lib/index.js';
 
@@ -242,5 +244,6 @@
 
 	.caption-attribution-wrapper {
 		position: absolute;
+		width: 100%;
 	}
 </style>

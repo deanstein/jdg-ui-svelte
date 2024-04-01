@@ -2,8 +2,11 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { JDGImage, JDGImageCaptionAttribution, JDGImageTile } from '$lib/index.js';
 	import { getAccentColors } from '$lib/jdg-state-management.js';
+
+	import { JDGImage, JDGImageCaptionAttribution, JDGImageTile } from '$lib/index.js';
+	import { setAlphaInRgbaString } from '$lib/jdg-graphics-factory.js';
+	import { jdgColors } from '$lib/jdg-styling-constants.js';
 
 	export let imageAttributeObjects = []; // all images shown in thumbnail collection
 	export let maxHeight = '50vh';
@@ -81,7 +84,10 @@
 			</div>
 		{/if}
 	</div>
-	<JDGImageCaptionAttribution imageAttributes={activeImage} />
+	<JDGImageCaptionAttribution
+		imageAttributes={activeImage}
+		backgroundColorRgba={setAlphaInRgbaString(jdgColors.headerBackground, 1.0)}
+	/>
 	<div class="carousel-thumbnail-container">
 		{#each imageAttributeObjects as imageAttributesObject, i}
 			<div
