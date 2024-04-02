@@ -62,7 +62,7 @@
 	};
 
 	const getPreferredContainerHeight = (imageAspectRatio, containerAspectRatio) => {
-		if (containerRef && imageRef && maxHeight !== 'auto') {
+		if (containerRef && imageRef || maxHeight !== 'auto') {
 			// if we're cropping to fill container,
 			// or showing the blur behind, height is always the max height
 			if (
@@ -84,6 +84,7 @@
 					return maxHeight;
 			}
 		}
+		return maxHeight;
 	};
 
 	const onImageLoad = () => {
