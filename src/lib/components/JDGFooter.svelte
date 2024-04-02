@@ -2,8 +2,11 @@
 	import { onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
+	import uiState from '$lib/states/ui-state.js';
+
 	import { getBuildCode } from '../jdg-utils.js';
 	import { jdgUiRepoName } from '../jdg-persistence-management.js';
+	import { toggleDevTools } from '$lib/jdg-state-management.js';
 
 	import { jdgColors, jdgSizes } from '../jdg-styling-constants.js';
 	import { JDGStripesHorizontal } from '../index.js';
@@ -15,6 +18,7 @@
 	export let alignItems = 'left';
 	export let backgroundColorRgba = jdgColors.headerBackground;
 	export let showHorizontalStripes = false;
+	export let showDevToolsButton = false;
 
 	const divider = '|';
 
@@ -52,9 +56,9 @@
 	{#if showHorizontalStripes}
 		<JDGStripesHorizontal />
 	{/if}
-	<div class="jdg-footer-content-container {footerContentContainerCss}">
+	<div class="footer-content-container {footerContentContainerCss}">
 		<!-- copyright and versions row -->
-		<div class="jdg-footer-row">
+		<div class="footer-row">
 			<div class="jdg-footer-item">© {copyrightYear} J. Dean Goldstein</div>
 			<div>{divider}</div>
 			{#if appVersion}
@@ -85,9 +89,31 @@
 		</div>
 		<!-- disclaimer row -->
 		{#if disclaimer}
-			<div class="jdg-footer-row">
+			<div class="footer-row">
 				<div class="jdg-footer-item">
 					{disclaimer}
+				</div>
+			</div>
+		{/if}
+		{#if showDevToolsButton}
+			<div
+				class="footer-dev-tools-toggle"
+				role="button"
+				tabindex="0"
+				on:click={toggleDevTools}
+				on:keypress={() => {}}
+			>
+				{#if $uiState.showDevTools}
+					Hide Dev Tools
+				{:else}
+					Show Dev Tools
+				{/if}
+			</div>
+		{/if}
+		{#if $uiState.showDevTools}
+			<div class="dev-tools">
+				<div class="state-view">
+					{JSON.stringify($uiState)}
 				</div>
 			</div>
 		{/if}
@@ -103,15 +129,23 @@
 		box-shadow: -3px -3px 5px rgba(0, 0, 0, 0.3);
 	}
 
-	.jdg-footer-content-container {
+	.footer-content-container {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		gap: 1.25vh;
 	}
 
-	.jdg-footer-row {
+	.footer-row {
 		display: flex;
 		gap: 7px;
+	}
+
+	.footer-dev-tools-toggle {
+		width: 100%;
+	}
+
+	.state-view {
+		word-wrap: break-word;
 	}
 </style>

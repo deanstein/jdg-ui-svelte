@@ -52,7 +52,12 @@
 	<JDGBackground />
 	<!-- all content goes in this slot -->
 	<slot />
-	<JDGFooter {appVersion} disclaimer={disclaimerMessage} showHorizontalStripes={true} />
+	<JDGFooter
+		{appVersion}
+		disclaimer={disclaimerMessage}
+		showHorizontalStripes={true}
+		showDevToolsButton={true}
+	/>
 	<!-- show the image detail overlay when appropriate -->
 	{#if $uiState.showImageDetailOverlay}
 		<JDGImageDetailOverlay imageAttributes={$uiState.imageDetailAttributes} />
