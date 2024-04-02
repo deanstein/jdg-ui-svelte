@@ -33,8 +33,8 @@
 	// so children don't have to add event handlers
 	const onPageResize = () => {
 		setWindowWidth(window.innerWidth);
-		setClientWidth(appContainerRef.clientWidth);
-		setIsMobileBreakpoint(appContainerRef.clientWidth <= jdgBreakpoints.width[0]);
+		setClientWidth(appContainerRef?.clientWidth);
+		setIsMobileBreakpoint(appContainerRef?.clientWidth <= jdgBreakpoints.width[0]);
 	};
 
 	// global styles, but using emotion css
