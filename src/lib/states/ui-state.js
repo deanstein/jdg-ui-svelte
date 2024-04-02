@@ -9,8 +9,10 @@ const uiState = {
 	imageDetailAttributes: {},
 	showImageDetailOverlay: false,
 	showNavSidebar: false,
+	showDevTools: false,
 	windowWidth: 0, // full window width, including scrollbar
-	clientWidth: 0 // window minus scrollbar
+	clientWidth: 0, // window minus scrollbar
+	isMobileBreakpoint: false
 };
 
 export default writable(uiState);

@@ -31,6 +31,13 @@ export const setClientWidth = (clientWidth) => {
 	});
 };
 
+export const setIsMobileBreakpoint = (isMobileBreakpoint) => {
+	uiState.update((currentValue) => {
+		currentValue.isMobileBreakpoint = isMobileBreakpoint;
+		return currentValue;
+	});
+};
+
 export const setShowImageDetailModal = (showImageDetailModal) => {
 	uiState.update((currentValue) => {
 		currentValue.showImageDetailOverlay = showImageDetailModal;
@@ -58,6 +65,13 @@ export const getIsNavSideBarOpen = () => {
 export const setNavSidebarOpen = (sidebarOpenState) => {
 	uiState.update((currentValue) => {
 		currentValue.showNavSidebar = sidebarOpenState;
+		return currentValue;
+	});
+};
+
+export const toggleDevTools = () => {
+	uiState.update((currentValue) => {
+		currentValue.showDevTools = !currentValue.showDevTools;
 		return currentValue;
 	});
 };

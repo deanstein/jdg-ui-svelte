@@ -2,10 +2,15 @@
 	import { onMount, tick } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { setAccentColors, setClientWidth, setWindowWidth } from '$lib/jdg-state-management.js';
+	import {
+		setAccentColors,
+		setClientWidth,
+		setIsMobileBreakpoint,
+		setWindowWidth
+	} from '$lib/jdg-state-management.js';
 
 	import { JDGLoadingOverlay } from '$lib/index.js';
-	import { jdgColors } from '$lib/jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgColors } from '$lib/jdg-styling-constants.js';
 	import { convertHexToRGBA } from '$lib/jdg-utils.js';
 
 	export let fontFamily = 'REM';
@@ -29,6 +34,7 @@
 	const onPageResize = () => {
 		setWindowWidth(window.innerWidth);
 		setClientWidth(appContainerRef.clientWidth);
+		setIsMobileBreakpoint(appContainerRef.clientWidth <= jdgBreakpoints.width[0]);
 	};
 
 	// global styles, but using emotion css

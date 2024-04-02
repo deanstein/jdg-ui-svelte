@@ -16,6 +16,7 @@
 	export let maxWidth = undefined; // if not defined, takes available space
 	export let alternateFitRef = undefined; // optionally use another element for image fit calcs
 	export let fillContainer = true; // if true, image may be cropped to fill its container in both directions
+	export let compactModeOnMobile = false; // if true, ignores fillContainer on smallest breakpoint for no cropping and fitted container (less height)
 	export let showBlurInUnfilledSpace = false; // if true, shows the image blurred in the unfilled space - only applies if fillContainer is false
 	export let isHovering = false; // parent can let image know of hover
 	export let showHoverEffect = false; // zoom image slightly on hover
@@ -62,8 +63,13 @@
 
 	const getPreferredContainerHeight = (imageAspectRatio, containerAspectRatio) => {
 		if (containerRef && imageRef && maxHeight !== 'auto') {
-			// if we're cropping, or showing the blur behind, height is always the max height
-			if (fillContainer || showBlurInUnfilledSpace) {
+			// if we're cropping to fill container,
+			// or showing the blur behind, height is always the max height
+			if (
+				fillContainer ||
+				showBlurInUnfilledSpace ||
+				(compactModeOnMobile && $uiState.isMobileBreakpoint)
+			) {
 				return maxHeight;
 			}
 			// else, need to determine crop based on aspect ratios
@@ -80,20 +86,15 @@
 		}
 	};
 
-	const setImageSizeAndFit = (imageAspectRatio, containerAspectRatio) => {
-		imageContainerCssDynamic = css`
-			height: ${getPreferredContainerHeight(imageAspectRatio, containerAspectRatio)};
-			width: ${showBlurInUnfilledSpace ? '100%' : maxWidth ?? 'auto'};
-		`;
-	};
-
 	const onImageLoad = () => {
 		// ensure that the image aspect ratio is captured once the image loads
 		getAspectRatios();
 	};
 
 	const imageCssStatic = css`
-		object-fit: ${fillContainer ? 'cover' : 'contain'};
+		object-fit: ${fillContainer || (compactModeOnMobile && $uiState.isMobileBreakpoint)
+			? 'cover'
+			: 'contain'};
 		/* if max height is not specified, use all available space below the header */
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			max-height: ${maxHeight === 'auto' ? `calc(100vh - ${jdgSizes.headerHeightSm})` : ''};
@@ -122,7 +123,9 @@
 
 	// may be updated dynamically by setImageSizeAndFit
 	let imageContainerCssDynamic = css`
-		height: ${maxHeight};
+		height: ${$uiState.isMobileBreakpoint && compactModeOnMobile
+			? 'auto'
+			: getPreferredContainerHeight(imageAspectRatio, containerAspectRatio)};
 		width: ${showBlurInUnfilledSpace ? '100%' : maxWidth ?? 'auto'};
 	`;
 
@@ -142,12 +145,16 @@
 	});
 
 	$: {
-		if (!fillContainer) {
-			// ensure the aspect ratios are updated when the window width changes in state
-			$uiState.windowWidth;
-			getAspectRatios();
-			setImageSizeAndFit(imageAspectRatio, containerAspectRatio);
-		}
+		// ensure the aspect ratios are updated when the window width changes in state
+		$uiState.windowWidth;
+		getAspectRatios();
+		imageContainerCssDynamic = css`
+			height: ${$uiState.isMobileBreakpoint && compactModeOnMobile
+				? 'auto'
+				: getPreferredContainerHeight(imageAspectRatio, containerAspectRatio)};
+			width: ${showBlurInUnfilledSpace ? '100%' : maxWidth ?? 'auto'};
+		`;
+
 		captionAttributionWrapperCssDynamic = css`
 			bottom: ${isHovering && showHoverEffect ? '9px' : '0px'};
 			transition: bottom ${isHovering && showHoverEffect ? '400ms' : '200ms'};

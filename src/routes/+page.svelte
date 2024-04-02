@@ -36,16 +36,19 @@
 				imageAttributes={imageAttributesCollection.aerial_60s70s_1}
 				showCaption={true}
 				showAttribution={true}
+				compactModeOnMobile={true}
 			/>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.cc_1}
 				showCaption={true}
 				showAttribution={true}
+				compactModeOnMobile={true}
 			/>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.architecture_1}
 				showCaption={true}
 				showAttribution={true}
+				compactModeOnMobile={true}
 			/>
 		</JDGGridLayout>
 		<JDGBodyCopy>
