@@ -51,6 +51,14 @@
 				compactModeOnMobile={true}
 			/>
 		</JDGGridLayout>
+		<JDGFullWidthContainer>
+			<JDGAccentBlock>
+				<JDGAccentText
+					primaryText={`Cinderella City's short but explosive life provides lessons \nin retail design, land use, and placemaking.`}
+					secondaryText="Some attribution text to test a really long, run-on sentence. Or even a bit of a subtitle!"
+				></JDGAccentText>
+			</JDGAccentBlock>
+		</JDGFullWidthContainer>
 		<JDGBodyCopy>
 			From concept to details, Cinderella City was unconventional and unexpected. Originally planned
 			for another location, it settled on an unwitting community, replacing a beloved park and
