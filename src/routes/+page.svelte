@@ -14,7 +14,8 @@
 		JDGImageCarousel,
 		JDGImageFullWidth,
 		JDGImageTile,
-		JDGGridLayout
+		JDGGridLayout,
+		JDGImageHybridGridCarousel
 	} from '$lib/index.js';
 	import imageAttributesCollection from './image-attributes-collection.js';
 </script>
@@ -31,26 +32,13 @@
 			destination, developed by its creator as a "city under a roof", which became both a fairtyale and
 			a nightmare for the actual city of Englewood, Colorado.
 		</JDGBodyCopy>
-		<JDGGridLayout>
-			<JDGImageTile
-				imageAttributes={imageAttributesCollection.aerial_60s70s_1}
-				showCaption={true}
-				showAttribution={true}
-				compactModeOnMobile={true}
-			/>
-			<JDGImageTile
-				imageAttributes={imageAttributesCollection.cc_1}
-				showCaption={true}
-				showAttribution={true}
-				compactModeOnMobile={true}
-			/>
-			<JDGImageTile
-				imageAttributes={imageAttributesCollection.architecture_1}
-				showCaption={true}
-				showAttribution={true}
-				compactModeOnMobile={true}
-			/>
-		</JDGGridLayout>
+		<JDGImageHybridGridCarousel
+			imageAttributeObjects={[
+				imageAttributesCollection.aerial_60s70s_1,
+				imageAttributesCollection.cc_1,
+				imageAttributesCollection.architecture_1
+			]}
+		/>
 		<JDGFullWidthContainer>
 			<JDGAccentBlock>
 				<JDGAccentText

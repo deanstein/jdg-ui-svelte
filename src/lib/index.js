@@ -51,6 +51,9 @@ export { JDGImageDetailOverlay };
 import JDGImageFullWidth from './components/JDGImageFullWidth.svelte';
 export { JDGImageFullWidth };
 
+import JDGImageHybridGridCarousel from './components/JDGImageHybridGridCarousel.svelte';
+export { JDGImageHybridGridCarousel };
+
 import JDGImageTile from './components/JDGImageTile.svelte';
 export { JDGImageTile };
 
