@@ -135,7 +135,7 @@ export const jdgSizes = {
 	get contentBoxPaddingSm() {
 		return this.nContentBoxPaddingSm.toString() + this.contentBoxPaddingUnit;
 	},
-	nContentBoxPaddingMd: 1.5,
+	nContentBoxPaddingMd: 1.75,
 	get contentBoxPaddingMd() {
 		return this.nContentBoxPaddingMd.toString() + this.contentBoxPaddingUnit;
 	},

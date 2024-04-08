@@ -35,17 +35,20 @@
 
 	const thumbnailContainerCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			padding: 0.75rem ${jdgSizes.bodyCopyVerticalPaddingSm} 0.75rem ${jdgSizes.bodyCopyVerticalPaddingSm};
+			padding: 0.75rem ${jdgSizes.bodyCopyVerticalPaddingSm} 0.75rem
+				${jdgSizes.bodyCopyVerticalPaddingSm};
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-				padding: 0.75rem ${jdgSizes.bodyCopyVerticalPaddingMd} 0.75rem ${jdgSizes.bodyCopyVerticalPaddingMd};
+			padding: 0.75rem ${jdgSizes.bodyCopyVerticalPaddingMd} 0.75rem
+				${jdgSizes.bodyCopyVerticalPaddingMd};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			padding: 0.75rem ${jdgSizes.bodyCopyVerticalPaddingLg} 0.75rem ${jdgSizes.bodyCopyVerticalPaddingLg};
+			padding: 0.75rem ${jdgSizes.bodyCopyVerticalPaddingLg} 0.75rem
+				${jdgSizes.bodyCopyVerticalPaddingLg};
 		}
-		`
+	`;
 
 	onMount(() => {
 		if (autoAdvance) {
