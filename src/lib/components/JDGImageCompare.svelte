@@ -8,13 +8,36 @@
 
 	let imageCompareContainerRef;
 	let isUserInteracting = false;
+	let animateSlider = true; // for screen recording only
+
 	let sliderPositionStore = writable(50);
+	let direction = 1;
 	let animationId;
 
+	function easeInOutQuad(t) {
+		return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+	}
+
+	let time = 0;
+	let speed = 0.01;
+
 	sliderPositionStore.subscribe((value) => {
-		if (!isUserInteracting) {
+		if (!isUserInteracting && animateSlider) {
 			animationId = requestAnimationFrame(() => {
-				sliderPositionStore.set((value + 1) % 100);
+				// Calculate the eased value based on the time
+				let easedValue = easeInOutQuad(time) * 100;
+
+				// Update the slider position based on the eased value
+				sliderPositionStore.set(easedValue);
+
+				// Reverse the direction and adjust the time when reaching either end
+				if (easedValue >= 100 || easedValue <= 0) {
+					direction *= -1;
+					time = direction > 0 ? 0 : 1; // Adjust the time based on the direction
+				}
+
+				// Increment the time based on the direction and speed
+				time += speed * direction;
 			});
 		}
 	});
@@ -24,14 +47,15 @@
 		cancelAnimationFrame(animationId);
 	}
 
+    
+	function handleMouseLeave() {
+		isUserInteracting = false;
+	}
+
 	function handleMouseMove(event) {
 		const rect = imageCompareContainerRef.getBoundingClientRect();
 		const x = event.clientX - rect.left; //x position within the element.
 		sliderPositionStore.set((x / rect.width) * 100);
-	}
-
-	function handleMouseLeave() {
-		isUserInteracting = false;
 	}
 </script>
 
@@ -48,21 +72,13 @@
 	tabindex="0"
 >
 	<div class="compare-image" style="width: 100%;">
-		<JDGImage
-			imageAttributes={imageAttributes2}
-			alternateFitRef={imageCompareContainerRef}
-			maxHeight="500px"
-		/>
+		<JDGImage imageAttributes={imageAttributes2} maxHeight="500px" />
 	</div>
 	<div
 		class="compare-image"
 		style="clip-path: inset(0 {100 - $sliderPositionStore}% 0 0); width: 100%;"
 	>
-		<JDGImage
-			imageAttributes={imageAttributes1}
-			alternateFitRef={imageCompareContainerRef}
-			maxHeight="500px"
-		/>
+		<JDGImage imageAttributes={imageAttributes1} maxHeight="500px" />
 	</div>
 	<div class="slider" style="left: {$sliderPositionStore}%;"></div>
 </div>
