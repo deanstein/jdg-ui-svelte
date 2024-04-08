@@ -23,6 +23,18 @@ const imageAttributesCollection = {
 		imgCaption: 'The Blue Mall as seen in 1968.',
 		imgAttribution: 'Englewood Public Library'
 	}),
+	ccp_blue_mall_60s70s_1: instantiateObject(jdgImageAttributes, {
+		imgSrc: './ccp/blue-mall-60s70s-1.png',
+		imgAlt: `Cinderella City's central Blue Mall, simulated in the 1968-1978 era.`,
+		imgCaption: `Cinderella City's central Blue Mall, simulated in the 1968-1978 era.`,
+		imgAttribution: 'Englewood Public Library (AI recolored)'
+	}),
+	ccp_blue_mall_80s90s_1: instantiateObject(jdgImageAttributes, {
+		imgSrc: './ccp/blue-mall-80s90s-1.png',
+		imgAlt: `Cinderella City's central Blue Mall, simulated in the 1987-1997 era.`,
+		imgCaption: `Cinderella City's central Blue Mall, simulated in the 1987-1997 era.`,
+		imgAttribution: 'Englewood Public Library (AI recolored)'
+	}),
 	lakeside_1: instantiateObject(jdgImageAttributes, {
 		imgSrc: './history/lakeside-1.jpg',
 		imgAlt: 'Lakeside Mall in 1956.',

@@ -1,5 +1,4 @@
 <script>
-	import { setImageDetailAttributes, setShowImageDetailModal } from '$lib/jdg-state-management.js';
 	import { openUrl } from '$lib/jdg-ui-management.js';
 
 	import uiState from '$lib/states/ui-state.js';
@@ -12,10 +11,11 @@
 		JDGContentContainer,
 		JDGFullWidthContainer,
 		JDGImageCarousel,
+		JDGImageCompare,
 		JDGImageFullWidth,
+		JDGImageHybridGridCarousel,
 		JDGImageTile,
-		JDGGridLayout,
-		JDGImageHybridGridCarousel
+		JDGGridLayout
 	} from '$lib/index.js';
 	import imageAttributesCollection from './image-attributes-collection.js';
 </script>
@@ -61,6 +61,7 @@
 			and an accurate digital 3D re-creation called the
 			<a href="./simulation">Cinderella City Simulation.</a>
 		</JDGBodyCopy>
+		<JDGImageCompare />
 		<JDGBodyCopy>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.lakeside_1}

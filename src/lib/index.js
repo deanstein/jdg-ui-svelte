@@ -45,6 +45,9 @@ export { JDGImageCaptionAttribution };
 import JDGImageCarousel from './components/JDGImageCarousel.svelte';
 export { JDGImageCarousel };
 
+import JDGImageCompare from './components/JDGImageCompare.svelte';
+export { JDGImageCompare };
+
 import JDGImageDetailOverlay from './components/JDGImageDetailOverlay.svelte';
 export { JDGImageDetailOverlay };
 
