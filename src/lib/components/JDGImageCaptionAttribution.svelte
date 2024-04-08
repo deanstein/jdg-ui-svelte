@@ -18,17 +18,20 @@
 
 	const captionAttributionContainerCss = css`
 		background-color: ${backgroundColorRgba};
-		backdrop-filter: blur(${jdgSizes.blurSizeSmall});
+		backdrop-filter: ${backgroundColorRgba === 'rgba(0, 0, 0, 0)' ? 'blur(${jdgSizes.blurSizeSmall})' : ''};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			padding: 3px ${ matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingSm : '8px'} 3px ${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingSm : '8px'}; 
+			padding: 3px ${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingSm : '8px'} 3px
+				${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingSm : '8px'};
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-				padding: 3px ${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingMd : '8px'} 3px ${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingMd : '8px'};
+			padding: 3px ${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingMd : '8px'} 3px
+				${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingMd : '8px'};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			padding: 3px ${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingLg : '8px'} 3px ${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingLg : '8px'};
+			padding: 3px ${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingLg : '8px'} 3px
+				${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingLg : '8px'};
 		}
 	`;
 

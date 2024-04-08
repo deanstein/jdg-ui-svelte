@@ -103,7 +103,7 @@
 	</div>
 	<JDGImageCaptionAttribution
 		imageAttributes={activeImage}
-		backgroundColorRgba={setAlphaInRgbaString(jdgColors.headerBackground, 1.0)}
+		backgroundColorRgba='rgba(0, 0, 0, 0)'
 		matchBodyCopyPadding={true}
 	/>
 	<div class="carousel-thumbnail-container {thumbnailContainerCss}">
