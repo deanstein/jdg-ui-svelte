@@ -9,15 +9,15 @@
 	const accentBlockCss = css`
 		background-color: ${backgroundColor};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			padding: 25px ${jdgSizes.bodyCopyVerticalPaddingSm} 25px ${jdgSizes.bodyCopyVerticalPaddingSm};
+			padding: 30px ${jdgSizes.bodyCopyVerticalPaddingSm} 30px ${jdgSizes.bodyCopyVerticalPaddingSm};
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-			padding: 25px ${jdgSizes.bodyCopyVerticalPaddingMd} 25px ${jdgSizes.bodyCopyVerticalPaddingMd};
+			padding: 40px ${jdgSizes.bodyCopyVerticalPaddingMd} 40px ${jdgSizes.bodyCopyVerticalPaddingMd};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			padding: 25px ${jdgSizes.bodyCopyVerticalPaddingLg} 25px ${jdgSizes.bodyCopyVerticalPaddingLg};
+			padding: 50px ${jdgSizes.bodyCopyVerticalPaddingLg} 50px ${jdgSizes.bodyCopyVerticalPaddingLg};
 		}
 	`;
 
