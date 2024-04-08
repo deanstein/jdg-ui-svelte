@@ -11,11 +11,9 @@
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-			display: flex;
-			flex-wrap: wrap;
-			justify-content: center;
-			gap: ${(jdgSizes.nContentBoxPaddingMd / 2).toString() +
-			jdgSizes.contentBoxFloatingMarginUnit};
+			display: grid;
+			gap: ${jdgSizes.nContentBoxPaddingMd.toString() + jdgSizes.contentBoxFloatingMarginUnit};
+			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 			display: grid;
