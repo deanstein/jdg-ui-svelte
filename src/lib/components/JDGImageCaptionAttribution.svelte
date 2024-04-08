@@ -7,6 +7,7 @@
 	export let showCaption = true;
 	export let showAttribution = true;
 	export let truncateText = true;
+	export let matchBodyCopyPadding = false; // if true, uses same padding as body copy (for full-width use only)
 	export let backgroundColorRgba = jdgColors.headerBackground;
 
 	const toggleTruncate = () => {
@@ -18,6 +19,17 @@
 	const captionAttributionContainerCss = css`
 		background-color: ${backgroundColorRgba};
 		backdrop-filter: blur(${jdgSizes.blurSizeSmall});
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			padding: 3px ${ matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingSm : '8px'} 3px ${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingSm : '8px'}; 
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+				padding: 3px ${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingMd : '8px'} 3px ${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingMd : '8px'};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			padding: 3px ${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingLg : '8px'} 3px ${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingLg : '8px'};
+		}
 	`;
 
 	const captionCss = css`
@@ -89,7 +101,6 @@
 		justify-content: center;
 		text-align: center;
 		gap: 0.1rem;
-		padding: 3px 8px 3px 8px;
 		width: 100%;
 		box-sizing: border-box;
 	}
