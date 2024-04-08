@@ -18,8 +18,8 @@
 
 	const captionAttributionContainerCss = css`
 		background-color: ${backgroundColorRgba};
-		backdrop-filter: ${backgroundColorRgba === 'rgba(0, 0, 0, 0)'
-			? 'blur(${jdgSizes.blurSizeSmall})'
+		backdrop-filter: ${backgroundColorRgba !== 'rgba(0, 0, 0, 0)'
+			? `blur(${jdgSizes.blurSizeSmall})`
 			: ''};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			padding: 3px ${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingSm : '8px'} 3px
