@@ -36,6 +36,12 @@ const imageAttributesCollection = {
 		imgCaption:
 			'Rose Mall as it appeared before grand opening in 1968. And a bunch of other words to test long captions!',
 		imgAttribution: 'Denver Public Library'
+	}),
+	rose_mall_60s70s_2: instantiateObject(jdgImageAttributes, {
+		imgSrc: './history/rose-mall-60s70s-2.jpg',
+		imgAlt: 'Offices above Rose Mall.',
+		imgCaption: 'Offices above Rose Mall.',
+		imgAttribution: 'Denver Public Library'
 	})
 };
 

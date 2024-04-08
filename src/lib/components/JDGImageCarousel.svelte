@@ -6,7 +6,7 @@
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGImageTile } from '$lib/index.js';
 	import { setAlphaInRgbaString } from '$lib/jdg-graphics-factory.js';
-	import { jdgColors } from '$lib/jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-styling-constants.js';
 
 	export let imageAttributeObjects = []; // all images shown in thumbnail collection
 	export let maxHeight = '50vh';
@@ -32,6 +32,20 @@
 	const crossfadeWrapperCss = css`
 		height: ${maxHeight};
 	`;
+
+	const thumbnailContainerCss = css`
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			padding: 0.75rem ${jdgSizes.bodyCopyVerticalPaddingSm} 0.75rem ${jdgSizes.bodyCopyVerticalPaddingSm};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+				padding: 0.75rem ${jdgSizes.bodyCopyVerticalPaddingMd} 0.75rem ${jdgSizes.bodyCopyVerticalPaddingMd};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			padding: 0.75rem ${jdgSizes.bodyCopyVerticalPaddingLg} 0.75rem ${jdgSizes.bodyCopyVerticalPaddingLg};
+		}
+		`
 
 	onMount(() => {
 		if (autoAdvance) {
@@ -88,7 +102,7 @@
 		imageAttributes={activeImage}
 		backgroundColorRgba={setAlphaInRgbaString(jdgColors.headerBackground, 1.0)}
 	/>
-	<div class="carousel-thumbnail-container">
+	<div class="carousel-thumbnail-container {thumbnailContainerCss}">
 		{#each imageAttributeObjects as imageAttributesObject, i}
 			<div
 				class="carousel-thumbnail-wrapper"
@@ -131,8 +145,9 @@
 
 	.carousel-thumbnail-container {
 		display: flex;
-		padding: 0.75rem;
+		flex-wrap: wrap;
 		gap: 1rem;
+		justify-content: center;
 	}
 
 	.carousel-thumbnail-wrapper {

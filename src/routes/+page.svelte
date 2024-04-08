@@ -36,7 +36,9 @@
 			imageAttributeObjects={[
 				imageAttributesCollection.aerial_60s70s_1,
 				imageAttributesCollection.cc_1,
-				imageAttributesCollection.architecture_1
+				imageAttributesCollection.architecture_1,
+				imageAttributesCollection.rose_mall_60s70s_1,
+				imageAttributesCollection.rose_mall_60s70s_2
 			]}
 		/>
 		<JDGFullWidthContainer>
