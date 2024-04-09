@@ -9,7 +9,7 @@
 
 	let imageCompareContainerRef;
 	let isUserInteracting = false;
-	let animateSlider = true; // for screen recording only
+	let animateSlider = false; // for screen recording only
 
 	let isVisible = writable(false);
 	let sliderPositionStore = writable(50);
