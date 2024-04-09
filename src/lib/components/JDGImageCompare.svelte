@@ -2,6 +2,7 @@
 	import { writable } from 'svelte/store';
 	import imageAttributesCollection from '../../routes/image-attributes-collection.js';
 	import { JDGImage } from '$lib/index.js';
+	import { onMount } from 'svelte';
 
 	export let imageAttributes1 = imageAttributesCollection.ccp_blue_mall_60s70s_1;
 	export let imageAttributes2 = imageAttributesCollection.ccp_blue_mall_80s90s_1;
@@ -10,9 +11,11 @@
 	let isUserInteracting = false;
 	let animateSlider = true; // for screen recording only
 
+	let isVisible = writable(false);
 	let sliderPositionStore = writable(50);
-	let direction = 1;
+	let direction = -1;
 	let animationId;
+	let observer;
 
 	function easeInOutQuad(t) {
 		return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
@@ -22,29 +25,32 @@
 	let speed = 0.005;
 
 	sliderPositionStore.subscribe((value) => {
-		if (!isUserInteracting && animateSlider) {
-			animationId = requestAnimationFrame(() => {
-				// Calculate the eased value based on the time
-				let easedValue = easeInOutQuad(time) * 100;
+		isVisible.subscribe((isVisibleValue) => {
+			if (!isUserInteracting && animateSlider && isVisibleValue) {
+				animationId = requestAnimationFrame(() => {
+					// Calculate the eased value based on the time
+					let easedValue = easeInOutQuad(time) * 100;
 
-				// Update the slider position based on the eased value
-				sliderPositionStore.set(easedValue);
+					// Update the slider position based on the eased value
+					sliderPositionStore.set(easedValue);
 
-				// Reverse the direction and adjust the time when reaching either end
-				if (easedValue >= 100 || easedValue <= 0) {
-					direction *= -1;
-					time = direction > 0 ? 0 : 1; // Adjust the time based on the direction
-				}
+					// Reverse the direction and adjust the time when reaching either end
+					if (easedValue >= 100 || easedValue <= 0) {
+						direction *= -1;
+						time = direction > 0 ? 0 : 1; // Adjust the time based on the direction
+					}
 
-				// Increment the time based on the direction and speed
-				time += speed * direction;
-			});
-		}
+					// Increment the time based on the direction and speed
+					time += speed * direction;
+				});
+			}
+		});
 	});
 
 	function handleMouseEnter() {
 		isUserInteracting = true;
 		cancelAnimationFrame(animationId);
+		//observer.unobserve(imageCompareContainerRef); // Stop observing when the user interacts
 	}
 
 	function handleMouseLeave() {
@@ -71,6 +77,23 @@
 	function handleTouchEnd() {
 		isUserInteracting = false;
 	}
+
+	onMount(() => {
+		observer = new IntersectionObserver(
+			([entry]) => {
+				// Check if the element is visible
+				if (entry.isIntersecting) {
+					isVisible.set(true);
+				} else {
+					// Stop the animation
+					isVisible.set(false);
+				}
+			},
+			{ threshold: 1 }
+		);
+
+		observer.observe(imageCompareContainerRef);
+	});
 </script>
 
 <div

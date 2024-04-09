@@ -5,8 +5,8 @@
 	import { getAccentColors } from '$lib/jdg-state-management.js';
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGImageTile } from '$lib/index.js';
-	import { setAlphaInRgbaString } from '$lib/jdg-graphics-factory.js';
-	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-styling-constants.js';
+
+	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-styling-constants.js';
 
 	export let imageAttributeObjects = []; // all images shown in thumbnail collection
 	export let maxHeight = '50vh';
