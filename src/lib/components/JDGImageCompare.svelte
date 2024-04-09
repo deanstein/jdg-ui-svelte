@@ -19,7 +19,7 @@
 	}
 
 	let time = 0;
-	let speed = 0.01;
+	let speed = 0.005;
 
 	sliderPositionStore.subscribe((value) => {
 		if (!isUserInteracting && animateSlider) {
