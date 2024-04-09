@@ -47,7 +47,6 @@
 		cancelAnimationFrame(animationId);
 	}
 
-    
 	function handleMouseLeave() {
 		isUserInteracting = false;
 	}
@@ -57,6 +56,21 @@
 		const x = event.clientX - rect.left; //x position within the element.
 		sliderPositionStore.set((x / rect.width) * 100);
 	}
+
+	function handleTouchMove(event) {
+		const rect = imageCompareContainerRef.getBoundingClientRect();
+		const x = event.touches[0].clientX - rect.left; //x position within the element.
+		sliderPositionStore.set((x / rect.width) * 100);
+	}
+
+	function handleTouchStart() {
+		isUserInteracting = true;
+		cancelAnimationFrame(animationId);
+	}
+
+	function handleTouchEnd() {
+		isUserInteracting = false;
+	}
 </script>
 
 <div
@@ -65,6 +79,9 @@
 	on:mouseenter={handleMouseEnter}
 	on:mousemove={handleMouseMove}
 	on:mouseleave={handleMouseLeave}
+	on:touchstart={handleTouchStart}
+	on:touchmove={handleTouchMove}
+	on:touchend={handleTouchEnd}
 	role="slider"
 	aria-valuemin="0"
 	aria-valuemax="100"
