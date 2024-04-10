@@ -65,7 +65,7 @@
 						clearInterval(intervalId);
 					}
 				},
-				{ threshold: 0.5 /* ensure carousel is 50% visible */ }
+				{ threshold: 0.5 /* ensure carousel is 50% visible before auto-advancing */ }
 			);
 
 			observer.observe(carouselRef);

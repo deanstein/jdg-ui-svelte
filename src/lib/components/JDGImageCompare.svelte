@@ -8,32 +8,20 @@
 	export let imageAttributes2 = imageAttributesCollection.ccp_blue_mall_80s90s_1;
 
 	let imageCompareContainerRef;
-	let isUserInteracting = false;
-	let animateSlider = true;
 
-	let isVisible = writable(false);
-	let sliderPositionStore = writable(50);
-	let direction = -1;
-	let animationId;
+	let animateSlider = true; // consumer can choose to animate
+	let isUserInteracting = false; // if user interacts, animation is canceled
 	let observer;
-
-	function easeInOutQuad(t) {
-		return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-	}
-
+	let isInView = writable(false); // animation only happens if compare container is in view
+	let sliderPositionStore = writable(50);
+	let animationId;
 	let time = 0;
 	let speed = 0.005;
+	let direction = -1;
 
-	isVisible.subscribe((isVisibleValue) => {
-		if (!isUserInteracting && animateSlider) {
-			if (isVisibleValue) {
-				animationId = requestAnimationFrame(animate);
-			} else {
-				cancelAnimationFrame(animationId);
-			}
-		}
-	});
-
+    /*** animation ***/
+    
+	// moves the slider from edge to edge with easing
 	const animate = () => {
 		// Calculate the eased value based on the time
 		let easedValue = easeInOutQuad(time) * 100;
@@ -52,51 +40,69 @@
 
 		// Request the next animation frame
 		animationId = requestAnimationFrame(animate);
-	}
+	};
+	const easeInOutQuad = (t) => {
+		return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+	};
+
+    /*** events ***/
 
 	const handleMouseEnter = () => {
 		isUserInteracting = true;
 		cancelAnimationFrame(animationId);
-		//observer.unobserve(imageCompareContainerRef); // Stop observing when the user interacts
-	}
+		observer.unobserve(imageCompareContainerRef); // Stop observing when the user interacts
+	};
 	const handleMouseLeave = () => {
 		isUserInteracting = false;
-	}
+	};
 
 	const handleMouseMove = (event) => {
 		const rect = imageCompareContainerRef.getBoundingClientRect();
-		const x = event.clientX - rect.left; //x position within the element.
+		const x = event.clientX - rect.left;
 		sliderPositionStore.set((x / rect.width) * 100);
-	}
+	};
 	const handleTouchMove = (event) => {
 		const rect = imageCompareContainerRef.getBoundingClientRect();
-		const x = event.touches[0].clientX - rect.left; //x position within the element.
+		const x = event.touches[0].clientX - rect.left;
 		sliderPositionStore.set((x / rect.width) * 100);
-	}
+	};
 
 	const handleTouchStart = () => {
 		isUserInteracting = true;
 		cancelAnimationFrame(animationId);
-	}
+	};
 	const handleTouchEnd = () => {
 		isUserInteracting = false;
-	}
+	};
+
+    /*** mounts + subscriptions ***/
 
 	onMount(() => {
 		observer = new IntersectionObserver(
 			([entry]) => {
 				// Check if the element is visible
 				if (entry.isIntersecting) {
-					isVisible.set(true);
+					isInView.set(true);
 				} else {
 					// Stop the animation
-					isVisible.set(false);
+					isInView.set(false);
 				}
 			},
 			{ threshold: 1 }
 		);
 
 		observer.observe(imageCompareContainerRef);
+	});
+
+	// animation only happens if compare container is in view
+	isInView.subscribe((isVisibleValue) => {
+		if (!isUserInteracting && animateSlider) {
+			if (isVisibleValue) {
+				animationId = requestAnimationFrame(animate);
+			} else {
+				cancelAnimationFrame(animationId);
+			}
+		}
 	});
 </script>
 
