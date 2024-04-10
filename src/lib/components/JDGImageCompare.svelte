@@ -9,7 +9,7 @@
 
 	let imageCompareContainerRef;
 	let isUserInteracting = false;
-	let animateSlider = false; // for screen recording only
+	let animateSlider = true;
 
 	let isVisible = writable(false);
 	let sliderPositionStore = writable(50);
@@ -24,57 +24,61 @@
 	let time = 0;
 	let speed = 0.005;
 
-	sliderPositionStore.subscribe((value) => {
-		isVisible.subscribe((isVisibleValue) => {
-			if (!isUserInteracting && animateSlider && isVisibleValue) {
-				animationId = requestAnimationFrame(() => {
-					// Calculate the eased value based on the time
-					let easedValue = easeInOutQuad(time) * 100;
-
-					// Update the slider position based on the eased value
-					sliderPositionStore.set(easedValue);
-
-					// Reverse the direction and adjust the time when reaching either end
-					if (easedValue >= 100 || easedValue <= 0) {
-						direction *= -1;
-						time = direction > 0 ? 0 : 1; // Adjust the time based on the direction
-					}
-
-					// Increment the time based on the direction and speed
-					time += speed * direction;
-				});
+	isVisible.subscribe((isVisibleValue) => {
+		if (!isUserInteracting && animateSlider) {
+			if (isVisibleValue) {
+				animationId = requestAnimationFrame(animate);
+			} else {
+				cancelAnimationFrame(animationId);
 			}
-		});
+		}
 	});
 
-	function handleMouseEnter() {
+	const animate = () => {
+		// Calculate the eased value based on the time
+		let easedValue = easeInOutQuad(time) * 100;
+
+		// Update the slider position based on the eased value
+		sliderPositionStore.set(easedValue);
+
+		// Reverse the direction and adjust the time when reaching either end
+		if (easedValue >= 100 || easedValue <= 0) {
+			direction *= -1;
+			time = direction > 0 ? 0 : 1; // Adjust the time based on the direction
+		}
+
+		// Increment the time based on the direction and speed
+		time += speed * direction;
+
+		// Request the next animation frame
+		animationId = requestAnimationFrame(animate);
+	}
+
+	const handleMouseEnter = () => {
 		isUserInteracting = true;
 		cancelAnimationFrame(animationId);
 		//observer.unobserve(imageCompareContainerRef); // Stop observing when the user interacts
 	}
-
-	function handleMouseLeave() {
+	const handleMouseLeave = () => {
 		isUserInteracting = false;
 	}
 
-	function handleMouseMove(event) {
+	const handleMouseMove = (event) => {
 		const rect = imageCompareContainerRef.getBoundingClientRect();
 		const x = event.clientX - rect.left; //x position within the element.
 		sliderPositionStore.set((x / rect.width) * 100);
 	}
-
-	function handleTouchMove(event) {
+	const handleTouchMove = (event) => {
 		const rect = imageCompareContainerRef.getBoundingClientRect();
 		const x = event.touches[0].clientX - rect.left; //x position within the element.
 		sliderPositionStore.set((x / rect.width) * 100);
 	}
 
-	function handleTouchStart() {
+	const handleTouchStart = () => {
 		isUserInteracting = true;
 		cancelAnimationFrame(animationId);
 	}
-
-	function handleTouchEnd() {
+	const handleTouchEnd = () => {
 		isUserInteracting = false;
 	}
 
