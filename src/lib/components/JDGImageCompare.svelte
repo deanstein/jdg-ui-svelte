@@ -6,23 +6,24 @@
 
 	export let imageAttributes1 = imageAttributesCollection.ccp_blue_mall_60s70s_1;
 	export let imageAttributes2 = imageAttributesCollection.ccp_blue_mall_80s90s_1;
+	export let animateSlider = false;
+	export let useFullWidthAnimation = true; // used for screen recording
 
 	let imageCompareContainerRef;
 
-	let animateSlider = true; // consumer can choose to animate
 	let isUserInteracting = false; // if user interacts, animation is canceled
-	let observer;
+	let observer; // observe whether container is in view
 	let isInView = writable(false); // animation only happens if compare container is in view
 	let sliderPositionStore = writable(50);
 	let animationId;
-	let time = 0;
-	let speed = 0.005;
-	let direction = -1;
 
-    /*** animation ***/
-    
+	/*** animation ***/
+
 	// moves the slider from edge to edge with easing
-	const animate = () => {
+	const animateFullWidthSpeed = 0.005;
+	let time = 0;
+	let direction = -1;
+	const animateFullWidth = () => {
 		// Calculate the eased value based on the time
 		let easedValue = easeInOutQuad(time) * 100;
 
@@ -36,16 +37,47 @@
 		}
 
 		// Increment the time based on the direction and speed
-		time += speed * direction;
+		time += animateFullWidthSpeed * direction;
 
 		// Request the next animation frame
-		animationId = requestAnimationFrame(animate);
+		animationId = requestAnimationFrame(animateFullWidth);
 	};
 	const easeInOutQuad = (t) => {
 		return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
 	};
 
-    /*** events ***/
+	// moves the slider from center to left, center, right, center
+	let start = null;
+	const animateMiddleDurationMs = 4000;
+	const moveFactor = 20; // % of total slider to move to
+	const animateMiddle = (timestamp) => {
+		if (!start) start = timestamp;
+		const elapsed = timestamp - start;
+
+		// Calculate the eased value based on the elapsed time
+		let t = elapsed / animateMiddleDurationMs;
+		let easedValue;
+		if (t < 1 / 3) {
+			// First third of the animation: move from center to 20% left
+			easedValue = 50 - moveFactor * easeInOutQuad(3 * t);
+		} else if (t < 2 / 3) {
+			// Second third of the animation: move from 20% left to 20% right
+			easedValue = 50 - moveFactor + 2 * moveFactor * easeInOutQuad(3 * t - 1);
+		} else {
+			// Final third of the animation: move from 20% right back to center
+			easedValue = 50 + moveFactor - moveFactor * easeInOutQuad(3 * t - 2);
+		}
+
+		// Update the slider position based on the eased value
+		sliderPositionStore.set(easedValue);
+
+		// Request the next animation frame if the animation is not finished
+		if (elapsed < animateMiddleDurationMs) {
+			animationId = requestAnimationFrame(useFullWidthAnimation ? animateFullWidth : animateMiddle);
+		}
+	};
+
+	/*** events ***/
 
 	const handleMouseEnter = () => {
 		isUserInteracting = true;
@@ -75,7 +107,7 @@
 		isUserInteracting = false;
 	};
 
-    /*** mounts + subscriptions ***/
+	/*** mounts + subscriptions ***/
 
 	onMount(() => {
 		observer = new IntersectionObserver(
@@ -98,7 +130,7 @@
 	isInView.subscribe((isVisibleValue) => {
 		if (!isUserInteracting && animateSlider) {
 			if (isVisibleValue) {
-				animationId = requestAnimationFrame(animate);
+				animationId = requestAnimationFrame(animateFullWidth);
 			} else {
 				cancelAnimationFrame(animationId);
 			}
@@ -113,7 +145,7 @@
 	on:mousemove={handleMouseMove}
 	on:mouseleave={handleMouseLeave}
 	on:touchstart={handleTouchStart}
-	on:touchmove={handleTouchMove}
+	on:touchmove|passive={handleTouchMove}
 	on:touchend={handleTouchEnd}
 	role="slider"
 	aria-valuemin="0"

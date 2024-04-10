@@ -61,7 +61,7 @@
 			and an accurate digital 3D re-creation called the
 			<a href="./simulation">Cinderella City Simulation.</a>
 		</JDGBodyCopy>
-		<JDGImageCompare />
+		<JDGImageCompare animateSlider={true} useFullWidthAnimation={true}/>
 		<JDGBodyCopy>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.lakeside_1}
