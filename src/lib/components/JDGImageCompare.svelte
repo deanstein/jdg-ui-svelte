@@ -1,8 +1,9 @@
 <script>
+    	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
+
 	import imageAttributesCollection from '../../routes/image-attributes-collection.js';
 	import { JDGImage } from '$lib/index.js';
-	import { onMount } from 'svelte';
 
 	export let imageAttributes1 = imageAttributesCollection.ccp_blue_mall_60s70s_1;
 	export let imageAttributes2 = imageAttributesCollection.ccp_blue_mall_80s90s_1;
@@ -153,14 +154,13 @@
 	aria-valuenow={$sliderPositionStore}
 	tabindex="0"
 >
-	<div class="compare-image" style="width: 100%;">
-		<JDGImage imageAttributes={imageAttributes2} maxHeight="500px" />
+	<div class="compare-image-absolute">
+		<JDGImage imageAttributes={imageAttributes2} fillContainer={false} maxHeight="auto" />
 	</div>
-	<div
-		class="compare-image"
-		style="clip-path: inset(0 {100 - $sliderPositionStore}% 0 0); width: 100%;"
+	<div class="compare-image-relative"
+		style="clip-path: inset(0 {100 - $sliderPositionStore}% 0 0);"
 	>
-		<JDGImage imageAttributes={imageAttributes1} maxHeight="500px" />
+		<JDGImage imageAttributes={imageAttributes1} fillContainer={false} maxHeight="auto" />
 	</div>
 	<div class="slider" style="left: {$sliderPositionStore}%;"></div>
 </div>
@@ -169,11 +169,12 @@
 	.jdg-image-compare-container {
 		position: relative;
 		width: 100%;
-		height: 500px;
+		height: 100%;
 	}
 
-	.compare-image {
+	.compare-image-absolute {
 		position: absolute;
+        width: 100%;
 		top: 0;
 		bottom: 0;
 	}
