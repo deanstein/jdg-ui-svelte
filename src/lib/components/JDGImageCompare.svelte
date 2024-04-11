@@ -8,7 +8,7 @@
 	export let imageAttributes1 = imageAttributesCollection.ccp_blue_mall_60s70s_1;
 	export let imageAttributes2 = imageAttributesCollection.ccp_blue_mall_80s90s_1;
 	export let animateSlider = false;
-	export let useFullWidthAnimation = true; // used for screen recording
+	export let useFullWidthAnimation = false; // used for screen recording
 
 	let imageCompareContainerRef;
 
@@ -20,31 +20,33 @@
 
 	/*** animation ***/
 
+    // easing function used for both animation types
+    const easeInOutQuad = (t) => {
+		return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+	};
+
 	// moves the slider from edge to edge with easing
 	const animateFullWidthSpeed = 0.005;
 	let time = 0;
 	let direction = -1;
 	const animateFullWidth = () => {
-		// Calculate the eased value based on the time
+		// calculate the eased value based on the time
 		let easedValue = easeInOutQuad(time) * 100;
 
-		// Update the slider position based on the eased value
+		// update the slider position based on the eased value
 		sliderPositionStore.set(easedValue);
 
-		// Reverse the direction and adjust the time when reaching either end
+		// reverse the direction and adjust the time when reaching either end
 		if (easedValue >= 100 || easedValue <= 0) {
 			direction *= -1;
 			time = direction > 0 ? 0 : 1; // Adjust the time based on the direction
 		}
 
-		// Increment the time based on the direction and speed
+		// increment the time based on the direction and speed
 		time += animateFullWidthSpeed * direction;
 
-		// Request the next animation frame
+		// request the next animation frame
 		animationId = requestAnimationFrame(animateFullWidth);
-	};
-	const easeInOutQuad = (t) => {
-		return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
 	};
 
 	// moves the slider from center to left, center, right, center
@@ -55,21 +57,21 @@
 		if (!start) start = timestamp;
 		const elapsed = timestamp - start;
 
-		// Calculate the eased value based on the elapsed time
+		// calculate the eased value based on the elapsed time
 		let t = elapsed / animateMiddleDurationMs;
 		let easedValue;
 		if (t < 1 / 3) {
-			// First third of the animation: move from center to 20% left
+			// first third of the animation: move from center to left
 			easedValue = 50 - moveFactor * easeInOutQuad(3 * t);
 		} else if (t < 2 / 3) {
-			// Second third of the animation: move from 20% left to 20% right
+			// second third of the animation: move from left past center to right
 			easedValue = 50 - moveFactor + 2 * moveFactor * easeInOutQuad(3 * t - 1);
 		} else {
-			// Final third of the animation: move from 20% right back to center
+			// final third of the animation: move from right back to center
 			easedValue = 50 + moveFactor - moveFactor * easeInOutQuad(3 * t - 2);
 		}
 
-		// Update the slider position based on the eased value
+		// update the slider position based on the eased value
 		sliderPositionStore.set(easedValue);
 
 		// Request the next animation frame if the animation is not finished
