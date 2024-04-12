@@ -13,6 +13,8 @@
 	export let attribution = undefined; // combined attribution for both images
 	export let animateSlider = false; // when in view, slider will dance a bit to show interactivity
 	export let useFullWidthAnimation = false; // used for screen recording
+    export let showBlurInUnfilledSpace = true;
+    export let maxHeight = 'auto';
 
 	let imageCompareContainerRef; // used for
 
@@ -169,8 +171,8 @@
 		<JDGImage
 			imageAttributes={imageAttributes2}
 			fillContainer={false}
-			maxHeight="auto"
-			showBlurInUnfilledSpace={true}
+			{maxHeight}
+			{showBlurInUnfilledSpace}
 		/>
 	</div>
 	<div
@@ -180,12 +182,15 @@
 		<JDGImage
 			imageAttributes={imageAttributes1}
 			fillContainer={false}
-			maxHeight="auto"
-			showBlurInUnfilledSpace={true}
+            {maxHeight}
+			{showBlurInUnfilledSpace}
 		/>
 	</div>
 	<div class="slider" style="left: {$sliderPositionStore}%;"></div>
-	<JDGImageCaptionAttribution imageAttributes={newImageAttributes} />
+    <div style="width: 100%;">
+        <JDGImageCaptionAttribution imageAttributes={newImageAttributes} />
+    </div>
+
 </div>
 
 <style>
