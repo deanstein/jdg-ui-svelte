@@ -3,18 +3,18 @@
 	import { writable } from 'svelte/store';
 
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
-	import imageAttributesCollection from '../../routes/image-attributes-collection.js';
+
 	import { JDGImage, JDGImageCaptionAttribution } from '$lib/index.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
 
-	export let imageAttributes1 = imageAttributesCollection.ccp_blue_mall_60s70s_1; // first image
-	export let imageAttributes2 = imageAttributesCollection.ccp_blue_mall_80s90s_1; // second image
+	export let imageAttributes1; // first image
+	export let imageAttributes2; // second image
 	export let caption = undefined; // combined caption for both images
 	export let attribution = undefined; // combined attribution for both images
 	export let animateSlider = false; // when in view, slider will dance a bit to show interactivity
 	export let useFullWidthAnimation = false; // used for screen recording
-    export let showBlurInUnfilledSpace = true;
-    export let maxHeight = 'auto';
+	export let showBlurInUnfilledSpace = true;
+	export let maxHeight = 'auto';
 
 	let imageCompareContainerRef; // used for
 
@@ -182,15 +182,14 @@
 		<JDGImage
 			imageAttributes={imageAttributes1}
 			fillContainer={false}
-            {maxHeight}
+			{maxHeight}
 			{showBlurInUnfilledSpace}
 		/>
 	</div>
 	<div class="slider" style="left: {$sliderPositionStore}%;"></div>
-    <div style="width: 100%;">
-        <JDGImageCaptionAttribution imageAttributes={newImageAttributes} />
-    </div>
-
+	<div style="width: 100%;">
+		<JDGImageCaptionAttribution imageAttributes={newImageAttributes} />
+	</div>
 </div>
 
 <style>
