@@ -38,6 +38,13 @@ export const setIsMobileBreakpoint = (isMobileBreakpoint) => {
 	});
 };
 
+export const setShowHeaderStripes = (showHeaderStripes) => {
+	uiState.update((currentValue) => {
+		currentValue.showHeaderStripes = showHeaderStripes;
+		return currentValue;
+	});
+};
+
 export const setShowImageDetailModal = (showImageDetailModal) => {
 	uiState.update((currentValue) => {
 		currentValue.showImageDetailOverlay = showImageDetailModal;

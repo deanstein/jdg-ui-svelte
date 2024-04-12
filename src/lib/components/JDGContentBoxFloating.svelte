@@ -1,6 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
+	import uiState from '$lib/states/ui-state.js';
 	import { convertRemToPixels } from '$lib/jdg-utils.js';
 
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '../jdg-styling-constants.js';
@@ -43,15 +44,15 @@
 
 	const floatingBoxAnchorTagCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			top: -${jdgSizes.nHeaderHeightSm + (title ? convertRemToPixels(jdgSizes.nFontSizeFloatingContentBoxTitle) * titleScrollMultiplier : 0)}px;
+			top: -${jdgSizes.nHeaderHeightSm + (title ? convertRemToPixels(jdgSizes.nFontSizeFloatingContentBoxTitle) * titleScrollMultiplier : 0) + ($uiState.showHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightSm : 0)}px;
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-			top: -${jdgSizes.nHeaderHeightMd + (title ? convertRemToPixels(jdgSizes.nFontSizeFloatingContentBoxTitle) * titleScrollMultiplier : 0)}px;
+			top: -${jdgSizes.nHeaderHeightMd + (title ? convertRemToPixels(jdgSizes.nFontSizeFloatingContentBoxTitle) * titleScrollMultiplier : 0) + ($uiState.showHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightMd : 0)}px;
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			top: -${jdgSizes.nHeaderHeightLg + (title ? convertRemToPixels(jdgSizes.nFontSizeFloatingContentBoxTitle) * titleScrollMultiplier : 0)}px;
+			top: -${jdgSizes.nHeaderHeightLg + (title ? convertRemToPixels(jdgSizes.nFontSizeFloatingContentBoxTitle) * titleScrollMultiplier : 0) + ($uiState.showHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightLg : 0)}px;
 		}
 	`;
 </script>

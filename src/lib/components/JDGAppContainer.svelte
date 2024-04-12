@@ -6,6 +6,7 @@
 		setAccentColors,
 		setClientWidth,
 		setIsMobileBreakpoint,
+		setShowHeaderStripes,
 		setWindowWidth
 	} from '$lib/jdg-state-management.js';
 
@@ -17,6 +18,7 @@
 	export let appLoadingIconSrc =
 		'https://raw.githubusercontent.com/deanstein/jdg-ui-svelte/main/static/jdg-ui-logo.jpg';
 	export let accentColors = jdgColors.accentColorsJDG;
+	export let showHeaderStripes = true;
 
 	// flag to show a loading overlay before app is loaded
 	// to prevent flash of unstyled content
@@ -67,6 +69,7 @@
 
 		window.addEventListener('resize', onPageResize);
 		setAccentColors(accentColors);
+		setShowHeaderStripes(showHeaderStripes);
 		// update the client and window width at the end so they're accurate
 		setTimeout(onPageResize, 0);
 	});

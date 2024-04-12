@@ -166,13 +166,23 @@
 	tabindex="0"
 >
 	<div class="compare-image-absolute">
-		<JDGImage imageAttributes={imageAttributes2} fillContainer={false} maxHeight="auto" />
+		<JDGImage
+			imageAttributes={imageAttributes2}
+			fillContainer={false}
+			maxHeight="auto"
+			showBlurInUnfilledSpace={true}
+		/>
 	</div>
 	<div
 		class="compare-image-relative"
 		style="clip-path: inset(0 {100 - $sliderPositionStore}% 0 0);"
 	>
-		<JDGImage imageAttributes={imageAttributes1} fillContainer={false} maxHeight="auto" />
+		<JDGImage
+			imageAttributes={imageAttributes1}
+			fillContainer={false}
+			maxHeight="auto"
+			showBlurInUnfilledSpace={true}
+		/>
 	</div>
 	<div class="slider" style="left: {$sliderPositionStore}%;"></div>
 	<JDGImageCaptionAttribution imageAttributes={newImageAttributes} />

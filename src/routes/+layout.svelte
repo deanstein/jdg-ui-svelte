@@ -36,9 +36,10 @@
 	const bannerMessage = 'This is a notification banner.';
 	const disclaimerMessage =
 		'This is text for the footer! It could be a disclaimer or something else.';
+	const showHeaderStripes = true;
 </script>
 
-<JDGAppContainer accentColors={jdgColors.accentColorsJDG}>
+<JDGAppContainer accentColors={jdgColors.accentColorsJDG} {showHeaderStripes}>
 	<JDGNotificationBanner message={bannerMessage} color={jdgColors.notificationInformation} />
 	<JDGHeader
 		logoJustification="left"
