@@ -61,7 +61,11 @@
 			and an accurate digital 3D re-creation called the
 			<a href="./simulation">Cinderella City Simulation.</a>
 		</JDGBodyCopy>
-		<JDGImageCompare animateSlider={true} useFullWidthAnimation={true}/>
+		<JDGImageCompare
+			animateSlider={true}
+			useFullWidthAnimation={true}
+			caption="The Blue Mall simulated in 1968-1978 and 1987-1997."
+		/>
 		<JDGBodyCopy>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.lakeside_1}

@@ -1,16 +1,25 @@
 <script>
-    	import { onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
 
+	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 	import imageAttributesCollection from '../../routes/image-attributes-collection.js';
-	import { JDGImage } from '$lib/index.js';
+	import { JDGImage, JDGImageCaptionAttribution } from '$lib/index.js';
+	import { instantiateObject } from '$lib/jdg-utils.js';
 
-	export let imageAttributes1 = imageAttributesCollection.ccp_blue_mall_60s70s_1;
-	export let imageAttributes2 = imageAttributesCollection.ccp_blue_mall_80s90s_1;
-	export let animateSlider = false;
+	export let imageAttributes1 = imageAttributesCollection.ccp_blue_mall_60s70s_1; // first image
+	export let imageAttributes2 = imageAttributesCollection.ccp_blue_mall_80s90s_1; // second image
+	export let caption = undefined; // combined caption for both images
+	export let attribution = undefined; // combined attribution for both images
+	export let animateSlider = false; // when in view, slider will dance a bit to show interactivity
 	export let useFullWidthAnimation = false; // used for screen recording
 
-	let imageCompareContainerRef;
+	let imageCompareContainerRef; // used for
+
+	// create a temp imageAttributes for combined caption/attribution
+	let newImageAttributes = instantiateObject(jdgImageAttributes);
+	newImageAttributes.imgCaption = caption;
+	newImageAttributes.imgAttribution = attribution;
 
 	let isUserInteracting = false; // if user interacts, animation is canceled
 	let observer; // observe whether container is in view
@@ -20,8 +29,8 @@
 
 	/*** animation ***/
 
-    // easing function used for both animation types
-    const easeInOutQuad = (t) => {
+	// easing function used for both animation types
+	const easeInOutQuad = (t) => {
 		return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
 	};
 
@@ -159,12 +168,14 @@
 	<div class="compare-image-absolute">
 		<JDGImage imageAttributes={imageAttributes2} fillContainer={false} maxHeight="auto" />
 	</div>
-	<div class="compare-image-relative"
+	<div
+		class="compare-image-relative"
 		style="clip-path: inset(0 {100 - $sliderPositionStore}% 0 0);"
 	>
 		<JDGImage imageAttributes={imageAttributes1} fillContainer={false} maxHeight="auto" />
 	</div>
 	<div class="slider" style="left: {$sliderPositionStore}%;"></div>
+	<JDGImageCaptionAttribution imageAttributes={newImageAttributes} />
 </div>
 
 <style>
@@ -176,7 +187,7 @@
 
 	.compare-image-absolute {
 		position: absolute;
-        width: 100%;
+		width: 100%;
 		top: 0;
 		bottom: 0;
 	}
