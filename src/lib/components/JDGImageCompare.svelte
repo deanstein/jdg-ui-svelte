@@ -1,6 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
+	import { css } from '@emotion/css';
 
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 
@@ -121,6 +122,11 @@
 		isUserInteracting = false;
 	};
 
+	/*** emotion css ***/
+	const compareContainerCss = css`
+		width: ${showBlurInUnfilledSpace ? '100%' : 'max-content'};
+	`;
+
 	/*** mounts + subscriptions ***/
 
 	onMount(() => {
@@ -152,50 +158,58 @@
 	});
 </script>
 
-<div
-	class="jdg-image-compare-container"
-	bind:this={imageCompareContainerRef}
-	on:mouseenter={handleMouseEnter}
-	on:mousemove={handleMouseMove}
-	on:mouseleave={handleMouseLeave}
-	on:touchstart={handleTouchStart}
-	on:touchmove|passive={handleTouchMove}
-	on:touchend={handleTouchEnd}
-	role="slider"
-	aria-valuemin="0"
-	aria-valuemax="100"
-	aria-valuenow={$sliderPositionStore}
-	tabindex="0"
->
-	<div class="compare-image-absolute">
-		<JDGImage
-			imageAttributes={imageAttributes2}
-			fillContainer={false}
-			{maxHeight}
-			{showBlurInUnfilledSpace}
-		/>
-	</div>
+<div class="jdg-image-compare-wrapper">
 	<div
-		class="compare-image-relative"
-		style="clip-path: inset(0 {100 - $sliderPositionStore}% 0 0);"
+		class="jdg-image-compare-container {compareContainerCss}"
+		bind:this={imageCompareContainerRef}
+		on:mouseenter={handleMouseEnter}
+		on:mousemove={handleMouseMove}
+		on:mouseleave={handleMouseLeave}
+		on:touchstart={handleTouchStart}
+		on:touchmove|passive={handleTouchMove}
+		on:touchend={handleTouchEnd}
+		role="slider"
+		aria-valuemin="0"
+		aria-valuemax="100"
+		aria-valuenow={$sliderPositionStore}
+		tabindex="0"
 	>
-		<JDGImage
-			imageAttributes={imageAttributes1}
-			fillContainer={false}
-			{maxHeight}
-			{showBlurInUnfilledSpace}
-		/>
-	</div>
-	<div class="slider" style="left: {$sliderPositionStore}%;"></div>
-	<div style="width: 100%;">
-		<JDGImageCaptionAttribution imageAttributes={newImageAttributes} />
+		<div class="compare-image-absolute">
+			<JDGImage
+				imageAttributes={imageAttributes2}
+				fillContainer={false}
+				{maxHeight}
+				{showBlurInUnfilledSpace}
+			/>
+		</div>
+		<div
+			class="compare-image-relative"
+			style="clip-path: inset(0 {100 - $sliderPositionStore}% 0 0);"
+		>
+			<JDGImage
+				imageAttributes={imageAttributes1}
+				fillContainer={false}
+				{maxHeight}
+				{showBlurInUnfilledSpace}
+			/>
+		</div>
+		<div class="slider" style="left: {$sliderPositionStore}%;"></div>
+		{#if caption}
+			<div style="width: 100%;">
+				<JDGImageCaptionAttribution imageAttributes={newImageAttributes} />
+			</div>
+		{/if}
 	</div>
 </div>
 
 <style>
+	.jdg-image-compare-wrapper {
+		display: flex;
+		justify-content: center;
+	}
+
 	.jdg-image-compare-container {
 		position: relative;
-		width: 100%;
 		height: 100%;
 	}
 
