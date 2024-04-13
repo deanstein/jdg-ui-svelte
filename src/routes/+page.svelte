@@ -63,11 +63,13 @@
 		</JDGBodyCopy>
 
 		<JDGImageCompare
-			imageAttributes1={imageAttributesCollection.ccp_blue_mall_60s70s_1}
-			imageAttributes2={imageAttributesCollection.ccp_blue_mall_80s90s_1}
+			imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
+			imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
 			animateSlider={true}
 			useFullWidthAnimation={true}
-			caption="The Blue Mall simulated in 1968-1978 and 1987-1997."
+			caption="The Gold Mall simulated in 1968-1978 and 1987-1997."
+			maxHeight="80vh"
+			showBlurInUnfilledSpace={false}
 		/>
 
 		<JDGBodyCopy>

@@ -35,6 +35,14 @@ const imageAttributesCollection = {
 		imgCaption: `Cinderella City's central Blue Mall, simulated in the 1987-1997 era.`,
 		imgAttribution: 'Englewood Public Library (AI recolored)'
 	}),
+	ccp_gold_mall_60s70s_1: instantiateObject(jdgImageAttributes, {
+		imgSrc: './ccp/gold-mall-60s70s-1.png',
+		imgAlt: `Cinderella City's Gold Mall, simulated in the 1968-1978 era.`
+	}),
+	ccp_gold_mall_80s90s_1: instantiateObject(jdgImageAttributes, {
+		imgSrc: './ccp/gold-mall-80s90s-1.png',
+		imgAlt: `Cinderella City's Gold Mall, simulated in the 1987-1997 era.`
+	}),
 	lakeside_1: instantiateObject(jdgImageAttributes, {
 		imgSrc: './history/lakeside-1.jpg',
 		imgAlt: 'Lakeside Mall in 1956.',
