@@ -67,7 +67,7 @@
 			imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
 			animateSlider={true}
 			useFullWidthAnimation={true}
-			caption="The Gold Mall simulated in 1968-1978 and 1987-1997."
+			caption="Gold Mall simulated in 1968-1978 and 1987-1997."
 			maxHeight="80vh"
 			showBlurInUnfilledSpace={false}
 		/>
