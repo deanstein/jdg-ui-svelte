@@ -4,6 +4,7 @@
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-styling-constants.js';
 
 	const bodyCopyContainerCss = css`
+		line-height: 1.5;
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: 15px;
 			padding: ${jdgSizes.contentBoxPaddingSm} ${jdgSizes.bodyCopyVerticalPaddingSm}
