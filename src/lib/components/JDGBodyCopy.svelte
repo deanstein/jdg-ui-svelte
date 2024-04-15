@@ -8,19 +8,19 @@
 	const bodyCopyContainerCss = css`
 		line-height: 1.5;
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			font-size: calc(${fontSizeMultiplier * 15}px;
+			font-size: calc(${fontSizeMultiplier * 15}px);
 			padding: ${jdgSizes.contentBoxPaddingSm} ${jdgSizes.bodyCopyVerticalPaddingSm}
 				${jdgSizes.contentBoxPaddingSm} ${jdgSizes.bodyCopyVerticalPaddingSm};
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) and (max-width: ${
 			jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit
 		}) {
-			font-size: calc(${fontSizeMultiplier * 16}px;
+			font-size: calc(${fontSizeMultiplier * 16}px);
 			padding: ${jdgSizes.contentBoxPaddingMd} ${jdgSizes.bodyCopyVerticalPaddingMd}
 				${jdgSizes.contentBoxPaddingMd} ${jdgSizes.bodyCopyVerticalPaddingMd};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			calc(${fontSizeMultiplier * 18}px
+			calc(${fontSizeMultiplier * 18}px);
 			padding: ${jdgSizes.contentBoxPaddingLg} ${jdgSizes.bodyCopyVerticalPaddingLg}
 				${jdgSizes.contentBoxPaddingLg} ${jdgSizes.bodyCopyVerticalPaddingLg};
 		}
