@@ -69,7 +69,7 @@
 				animateSlider={true}
 				useFullWidthAnimation={true}
 				caption="Gold Mall simulated in 1968-1978 and 1987-1997."
-				maxHeight="80vh"
+				maxHeight="60vh"
 				showBlurInUnfilledSpace={false}
 			/>
 		</JDGFullWidthContainer>
