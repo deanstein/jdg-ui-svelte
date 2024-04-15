@@ -180,6 +180,7 @@
 				fillContainer={false}
 				{maxHeight}
 				{showBlurInUnfilledSpace}
+				alternateFitRef={imageCompareContainerRef}
 			/>
 		</div>
 		<div
@@ -191,6 +192,7 @@
 				fillContainer={false}
 				{maxHeight}
 				{showBlurInUnfilledSpace}
+				alternateFitRef={imageCompareContainerRef}
 			/>
 		</div>
 		<div class="slider" style="left: {$sliderPositionStore}%;"></div>
