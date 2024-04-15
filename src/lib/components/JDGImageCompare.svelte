@@ -17,7 +17,8 @@
 	export let showBlurInUnfilledSpace = true;
 	export let maxHeight = 'auto';
 
-	let imageCompareContainerRef; // used for
+	let imageCompareWrapperRef;
+	let imageCompareContainerRef;
 
 	// create a temp imageAttributes for combined caption/attribution
 	let newImageAttributes = instantiateObject(jdgImageAttributes);
@@ -158,7 +159,7 @@
 	});
 </script>
 
-<div class="jdg-image-compare-wrapper">
+<div class="jdg-image-compare-wrapper" bind:this={imageCompareWrapperRef}>
 	<div
 		class="jdg-image-compare-container {compareContainerCss}"
 		bind:this={imageCompareContainerRef}
@@ -179,8 +180,8 @@
 				imageAttributes={imageAttributes2}
 				fillContainer={false}
 				{maxHeight}
-				maxWidth="100%"
 				{showBlurInUnfilledSpace}
+				alternateFitRef={imageCompareWrapperRef}
 			/>
 		</div>
 		<div
@@ -191,8 +192,8 @@
 				imageAttributes={imageAttributes1}
 				fillContainer={false}
 				{maxHeight}
-				maxWidth="100%"
 				{showBlurInUnfilledSpace}
+				alternateFitRef={imageCompareWrapperRef}
 			/>
 		</div>
 		<div class="slider" style="left: {$sliderPositionStore}%;"></div>
@@ -208,6 +209,7 @@
 	.jdg-image-compare-wrapper {
 		display: flex;
 		justify-content: center;
+		width: 100%;
 	}
 
 	.jdg-image-compare-container {
