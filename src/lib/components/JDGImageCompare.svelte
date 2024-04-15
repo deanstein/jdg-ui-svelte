@@ -39,7 +39,7 @@
 	};
 
 	// moves the slider from edge to edge with easing
-	const animateFullWidthSpeed = 0.005;
+	const animateFullWidthSpeed = 0.002;
 	let time = 0;
 	let direction = -1;
 	const animateFullWidth = () => {
