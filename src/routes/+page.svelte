@@ -20,30 +20,30 @@
 	import imageAttributesCollection from './image-attributes-collection.js';
 </script>
 
-<JDGContentContainer overlapWithHeader={true} topBottomPadding="0" gap="0">
-	<JDGImageFullWidth
-		imageAttributes={imageAttributesCollection.cc_1}
-		primaryText="STEP BACK IN TIME"
-		secondaryText="to Cinderella City Mall"
-	/>
-	<JDGContentBoxFloating>
-		<JDGBodyCopy>
-			The <strong>Cinderella City Project</strong> is an examination of a unique mid-century shopping
-			destination, developed by its creator as a "city under a roof", which became both a fairtyale and
-			a nightmare for the actual city of Englewood, Colorado.
-		</JDGBodyCopy>
-		<JDGImageHybridGridCarousel
-			imageAttributeObjects={[
-				imageAttributesCollection.aerial_60s70s_1,
-				imageAttributesCollection.cc_1,
-				imageAttributesCollection.architecture_1,
-				imageAttributesCollection.rose_mall_60s70s_1,
-				imageAttributesCollection.rose_mall_60s70s_2
-			]}
+<JDGContentContainer overlapWithHeader={true}>
+	<div style="display: flex; flex-direction: column;">
+		<JDGImageFullWidth
+			imageAttributes={imageAttributesCollection.cc_1}
+			primaryText="STEP BACK IN TIME"
+			secondaryText="to Cinderella City Mall"
 		/>
-	</JDGContentBoxFloating>
-</JDGContentContainer>
-<JDGContentContainer>
+		<JDGContentBoxFloating>
+			<JDGBodyCopy>
+				The <strong>Cinderella City Project</strong> is an examination of a unique mid-century shopping
+				destination, developed by its creator as a "city under a roof", which became both a fairtyale
+				and a nightmare for the actual city of Englewood, Colorado.
+			</JDGBodyCopy>
+			<JDGImageHybridGridCarousel
+				imageAttributeObjects={[
+					imageAttributesCollection.aerial_60s70s_1,
+					imageAttributesCollection.cc_1,
+					imageAttributesCollection.architecture_1,
+					imageAttributesCollection.rose_mall_60s70s_1,
+					imageAttributesCollection.rose_mall_60s70s_2
+				]}
+			/>
+		</JDGContentBoxFloating>
+	</div>
 	<JDGContentBoxFloating title="BACKGROUND">
 		<JDGBodyCopy>
 			The city of Englewood, Colorado changed forever in 1968 when mall magnate Gerri Von Frellick
