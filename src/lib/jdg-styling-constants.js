@@ -14,8 +14,9 @@ export const jdgColors = {
 		'rgba(175, 175, 175, 1)',
 		'rgba(190, 190, 190, 1)'
 	],
-	text: 'black',
+	text: '#323232',
 	textLight: '#737373',
+	title: '#4F4F4F',
 	headerBackground: 'rgba(250, 250, 250, 0.7)',
 	contentBoxBackground: 'rgba(252, 252, 252, 0.7)',
 	buttonPrimary: '#0092e4',

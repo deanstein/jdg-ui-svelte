@@ -7,14 +7,20 @@
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '../jdg-styling-constants.js';
 
 	export let title = undefined;
+	export let useExteriorTitle = false; // legacy exterior title
 	// @ts-expect-error
 	export let anchorTag = title?.replace(/ /g, '-');
 
 	const titleScrollMultiplier = 1.75; // when scrolling to this anchor tag, account for the height of the title and then some
 
-	const floatingBoxTitleCss = css`
+	const floatingBoxTitleExteriorCss = css`
 		font-size: ${jdgSizes.fontSizeFloatingContentBoxTitle};
 		color: ${jdgColors.contentBoxBackground};
+	`;
+
+	const floatingBoxTitleInteriorCss = css`
+		font-size: ${jdgSizes.fontSizeFloatingContentBoxTitle};
+		color: ${jdgColors.title};
 	`;
 
 	const floatingBoxContainerCss = css`
@@ -59,23 +65,21 @@
 
 <div class="jdg-content-box-floating-container {floatingBoxContainerCss}">
 	{#if title}
-		<div class="jdg-content-box-floating-title {floatingBoxTitleCss}">
-			{title}
-		</div>
-		<div id={anchorTag} class="jdg-content-box-anchor-tag {floatingBoxAnchorTagCss}" />
+		{#if useExteriorTitle}
+			<h1 class="content-box-title-exterior {floatingBoxTitleExteriorCss}">
+				{title}
+			</h1>
+		{:else}
+			<h1 class="content-box-title-interior {floatingBoxTitleInteriorCss}">
+				{title}
+			</h1>
+		{/if}
+		<div id={anchorTag} class="content-box-anchor-tag {floatingBoxAnchorTagCss}" />
 	{/if}
 	<slot />
 </div>
 
 <style>
-	.jdg-content-box-floating-title {
-		position: absolute;
-		bottom: 100%;
-		left: 0;
-		font-weight: bold;
-		line-height: 0.68;
-	}
-
 	.jdg-content-box-floating-container {
 		display: flex;
 		flex-direction: column;
@@ -85,7 +89,20 @@
 		min-height: 200px;
 	}
 
-	.jdg-content-box-anchor-tag {
+	.content-box-title-exterior {
+		position: absolute;
+		bottom: 100%;
+		left: 0;
+		font-weight: bold;
+		line-height: 0.68;
+		margin: 0;
+	}
+
+	.content-box-title-interior {
+		text-align: center;
+	}
+
+	.content-box-anchor-tag {
 		position: absolute;
 	}
 </style>

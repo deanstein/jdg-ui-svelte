@@ -4,21 +4,23 @@
 
 	export let overlapWithHeader = false;
 	export let topBottomPadding = '60px';
-	export let gap = '60px';
+	export let gap = undefined;
 
 	const jdgContentContainerCss = css`
 		padding: ${overlapWithHeader ? '0' : topBottomPadding} 0 ${topBottomPadding} 0;
-		gap: ${gap};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			margin-top: ${overlapWithHeader ? '-' + jdgSizes.headerHeightSm : '0'};
+			gap: ${gap ?? '40px'};
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
 			margin-top: ${overlapWithHeader ? '-' + jdgSizes.headerHeightSm : '0'};
+			gap: ${gap ?? '50px'};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 			margin-top: ${overlapWithHeader ? '-' + jdgSizes.headerHeightLg : '0'};
+			gap: ${gap ?? '60px'};
 		}
 	`;
 </script>
