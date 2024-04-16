@@ -57,17 +57,17 @@
 
 <div class="jdg-accent-text-container">
 	{#if superText}
-		<div class="accent-text-secondary {superTextCss}">
+		<h2 class="accent-text-secondary {superTextCss}">
 			{superText}
-		</div>
+		</h2>
 	{/if}
-	<div class="accent-text-primary {primaryTextCss}">
+	<h1 class="accent-text-primary {primaryTextCss}">
 		{`${primaryText}`}
-	</div>
+	</h1>
 	{#if secondaryText}
-		<div class="accent-text-secondary {secondaryTextCss}">
+		<h2 class="accent-text-secondary {secondaryTextCss}">
 			{secondaryText}
-		</div>
+		</h2>
 	{/if}
 </div>
 
@@ -75,16 +75,18 @@
 	.jdg-accent-text-container {
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
+		gap: 1rem;
 	}
 
 	.accent-text-primary {
 		color: white;
 		text-align: center;
+		margin: 0;
 	}
 
 	.accent-text-secondary {
 		color: white;
 		text-align: center;
+		margin: 0;
 	}
 </style>

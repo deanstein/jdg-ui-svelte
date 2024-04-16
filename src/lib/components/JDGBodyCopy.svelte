@@ -27,6 +27,6 @@
 	`;
 </script>
 
-<div class="jdg-body-copy-container {bodyCopyContainerCss}">
+<p class="jdg-body-copy-container {bodyCopyContainerCss}">
 	<slot />
-</div>
+</p>
