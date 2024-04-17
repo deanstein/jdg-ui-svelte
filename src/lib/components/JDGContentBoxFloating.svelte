@@ -86,7 +86,7 @@
 		position: relative;
 		width: -webkit-fill-available;
 		width: -moz-available;
-		min-height: 200px;
+		min-height: 50px;
 	}
 
 	.content-box-title-exterior {
