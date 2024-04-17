@@ -8,7 +8,7 @@
     scroll-behavior: smooth;
 }
 
-body {
+body, p {
     margin: 0;
 }
 

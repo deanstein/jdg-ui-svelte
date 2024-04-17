@@ -28,7 +28,7 @@
 			secondaryText="to Cinderella City Mall"
 		/>
 		<JDGContentBoxFloating>
-			<JDGBodyCopy>
+			<JDGBodyCopy fontSizeMultiplier={1.15}>
 				The <strong>Cinderella City Project</strong> is an examination of a unique mid-century shopping
 				destination, developed by its creator as a "city under a roof", which became both a fairtyale
 				and a nightmare for the actual city of Englewood, Colorado.
@@ -45,7 +45,7 @@
 		</JDGContentBoxFloating>
 	</div>
 	<JDGContentBoxFloating title="BACKGROUND">
-		<JDGBodyCopy>
+		<JDGBodyCopy paddingTop="0">
 			The city of Englewood, Colorado changed forever in 1968 when mall magnate Gerri Von Frellick
 			opened a controversial 1.35 million-square foot shopping center on the site of the community's
 			beloved City Park.
@@ -168,5 +168,8 @@
 	</JDGAccentBlock>
 	<JDGContentBoxFloating title="A THIRD SECTION" />
 	<JDGAccentBlock backgroundColor={$uiState.accentColors[2]} />
-	<JDGContentBoxFloating title="A FOURTH SECTION" />
+	<JDGContentBoxFloating title="LONG SECTION NAME" />
+	<JDGContentBoxFloating>
+		<JDGImageFullWidth />
+	</JDGContentBoxFloating>
 </JDGContentContainer>
