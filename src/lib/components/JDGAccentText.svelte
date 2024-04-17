@@ -4,13 +4,17 @@
 
 	export let superText = undefined; // appears above the main text, like a quote segment
 	export let superTextFontFamily = 'REM';
+	export let superTextBold = false;
 	export let primaryText = 'Accent text'; // main text in large font
 	export let primaryTextFontFamily = 'REM';
+	export let primaryTextBold = false;
 	export let secondaryText = undefined; // appears below the main text, like a quote attribution
 	export let secondaryTextFontFamily = 'REM';
+	export let secondaryTextBold = false;
 
 	const superTextCss = css`
 		font-family: ${superTextFontFamily};
+		font-weight: ${superTextBold ? 'bold' : 'normal'};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: ${jdgSizes.fontSizeAccentTextSecondarySm};
 		}
@@ -26,6 +30,7 @@
 
 	const primaryTextCss = css`
 		font-family: ${primaryTextFontFamily};
+		font-weight: ${primaryTextBold ? 'bold' : 'normal'};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: ${jdgSizes.fontSizeAccentTextPrimarySm};
 		}
@@ -41,6 +46,7 @@
 
 	const secondaryTextCss = css`
 		font-family: ${secondaryTextFontFamily};
+		font-weight: ${secondaryTextBold ? 'bold' : 'normal'};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: ${jdgSizes.fontSizeAccentTextSecondarySm};
 		}
