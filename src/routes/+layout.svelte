@@ -39,7 +39,7 @@
 	const showHeaderStripes = true;
 </script>
 
-<JDGAppContainer accentColors={jdgColors.accentColorsJDG} {showHeaderStripes}>
+<JDGAppContainer accentColors={jdgColors.accentColorsCCP} {showHeaderStripes}>
 	<JDGNotificationBanner message={bannerMessage} color={jdgColors.notificationInformation} />
 	<JDGHeader
 		logoJustification="left"
