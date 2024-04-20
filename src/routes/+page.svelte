@@ -172,6 +172,7 @@
 	</JDGContentBoxFloating>
 	<JDGAccentBlock backgroundColor={$uiState.accentColors[1]}>
 		<JDGAccentText
+			isQuote={true}
 			primaryText={`"The people of the City of Englewood want this mall in their community."`}
 			secondaryText="Gerri Von Frellick, 1960"
 		/>
