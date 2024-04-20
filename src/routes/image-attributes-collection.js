@@ -23,6 +23,10 @@ const imageAttributesCollection = {
 		imgCaption: 'The Blue Mall as seen in 1968.',
 		imgAttribution: 'Englewood Public Library'
 	}),
+	ccp_ouatacc_white: instantiateObject(jdgImageAttributes, {
+		imgSrc: './ccp/ouatacc-white.png',
+		imgAlt: `Once Upon a Time at Cinderella City.`
+	}),
 	ccp_blue_mall_60s70s_1: instantiateObject(jdgImageAttributes, {
 		imgSrc: './ccp/blue-mall-60s70s-1.png',
 		imgAlt: `Cinderella City's central Blue Mall, simulated in the 1968-1978 era.`,

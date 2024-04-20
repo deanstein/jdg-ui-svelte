@@ -16,6 +16,8 @@
 	export let primaryTextFontFamily = 'REM';
 	export let secondaryText = undefined;
 	export let secondaryTextFontFamily = 'REM';
+	export let overlayImageAttributes = undefined; // for example, a logo or vector graphic over the image
+	export let overlayImageMaxHeight = '200px';
 
 	const imageOverlayCss = css`
 		background-color: ${overlayColorRgba};
@@ -24,7 +26,7 @@
 
 <JDGFullWidthContainer>
 	<JDGImage {imageAttributes} {maxHeight} />
-	{#if showOverlay || primaryText || secondaryText}
+	{#if showOverlay || primaryText || secondaryText || overlayImageAttributes}
 		<div class="image-overlay {imageOverlayCss}">
 			{#if primaryText || secondaryText}
 				<JDGAccentText
@@ -35,6 +37,11 @@
 					{secondaryText}
 					{secondaryTextFontFamily}
 				/>
+			{/if}
+			{#if overlayImageAttributes}
+				<div class="overlay-image-wrapper">
+					<JDGImage imageAttributes={overlayImageAttributes} maxHeight={overlayImageMaxHeight} />
+				</div>
 			{/if}
 		</div>
 	{/if}
@@ -48,6 +55,17 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+		width: 100%;
+		height: 100%;
+	}
+
+	.overlay-image-wrapper {
+		position: absolute;
+		top: 0;
+		left: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		width: 100%;
 		height: 100%;
 	}
