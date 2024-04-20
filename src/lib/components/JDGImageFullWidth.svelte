@@ -17,7 +17,7 @@
 	export let secondaryText = undefined;
 	export let secondaryTextFontFamily = 'REM';
 	export let overlayImageAttributes = undefined; // for example, a logo or vector graphic over the image
-	export let overlayImageMaxHeight = '200px';
+	export let overlayImageMaxHeight = '18vh';
 
 	const imageOverlayCss = css`
 		background-color: ${overlayColorRgba};

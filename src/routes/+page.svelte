@@ -26,7 +26,6 @@
 			imageAttributes={imageAttributesCollection.cc_1}
 			showOverlay={true}
 			overlayImageAttributes={imageAttributesCollection.ccp_ouatacc_white}
-			overlayImageMaxHeight="200px"
 		/>
 		<JDGContentBoxFloating>
 			<JDGBodyCopy fontSizeMultiplier={1.15}>
