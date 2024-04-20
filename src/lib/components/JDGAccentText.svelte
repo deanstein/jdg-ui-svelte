@@ -2,6 +2,7 @@
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-styling-constants.js';
 	import { css } from '@emotion/css';
 
+	export let isQuote = false; // if true, more gap is used
 	export let superText = undefined; // appears above the main text, like a quote segment
 	export let superTextFontFamily = 'REM';
 	export let superTextBold = false;
@@ -11,6 +12,10 @@
 	export let secondaryText = undefined; // appears below the main text, like a quote attribution
 	export let secondaryTextFontFamily = 'REM';
 	export let secondaryTextBold = false;
+
+	const accentTextContainerCss = css`
+		gap: ${isQuote ? '0.5rem' : '0.1rem'};
+	`;
 
 	const superTextCss = css`
 		font-family: ${superTextFontFamily};
@@ -61,7 +66,7 @@
 	`;
 </script>
 
-<div class="jdg-accent-text-container">
+<div class="jdg-accent-text-container {accentTextContainerCss}">
 	{#if superText}
 		<h2 class="accent-text-secondary {superTextCss}">
 			{superText}
@@ -81,7 +86,6 @@
 	.jdg-accent-text-container {
 		display: flex;
 		flex-direction: column;
-		gap: 0.1rem;
 	}
 
 	.accent-text-primary {

@@ -60,8 +60,17 @@
 		<JDGFullWidthContainer>
 			<JDGAccentBlock>
 				<JDGAccentText
-					primaryText={`Cinderella City's short but explosive life provides lessons \nin retail design, land use, and placemaking.`}
-					secondaryText="Some attribution text to test a really long, run-on sentence. Or even a bit of a subtitle!"
+					primaryText={`This accent text`}
+					secondaryText="demonstrates the no-quote type."
+				></JDGAccentText>
+			</JDGAccentBlock>
+		</JDGFullWidthContainer>
+		<JDGFullWidthContainer>
+			<JDGAccentBlock>
+				<JDGAccentText
+					isQuote={true}
+					primaryText={`"A very important quote."`}
+					secondaryText="- John K. Doe"
 				></JDGAccentText>
 			</JDGAccentBlock>
 		</JDGFullWidthContainer>
