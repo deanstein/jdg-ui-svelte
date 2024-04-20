@@ -16,6 +16,7 @@ a {
     position: relative;
     display: inline-block;
     text-decoration: none;
+    line-height: 1; /* don't inherit possible parent line height */
 }
 
 /* header logo, menu icon */
@@ -35,6 +36,7 @@ a.no-initial-highlight::before, .jdg-highlight-container .jdg-highlight.no-initi
     left: -6px;
 }
 
+/* primarily for BodyCopy links */
 a::before, .jdg-highlight-container .jdg-highlight::before {
     content: "";
     position: absolute;
@@ -45,6 +47,7 @@ a::before, .jdg-highlight-container .jdg-highlight::before {
     left: -2px;
     /* background-color: this needs to be specified using emotion css */
     transition: all .3s ease-in-out;
+    line-height: 1.2; /* don't inherit possible parent line height */
 }
 
 a:hover::before, .jdg-highlight-container:hover .jdg-highlight::before {
