@@ -7,10 +7,13 @@
 
 	import jdgImageAttributes from '../schemas/jdg-image-attributes.js';
 
+	import jdgPlaceholderImageEnhanced from '../../assets/jdg-image-placeholder.jpg?enhanced';
+
 	import { JDGImage, JDGImageCaptionAttribution, JDGStripesHorizontal } from '../index.js';
 	import { setAlphaInRgbaString, verticalSlide } from '$lib/jdg-graphics-factory.js';
 	import { jdgColors, jdgSizes, jdgDurations, jdgBreakpoints } from '../jdg-styling-constants.js';
 
+	export let imageEnhancedSrc = jdgPlaceholderImageEnhanced;
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object to hold all details
 	export let maxWidth = undefined; // if not defined, takes available space
 	export let maxHeight = '300px';
@@ -126,6 +129,7 @@
 				{maxHeight}
 				{maxWidth}
 				{alternateFitRef}
+				{imageEnhancedSrc}
 				{imageAttributes}
 				showHoverEffect={true}
 				{isHovering}

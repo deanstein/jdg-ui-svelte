@@ -8,8 +8,10 @@
 	import { JDGImage, JDGImageCaptionAttribution } from '$lib/index.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
 
-	export let imageAttributes1; // first image
-	export let imageAttributes2; // second image
+	export let imageEnhancedSrc1; // first image
+	export let imageAttributes1;
+	export let imageEnhancedSrc2; // second image
+	export let imageAttributes2;
 	export let caption = undefined; // combined caption for both images
 	export let attribution = undefined; // combined attribution for both images
 	export let animateSlider = false; // when in view, slider will dance a bit to show interactivity
@@ -177,6 +179,7 @@
 	>
 		<div class="compare-image-absolute">
 			<JDGImage
+				imageEnhancedSrc={imageEnhancedSrc2}
 				imageAttributes={imageAttributes2}
 				fillContainer={false}
 				{maxHeight}
@@ -189,6 +192,7 @@
 			style="clip-path: inset(0 {100 - $sliderPositionStore}% 0 0);"
 		>
 			<JDGImage
+				imageEnhancedSrc={imageEnhancedSrc1}
 				imageAttributes={imageAttributes1}
 				fillContainer={false}
 				{maxHeight}

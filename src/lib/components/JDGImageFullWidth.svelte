@@ -6,6 +6,7 @@
 
 	import { JDGAccentText, JDGFullWidthContainer, JDGImage } from '$lib/index.js';
 
+	export let imageEnhancedSrc;
 	export let imageAttributes = instantiateObject(jdgImageAttributes);
 	export let maxHeight = '80vh';
 	export let showOverlay = false;
@@ -25,7 +26,7 @@
 </script>
 
 <JDGFullWidthContainer>
-	<JDGImage {imageAttributes} {maxHeight} />
+	<JDGImage {imageEnhancedSrc} {imageAttributes} {maxHeight} />
 	{#if showOverlay || primaryText || secondaryText || overlayImageAttributes}
 		<div class="image-overlay {imageOverlayCss}">
 			{#if primaryText || secondaryText}

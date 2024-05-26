@@ -11,7 +11,10 @@
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-styling-constants.js';
 	import { JDGImageCaptionAttribution } from '$lib/index.js';
 
+	import jdgPlaceholderImageEnhanced from '../../assets/jdg-image-placeholder.jpg?enhanced';
+
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object for all image data
+	export let imageEnhancedSrc = jdgPlaceholderImageEnhanced;
 	export let maxHeight = '300px'; // image will never exceed this height, but could be less depending on fillContainer
 	export let maxWidth = undefined; // if not defined, takes available space
 	export let alternateFitRef = undefined; // optionally use another element for image fit calcs
@@ -53,7 +56,8 @@
 	const getAspectRatios = () => {
 		if (containerRef && imageRef) {
 			containerAspectRatio = alternateFitRef
-				? alternateFitRef.clientWidth / maxHeightPx
+				? // @ts-expect-error
+					alternateFitRef.clientWidth / maxHeightPx
 				: containerRef.clientWidth / maxHeightPx;
 			if (!imageAspectRatio) {
 				imageAspectRatio = imageRef.naturalWidth / imageRef.naturalHeight;
@@ -180,10 +184,10 @@
 	bind:this={containerRef}
 	class="jdg-image-container {imageContainerCssDynamic}"
 >
-	<img
+	<enhanced:img
 		bind:this={imageRef}
 		class={`image ${imageCssStatic} ${imageAnimationCss}`}
-		src={imageAttributes.imgSrc}
+		src={imageEnhancedSrc ?? jdgPlaceholderImageEnhanced}
 		alt={imageAttributes.imgAlt}
 	/>
 	<!-- only show blurred image behind if blurUnfilledSpace is true -->

@@ -8,6 +8,7 @@
 		JDGImageTile
 	} from '$lib/index.js';
 
+	export let enhancedImageSrcObjects = [];
 	export let imageAttributeObjects = []; // all images shown in thumbnail collection
 </script>
 
@@ -22,6 +23,7 @@
 		<JDGGridLayout>
 			{#each imageAttributeObjects as imageAttributesObject, i}
 				<JDGImageTile
+					imageEnhancedSrc={enhancedImageSrcObjects[i]}
 					imageAttributes={imageAttributesObject}
 					showBlurInUnfilledSpace={true}
 					showCaption={true}

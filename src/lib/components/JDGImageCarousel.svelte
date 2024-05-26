@@ -9,6 +9,7 @@
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-styling-constants.js';
 
 	export let imageAttributeObjects = []; // all images shown in thumbnail collection
+	export let imageEnhancedSrcObjects = [];
 	export let maxHeight = '50vh';
 	export let activeThumbnailColor = getAccentColors()[0];
 	export let autoAdvance = true; // if true, auto advance through images at given interval
@@ -16,11 +17,13 @@
 
 	let carouselRef; // used for only auto-advancing when carousel is visible
 	let activeImage = imageAttributeObjects[0]; // start with the first image
+	let activeImageEnhancedSrc = imageEnhancedSrcObjects[0];
 	let kludge = true; // kludge to force a "crossfade" effect by swapping divs via flag
 	let intervalId; // identifier for the auto-advance setInterval() call
 
-	const setActiveImage = (imageAttributesObject, endAutoAdvance = false) => {
+	const setActiveImage = (imageEnhancedSrc, imageAttributesObject, endAutoAdvance = false) => {
 		activeImage = imageAttributesObject;
+		activeImageEnhancedSrc = imageEnhancedSrc;
 		kludge = !kludge;
 		// when user clicks on a thumbnail, auto advance stops
 		if (endAutoAdvance) {
@@ -59,7 +62,10 @@
 						intervalId = setInterval(() => {
 							let currentIndex = imageAttributeObjects.indexOf(activeImage);
 							currentIndex = (currentIndex + 1) % imageAttributeObjects.length;
-							setActiveImage(imageAttributeObjects[currentIndex]);
+							setActiveImage(
+								imageEnhancedSrcObjects[currentIndex],
+								imageAttributeObjects[currentIndex]
+							);
 						}, autoAdvanceInterval);
 					} else {
 						clearInterval(intervalId);
@@ -83,6 +89,7 @@
 		{#if kludge}
 			<div class="carousel-crossfade-wrapper-absolute">
 				<JDGImage
+					imageEnhancedSrc={activeImageEnhancedSrc}
 					imageAttributes={activeImage}
 					{maxHeight}
 					fillContainer={false}
@@ -93,6 +100,7 @@
 		{:else}
 			<div class="carousel-crossfade-wrapper-absolute">
 				<JDGImage
+					imageEnhancedSrc={activeImageEnhancedSrc}
 					imageAttributes={activeImage}
 					{maxHeight}
 					fillContainer={false}
@@ -116,7 +124,7 @@
 			>
 				<JDGImageTile
 					onClickFunction={() => {
-						setActiveImage(imageAttributesObject, true);
+						setActiveImage(imageEnhancedSrcObjects[i], imageAttributesObject, true);
 					}}
 					imageAttributes={imageAttributesObject}
 					maxHeight="50px"
