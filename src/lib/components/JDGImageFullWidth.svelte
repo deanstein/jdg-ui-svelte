@@ -18,6 +18,7 @@
 	export let secondaryText = undefined;
 	export let secondaryTextFontFamily = 'REM';
 	export let overlayImageAttributes = undefined; // for example, a logo or vector graphic over the image
+	export let overlayImageEnhancedSrc = undefined;
 	export let overlayImageMaxHeight = '18vh';
 
 	const imageOverlayCss = css`
@@ -41,7 +42,11 @@
 			{/if}
 			{#if overlayImageAttributes}
 				<div class="overlay-image-wrapper">
-					<JDGImage imageAttributes={overlayImageAttributes} maxHeight={overlayImageMaxHeight} />
+					<JDGImage
+						imageEnhancedSrc={overlayImageEnhancedSrc}
+						imageAttributes={overlayImageAttributes}
+						maxHeight={overlayImageMaxHeight}
+					/>
 				</div>
 			{/if}
 		</div>

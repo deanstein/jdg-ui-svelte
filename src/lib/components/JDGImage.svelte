@@ -14,7 +14,7 @@
 	import jdgPlaceholderImageEnhanced from '../../assets/jdg-image-placeholder.jpg?enhanced';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object for all image data
-	export let imageEnhancedSrc = jdgPlaceholderImageEnhanced;
+	export let imageEnhancedSrc;
 	export let maxHeight = '300px'; // image will never exceed this height, but could be less depending on fillContainer
 	export let maxWidth = undefined; // if not defined, takes available space
 	export let alternateFitRef = undefined; // optionally use another element for image fit calcs
@@ -184,12 +184,14 @@
 	bind:this={containerRef}
 	class="jdg-image-container {imageContainerCssDynamic}"
 >
-	<enhanced:img
-		bind:this={imageRef}
-		class={`image ${imageCssStatic} ${imageAnimationCss}`}
-		src={imageEnhancedSrc ?? jdgPlaceholderImageEnhanced}
-		alt={imageAttributes.imgAlt}
-	/>
+	{#if imageEnhancedSrc}
+		<enhanced:img
+			bind:this={imageRef}
+			class={`image ${imageCssStatic} ${imageAnimationCss}`}
+			src={imageEnhancedSrc}
+			alt={imageAttributes.imgAlt}
+		/>
+	{/if}
 	<!-- only show blurred image behind if blurUnfilledSpace is true -->
 	{#if showBlurInUnfilledSpace && !fillContainer}
 		<div class="image-blur {imageBlurCss}"></div>

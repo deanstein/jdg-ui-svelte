@@ -59,6 +59,13 @@ export const setImageDetailAttributes = (imageDetailObject) => {
 	});
 };
 
+export const setImageDetailEnhancedSrc = (imageDetailEnhancedSource) => {
+	uiState.update((currentValue) => {
+		currentValue.imageDetailEnhancedSrc = imageDetailEnhancedSource;
+		return currentValue;
+	});
+};
+
 export const getIsNavSideBarOpen = () => {
 	let isOpen;
 

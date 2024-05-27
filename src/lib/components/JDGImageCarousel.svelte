@@ -127,6 +127,7 @@
 						setActiveImage(imageEnhancedSrcObjects[i], imageAttributesObject, true);
 					}}
 					imageAttributes={imageAttributesObject}
+					imageEnhancedSrc={imageEnhancedSrcObjects[i]}
 					maxHeight="50px"
 					maxWidth="75px"
 				/>

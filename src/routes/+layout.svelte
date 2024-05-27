@@ -69,7 +69,7 @@
 	{#if $uiState.showImageDetailOverlay}
 		<JDGImageDetailOverlay
 			imageAttributes={$uiState.imageDetailAttributes}
-			imageEnhancedSrc={imageEnhancedSrcCollection[$uiState.imageDetailAttributes.imgSrc]}
+			imageEnhancedSrc={$uiState.imageDetailEnhancedSrc}
 		/>
 	{/if}
 </JDGAppContainer>

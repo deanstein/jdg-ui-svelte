@@ -15,16 +15,15 @@ export async function getImageEnhancedSrcCollection() {
 		Object.entries(imageAttributesCollection).map(async ([key, attributes]) => {
 			const imagePromise = images[attributes.imgSrc.split('?')[0]];
 			if (imagePromise) {
-				const module = await imagePromise;
-				imageEnhancedSrcCollection[key] = module;
+				const module = await imagePromise(); // Call the function to get the promise
+				//@ts-expect-error
+				imageEnhancedSrcCollection[key] = module.default;
 			}
 		})
 	);
 
 	return imageEnhancedSrcCollection;
 }
-
-// two places below to add a new image
 
 // a map of all available images and their attributes
 // new images with a caption must be added here
@@ -43,7 +42,7 @@ const imageAttributesCollection = {
 		imgCaption: 'Architecture'
 	}),
 	cc_1: instantiateObject(jdgImageAttributes, {
-		imgSrc: '../../assets/history/CCP1.jpg?enhanced',
+		imgSrc: '../assets/history/CCP1.jpg?enhanced',
 		imgAlt: 'The Blue Mall as seen in 1968.',
 		imgCaption: 'The Blue Mall as seen in 1968.',
 		imgAttribution: 'Englewood Public Library'
@@ -94,21 +93,4 @@ const imageAttributesCollection = {
 	})
 };
 
-// const imageEnhancedSrcCollection = {
-// 	aerial_60s70s_1: images[imageAttributesCollection.aerial_60s70s_1.imgSrc],
-// 	architecture_1: images[imageAttributesCollection.architecture_1.imgSrc],
-// 	cc_1: images[imageAttributesCollection.cc_1.imgSrc.split('?')[0]],
-// 	ccp_ouatac_white: images[imageAttributesCollection.ccp_ouatacc_white.imgSrc],
-// 	ccp_blue_mall_60s70s_1: images[imageAttributesCollection.ccp_blue_mall_60s70s_1.imgSrc],
-// 	ccp_blue_mall_80s90s_1: images[imageAttributesCollection.ccp_blue_mall_80s90s_1.imgSrc],
-// 	ccp_gold_mall_60s70s_1: images[imageAttributesCollection.ccp_gold_mall_60s70s_1.imgSrc],
-// 	ccp_gold_mall_80s90s_1: images[imageAttributesCollection.ccp_gold_mall_80s90s_1.imgSrc],
-// 	lakeside_1: images[imageAttributesCollection.lakeside_1.imgSrc],
-// 	rose_mall_60s70s_1: images[imageAttributesCollection.rose_mall_60s70s_1.imgSrc],
-// 	rose_mall_60s70s_2: images[imageAttributesCollection.rose_mall_60s70s_2.imgSrc]
-// }
-
 export { imageAttributesCollection };
-// export {imageEnhancedSrcCollection};
-console.log(Object.keys(images));
-console.log(images[imageAttributesCollection.cc_1.imgSrc.split('?')[0]]);
