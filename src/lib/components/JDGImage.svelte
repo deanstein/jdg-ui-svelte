@@ -3,6 +3,7 @@
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
+
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 	import uiState from '$lib/states/ui-state.js';
 
@@ -180,7 +181,7 @@
 	bind:this={containerRef}
 	class="jdg-image-container {imageContainerCssDynamic}"
 >
-	<img
+	<Image
 		bind:this={imageRef}
 		class={`image ${imageCssStatic} ${imageAnimationCss}`}
 		src={imageAttributes.imgSrc}
