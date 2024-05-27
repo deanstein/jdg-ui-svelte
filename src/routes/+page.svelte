@@ -155,14 +155,14 @@
 				imageEnhancedSrc={imageEnhancedSrcCollection.rose_mall_60s70s_1}
 				label={'IMAGE DETAIL EXAMPLE'}
 			/>
-			<!-- <JDGImageTile
+			<JDGImageTile
 				label={'EXTERNAL EXAMPLE'}
 				onClickFunction={() => {
 					openUrl('http://www.google.com', true);
 				}}
 			/>
 			<JDGImageTile />
-			<JDGImageTile /> -->
+			<JDGImageTile />
 		</JDGGridLayout>
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="TEST SECTION">
@@ -171,7 +171,7 @@
 			imageEnhancedSrc={imageEnhancedSrcCollection.aerial_60s70s_1}
 			fillContainer={false}
 		/>
-		<!-- <JDGImageTile fillContainer={false} href="/about" /> -->
+		<JDGImageTile fillContainer={false} href="/about" />
 	</JDGContentBoxFloating>
 	<JDGAccentBlock>
 		<JDGAccentText primaryText={`"Another quote."`} secondaryText="Another Someone, 1998" />

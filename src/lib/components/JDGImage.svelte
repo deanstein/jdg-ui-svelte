@@ -6,15 +6,13 @@
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 	import uiState from '$lib/states/ui-state.js';
 
-	import { convertVhToPixels, instantiateObject } from '$lib/jdg-utils.js';
+	import { instantiateObject } from '$lib/jdg-utils.js';
 
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-styling-constants.js';
 	import { JDGImageCaptionAttribution } from '$lib/index.js';
 
-	import jdgPlaceholderImageEnhanced from '../../assets/jdg-image-placeholder.jpg?enhanced';
-
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object for all image data
-	export let imageEnhancedSrc;
+	export let imageEnhancedSrc = undefined;
 	export let maxHeight = '300px'; // image will never exceed this height, but could be less depending on fillContainer
 	export let maxWidth = undefined; // if not defined, takes available space
 	export let alternateFitRef = undefined; // optionally use another element for image fit calcs
@@ -34,23 +32,12 @@
 
 	// height can be in vh or px or even auto
 	// if in vh, convert to pixels for calculations
-	let maxHeightValue;
-	let maxHeightUnit;
 	let maxHeightPx;
-	// self-executing function that gets the pixel height from maxHeight prop
-	const getMaxHeightPxFromProp = (() => {
-		// if height is auto, skip all this
-		if (maxHeight !== 'auto') {
-			[maxHeightValue, maxHeightUnit] = maxHeight.match(/^(\d+)(\D+)$/).slice(1);
-			const maxHeightParsed = parseFloat(maxHeightValue);
-			// get the max height in px for calculations
-			if (maxHeightUnit === 'vh') {
-				maxHeightPx = convertVhToPixels(maxHeightParsed);
-			} else if (maxHeightUnit === 'px') {
-				maxHeightPx = maxHeightParsed;
-			}
-		}
-	})();
+
+	// placeholder image that will be used while given image is loading
+	// or if given image is invalid
+	const placeholderImageSrc =
+		'https://raw.githubusercontent.com/deanstein/jdg-ui-svelte/6a19bbd107ce8787331e5ead06f38fa8e472aaea/static/jdg-image-placeholder.jpg';
 
 	// calculate the aspect ratio of the image container and the image (if not already known)
 	const getAspectRatios = () => {
@@ -191,6 +178,13 @@
 			src={imageEnhancedSrc}
 			alt={imageAttributes.imgAlt}
 		/>
+	{:else}
+		<img
+			bind:this={imageRef}
+			class={`image ${imageCssStatic} ${imageAnimationCss}`}
+			src={placeholderImageSrc}
+			alt={imageAttributes.imgAlt}
+		/>
 	{/if}
 	<!-- only show blurred image behind if blurUnfilledSpace is true -->
 	{#if showBlurInUnfilledSpace && !fillContainer}
@@ -220,6 +214,11 @@
 		height: 100%;
 		width: 100%;
 		transition: transform 0.3s ease-in-out;
+	}
+
+	picture {
+		height: 100%;
+		width: 100%;
 	}
 
 	.image-blur {

@@ -15,7 +15,7 @@
 	import { setAlphaInRgbaString, verticalSlide } from '$lib/jdg-graphics-factory.js';
 	import { jdgColors, jdgSizes, jdgDurations, jdgBreakpoints } from '../jdg-styling-constants.js';
 
-	export let imageEnhancedSrc;
+	export let imageEnhancedSrc = undefined;
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object to hold all details
 	export let maxWidth = undefined; // if not defined, takes available space
 	export let maxHeight = '300px';
@@ -96,6 +96,7 @@
 			on:click={() => {
 				// if provided, use the onclick prop
 				if (onClickFunction) {
+					//@ts-expect-error
 					onClickFunction();
 				} else if (href) {
 					// if href is provided, do nothing
