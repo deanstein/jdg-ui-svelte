@@ -18,12 +18,10 @@ jobs:
           cache: npm
 
       - name: Add sharp
-        run: yarn add sharp --ignore-engines
+        run: npm install --include=optional sharp
 
-      - name: Reinstall dependencies
-        run: |
-          rm -rf node_modules yarn.lock
-          yarn install
+      - name: Install dependencies
+        run: yarn install
 
       - name: build
         env:
