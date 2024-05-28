@@ -18,27 +18,15 @@
 		JDGGridLayout
 	} from '$lib/index.js';
 
-	import {
-		imageAttributesCollection,
-		getImageEnhancedSrcCollection
-	} from './image-attributes-collection.js';
-
-	let imageEnhancedSrcCollection = {};
-	getImageEnhancedSrcCollection().then((collection) => {
-		imageEnhancedSrcCollection = collection;
-
-		console.log('Enhanced image source collection: ', imageEnhancedSrcCollection);
-	});
+	import { imageAttributesCollection } from './image-attributes-collection.js';
 </script>
 
 <JDGContentContainer overlapWithHeader={true}>
 	<div style="display: flex; flex-direction: column;">
 		<JDGImageFullWidth
-			imageEnhancedSrc={imageEnhancedSrcCollection.cc_1}
 			imageAttributes={imageAttributesCollection.cc_1}
 			showOverlay={true}
 			overlayImageAttributes={imageAttributesCollection.ccp_ouatacc_white}
-			overlayImageEnhancedSrc={imageEnhancedSrcCollection?.ccp_ouatacc_white}
 		/>
 		<JDGContentBoxFloating>
 			<JDGBodyCopy fontSizeMultiplier={1.15}>
@@ -47,13 +35,6 @@
 				and a nightmare for the actual city of Englewood, Colorado.
 			</JDGBodyCopy>
 			<JDGImageHybridGridCarousel
-				enhancedImageSrcObjects={[
-					imageEnhancedSrcCollection.aerial_60s70s_1,
-					imageEnhancedSrcCollection.cc_1,
-					imageEnhancedSrcCollection.architecture_1,
-					imageEnhancedSrcCollection.rose_mall_60s70s_1,
-					imageEnhancedSrcCollection.rose_mall_60s70s_2
-				]}
 				imageAttributeObjects={[
 					imageAttributesCollection.aerial_60s70s_1,
 					imageAttributesCollection.cc_1,
@@ -105,9 +86,7 @@
 		<JDGFullWidthContainer>
 			<JDGImageCompare
 				imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
-				imageEnhancedSrc1={imageEnhancedSrcCollection.ccp_gold_mall_60s70s_1}
 				imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
-				imageEnhancedSrc2={imageEnhancedSrcCollection.ccp_gold_mall_80s90s_1}
 				animateSlider={true}
 				useFullWidthAnimation={true}
 				caption="Gold Mall simulated in 1968-1978 and 1987-1997."
@@ -119,7 +98,6 @@
 		<JDGBodyCopy>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.lakeside_1}
-				imageEnhancedSrc={imageEnhancedSrcCollection.lakeside_1}
 				fillContainer={false}
 				showCaption={true}
 				showAttribution={true}
@@ -146,13 +124,11 @@
 		<JDGGridLayout>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.architecture_1}
-				imageEnhancedSrc={imageEnhancedSrcCollection.architecture_1}
 				label={'SCROLL EXAMPLE'}
 				href="#ANOTHER-SECTION"
 			/>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
-				imageEnhancedSrc={imageEnhancedSrcCollection.rose_mall_60s70s_1}
 				label={'IMAGE DETAIL EXAMPLE'}
 			/>
 			<JDGImageTile
@@ -168,7 +144,6 @@
 	<JDGContentBoxFloating title="TEST SECTION">
 		<JDGImageTile
 			imageAttributes={imageAttributesCollection.aerial_60s70s_1}
-			imageEnhancedSrc={imageEnhancedSrcCollection.aerial_60s70s_1}
 			fillContainer={false}
 		/>
 		<JDGImageTile fillContainer={false} href="/about" />
@@ -180,7 +155,6 @@
 		<JDGBodyCopy>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.lakeside_1}
-				imageEnhancedSrc={imageEnhancedSrcCollection.lakeside_1}
 				fillContainer={false}
 				showBlurInUnfilledSpace={true}
 				showCaption={true}
@@ -190,7 +164,6 @@
 		<JDGBodyCopy>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.aerial_60s70s_1}
-				imageEnhancedSrc={imageEnhancedSrcCollection.aerial_60s70s_1}
 				fillContainer={false}
 				showCaption={true}
 				showAttribution={true}
@@ -208,9 +181,6 @@
 	<JDGAccentBlock backgroundColor={$uiState.accentColors[2]} />
 	<JDGContentBoxFloating title="LONG SECTION NAME" />
 	<JDGContentBoxFloating>
-		<JDGImageFullWidth
-			imageEnhancedSrc={imageEnhancedSrcCollection.aerial_60s70s_1}
-			imageAttributes={imageAttributesCollection.aerial_60s70s_1}
-		/>
+		<JDGImageFullWidth imageAttributes={imageAttributesCollection.aerial_60s70s_1} />
 	</JDGContentBoxFloating>
 </JDGContentContainer>

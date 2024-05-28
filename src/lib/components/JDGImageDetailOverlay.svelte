@@ -10,7 +10,6 @@
 	import { JDGImage, JDGImageCaptionAttribution, JDGOverlay } from '$lib/index.js';
 	import { jdgBreakpoints } from '$lib/jdg-styling-constants.js';
 
-	export let imageEnhancedSrc;
 	export let imageAttributes = instantiateObject(jdgImageAttributes);
 
 	const imageAndCaptionWrapperCss = css`
@@ -38,7 +37,6 @@
 >
 	<div class="image-and-caption-wrapper {imageAndCaptionWrapperCss}" transition:scale>
 		<JDGImage
-			{imageEnhancedSrc}
 			{imageAttributes}
 			maxHeight="auto"
 			fillContainer={false}

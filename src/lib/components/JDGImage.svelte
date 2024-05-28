@@ -12,7 +12,6 @@
 	import { JDGImageCaptionAttribution } from '$lib/index.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object for all image data
-	export let imageEnhancedSrc = undefined;
 	export let maxHeight = '300px'; // image will never exceed this height, but could be less depending on fillContainer
 	export let maxWidth = undefined; // if not defined, takes available space
 	export let alternateFitRef = undefined; // optionally use another element for image fit calcs
@@ -121,9 +120,7 @@
 		}
 	`;
 
-	const imageBlurCss = css`
-		background-image: url(${imageAttributes.imgSrc});
-	`;
+	let imageBlurCss = css``;
 
 	// may be updated dynamically by setImageSizeAndFit
 	let imageContainerCssDynamic = css`
@@ -163,6 +160,14 @@
 			bottom: ${isHovering && showHoverEffect ? '9px' : '0px'};
 			transition: bottom ${isHovering && showHoverEffect ? '400ms' : '200ms'};
 		`;
+
+		if (showBlurInUnfilledSpace) {
+			const imgElement = containerRef?.querySelector('img');
+
+			imageBlurCss = css`
+				background-image: url(${imgElement?.src});
+			`;
+		}
 	}
 </script>
 
@@ -171,14 +176,16 @@
 	bind:this={containerRef}
 	class="jdg-image-container {imageContainerCssDynamic}"
 >
-	{#if imageEnhancedSrc}
+	<!-- if there's an enhanced image, use it -->
+	{#if imageAttributes?.imgEnhancedSrc}
 		<enhanced:img
 			bind:this={imageRef}
 			class={`image ${imageCssStatic} ${imageAnimationCss}`}
-			src={imageEnhancedSrc}
+			src={imageAttributes.imgEnhancedSrc}
 			alt={imageAttributes.imgAlt}
 		/>
 	{:else}
+		<!-- show the placeholder image as a non-enhanced image -->
 		<img
 			bind:this={imageRef}
 			class={`image ${imageCssStatic} ${imageAnimationCss}`}
@@ -189,6 +196,7 @@
 	<!-- only show blurred image behind if blurUnfilledSpace is true -->
 	{#if showBlurInUnfilledSpace && !fillContainer}
 		<div class="image-blur {imageBlurCss}"></div>
+		<img:enhanced src={imageAttributes.imgEnhancedSrc} />
 		<div class="image-blur-background"></div>
 	{/if}
 	<!-- caption and attribution -->

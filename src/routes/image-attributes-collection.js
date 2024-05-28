@@ -9,20 +9,16 @@ const images = import.meta.glob('./../assets/**/*.{avif,gif,heif,jpeg,jpg,png,ti
 });
 
 export async function getImageEnhancedSrcCollection() {
-	const imageEnhancedSrcCollection = {};
-
 	await Promise.all(
 		Object.entries(imageAttributesCollection).map(async ([key, attributes]) => {
 			const imagePromise = images[attributes.imgSrc.split('?')[0]];
 			if (imagePromise) {
 				const module = await imagePromise(); // Call the function to get the promise
 				//@ts-expect-error
-				imageEnhancedSrcCollection[key] = module.default;
+				imageAttributesCollection[key].imgEnhancedSrc = module.default;
 			}
 		})
 	);
-
-	return imageEnhancedSrcCollection;
 }
 
 // a map of all available images and their attributes
@@ -92,5 +88,7 @@ const imageAttributesCollection = {
 		imgAttribution: 'Denver Public Library'
 	})
 };
+
+await getImageEnhancedSrcCollection();
 
 export { imageAttributesCollection };

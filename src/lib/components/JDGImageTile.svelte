@@ -1,11 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import {
-		setImageDetailAttributes,
-		setImageDetailEnhancedSrc,
-		setShowImageDetailModal
-	} from '$lib/jdg-state-management.js';
+	import { setImageDetailAttributes, setShowImageDetailModal } from '$lib/jdg-state-management.js';
 
 	import { instantiateObject } from './../jdg-utils.js';
 
@@ -15,7 +11,6 @@
 	import { setAlphaInRgbaString, verticalSlide } from '$lib/jdg-graphics-factory.js';
 	import { jdgColors, jdgSizes, jdgDurations, jdgBreakpoints } from '../jdg-styling-constants.js';
 
-	export let imageEnhancedSrc = undefined;
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object to hold all details
 	export let maxWidth = undefined; // if not defined, takes available space
 	export let maxHeight = '300px';
@@ -34,7 +29,6 @@
 	const showImageDetailModal = () => {
 		setShowImageDetailModal(true);
 		setImageDetailAttributes(imageAttributes);
-		setImageDetailEnhancedSrc(imageEnhancedSrc);
 	};
 
 	let isHovering;
@@ -133,7 +127,6 @@
 				{maxHeight}
 				{maxWidth}
 				{alternateFitRef}
-				{imageEnhancedSrc}
 				{imageAttributes}
 				showHoverEffect={true}
 				{isHovering}

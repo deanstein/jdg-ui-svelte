@@ -6,7 +6,6 @@
 
 	import { JDGAccentText, JDGFullWidthContainer, JDGImage } from '$lib/index.js';
 
-	export let imageEnhancedSrc;
 	export let imageAttributes = instantiateObject(jdgImageAttributes);
 	export let maxHeight = '80vh';
 	export let showOverlay = false;
@@ -18,7 +17,6 @@
 	export let secondaryText = undefined;
 	export let secondaryTextFontFamily = 'REM';
 	export let overlayImageAttributes = undefined; // for example, a logo or vector graphic over the image
-	export let overlayImageEnhancedSrc = undefined;
 	export let overlayImageMaxHeight = '18vh';
 
 	const imageOverlayCss = css`
@@ -27,7 +25,7 @@
 </script>
 
 <JDGFullWidthContainer>
-	<JDGImage {imageEnhancedSrc} {imageAttributes} {maxHeight} />
+	<JDGImage {imageAttributes} {maxHeight} />
 	{#if showOverlay || primaryText || secondaryText || overlayImageAttributes}
 		<div class="image-overlay {imageOverlayCss}">
 			{#if primaryText || secondaryText}
@@ -42,11 +40,7 @@
 			{/if}
 			{#if overlayImageAttributes}
 				<div class="overlay-image-wrapper">
-					<JDGImage
-						imageEnhancedSrc={overlayImageEnhancedSrc}
-						imageAttributes={overlayImageAttributes}
-						maxHeight={overlayImageMaxHeight}
-					/>
+					<JDGImage imageAttributes={overlayImageAttributes} maxHeight={overlayImageMaxHeight} />
 				</div>
 			{/if}
 		</div>

@@ -14,12 +14,6 @@
 		JDGNotificationBanner
 	} from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-styling-constants.js';
-	import { getImageEnhancedSrcCollection } from './image-attributes-collection.js';
-
-	let imageEnhancedSrcCollection;
-	getImageEnhancedSrcCollection().then((collection) => {
-		imageEnhancedSrcCollection = collection;
-	});
 
 	// define the nav items in the header
 	const newNavItem1 = instantiateObject(jdgNavItem);
@@ -67,9 +61,6 @@
 	/>
 	<!-- show the image detail overlay when appropriate -->
 	{#if $uiState.showImageDetailOverlay}
-		<JDGImageDetailOverlay
-			imageAttributes={$uiState.imageDetailAttributes}
-			imageEnhancedSrc={$uiState.imageDetailEnhancedSrc}
-		/>
+		<JDGImageDetailOverlay imageAttributes={$uiState.imageDetailAttributes} />
 	{/if}
 </JDGAppContainer>
