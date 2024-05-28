@@ -20,11 +20,10 @@ jobs:
       - name: Add sharp
         run: yarn add sharp --ignore-engines
 
-      - name: Install Sharp for Linux
-        run: npm install --os=linux --cpu=x64 sharp
-
-      - name: Install dependencies
-        run: yarn install
+      - name: Reinstall dependencies
+        run: |
+          rm -rf node_modules yarn.lock
+          yarn install
 
       - name: build
         env:
