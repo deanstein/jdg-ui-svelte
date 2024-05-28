@@ -6,7 +6,7 @@
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 	import uiState from '$lib/states/ui-state.js';
 
-	import { convertVhToPixels, instantiateObject } from '$lib/jdg-utils.js';
+	import { instantiateObject } from '$lib/jdg-utils.js';
 
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-styling-constants.js';
 	import { JDGImageCaptionAttribution } from '$lib/index.js';
@@ -31,29 +31,19 @@
 
 	// height can be in vh or px or even auto
 	// if in vh, convert to pixels for calculations
-	let maxHeightValue;
-	let maxHeightUnit;
 	let maxHeightPx;
-	// self-executing function that gets the pixel height from maxHeight prop
-	const getMaxHeightPxFromProp = (() => {
-		// if height is auto, skip all this
-		if (maxHeight !== 'auto') {
-			[maxHeightValue, maxHeightUnit] = maxHeight.match(/^(\d+)(\D+)$/).slice(1);
-			const maxHeightParsed = parseFloat(maxHeightValue);
-			// get the max height in px for calculations
-			if (maxHeightUnit === 'vh') {
-				maxHeightPx = convertVhToPixels(maxHeightParsed);
-			} else if (maxHeightUnit === 'px') {
-				maxHeightPx = maxHeightParsed;
-			}
-		}
-	})();
+
+	// placeholder image that will be used while given image is loading
+	// or if given image is invalid
+	const placeholderImageSrc =
+		'https://raw.githubusercontent.com/deanstein/jdg-ui-svelte/6a19bbd107ce8787331e5ead06f38fa8e472aaea/static/jdg-image-placeholder.jpg';
 
 	// calculate the aspect ratio of the image container and the image (if not already known)
 	const getAspectRatios = () => {
 		if (containerRef && imageRef) {
 			containerAspectRatio = alternateFitRef
-				? alternateFitRef.clientWidth / maxHeightPx
+				? // @ts-expect-error
+					alternateFitRef.clientWidth / maxHeightPx
 				: containerRef.clientWidth / maxHeightPx;
 			if (!imageAspectRatio) {
 				imageAspectRatio = imageRef.naturalWidth / imageRef.naturalHeight;
@@ -130,9 +120,7 @@
 		}
 	`;
 
-	const imageBlurCss = css`
-		background-image: url(${imageAttributes.imgSrc});
-	`;
+	let imageBlurCss = css``;
 
 	// may be updated dynamically by setImageSizeAndFit
 	let imageContainerCssDynamic = css`
@@ -172,6 +160,14 @@
 			bottom: ${isHovering && showHoverEffect ? '9px' : '0px'};
 			transition: bottom ${isHovering && showHoverEffect ? '400ms' : '200ms'};
 		`;
+
+		if (showBlurInUnfilledSpace) {
+			const imgElement = containerRef?.querySelector('img');
+
+			imageBlurCss = css`
+				background-image: url(${imgElement?.src});
+			`;
+		}
 	}
 </script>
 
@@ -180,15 +176,27 @@
 	bind:this={containerRef}
 	class="jdg-image-container {imageContainerCssDynamic}"
 >
-	<img
-		bind:this={imageRef}
-		class={`image ${imageCssStatic} ${imageAnimationCss}`}
-		src={imageAttributes.imgSrc}
-		alt={imageAttributes.imgAlt}
-	/>
+	<!-- if there's an enhanced image, use it -->
+	{#if imageAttributes?.imgEnhancedSrc}
+		<enhanced:img
+			bind:this={imageRef}
+			class={`image ${imageCssStatic} ${imageAnimationCss}`}
+			src={imageAttributes.imgEnhancedSrc}
+			alt={imageAttributes.imgAlt}
+		/>
+	{:else}
+		<!-- show the placeholder image as a non-enhanced image -->
+		<img
+			bind:this={imageRef}
+			class={`image ${imageCssStatic} ${imageAnimationCss}`}
+			src={placeholderImageSrc}
+			alt={imageAttributes.imgAlt}
+		/>
+	{/if}
 	<!-- only show blurred image behind if blurUnfilledSpace is true -->
 	{#if showBlurInUnfilledSpace && !fillContainer}
 		<div class="image-blur {imageBlurCss}"></div>
+		<img:enhanced src={imageAttributes.imgEnhancedSrc} />
 		<div class="image-blur-background"></div>
 	{/if}
 	<!-- caption and attribution -->
@@ -214,6 +222,11 @@
 		height: 100%;
 		width: 100%;
 		transition: transform 0.3s ease-in-out;
+	}
+
+	picture {
+		height: 100%;
+		width: 100%;
 	}
 
 	.image-blur {

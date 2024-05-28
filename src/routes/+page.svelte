@@ -17,7 +17,8 @@
 		JDGImageTile,
 		JDGGridLayout
 	} from '$lib/index.js';
-	import imageAttributesCollection from './image-attributes-collection.js';
+
+	import { imageAttributesCollection } from './image-attributes-collection.js';
 </script>
 
 <JDGContentContainer overlapWithHeader={true}>
@@ -180,6 +181,6 @@
 	<JDGAccentBlock backgroundColor={$uiState.accentColors[2]} />
 	<JDGContentBoxFloating title="LONG SECTION NAME" />
 	<JDGContentBoxFloating>
-		<JDGImageFullWidth />
+		<JDGImageFullWidth imageAttributes={imageAttributesCollection.aerial_60s70s_1} />
 	</JDGContentBoxFloating>
 </JDGContentContainer>

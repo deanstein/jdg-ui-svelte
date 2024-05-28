@@ -8,8 +8,8 @@
 	import { JDGImage, JDGImageCaptionAttribution } from '$lib/index.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
 
-	export let imageAttributes1; // first image
-	export let imageAttributes2; // second image
+	export let imageAttributes1;
+	export let imageAttributes2;
 	export let caption = undefined; // combined caption for both images
 	export let attribution = undefined; // combined attribution for both images
 	export let animateSlider = false; // when in view, slider will dance a bit to show interactivity
