@@ -1,25 +1,12 @@
-import { instantiateObject } from '$lib/jdg-utils.js';
+import { getImageEnhancedSrcCollection, instantiateObject } from '$lib/jdg-utils.js';
 import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 
-// get all images as objects for the optimization package
+// get all images from a local dir for optimization
 const images = import.meta.glob('./../assets/**/*.{avif,gif,heif,jpeg,jpg,png,tiff,webp}', {
 	query: {
 		enhanced: true
 	}
 });
-
-export async function getImageEnhancedSrcCollection() {
-	await Promise.all(
-		Object.entries(imageAttributesCollection).map(async ([key, attributes]) => {
-			const imagePromise = images[attributes.imgSrc.split('?')[0]];
-			if (imagePromise) {
-				const module = await imagePromise(); // Call the function to get the promise
-				//@ts-expect-error
-				imageAttributesCollection[key].imgEnhancedSrc = module.default;
-			}
-		})
-	);
-}
 
 // a map of all available images and their attributes
 // new images with a caption must be added here
@@ -89,6 +76,7 @@ const imageAttributesCollection = {
 	})
 };
 
-await getImageEnhancedSrcCollection();
+// convert the imageAttributesCollection to an enhnacedSrc collection for optimized assets
+await getImageEnhancedSrcCollection(images, imageAttributesCollection);
 
 export { imageAttributesCollection };
