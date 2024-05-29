@@ -17,9 +17,6 @@ jobs:
           node-version: 18
           cache: npm
 
-      - name: Add sharp
-        run: yarn add sharp --ignore-engines
-
       - name: Install dependencies
         run: yarn install
 
