@@ -324,3 +324,17 @@ export const convertHexToRGBA = (hexColor, alpha = 1) => {
 
 	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
+
+// given an array of images (using meta.glob.import()),
+// get the corresponding array of enhanced images (img:enhanced)
+export const getImageEnhancedSrcCollection = async (importedImages, imageAttributesCollection) => {
+	await Promise.all(
+		Object.entries(imageAttributesCollection).map(async ([key, attributes]) => {
+			const imagePromise = importedImages[attributes.imgSrc.split('?')[0]];
+			if (imagePromise) {
+				const module = await imagePromise();
+				imageAttributesCollection[key].imgEnhancedSrc = module.default;
+			}
+		})
+	);
+};

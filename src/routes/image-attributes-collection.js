@@ -1,5 +1,12 @@
-import { instantiateObject } from '$lib/jdg-utils.js';
+import { getImageEnhancedSrcCollection, instantiateObject } from '$lib/jdg-utils.js';
 import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
+
+// get all images from a local dir for optimization
+const images = import.meta.glob('./../assets/**/*.{avif,gif,heif,jpeg,jpg,png,tiff,webp}', {
+	query: {
+		enhanced: true
+	}
+});
 
 // a map of all available images and their attributes
 // new images with a caption must be added here
@@ -69,4 +76,7 @@ const imageAttributesCollection = {
 	})
 };
 
-export default imageAttributesCollection;
+// convert the imageAttributesCollection to an enhnacedSrc collection for optimized assets
+await getImageEnhancedSrcCollection(images, imageAttributesCollection);
+
+export { imageAttributesCollection };
