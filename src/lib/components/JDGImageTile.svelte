@@ -90,6 +90,7 @@
 			on:click={() => {
 				// if provided, use the onclick prop
 				if (onClickFunction) {
+					//@ts-expect-error
 					onClickFunction();
 				} else if (href) {
 					// if href is provided, do nothing

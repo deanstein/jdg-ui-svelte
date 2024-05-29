@@ -53,6 +53,7 @@
 	const getAspectRatios = () => {
 		if (containerRef && imageRef) {
 			containerAspectRatio = alternateFitRef
+			//@ts-expect-error
 				? alternateFitRef.clientWidth / maxHeightPx
 				: containerRef.clientWidth / maxHeightPx;
 			if (!imageAspectRatio) {
