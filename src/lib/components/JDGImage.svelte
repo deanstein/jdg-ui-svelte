@@ -206,11 +206,6 @@
 		transition: transform 0.3s ease-in-out;
 	}
 
-	picture {
-		height: 100%;
-		width: 100%;
-	}
-
 	.image-blur {
 		position: absolute;
 		top: 0;
