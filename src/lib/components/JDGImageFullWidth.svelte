@@ -40,7 +40,7 @@
 			{/if}
 			{#if overlayImageAttributes}
 				<div class="overlay-image-wrapper">
-					<JDGImage imageAttributes={overlayImageAttributes} maxHeight={overlayImageMaxHeight} />
+					<JDGImage imageAttributes={overlayImageAttributes} maxHeight={overlayImageMaxHeight} fillContainer={false}/>
 				</div>
 			{/if}
 		</div>
