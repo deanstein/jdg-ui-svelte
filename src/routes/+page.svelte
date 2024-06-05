@@ -27,12 +27,15 @@
 			imageAttributes={imageAttributesCollection.cc_1}
 			showOverlay={true}
 			overlayImageAttributes={imageAttributesCollection.ccp_ouatacc_white}
+			overlayText="A Secondary Text Test"
 		/>
 		<JDGContentBoxFloating>
 			<JDGBodyCopy fontSizeMultiplier={1.15}>
-				The <strong>Cinderella City Project</strong> is an examination of a unique mid-century shopping
-				destination, developed by its creator as a "city under a roof", which became both a fairtyale
-				and a nightmare for the actual city of Englewood, Colorado.
+				The <strong>Cinderella City Project</strong> is an examination of a unique mid-century
+				shopping destination, developed by its creator as a "city under a roof", which became both a
+				fairtyale and a nightmare for the actual city of Englewood, Colorado.
+				<br /><br />
+				There's even more to the story. <a href="./history">Read Cinderella City's history</a>.
 			</JDGBodyCopy>
 			<JDGImageHybridGridCarousel
 				imageAttributeObjects={[
