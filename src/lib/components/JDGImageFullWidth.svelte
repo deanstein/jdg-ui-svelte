@@ -10,7 +10,6 @@
 	export let maxHeight = '80vh';
 	export let showOverlay = false;
 	export let overlayColorRgba = 'rgba(50, 50, 50, 0.2)';
-	export let overlayText = undefined;
 	export let superText = undefined;
 	export let superTextFontFamily = 'REM';
 	export let primaryText = undefined;
@@ -19,6 +18,8 @@
 	export let secondaryTextFontFamily = 'REM';
 	export let overlayImageAttributes = undefined; // for example, a logo or vector graphic over the image
 	export let overlayImageMaxHeight = '18vh';
+	export let overlayImageText = undefined;
+	export let overlayImageTextFontFamily = 'REM';
 
 	const imageOverlayCss = css`
 		background-color: ${overlayColorRgba};
@@ -46,8 +47,11 @@
 						maxHeight={overlayImageMaxHeight}
 						fillContainer={false}
 					/>
-					{#if overlayText}
-						<JDGAccentText secondaryText={overlayText} />
+					{#if overlayImageText}
+						<JDGAccentText
+							secondaryText={overlayImageText}
+							secondaryTextFontFamily={overlayImageTextFontFamily}
+						/>
 					{/if}
 				</div>
 			{/if}

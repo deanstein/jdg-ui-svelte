@@ -27,7 +27,8 @@
 			imageAttributes={imageAttributesCollection.cc_1}
 			showOverlay={true}
 			overlayImageAttributes={imageAttributesCollection.ccp_ouatacc_white}
-			overlayText="A Secondary Text Test"
+			overlayImageText="A Secondary Text Test"
+			overlayImageTextFontFamily="Righteous"
 		/>
 		<JDGContentBoxFloating>
 			<JDGBodyCopy fontSizeMultiplier={1.15}>
