@@ -10,6 +10,7 @@
 	export let maxHeight = '80vh';
 	export let showOverlay = false;
 	export let overlayColorRgba = 'rgba(50, 50, 50, 0.2)';
+	export let overlayText = undefined;
 	export let superText = undefined;
 	export let superTextFontFamily = 'REM';
 	export let primaryText = undefined;
@@ -28,7 +29,7 @@
 	<JDGImage {imageAttributes} {maxHeight} />
 	{#if showOverlay || primaryText || secondaryText || overlayImageAttributes}
 		<div class="image-overlay {imageOverlayCss}">
-			{#if primaryText || secondaryText}
+			{#if superText || primaryText || secondaryText}
 				<JDGAccentText
 					{superText}
 					{superTextFontFamily}
@@ -45,6 +46,9 @@
 						maxHeight={overlayImageMaxHeight}
 						fillContainer={false}
 					/>
+					{#if overlayText}
+						<JDGAccentText secondaryText={overlayText} />
+					{/if}
 				</div>
 			{/if}
 		</div>
@@ -68,6 +72,8 @@
 		top: 0;
 		left: 0;
 		display: flex;
+		flex-direction: column;
+		gap: 15px;
 		align-items: center;
 		justify-content: center;
 		width: 100%;

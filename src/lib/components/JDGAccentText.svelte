@@ -6,7 +6,7 @@
 	export let superText = undefined; // appears above the main text, like a quote segment
 	export let superTextFontFamily = 'REM';
 	export let superTextBold = false;
-	export let primaryText = 'Accent text'; // main text in large font
+	export let primaryText = undefined; // main text in large font
 	export let primaryTextFontFamily = 'REM';
 	export let primaryTextBold = false;
 	export let secondaryText = undefined; // appears below the main text, like a quote attribution
@@ -72,9 +72,11 @@
 			{superText}
 		</h2>
 	{/if}
-	<h1 class="accent-text-primary {primaryTextCss}">
-		{`${primaryText}`}
-	</h1>
+	{#if primaryText}
+		<h1 class="accent-text-primary {primaryTextCss}">
+			{`${primaryText}`}
+		</h1>
+	{/if}
 	{#if secondaryText}
 		<h2 class="accent-text-secondary {secondaryTextCss}">
 			{secondaryText}
