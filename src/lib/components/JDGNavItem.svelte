@@ -1,0 +1,33 @@
+<script>
+	import { css } from '@emotion/css';
+
+	import { jdgSizes } from '$lib/jdg-styling-constants.js';
+
+	export let navItem;
+	export let onClickFunction = () => {};
+	export let nLetterSpacing = 5;
+	export let letterSpacingUnit = 'px';
+
+	const navItemCss = css`
+		font-size: ${jdgSizes.fontSizeHeaderTitle};
+		letter-spacing: ${nLetterSpacing.toString() + letterSpacingUnit};
+		padding-left: ${(nLetterSpacing / 2).toString() + letterSpacingUnit};
+	`;
+</script>
+
+<a
+	class="jdg-nav-item no-initial-highlight {navItemCss}"
+	href={navItem?.href}
+	on:click={() => {
+		onClickFunction();
+	}}>{navItem?.label}</a
+>
+
+<style>
+	.jdg-nav-item {
+		align-items: baseline;
+		display: flex;
+		font-weight: bold;
+		line-height: 0px; /* not sure why, but required to get text at bottom of div */
+	}
+</style>

@@ -15,10 +15,13 @@
 		JDGImageFullWidth,
 		JDGImageHybridGridCarousel,
 		JDGImageTile,
-		JDGGridLayout
+		JDGGridLayout,
+		JDGJumpTo
 	} from '$lib/index.js';
 
 	import { imageAttributesCollection } from './image-attributes-collection.js';
+	import { instantiateObject } from '$lib/jdg-utils.js';
+	import jdgNavItem from '$lib/schemas/jdg-nav-item.js';
 </script>
 
 <JDGContentContainer overlapWithHeader={true}>
@@ -49,6 +52,22 @@
 			/>
 		</JDGContentBoxFloating>
 	</div>
+	<JDGJumpTo
+		jumpToNavItems={[
+			instantiateObject(jdgNavItem, {
+				label: 'PROJECT BACKGROUND',
+				href: '#BACKGROUND'
+			}),
+			instantiateObject(jdgNavItem, {
+				label: 'THIS IS A LONGER TITLE',
+				href: '#ARCHITECTURE'
+			}),
+			instantiateObject(jdgNavItem, {
+				label: 'ANOTHER SECTION',
+				href: '#ARCHITECTURE'
+			})
+		]}
+	/>
 	<JDGContentBoxFloating title="BACKGROUND">
 		<JDGBodyCopy paddingTop="0">
 			The city of Englewood, Colorado changed forever in 1968 when mall magnate Gerri Von Frellick

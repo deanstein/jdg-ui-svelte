@@ -7,7 +7,7 @@
 	import { getIsNavSideBarOpen, setNavSidebarOpen } from '../jdg-state-management.js';
 	import { breakpointHandler } from '$lib/jdg-ui-management.js';
 
-	import { JDGMenuIcon } from '../index.js';
+	import { JDGMenuIcon, JDGNavItem } from '../index.js';
 	import { jdgColors, jdgSizes } from '../jdg-styling-constants.js';
 
 	// nav items are an array of objects
@@ -51,14 +51,6 @@
 		background-color: transparent;
 	`;
 
-	const navItemCss = css`
-		font-size: ${jdgSizes.fontSizeHeaderTitle};
-		:last-of-type {
-			margin-right: 0rem;
-			padding-right: 0rem;
-		}
-	`;
-
 	onMount(() => {
 		window.addEventListener('resize', navBreakpointHandler);
 		// Call the handler once to handle the current screen size
@@ -99,19 +91,12 @@
 {:else}
 	<nav class="desktop-nav-container jdg-letter-spacing-title">
 		{#each navItems as navItem, i}
-			<a class="desktop-nav-item no-initial-highlight {navItemCss}" href={navItem?.href}
-				>{navItem?.label}</a
-			>
+			<JDGNavItem {navItem} />
 		{/each}
 	</nav>
 {/if}
 
 <style>
-	a {
-		letter-spacing: 5px;
-		padding-left: 2.5px; /* letter-spacing adds an extra space at the end; account for this by shifting 1/2 letter spacing on left */
-	}
-
 	.desktop-nav-container {
 		display: flex;
 		width: 100%;
@@ -119,13 +104,6 @@
 		align-items: flex-end;
 		justify-content: end;
 		gap: 4rem;
-	}
-
-	.desktop-nav-item {
-		align-items: baseline;
-		display: flex;
-		font-weight: bold;
-		line-height: 0px; /* not sure why, but required to get text at bottom of div */
 	}
 
 	.mobile-nav-button-justification-container {

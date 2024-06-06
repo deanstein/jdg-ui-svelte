@@ -60,8 +60,14 @@ export { JDGImageHybridGridCarousel };
 import JDGImageTile from './components/JDGImageTile.svelte';
 export { JDGImageTile };
 
+import JDGJumpTo from './components/JDGJumpTo.svelte';
+export { JDGJumpTo };
+
 import JDGLoadingOverlay from './components/JDGLoadingOverlay.svelte';
 export { JDGLoadingOverlay };
+
+import JDGNavItem from './components/JDGNavItem.svelte';
+export { JDGNavItem };
 
 import JDGNotificationBanner from './components/JDGNotificationBanner.svelte';
 export { JDGNotificationBanner };

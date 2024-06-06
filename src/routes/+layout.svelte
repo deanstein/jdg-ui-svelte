@@ -47,7 +47,7 @@
 		logoTitle={'JDG SVELTE UI'}
 		logoAlt="JDG SVELTE UI"
 		{navItems}
-		useMobileNav={true}
+		useMobileNav={false}
 		showHorizontalStripes={true}
 	/>
 	<JDGBackground />

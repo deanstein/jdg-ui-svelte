@@ -5,9 +5,11 @@
 
 	export let fontSizeMultiplier = 1; // optionally make fonts larger at all breakpoints
 	export let paddingTop = undefined; // first body copy needs this set to 0
+	export let textAlign = 'left';
 
 	const bodyCopyContainerCss = css`
 		line-height: 1.5;
+		text-align: ${textAlign};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: calc(${fontSizeMultiplier * 15}px);
 			padding: ${paddingTop ?? jdgSizes.contentBoxPaddingSm} ${jdgSizes.bodyCopyVerticalPaddingSm}
