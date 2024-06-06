@@ -21,7 +21,7 @@
 	export let showArrowInItems = true;
 
 	const jumpToItemCss = css`
-		min-height: ${(jdgSizes.nFontSizeHeaderTitle * 3).toString() + jdgSizes.fontUnit};
+		min-height: ${(jdgSizes.nFontSizeHeaderTitle * 2.5).toString() + jdgSizes.fontUnit};
 	`;
 </script>
 

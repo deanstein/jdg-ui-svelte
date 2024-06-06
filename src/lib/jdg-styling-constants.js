@@ -71,15 +71,15 @@ export const jdgSizes = {
 	get fontSizeAccentTextPrimaryLg() {
 		return this.nFontSizeAccentTextPrimaryLg.toString() + this.fontUnit;
 	},
-	nFontSizeAccentTextSecondarySm: 1,
+	nFontSizeAccentTextSecondarySm: 1.25,
 	get fontSizeAccentTextSecondarySm() {
 		return this.nFontSizeAccentTextSecondarySm.toString() + this.fontUnit;
 	},
-	nFontSizeAccentTextSecondaryMd: 1.25,
+	nFontSizeAccentTextSecondaryMd: 1.5,
 	get fontSizeAccentTextSecondaryMd() {
 		return this.nFontSizeAccentTextSecondaryMd.toString() + this.fontUnit;
 	},
-	nFontSizeAccentTextSecondaryLg: 1.5,
+	nFontSizeAccentTextSecondaryLg: 1.75,
 	get fontSizeAccentTextSecondaryLg() {
 		return this.nFontSizeAccentTextSecondaryLg.toString() + this.fontUnit;
 	},
