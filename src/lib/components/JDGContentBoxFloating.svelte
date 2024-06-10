@@ -7,19 +7,22 @@
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '../jdg-styling-constants.js';
 
 	export let title = undefined;
-	export let useExteriorTitle = false; // legacy exterior title
+	export let subtitle = undefined;
 	// @ts-expect-error
 	export let anchorTag = title?.replace(/ /g, '-');
 
-	const titleScrollMultiplier = 1.75; // when scrolling to this anchor tag, account for the height of the title and then some
+	// when scrolling to this anchor tag,
+	// account for the height of the title and then some
+	const titleScrollMultiplier = 1.75;
 
-	const floatingBoxTitleExteriorCss = css`
+	const floatingBoxTitleCss = css`
 		font-size: ${jdgSizes.fontSizeFloatingContentBoxTitle};
-		color: ${jdgColors.contentBoxBackground};
+		color: ${jdgColors.title};
+		margin-bottom: ${subtitle ? 0 : 'revert'};
 	`;
 
-	const floatingBoxTitleInteriorCss = css`
-		font-size: ${jdgSizes.fontSizeFloatingContentBoxTitle};
+	const floatingBoxSubtitleCss = css`
+		font-size: ${jdgSizes.fontSizeFloatingContentBoxSubtitle};
 		color: ${jdgColors.title};
 	`;
 
@@ -64,17 +67,20 @@
 </script>
 
 <div class="jdg-content-box-floating-container {floatingBoxContainerCss}">
-	{#if title}
-		{#if useExteriorTitle}
-			<h1 class="content-box-title-exterior {floatingBoxTitleExteriorCss}">
-				{title}
-			</h1>
-		{:else}
-			<h1 class="content-box-title-interior {floatingBoxTitleInteriorCss}">
-				{title}
-			</h1>
-		{/if}
-		<div id={anchorTag} class="content-box-anchor-tag {floatingBoxAnchorTagCss}" />
+	{#if title || subtitle}
+		<div class="content-box-title-and-subtitle-container">
+			{#if title}
+				<h1 class="content-box-title-and-subtitle {floatingBoxTitleCss}">
+					{title}
+				</h1>
+				<div id={anchorTag} class="content-box-anchor-tag {floatingBoxAnchorTagCss}" />
+			{/if}
+			{#if subtitle}
+				<h2 class="content-box-title-and-subtitle content-box-subtitle {floatingBoxSubtitleCss}">
+					{subtitle}
+				</h2>
+			{/if}
+		</div>
 	{/if}
 	<slot />
 </div>
@@ -89,17 +95,20 @@
 		min-height: 50px;
 	}
 
-	.content-box-title-exterior {
-		position: absolute;
-		bottom: 100%;
-		left: 0;
-		font-weight: bold;
-		line-height: 0.68;
-		margin: 0;
+	.content-box-title-and-subtitle-container {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		gap: 10px;
 	}
 
-	.content-box-title-interior {
+	.content-box-title-and-subtitle {
 		text-align: center;
+	}
+
+	.content-box-subtitle {
+		margin-top: 0;
 	}
 
 	.content-box-anchor-tag {
