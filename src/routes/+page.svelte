@@ -16,12 +16,29 @@
 		JDGImageHybridGridCarousel,
 		JDGImageTile,
 		JDGGridLayout,
-		JDGJumpTo
+		JDGJumpTo,
+		JDGAccentBlockWithText
 	} from '$lib/index.js';
 
 	import { imageAttributesCollection } from './image-attributes-collection.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
 	import jdgNavItem from '$lib/schemas/jdg-nav-item.js';
+	import { jdgColors } from '$lib/jdg-styling-constants.js';
+
+	const jumpToNavItems = [
+		instantiateObject(jdgNavItem, {
+			label: 'BACKGROUND',
+			href: '#BACKGROUND'
+		}),
+		instantiateObject(jdgNavItem, {
+			label: 'ARCHITECTURE',
+			href: '#ARCHITECTURE'
+		}),
+		instantiateObject(jdgNavItem, {
+			label: 'ACCENT BLOCKS',
+			href: '#ACCENT-BLOCK-1'
+		})
+	];
 </script>
 
 <JDGContentContainer overlapWithHeader={true}>
@@ -52,22 +69,7 @@
 			/>
 		</JDGContentBoxFloating>
 	</div>
-	<JDGJumpTo
-		jumpToNavItems={[
-			instantiateObject(jdgNavItem, {
-				label: 'PROJECT BACKGROUND',
-				href: '#BACKGROUND'
-			}),
-			instantiateObject(jdgNavItem, {
-				label: 'THIS IS A LONGER TITLE',
-				href: '#ARCHITECTURE'
-			}),
-			instantiateObject(jdgNavItem, {
-				label: 'ANOTHER SECTION',
-				href: '#ARCHITECTURE'
-			})
-		]}
-	/>
+	<JDGJumpTo {jumpToNavItems} />
 	<JDGContentBoxFloating title="BACKGROUND">
 		<JDGBodyCopy paddingTop="0">
 			The city of Englewood, Colorado changed forever in 1968 when mall magnate Gerri Von Frellick
@@ -80,23 +82,41 @@
 			The result was an oversized complex squeezed into an undersized boundary, utilizing a unique M-shaped
 			complex broken up into 5 sub-malls, and surrounded by a two-level parking garage.
 		</JDGBodyCopy>
+	</JDGContentBoxFloating>
+	<JDGContentBoxFloating title="ACCENT BLOCK 1" subtitle="Composite, High-Contrast">
 		<JDGFullWidthContainer>
-			<JDGAccentBlock>
+			<JDGAccentBlockWithText
+				isQuote={true}
+				primaryText={`"A very important quote."`}
+				secondaryText="- John K. Doe"
+			/>
+		</JDGFullWidthContainer>
+		<JDGBodyCopy paddingTop="0">
+			<ul>
+				<li>Uses composite component <b>AccentBlockWithText</b></li>
+				<li>
+					Adjusts the background color automatically for max contrast with the given text color
+				</li>
+			</ul>
+		</JDGBodyCopy>
+	</JDGContentBoxFloating>
+	<JDGContentBoxFloating title="ACCENT BLOCK 2" subtitle="Manually Assembled">
+		<JDGFullWidthContainer>
+			<JDGAccentBlock backgroundColor={jdgColors.accentColorsCCP[0]}>
 				<JDGAccentText
 					primaryText={`This accent text`}
-					secondaryText="demonstrates the no-quote type."
+					secondaryText={'demonstrates the no-quote type.'}
 				></JDGAccentText>
 			</JDGAccentBlock>
 		</JDGFullWidthContainer>
-		<JDGFullWidthContainer>
-			<JDGAccentBlock>
-				<JDGAccentText
-					isQuote={true}
-					primaryText={`"A very important quote."`}
-					secondaryText="- John K. Doe"
-				></JDGAccentText>
-			</JDGAccentBlock>
-		</JDGFullWidthContainer>
+		<JDGBodyCopy paddingTop="0">
+			<ul>
+				<li>Built using component elements: <b>AccentBlock</b> and <b>AccentText</b></li>
+				<li>Does <b>not</b> adjust the background color automatically for most contrast</li>
+			</ul>
+		</JDGBodyCopy>
+	</JDGContentBoxFloating>
+	<JDGContentBoxFloating>
 		<JDGBodyCopy>
 			and its short 30-year life provided lessons in retail design, architecture, and placemaking.
 			<br /><br />
