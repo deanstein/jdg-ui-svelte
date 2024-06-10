@@ -317,10 +317,153 @@ export const convertRemToPixels = (remValue) => {
 	);
 };
 
+//
+// COLOR UTILS
+//
+
 export const convertHexToRGBA = (hexColor, alpha = 1) => {
 	const r = parseInt(hexColor.slice(1, 3), 16);
 	const g = parseInt(hexColor.slice(3, 5), 16);
 	const b = parseInt(hexColor.slice(5, 7), 16);
 
 	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
+
+export const adjustColorForContrast = (colorToChange, baseColor) => {
+	// Check if color and baseColor are in HEX or RGBA format
+	let isColorHex = typeof colorToChange === 'string' && colorToChange.startsWith('#');
+	let isBaseColorHex = typeof baseColor === 'string' && baseColor.startsWith('#');
+
+	// Convert color and baseColor to RGB
+	let rgbColor = isColorHex ? hexToRgb(colorToChange) : rgbaToRgb(colorToChange);
+	let rgbBaseColor = isBaseColorHex ? hexToRgb(baseColor) : rgbaToRgb(baseColor);
+
+	// Calculate the contrast ratio
+	let contrastRatio = calculateContrastRatio(rgbColor, rgbBaseColor);
+
+	const maxIterations = 10;
+	let iterations = 0;
+
+	// If the contrast ratio is less than 4.5:1, adjust the color
+	while (contrastRatio < 4.5 && iterations < maxIterations) {
+		console.log(contrastRatio);
+		// If the base color is light, make the color darker
+		if (isLight(rgbBaseColor)) {
+			rgbColor = darken(rgbColor);
+		} else {
+			// If the base color is dark, make the color lighter
+			rgbColor = lighten(rgbColor);
+		}
+
+		// Recalculate the contrast ratio
+		contrastRatio = calculateContrastRatio(rgbColor, rgbBaseColor);
+
+		iterations++;
+	}
+
+	// Convert the color back to its original format
+	let adjustedColor = isColorHex ? rgbToHex(rgbColor) : rgbToRgba(rgbColor, colorToChange.a);
+
+	return adjustedColor;
+};
+
+// export const adjustColorForContrast = (colorToChange, baseColor) => {
+//     // Convert color and baseColor to RGB
+//     let rgbColor = hexToRgb(colorToChange);
+//     let rgbBaseColor = hexToRgb(baseColor);
+
+//     // Calculate the contrast ratio
+//     let contrastRatio = calculateContrastRatio(rgbColor, rgbBaseColor);
+
+//     // If the contrast ratio is less than 4.5:1, adjust the color
+//     while (contrastRatio < 4.5) {
+//         // If the base color is light, make the color darker
+//         if (isLight(rgbBaseColor)) {
+//             rgbColor = darken(rgbColor);
+//         } else {
+//             // If the base color is dark, make the color lighter
+//             rgbColor = lighten(rgbColor);
+//         }
+
+//         // Recalculate the contrast ratio
+//         contrastRatio = calculateContrastRatio(rgbColor, rgbBaseColor);
+//     }
+
+//     // Convert the color back to HEX
+//     let adjustedColor = rgbToHex(rgbColor);
+
+//     return adjustedColor;
+// }
+
+export const rgbaToRgb = (rgba) => {
+	// Extract the r, g, b values from the rgba string
+	let [r, g, b, a] = rgba.slice(5, -1).split(',').map(Number);
+
+	return { r, g, b };
+};
+
+export const rgbToRgba = (rgb, alpha) => {
+	// Combine the r, g, b values into an rgba string with the given alpha
+	let rgba = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`;
+
+	return rgba;
+};
+
+export const hexToRgb = (hex) => {
+	let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+	return result
+		? {
+				r: parseInt(result[1], 16),
+				g: parseInt(result[2], 16),
+				b: parseInt(result[3], 16)
+			}
+		: null;
+};
+
+export const rgbToHex = (rgb) => {
+	return '#' + ((1 << 24) + (rgb.r << 16) + (rgb.g << 8) + rgb.b).toString(16).slice(1);
+};
+
+export const calculateContrastRatio = (color1, color2) => {
+	let l1 = getRelativeLuminance(color1) + 0.05;
+	let l2 = getRelativeLuminance(color2) + 0.05;
+
+	// Ensure l1 is the relative luminance of the lighter color
+	if (l1 < l2) {
+		[l1, l2] = [l2, l1];
+	}
+
+	return l1 / l2;
+};
+
+export const getRelativeLuminance = (color) => {
+	let rgb = [color.r, color.g, color.b];
+	rgb = rgb.map((c) => {
+		c /= 255;
+		return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+	});
+	return 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
+};
+
+export const isLight = (color) => {
+	let yiq = (color.r * 299 + color.g * 587 + color.b * 114) / 1000;
+	return yiq >= 128;
+};
+
+export const darken = (color) => {
+	let ratio = 0.9; // decrease brightness by 10%
+	return {
+		r: Math.max(Math.round(color.r * ratio), 0),
+		g: Math.max(Math.round(color.g * ratio), 0),
+		b: Math.max(Math.round(color.b * ratio), 0)
+	};
+};
+
+export const lighten = (color) => {
+	let ratio = 1.1; // increase brightness by 10%
+	return {
+		r: Math.min(Math.round(color.r * ratio), 255),
+		g: Math.min(Math.round(color.g * ratio), 255),
+		b: Math.min(Math.round(color.b * ratio), 255)
+	};
 };
