@@ -3,6 +3,9 @@ import './jdg-styling-root.css';
 import JDGAccentBlock from './components/JDGAccentBlock.svelte';
 export { JDGAccentBlock };
 
+import JDGAccentBlockWithText from './components/JDGAccentBlockWithText.svelte';
+export { JDGAccentBlockWithText };
+
 import JDGAccentText from './components/JDGAccentText.svelte';
 export { JDGAccentText };
 

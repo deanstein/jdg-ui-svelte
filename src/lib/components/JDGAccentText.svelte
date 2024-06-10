@@ -1,5 +1,5 @@
 <script>
-	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-styling-constants.js';
 	import { css } from '@emotion/css';
 
 	export let isQuote = false; // if true, more gap is used
@@ -12,6 +12,7 @@
 	export let secondaryText = undefined; // appears below the main text, like a quote attribution
 	export let secondaryTextFontFamily = 'REM';
 	export let secondaryTextBold = false;
+	export let textColor = jdgColors.textDm;
 
 	const accentTextContainerCss = css`
 		gap: ${isQuote ? '0.7rem' : '0.1rem'};
@@ -20,6 +21,7 @@
 	const superTextCss = css`
 		font-family: ${superTextFontFamily};
 		font-weight: ${superTextBold ? 'bold' : 'normal'};
+		color: ${textColor};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: ${jdgSizes.fontSizeAccentTextSecondarySm};
 		}
@@ -36,6 +38,7 @@
 	const primaryTextCss = css`
 		font-family: ${primaryTextFontFamily};
 		font-weight: ${primaryTextBold ? 'bold' : 'normal'};
+		color: ${textColor};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: ${jdgSizes.fontSizeAccentTextPrimarySm};
 		}
@@ -52,6 +55,7 @@
 	const secondaryTextCss = css`
 		font-family: ${secondaryTextFontFamily};
 		font-weight: ${secondaryTextBold ? 'bold' : 'normal'};
+		color: ${textColor};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: ${jdgSizes.fontSizeAccentTextSecondarySm};
 		}
@@ -69,17 +73,17 @@
 <div class="jdg-accent-text-container {accentTextContainerCss}">
 	{#if superText}
 		<h2 class="accent-text-secondary {superTextCss}">
-			{superText}
+			{@html superText}
 		</h2>
 	{/if}
 	{#if primaryText}
 		<h1 class="accent-text-primary {primaryTextCss}">
-			{`${primaryText}`}
+			{@html `${primaryText}`}
 		</h1>
 	{/if}
 	{#if secondaryText}
 		<h2 class="accent-text-secondary {secondaryTextCss}">
-			{secondaryText}
+			{@html secondaryText}
 		</h2>
 	{/if}
 </div>
@@ -91,13 +95,11 @@
 	}
 
 	.accent-text-primary {
-		color: white;
 		text-align: center;
 		margin: 0;
 	}
 
 	.accent-text-secondary {
-		color: white;
 		text-align: center;
 		margin: 0;
 	}

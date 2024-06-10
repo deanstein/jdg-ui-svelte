@@ -17,6 +17,7 @@ export const jdgColors = {
 	],
 	text: '#323232',
 	textLight: '#737373',
+	textDm: '#ffffff',
 	title: '#4F4F4F',
 	headerBackground: 'rgba(250, 250, 250, 0.7)',
 	contentBoxBackground: 'rgba(252, 252, 252, 0.7)',
@@ -86,6 +87,10 @@ export const jdgSizes = {
 	nFontSizeFloatingContentBoxTitle: 2,
 	get fontSizeFloatingContentBoxTitle() {
 		return this.nFontSizeFloatingContentBoxTitle.toString() + this.fontUnit;
+	},
+	nFontSizeFloatingContentBoxSubtitle: 1.25,
+	get fontSizeFloatingContentBoxSubtitle() {
+		return this.nFontSizeFloatingContentBoxSubtitle.toString() + this.fontUnit;
 	},
 
 	nBlurSizeSmall: 5,
