@@ -17,7 +17,6 @@
 	export let disclaimer = undefined; // optional disclaimer, applicable to some sites
 	export let alignItems = 'left';
 	export let backgroundColorRgba = jdgColors.headerBackground;
-	export let showHorizontalStripes = false;
 	export let showDevToolsButton = false;
 
 	const divider = '|';
@@ -53,7 +52,7 @@
 
 <footer class="jdg-footer-outer-container {footerOuterContainerCss}">
 	<!-- horizontal stripes at top of footer -->
-	{#if showHorizontalStripes}
+	{#if $uiState.showHeaderStripes}
 		<JDGStripesHorizontal />
 	{/if}
 	<div class="footer-content-container {footerContentContainerCss}">
