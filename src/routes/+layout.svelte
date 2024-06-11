@@ -36,7 +36,7 @@
 	const bannerMessage = 'This is a notification banner.';
 	const disclaimerMessage =
 		'This is text for the footer! It could be a disclaimer or something else.';
-	const showHeaderStripes = true;
+	const showHeaderStripes = false;
 </script>
 
 <JDGAppContainer accentColors={jdgColors.accentColorsCCP} {showHeaderStripes}>
@@ -48,17 +48,12 @@
 		logoAlt="JDG SVELTE UI"
 		{navItems}
 		useMobileNav={true}
-		showHorizontalStripes={showHeaderStripes}
+		suppressAlphaOnScroll={true}
 	/>
 	<JDGBackground />
 	<!-- all content goes in this slot -->
 	<slot />
-	<JDGFooter
-		{appVersion}
-		disclaimer={disclaimerMessage}
-		showHorizontalStripes={true}
-		showDevToolsButton={true}
-	/>
+	<JDGFooter {appVersion} disclaimer={disclaimerMessage} showDevToolsButton={true} />
 	<!-- show the image detail overlay when appropriate -->
 	{#if $uiState.showImageDetailOverlay}
 		<JDGImageDetailOverlay imageAttributes={$uiState.imageDetailAttributes} />
