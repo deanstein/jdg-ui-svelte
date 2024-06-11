@@ -182,6 +182,7 @@
 				{maxHeight}
 				{showBlurInUnfilledSpace}
 				alternateFitRef={imageCompareWrapperRef}
+				compactModeOnMobile={true}
 			/>
 		</div>
 		<div
@@ -194,6 +195,7 @@
 				{maxHeight}
 				{showBlurInUnfilledSpace}
 				alternateFitRef={imageCompareWrapperRef}
+				compactModeOnMobile={true}
 			/>
 		</div>
 		<div class="slider" style="left: {$sliderPositionStore}%;"></div>
