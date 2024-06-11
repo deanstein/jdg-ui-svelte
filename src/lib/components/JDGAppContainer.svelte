@@ -12,7 +12,7 @@
 
 	import { JDGLoadingOverlay } from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors } from '$lib/jdg-styling-constants.js';
-	import { convertHexToRGBA } from '$lib/jdg-utils.js';
+	import { adjustColorForContrast, convertHexToRGBA } from '$lib/jdg-utils.js';
 
 	export let fontFamily = 'REM';
 	export let appLoadingIconSrc =
@@ -54,10 +54,10 @@
 				${convertHexToRGBA(accentColors[1], hyperlinkColorOpacity)} 66%,
 				${convertHexToRGBA(accentColors[2], hyperlinkColorOpacity)} 66%
 			)`
-				: `${accentColors[0]}`};
+				: `${adjustColorForContrast(accentColors[0], jdgColors.text, 10)}`};
 		}
 		a:before {
-			background: ${accentColors[0]};
+			background: ${adjustColorForContrast(accentColors[0], jdgColors.text, 10)};
 		}
 
 		font-family: ${fontFamily};
