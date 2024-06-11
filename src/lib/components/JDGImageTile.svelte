@@ -44,7 +44,7 @@
 
 	const imageTileLabelContainerCss = css`
 		color: ${jdgColors.text};
-		background-color: ${jdgColors.headerBackground};
+		background-color: ${jdgColors.imageLabelBackground};
 		backdrop-filter: blur(${jdgSizes.blurSizeSmall});
 		${labelContainerVerticalAlign === 'center'
 			? `top: 50%;
@@ -144,7 +144,7 @@
 				{imageAttributes}
 				{showCaption}
 				{showAttribution}
-				backgroundColorRgba={setAlphaInRgbaString(jdgColors.headerBackground, 1.0)}
+				backgroundColorRgba={setAlphaInRgbaString(jdgColors.imageLabelBackground, 1.0)}
 			/>
 		</div>
 	{/if}

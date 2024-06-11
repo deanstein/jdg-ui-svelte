@@ -8,7 +8,7 @@
 	export let showAttribution = true;
 	export let truncateText = true;
 	export let matchBodyCopyPadding = false; // if true, uses same padding as body copy (for full-width use only)
-	export let backgroundColorRgba = jdgColors.headerBackground;
+	export let backgroundColorRgba = jdgColors.imageLabelBackground;
 
 	const toggleTruncate = () => {
 		truncateText = !truncateText;
