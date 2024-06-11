@@ -18,7 +18,7 @@
 			href: '#example2'
 		})
 	];
-	export let showArrowInItems = true;
+	export let showArrowInItems = false;
 
 	const jumpToItemCss = css`
 		min-height: ${(jdgSizes.nFontSizeHeaderTitle * 2.5).toString() + jdgSizes.fontUnit};
