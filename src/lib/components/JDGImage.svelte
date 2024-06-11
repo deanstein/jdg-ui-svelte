@@ -6,7 +6,7 @@
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 	import uiState from '$lib/states/ui-state.js';
 
-	import { instantiateObject } from '$lib/jdg-utils.js';
+	import { convertVhToPixels, instantiateObject } from '$lib/jdg-utils.js';
 
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-styling-constants.js';
 	import { JDGImageCaptionAttribution } from '$lib/index.js';
@@ -31,13 +31,31 @@
 
 	// height can be in vh or px or even auto
 	// if in vh, convert to pixels for calculations
+	let maxHeightValue;
+	let maxHeightUnit;
 	let maxHeightPx;
+
+	// self-executing function that gets the pixel height from maxHeight prop
+	// (it may look like this is unused, but it's used! don't delete)
+	const getMaxHeightPxFromProp = (() => {
+		// if height is auto, skip all this
+		if (maxHeight !== 'auto') {
+			[maxHeightValue, maxHeightUnit] = maxHeight.match(/^(\d+)(\D+)$/).slice(1);
+			const maxHeightParsed = parseFloat(maxHeightValue);
+			// get the max height in px for calculations
+			if (maxHeightUnit === 'vh') {
+				maxHeightPx = convertVhToPixels(maxHeightParsed);
+			} else if (maxHeightUnit === 'px') {
+				maxHeightPx = maxHeightParsed;
+			}
+		}
+	})();
 
 	// calculate the aspect ratio of the image container and the image (if not already known)
 	const getAspectRatios = () => {
 		if (containerRef && imageRef) {
 			containerAspectRatio = alternateFitRef
-				? // @ts-expect-error
+				? //@ts-expect-error
 					alternateFitRef.clientWidth / maxHeightPx
 				: containerRef.clientWidth / maxHeightPx;
 			if (!imageAspectRatio) {
