@@ -33,11 +33,6 @@
 	// if in vh, convert to pixels for calculations
 	let maxHeightPx;
 
-	// placeholder image that will be used while given image is loading
-	// or if given image is invalid
-	const placeholderImageSrc =
-		'https://raw.githubusercontent.com/deanstein/jdg-ui-svelte/6a19bbd107ce8787331e5ead06f38fa8e472aaea/static/jdg-image-placeholder.jpg';
-
 	// calculate the aspect ratio of the image container and the image (if not already known)
 	const getAspectRatios = () => {
 		if (containerRef && imageRef) {

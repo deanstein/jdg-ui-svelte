@@ -16,7 +16,7 @@
 
 	export let fontFamily = 'REM';
 	export let appLoadingIconSrc =
-		'https://raw.githubusercontent.com/deanstein/jdg-ui-svelte/main/static/jdg-ui-logo.jpg';
+		'https://res.cloudinary.com/jdg-main/image/upload/v1718070772/jdg-ui-svelte/jdg-ui-logo_cs4ji5.jpg';
 	export let accentColors = jdgColors.accentColorsJDG;
 	export let showHeaderStripes = true;
 

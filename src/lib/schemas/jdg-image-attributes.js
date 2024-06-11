@@ -1,6 +1,6 @@
 const jdgImageAttributes = {
 	imgSrc:
-		'https://raw.githubusercontent.com/deanstein/jdg-ui-svelte/main/static/jdg-image-placeholder.jpg',
+		'https://res.cloudinary.com/jdg-main/image/upload/v1718070722/jdg-ui-svelte/jdg-image-placeholder_xkwb6q.jpg',
 	imgTitle: 'A placeholder image',
 	imgAlt: 'A placeholder image',
 	imgCaption: undefined,
