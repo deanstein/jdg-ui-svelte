@@ -31,7 +31,6 @@
 		margin-left: ${jdgSizes.contentBoxFloatingMarginLg};
 		margin-right: ${jdgSizes.contentBoxFloatingMarginLg};
 		background-color: ${jdgColors.contentBoxBackground};
-		backdrop-filter: blur(${jdgSizes.blurSizeSmall});
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			padding: 2rem ${jdgSizes.contentBoxPaddingSm} 2rem ${jdgSizes.contentBoxPaddingSm};
 			margin-left: ${jdgSizes.contentBoxFloatingMarginSm};
@@ -93,6 +92,7 @@
 		width: -webkit-fill-available;
 		width: -moz-available;
 		min-height: 50px;
+		z-index: 0;
 	}
 
 	.content-box-title-and-subtitle-container {
