@@ -211,7 +211,6 @@
 		filter: blur(5px);
 		background-size: cover;
 		background-position: center;
-		opacity: 0.5;
 	}
 
 	.image-blur-background {
