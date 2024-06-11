@@ -2,7 +2,7 @@
 	import { scale } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
-	import { setShowImageDetailModal } from '$lib/jdg-state-management.js';
+	import { setImageDetailAttributes, setShowImageDetailModal } from '$lib/jdg-state-management.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
 
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
@@ -31,6 +31,7 @@
 	showTitleBar={true}
 	onCloseFunction={() => {
 		setShowImageDetailModal(false);
+		setImageDetailAttributes(undefined);
 	}}
 	closeOnOverlayClick={true}
 	colorRgba="rgba(255, 255, 255, 0.6)"
