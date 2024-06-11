@@ -329,7 +329,11 @@ export const convertHexToRGBA = (hexColor, alpha = 1) => {
 	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
-export const adjustColorForContrast = (colorToChange, baseColor, minContrastRatio = 4.5 /* WCAG contrast standard */) => {
+export const adjustColorForContrast = (
+	colorToChange,
+	baseColor,
+	minContrastRatio = 4.5 /* WCAG contrast standard */
+) => {
 	//console.log("Adjusting color for contrast. Color to change: " + colorToChange + " and base color: " + baseColor);
 	// Check if color and baseColor are in HEX or RGBA format
 	let isColorHex = typeof colorToChange === 'string' && colorToChange.startsWith('#');
