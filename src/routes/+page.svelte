@@ -111,7 +111,7 @@
 		</JDGFullWidthContainer>
 		<JDGBodyCopy paddingTop="0">
 			<ul>
-				<li>Built using component elements: <b>AccentBlock</b> and <b>AccentText</b></li>
+				<li>Assembled manually using two components: <b>AccentBlock</b> and <b>AccentText</b></li>
 				<li>Does <b>not</b> adjust the background color automatically for most contrast</li>
 			</ul>
 		</JDGBodyCopy>
