@@ -3,6 +3,8 @@
 	import { slide } from 'svelte/transition';
 
 	import uiState from '../states/ui-state.js';
+
+	import { setAlphaInRgbaString } from '$lib/jdg-graphics-factory.js';
 	import { setNavSidebarOpen } from '../jdg-state-management.js';
 	import { jdgColors, jdgDurations, jdgSizes } from '../jdg-styling-constants.js';
 
@@ -14,7 +16,7 @@
 		a:before {
 			background-color: transparent;
 		}
-		background-color: ${jdgColors.headerBackground};
+		background-color: ${setAlphaInRgbaString(jdgColors.headerBackground, 0.7)};
 	`;
 
 	const sideNavSlideWrapperCss = css`
