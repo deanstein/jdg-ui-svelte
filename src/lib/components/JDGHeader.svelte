@@ -10,6 +10,7 @@
 	import { getAlphaFromRgbaString, setAlphaInRgbaString } from '../jdg-graphics-factory.js';
 
 	import { JDGTopNav, JDGSideNav, JDGStripesHorizontal } from '../index.js';
+	import uiState from '$lib/states/ui-state.js';
 
 	export let showLogo = true;
 	export let logoSrc =
@@ -23,12 +24,12 @@
 	export let navItems = [];
 	export let textColor = jdgColors.text;
 	export let backgroundColorRgba = jdgColors.headerBackground;
-	export let showHorizontalStripes = false;
 	export let suppressAlphaOnScroll = false; // disable alpha past some scroll threshold
 
 	let forceHideTitleAtBreakpoint = true; // forces no title below certain breakpoints
 	let forceMobileNavOnCenteredTitle = false; // forces mobile nav when title is centered
 	let showTitleResult; // combined result between intent and breakpoint
+	let scrollAlpha = 1;
 
 	// set certain flags at certain breakpoints
 	const headerBreakpointHandler = () => {
@@ -55,22 +56,20 @@
 		const threshold = 0.1;
 
 		// Get the original alpha value from the rgba string
-		const originalAlpha = getAlphaFromRgbaString(backgroundColorRgba);
+		let originalAlpha = getAlphaFromRgbaString(backgroundColorRgba);
 
-		// Calculate the new alpha value based on the scroll percentage and the threshold
-		let newAlpha;
-		if (scrollPercent <= threshold) {
-			newAlpha = originalAlpha + (1 - originalAlpha) * (scrollPercent / threshold);
-		} else {
-			newAlpha = 1;
+		// if the original alpha was 1, force it to something lower
+		// for the requested effect to be visible
+		if (originalAlpha === 1) {
+			originalAlpha = 0.7;
 		}
 
-		// Update the background color with the new alpha value
-		// TODO: THIS CAUSES DUPLICATE CSS STYLES - FIX!
-		headerContainerInnerCss = css`
-			${headerContainerInnerCss}
-			background-color: ${setAlphaInRgbaString(backgroundColorRgba, newAlpha)};
-		`;
+		// Calculate the new alpha value based on the scroll percentage and the threshold
+		if (scrollPercent <= threshold) {
+			scrollAlpha = originalAlpha + (1 - originalAlpha) * (scrollPercent / threshold);
+		} else {
+			scrollAlpha = 1;
+		}
 	};
 
 	let headerContainerOuterCss = css`
@@ -78,23 +77,7 @@
 		z-index: ${incrementHighestZIndex()};
 	`;
 
-	let headerContainerInnerCss = css`
-		padding-top: ${jdgSizes.headerTopBottomPadding};
-		padding-bottom: ${jdgSizes.headerTopBottomPadding};
-		background-color: ${backgroundColorRgba};
-		backdrop-filter: blur(${jdgSizes.blurSizeMedium});
-		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			height: ${jdgSizes.headerHeightSm};
-		}
-		@media (min-width: ${jdgBreakpoints.width[0].toString() +
-			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
-			jdgBreakpoints.unit}) {
-			height: ${jdgSizes.headerHeightMd};
-		}
-		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			height: ${jdgSizes.headerHeightLg};
-		}
-	`;
+	let headerContainerInnerCss;
 
 	let logoJustificationContainerCss = css`
 		display: flex;
@@ -136,6 +119,7 @@
 	onMount(() => {
 		window.addEventListener('resize', headerBreakpointHandler);
 		if (suppressAlphaOnScroll) {
+			setHeaderBackgroundColorAlphaAtPos();
 			window.addEventListener('scroll', setHeaderBackgroundColorAlphaAtPos);
 		}
 		// Call the handler once to handle the current screen size
@@ -154,6 +138,26 @@
 	$: {
 		showTitleResult = logoTitle && !forceHideTitleAtBreakpoint && logoJustification !== 'center';
 		forceMobileNavOnCenteredTitle = logoJustification === 'center';
+
+		headerContainerInnerCss = css`
+			padding-top: ${jdgSizes.headerTopBottomPadding};
+			padding-bottom: ${jdgSizes.headerTopBottomPadding};
+			background-color: ${suppressAlphaOnScroll
+				? setAlphaInRgbaString(backgroundColorRgba, scrollAlpha)
+				: backgroundColorRgba};
+			backdrop-filter: blur(${jdgSizes.blurSizeMedium});
+			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+				height: ${jdgSizes.headerHeightSm};
+			}
+			@media (min-width: ${jdgBreakpoints.width[0].toString() +
+				jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+				jdgBreakpoints.unit}) {
+				height: ${jdgSizes.headerHeightMd};
+			}
+			@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+				height: ${jdgSizes.headerHeightLg};
+			}
+		`;
 	}
 </script>
 
@@ -193,7 +197,7 @@
 		<JDGSideNav {navItems} />
 	{/if}
 	<!-- stripes at bottom of header -->
-	{#if showHorizontalStripes}
+	{#if $uiState.showHeaderStripes}
 		<JDGStripesHorizontal reverseColors={true} animationDirection="horizontal" />
 	{/if}
 </header>
