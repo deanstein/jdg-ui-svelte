@@ -27,7 +27,7 @@
 		background-color: ${overlayColorRgba};
 	`;
 
-	const overlayContentHeaderOffset = css`
+	const overlayContentHeaderOffsetCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			padding-top: ${overlapWithHeader
 				? jdgSizes.nHeaderHeightSm / 2 + jdgSizes.headerHeightUnit
@@ -53,7 +53,7 @@
 	{#if showOverlay || primaryText || secondaryText || overlayImageAttributes}
 		<div class="image-overlay {imageOverlayCss}">
 			{#if superText || primaryText || secondaryText}
-				<div class={overlayContentHeaderOffset}>
+				<div class={overlayContentHeaderOffsetCss}>
 					<JDGAccentText
 						{superText}
 						{superTextFontFamily}
@@ -65,7 +65,7 @@
 				</div>
 			{/if}
 			{#if overlayImageAttributes}
-				<div class="overlay-image-wrapper {overlayContentHeaderOffset}">
+				<div class="overlay-image-wrapper {overlayContentHeaderOffsetCss}">
 					<JDGImage
 						imageAttributes={overlayImageAttributes}
 						maxHeight={overlayImageMaxHeight}
