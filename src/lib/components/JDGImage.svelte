@@ -38,8 +38,7 @@
 	// self-executing function that gets the pixel height from maxHeight prop
 	// (it may look like this is unused, but it's used! don't delete)
 	const getMaxHeightPxFromProp = (() => {
-		// if height is auto, skip all this
-		console.log("JDGImage (" + imageAttributes.imgSrc + ": HeightPx from prop: " + maxHeight);
+		// only calculate maxHeight if prop is not auto
 		if (maxHeight !== 'auto') {
 			[maxHeightValue, maxHeightUnit] = maxHeight.match(/^(\d+)(\D+)$/).slice(1);
 			const maxHeightParsed = parseFloat(maxHeightValue);
