@@ -1,9 +1,9 @@
 <script>
-	import { JDGContentBoxFloating, JDGContentContainer, JDGImageFullWidth } from '$lib/index.js';
+	import { JDGContentContainer, JDGImageFullWidth } from '$lib/index.js';
 	import { imageAttributesCollection } from '../image-attributes-collection.js';
 </script>
 
-<JDGContentContainer overlapWithHeader={true} topBottomPadding="0" gap="0">
+<JDGContentContainer overlapWithHeader={false} topBottomPadding="0" gap="0">
 	<JDGImageFullWidth
 		imageAttributes={imageAttributesCollection.ccp_gold_mall_80s90s_1}
 		showOverlay={true}
@@ -12,5 +12,6 @@
 		primaryTextFontFamily="Righteous"
 		secondaryText="at the Historic Englewood Museum"
 		secondaryTextFontFamily="Righteous"
+		overlapWithHeader={false}
 	/>
 </JDGContentContainer>
