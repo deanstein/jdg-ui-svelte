@@ -15,7 +15,7 @@
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-			margin-top: ${overlapWithHeader ? '-' + jdgSizes.headerHeightSm : '0'};
+			margin-top: ${overlapWithHeader ? '-' + jdgSizes.headerHeightMd : '0'};
 			gap: ${gap ?? '50px'};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
