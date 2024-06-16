@@ -5,9 +5,11 @@
 	import { instantiateObject } from '$lib/jdg-utils.js';
 
 	import { JDGAccentText, JDGFullWidthContainer, JDGImage } from '$lib/index.js';
+	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-styling-constants.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes);
 	export let maxHeight = '80vh';
+	export let overlapWithHeader = false; // if true, the overlays will be moved down so they're visually centered
 	export let showOverlay = false;
 	export let overlayColorRgba = 'rgba(50, 50, 50, 0.2)';
 	export let superText = undefined;
@@ -24,6 +26,26 @@
 	const imageOverlayCss = css`
 		background-color: ${overlayColorRgba};
 	`;
+
+	const overlayContentHeaderOffset = css`
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			padding-top: ${overlapWithHeader
+				? jdgSizes.nHeaderHeightSm / 2 + jdgSizes.headerHeightUnit
+				: '0'};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			padding-top: ${overlapWithHeader
+				? jdgSizes.nHeaderHeightMd / 2 + jdgSizes.headerHeightUnit
+				: '0'};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			padding-top: ${overlapWithHeader
+				? jdgSizes.nHeaderHeightLg / 2 + jdgSizes.headerHeightUnit
+				: '0'};
+		}
+	`;
 </script>
 
 <JDGFullWidthContainer>
@@ -31,17 +53,19 @@
 	{#if showOverlay || primaryText || secondaryText || overlayImageAttributes}
 		<div class="image-overlay {imageOverlayCss}">
 			{#if superText || primaryText || secondaryText}
-				<JDGAccentText
-					{superText}
-					{superTextFontFamily}
-					{primaryText}
-					{primaryTextFontFamily}
-					{secondaryText}
-					{secondaryTextFontFamily}
-				/>
+				<div class={overlayContentHeaderOffset}>
+					<JDGAccentText
+						{superText}
+						{superTextFontFamily}
+						{primaryText}
+						{primaryTextFontFamily}
+						{secondaryText}
+						{secondaryTextFontFamily}
+					/>
+				</div>
 			{/if}
 			{#if overlayImageAttributes}
-				<div class="overlay-image-wrapper">
+				<div class="overlay-image-wrapper {overlayContentHeaderOffset}">
 					<JDGImage
 						imageAttributes={overlayImageAttributes}
 						maxHeight={overlayImageMaxHeight}
