@@ -75,7 +75,7 @@
 			) {
 				return maxHeight;
 			}
-			// else, need to determine crop based on aspect ratios
+			// otherwise, need to determine crop based on aspect ratios
 			switch (true) {
 				// image is wider than container
 				case imageAspectRatio > containerAspectRatio:

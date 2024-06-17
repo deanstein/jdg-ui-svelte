@@ -67,7 +67,10 @@
 				</div>
 			{/if}
 			{#if overlayImageAttributes}
-				<div bind:this={imageOverlayWrapperRef} class="overlay-image-wrapper {overlayContentHeaderOffsetCss}">
+				<div
+					bind:this={imageOverlayWrapperRef}
+					class="image-overlay-wrapper {overlayContentHeaderOffsetCss}"
+				>
 					<JDGImage
 						imageAttributes={overlayImageAttributes}
 						maxHeight={overlayImageMaxHeight}
@@ -98,7 +101,7 @@
 		height: 100%;
 	}
 
-	.overlay-image-wrapper {
+	.image-overlay-wrapper {
 		position: absolute;
 		top: 0;
 		left: 0;
