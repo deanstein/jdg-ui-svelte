@@ -92,7 +92,7 @@
 	.jdg-accent-text-container {
 		display: flex;
 		flex-direction: column;
-		padding: 20px;
+		padding: 0px 20px 0px 20px;
 	}
 
 	.accent-text-primary {
