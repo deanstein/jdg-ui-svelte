@@ -19,9 +19,11 @@
 	export let secondaryText = undefined;
 	export let secondaryTextFontFamily = 'REM';
 	export let overlayImageAttributes = undefined; // for example, a logo or vector graphic over the image
-	export let overlayImageMaxHeight = '18vh';
+	export let overlayImageMaxHeight = '200px';
 	export let overlayImageText = undefined;
 	export let overlayImageTextFontFamily = 'REM';
+
+	let imageOverlayWrapperRef;
 
 	const imageOverlayCss = css`
 		background-color: ${overlayColorRgba};
@@ -65,11 +67,12 @@
 				</div>
 			{/if}
 			{#if overlayImageAttributes}
-				<div class="overlay-image-wrapper {overlayContentHeaderOffsetCss}">
+				<div bind:this={imageOverlayWrapperRef} class="overlay-image-wrapper {overlayContentHeaderOffsetCss}">
 					<JDGImage
 						imageAttributes={overlayImageAttributes}
 						maxHeight={overlayImageMaxHeight}
 						fillContainer={false}
+						alternateFitRef={imageOverlayWrapperRef}
 					/>
 					{#if overlayImageText}
 						<JDGAccentText
