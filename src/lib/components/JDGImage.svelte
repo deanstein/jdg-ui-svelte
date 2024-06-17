@@ -92,8 +92,6 @@
 			}
 		}
 
-		console.log(preferredContainerHeight);
-
 		return preferredContainerHeight;
 	};
 
