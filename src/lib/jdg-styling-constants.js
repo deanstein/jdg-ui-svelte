@@ -113,7 +113,7 @@ export const jdgSizes = {
 		return this.nHorizontalStripeHeightSm.toString() + this.horizontalStripeHeightUnit;
 	},
 
-	nBodyCopyVerticalPaddingSm: 10,
+	nBodyCopyVerticalPaddingSm: 5,
 	bodyCopyVerticalPaddingUnit: 'vw',
 	get bodyCopyVerticalPaddingSm() {
 		return this.nBodyCopyVerticalPaddingSm.toString() + this.bodyCopyVerticalPaddingUnit;
