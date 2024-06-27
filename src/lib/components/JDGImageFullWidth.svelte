@@ -5,7 +5,7 @@
 	import { instantiateObject } from '$lib/jdg-utils.js';
 
 	import { JDGAccentText, JDGFullWidthContainer, JDGImage } from '$lib/index.js';
-	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgFonts, jdgSizes } from '$lib/jdg-styling-constants.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes);
 	export let maxHeight = '80vh';
@@ -13,15 +13,15 @@
 	export let showOverlay = false;
 	export let overlayColorRgba = 'rgba(50, 50, 50, 0.2)';
 	export let superText = undefined;
-	export let superTextFontFamily = 'REM';
+	export let superTextFontFamily = jdgFonts.body;
 	export let primaryText = undefined;
-	export let primaryTextFontFamily = 'REM';
+	export let primaryTextFontFamily = jdgFonts.body;
 	export let secondaryText = undefined;
-	export let secondaryTextFontFamily = 'REM';
+	export let secondaryTextFontFamily = jdgFonts.body;
 	export let overlayImageAttributes = undefined; // for example, a logo or vector graphic over the image
 	export let overlayImageMaxHeight = '18vh';
 	export let overlayImageText = undefined;
-	export let overlayImageTextFontFamily = 'REM';
+	export let overlayImageTextFontFamily = jdgFonts.body;
 
 	let imageOverlayWrapperRef;
 

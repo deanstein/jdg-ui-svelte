@@ -1,16 +1,16 @@
 <script>
-	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgColors, jdgFonts, jdgSizes } from '$lib/jdg-styling-constants.js';
 	import { css } from '@emotion/css';
 
 	export let isQuote = false; // if true, more gap is used
 	export let superText = undefined; // appears above the main text, like a quote segment
-	export let superTextFontFamily = 'REM';
+	export let superTextFontFamily = jdgFonts.body;
 	export let superTextBold = false;
 	export let primaryText = undefined; // main text in large font
-	export let primaryTextFontFamily = 'REM';
+	export let primaryTextFontFamily = jdgFonts.body;
 	export let primaryTextBold = false;
 	export let secondaryText = undefined; // appears below the main text, like a quote attribution
-	export let secondaryTextFontFamily = 'REM';
+	export let secondaryTextFontFamily = jdgFonts.body;
 	export let secondaryTextBold = false;
 	export let textColor = jdgColors.textDm;
 

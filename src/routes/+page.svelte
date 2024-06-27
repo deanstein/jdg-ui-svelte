@@ -17,7 +17,8 @@
 		JDGImageTile,
 		JDGGridLayout,
 		JDGJumpTo,
-		JDGAccentBlockWithText
+		JDGAccentBlockWithText,
+		JDGFeatureCard
 	} from '$lib/index.js';
 
 	import { imageAttributesCollection } from './image-attributes-collection.js';
@@ -115,6 +116,25 @@
 				<li>Assembled manually using two components: <b>AccentBlock</b> and <b>AccentText</b></li>
 				<li>Does <b>not</b> adjust the background color automatically for most contrast</li>
 			</ul>
+		</JDGBodyCopy>
+	</JDGContentBoxFloating>
+	<JDGContentBoxFloating title="FEATURE CARD">
+		<JDGFeatureCard
+			featureTitle="HISTORICALLY ACCURATE"
+			featureImageAttributes={imageAttributesCollection.ccp_blue_mall_60s70s_1}
+			featureDescription="Experience Cinderella City Mall in full 3D, complete with accurate architectural details
+			and signage based on real photographs and original blueprints of the mall"
+			imageAlign="left"
+		/>
+		<JDGFeatureCard
+			featureTitle="INCREDIBLE GAMEPLAY"
+			featureImageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
+			featureDescription="Another really cool feature!"
+			imageAlign="right"
+			backgroundColor={jdgColors.accentColorsJDG[1]}
+		/>
+		<JDGBodyCopy paddingTop="0">
+			Displays a colorful rectangle containing an imageTile and description text.
 		</JDGBodyCopy>
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating>

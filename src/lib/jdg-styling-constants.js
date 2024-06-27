@@ -4,6 +4,10 @@ export const jdgBreakpoints = {
 	unit: 'px'
 };
 
+export const jdgFonts = {
+	body: 'REM'
+};
+
 export const jdgColors = {
 	/* these colors define the accent colors for different sites */
 	/* lm = lightmode; dm = darkmode */
@@ -36,10 +40,18 @@ export const jdgColors = {
 };
 
 export const jdgSizes = {
-	nFontSizeSmall: 0.75,
 	fontUnit: 'rem',
-	get fontSizeSmall() {
-		return this.nFontSizeSmall.toString() + this.fontUnit;
+	nFontSizeBodySm: 1.0,
+	get fontSizeBodySm() {
+		return this.nFontSizeBodySmall.toString() + this.fontUnit;
+	},
+	nFontSizeBodyMd: 1.1,
+	get fontSizeBodyMedium() {
+		return this.nFontSizeBodyMd.toString() + this.fontUnit;
+	},
+	nFontSizeBodyLg: 1.2,
+	get fontSizeBodyLarge() {
+		return this.nFontSizeBodyLg.toString() + this.fontUnit;
 	},
 	nFontSizeHeaderSupertitle: 0.6,
 	get fontSizeHeaderSupertitle() {

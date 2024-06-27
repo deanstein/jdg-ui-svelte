@@ -11,10 +11,10 @@
 	} from '$lib/jdg-state-management.js';
 
 	import { JDGLoadingOverlay } from '$lib/index.js';
-	import { jdgBreakpoints, jdgColors } from '$lib/jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgColors, jdgFonts } from '$lib/jdg-styling-constants.js';
 	import { adjustColorForContrast, convertHexToRGBA } from '$lib/jdg-utils.js';
 
-	export let fontFamily = 'REM';
+	export let fontFamily = jdgFonts.body;
 	export let appLoadingIconSrc =
 		'https://res.cloudinary.com/jdg-main/image/upload/v1718070772/jdg-ui-svelte/jdg-ui-logo_cs4ji5.jpg';
 	export let accentColors = jdgColors.accentColorsJDG;
