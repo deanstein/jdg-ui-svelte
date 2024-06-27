@@ -4,9 +4,7 @@
 	import { adjustColorForContrast } from '$lib/jdg-utils.js';
 
 	import { jdgBreakpoints, jdgColors, jdgFonts, jdgSizes } from '$lib/jdg-styling-constants.js';
-	import { JDGImageTile } from '$lib/index.js';
 
-	export let featureImageAttributes;
 	export let featureTitle = undefined;
 	export let featureDescription;
 	export let titleFontFamily = jdgFonts.body;
@@ -15,7 +13,6 @@
 	export let nDescriptionTextSizeMultiplier = 1.25; // factor of body copy size
 	export let backgroundColor = getAccentColors()[0];
 	export let imageAlign = 'left'; // image on this side, text on opposite
-	export let maxImageHeight = '400px';
 	export let showBorderImage = true;
 
 	const featureCardContainerCss = css`
@@ -71,16 +68,17 @@
 	`;
 
 	const featureImageCss = css`
+		background-color: ${descriptionTextColor};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			border: ${showBorderImage ? `10px solid ${descriptionTextColor}` : '0'};
+			padding: ${showBorderImage ? '10px' : '0'};
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-			border: ${showBorderImage ? `15px solid ${descriptionTextColor}` : '0'};
+			padding: ${showBorderImage ? '15px' : '0'};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			border: ${showBorderImage ? `20px solid ${descriptionTextColor}` : '0'};
+			padding: ${showBorderImage ? '20px' : '0'};
 		}
 	`;
 </script>
@@ -88,11 +86,8 @@
 <div class="jdg-feature-card-container {featureCardContainerCss}">
 	<div class="feature-card-row {featureCardRowCss}">
 		<div class="image-cell {featureImageCss}">
-			<JDGImageTile
-				imageAttributes={featureImageAttributes}
-				maxHeight={maxImageHeight}
-				compactModeOnMobile={true}
-			/>
+			<!-- anything can go here - ImageTile, ImageCompare, ImageCarousel, etc -->
+			<slot />
 		</div>
 		<div class="text-cell">
 			{#if featureTitle}
@@ -116,6 +111,7 @@
 		flex: 6;
 		background-size: cover;
 		background-position: center;
+		z-index: 1;
 	}
 
 	.text-cell {

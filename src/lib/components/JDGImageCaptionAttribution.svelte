@@ -17,6 +17,7 @@
 	const attributionPrefix = 'Image Source: ';
 
 	const captionAttributionContainerCss = css`
+		color: ${jdgColors.text};
 		background-color: ${backgroundColorRgba};
 		backdrop-filter: ${backgroundColorRgba !== 'rgba(0, 0, 0, 0)'
 			? `blur(${jdgSizes.blurSizeSmall})`

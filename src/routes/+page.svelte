@@ -121,18 +121,31 @@
 	<JDGContentBoxFloating title="FEATURE CARD">
 		<JDGFeatureCard
 			featureTitle="HISTORICALLY ACCURATE"
-			featureImageAttributes={imageAttributesCollection.ccp_blue_mall_60s70s_1}
 			featureDescription="Experience Cinderella City Mall in full 3D, complete with accurate architectural details
 			and signage based on real photographs and original blueprints of the mall"
 			imageAlign="left"
-		/>
+		>
+			<JDGImageTile
+				imageAttributes={imageAttributesCollection.ccp_blue_mall_60s70s_1}
+				maxHeight={'400px'}
+				compactModeOnMobile={true}
+			/>
+		</JDGFeatureCard>
 		<JDGFeatureCard
 			featureTitle="INCREDIBLE GAMEPLAY"
-			featureImageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
 			featureDescription="Another really cool feature!"
 			imageAlign="right"
 			backgroundColor={jdgColors.accentColorsJDG[1]}
-		/>
+		>
+			<JDGImageCompare
+				imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
+				imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
+				animateSlider={true}
+				useFullWidthAnimation={true}
+				maxHeight="400px"
+				showBlurInUnfilledSpace={true}
+			/>
+		</JDGFeatureCard>
 		<JDGBodyCopy paddingTop="0">
 			Displays a colorful rectangle containing an imageTile and description text.
 		</JDGBodyCopy>
@@ -152,10 +165,10 @@
 				imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
 				imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
 				animateSlider={true}
-				useFullWidthAnimation={true}
+				useFullWidthAnimation={false}
 				caption="Gold Mall simulated in 1968-1978 and 1987-1997."
 				maxHeight="60vh"
-				showBlurInUnfilledSpace={false}
+				showBlurInUnfilledSpace={true}
 			/>
 		</JDGFullWidthContainer>
 
