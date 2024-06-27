@@ -28,7 +28,7 @@
 	};
 
 	const notificationContainerCss = css`
-		font-size: ${jdgSizes.fontSizeSmall};
+		font-size: ${jdgSizes.fontSizeBodyXSm};
 		z-index: ${forceOnTop ? incrementHighestZIndex() : 1};
 		background-color: ${color};
 		color: ${jdgColors.text};

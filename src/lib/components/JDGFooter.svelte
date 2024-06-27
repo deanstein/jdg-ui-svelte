@@ -39,7 +39,7 @@
 
 	const footerContentContainerCss = css`
 		align-items: ${alignItems};
-		font-size: ${jdgSizes.fontSizeSmall};
+		font-size: ${jdgSizes.fontSizeBodyXSm};
 		padding: ${jdgSizes.headerTopBottomPadding} ${jdgSizes.headerSidePadding}
 			${jdgSizes.headerTopBottomPadding} ${jdgSizes.headerSidePadding};
 	`;

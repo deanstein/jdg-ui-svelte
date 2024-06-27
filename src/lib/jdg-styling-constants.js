@@ -41,18 +41,24 @@ export const jdgColors = {
 
 export const jdgSizes = {
 	fontUnit: 'rem',
+
+	nFontSizeBodyXSm: 0.75,
+	get fontSizeBodyXSm() {
+		return this.nFontSizeBodyXSm.toString() + this.fontUnit;
+	},
 	nFontSizeBodySm: 1.0,
 	get fontSizeBodySm() {
-		return this.nFontSizeBodySmall.toString() + this.fontUnit;
+		return this.nFontSizeBodySm.toString() + this.fontUnit;
 	},
 	nFontSizeBodyMd: 1.1,
-	get fontSizeBodyMedium() {
+	get fontSizeBodyMd() {
 		return this.nFontSizeBodyMd.toString() + this.fontUnit;
 	},
 	nFontSizeBodyLg: 1.2,
-	get fontSizeBodyLarge() {
+	get fontSizeBodyLg() {
 		return this.nFontSizeBodyLg.toString() + this.fontUnit;
 	},
+
 	nFontSizeHeaderSupertitle: 0.6,
 	get fontSizeHeaderSupertitle() {
 		return this.nFontSizeHeaderSupertitle.toString() + this.fontUnit;
@@ -61,6 +67,7 @@ export const jdgSizes = {
 	get fontSizeHeaderTitle() {
 		return this.nFontSizeHeaderTitle.toString() + this.fontUnit;
 	},
+
 	nFontSizeAccentTextPrimarySm: 1.75,
 	get fontSizeAccentTextPrimarySm() {
 		return this.nFontSizeAccentTextPrimarySm.toString() + this.fontUnit;
@@ -85,6 +92,7 @@ export const jdgSizes = {
 	get fontSizeAccentTextSecondaryLg() {
 		return this.nFontSizeAccentTextSecondaryLg.toString() + this.fontUnit;
 	},
+
 	nFontSizeFloatingContentBoxTitle: 2,
 	get fontSizeFloatingContentBoxTitle() {
 		return this.nFontSizeFloatingContentBoxTitle.toString() + this.fontUnit;
