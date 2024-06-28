@@ -9,6 +9,7 @@
 	} from '$lib/index.js';
 
 	export let imageAttributeObjects = []; // all images shown in thumbnail collection
+	export let maxColumns = 3;
 </script>
 
 <div class="jdg-hybrid-image-grid-carousel-container">
@@ -19,7 +20,7 @@
 		</JDGFullWidthContainer>
 	{:else}
 		<!-- other breakpoints use the grid layout with image tiles -->
-		<JDGGridLayout>
+		<JDGGridLayout {maxColumns} >
 			{#each imageAttributeObjects as imageAttributesObject, i}
 				<JDGImageTile
 					imageAttributes={imageAttributesObject}
