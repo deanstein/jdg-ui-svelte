@@ -151,15 +151,24 @@
 		</JDGBodyCopy>
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating>
-		<JDGBodyCopy>
-			and its short 30-year life provided lessons in retail design, architecture, and placemaking.
-			<br /><br />
-			Take a trip into history and see the good, the bad, and the ugly of Cinderella City through
-			<a href="./history">historic photographs</a>
-			and an accurate digital 3D re-creation called the
-			<a href="./simulation">Cinderella City Simulation.</a>
-		</JDGBodyCopy>
-
+		<JDGBodyCopy textAlign="center">ImageCompare in GridLayout</JDGBodyCopy>
+		<JDGGridLayout maxColumns={2}>
+			<JDGImageTile
+				imageAttributes={imageAttributesCollection.cc_1}
+				fillContainer={true}
+				showCaption={false}
+				showAttribution={false}
+				maxHeight="400px"
+			/>
+			<JDGImageCompare
+				imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
+				imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
+				animateSlider={true}
+				useFullWidthAnimation={true}
+				maxHeight="400px"
+				showBlurInUnfilledSpace={true}
+			/>
+		</JDGGridLayout>
 		<JDGFullWidthContainer>
 			<JDGImageCompare
 				imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
