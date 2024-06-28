@@ -20,7 +20,7 @@
 		</JDGFullWidthContainer>
 	{:else}
 		<!-- other breakpoints use the grid layout with image tiles -->
-		<JDGGridLayout {maxColumns} >
+		<JDGGridLayout {maxColumns}>
 			{#each imageAttributeObjects as imageAttributesObject, i}
 				<JDGImageTile
 					imageAttributes={imageAttributesObject}
