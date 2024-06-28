@@ -152,6 +152,23 @@
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating>
 		<JDGBodyCopy textAlign="center">ImageCompare in GridLayout</JDGBodyCopy>
+		<div style="display: flex; justify-content: center; align-items: center;">
+			<JDGImageTile
+				imageAttributes={imageAttributesCollection.cc_1}
+				fillContainer={true}
+				showCaption={false}
+				showAttribution={false}
+				maxHeight="400px"
+			/>
+			<JDGImageCompare
+				imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
+				imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
+				animateSlider={true}
+				useFullWidthAnimation={true}
+				maxHeight="400px"
+				showBlurInUnfilledSpace={true}
+			/>
+		</div>
 		<JDGGridLayout maxColumns={2}>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.cc_1}
