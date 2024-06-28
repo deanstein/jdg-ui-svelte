@@ -6,6 +6,7 @@
 	export let maxColumns = 3;
 
 	const gridContainerCss = css`
+		align-items: center;
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			display: grid;
 			gap: ${jdgSizes.contentBoxPaddingSm};
