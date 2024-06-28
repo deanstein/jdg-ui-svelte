@@ -105,6 +105,8 @@
 <style>
 	.feature-card-row {
 		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.image-cell {
@@ -112,6 +114,7 @@
 		background-size: cover;
 		background-position: center;
 		z-index: 1;
+		height: 100%;
 	}
 
 	.text-cell {
