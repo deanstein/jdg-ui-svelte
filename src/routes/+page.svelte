@@ -152,39 +152,26 @@
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating>
 		<JDGBodyCopy textAlign="center">ImageCompare in GridLayout</JDGBodyCopy>
-		<div style="display: flex; justify-content: center; align-items: center;">
+		<JDGGridLayout maxColumns={2}>
+			<div style="display: flex; flex-direction: row-reverse;">
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.cc_1}
-				fillContainer={true}
+				fillContainer={false}
 				showCaption={false}
 				showAttribution={false}
 				maxHeight="400px"
 			/>
+			</div>
+			<div style="width: fit-content; display: flex;">
 			<JDGImageCompare
 				imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
 				imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
 				animateSlider={true}
 				useFullWidthAnimation={true}
 				maxHeight="400px"
-				showBlurInUnfilledSpace={true}
+				showBlurInUnfilledSpace={false}
 			/>
 		</div>
-		<JDGGridLayout maxColumns={2}>
-			<JDGImageTile
-				imageAttributes={imageAttributesCollection.cc_1}
-				fillContainer={true}
-				showCaption={false}
-				showAttribution={false}
-				maxHeight="400px"
-			/>
-			<JDGImageCompare
-				imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
-				imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
-				animateSlider={true}
-				useFullWidthAnimation={true}
-				maxHeight="400px"
-				showBlurInUnfilledSpace={true}
-			/>
 		</JDGGridLayout>
 		<JDGFullWidthContainer>
 			<JDGImageCompare
