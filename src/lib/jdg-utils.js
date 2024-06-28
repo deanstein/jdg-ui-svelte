@@ -329,10 +329,11 @@ export const convertHexToRGBA = (hexColor, alpha = 1) => {
 	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
+// adjusts a given color to meet a WCAG contrast value
 export const adjustColorForContrast = (
 	colorToChange,
 	baseColor,
-	minContrastRatio = 4.5 /* WCAG contrast standard */
+	minContrastRatio = 2.5 /* WCAG contrast standard (ideal is 4.5) */
 ) => {
 	//console.log("Adjusting color for contrast. Color to change: " + colorToChange + " and base color: " + baseColor);
 	// Check if color and baseColor are in HEX or RGBA format
