@@ -125,7 +125,7 @@
 
 	/*** emotion css ***/
 	const compareContainerCss = css`
-		width: ${showBlurInUnfilledSpace ? '100%' : 'max-content'};
+		width: ${showBlurInUnfilledSpace ? '100%' : 'fit-content'};
 	`;
 
 	/*** mounts + subscriptions ***/
@@ -216,7 +216,6 @@
 
 	.jdg-image-compare-container {
 		position: relative;
-		width: 100%;
 		height: 100%;
 	}
 
