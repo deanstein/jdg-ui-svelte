@@ -2,6 +2,9 @@
 	import { css } from '@emotion/css';
 
 	import { jdgBreakpoints, jdgSizes } from '../jdg-styling-constants.js';
+
+	export let maxColumns = 3;
+
 	const gridContainerCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			display: grid;
@@ -19,7 +22,7 @@
 			display: grid;
 			gap: ${(jdgSizes.nContentBoxPaddingLg / 2).toString() +
 			jdgSizes.contentBoxFloatingMarginUnit};
-			grid-template-columns: repeat(3, minmax(0, 1fr));
+			grid-template-columns: repeat(${maxColumns}, minmax(0, 1fr));
 		}
 	`;
 </script>
