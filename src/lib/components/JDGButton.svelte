@@ -52,7 +52,8 @@
 	export let fontSize = '1rem';
 	export let width = 'max-content';
 	export let borderRadius = '1.5em';
-	export let padding = '10px';
+	export let paddingTopBottom = '10px';
+	export let paddingLeftRight = '20px';
 	export let gap = '8px';
 	export let tooltip = undefined;
 
@@ -60,7 +61,7 @@
 		font-size: ${fontSize};
 		width: ${width};
 		border-radius: ${borderRadius};
-		padding: ${padding};
+		padding: ${`${paddingTopBottom} ${paddingLeftRight} ${paddingTopBottom} ${paddingLeftRight}`};
 		gap: ${gap};
 		color: ${textColor};
 		background-color: ${backgroundColor};

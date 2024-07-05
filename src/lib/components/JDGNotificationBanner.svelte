@@ -64,7 +64,8 @@
 					faIcon={'fa-circle-xmark'}
 					label={null}
 					backgroundColor="transparent"
-					padding="6px"
+					paddingTopBottom="6px"
+					paddingLeftRight="6px"
 					tooltip="Dismiss"
 				/>
 			{/if}
