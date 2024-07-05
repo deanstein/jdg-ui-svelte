@@ -125,6 +125,7 @@
 			style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;"
 		>
 			<JDGButton onClickFunction={() => {}} label="This is a primary button" />
+			<JDGButton onClickFunction={() => {}} label="This button has no icon" faIcon={null} />
 			<JDGButton
 				onClickFunction={() => {}}
 				label="This is a secondary button"
