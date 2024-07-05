@@ -210,6 +210,16 @@ export const getNumberOfYearsBetweenEvents = (startDate, endDate) => {
 	return years;
 };
 
+///
+/// STRING UTILS
+///
+
+// replaces spaces with hyphens, and converts to lowercase
+// for use in converting section titles into anchor tags
+export const convertStringToAnchorTag = (string) => {
+	return string?.replace(/ /g, '-').toLowerCase();
+};
+
 // build code is in this format:
 // yyyymmdd.nn where yyyymmdd is the "build date" and nn is the "build number" (see below)
 export const getBuildCode = async (repoName) => {
