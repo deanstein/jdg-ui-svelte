@@ -63,10 +63,8 @@
 					onClickFunction={onClickCloseButton}
 					faIcon={'fa-circle-xmark'}
 					label={null}
-					color={jdgColors.buttonPrimary}
-					colorHover={jdgColors.buttonPrimary}
 					backgroundColor="transparent"
-					backgroundColorHover={jdgColors.hoverBackground}
+					padding="6px"
 					tooltip="Dismiss"
 				/>
 			{/if}
