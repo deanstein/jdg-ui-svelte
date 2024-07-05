@@ -2,43 +2,80 @@
 	import { css } from '@emotion/css';
 
 	import { jdgColors } from '../jdg-styling-constants.js';
+	import { adjustColorForContrast, darkenColor, hexToRgb, rgbToHex } from '$lib/jdg-utils.js';
+
+	const primaryButtonBackgroundColor = '#0B84CB';
+	const secondaryButtonBackgroundColor = '#7a9eb3';
+	const disabledButtonBackgroundColor = '#B5B5B5';
+	const getDefaultBackgroundColor = () => {
+		let bgColor;
+
+		if (isPrimary && isEnabled) {
+			bgColor = primaryButtonBackgroundColor;
+		} else if (!isEnabled) {
+			// disabled
+			bgColor = disabledButtonBackgroundColor;
+		} else {
+			// secondary
+			bgColor = secondaryButtonBackgroundColor;
+		}
+
+		// ensure the background color is adjusted
+		return adjustColorForContrast(bgColor, textColor, 2.5);
+	};
+
+	const getDefaultBackgroundHoverColor = () => {
+		let bgColorHover;
+
+		if (backgroundColor === 'transparent') {
+			bgColorHover = rgbToHex(darkenColor(hexToRgb(getDefaultBackgroundColor()), 0.2));
+		} else if (!isEnabled) {
+			bgColorHover = disabledButtonBackgroundColor;
+		} else {
+			bgColorHover = rgbToHex(darkenColor(hexToRgb(backgroundColor), 0.2));
+		}
+
+		return adjustColorForContrast(bgColorHover, textColor, 2.5);
+	};
 
 	export let label = 'This is a button'; // set null if no label is desired
-	export let faClass = 'fa-regular';
+	export let faClass = 'fa-solid';
 	export let faIcon = 'fa-circle-info'; // set null if no icon is desired
 	export let isEnabled = true;
+	export let isPrimary = true;
 	export let onClickFunction;
-	export let color = undefined;
-	export let colorHover = undefined;
-	export let backgroundColor = undefined;
-	export let backgroundColorHover = undefined;
-	export let fontSize = undefined;
-	export let padding = undefined;
-	export let tooltip = 'This is a button tooltip.';
+	export let textColor = jdgColors.textDm;
+	export let textColorHover = jdgColors.textDm;
+	export let backgroundColor = getDefaultBackgroundColor();
+	// hover color by default is a slightly darker version of the background color
+	export let backgroundColorHover = getDefaultBackgroundHoverColor();
+	export let fontSize = '1rem';
+	export let width = 'max-content';
+	export let borderRadius = '1.5em';
+	export let padding = '10px';
+	export let gap = '8px';
+	export let tooltip = undefined;
 
 	let buttonCss = css`
-		font-size: ${fontSize ? fontSize : 'auto'};
-		padding: ${padding ? padding : '5px'};
-		gap: ${padding ? padding : '5px'};
-		color: ${color ? color : 'white'};
-		background-color: ${backgroundColor ? backgroundColor : jdgColors.buttonPrimary};
+		font-size: ${fontSize};
+		width: ${width};
+		border-radius: ${borderRadius};
+		padding: ${padding};
+		gap: ${gap};
+		color: ${textColor};
+		background-color: ${backgroundColor};
 		:hover {
-			color: ${colorHover ? colorHover : 'white'};
-			background-color: ${backgroundColorHover ? backgroundColorHover : jdgColors.hoverBackground};
+			color: ${textColorHover};
+			background-color: ${backgroundColorHover};
 		}
-		:disabled {
-			background-color: ${jdgColors.buttonDisabled};
-		}
-		:disabled:hover {
-			background-color: ${jdgColors.buttonDisabled};
-		}
+		cursor: ${isEnabled ? 'pointer' : 'default'};
 	`;
 </script>
 
 <button
-	disabled={!isEnabled}
 	on:click={onClickFunction}
-	title={tooltip}
+	disabled={!isEnabled}
+	title={tooltip ?? ''}
 	class="jdg-button {buttonCss}"
 >
 	{#if faIcon !== null}
@@ -57,7 +94,5 @@
 		border: none;
 		outline: none;
 		font-weight: bold;
-		border-radius: 5px;
-		cursor: pointer;
 	}
 </style>
