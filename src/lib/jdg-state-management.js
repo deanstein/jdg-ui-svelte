@@ -59,6 +59,20 @@ export const setImageDetailAttributes = (imageDetailObject) => {
 	});
 };
 
+export const resetJumpToNavItems = () => {
+	uiState.update((currentValue) => {
+		currentValue.jumpToNavItems = [];
+		return currentValue;
+	});
+};
+
+export const addJumpToNavItem = (navItem) => {
+	uiState.update((currentValue) => {
+		currentValue.jumpToNavItems.push(navItem);
+		return currentValue;
+	});
+};
+
 export const getIsNavSideBarOpen = () => {
 	let isOpen;
 

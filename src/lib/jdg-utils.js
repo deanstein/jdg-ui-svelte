@@ -217,14 +217,13 @@ export const getNumberOfYearsBetweenEvents = (startDate, endDate) => {
 // replaces spaces with hyphens, and converts to lowercase
 // for use in converting section titles into anchor tags
 export const convertStringToAnchorTag = (string, addHash = true) => {
-    string = string?.replace(/ /g, '-').toLowerCase();
+	string = string?.replace(/ /g, '-').toLowerCase();
 	// add the hash if it doesn't exist already
-    if (string && addHash && !string.startsWith("#")) {
-        string = '#' + string;
-    }
-    return string;
+	if (string && addHash && !string.startsWith('#')) {
+		string = '#' + string;
+	}
+	return string;
 };
-
 
 // build code is in this format:
 // yyyymmdd.nn where yyyymmdd is the "build date" and nn is the "build number" (see below)

@@ -1,14 +1,23 @@
 <script>
+	import { onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
 	import uiState from '$lib/states/ui-state.js';
-	import { convertRemToPixels, convertStringToAnchorTag } from '$lib/jdg-utils.js';
+	import { addJumpToNavItem } from '$lib/jdg-state-management.js';
+	import jdgNavItem from '$lib/schemas/jdg-nav-item.js';
+
+	import {
+		convertRemToPixels,
+		convertStringToAnchorTag,
+		instantiateObject
+	} from '$lib/jdg-utils.js';
 
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '../jdg-styling-constants.js';
 
 	export let title = undefined;
 	export let subtitle = undefined;
 	export let anchorTag = convertStringToAnchorTag(title, false);
+	export let includeInJumpTo = true;
 
 	// when scrolling to this anchor tag,
 	// account for the height of the title and then some
@@ -62,6 +71,17 @@
 			top: -${jdgSizes.nHeaderHeightLg + (title ? convertRemToPixels(jdgSizes.nFontSizeFloatingContentBoxTitle) * titleScrollMultiplier : 0) + ($uiState.showHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightLg : 0)}px;
 		}
 	`;
+
+	onMount(() => {
+		if (includeInJumpTo) {
+			addJumpToNavItem(
+				instantiateObject(jdgNavItem, {
+					label: title,
+					href: convertStringToAnchorTag(anchorTag)
+				})
+			);
+		}
+	});
 </script>
 
 <div class="jdg-content-box-floating-container {floatingBoxContainerCss}">

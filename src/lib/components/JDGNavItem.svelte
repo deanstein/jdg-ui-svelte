@@ -18,7 +18,9 @@
 
 <a
 	class="jdg-nav-item no-initial-highlight {navItemCss}"
-	href={navItem?.href.startsWith("#") || navItem?.href.startsWith(".") ? convertStringToAnchorTag(navItem?.href) : navItem?.href}
+	href={navItem?.href?.startsWith('#') || navItem?.href?.startsWith('.')
+		? convertStringToAnchorTag(navItem?.href)
+		: navItem?.href}
 	on:click={() => {
 		onClickFunction();
 	}}>{navItem?.label}</a

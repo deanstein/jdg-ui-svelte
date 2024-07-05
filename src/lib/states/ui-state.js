@@ -7,6 +7,7 @@ const uiState = {
 	activeNotificationBanners: [],
 	highestZIndex: 1,
 	imageDetailAttributes: {},
+	jumpToNavItems: [],
 	showHeaderStripes: false,
 	showImageDetailOverlay: false,
 	showNavSidebar: false,
