@@ -59,26 +59,30 @@
 	export let gap = '8px';
 	export let tooltip = undefined;
 
-	let buttonCss = css`
-		font-size: ${fontSize};
-		width: ${
-			width == 'max-content'
-				? 'max-content'
-				: $uiState.isMobileBreakpoint
-					? '100%'
-					: width /* button is 100% width on smallest breakpoint */
-		};
-		border-radius: ${borderRadius};
-		padding: ${`${paddingTopBottom} ${paddingLeftRight} ${paddingTopBottom} ${paddingLeftRight}`};
-		gap: ${gap};
-		color: ${textColor};
-		background-color: ${backgroundColor};
-		:hover {
-			color: ${textColorHover};
-			background-color: ${backgroundColorHover};
-		}
-		cursor: ${isEnabled ? 'pointer' : 'default'};
-	`;
+	let buttonCss = css``; // redeefined in the reactive block
+
+	$: {
+		buttonCss = css`
+			font-size: ${fontSize};
+			width: ${
+				width == 'max-content'
+					? 'max-content'
+					: $uiState.isMobileBreakpoint
+						? '100%'
+						: width /* button is 100% width on smallest breakpoint */
+			};
+			border-radius: ${borderRadius};
+			padding: ${`${paddingTopBottom} ${paddingLeftRight} ${paddingTopBottom} ${paddingLeftRight}`};
+			gap: ${gap};
+			color: ${textColor};
+			background-color: ${backgroundColor};
+			:hover {
+				color: ${textColorHover};
+				background-color: ${backgroundColorHover};
+			}
+			cursor: ${isEnabled ? 'pointer' : 'default'};
+		`;
+	}
 </script>
 
 <button
