@@ -18,7 +18,8 @@
 		JDGGridLayout,
 		JDGJumpTo,
 		JDGAccentBlockWithText,
-		JDGFeatureCard
+		JDGFeatureCard,
+		JDGButton
 	} from '$lib/index.js';
 
 	import { imageAttributesCollection } from './image-attributes-collection.js';
@@ -118,6 +119,39 @@
 			</ul>
 		</JDGBodyCopy>
 	</JDGContentBoxFloating>
+	<JDGContentBoxFloating title="BUTTONS">
+		<JDGBodyCopy textAlign="center" paddingTop="0" paddingBottom="0">Varying widths:</JDGBodyCopy>
+		<div
+			style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;"
+		>
+			<JDGButton onClickFunction={() => {}} label="This is a primary button" />
+			<JDGButton
+				onClickFunction={() => {}}
+				label="This is a secondary button"
+				backgroundColor={jdgColors.buttonSecondaryBackground}
+				isPrimary={false}
+			/>
+			<JDGButton
+				onClickFunction={() => {}}
+				label="This is a custom button"
+				backgroundColor={jdgColors.accentColorsJDG[1]}
+			/>
+			<JDGButton onClickFunction={() => {}} label="This is a disabled button" isEnabled={false} />
+		</div>
+		<JDGBodyCopy textAlign="center" paddingBottom="0">Consistent width:</JDGBodyCopy>
+		<div
+			style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;"
+		>
+			<JDGButton onClickFunction={() => {}} label="This is a primary button" width="500px" />
+			<JDGButton
+				onClickFunction={() => {}}
+				label="This is a secondary button"
+				isPrimary={false}
+				backgroundColor={jdgColors.buttonSecondaryBackground}
+				width="500px"
+			/>
+		</div>
+	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="FEATURE CARD">
 		<JDGFeatureCard
 			featureTitle="HISTORICALLY ACCURATE"
@@ -174,7 +208,9 @@
 			</div>
 		</JDGGridLayout>
 		<JDGGridLayout maxColumns={2}>
-			<div style="width: fit-content; display: flex; flex-direction: row-reverse; margin-left: auto;">
+			<div
+				style="width: fit-content; display: flex; flex-direction: row-reverse; margin-left: auto;"
+			>
 				<JDGImageCompare
 					imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
 					imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
@@ -194,13 +230,14 @@
 				/>
 			</div>
 		</JDGGridLayout>
+		ImageCompare in FullWidthContainer
 		<JDGFullWidthContainer>
 			<JDGImageCompare
 				imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
 				imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
 				animateSlider={true}
 				useFullWidthAnimation={false}
-				caption="Gold Mall simulated in 1968-1978 and 1987-1997."
+				caption="Gold Mall simulated in 1968-1978 and 1987-1997. And this is an even longer caption to test a possible failure case."
 				maxHeight="60vh"
 				showBlurInUnfilledSpace={true}
 			/>
