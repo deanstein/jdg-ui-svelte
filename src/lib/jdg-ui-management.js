@@ -21,29 +21,6 @@ export const getDistanceToBottomOfHeader = (includeStripes = false) => {
 	return distanceToBottom;
 };
 
-export const scrollToAnchor = (anchorId, accountForHeader = true, additionalOffset = 0) => {
-	const element = document.querySelector(`#${anchorId}`);
-	if (element) {
-		const topValue = accountForHeader
-			? //@ts-expect-error
-				element.offsetTop - getDistanceToBottomOfHeader().value - additionalOffset
-			: //@ts-expect-error
-				element.offsetTop - additionalOffset;
-		window.scrollTo({
-			top: topValue,
-			behavior: 'smooth'
-		});
-	}
-};
-
-export const openUrl = (url, newTab) => {
-	if (newTab) {
-		window.open(url, '_blank');
-	} else {
-		window.location.href = url;
-	}
-};
-
 // do stuff at each breakpoint
 export const breakpointHandler = (
 	breakpoint0Function,
