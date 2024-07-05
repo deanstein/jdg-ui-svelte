@@ -8,7 +8,7 @@
 
 	export let title = undefined;
 	export let subtitle = undefined;
-	export let anchorTag = convertStringToAnchorTag(title);
+	export let anchorTag = convertStringToAnchorTag(title, false);
 
 	// when scrolling to this anchor tag,
 	// account for the height of the title and then some

@@ -2,6 +2,7 @@
 	import { css } from '@emotion/css';
 
 	import { jdgSizes } from '$lib/jdg-styling-constants.js';
+	import { convertStringToAnchorTag } from '$lib/jdg-utils.js';
 
 	export let navItem;
 	export let onClickFunction = () => {};
@@ -17,7 +18,7 @@
 
 <a
 	class="jdg-nav-item no-initial-highlight {navItemCss}"
-	href={navItem?.href}
+	href={navItem?.href.startsWith("#") || navItem?.href.startsWith(".") ? convertStringToAnchorTag(navItem?.href) : navItem?.href}
 	on:click={() => {
 		onClickFunction();
 	}}>{navItem?.label}</a
