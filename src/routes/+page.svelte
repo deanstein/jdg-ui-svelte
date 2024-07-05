@@ -1,5 +1,5 @@
 <script>
-	import { openUrl } from '$lib/jdg-utils.js';
+	import { openUrl, scrollToAnchor } from '$lib/jdg-utils.js';
 
 	import uiState from '$lib/states/ui-state.js';
 
@@ -108,7 +108,13 @@
 			style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;"
 		>
 			<JDGButton onClickFunction={() => {}} label="This is a primary button" />
-			<JDGButton onClickFunction={() => {}} label="This button has no icon" faIcon={null} />
+			<JDGButton
+				onClickFunction={() => {
+					scrollToAnchor('background');
+				}}
+				label="This button has no icon, and scrolls to an anchor"
+				faIcon={null}
+			/>
 			<JDGButton
 				onClickFunction={() => {}}
 				label="This is a secondary button"
