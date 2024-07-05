@@ -469,17 +469,13 @@ export const openUrl = (url, newTab) => {
 	}
 };
 
-export const scrollToAnchor = (anchorId, accountForHeader = true, additionalOffset = 0) => {
-	const element = document.querySelector(`#${anchorId}`);
+export const scrollToAnchor = (anchorId) => {
+	// ensure the anchorId is properly formatted
+	const anchorIdPostProcessed = convertStringToAnchorTag(anchorId, false);
+	const element = document.getElementById(anchorIdPostProcessed);
 	if (element) {
-		const topValue = accountForHeader
-			? //@ts-expect-error
-				element.offsetTop - getDistanceToBottomOfHeader().value - additionalOffset
-			: //@ts-expect-error
-				element.offsetTop - additionalOffset;
-		window.scrollTo({
-			top: topValue,
-			behavior: 'smooth'
-		});
+		element.scrollIntoView({ behavior: 'smooth' });
+	} else {
+		console.error('scrollToAnchor: Element not found by ID: ' + anchorIdPostProcessed);
 	}
 };
