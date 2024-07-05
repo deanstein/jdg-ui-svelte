@@ -34,8 +34,21 @@ export const jdgColors = {
 };
 
 export const jdgSizes = {
-	fontUnit: 'rem',
+	contentContainerGapUnit: 'px',
+	nContentContainerGapSm: 40,
+	get contentContainerGapSm() {
+		return this.nContentContainerGapSm.toString() + this.contentContainerGapUnit;
+	},
+	nContentContainerGapMd: 50,
+	get contentContainerGapMd() {
+		return this.nContentContainerGapMd.toString() + this.contentContainerGapUnit;
+	},
+	nContentContainerGapLg: 60,
+	get contentContainerGapLg() {
+		return this.nContentContainerGapLg.toString() + this.contentContainerGapUnit;
+	},
 
+	fontUnit: 'rem',
 	nFontSizeBodyXSm: 0.75,
 	get fontSizeBodyXSm() {
 		return this.nFontSizeBodyXSm.toString() + this.fontUnit;

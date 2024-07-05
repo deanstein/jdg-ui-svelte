@@ -19,10 +19,6 @@
 	export let anchorTag = convertStringToAnchorTag(title, false);
 	export let includeInJumpTo = true;
 
-	// when scrolling to this anchor tag,
-	// account for the height of the title and then some
-	const titleScrollMultiplier = 1.75;
-
 	const floatingBoxTitleCss = css`
 		font-size: ${jdgSizes.fontSizeFloatingContentBoxTitle};
 		color: ${jdgColors.title};
@@ -60,15 +56,15 @@
 
 	const floatingBoxAnchorTagCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			top: -${jdgSizes.nHeaderHeightSm + (title ? convertRemToPixels(jdgSizes.nFontSizeFloatingContentBoxTitle) * titleScrollMultiplier : 0) + ($uiState.showHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightSm : 0)}px;
+			top: -${jdgSizes.nHeaderHeightSm + jdgSizes.nContentContainerGapSm + ($uiState.showHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightSm : 0)}px;
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-			top: -${jdgSizes.nHeaderHeightMd + (title ? convertRemToPixels(jdgSizes.nFontSizeFloatingContentBoxTitle) * titleScrollMultiplier : 0) + ($uiState.showHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightMd : 0)}px;
+			top: -${jdgSizes.nHeaderHeightMd + jdgSizes.nContentContainerGapMd + ($uiState.showHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightMd : 0)}px;
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			top: -${jdgSizes.nHeaderHeightLg + (title ? convertRemToPixels(jdgSizes.nFontSizeFloatingContentBoxTitle) * titleScrollMultiplier : 0) + ($uiState.showHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightLg : 0)}px;
+			top: -${jdgSizes.nHeaderHeightLg + jdgSizes.nContentContainerGapLg + ($uiState.showHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightLg : 0)}px;
 		}
 	`;
 
