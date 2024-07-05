@@ -23,30 +23,7 @@
 	} from '$lib/index.js';
 
 	import { imageAttributesCollection } from './image-attributes-collection.js';
-	import { convertStringToAnchorTag, instantiateObject } from '$lib/jdg-utils.js';
-	import jdgNavItem from '$lib/schemas/jdg-nav-item.js';
 	import { jdgColors } from '$lib/jdg-styling-constants.js';
-
-	const jumpToNavItems = [
-		instantiateObject(jdgNavItem, {
-			label: 'BACKGROUND',
-			get href() {
-				return convertStringToAnchorTag(this.label);
-			}
-		}),
-		instantiateObject(jdgNavItem, {
-			label: 'ARCHITECTURE',
-			get href() {
-				return convertStringToAnchorTag(this.label);
-			}
-		}),
-		instantiateObject(jdgNavItem, {
-			label: 'ACCENT BLOCKS',
-			get href() {
-				return convertStringToAnchorTag(this.label);
-			}
-		})
-	];
 </script>
 
 <JDGContentContainer overlapWithHeader={true}>
@@ -78,7 +55,7 @@
 			/>
 		</JDGContentBoxFloating>
 	</div>
-	<JDGJumpTo {jumpToNavItems} />
+	<JDGJumpTo />
 	<JDGContentBoxFloating title="BACKGROUND">
 		<JDGBodyCopy paddingTop="0">
 			The city of Englewood, Colorado changed forever in 1968 when mall magnate Gerri Von Frellick
