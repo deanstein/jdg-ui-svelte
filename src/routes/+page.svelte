@@ -23,22 +23,28 @@
 	} from '$lib/index.js';
 
 	import { imageAttributesCollection } from './image-attributes-collection.js';
-	import { instantiateObject } from '$lib/jdg-utils.js';
+	import { convertStringToAnchorTag, instantiateObject } from '$lib/jdg-utils.js';
 	import jdgNavItem from '$lib/schemas/jdg-nav-item.js';
 	import { jdgColors } from '$lib/jdg-styling-constants.js';
 
 	const jumpToNavItems = [
 		instantiateObject(jdgNavItem, {
 			label: 'BACKGROUND',
-			href: '#BACKGROUND'
+			get href() {
+				return convertStringToAnchorTag(this.label);
+			}
 		}),
 		instantiateObject(jdgNavItem, {
 			label: 'ARCHITECTURE',
-			href: '#ARCHITECTURE'
+			get href() {
+				return convertStringToAnchorTag(this.label);
+			}
 		}),
 		instantiateObject(jdgNavItem, {
 			label: 'ACCENT BLOCKS',
-			href: '#ACCENT-BLOCK-1'
+			get href() {
+				return convertStringToAnchorTag(this.label);
+			}
 		})
 	];
 </script>
