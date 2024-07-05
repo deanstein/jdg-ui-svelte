@@ -73,6 +73,18 @@ export const addJumpToNavItem = (navItem) => {
 	});
 };
 
+export const removeJumpToNavItem = (navItem) => {
+	uiState.update((currentValue) => {
+		const index = currentValue.jumpToNavItems.findIndex(
+			(item) => JSON.stringify(item) === JSON.stringify(navItem)
+		);
+		if (index !== -1) {
+			currentValue.jumpToNavItems.splice(index, 1);
+		}
+		return currentValue;
+	});
+};
+
 export const getIsNavSideBarOpen = () => {
 	let isOpen;
 

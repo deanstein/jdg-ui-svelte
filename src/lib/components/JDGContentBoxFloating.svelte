@@ -1,9 +1,9 @@
 <script>
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
 	import uiState from '$lib/states/ui-state.js';
-	import { addJumpToNavItem } from '$lib/jdg-state-management.js';
+	import { addJumpToNavItem, removeJumpToNavItem } from '$lib/jdg-state-management.js';
 	import jdgNavItem from '$lib/schemas/jdg-nav-item.js';
 
 	import {
@@ -71,6 +71,17 @@
 	onMount(() => {
 		if (includeInJumpTo) {
 			addJumpToNavItem(
+				instantiateObject(jdgNavItem, {
+					label: title,
+					href: convertStringToAnchorTag(anchorTag)
+				})
+			);
+		}
+	});
+
+	onDestroy(() => {
+		if (includeInJumpTo) {
+			removeJumpToNavItem(
 				instantiateObject(jdgNavItem, {
 					label: title,
 					href: convertStringToAnchorTag(anchorTag)
