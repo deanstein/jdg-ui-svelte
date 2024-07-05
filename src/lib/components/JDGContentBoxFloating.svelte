@@ -2,14 +2,13 @@
 	import { css } from '@emotion/css';
 
 	import uiState from '$lib/states/ui-state.js';
-	import { convertRemToPixels } from '$lib/jdg-utils.js';
+	import { convertRemToPixels, convertStringToAnchorTag } from '$lib/jdg-utils.js';
 
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '../jdg-styling-constants.js';
 
 	export let title = undefined;
 	export let subtitle = undefined;
-	// @ts-expect-error
-	export let anchorTag = title?.replace(/ /g, '-');
+	export let anchorTag = convertStringToAnchorTag(title);
 
 	// when scrolling to this anchor tag,
 	// account for the height of the title and then some
