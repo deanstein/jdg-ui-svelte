@@ -1,5 +1,5 @@
 <script>
-	import { openUrl } from '$lib/jdg-ui-management.js';
+	import { openUrl } from '$lib/jdg-utils.js';
 
 	import uiState from '$lib/states/ui-state.js';
 
