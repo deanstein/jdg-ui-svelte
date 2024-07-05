@@ -126,13 +126,13 @@
 		<div
 			style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;"
 		>
-			<JDGButton onClickFunction={() => {}} label="This is a primary button" width="500px" />
+			<JDGButton onClickFunction={() => {}} label="This is a primary button" width="300px" />
 			<JDGButton
 				onClickFunction={() => {}}
 				label="This is a secondary button"
 				isPrimary={false}
 				backgroundColor={jdgColors.buttonSecondaryBackground}
-				width="500px"
+				width="300px"
 			/>
 		</div>
 	</JDGContentBoxFloating>
