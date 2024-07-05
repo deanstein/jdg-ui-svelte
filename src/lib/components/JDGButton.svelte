@@ -1,6 +1,8 @@
 <script>
 	import { css } from '@emotion/css';
 
+	import uiState from '$lib/states/ui-state.js';
+
 	import { jdgColors } from '../jdg-styling-constants.js';
 	import { adjustColorForContrast, darkenColor, hexToRgb, rgbToHex } from '$lib/jdg-utils.js';
 
@@ -59,7 +61,13 @@
 
 	let buttonCss = css`
 		font-size: ${fontSize};
-		width: ${width};
+		width: ${
+			width == 'max-content'
+				? 'max-content'
+				: $uiState.isMobileBreakpoint
+					? '100%'
+					: width /* button is 100% width on smallest breakpoint */
+		};
 		border-radius: ${borderRadius};
 		padding: ${`${paddingTopBottom} ${paddingLeftRight} ${paddingTopBottom} ${paddingLeftRight}`};
 		gap: ${gap};
@@ -74,6 +82,7 @@
 </script>
 
 <button
+	type="button"
 	on:click={onClickFunction}
 	disabled={!isEnabled}
 	title={tooltip ?? ''}
