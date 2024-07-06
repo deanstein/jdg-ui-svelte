@@ -9,7 +9,7 @@
 	export let textAlign = 'left';
 
 	const bodyCopyContainerCss = css`
-		line-height: 1.5;
+		line-height: 2;
 		text-align: ${textAlign};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: ${(fontSizeMultiplier * jdgSizes.nFontSizeBodySm).toString() + jdgSizes.fontUnit};
