@@ -75,10 +75,10 @@
 			padding: ${`${paddingTopBottom} ${paddingLeftRight} ${paddingTopBottom} ${paddingLeftRight}`};
 			gap: ${gap};
 			color: ${textColor};
-			background-color: ${backgroundColor};
+			background-color: ${isEnabled ? backgroundColor : disabledButtonBackgroundColor};
 			:hover {
 				color: ${textColorHover};
-				background-color: ${backgroundColorHover};
+				background-color: ${isEnabled ? backgroundColorHover : disabledButtonBackgroundColor};
 			}
 			cursor: ${isEnabled ? 'pointer' : 'default'};
 		`;
