@@ -24,6 +24,8 @@
 
 	import { imageAttributesCollection } from './image-attributes-collection.js';
 	import { jdgColors } from '$lib/jdg-styling-constants.js';
+
+	let isTestButtonEnabled = true;
 </script>
 
 <JDGContentContainer overlapWithHeader={true}>
@@ -127,6 +129,13 @@
 				backgroundColor={jdgColors.accentColorsJDG[1]}
 			/>
 			<JDGButton onClickFunction={() => {}} label="This is a disabled button" isEnabled={false} />
+			<JDGButton
+				onClickFunction={() => {
+					isTestButtonEnabled = !isTestButtonEnabled;
+				}}
+				label="This button will disable when clicked"
+				isEnabled={isTestButtonEnabled}
+			/>
 		</div>
 		<JDGBodyCopy textAlign="center" paddingBottom="0">Consistent width:</JDGBodyCopy>
 		<div
