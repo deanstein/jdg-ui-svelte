@@ -71,6 +71,16 @@
 			complex broken up into 5 sub-malls, and surrounded by a two-level parking garage.
 		</JDGBodyCopy>
 	</JDGContentBoxFloating>
+	<JDGContentBoxFloating title="BODY COPY">
+		<JDGBodyCopy paddingTop="0">
+			This body copy has <a href="./about">regular hyperlink styles</a>. They're useful for short
+			words, no more than a <a href="./about">few at a time</a>.
+		</JDGBodyCopy>
+		<JDGBodyCopy paddingTop="0" simpleHyperlinkStyle={true}>
+			This body copy has <a href="./about">simplified hyperlink styles</a>. These are useful for
+			<a href="./about">longer sections of text which might be hyperlinks but could also wrap</a>.
+		</JDGBodyCopy>
+	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="ACCENT BLOCK 1" subtitle="Composite, High-Contrast">
 		<JDGFullWidthContainer>
 			<JDGAccentBlockWithText
@@ -183,7 +193,7 @@
 			Displays a colorful rectangle containing an imageTile and description text.
 		</JDGBodyCopy>
 	</JDGContentBoxFloating>
-	<JDGContentBoxFloating>
+	<JDGContentBoxFloating title="IMAGE COMPARE">
 		<JDGBodyCopy textAlign="center">ImageCompare in GridLayout</JDGBodyCopy>
 		<JDGGridLayout maxColumns={2}>
 			<div style="display: flex; flex-direction: row-reverse;">
