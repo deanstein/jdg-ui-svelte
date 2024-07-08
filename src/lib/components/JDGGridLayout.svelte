@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { jdgBreakpoints, jdgSizes } from '../jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgSizes } from '../jdg-shared-styles.js';
 
 	export let maxColumns = 3;
 

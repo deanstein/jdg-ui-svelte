@@ -12,7 +12,7 @@
 		instantiateObject
 	} from '$lib/jdg-utils.js';
 
-	import { jdgBreakpoints, jdgColors, jdgSizes } from '../jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgColors, jdgSizes } from '../jdg-shared-styles.js';
 
 	export let title = undefined;
 	export let subtitle = undefined;

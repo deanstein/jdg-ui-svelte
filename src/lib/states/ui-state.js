@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 
-import { jdgColors } from '$lib/jdg-styling-constants.js';
+import { jdgColors } from '$lib/jdg-shared-styles.js';
 
 const uiState = {
 	accentColors: jdgColors.accentColorsJDG,

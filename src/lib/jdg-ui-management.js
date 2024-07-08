@@ -1,4 +1,4 @@
-import { jdgBreakpoints, jdgSizes } from './jdg-styling-constants.js';
+import { jdgBreakpoints, jdgSizes } from './jdg-shared-styles.js';
 
 export const getScreenCentroid = () => {
 	return {

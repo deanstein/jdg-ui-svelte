@@ -17,7 +17,7 @@
 		jdgColors,
 		jdgFonts,
 		jdgLinkStyles
-	} from '$lib/jdg-styling-constants.js';
+	} from '$lib/jdg-shared-styles.js';
 	import { adjustColorForContrast, convertHexToRGBA } from '$lib/jdg-utils.js';
 
 	export let fontFamily = jdgFonts.body;

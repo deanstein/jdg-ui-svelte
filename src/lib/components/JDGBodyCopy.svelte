@@ -6,7 +6,7 @@
 		jdgColors,
 		jdgLinkStyles,
 		jdgSizes
-	} from '$lib/jdg-styling-constants.js';
+	} from '$lib/jdg-shared-styles.js';
 	import { getAccentColors } from '$lib/jdg-state-management.js';
 	import { adjustColorForContrast } from '$lib/jdg-utils.js';
 

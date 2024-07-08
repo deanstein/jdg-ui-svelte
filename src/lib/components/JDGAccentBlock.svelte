@@ -2,7 +2,7 @@
 	import { css } from '@emotion/css';
 	import { getAccentColors } from '$lib/jdg-state-management.js';
 	import { onMount } from 'svelte';
-	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let backgroundColor = getAccentColors()[0];
 

@@ -6,7 +6,7 @@
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGImageTile } from '$lib/index.js';
 
-	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let imageAttributeObjects = []; // all images shown in thumbnail collection
 	export let maxHeight = '50vh';

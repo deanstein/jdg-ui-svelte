@@ -3,7 +3,7 @@
 
 	import uiState from '$lib/states/ui-state.js';
 
-	import { jdgColors } from '../jdg-styling-constants.js';
+	import { jdgColors } from '../jdg-shared-styles.js';
 	import { adjustColorForContrast, darkenColor, hexToRgb, rgbToHex } from '$lib/jdg-utils.js';
 
 	const primaryButtonBackgroundColor = '#0B84CB';

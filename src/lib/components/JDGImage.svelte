@@ -8,7 +8,7 @@
 
 	import { convertVhToPixels, instantiateObject } from '$lib/jdg-utils.js';
 
-	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { JDGImageCaptionAttribution } from '$lib/index.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object for all image data

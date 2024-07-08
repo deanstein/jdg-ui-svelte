@@ -6,7 +6,7 @@
 
 	import { setAlphaInRgbaString } from '$lib/jdg-graphics-factory.js';
 	import { setNavSidebarOpen } from '../jdg-state-management.js';
-	import { jdgColors, jdgDurations, jdgSizes } from '../jdg-styling-constants.js';
+	import { jdgColors, jdgDurations, jdgSizes } from '../jdg-shared-styles.js';
 
 	export let navItems;
 	export let sideNavWidth = '250px';

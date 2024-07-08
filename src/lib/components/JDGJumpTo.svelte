@@ -4,7 +4,7 @@
 	import uiState from '$lib/states/ui-state.js';
 
 	import { JDGContentBoxFloating, JDGNavItem } from '$lib/index.js';
-	import { jdgSizes } from '$lib/jdg-styling-constants.js';
+	import { jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let sectionTitle = 'JUMP TO';
 	export let showArrowInItems = false;

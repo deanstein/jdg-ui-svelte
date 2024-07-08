@@ -1,5 +1,5 @@
 <script>
-	import { jdgBreakpoints, jdgColors, jdgFonts, jdgSizes } from '$lib/jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgColors, jdgFonts, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { css } from '@emotion/css';
 
 	export let isQuote = false; // if true, more gap is used

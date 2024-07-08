@@ -3,7 +3,7 @@
 	import { getAccentColors } from '$lib/jdg-state-management.js';
 	import { adjustColorForContrast } from '$lib/jdg-utils.js';
 
-	import { jdgBreakpoints, jdgColors, jdgFonts, jdgSizes } from '$lib/jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgColors, jdgFonts, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let featureTitle = undefined;
 	export let featureDescription;

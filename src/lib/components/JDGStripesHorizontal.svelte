@@ -1,6 +1,6 @@
 <script>
 	import { css, keyframes } from '@emotion/css';
-	import { jdgBreakpoints, jdgColors, jdgSizes } from '../jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgColors, jdgSizes } from '../jdg-shared-styles.js';
 	import { onMount } from 'svelte';
 	import { getAccentColors } from '$lib/jdg-state-management.js';
 

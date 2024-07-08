@@ -1,5 +1,5 @@
 <script>
-	import { jdgColors, jdgFonts } from '$lib/jdg-styling-constants.js';
+	import { jdgColors, jdgFonts } from '$lib/jdg-shared-styles.js';
 	import { JDGAccentBlock, JDGAccentText } from '$lib/index.js';
 	import { getAccentColors } from '$lib/jdg-state-management.js';
 	import { adjustColorForContrast } from '$lib/jdg-utils.js';

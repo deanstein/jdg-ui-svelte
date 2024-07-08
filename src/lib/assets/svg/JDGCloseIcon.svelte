@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { jdgSizes } from '$lib/jdg-styling-constants.js';
+	import { jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	const imgCss = css`
 		height: ${jdgSizes.navMobileIconHeightSm};

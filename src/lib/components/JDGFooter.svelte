@@ -8,7 +8,7 @@
 	import { jdgUiRepoName } from '../jdg-persistence-management.js';
 	import { toggleDevTools } from '$lib/jdg-state-management.js';
 
-	import { jdgColors, jdgSizes } from '../jdg-styling-constants.js';
+	import { jdgColors, jdgSizes } from '../jdg-shared-styles.js';
 	import { JDGStripesHorizontal } from '../index.js';
 
 	export let repoName = jdgUiRepoName;

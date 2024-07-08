@@ -8,7 +8,7 @@
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGOverlay } from '$lib/index.js';
-	import { jdgBreakpoints } from '$lib/jdg-styling-constants.js';
+	import { jdgBreakpoints } from '$lib/jdg-shared-styles.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes);
 

@@ -10,7 +10,7 @@
 		removeNotificationBanner,
 		incrementHighestZIndex
 	} from '../jdg-state-management.js';
-	import { jdgColors, jdgSizes } from '../jdg-styling-constants.js';
+	import { jdgColors, jdgSizes } from '../jdg-shared-styles.js';
 	import { darkenColor, getIsValueInArray } from '../jdg-utils.js';
 	import { JDGButton } from '../index.js';
 

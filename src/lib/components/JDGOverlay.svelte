@@ -7,7 +7,7 @@
 	import { getHighestZIndex } from '../jdg-state-management.js';
 
 	import { JDGCloseIcon } from '$lib/index.js';
-	import { jdgBreakpoints, jdgColors, jdgDurations, jdgSizes } from '../jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgColors, jdgDurations, jdgSizes } from '../jdg-shared-styles.js';
 
 	export let colorRgba = 'rgba(255, 255, 255, 1.0)';
 	export let showTitleBar = true;

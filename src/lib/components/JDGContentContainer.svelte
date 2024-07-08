@@ -1,5 +1,5 @@
 <script>
-	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { css } from '@emotion/css';
 
 	export let overlapWithHeader = false;

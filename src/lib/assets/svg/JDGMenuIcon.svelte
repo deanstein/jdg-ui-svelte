@@ -3,7 +3,7 @@
 
 	import uiState from '$lib/states/ui-state.js';
 
-	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	let isOpen;
 

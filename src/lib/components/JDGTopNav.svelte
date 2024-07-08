@@ -8,7 +8,7 @@
 	import { breakpointHandler } from '$lib/jdg-ui-management.js';
 
 	import { JDGMenuIcon, JDGNavItem } from '../index.js';
-	import { jdgColors, jdgSizes } from '../jdg-styling-constants.js';
+	import { jdgColors, jdgSizes } from '../jdg-shared-styles.js';
 
 	// nav items are an array of objects
 	export let navItems = [];

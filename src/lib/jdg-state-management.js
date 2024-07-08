@@ -1,4 +1,4 @@
-import { jdgColors } from './jdg-styling-constants.js';
+import { jdgColors } from './jdg-shared-styles.js';
 import { addUniqueValueToArray, removeValueFromArray } from './jdg-utils.js';
 import uiState from './states/ui-state.js';
 

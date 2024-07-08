@@ -23,7 +23,7 @@
 	} from '$lib/index.js';
 
 	import { imageAttributesCollection } from './image-attributes-collection.js';
-	import { jdgColors } from '$lib/jdg-styling-constants.js';
+	import { jdgColors } from '$lib/jdg-shared-styles.js';
 
 	let isTestButtonEnabled = true;
 </script>

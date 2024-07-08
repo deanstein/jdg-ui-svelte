@@ -10,7 +10,7 @@
 		JDGImageFullWidth,
 		JDGJumpTo
 	} from '$lib/index.js';
-	import { jdgColors } from '$lib/jdg-styling-constants.js';
+	import { jdgColors } from '$lib/jdg-shared-styles.js';
 	import { imageAttributesCollection } from '../image-attributes-collection.js';
 </script>
 

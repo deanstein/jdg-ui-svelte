@@ -5,7 +5,7 @@
 	import { instantiateObject } from '$lib/jdg-utils.js';
 
 	import { JDGAccentText, JDGFullWidthContainer, JDGImage } from '$lib/index.js';
-	import { jdgBreakpoints, jdgFonts, jdgSizes } from '$lib/jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgFonts, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes);
 	export let maxHeight = '80vh';

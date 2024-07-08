@@ -13,7 +13,7 @@
 		JDGImageDetailOverlay,
 		JDGNotificationBanner
 	} from '$lib/index.js';
-	import { jdgColors } from '$lib/jdg-styling-constants.js';
+	import { jdgColors } from '$lib/jdg-shared-styles.js';
 
 	// define the nav items in the header
 	const newNavItem1 = instantiateObject(jdgNavItem);

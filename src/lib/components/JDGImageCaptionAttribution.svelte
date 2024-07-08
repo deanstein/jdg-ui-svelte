@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let imageAttributes;
 	export let showCaption = true;

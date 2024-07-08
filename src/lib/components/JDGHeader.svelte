@@ -5,7 +5,7 @@
 
 	import uiState from '$lib/states/ui-state.js';
 
-	import { jdgBreakpoints, jdgColors, jdgSizes } from '../jdg-styling-constants.js';
+	import { jdgBreakpoints, jdgColors, jdgSizes } from '../jdg-shared-styles.js';
 	import { incrementHighestZIndex } from '$lib/jdg-state-management.js';
 	import { breakpointHandler } from '../jdg-ui-management.js';
 
