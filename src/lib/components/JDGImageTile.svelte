@@ -39,7 +39,7 @@
 	`;
 
 	const imageTileCss = css`
-		width: ${showBlurInUnfilledSpace ? '100%' : 'auto'};
+		width: ${showBlurInUnfilledSpace || fillContainer ? '100%' : 'auto'};
 	`;
 
 	const imageTileLabelContainerCss = css`
