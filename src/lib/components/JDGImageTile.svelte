@@ -158,6 +158,7 @@
 	}
 
 	a {
+		display: flex;
 		min-width: 0;
 		justify-content: center;
 		align-items: center;
