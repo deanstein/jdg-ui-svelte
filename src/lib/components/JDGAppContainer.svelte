@@ -12,12 +12,7 @@
 	} from '$lib/jdg-state-management.js';
 
 	import { JDGLoadingOverlay } from '$lib/index.js';
-	import {
-		jdgBreakpoints,
-		jdgColors,
-		jdgFonts,
-		jdgLinkStyles
-	} from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgColors, jdgFonts, jdgLinkStyles } from '$lib/jdg-shared-styles.js';
 	import { adjustColorForContrast, convertHexToRGBA } from '$lib/jdg-utils.js';
 
 	export let fontFamily = jdgFonts.body;

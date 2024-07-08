@@ -4,23 +4,26 @@
 	import uiState from '$lib/states/ui-state.js';
 
 	import { jdgColors } from '../jdg-shared-styles.js';
-	import { adjustColorForContrast, darkenColor, hexToRgb, rgbToHex } from '$lib/jdg-utils.js';
-
-	const primaryButtonBackgroundColor = '#0B84CB';
-	const secondaryButtonBackgroundColor = '#7a9eb3';
-	const disabledButtonBackgroundColor = '#B5B5B5';
+	import {
+		adjustColorForContrast,
+		darkenColor,
+		hexToRgb,
+		lightenColor,
+		rgbToHex,
+		setHexColorSaturation
+	} from '$lib/jdg-utils.js';
 
 	const getDefaultBackgroundColor = () => {
 		let bgColor;
 
 		if (isPrimary && isEnabled) {
-			bgColor = primaryButtonBackgroundColor;
+			bgColor = jdgColors.active;
 		} else if (!isEnabled) {
 			// disabled
-			bgColor = disabledButtonBackgroundColor;
+			bgColor = jdgColors.disabled;
 		} else {
 			// secondary
-			bgColor = secondaryButtonBackgroundColor;
+			bgColor = setHexColorSaturation(lightenColor(jdgColors.active, 0.4), 20);
 		}
 
 		// ensure the background color is adjusted
@@ -33,7 +36,7 @@
 		if (backgroundColor === 'transparent') {
 			bgColorHover = rgbToHex(darkenColor(hexToRgb(getDefaultBackgroundColor()), 0.2));
 		} else if (!isEnabled) {
-			bgColorHover = disabledButtonBackgroundColor;
+			bgColorHover = jdgColors.disabled;
 		} else {
 			bgColorHover = darkenColor(backgroundColor, 0.2);
 		}
@@ -76,10 +79,10 @@
 			padding: ${`${paddingTopBottom} ${paddingLeftRight} ${paddingTopBottom} ${paddingLeftRight}`};
 			gap: ${gap};
 			color: ${textColor};
-			background-color: ${isEnabled ? backgroundColor : disabledButtonBackgroundColor};
+			background-color: ${isEnabled ? backgroundColor : jdgColors.disabled};
 			:hover {
 				color: ${textColorHover};
-				background-color: ${isEnabled ? backgroundColorHover : disabledButtonBackgroundColor};
+				background-color: ${isEnabled ? backgroundColorHover : jdgColors.disabled};
 			}
 			cursor: ${isEnabled ? 'pointer' : 'default'};
 		`;

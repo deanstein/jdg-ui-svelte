@@ -1,12 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import {
-		jdgBreakpoints,
-		jdgColors,
-		jdgLinkStyles,
-		jdgSizes
-	} from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgColors, jdgLinkStyles, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { getAccentColors } from '$lib/jdg-state-management.js';
 	import { adjustColorForContrast } from '$lib/jdg-utils.js';
 
