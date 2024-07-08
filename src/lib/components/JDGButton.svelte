@@ -9,6 +9,7 @@
 	const primaryButtonBackgroundColor = '#0B84CB';
 	const secondaryButtonBackgroundColor = '#7a9eb3';
 	const disabledButtonBackgroundColor = '#B5B5B5';
+
 	const getDefaultBackgroundColor = () => {
 		let bgColor;
 
@@ -34,7 +35,7 @@
 		} else if (!isEnabled) {
 			bgColorHover = disabledButtonBackgroundColor;
 		} else {
-			bgColorHover = rgbToHex(darkenColor(hexToRgb(backgroundColor), 0.2));
+			bgColorHover = darkenColor(backgroundColor, 0.2);
 		}
 
 		return adjustColorForContrast(bgColorHover, textColor, 2.5);

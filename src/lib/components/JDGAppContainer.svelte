@@ -3,6 +3,7 @@
 	import { css } from '@emotion/css';
 
 	import {
+		getAccentColors,
 		setAccentColors,
 		setClientWidth,
 		setIsMobileBreakpoint,
@@ -11,13 +12,19 @@
 	} from '$lib/jdg-state-management.js';
 
 	import { JDGLoadingOverlay } from '$lib/index.js';
-	import { jdgBreakpoints, jdgColors, jdgFonts } from '$lib/jdg-styling-constants.js';
+	import {
+		jdgBreakpoints,
+		jdgColors,
+		jdgFonts,
+		jdgLinkStyles
+	} from '$lib/jdg-styling-constants.js';
 	import { adjustColorForContrast, convertHexToRGBA } from '$lib/jdg-utils.js';
 
 	export let fontFamily = jdgFonts.body;
 	export let appLoadingIconSrc =
 		'https://res.cloudinary.com/jdg-main/image/upload/v1718070772/jdg-ui-svelte/jdg-ui-logo_cs4ji5.jpg';
 	export let accentColors = jdgColors.accentColorsJDG;
+	export let linkStyleColor = getAccentColors()[0];
 	export let showHeaderStripes = true;
 
 	// flag to show a loading overlay before app is loaded
@@ -39,25 +46,30 @@
 		setIsMobileBreakpoint(appContainerRef?.clientWidth <= jdgBreakpoints.width[0]);
 	};
 
-	// global styles, but using emotion css
+	// global styles using emotion css
 	const appContainerCss = css`
+		.jdg-letter-spacing-title {
+			letter-spacing: 5px;
+		}
+
 		a {
 			color: ${jdgColors.text};
 		}
+
 		a.no-initial-highlight::before,
 		.jdg-highlight-container .jdg-highlight::before {
 			background: ${useStripedHyperlinkHoverStyle
 				? `linear-gradient(
 				to bottom,
-				${convertHexToRGBA(accentColors[0], hyperlinkColorOpacity)} 33%,
+				${convertHexToRGBA(accentColors[0], hyperlinkColorOpacity)} 33%,I'm act
 				${convertHexToRGBA(accentColors[1], hyperlinkColorOpacity)} 33%,
 				${convertHexToRGBA(accentColors[1], hyperlinkColorOpacity)} 66%,
 				${convertHexToRGBA(accentColors[2], hyperlinkColorOpacity)} 66%
 			)`
-				: `${adjustColorForContrast(accentColors[0], jdgColors.text, 10)}`};
+				: `${adjustColorForContrast(linkStyleColor, jdgColors.text, 10)}`};
 		}
 		a:before {
-			background: ${adjustColorForContrast(accentColors[0], jdgColors.text, 10)};
+			background: ${adjustColorForContrast(linkStyleColor, jdgColors.text, 10)};
 		}
 
 		font-family: ${fontFamily};
@@ -75,7 +87,10 @@
 	});
 </script>
 
-<div class="jdg-app-container {appContainerCss}" bind:this={appContainerRef}>
+<div
+	class="jdg-app-container {appContainerCss} {jdgLinkStyles.animatedBar}"
+	bind:this={appContainerRef}
+>
 	<!-- loading overlay - only shown before layout is fully loaded -->
 	<JDGLoadingOverlay isLoading={!isAppLoaded} loadingIconSrc={appLoadingIconSrc} />
 	{#if isAppLoaded}
@@ -84,6 +99,15 @@
 </div>
 
 <style>
+	:global(body),
+	:global(p) {
+		margin: 0;
+	}
+
+	:global(:root) {
+		scroll-behavior: smooth;
+	}
+
 	.jdg-app-container {
 		display: flex;
 		flex-direction: column;

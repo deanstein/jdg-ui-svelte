@@ -10,12 +10,42 @@
 		removeNotificationBanner,
 		incrementHighestZIndex
 	} from '../jdg-state-management.js';
-	import { jdgSizes, jdgColors } from '../jdg-styling-constants.js';
-	import { getIsValueInArray } from '../jdg-utils.js';
+	import { jdgColors, jdgSizes } from '../jdg-styling-constants.js';
+	import { darkenColor, getIsValueInArray } from '../jdg-utils.js';
 	import { JDGButton } from '../index.js';
 
-	export let message = 'This is a notification banner.';
-	export let color = jdgColors.notificationInformation;
+	// possible notification types
+	const notificationTypes = {
+		error: {
+			color: '#DB7093',
+			message: 'An error occurred.',
+			icon: 'error-icon'
+		},
+		warning: {
+			color: '#FFFFE0',
+			message: 'This is a warning.',
+			icon: 'warning-icon'
+		},
+		information: {
+			color: '#ADD8E6',
+			message: 'This is an information message.',
+			icon: 'info-icon'
+		},
+		inProgress: {
+			color: '#FFFF00',
+			message: 'Operation in progress.',
+			icon: 'progress-icon'
+		},
+		success: {
+			color: '#77FF16',
+			message: 'Operation successful.',
+			icon: 'success-icon'
+		}
+	};
+
+	export let notificationType = 'information'; // default type
+	export let message = notificationTypes[notificationType].message;
+	export let backgroundColor = undefined; // type color can be overridden
 	export let standalone = true; // set to false if included in a header already in a fixed position
 	export let forceOnTop = false; // if true, will use z-index store to ensure always on top
 	export let showCloseButton = true;
@@ -30,7 +60,7 @@
 	const notificationContainerCss = css`
 		font-size: ${jdgSizes.fontSizeBodyXSm};
 		z-index: ${forceOnTop ? incrementHighestZIndex() : 1};
-		background-color: ${color};
+		background-color: ${backgroundColor ?? notificationTypes[notificationType].color};
 		color: ${jdgColors.text};
 	`;
 
@@ -67,6 +97,9 @@
 					paddingTopBottom="6px"
 					paddingLeftRight="6px"
 					tooltip="Dismiss"
+					textColor={darkenColor(notificationTypes[notificationType].color, 0.4).toString()}
+					textColorHover={darkenColor(notificationTypes[notificationType].color, 0.8).toString()}
+					backgroundColorHover="transparent"
 				/>
 			{/if}
 		</div>

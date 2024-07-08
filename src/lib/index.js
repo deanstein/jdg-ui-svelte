@@ -1,5 +1,3 @@
-import './jdg-styling-root.css';
-
 import JDGAccentBlock from './components/JDGAccentBlock.svelte';
 export { JDGAccentBlock };
 

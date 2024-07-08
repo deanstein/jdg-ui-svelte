@@ -348,7 +348,7 @@ export const convertHexToRGBA = (hexColor, alpha = 1) => {
 export const adjustColorForContrast = (
 	colorToChange,
 	baseColor,
-	minContrastRatio = 2.5 /* WCAG contrast standard (ideal is 4.5) */
+	minContrastRatio = 2.5 /* WCAG contrast value (ideal is 4.5) */
 ) => {
 	//console.log("Adjusting color for contrast. Color to change: " + colorToChange + " and base color: " + baseColor);
 	// Check if color and baseColor are in HEX or RGBA format
@@ -370,9 +370,11 @@ export const adjustColorForContrast = (
 	while (contrastRatio < minContrastRatio && iterations < maxIterations) {
 		// If the base color is light, make the color darker
 		if (isLight(rgbBaseColor)) {
+			// @ts-expect-error
 			rgbColor = darkenColor(rgbColor, 0.1);
 		} else {
-			// If the base color is dark, make the color lighter
+			// if the base color is dark, make the color lighter
+			// @ts-expect-error
 			rgbColor = lightenColor(rgbColor, 0.1);
 		}
 
@@ -389,8 +391,16 @@ export const adjustColorForContrast = (
 };
 
 export const rgbaToRgb = (rgba) => {
-	// Extract the r, g, b values from the rgba string
-	let [r, g, b, a] = rgba.slice(5, -1).split(',').map(Number);
+	let r, g, b, a;
+	if (typeof rgba === 'string') {
+		// Extract the r, g, b, a values from the rgba string
+		[r, g, b, a] = rgba.slice(5, -1).split(',').map(Number);
+	} else if (typeof rgba === 'object' && 'r' in rgba && 'g' in rgba && 'b' in rgba) {
+		// If rgba is an object, extract the r, g, b values directly
+		({ r, g, b } = rgba);
+	} else {
+		throw new Error('Invalid color format. Please use either rgba format or an RGB object.');
+	}
 
 	return { r, g, b };
 };
@@ -443,22 +453,86 @@ export const isLight = (color) => {
 	return yiq >= 128;
 };
 
-export const darkenColor = (color, darkenRatio) => {
-	let ratio = 1 - darkenRatio;
-	return {
-		r: Math.max(Math.round(color.r * ratio), 0),
-		g: Math.max(Math.round(color.g * ratio), 0),
-		b: Math.max(Math.round(color.b * ratio), 0)
+export const lightenColor = (color, lightenRatio, matchInputType = false) => {
+	let rgbColor;
+	let inputFormat = 'object';
+
+	if (typeof color === 'string') {
+		if (color.startsWith('#')) {
+			rgbColor = hexToRgb(color);
+			inputFormat = 'hex';
+		} else if (color.startsWith('rgba')) {
+			rgbColor = rgbaToRgb(color);
+			inputFormat = 'rgba';
+		} else {
+			throw new Error('Invalid color format. Please use either rgba or hex format.');
+		}
+	} else if (typeof color === 'object' && 'r' in color && 'g' in color && 'b' in color) {
+		rgbColor = color;
+	} else {
+		throw new Error('Invalid color format. Please use either rgba or hex format or an RGB object.');
+	}
+
+	let ratio = 1 + lightenRatio;
+	let result = {
+		r: Math.min(Math.round(rgbColor.r * ratio), 255),
+		g: Math.min(Math.round(rgbColor.g * ratio), 255),
+		b: Math.min(Math.round(rgbColor.b * ratio), 255)
 	};
+
+	if (matchInputType) {
+		switch (inputFormat) {
+			case 'hex':
+				return rgbToHex(result);
+			case 'rgba':
+				return `rgba(${result.r}, ${result.g}, ${result.b}, ${rgbColor.a || 1})`;
+			default:
+				return result;
+		}
+	} else {
+		return result;
+	}
 };
 
-export const lightenColor = (color, lightenRatio) => {
-	let ratio = 1 + lightenRatio;
-	return {
-		r: Math.min(Math.round(color.r * ratio), 255),
-		g: Math.min(Math.round(color.g * ratio), 255),
-		b: Math.min(Math.round(color.b * ratio), 255)
+export const darkenColor = (color, darkenRatio, matchInputType = true) => {
+	let rgbColor;
+	let inputFormat = 'object';
+
+	if (typeof color === 'string') {
+		if (color.startsWith('#')) {
+			rgbColor = hexToRgb(color);
+			inputFormat = 'hex';
+		} else if (color.startsWith('rgba')) {
+			rgbColor = rgbaToRgb(color);
+			inputFormat = 'rgba';
+		} else {
+			throw new Error('Invalid color format. Please use either rgba or hex format.');
+		}
+	} else if (typeof color === 'object' && 'r' in color && 'g' in color && 'b' in color) {
+		rgbColor = color;
+	} else {
+		throw new Error('Invalid color format. Please use either rgba or hex format or an RGB object.');
+	}
+
+	let ratio = 1 - darkenRatio;
+	let result = {
+		r: Math.max(Math.round(rgbColor.r * ratio), 0),
+		g: Math.max(Math.round(rgbColor.g * ratio), 0),
+		b: Math.max(Math.round(rgbColor.b * ratio), 0)
 	};
+
+	if (matchInputType) {
+		switch (inputFormat) {
+			case 'hex':
+				return rgbToHex(result);
+			case 'rgba':
+				return `rgba(${result.r}, ${result.g}, ${result.b}, ${rgbColor.a || 1})`;
+			default:
+				return result;
+		}
+	} else {
+		return result;
+	}
 };
 
 export const openUrl = (url, newTab) => {

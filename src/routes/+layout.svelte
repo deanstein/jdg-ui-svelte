@@ -33,14 +33,13 @@
 	// get the app version from package.json
 	//@ts-expect-error
 	const appVersion = packageJson.version;
-	const bannerMessage = 'This is a notification banner.';
 	const disclaimerMessage =
 		'This is text for the footer! It could be a disclaimer or something else.';
 	const showHeaderStripes = false;
 </script>
 
 <JDGAppContainer accentColors={jdgColors.accentColorsCCP} {showHeaderStripes}>
-	<JDGNotificationBanner message={bannerMessage} color={jdgColors.notificationInformation} />
+	<JDGNotificationBanner notificationType="warning" />
 	<JDGHeader
 		logoJustification="left"
 		logoSupertitle={'INTRODUCING'}

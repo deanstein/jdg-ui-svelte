@@ -1,3 +1,5 @@
+import { css } from '@emotion/css';
+
 export const jdgBreakpoints = {
 	width: [768, 1024],
 	height: [400, 800],
@@ -25,12 +27,7 @@ export const jdgColors = {
 	title: '#4F4F4F',
 	headerBackground: 'rgba(250, 250, 250, 1)',
 	contentBoxBackground: 'rgba(252, 252, 252, 0.7)',
-	imageLabelBackground: 'rgba(255, 255, 255, 0.7)',
-	notificationError: 'palevioletred',
-	notificationWarning: 'lightYellow',
-	notificationInformation: 'lightBlue',
-	notificationInProgress: 'yellow',
-	notificationSuccess: '#77FF16'
+	imageLabelBackground: 'rgba(255, 255, 255, 0.7)'
 };
 
 export const jdgSizes = {
@@ -237,4 +234,131 @@ export const jdgSizes = {
 
 export const jdgDurations = {
 	default: 300 //ms
+};
+
+export const jdgLinkStyles = {
+	animatedBar: css`
+		/* genearal hyperlink style setup */
+		a {
+			/* link text color defined in JDGAppContainer */
+			position: relative;
+			display: inline-block;
+			text-decoration: none;
+			line-height: 1; /* don't inherit possible parent line height */
+		}
+
+		.jdg-highlight-container {
+			position: relative;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 100%;
+			height: 100%;
+		}
+
+		.jdg-highlight {
+			position: relative;
+		}
+
+		@keyframes slide-right {
+			0% {
+				width: 0;
+			}
+			100% {
+				width: calc(100% + 4px);
+			}
+		}
+
+		@keyframes slide-up {
+			0% {
+				height: 0;
+			}
+			100% {
+				height: 10px;
+			}
+		}
+
+		/* header logo, menu icon */
+		a.no-initial-highlight::before,
+		.jdg-highlight-container .jdg-highlight.no-initial-highlight::before {
+			content: '';
+			position: absolute;
+			z-index: -1;
+			width: calc(100% + 8px);
+			left: -4px;
+			height: 0;
+			bottom: -0.225rem;
+			/* link banner background color specified in JDGAppContainer.svelte */
+			transition: all 0.3s ease-in-out;
+		}
+
+		.jdg-letter-spacing-title a.no-initial-highlight::before,
+		.jdg-letter-spacing-title .jdg-highlight-container .jdg-highlight.no-initial-highlight::before {
+			left: -6px;
+		}
+
+		/* primarily for BodyCopy links */
+		a::before,
+		.jdg-highlight-container .jdg-highlight::before {
+			content: '';
+			position: absolute;
+			z-index: -1;
+			width: calc(100% + 4px);
+			height: 8px;
+			bottom: -0.1rem;
+			left: -2px;
+			/* background-color: this needs to be specified using emotion css */
+			transition: all 0.5s ease-in-out;
+			line-height: 1.2; /* don't inherit possible parent line height */
+		}
+
+		a:hover::before,
+		.jdg-highlight-container:hover .jdg-highlight::before {
+			animation: slide-right 0.5s forwards;
+		}
+
+		a::before:hover {
+			background-color: none;
+		}
+
+		/* certain elements like header logo and nav get a different <a> treatment */
+		a.no-initial-highlight::before,
+		.jdg-highlight.no-initial-highlight::before {
+			height: 0;
+		}
+
+		a.no-initial-highlight:hover::before,
+		.jdg-highlight-container:hover .jdg-highlight.no-initial-highlight::before {
+			animation: slide-up 0.5s forwards;
+		}
+	`,
+
+	simple: css`
+		a {
+			text-decoration: none;
+			display: initial;
+		}
+
+		a::before,
+		.jdg-highlight-container .jdg-highlight::before {
+			content: initial;
+			position: initial;
+			z-index: auto;
+			width: auto;
+			height: auto;
+			bottom: auto;
+			left: auto;
+			transition: none;
+			line-height: normal;
+		}
+
+		a:hover::before,
+		.jdg-highlight-container:hover .jdg-highlight::before {
+			animation: none;
+		}
+
+		a::before:hover {
+			background-color: initial;
+		}
+	`
 };
