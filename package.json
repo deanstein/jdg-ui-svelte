@@ -22,6 +22,7 @@
 			"svelte": "./dist/index.js"
 		},
 		"./schemas/jdg-image-attributes.js": "./dist/schemas/jdg-image-attributes.js",
+		"./schemas/jdg-notification-types": "./dist/schemas/jdg-notification-types.js",
 		"./schemas/jdg-nav-item.js": "./dist/schemas/jdg-nav-item.js",
 		"./states/ui-state.js": "./dist/states/ui-state.js",
 		"./jdg-persistence-management.js": "./dist/jdg-persistence-management.js",

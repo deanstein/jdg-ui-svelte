@@ -14,6 +14,7 @@
 		JDGNotificationBanner
 	} from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
+	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
 
 	// define the nav items in the header
 	const newNavItem1 = instantiateObject(jdgNavItem);
@@ -28,7 +29,11 @@
 	newNavItem3.label = 'CONTACT';
 	newNavItem3.href = '/contact';
 
-	const navItems = [newNavItem1, newNavItem2, newNavItem3];
+	const newNavItem4 = instantiateObject(jdgNavItem);
+	newNavItem4.label = 'SINGLE TEST';
+	newNavItem4.href = '/single-test';
+
+	const navItems = [newNavItem1, newNavItem2, newNavItem3, newNavItem4];
 
 	// get the app version from package.json
 	//@ts-expect-error
@@ -39,7 +44,7 @@
 </script>
 
 <JDGAppContainer accentColors={jdgColors.accentColorsCCP} {showHeaderStripes}>
-	<JDGNotificationBanner notificationType="warning" />
+	<JDGNotificationBanner notificationType={jdgNotificationTypes.information.id} />
 	<JDGHeader
 		logoJustification="left"
 		logoSupertitle={'INTRODUCING'}
