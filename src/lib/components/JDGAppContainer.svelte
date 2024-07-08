@@ -1,5 +1,5 @@
 <script>
-	import { onMount, tick } from 'svelte';
+	import { onMount, setContext, tick } from 'svelte';
 	import { css } from '@emotion/css';
 
 	import {
@@ -14,12 +14,14 @@
 	import { JDGLoadingOverlay } from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgFonts, jdgLinkStyles } from '$lib/jdg-shared-styles.js';
 	import { adjustColorForContrast, convertHexToRGBA } from '$lib/jdg-utils.js';
+	import jdgContexts from '$lib/jdg-contexts.js';
 
 	export let fontFamily = jdgFonts.body;
 	export let appLoadingIconSrc =
 		'https://res.cloudinary.com/jdg-main/image/upload/v1718070772/jdg-ui-svelte/jdg-ui-logo_cs4ji5.jpg';
 	export let accentColors = jdgColors.accentColorsJDG;
-	export let linkStyleColor = getAccentColors()[0];
+	export let linkColorDefault = getAccentColors()[0]; /* color for the "banner" hyperlink style */
+	export let linkColorSimple = getAccentColors()[0]; /* color for the simple hyperlink style */
 	export let showHeaderStripes = true;
 
 	// flag to show a loading overlay before app is loaded
@@ -30,7 +32,7 @@
 	let appContainerRef;
 
 	// global hyperlink style options
-	const hyperlinkColorOpacity = 0.75;
+	const stripedColorOpacity = 0.75;
 	const useStripedHyperlinkHoverStyle = false;
 
 	// app sets window and client width in the ui state
@@ -47,6 +49,11 @@
 			letter-spacing: 5px;
 		}
 
+		font-family: ${fontFamily};
+	`;
+
+	const linkStyleDefaultCss = css`
+		${jdgLinkStyles.animatedBar}
 		a {
 			color: ${jdgColors.text};
 		}
@@ -56,19 +63,30 @@
 			background: ${useStripedHyperlinkHoverStyle
 				? `linear-gradient(
 				to bottom,
-				${convertHexToRGBA(accentColors[0], hyperlinkColorOpacity)} 33%,I'm act
-				${convertHexToRGBA(accentColors[1], hyperlinkColorOpacity)} 33%,
-				${convertHexToRGBA(accentColors[1], hyperlinkColorOpacity)} 66%,
-				${convertHexToRGBA(accentColors[2], hyperlinkColorOpacity)} 66%
+				${convertHexToRGBA(accentColors[0], stripedColorOpacity)} 33%,I'm act
+				${convertHexToRGBA(accentColors[1], stripedColorOpacity)} 33%,
+				${convertHexToRGBA(accentColors[1], stripedColorOpacity)} 66%,
+				${convertHexToRGBA(accentColors[2], stripedColorOpacity)} 66%
 			)`
-				: `${adjustColorForContrast(linkStyleColor, jdgColors.text, 10)}`};
+				: `${adjustColorForContrast(linkColorDefault, jdgColors.text, 10)}`};
 		}
 		a:before {
-			background: ${adjustColorForContrast(linkStyleColor, jdgColors.text, 10)};
+			background: ${adjustColorForContrast(linkColorDefault, jdgColors.text, 10)};
 		}
-
-		font-family: ${fontFamily};
 	`;
+
+	// other link styles which may not be used here but need to be defined here and
+	// made available via setContext for other components to possibly access
+	const linkStyleSimpleCss = css`
+		${jdgLinkStyles.simple}
+		a {
+			color: ${adjustColorForContrast(linkColorSimple, jdgColors.contentBoxBackground, 3)};
+		}
+		a:hover {
+			color: ${adjustColorForContrast(linkColorSimple, jdgColors.contentBoxBackground, 5)};
+		}
+	`;
+	setContext(jdgContexts.linkStyleSimple, linkStyleSimpleCss);
 
 	onMount(async () => {
 		await tick(); // delay until layout and all children are loaded
@@ -82,10 +100,7 @@
 	});
 </script>
 
-<div
-	class="jdg-app-container {appContainerCss} {jdgLinkStyles.animatedBar}"
-	bind:this={appContainerRef}
->
+<div class="jdg-app-container {appContainerCss} {linkStyleDefaultCss}" bind:this={appContainerRef}>
 	<!-- loading overlay - only shown before layout is fully loaded -->
 	<JDGLoadingOverlay isLoading={!isAppLoaded} loadingIconSrc={appLoadingIconSrc} />
 	{#if isAppLoaded}
