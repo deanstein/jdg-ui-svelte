@@ -239,7 +239,7 @@
 				/>
 			</div>
 		</JDGGridLayout>
-		ImageCompare in FullWidthContainer
+		<JDGBodyCopy textAlign="center">ImageCompare in FullWidthContainer</JDGBodyCopy>
 		<JDGFullWidthContainer>
 			<JDGImageCompare
 				imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
@@ -336,8 +336,29 @@
 	</JDGAccentBlock>
 	<JDGContentBoxFloating title="A THIRD SECTION" />
 	<JDGAccentBlock backgroundColor={$uiState.accentColors[2]} />
-	<JDGContentBoxFloating title="LONG SECTION NAME" />
-	<JDGContentBoxFloating>
+	<JDGContentBoxFloating title="LONG SECTION NAME">
 		<JDGImageFullWidth imageAttributes={imageAttributesCollection.aerial_60s70s_1} />
+	</JDGContentBoxFloating>
+	<JDGContentBoxFloating title="EXPLORE FURTHER" includeInJumpTo={true}>
+		<JDGGridLayout>
+			<JDGImageTile
+				label="LEARN MORE ABOUT THE PROJECT"
+				href="./about"
+				labelJustification={'center'}
+				imageAttributes={imageAttributesCollection.ccp_construction_60s70s_4}
+			/>
+			<JDGImageTile
+				label="READ THE FULL HISTORY"
+				href="./history"
+				imageAttributes={imageAttributesCollection.rose_mall_60s70s_construction_1}
+				labelJustification={'center'}
+			/>
+			<JDGImageTile
+				label="EXPERIENCE THE SIMULATION"
+				href="./simulation"
+				imageAttributes={imageAttributesCollection.ccp_blue_mall_60s70s_2}
+				labelJustification={'center'}
+			/>
+		</JDGGridLayout>
 	</JDGContentBoxFloating>
 </JDGContentContainer>

@@ -30,8 +30,8 @@
 	newNavItem3.href = '/contact';
 
 	const newNavItem4 = instantiateObject(jdgNavItem);
-	newNavItem4.label = 'SINGLE TEST';
-	newNavItem4.href = '/single-test';
+	newNavItem4.label = 'SIMPLE TEST';
+	newNavItem4.href = '/simple-test';
 
 	const navItems = [newNavItem1, newNavItem2, newNavItem3, newNavItem4];
 
