@@ -1,6 +1,6 @@
 {
 	"name": "jdg-ui-svelte",
-	"version": "0.12.4",
+	"version": "0.13.0",
 	"license": "MIT",
 	"scripts": {
 		"dev": "vite dev",
@@ -28,8 +28,7 @@
 		"./jdg-state-management.js": "./dist/jdg-state-management.js",
 		"./jdg-ui-management.js": "./dist/jdg-ui-management.js",
 		"./jdg-utils.js": "./dist/jdg-utils.js",
-		"./jdg-styling-constants.js": "./dist/jdg-styling-constants.js",
-		"./jdg-styling-root.css": "./dist/jdg-styling-root.css"
+		"./jdg-shared-styles.js": "./dist/jdg-shared-styles.js"
 	},
 	"files": [
 		"dist",
