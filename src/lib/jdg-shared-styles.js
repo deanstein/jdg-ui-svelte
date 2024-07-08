@@ -240,9 +240,9 @@ export const jdgDurations = {
 
 export const jdgLinkStyles = {
 	animatedBar: css`
-		/* genearal hyperlink style setup */
+		/* general hyperlink style setup */
 		a {
-			/* link text color defined in JDGAppContainer */
+			/* link text color defined in JDGAppContainer.svelte Emotion CSS */
 			position: relative;
 			display: inline-block;
 			text-decoration: none;
@@ -290,7 +290,7 @@ export const jdgLinkStyles = {
 			left: -4px;
 			height: 0;
 			bottom: -0.225rem;
-			/* link banner background color specified in JDGAppContainer.svelte */
+			/* link banner background color specified in JDGAppContainer.svelte Emotion CSS */
 			transition: all 0.3s ease-in-out;
 		}
 
