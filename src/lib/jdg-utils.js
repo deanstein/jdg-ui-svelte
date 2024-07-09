@@ -5,6 +5,7 @@ import {
 	getTotalCommitsInPublicRepo,
 	getLatestCommitDateFromPublicRepo
 } from './jdg-persistence-management.js';
+import { getDistanceToBottomOfHeader } from './jdg-ui-management.js';
 
 export const addUniqueValueToArray = (array, value) => {
 	if (!array.includes(value)) {
@@ -603,12 +604,29 @@ export const openUrl = (url, newTab) => {
 };
 
 // scrolls to the given anchor id
-export const scrollToAnchor = (anchorId) => {
+// with options for accounting for header and additional offset
+// note that JDGContentBoxFloating anchors are already positioned with header height offset
+export const scrollToAnchor = (anchorId, accountForHeader = false, additionalOffset = 0) => {
 	// ensure the anchorId is properly formatted
 	const anchorIdPostProcessed = convertStringToAnchorTag(anchorId, false);
 	const element = document.getElementById(anchorIdPostProcessed);
 	if (element) {
-		element.scrollIntoView({ behavior: 'smooth' });
+		// if not accounting to header and no add'l offset, do the simple thing
+		if (accountForHeader == false && additionalOffset == 0) {
+			element.scrollIntoView({ behavior: 'smooth' });
+		}
+		// otherwise, do some calculations
+		else {
+			const rect = element.getBoundingClientRect();
+			const scrollTop = window.scrollY || document.documentElement.scrollTop;
+			const topValue = accountForHeader
+				? rect.top + scrollTop - getDistanceToBottomOfHeader().value - additionalOffset
+				: rect.top + scrollTop - additionalOffset;
+			window.scrollTo({
+				top: topValue,
+				behavior: 'smooth'
+			});
+		}
 	} else {
 		console.error('scrollToAnchor: Element not found by ID: ' + anchorIdPostProcessed);
 	}
