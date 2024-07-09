@@ -623,9 +623,9 @@ export const scrollToAnchorOnLoad = () => {
 
 	const checkForElement = () => {
 		const { hash } = document.location;
-		const scrollTo = hash && document.getElementById(hash.slice(1));
-		if (scrollTo) {
-			scrollTo.scrollIntoView();
+		const scrollToElement = hash && document.getElementById(hash.slice(1));
+		if (scrollToElement) {
+			scrollToElement.scrollIntoView({ behavior: 'smooth' });
 		} else if (attempts < maxAttempts) {
 			// if the element isn't available yet and we haven't reached the max number of attempts, check again in 500 milliseconds
 			setTimeout(checkForElement, 500);
