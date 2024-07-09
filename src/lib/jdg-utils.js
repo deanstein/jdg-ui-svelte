@@ -602,6 +602,7 @@ export const openUrl = (url, newTab) => {
 	}
 };
 
+// scrolls to the given anchor id
 export const scrollToAnchor = (anchorId) => {
 	// ensure the anchorId is properly formatted
 	const anchorIdPostProcessed = convertStringToAnchorTag(anchorId, false);
@@ -611,4 +612,27 @@ export const scrollToAnchor = (anchorId) => {
 	} else {
 		console.error('scrollToAnchor: Element not found by ID: ' + anchorIdPostProcessed);
 	}
+};
+
+// when loading a page with an anchor tag in the URL,
+// the anchor might not be loaded, so keep trying
+// and scroll to it when it becomes available
+export const scrollToAnchorOnLoad = () => {
+	let attempts = 0;
+	const maxAttempts = 10; // how long to keep trying?
+
+	const checkForElement = () => {
+		const { hash } = document.location;
+		const scrollTo = hash && document.getElementById(hash.slice(1));
+		if (scrollTo) {
+			scrollTo.scrollIntoView();
+		} else if (attempts < maxAttempts) {
+			// if the element isn't available yet and we haven't reached the max number of attempts, check again in 500 milliseconds
+			setTimeout(checkForElement, 500);
+			attempts++;
+		}
+	};
+
+	// Start checking for the element
+	checkForElement();
 };

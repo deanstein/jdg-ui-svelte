@@ -13,7 +13,11 @@
 
 	import { JDGLoadingOverlay } from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgFonts, jdgLinkStyles } from '$lib/jdg-shared-styles.js';
-	import { adjustColorForContrast, convertHexToRGBA } from '$lib/jdg-utils.js';
+	import {
+		adjustColorForContrast,
+		convertHexToRGBA,
+		scrollToAnchorOnLoad
+	} from '$lib/jdg-utils.js';
 	import jdgContexts from '$lib/jdg-contexts.js';
 
 	export let fontFamily = jdgFonts.body;
@@ -97,6 +101,8 @@
 		setShowHeaderStripes(showHeaderStripes);
 		// update the client and window width at the end so they're accurate
 		setTimeout(onPageResize, 0);
+		// if an anchor tag is provided in the URL, scroll to it when available
+		scrollToAnchorOnLoad();
 	});
 </script>
 
