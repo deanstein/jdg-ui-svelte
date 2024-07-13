@@ -603,6 +603,13 @@ export const openUrl = (url, newTab) => {
 	}
 };
 
+// adds "f_auto" where required
+// to automatically optimize a given cloudinary URL
+export const addCloudinaryUrlTransformation = (url, transformation = 'f_auto') => {
+	let parts = url.split('/upload/');
+	return parts[0] + '/upload/' + transformation + '/' + parts[1];
+};
+
 // scrolls to the given anchor id
 // with options for accounting for header and additional offset
 // note that JDGContentBoxFloating anchors are already positioned with header height offset
