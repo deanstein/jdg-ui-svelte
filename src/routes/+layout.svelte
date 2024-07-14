@@ -70,6 +70,7 @@
 			facebookHref={urls.ccpFacebook}
 			youtubeHref={urls.ccpYouTube}
 			linkedinHref={urls.jdgLinkedIn}
+			githubHref={urls.ccpGitHubReleases}
 		/>
 	</JDGFooter>
 	<!-- show the image detail overlay when appropriate -->
