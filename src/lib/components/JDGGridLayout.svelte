@@ -4,6 +4,7 @@
 	import { jdgBreakpoints, jdgSizes } from '../jdg-shared-styles.js';
 
 	export let maxColumns = 3;
+	export let forceMaxColumns = false; // if true, max columns even on smallest breakpoints
 
 	const gridContainerCss = css`
 		align-items: center;
@@ -12,10 +13,9 @@
 		justify-content: center;
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			> * {
-				flex: 0 1 100%;
+				flex: 0 1 ${forceMaxColumns ? 'calc(100% / 3)' : '100%'};
 			}
-			gap: ${(jdgSizes.nContentBoxPaddingSm / 2).toString() +
-			jdgSizes.contentBoxPaddingUnit};
+			gap: ${(jdgSizes.nContentBoxPaddingSm / 2).toString() + jdgSizes.contentBoxPaddingUnit};
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
@@ -23,7 +23,7 @@
 			> * {
 				flex: 0 1
 					calc(
-						50% -
+						${forceMaxColumns ? '(100% / 3)' : '50%'} -
 							${jdgSizes.nContentBoxPaddingMd.toString() + jdgSizes.contentBoxPaddingUnit}
 					);
 			}
@@ -34,12 +34,10 @@
 				flex: 0 1
 					calc(
 						(100% / ${maxColumns}) -
-							${(jdgSizes.nContentBoxPaddingLg / 2).toString() +
-							jdgSizes.contentBoxPaddingUnit}
+							${(jdgSizes.nContentBoxPaddingLg / 2).toString() + jdgSizes.contentBoxPaddingUnit}
 					);
 			}
-			gap: ${(jdgSizes.nContentBoxPaddingLg / 2).toString() +
-			jdgSizes.contentBoxPaddingUnit};
+			gap: ${(jdgSizes.nContentBoxPaddingLg / 2).toString() + jdgSizes.contentBoxPaddingUnit};
 		}
 	`;
 </script>
