@@ -5,21 +5,22 @@
 
 	import {
 		JDGAccentBlock,
+		JDGAccentBlockWithText,
 		JDGAccentText,
 		JDGBodyCopy,
+		JDGButton,
 		JDGContentBoxFloating,
 		JDGContentContainer,
+		JDGFeatureCard,
 		JDGFullWidthContainer,
+		JDGGridLayout,
 		JDGImageCarousel,
 		JDGImageCompare,
 		JDGImageFullWidth,
 		JDGImageHybridGridCarousel,
 		JDGImageTile,
-		JDGGridLayout,
 		JDGJumpTo,
-		JDGAccentBlockWithText,
-		JDGFeatureCard,
-		JDGButton
+		JDGUpNext
 	} from '$lib/index.js';
 
 	import { imageAttributesCollection } from './image-attributes-collection.js';
@@ -339,26 +340,15 @@
 	<JDGContentBoxFloating title="LONG SECTION NAME">
 		<JDGImageFullWidth imageAttributes={imageAttributesCollection.aerial_60s70s_1} />
 	</JDGContentBoxFloating>
-	<JDGContentBoxFloating title="EXPLORE FURTHER" includeInJumpTo={true}>
-		<JDGGridLayout>
-			<JDGImageTile
-				label="LEARN MORE ABOUT THE PROJECT"
-				href="./about"
-				labelJustification={'center'}
-				imageAttributes={imageAttributesCollection.ccp_construction_60s70s_4}
-			/>
-			<JDGImageTile
-				label="READ THE FULL HISTORY"
-				href="./history"
-				imageAttributes={imageAttributesCollection.rose_mall_60s70s_construction_1}
-				labelJustification={'center'}
-			/>
-			<JDGImageTile
-				label="EXPERIENCE THE SIMULATION"
-				href="./simulation"
-				imageAttributes={imageAttributesCollection.ccp_blue_mall_60s70s_2}
-				labelJustification={'center'}
-			/>
-		</JDGGridLayout>
-	</JDGContentBoxFloating>
+	<JDGUpNext
+		item1Label={'LEARN MORE ABOUT THE PROJECT'}
+		item1Href={'./about'}
+		item1ImageAttributes={imageAttributesCollection.cc_1}
+		item2Label={'READ THE FULL HISTORY'}
+		item2Href="./history"
+		item2ImageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
+		item3Label="EXPERIENCE THE SIMULATION"
+		item3Href="./simulation"
+		item3ImageAttributes={imageAttributesCollection.ccp_blue_mall_80s90s_1}
+	/>
 </JDGContentContainer>
