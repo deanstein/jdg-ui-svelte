@@ -109,7 +109,7 @@
 					label={$uiState.showDevTools ? 'Hide Dev Tools' : 'Show Dev Tools'}
 					paddingTopBottom="5px"
 					paddingLeftRight="10px"
-					faIcon={null}
+					faIcon="fa-wrench"
 					fontSize={jdgSizes.fontSizeBodyXSm}
 				/>
 			</div>
