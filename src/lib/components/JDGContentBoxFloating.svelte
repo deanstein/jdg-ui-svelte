@@ -6,11 +6,7 @@
 	import { addJumpToNavItem, removeJumpToNavItem } from '$lib/jdg-state-management.js';
 	import jdgNavItem from '$lib/schemas/jdg-nav-item.js';
 
-	import {
-		convertRemToPixels,
-		convertStringToAnchorTag,
-		instantiateObject
-	} from '$lib/jdg-utils.js';
+	import { convertStringToAnchorTag, instantiateObject } from '$lib/jdg-utils.js';
 
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '../jdg-shared-styles.js';
 
