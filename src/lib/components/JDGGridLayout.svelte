@@ -14,8 +14,8 @@
 			> * {
 				flex: 0 1 100%;
 			}
-			gap: ${(jdgSizes.nContentBoxFloatingMarginSm / 2).toString() +
-			jdgSizes.contentBoxFloatingMarginUnit};
+			gap: ${(jdgSizes.nContentBoxPaddingSm / 2).toString() +
+			jdgSizes.contentBoxPaddingUnit};
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
@@ -24,10 +24,10 @@
 				flex: 0 1
 					calc(
 						50% -
-							${jdgSizes.nContentBoxPaddingMd.toString() + jdgSizes.contentBoxFloatingMarginUnit}
+							${jdgSizes.nContentBoxPaddingMd.toString() + jdgSizes.contentBoxPaddingUnit}
 					);
 			}
-			gap: ${jdgSizes.nContentBoxPaddingMd.toString() + jdgSizes.contentBoxFloatingMarginUnit};
+			gap: ${(jdgSizes.nContentBoxPaddingMd / 2).toString() + jdgSizes.contentBoxPaddingUnit};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 			> * {
@@ -35,11 +35,11 @@
 					calc(
 						(100% / ${maxColumns}) -
 							${(jdgSizes.nContentBoxPaddingLg / 2).toString() +
-							jdgSizes.contentBoxFloatingMarginUnit}
+							jdgSizes.contentBoxPaddingUnit}
 					);
 			}
 			gap: ${(jdgSizes.nContentBoxPaddingLg / 2).toString() +
-			jdgSizes.contentBoxFloatingMarginUnit};
+			jdgSizes.contentBoxPaddingUnit};
 		}
 	`;
 </script>
