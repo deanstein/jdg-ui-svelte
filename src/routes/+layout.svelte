@@ -11,10 +11,12 @@
 		JDGFooter,
 		JDGHeader,
 		JDGImageDetailOverlay,
-		JDGNotificationBanner
+		JDGNotificationBanner,
+		JDGSocialMedia
 	} from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
 	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
+	import { urls } from '$lib/jdg-shared-strings.js';
 
 	// define the nav items in the header
 	const newNavItem1 = instantiateObject(jdgNavItem);
@@ -62,7 +64,14 @@
 		disclaimer={disclaimerMessage}
 		showDevToolsButton={true}
 		alignItems="center"
-	/>
+	>
+		<JDGSocialMedia
+			instagramHref={urls.ccpInstagram}
+			facebookHref={urls.ccpFacebook}
+			youtubeHref={urls.ccpYouTube}
+			linkedinHref={urls.jdgLinkedIn}
+		/>
+	</JDGFooter>
 	<!-- show the image detail overlay when appropriate -->
 	{#if $uiState.showImageDetailOverlay}
 		<JDGImageDetailOverlay imageAttributes={$uiState.imageDetailAttributes} />
