@@ -3,8 +3,8 @@
 
 	export let contentBoxFloatingTitle = 'UP NEXT';
 
-	// this is effectively a wrapper for 3 ImageTiles, 
-    // so we need to supply all those props
+	// this is effectively a wrapper for 3 ImageTiles,
+	// so we need to supply all those props
 	export let item1Label;
 	export let item1Href;
 	export let item1ImageAttributes;
