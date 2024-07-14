@@ -197,7 +197,7 @@
 	<JDGContentBoxFloating title="IMAGE COMPARE">
 		<JDGBodyCopy textAlign="center">ImageCompare in GridLayout</JDGBodyCopy>
 		<JDGGridLayout maxColumns={2}>
-			<div style="display: flex; flex-direction: row-reverse;">
+			<div style="display: flex; flex-basis: auto;">
 				<JDGImageTile
 					imageAttributes={imageAttributesCollection.cc_1}
 					fillContainer={false}
@@ -206,7 +206,7 @@
 					maxHeight="400px"
 				/>
 			</div>
-			<div style="width: fit-content; display: flex;">
+			<div style="display: flex; flex-basis: auto;">
 				<JDGImageCompare
 					imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
 					imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
@@ -218,9 +218,7 @@
 			</div>
 		</JDGGridLayout>
 		<JDGGridLayout maxColumns={2}>
-			<div
-				style="width: fit-content; display: flex; flex-direction: row-reverse; margin-left: auto;"
-			>
+			<div style="display: flex; flex-basis: auto;">
 				<JDGImageCompare
 					imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
 					imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
@@ -230,7 +228,7 @@
 					showBlurInUnfilledSpace={false}
 				/>
 			</div>
-			<div style="display: flex;">
+			<div style="display: flex; flex-basis: auto;">
 				<JDGImageTile
 					imageAttributes={imageAttributesCollection.cc_1}
 					fillContainer={false}
