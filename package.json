@@ -29,6 +29,7 @@
 		"./jdg-state-management.js": "./dist/jdg-state-management.js",
 		"./jdg-ui-management.js": "./dist/jdg-ui-management.js",
 		"./jdg-utils.js": "./dist/jdg-utils.js",
+		"./jdg-shared-strings.js": "./dist/jdg-shared-strings.js",
 		"./jdg-shared-styles.js": "./dist/jdg-shared-styles.js"
 	},
 	"files": [
