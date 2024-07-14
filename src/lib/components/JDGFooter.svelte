@@ -9,7 +9,7 @@
 	import { toggleDevTools } from '$lib/jdg-state-management.js';
 
 	import { jdgColors, jdgSizes } from '../jdg-shared-styles.js';
-	import { JDGStripesHorizontal } from '../index.js';
+	import { JDGButton, JDGStripesHorizontal } from '../index.js';
 
 	export let repoName = jdgUiRepoName;
 	export let appVersion = undefined;
@@ -44,6 +44,10 @@
 			${jdgSizes.headerTopBottomPadding} ${jdgSizes.headerSidePadding};
 	`;
 
+	const footerDevToolsCss = css`
+		justify-content: ${alignItems};
+	`;
+
 	onMount(async () => {
 		// get the lgetBuildCode the deployment repo
 		buildCode = await getBuildCode(repoName);
@@ -56,10 +60,22 @@
 		<JDGStripesHorizontal />
 	{/if}
 	<div class="footer-content-container {footerContentContainerCss}">
-		<!-- copyright and versions row -->
+		<!-- copyright row -->
 		<div class="footer-row">
-			<div class="jdg-footer-item">© {copyrightYear} J. Dean Goldstein</div>
-			<div>{divider}</div>
+			<div class="jdg-footer-item">© {copyrightYear} Joshua Dean Goldstein</div>
+		</div>
+		<!-- disclaimer row -->
+		{#if disclaimer}
+			<div class="footer-row">
+				<div class="jdg-footer-item">
+					{disclaimer}
+				</div>
+			</div>
+		{/if}
+		<!-- any extra content goes here -->
+		<slot />
+		<!-- versions row -->
+		<div class="footer-row">
 			{#if appVersion}
 				{#if additionalVersionData}
 					<div class="jdg-footer-item">
@@ -86,27 +102,16 @@
 				{/if}
 			</div>
 		</div>
-		<!-- disclaimer row -->
-		{#if disclaimer}
-			<div class="footer-row">
-				<div class="jdg-footer-item">
-					{disclaimer}
-				</div>
-			</div>
-		{/if}
 		{#if showDevToolsButton}
-			<div
-				class="footer-dev-tools-toggle"
-				role="button"
-				tabindex="0"
-				on:click={toggleDevTools}
-				on:keypress={() => {}}
-			>
-				{#if $uiState.showDevTools}
-					Hide Dev Tools
-				{:else}
-					Show Dev Tools
-				{/if}
+			<div class="footer-row {footerDevToolsCss}">
+				<JDGButton
+					onClickFunction={toggleDevTools}
+					label={$uiState.showDevTools ? 'Hide Dev Tools' : 'Show Dev Tools'}
+					paddingTopBottom="5px"
+					paddingLeftRight="10px"
+					faIcon={null}
+					fontSize={jdgSizes.fontSizeBodyXSm}
+				/>
 			</div>
 		{/if}
 		{#if $uiState.showDevTools}
@@ -138,10 +143,6 @@
 	.footer-row {
 		display: flex;
 		gap: 7px;
-	}
-
-	.footer-dev-tools-toggle {
-		width: 100%;
 	}
 
 	.state-view {
