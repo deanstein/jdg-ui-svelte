@@ -21,22 +21,22 @@
 
 <JDGGridLayout forceMaxColumns={true}>
 	{#if instagramHref}
-		<a href={instagramHref} class="no-initial-highlight">
+		<a href={instagramHref} target="_blank" class="no-initial-highlight">
 			<i class="{fontClass} {faClass} {instagramFaIcon}" />
 		</a>
 	{/if}
 	{#if facebookHref}
-		<a href={facebookHref} class="no-initial-highlight">
+		<a href={facebookHref} target="_blank" class="no-initial-highlight">
 			<i class="{fontClass} {faClass} {facebookFaIcon}" />
 		</a>
 	{/if}
 	{#if youtubeHref}
-		<a href={youtubeHref} class="no-initial-highlight">
+		<a href={youtubeHref} target="_blank" class="no-initial-highlight">
 			<i class="{fontClass} {faClass} {youtubeFaIcon}" />
 		</a>
 	{/if}
 	{#if linkedinHref}
-		<a href={linkedinHref} class="no-initial-highlight">
+		<a href={linkedinHref} target="_blank" class="no-initial-highlight">
 			<i class="{fontClass} {faClass} {linkedinFaIcon}" />
 		</a>
 	{/if}
