@@ -66,6 +66,7 @@
 		alignItems="center"
 	>
 		<JDGSocialMedia
+			iconColor={'gray'}
 			instagramHref={urls.ccpInstagram}
 			facebookHref={urls.ccpFacebook}
 			youtubeHref={urls.ccpYouTube}
