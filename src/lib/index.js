@@ -88,6 +88,9 @@ export { JDGStripesHorizontal };
 import JDGTopNav from './components/JDGTopNav.svelte';
 export { JDGTopNav };
 
+import JDGUpNext from './components/JDGUpNext.svelte';
+export { JDGUpNext };
+
 // SVG components
 import JDGCloseIcon from './assets/svg/JDGCloseIcon.svelte';
 export { JDGCloseIcon };
