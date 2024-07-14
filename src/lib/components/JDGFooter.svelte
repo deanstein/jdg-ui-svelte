@@ -61,6 +61,8 @@
 		<JDGStripesHorizontal />
 	{/if}
 	<div class="footer-content-container {footerContentContainerCss}">
+		<!-- any extra content goes here -->
+		<slot />
 		<!-- copyright row -->
 		<div class="footer-row">
 			<div class="jdg-footer-item">© {copyrightYear} {copyright}</div>
@@ -73,8 +75,6 @@
 				</div>
 			</div>
 		{/if}
-		<!-- any extra content goes here -->
-		<slot />
 		<!-- versions row -->
 		<div class="footer-row">
 			{#if appVersion}
