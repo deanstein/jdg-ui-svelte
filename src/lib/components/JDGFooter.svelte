@@ -14,7 +14,7 @@
 	export let repoName = jdgUiRepoName;
 	export let appVersion = undefined;
 	export let additionalVersionData = undefined; // optional additional version data, applicable to some sites
-	export let copyright = "Joshua Dean Goldstein"; // appears after the (C) symbol
+	export let copyright = 'Joshua Dean Goldstein'; // appears after the (C) symbol
 	export let disclaimer = undefined; // optional disclaimer, applicable to some sites
 	export let alignItems = 'left';
 	export let backgroundColorRgba = jdgColors.headerBackground;
