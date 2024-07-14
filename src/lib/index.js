@@ -82,6 +82,9 @@ export { JDGOverlay };
 import JDGSideNav from './components/JDGSideNav.svelte';
 export { JDGSideNav };
 
+import JDGSocialMedia from './components/JDGSocialMedia.svelte';
+export { JDGSocialMedia };
+
 import JDGStripesHorizontal from './components/JDGStripesHorizontal.svelte';
 export { JDGStripesHorizontal };
 
