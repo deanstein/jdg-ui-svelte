@@ -101,8 +101,7 @@
 
 <style>
 	.jdg-caption-attribution-container {
-		display: flex;
-		flex-direction: column;
+		display: grid;
 		align-items: center;
 		justify-content: center;
 		text-align: center;
