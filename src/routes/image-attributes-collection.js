@@ -11,7 +11,7 @@ const imageAttributesCollection = {
 		imgAlt:
 			'Cinderella City as it appeared in 1968. And a bunch of other words to test long captions!',
 		imgCaption:
-			'Cinderella City as it appeared in 1968. And a bunch of other words to test long captions!',
+			'Cinderella City as it appeared in 1968. And a bunch of other words to test long captions! Here, have some more text! Even more now.',
 		imgAttribution: 'Englewood Public Library (AI recolored)'
 	}),
 	architecture_1: instantiateObject(jdgImageAttributes, {
