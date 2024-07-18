@@ -23,7 +23,7 @@
 
 	const floatingBoxSubtitleCss = css`
 		font-size: ${jdgSizes.fontSizeFloatingContentBoxSubtitle};
-		color: ${jdgColors.title};
+		color: ${jdgColors.textLight};
 	`;
 
 	const floatingBoxContainerCss = css`
@@ -123,6 +123,7 @@
 		justify-content: center;
 		align-items: center;
 		gap: 10px;
+		letter-spacing: 3px;
 	}
 
 	.content-box-title-and-subtitle {
@@ -131,6 +132,7 @@
 
 	.content-box-subtitle {
 		margin-top: 0;
+		font-weight: 100;
 	}
 
 	.content-box-anchor-tag {
