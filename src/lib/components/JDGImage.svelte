@@ -6,15 +6,17 @@
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 	import uiState from '$lib/states/ui-state.js';
 
-	import { addCloudinaryUrlHeight, addCloudinaryUrlWidth, convertVhToPixels, isUrlCloudinary, instantiateObject } from '$lib/jdg-utils.js';
+	import {
+		addCloudinaryUrlHeight,
+		addCloudinaryUrlWidth,
+		addCloudinaryUrlTransformation,
+		convertVhToPixels,
+		isUrlCloudinary,
+		instantiateObject
+	} from '$lib/jdg-utils.js';
 
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { JDGImageCaptionAttribution } from '$lib/index.js';
-
-	// in order for cloudinary sizing to work correctly, 
-	// need to use the local image placeholder until image is loaded
-	// @ts-expect-error
-	import imagePlaceholder from '$lib/assets/raster/jdg-image-placeholder.png';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object for all image data
 	export let maxHeight = '350px'; // image will never exceed this height, but could be less depending on fillContainer
@@ -168,7 +170,8 @@
 			imageRef.addEventListener('load', onImageLoad);
 		}
 
-		adjustedImgSrc = imageAttributes.imgSrc;
+		// initial image is a low-quality one
+		adjustedImgSrc = addCloudinaryUrlTransformation(imageAttributes.imgSrc, 'q_0');
 	});
 
 	onDestroy(() => {
@@ -193,7 +196,7 @@
 			transition: bottom ${isHovering && showHoverEffect ? '400ms' : '200ms'};
 		`;
 
-		// if the image is a cloudinary URL, 
+		// if the image is a cloudinary URL,
 		// get the required height and width from the image container
 		// so we can modify the URL to specify those sizes and get an asset that fits its container
 		if (
@@ -204,12 +207,12 @@
 		) {
 			// set the height or width depending on the image fit
 			// if this function returns "auto" then the image height should be specified
-			if (getPreferredContainerHeight(imageAspectRatio, containerAspectRatio) === "auto") {
+			if (getPreferredContainerHeight(imageAspectRatio, containerAspectRatio) === 'auto') {
 				adjustedImgSrc = addCloudinaryUrlHeight(imageAttributes.imgSrc, containerRef.offsetHeight);
 				previousHeight = containerRef.offsetHeight;
-			} else 
+			}
 			// otherwise, specify the image width
-			{
+			else {
 				adjustedImgSrc = addCloudinaryUrlWidth(imageAttributes.imgSrc, containerRef.offsetWidth);
 				previousWidth = containerRef.offsetWidth;
 			}
@@ -226,14 +229,11 @@
 	bind:this={containerRef}
 	class="jdg-image-container {imageContainerCssDynamic}"
 >
-	{#if !isImageLoaded}
-		<div class="image-loading-overlay" />
-	{/if}
 	<img
 		bind:this={imageRef}
 		on:load={onImageLoad}
 		class={`image ${imageCssStatic} ${imageAnimationCss}`}
-		src={isImageLoaded ? adjustedImgSrc : imagePlaceholder}
+		src={adjustedImgSrc}
 		alt={imageAttributes.imgAlt}
 	/>
 	<!-- only show blurred image behind if blurUnfilledSpace is true -->
