@@ -50,6 +50,11 @@
 	let previousWidth = 0;
 	const heightOrWidthChangeThreshold = 10;
 
+	// when loading images, very low-res placeholders are used during loading
+	const imageLoadingTransformation = 'q_1';
+	// similarly, the background blurred image is also very low-quality
+	const blurredImageTransformation = 'w_400';
+
 	// self-executing function that gets the pixel height from maxHeight prop
 	// (it may look like this is unused, but it's used! don't delete)
 	const getMaxHeightPxFromProp = (() => {
@@ -141,6 +146,14 @@
 		}
 	`;
 
+	// let the background be a very low-quality version of the main image
+	let imageBlurCssDynamic = css`
+		background-image: url(${addCloudinaryUrlTransformation(
+			imageAttributes.imgSrc,
+			blurredImageTransformation
+		)});
+	`;
+
 	const imageAnimationCss = css`
 		@media (hover: hover) {
 			:hover {
@@ -160,18 +173,16 @@
 	// set dynamically by isHovering and showHoverEffect
 	let captionAttributionWrapperCssDynamic = css``;
 
-	// set dynamically when image container size is known
-	let imageBlurCssDynamic = css`
-		background-image: url(${adjustedImgSrc});
-	`;
-
 	onMount(() => {
 		if (imageRef && !fillContainer) {
 			imageRef.addEventListener('load', onImageLoad);
 		}
 
-		// initial image is a low-quality one
-		adjustedImgSrc = addCloudinaryUrlTransformation(imageAttributes.imgSrc, 'q_0');
+		// initial image is a very low-quality one for a fast initial load
+		adjustedImgSrc = addCloudinaryUrlTransformation(
+			imageAttributes.imgSrc,
+			imageLoadingTransformation
+		);
 	});
 
 	onDestroy(() => {
@@ -217,10 +228,6 @@
 				previousWidth = containerRef.offsetWidth;
 			}
 		}
-
-		imageBlurCssDynamic = css`
-			background-image: url(${adjustedImgSrc});
-		`;
 	}
 </script>
 
