@@ -73,11 +73,20 @@
 		</JDGBodyCopy>
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="BODY COPY">
-		<JDGBodyCopy paddingTop="0">
+		<JDGBodyCopy textColor="#7C5353">
+			This JDGBodyCopy has a text color override. And a <a href="./">hyperlink for testing!</a> The hyperlink
+			should have the same color as the text.
+		</JDGBodyCopy>
+		<JDGBodyCopy textColor="#484848" simpleHyperlinkStyle={true}>
+			This JDGBodyCopy has a text color override and simple hyperlinks. And a <a href="./"
+				>hyperlink for testing!</a
+			> The hyperlink should remain the "simple hyperlink" color.
+		</JDGBodyCopy>
+		<JDGBodyCopy>
 			This body copy has <a href="./about">regular hyperlink styles</a>. They're useful for short
 			words, no more than a <a href="./about">few at a time</a>.
 		</JDGBodyCopy>
-		<JDGBodyCopy paddingTop="0" simpleHyperlinkStyle={true}>
+		<JDGBodyCopy simpleHyperlinkStyle={true}>
 			This body copy has <a href="./about">simplified hyperlink styles</a>. These are useful for
 			<a href="./about">longer sections of text which might be hyperlinks but could also wrap</a>.
 		</JDGBodyCopy>
@@ -259,6 +268,16 @@
 				showAttribution={true}
 			/>
 		</JDGBodyCopy>
+	</JDGContentBoxFloating>
+	<JDGContentBoxFloating title="IMAGE CAROUSEL">
+		<JDGFullWidthContainer>
+			<JDGImageCarousel
+				imageAttributeObjects={[
+					imageAttributesCollection.cc_1,
+					imageAttributesCollection.rose_mall_60s70s_1
+				]}
+			/>
+		</JDGFullWidthContainer>
 		<JDGFullWidthContainer>
 			<JDGImageCarousel
 				imageAttributeObjects={[
