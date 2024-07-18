@@ -6,13 +6,18 @@
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 	import uiState from '$lib/states/ui-state.js';
 
-	import { convertVhToPixels, instantiateObject } from '$lib/jdg-utils.js';
+	import { addCloudinaryUrlHeight, addCloudinaryUrlWidth, convertVhToPixels, isUrlCloudinary, instantiateObject } from '$lib/jdg-utils.js';
 
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { JDGImageCaptionAttribution } from '$lib/index.js';
 
+	// in order for cloudinary sizing to work correctly, 
+	// need to use the local image placeholder until image is loaded
+	// @ts-expect-error
+	import imagePlaceholder from '$lib/assets/raster/jdg-image-placeholder.png';
+
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object for all image data
-	export let maxHeight = '300px'; // image will never exceed this height, but could be less depending on fillContainer
+	export let maxHeight = '350px'; // image will never exceed this height, but could be less depending on fillContainer
 	export let maxWidth = undefined; // if not defined, takes available space
 	export let alternateFitRef = undefined; // optionally use another element for image fit calcs
 	export let fillContainer = true; // if true, image may be cropped to fill its container in both directions
@@ -24,16 +29,24 @@
 	export let showAttribution = false;
 	export let transition = fade; // fade or scale depending on usage
 
+	let adjustedImgSrc;
 	let containerRef;
 	let containerAspectRatio;
 	let imageRef;
 	let imageAspectRatio;
+	let isImageLoaded = false;
 
 	// height can be in vh or px or even auto
 	// if in vh, convert to pixels for calculations
 	let maxHeightValue;
 	let maxHeightUnit;
 	let maxHeightPx;
+
+	// prevent redundant cloudinary transformation requests
+	// by checking if the height of the image container has changed
+	let previousHeight = 0;
+	let previousWidth = 0;
+	const heightOrWidthChangeThreshold = 10;
 
 	// self-executing function that gets the pixel height from maxHeight prop
 	// (it may look like this is unused, but it's used! don't delete)
@@ -93,6 +106,7 @@
 	const onImageLoad = () => {
 		// ensure that the image aspect ratio is captured once the image loads
 		getAspectRatios();
+		isImageLoaded = true;
 	};
 
 	const imageCssStatic = css`
@@ -133,10 +147,6 @@
 		}
 	`;
 
-	const imageBlurCss = css`
-		background-image: url(${imageAttributes.imgSrc});
-	`;
-
 	// may be updated dynamically by setImageSizeAndFit
 	let imageContainerCssDynamic = css`
 		height: ${$uiState.isMobileBreakpoint && compactModeOnMobile
@@ -148,10 +158,17 @@
 	// set dynamically by isHovering and showHoverEffect
 	let captionAttributionWrapperCssDynamic = css``;
 
+	// set dynamically when image container size is known
+	let imageBlurCssDynamic = css`
+		background-image: url(${adjustedImgSrc});
+	`;
+
 	onMount(() => {
 		if (imageRef && !fillContainer) {
 			imageRef.addEventListener('load', onImageLoad);
 		}
+
+		adjustedImgSrc = imageAttributes.imgSrc;
 	});
 
 	onDestroy(() => {
@@ -175,6 +192,32 @@
 			bottom: ${isHovering && showHoverEffect ? '9px' : '0px'};
 			transition: bottom ${isHovering && showHoverEffect ? '400ms' : '200ms'};
 		`;
+
+		// if the image is a cloudinary URL, 
+		// get the required height and width from the image container
+		// so we can modify the URL to specify those sizes and get an asset that fits its container
+		if (
+			containerRef &&
+			Math.abs(containerRef.offsetHeight - previousHeight) > heightOrWidthChangeThreshold &&
+			isImageLoaded &&
+			isUrlCloudinary(imageAttributes.imgSrc)
+		) {
+			// set the height or width depending on the image fit
+			// if this function returns "auto" then the image height should be specified
+			if (getPreferredContainerHeight(imageAspectRatio, containerAspectRatio) === "auto") {
+				adjustedImgSrc = addCloudinaryUrlHeight(imageAttributes.imgSrc, containerRef.offsetHeight);
+				previousHeight = containerRef.offsetHeight;
+			} else 
+			// otherwise, specify the image width
+			{
+				adjustedImgSrc = addCloudinaryUrlWidth(imageAttributes.imgSrc, containerRef.offsetWidth);
+				previousWidth = containerRef.offsetWidth;
+			}
+		}
+
+		imageBlurCssDynamic = css`
+			background-image: url(${adjustedImgSrc});
+		`;
 	}
 </script>
 
@@ -183,15 +226,19 @@
 	bind:this={containerRef}
 	class="jdg-image-container {imageContainerCssDynamic}"
 >
+	{#if !isImageLoaded}
+		<div class="image-loading-overlay" />
+	{/if}
 	<img
 		bind:this={imageRef}
+		on:load={onImageLoad}
 		class={`image ${imageCssStatic} ${imageAnimationCss}`}
-		src={imageAttributes.imgSrc}
+		src={isImageLoaded ? adjustedImgSrc : imagePlaceholder}
 		alt={imageAttributes.imgAlt}
 	/>
 	<!-- only show blurred image behind if blurUnfilledSpace is true -->
 	{#if showBlurInUnfilledSpace && !fillContainer}
-		<div class="image-blur {imageBlurCss}"></div>
+		<div class="image-blur {imageBlurCssDynamic}"></div>
 		<div class="image-blur-background"></div>
 	{/if}
 	<!-- caption and attribution -->
@@ -239,6 +286,29 @@
 		z-index: -2;
 		width: 100%;
 		height: 100%;
+	}
+
+	.image-loading-overlay {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		background-color: rgba(50, 50, 50, 0.5);
+		animation: fade 2s infinite;
+	}
+
+	/* used for a fading effect while the image is loading */
+	@keyframes fade {
+		0% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
 	}
 
 	.caption-attribution-wrapper {

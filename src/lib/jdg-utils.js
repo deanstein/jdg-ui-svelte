@@ -603,11 +603,55 @@ export const openUrl = (url, newTab) => {
 	}
 };
 
+export const isUrlCloudinary = (url) => {
+	if (url.includes('cloudinary.com')) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+// ensures that imgAlt is the same as imgCaption if not provided
+export const postProcessImageAttributes = (jdgImageAttributes) => {
+	// imgAlt is likely the same as imgCaption, unless already specified
+	if (jdgImageAttributes.imgCaption && !jdgImageAttributes.imgAlt) {
+		jdgImageAttributes.imgAlt = jdgImageAttributes.imgCaption;
+	}
+	return jdgImageAttributes;
+};
+
 // adds "f_auto" where required
 // to automatically optimize a given cloudinary URL
 export const addCloudinaryUrlTransformation = (url, transformation = 'f_auto') => {
 	let parts = url.split('/upload/');
 	return parts[0] + '/upload/' + transformation + '/' + parts[1];
+};
+
+export const addCloudinaryUrlWidth = (url, width) => {
+	if (isUrlCloudinary(url)) {
+		let parts = url.split('/upload/');
+		let transformations = parts[1].split('/');
+		// Remove existing width transformation if it exists
+		transformations = transformations.filter((transformation) => !transformation.startsWith('w_'));
+		// Add new width transformation
+		transformations.unshift(`w_${width},c_fill`);
+		return parts[0] + '/upload/' + transformations.join('/');
+	}
+	return url;
+};
+
+
+export const addCloudinaryUrlHeight = (url, height) => {
+	if (isUrlCloudinary(url)) {
+		let parts = url.split('/upload/');
+		let transformations = parts[1].split('/');
+		// Remove existing height transformation if it exists
+		transformations = transformations.filter((transformation) => !transformation.startsWith('h_'));
+		// Add new height transformation
+		transformations.unshift(`h_${height},c_fill`);
+		return parts[0] + '/upload/' + transformations.join('/');
+	}
+	return url;
 };
 
 // scrolls to the given anchor id

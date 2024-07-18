@@ -1,4 +1,8 @@
-import { addCloudinaryUrlTransformation, instantiateObject } from '$lib/jdg-utils.js';
+import {
+	addCloudinaryUrlTransformation,
+	instantiateObject,
+	postProcessImageAttributes
+} from '$lib/jdg-utils.js';
 import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 
 // a map of all available images and their attributes
@@ -78,7 +82,7 @@ const imageAttributesCollection = {
 		imgAlt:
 			'Rose Mall as it appeared before grand opening in 1968. And a bunch of other words to test long captions!',
 		imgCaption:
-			'Rose Mall as it appeared before grand opening in 1968. And a bunch of other words to test long captions!',
+			'Rose Mall as it appeared before grand opening in 1968. And a bunch of other words to test long captions! Even longer longer longer captions!',
 		imgAttribution: 'Denver Public Library'
 	}),
 	rose_mall_60s70s_2: instantiateObject(jdgImageAttributes, {
@@ -88,7 +92,14 @@ const imageAttributesCollection = {
 		imgAlt: 'Offices above Rose Mall.',
 		imgCaption: 'Offices above Rose Mall.',
 		imgAttribution: 'Denver Public Library'
-	})
+	}),
+	fairgrounds_aerial: postProcessImageAttributes(
+		instantiateObject(jdgImageAttributes, {
+			imgSrc: addCloudinaryUrlTransformation(
+				'https://res.cloudinary.com/jdg-main/image/upload/v1721195162/jdg-website/arch/fairgrounds-aerial.jpg'
+			)
+		})
+	)
 };
 
 export { imageAttributesCollection };
