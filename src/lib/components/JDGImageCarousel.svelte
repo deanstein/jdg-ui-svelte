@@ -13,6 +13,7 @@
 	export let activeThumbnailColor = getAccentColors()[0];
 	export let autoAdvance = true; // if true, auto advance through images at given interval
 	export let autoAdvanceInterval = 4500; // ms, interval between auto-advances
+	export let showBlurInUnfilledSpace = true;
 
 	let carouselRef; // used for only auto-advancing when carousel is visible
 	let activeImage = imageAttributeObjects[0]; // start with the first image
@@ -86,7 +87,7 @@
 					imageAttributes={activeImage}
 					{maxHeight}
 					fillContainer={false}
-					showBlurInUnfilledSpace={true}
+					{showBlurInUnfilledSpace}
 				/>
 			</div>
 			<!-- kludge to force a "crossfade" effect by swapping divs via flag -->
@@ -96,7 +97,7 @@
 					imageAttributes={activeImage}
 					{maxHeight}
 					fillContainer={false}
-					showBlurInUnfilledSpace={true}
+					{showBlurInUnfilledSpace}
 				/>
 			</div>
 		{/if}
