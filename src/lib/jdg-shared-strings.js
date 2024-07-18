@@ -1,4 +1,6 @@
 export const jdgSharedUrls = {
+	adskFormIt: 'https://formit.autodesk.com/',
+	adskDynamo: 'https://dynamobim.org/',
 	ccpFacebook: 'https://www.facebook.com/cinderellacityproject/',
 	ccpInstagram: 'https://www.instagram.com/cinderellacityproject/',
 	ccpYouTube: 'https://www.youtube.com/c/TheCinderellaCityProject',
