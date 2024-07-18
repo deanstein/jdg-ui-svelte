@@ -3,6 +3,7 @@
 		JDGBodyCopy,
 		JDGContentBoxFloating,
 		JDGContentContainer,
+		JDGImageCarousel,
 		JDGImageTile
 	} from '$lib/index.js';
 	import { imageAttributesCollection } from '../image-attributes-collection.js';
@@ -15,9 +16,14 @@
 			simple!
 		</JDGBodyCopy>
 		<JDGImageTile
-			imageAttributes={imageAttributesCollection.aerial_60s70s_1}
+			imageAttributes={imageAttributesCollection.fairgrounds_aerial}
 			fillContainer={false}
 		/>
-		<JDGImageTile fillContainer={false} href="/about" />
+		<JDGImageCarousel
+			imageAttributeObjects={[
+				imageAttributesCollection.fairgrounds_aerial,
+				imageAttributesCollection.rose_mall_60s70s_2
+			]}
+		/>
 	</JDGContentBoxFloating>
 </JDGContentContainer>
