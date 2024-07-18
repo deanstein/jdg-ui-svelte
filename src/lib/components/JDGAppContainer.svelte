@@ -53,6 +53,7 @@
 			letter-spacing: 5px;
 		}
 
+		color: ${jdgColors.text};
 		font-family: ${fontFamily};
 	`;
 
