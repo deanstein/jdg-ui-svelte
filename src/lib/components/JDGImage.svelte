@@ -288,29 +288,6 @@
 		height: 100%;
 	}
 
-	.image-loading-overlay {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		display: flex;
-		align-items: center;
-		background-color: rgba(50, 50, 50, 0.5);
-		animation: fade 2s infinite;
-	}
-
-	/* used for a fading effect while the image is loading */
-	@keyframes fade {
-		0% {
-			opacity: 1;
-		}
-		50% {
-			opacity: 0;
-		}
-		100% {
-			opacity: 1;
-		}
-	}
-
 	.caption-attribution-wrapper {
 		position: absolute;
 		width: 100%;
