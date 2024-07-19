@@ -35,7 +35,6 @@
 	newNavItem4.label = 'SIMPLE TEST';
 	newNavItem4.href = '/simple-test';
 
-	
 	const newNavItem5 = instantiateObject(jdgNavItem);
 	newNavItem5.label = 'CLOUDINARY TEST';
 	newNavItem5.href = '/cloudinary-test';

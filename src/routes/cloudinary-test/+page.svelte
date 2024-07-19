@@ -12,9 +12,7 @@
 
 <JDGContentContainer>
 	<JDGContentBoxFloating title="CLOUDINARY TEST">
-		<JDGBodyCopy paddingTop="0">
-			Test out Cloudinary optimization and resizing here.
-		</JDGBodyCopy>
+		<JDGBodyCopy paddingTop="0">Test out Cloudinary optimization and resizing here.</JDGBodyCopy>
 		<JDGImageFullWidth
 			imageAttributes={imageAttributesCollection.cc_1}
 			showOverlay={true}
