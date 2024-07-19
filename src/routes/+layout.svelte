@@ -35,7 +35,12 @@
 	newNavItem4.label = 'SIMPLE TEST';
 	newNavItem4.href = '/simple-test';
 
-	const navItems = [newNavItem1, newNavItem2, newNavItem3, newNavItem4];
+	
+	const newNavItem5 = instantiateObject(jdgNavItem);
+	newNavItem5.label = 'CLOUDINARY TEST';
+	newNavItem5.href = '/cloudinary-test';
+
+	const navItems = [newNavItem1, newNavItem2, newNavItem3, newNavItem4, newNavItem5];
 
 	// get the app version from package.json
 	//@ts-expect-error
