@@ -247,7 +247,10 @@
 	/>
 	<!-- only show blurred image behind if blurUnfilledSpace is true -->
 	{#if showBlurInUnfilledSpace && !fillContainer}
-		<div class="image-blur" style={adjustedImgSrc ? `background-image: url(${adjustedImgSrc});` : ''}></div>
+		<div
+			class="image-blur"
+			style={adjustedImgSrc ? `background-image: url(${adjustedImgSrc});` : ''}
+		></div>
 		<div class="image-blur-background"></div>
 	{/if}
 	<!-- caption and attribution -->
