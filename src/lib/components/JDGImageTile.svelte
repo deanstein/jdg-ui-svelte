@@ -9,7 +9,7 @@
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGStripesHorizontal } from '../index.js';
 	import { setAlphaInRgbaString, verticalSlide } from '$lib/jdg-graphics-factory.js';
-	import { jdgColors, jdgSizes, jdgDurations, jdgBreakpoints } from '../jdg-shared-styles.js';
+	import { jdgColors, jdgSizes, jdgDurations, jdgBreakpoints, jdgLinkStyles } from '../jdg-shared-styles.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object to hold all details
 	export let maxWidth = undefined; // if not defined, takes available space
@@ -80,7 +80,7 @@
 </script>
 
 <div class="jdg-image-tile-container">
-	<a bind:this={alternateFitRef} {href} class={aCss}>
+	<a bind:this={alternateFitRef} {href} class="{jdgLinkStyles.simple} {aCss}">
 		<div
 			class="image-tile {imageTileCss}"
 			on:mouseenter={() => (isHovering = true)}
@@ -199,6 +199,7 @@
 		width: -webkit-fill-available;
 		width: -moz-available;
 		font-weight: bold;
+		letter-spacing: 1px;
 		z-index: 1;
 		pointer-events: none;
 	}
