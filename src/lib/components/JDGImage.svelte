@@ -51,9 +51,7 @@
 	const heightOrWidthChangeThreshold = 10;
 
 	// when loading images, very low-res placeholders are used during loading
-	const imageLoadingTransformation = 'q_1';
-	// similarly, the background blurred image is also very low-quality
-	const blurredImageTransformation = 'w_400';
+	const imageLoadingTransformation = 'f_auto,q_1';
 
 	// self-executing function that gets the pixel height from maxHeight prop
 	// (it may look like this is unused, but it's used! don't delete)
@@ -144,14 +142,6 @@
 					}px)`
 				: ''};
 		}
-	`;
-
-	// let the background be a very low-quality version of the main image
-	let imageBlurCssDynamic = css`
-		background-image: url(${addCloudinaryUrlTransformation(
-			imageAttributes.imgSrc,
-			blurredImageTransformation
-		)});
 	`;
 
 	const imageAnimationCss = css`
@@ -245,7 +235,7 @@
 	/>
 	<!-- only show blurred image behind if blurUnfilledSpace is true -->
 	{#if showBlurInUnfilledSpace && !fillContainer}
-		<div class="image-blur {imageBlurCssDynamic}"></div>
+		<div class="image-blur" style={`background-image: url(${adjustedImgSrc});`}></div>
 		<div class="image-blur-background"></div>
 	{/if}
 	<!-- caption and attribution -->
