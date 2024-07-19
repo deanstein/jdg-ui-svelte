@@ -13,8 +13,7 @@
 		jdgColors,
 		jdgSizes,
 		jdgDurations,
-		jdgBreakpoints,
-		jdgLinkStyles
+		jdgBreakpoints
 	} from '../jdg-shared-styles.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object to hold all details
@@ -86,7 +85,7 @@
 </script>
 
 <div class="jdg-image-tile-container">
-	<a bind:this={alternateFitRef} {href} class="{jdgLinkStyles.simple} {aCss}">
+	<a bind:this={alternateFitRef} {href} class={aCss}>
 		<div
 			class="image-tile {imageTileCss}"
 			on:mouseenter={() => (isHovering = true)}
