@@ -41,6 +41,7 @@
 	let containerAspectRatio;
 	let imageRef;
 	let imageAspectRatio;
+	let devicePixelRatio;
 	let isImageLoaded = false;
 
 	// height can be in vh or px or even auto
@@ -169,6 +170,8 @@
 	let captionAttributionWrapperCssDynamic = css``;
 
 	onMount(() => {
+		devicePixelRatio = window.devicePixelRatio || 1;
+
 		if (imageRef && !fillContainer) {
 			imageRef.addEventListener('load', onImageLoad);
 		}
@@ -214,13 +217,19 @@
 			// set the height or width depending on the image fit
 			// image is wider than container, so specify height
 			if (imageAspectRatio > containerAspectRatio) {
-				adjustedImgSrc = addCloudinaryUrlHeight(imageAttributes.imgSrc, containerRef.offsetHeight);
+				adjustedImgSrc = addCloudinaryUrlHeight(
+					imageAttributes.imgSrc,
+					Math.ceil(containerRef.offsetHeight * devicePixelRatio)
+				);
 				previousHeight = containerRef.offsetHeight;
 			}
 			// otherwise, image is narrower than container
 			// so specify the image width
 			else {
-				adjustedImgSrc = addCloudinaryUrlWidth(imageAttributes.imgSrc, containerRef.offsetWidth);
+				adjustedImgSrc = addCloudinaryUrlWidth(
+					imageAttributes.imgSrc,
+					Math.ceil(containerRef.offsetWidth * devicePixelRatio)
+				);
 				previousWidth = containerRef.offsetWidth;
 			}
 			//console.log("CLOUDINARY ADJUSTED URL: " + adjustedImgSrc);
