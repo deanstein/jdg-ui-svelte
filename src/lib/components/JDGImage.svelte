@@ -18,6 +18,10 @@
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { JDGImageCaptionAttribution } from '$lib/index.js';
 
+	// show a local image while image is loading
+	// @ts-expect-error
+	import imagePlaceholder from '$lib/assets/raster/jdg-image-placeholder.png';
+
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object for all image data
 	export let maxHeight = '350px'; // image will never exceed this height, but could be less depending on fillContainer
 	export let maxWidth = undefined; // if not defined, takes available space
@@ -29,6 +33,7 @@
 	export let showHoverEffect = false; // zoom image slightly on hover
 	export let showCaption = false;
 	export let showAttribution = false;
+	export let showPlaceholderImage = true;
 	export let transition = fade; // fade or scale depending on usage
 
 	let adjustedImgSrc;
@@ -226,11 +231,18 @@
 	bind:this={containerRef}
 	class="jdg-image-container {imageContainerCssDynamic}"
 >
+	{#if showPlaceholderImage && !isImageLoaded}
+		<div class="image-loading-overlay" />
+	{/if}
 	<img
 		bind:this={imageRef}
 		on:load={onImageLoad}
 		class={`image ${imageCssStatic} ${imageAnimationCss}`}
-		src={adjustedImgSrc}
+		src={showPlaceholderImage
+			? isImageLoaded
+				? adjustedImgSrc
+				: imagePlaceholder
+			: adjustedImgSrc}
 		alt={imageAttributes.imgAlt}
 	/>
 	<!-- only show blurred image behind if blurUnfilledSpace is true -->
@@ -283,6 +295,29 @@
 		z-index: -2;
 		width: 100%;
 		height: 100%;
+	}
+
+	.image-loading-overlay {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		background-color: rgba(50, 50, 50, 0.5);
+		animation: fade 2s infinite;
+	}
+
+	/* used for a fading effect while the image is loading */
+	@keyframes fade {
+		0% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
 	}
 
 	.caption-attribution-wrapper {

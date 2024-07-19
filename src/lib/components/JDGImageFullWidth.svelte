@@ -51,7 +51,7 @@
 </script>
 
 <JDGFullWidthContainer>
-	<JDGImage {imageAttributes} {maxHeight} />
+	<JDGImage {imageAttributes} {maxHeight} showPlaceholderImage={false} />
 	{#if showOverlay || primaryText || secondaryText || overlayImageAttributes}
 		<div class="image-overlay {imageOverlayCss}">
 			{#if superText || primaryText || secondaryText}
@@ -76,6 +76,7 @@
 						maxHeight={overlayImageMaxHeight}
 						fillContainer={false}
 						alternateFitRef={imageOverlayWrapperRef}
+						showPlaceholderImage={false}
 					/>
 					{#if overlayImageText}
 						<JDGAccentText
