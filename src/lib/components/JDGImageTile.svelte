@@ -151,13 +151,15 @@
 </div>
 
 <style>
-	/* ignore the global a styles */
-	a::before,
-	a:hover::before {
+	/* ignore the global link styles */
+	.jdg-image-tile-container a,
+	.jdg-image-tile-container a::before,
+	.jdg-image-tile-container a:hover::before {
 		all: unset;
+		background: none;
 	}
 
-	a {
+	.jdg-image-tile-container a {
 		display: flex;
 		min-width: 0;
 		justify-content: center;
