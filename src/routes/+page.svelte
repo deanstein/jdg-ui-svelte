@@ -273,8 +273,8 @@
 		<JDGFullWidthContainer>
 			<JDGImageCarousel
 				imageAttributeObjects={[
-					imageAttributesCollection.cc_1,
-					imageAttributesCollection.rose_mall_60s70s_1
+					imageAttributesCollection.fairgrounds_aerial,
+					imageAttributesCollection.speer_point_after
 				]}
 			/>
 		</JDGFullWidthContainer>
@@ -320,6 +320,7 @@
 		<JDGImageTile
 			imageAttributes={imageAttributesCollection.aerial_60s70s_1}
 			fillContainer={false}
+			href="./about"
 		/>
 		<JDGImageTile fillContainer={false} href="/about" />
 	</JDGContentBoxFloating>

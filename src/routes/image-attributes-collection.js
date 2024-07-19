@@ -99,6 +99,23 @@ const imageAttributesCollection = {
 				'https://res.cloudinary.com/jdg-main/image/upload/v1721195162/jdg-website/arch/fairgrounds-aerial.jpg'
 			)
 		})
+	),
+	speer_point_before: postProcessImageAttributes(
+		instantiateObject(jdgImageAttributes, {
+			imgSrc: addCloudinaryUrlTransformation(
+				'https://res.cloudinary.com/jdg-main/image/upload/v1721164768/jdg-website/exp/speer-point-before.jpg'
+			),
+			imgCaption: 'The original building at 10th and Speer in Denver.'
+		})
+	),
+	speer_point_after: postProcessImageAttributes(
+		instantiateObject(jdgImageAttributes, {
+			imgSrc: addCloudinaryUrlTransformation(
+				'https://res.cloudinary.com/jdg-main/image/upload/v1721164767/jdg-website/exp/speer-point-after.jpg'
+			),
+			imgCaption:
+				'The alternate use scheme includes artist studios, a cafe, a restaurant, and event space.'
+		})
 	)
 };
 
