@@ -205,12 +205,14 @@
 			transition: bottom ${isHovering && showHoverEffect ? '400ms' : '200ms'};
 		`;
 
+		let resizeRef = alternateFitRef ?? containerRef;
+
 		// if the image is a cloudinary URL,
 		// get the required height and width from the image container
 		// so we can modify the URL to specify those sizes and get an asset that fits its container
 		if (
-			containerRef &&
-			Math.abs(containerRef.offsetHeight - previousHeight) > heightOrWidthChangeThreshold &&
+			resizeRef &&
+			Math.abs(resizeRef.offsetHeight - previousHeight) > heightOrWidthChangeThreshold &&
 			isImageLoaded &&
 			isUrlCloudinary(imageAttributes.imgSrc)
 		) {
@@ -219,9 +221,10 @@
 			if (imageAspectRatio > containerAspectRatio) {
 				adjustedImgSrc = addCloudinaryUrlHeight(
 					imageAttributes.imgSrc,
-					Math.ceil(containerRef.offsetHeight * devicePixelRatio)
+					Math.ceil(resizeRef.offsetHeight * devicePixelRatio)
 				);
-				previousHeight = containerRef.offsetHeight;
+				previousHeight = resizeRef.offsetHeight;
+				//console.log("Specifying height. Adjusted cloudinary URL: " + adjustedImgSrc);
 			}
 			// otherwise, image is narrower than container
 			// so specify the image width
@@ -231,8 +234,8 @@
 					Math.ceil(containerRef.offsetWidth * devicePixelRatio)
 				);
 				previousWidth = containerRef.offsetWidth;
+				//console.log("Specifying width. Adjusted Cloudinary URL: " + adjustedImgSrc);
 			}
-			//console.log("CLOUDINARY ADJUSTED URL: " + adjustedImgSrc);
 		}
 	}
 </script>
