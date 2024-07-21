@@ -25,18 +25,21 @@
 			href={item1Href}
 			imageAttributes={item1ImageAttributes}
 			labelJustification={'center'}
+			compactModeOnMobile={false}
 		/>
 		<JDGImageTile
 			label={item2Label}
 			href={item2Href}
 			imageAttributes={item2ImageAttributes}
 			labelJustification={'center'}
+			compactModeOnMobile={false}
 		/>
 		<JDGImageTile
 			label={item3Label}
 			href={item3Href}
 			imageAttributes={item3ImageAttributes}
 			labelJustification={'center'}
+			compactModeOnMobile={false}
 		/>
 	</JDGGridLayout>
 </JDGContentBoxFloating>
