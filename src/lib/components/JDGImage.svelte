@@ -36,7 +36,9 @@
 	export let showPlaceholderImage = true;
 	export let transition = fade; // fade or scale depending on usage
 
-	let adjustedImgSrc;
+	// for cloudinary media, imgSrc will be modified with transforms for optimization
+	// if this isn't a cloudinary image, it will remain the current imgSrc
+	let adjustedImgSrc = imageAttributes.imgSrc;
 	let containerRef;
 	// the ref used for cloudinary resolutions requests
 	// this is either the alternate fit ref or the container ref
