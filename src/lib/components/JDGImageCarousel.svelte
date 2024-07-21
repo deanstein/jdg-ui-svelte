@@ -122,6 +122,7 @@
 					imageAttributes={imageAttributesObject}
 					maxHeight="50px"
 					maxWidth="75px"
+					compactModeOnMobile={false}
 				/>
 			</div>
 		{/each}
