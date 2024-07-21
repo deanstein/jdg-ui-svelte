@@ -41,36 +41,45 @@
 		/>
 		<JDGContentBoxFloating>
 			<JDGBodyCopy fontSizeMultiplier={1.15}>
-				The <strong>Cinderella City Project</strong> is an examination of a unique mid-century
-				shopping destination, developed by its creator as a "city under a roof", which became both a
-				fairtyale and a nightmare for the actual city of Englewood, Colorado.
+				<strong>JDG SVELTE UI</strong> is an in-progress UI framework by
+				<a href="./about">Joshua Dean Goldstein.</a>
 				<br /><br />
-				There's even more to the story. <a href="./history">Read Cinderella City's history</a>.
+				Standard usages and tests of components are below.
+				<br /><br />
+				Enjoy!
 			</JDGBodyCopy>
-			<JDGImageHybridGridCarousel
-				imageAttributeObjects={[
-					imageAttributesCollection.aerial_60s70s_1,
-					imageAttributesCollection.cc_1,
-					imageAttributesCollection.architecture_1,
-					imageAttributesCollection.rose_mall_60s70s_1,
-					imageAttributesCollection.rose_mall_60s70s_2
-				]}
-			/>
 		</JDGContentBoxFloating>
 	</div>
 	<JDGJumpTo />
-	<JDGContentBoxFloating title="BACKGROUND">
-		<JDGBodyCopy paddingTop="0">
-			The city of Englewood, Colorado changed forever in 1968 when mall magnate Gerri Von Frellick
-			opened a controversial 1.35 million-square foot shopping center on the site of the community's
-			beloved City Park.
+	<JDGContentBoxFloating title="GRID LAYOUT">
+		<JDGBodyCopy paddingBottom="0" textAlign="center">
+			Hybrid GridCarousel with more than 3 items:
 			<br /><br />
-			Dubbed "Cinderella City," Von Frellick's new development was thrust upon an unwitting community
-			after a protracted legal battle over its location.
-			<br /><br />
-			The result was an oversized complex squeezed into an undersized boundary, utilizing a unique M-shaped
-			complex broken up into 5 sub-malls, and surrounded by a two-level parking garage.
+			(will become ImageCarousel on smallest breakpoint)
 		</JDGBodyCopy>
+		<JDGImageHybridGridCarousel
+			imageAttributeObjects={[
+				imageAttributesCollection.aerial_60s70s_1,
+				imageAttributesCollection.cc_1,
+				imageAttributesCollection.architecture_1,
+				imageAttributesCollection.rose_mall_60s70s_1,
+				imageAttributesCollection.rose_mall_60s70s_2
+			]}
+		/>
+		<JDGBodyCopy paddingBottom="0" textAlign="center">GridLayout with just 2 items:</JDGBodyCopy>
+		<JDGGridLayout maxColumns={2}>
+			<JDGImageCompare
+				imageAttributes1={imageAttributesCollection.ccp_blue_mall_60s70s_1}
+				imageAttributes2={imageAttributesCollection.ccp_blue_mall_80s90s_1}
+				maxHeight="400px"
+				showBlurInUnfilledSpace={false}
+			/>
+			<JDGImageTile
+				imageAttributes={imageAttributesCollection.cc_1}
+				fillContainer={false}
+				maxHeight="400px"
+			/>
+		</JDGGridLayout>
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="BODY COPY">
 		<JDGBodyCopy textColor="#7C5353">
