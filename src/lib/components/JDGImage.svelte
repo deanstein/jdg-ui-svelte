@@ -36,6 +36,9 @@
 	export let showPlaceholderImage = true;
 	export let transition = fade; // fade or scale depending on usage
 
+	// DEBUGGING
+	const showDebugMessagesInConsole = false;
+
 	// for cloudinary media, imgSrc will be modified with transforms for optimization
 	// if this isn't a cloudinary image, it will remain the current imgSrc
 	let adjustedImgSrc = imageAttributes.imgSrc;
@@ -281,9 +284,11 @@
 				const adjustedHeight = Math.ceil(maxHeightPx * devicePixelRatio);
 				adjustedImgSrc = addCloudinaryUrlHeight(imageAttributes.imgSrc, adjustedHeight);
 				previousHeight = resolutionRef.offsetHeight;
-				console.log(
-					'Specifying height in Cloudinary URL. Adjusted Cloudinary URL: ' + adjustedImgSrc
-				);
+				if (showDebugMessagesInConsole) {
+					console.log(
+						'Specifying height in Cloudinary URL. Adjusted Cloudinary URL: ' + adjustedImgSrc
+					);
+				}
 			}
 			// otherwise, image is narrower than container
 			// so specify the image width
@@ -293,9 +298,11 @@
 					Math.ceil(containerRef.offsetWidth * devicePixelRatio)
 				);
 				previousWidth = containerRef.offsetWidth;
-				console.log(
-					'Specifying width in Cloudinary URL. Adjusted Cloudinary URL: ' + adjustedImgSrc
-				);
+				if (showDebugMessagesInConsole) {
+					console.log(
+						'Specifying width in Cloudinary URL. Adjusted Cloudinary URL: ' + adjustedImgSrc
+					);
+				}
 			}
 		}
 	}
