@@ -23,7 +23,8 @@ const imageAttributesCollection = {
 			'https://res.cloudinary.com/jdg-main/image/upload/v1716959964/jdg-ui-svelte/project-tiles/architecture_gdysdx.jpg'
 		),
 		imgAlt: 'Architecture',
-		imgCaption: 'Architecture'
+		imgCaption: 'Architecture',
+		imgAttribution: 'Author'
 	}),
 	cc_1: instantiateObject(jdgImageAttributes, {
 		imgSrc: addCloudinaryUrlTransformation(
