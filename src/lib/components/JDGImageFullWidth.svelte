@@ -75,7 +75,6 @@
 						imageAttributes={overlayImageAttributes}
 						maxHeight={overlayImageMaxHeight}
 						fillContainer={false}
-						alternateFitRef={imageOverlayWrapperRef}
 						showPlaceholderImage={false}
 					/>
 					{#if overlayImageText}
