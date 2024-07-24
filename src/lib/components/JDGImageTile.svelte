@@ -9,7 +9,7 @@
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGStripesHorizontal } from '../index.js';
 	import { setAlphaInRgbaString, verticalSlide } from '$lib/jdg-graphics-factory.js';
-	import { jdgColors, jdgSizes, jdgDurations, jdgBreakpoints } from '../jdg-shared-styles.js';
+	import { jdgColors, jdgFonts, jdgSizes, jdgDurations, jdgBreakpoints } from '../jdg-shared-styles.js';
 	import uiState from '$lib/states/ui-state.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object to hold all details
@@ -19,6 +19,7 @@
 	export let compactModeOnMobile = true; // if true, ignores fillContainer on smallest breakpoint for no cropping and fitted container (less height)
 	export let showBlurInUnfilledSpace = false; // if true, shows the image blurred in the unfilled space - only applies if fillContainer is false
 	export let label = undefined;
+	export let labelFontFamily = jdgFonts.body;
 	export let labelJustification = 'left';
 	export let labelContainerVerticalAlign = 'bottom';
 	export let href = undefined;
@@ -44,6 +45,7 @@
 	`;
 
 	const imageTileLabelContainerCss = css`
+		font-family: ${labelFontFamily};
 		color: ${jdgColors.text};
 		background-color: ${jdgColors.imageLabelBackground};
 		backdrop-filter: blur(${jdgSizes.blurSizeSmall});

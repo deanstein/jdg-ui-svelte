@@ -7,7 +7,8 @@ export const jdgBreakpoints = {
 };
 
 export const jdgFonts = {
-	body: 'REM'
+	body: 'REM',
+	righteous: 'Righteous'
 };
 
 export const jdgColors = {

@@ -8,20 +8,24 @@
 
 	import { convertStringToAnchorTag, instantiateObject } from '$lib/jdg-utils.js';
 
-	import { jdgBreakpoints, jdgColors, jdgSizes } from '../jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgColors, jdgFonts, jdgSizes } from '../jdg-shared-styles.js';
 
 	export let title = undefined;
+	export let titleFontFamily = jdgFonts.body;
 	export let subtitle = undefined;
+	export let subtitleFontFamily = jdgFonts.body;
 	export let anchorTag = convertStringToAnchorTag(title, false);
 	export let includeInJumpTo = true;
 
 	const floatingBoxTitleCss = css`
+		font-family: ${titleFontFamily};
 		font-size: ${jdgSizes.fontSizeFloatingContentBoxTitle};
 		color: ${jdgColors.title};
 		margin-bottom: ${subtitle ? 0 : 'revert'};
 	`;
 
 	const floatingBoxSubtitleCss = css`
+		font-family: ${subtitleFontFamily};
 		font-size: ${jdgSizes.fontSizeFloatingContentBoxSubtitle};
 		color: ${jdgColors.textLight};
 	`;
