@@ -33,10 +33,6 @@
 	// to prevent flash of unstyled content
 	let isAppLoaded = false;
 
-	// these
-	const scrollTimeoutDuration = 100; //ms
-	let scrollTimeout;
-
 	// used for determining the "client width" - width w/o scrollbars
 	let appContainerRef;
 
@@ -52,14 +48,13 @@
 		setIsMobileBreakpoint(appContainerRef?.clientWidth <= jdgBreakpoints.width[0]);
 	};
 
-	// set the page scroll state for components to prevent or add behaviors during scroll
-	const onPageScroll = () => {
+	// set whether page is being scrolled or not
+	const onPageStartScroll = () => {
 		setIsScrolling(true);
-		clearTimeout(scrollTimeout);
-		scrollTimeout = setTimeout(() => {
-			setIsScrolling(false);
-		}, scrollTimeoutDuration);
-	};
+	}
+	const onPageEndScroll = () => {
+		setIsScrolling(false);
+	}
 
 	// global styles using emotion css
 	const appContainerCss = css`
@@ -111,10 +106,6 @@
 		await tick(); // delay until layout and all children are loaded
 		isAppLoaded = true;
 
-		// add event listeners
-		window.addEventListener('resize', onPageResize);
-		window.addEventListener('scroll', onPageScroll);
-
 		// apps have accent colors
 		setAccentColors(accentColors);
 		setShowHeaderStripes(showHeaderStripes);
@@ -125,6 +116,9 @@
 		scrollToAnchorOnLoad();
 	});
 </script>
+
+<!-- set up directives for event listeners -->
+<svelte:window on:resize={onPageResize} on:scroll={onPageStartScroll} on:scrollend={onPageEndScroll} />
 
 <div class="jdg-app-container {appContainerCss} {linkStyleDefaultCss}" bind:this={appContainerRef}>
 	<!-- loading overlay - only shown before layout is fully loaded -->
