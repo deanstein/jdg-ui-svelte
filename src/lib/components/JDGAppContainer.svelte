@@ -7,6 +7,7 @@
 		setAccentColors,
 		setClientWidth,
 		setIsMobileBreakpoint,
+		setIsScrolling,
 		setShowHeaderStripes,
 		setWindowWidth
 	} from '$lib/jdg-state-management.js';
@@ -32,6 +33,10 @@
 	// to prevent flash of unstyled content
 	let isAppLoaded = false;
 
+	// these
+	const scrollTimeoutDuration = 100; //ms
+	let scrollTimeout;
+
 	// used for determining the "client width" - width w/o scrollbars
 	let appContainerRef;
 
@@ -45,6 +50,15 @@
 		setWindowWidth(window.innerWidth);
 		setClientWidth(appContainerRef?.clientWidth);
 		setIsMobileBreakpoint(appContainerRef?.clientWidth <= jdgBreakpoints.width[0]);
+	};
+
+	// set the page scroll state for components to prevent or add behaviors during scroll
+	const onPageScroll = () => {
+		setIsScrolling(true);
+		clearTimeout(scrollTimeout);
+		scrollTimeout = setTimeout(() => {
+			setIsScrolling(false);
+		}, scrollTimeoutDuration);
 	};
 
 	// global styles using emotion css
@@ -97,11 +111,16 @@
 		await tick(); // delay until layout and all children are loaded
 		isAppLoaded = true;
 
+		// add event listeners
 		window.addEventListener('resize', onPageResize);
+		window.addEventListener('scroll', onPageScroll);
+
+		// apps have accent colors
 		setAccentColors(accentColors);
 		setShowHeaderStripes(showHeaderStripes);
 		// update the client and window width at the end so they're accurate
 		setTimeout(onPageResize, 0);
+
 		// if an anchor tag is provided in the URL, scroll to it when available
 		scrollToAnchorOnLoad();
 	});

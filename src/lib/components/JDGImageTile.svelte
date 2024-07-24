@@ -10,6 +10,7 @@
 	import { JDGImage, JDGImageCaptionAttribution, JDGStripesHorizontal } from '../index.js';
 	import { setAlphaInRgbaString, verticalSlide } from '$lib/jdg-graphics-factory.js';
 	import { jdgColors, jdgSizes, jdgDurations, jdgBreakpoints } from '../jdg-shared-styles.js';
+	import uiState from '$lib/states/ui-state.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object to hold all details
 	export let maxWidth = undefined; // if not defined, takes available space
@@ -80,14 +81,19 @@
 </script>
 
 <div class="jdg-image-tile-container">
-	<a bind:this={alternateFitRef} {href} class={aCss}>
+	<a bind:this={alternateFitRef} href={$uiState.isScrolling ? null : href} class={aCss}>
 		<div
 			class="image-tile {imageTileCss}"
 			on:mouseenter={() => (isHovering = true)}
 			on:mouseleave={() => (isHovering = false)}
 			role="button"
 			tabindex="0"
-			on:click={() => {
+			on:click={(event) => {
+				// prevent click if scrolling
+				if ($uiState.isScrolling) {
+					event.preventDefault();
+					return;
+				}
 				// if provided, use the onclick prop
 				if (onClickFunction) {
 					//@ts-expect-error
