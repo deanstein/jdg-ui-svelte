@@ -24,7 +24,7 @@
 	} from '$lib/index.js';
 
 	import { imageAttributesCollection } from './image-attributes-collection.js';
-	import { jdgColors } from '$lib/jdg-shared-styles.js';
+	import { jdgColors, jdgFonts } from '$lib/jdg-shared-styles.js';
 
 	let isTestButtonEnabled = true;
 </script>
@@ -68,9 +68,9 @@
 		<JDGGridLayout>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.aerial_60s70s_1}
-				compactModeOnMobile={false}
+				compactModeOnMobile={false} label={"A LABEL WITH BODY FONT"}
 			/>
-			<JDGImageTile imageAttributes={imageAttributesCollection.cc_1} compactModeOnMobile={false} />
+			<JDGImageTile imageAttributes={imageAttributesCollection.cc_1} compactModeOnMobile={false} label={"A LABEL WITH A RETRO FONT"} labelFontFamily={jdgFonts.righteous} />
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.architecture_1}
 				compactModeOnMobile={false}
@@ -82,6 +82,33 @@
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.rose_mall_60s70s_2}
 				compactModeOnMobile={false}
+			/>
+		</JDGGridLayout>
+		Grid layout with sizing issues:
+		<JDGGridLayout>
+			<JDGImageTile
+				label="DETAILED HISTORY"
+				href="./history"
+				imageAttributes={imageAttributesCollection.rose_mall_60s70s_construction_1}
+				labelJustification={'center'}
+				compactModeOnMobile={false}
+				maxHeight={"300px"}
+			/>
+			<JDGImageTile
+				label="ARCHITECTURAL ANALYSIS"
+				href="./analysis"
+				imageAttributes={imageAttributesCollection.plan_60s70s_1}
+				labelJustification={'center'}
+				compactModeOnMobile={false}
+				maxHeight={"300px"}
+			/>
+			<JDGImageTile
+				label="IMMERSIVE SIMULATION"
+				href="./simulation"
+				imageAttributes={imageAttributesCollection.ccp_blue_mall_60s70s_1}
+				labelJustification={'center'}
+				compactModeOnMobile={false}
+				maxHeight={"300px"}
 			/>
 		</JDGGridLayout>
 		<JDGBodyCopy paddingBottom="0" textAlign="center">
@@ -350,6 +377,14 @@
 		<JDGBodyCopy paddingTop="0" textAlign="center">
 			These images weren't provided an src, so they get the default placeholder.
 		</JDGBodyCopy>
+		<JDGGridLayout>
+			<JDGImageTile />
+			<JDGImageTile />
+			<JDGImageTile />
+		</JDGGridLayout>
+			<JDGBodyCopy>
+				These images are always in a loading state for testing
+			</JDGBodyCopy>
 		<JDGGridLayout>
 			<JDGImageTile />
 			<JDGImageTile />

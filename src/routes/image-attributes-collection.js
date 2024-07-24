@@ -117,7 +117,22 @@ const imageAttributesCollection = {
 			imgCaption:
 				'The alternate use scheme includes artist studios, a cafe, a restaurant, and event space.'
 		})
-	)
+	),
+	rose_mall_60s70s_construction_1: instantiateObject(jdgImageAttributes, {
+		imgSrc:
+			'https://res.cloudinary.com/jdg-main/image/upload/f_auto/v1716962804/ccp-website/rose-mall/rose-mall-60s70s-construction-1_ketke8.jpg',
+		imgAlt: 'Rose Mall during construction in 1967.',
+		imgCaption: 'Rose Mall during construction in 1967.',
+		imgAttribution: 'Englewood Public Library'
+	}),
+	plan_60s70s_1: instantiateObject(jdgImageAttributes, {
+		imgSrc:
+			'https://res.cloudinary.com/jdg-main/image/upload/f_auto/v1716962803/ccp-website/plans/plan-60s70s-1_wkmpff.png',
+		imgAlt: 'Cinderella City featured 5 sub-malls: Blue, Rose, Gold, Shamrock, and Cinder Alley.',
+		imgCaption:
+			'Cinderella City featured 5 sub-malls: Blue, Rose, Gold, Shamrock, and Cinder Alley.',
+		imgAttribution: 'Englewood Public Library'
+	}),
 };
 
 export { imageAttributesCollection };
