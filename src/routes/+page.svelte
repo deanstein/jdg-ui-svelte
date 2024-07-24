@@ -52,6 +52,38 @@
 	</div>
 	<JDGJumpTo />
 	<JDGContentBoxFloating title="GRID LAYOUT">
+		<JDGBodyCopy paddingBottom="0" textAlign="center"
+			>Grid with more than 3 items, compactModeOnMobile true:</JDGBodyCopy
+		>
+		<JDGGridLayout>
+			<JDGImageTile imageAttributes={imageAttributesCollection.aerial_60s70s_1} />
+			<JDGImageTile imageAttributes={imageAttributesCollection.cc_1} />
+			<JDGImageTile imageAttributes={imageAttributesCollection.architecture_1} />
+			<JDGImageTile imageAttributes={imageAttributesCollection.rose_mall_60s70s_1} />
+			<JDGImageTile imageAttributes={imageAttributesCollection.rose_mall_60s70s_2} />
+		</JDGGridLayout>
+		<JDGBodyCopy paddingBottom="0" textAlign="center"
+			>Grid with more than 3 items, compactModeOnMobile false:</JDGBodyCopy
+		>
+		<JDGGridLayout>
+			<JDGImageTile
+				imageAttributes={imageAttributesCollection.aerial_60s70s_1}
+				compactModeOnMobile={false}
+			/>
+			<JDGImageTile imageAttributes={imageAttributesCollection.cc_1} compactModeOnMobile={false} />
+			<JDGImageTile
+				imageAttributes={imageAttributesCollection.architecture_1}
+				compactModeOnMobile={false}
+			/>
+			<JDGImageTile
+				imageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
+				compactModeOnMobile={false}
+			/>
+			<JDGImageTile
+				imageAttributes={imageAttributesCollection.rose_mall_60s70s_2}
+				compactModeOnMobile={false}
+			/>
+		</JDGGridLayout>
 		<JDGBodyCopy paddingBottom="0" textAlign="center">
 			Hybrid GridCarousel with more than 3 items:
 			<br /><br />
@@ -314,30 +346,12 @@
 			/>
 		</JDGFullWidthContainer>
 	</JDGContentBoxFloating>
-	<JDGContentBoxFloating title="ARCHITECTURE">
-		<span>
-			Some text above.
-			<br /><br />
-			This is a <a href="#ANOTHER-SECTION">hyperlink test.</a> And these are more words!
-			<br /><br />
-			Some text below
-		</span>
+	<JDGContentBoxFloating title="PLACEHOLDER IMAGES">
+		<JDGBodyCopy paddingTop="0" textAlign="center">
+			These images weren't provided an src, so they get the default placeholder.
+		</JDGBodyCopy>
 		<JDGGridLayout>
-			<JDGImageTile
-				imageAttributes={imageAttributesCollection.architecture_1}
-				label={'SCROLL EXAMPLE'}
-				href="#ANOTHER-SECTION"
-			/>
-			<JDGImageTile
-				imageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
-				label={'IMAGE DETAIL EXAMPLE'}
-			/>
-			<JDGImageTile
-				label={'EXTERNAL EXAMPLE'}
-				onClickFunction={() => {
-					openUrl('http://www.google.com', true);
-				}}
-			/>
+			<JDGImageTile />
 			<JDGImageTile />
 			<JDGImageTile />
 		</JDGGridLayout>
