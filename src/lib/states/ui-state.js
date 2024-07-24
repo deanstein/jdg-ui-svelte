@@ -14,7 +14,8 @@ const uiState = {
 	showDevTools: false,
 	windowWidth: 0, // full window width, including scrollbar
 	clientWidth: 0, // window minus scrollbar
-	isMobileBreakpoint: false
+	isMobileBreakpoint: false,
+	isScrolling: false
 };
 
 export default writable(uiState);

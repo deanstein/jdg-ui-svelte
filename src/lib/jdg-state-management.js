@@ -38,6 +38,13 @@ export const setIsMobileBreakpoint = (isMobileBreakpoint) => {
 	});
 };
 
+export const setIsScrolling = (isScrolling) => {
+	uiState.update((currentValue) => {
+		currentValue.isScrolling = isScrolling;
+		return currentValue;
+	});
+};
+
 export const setShowHeaderStripes = (showHeaderStripes) => {
 	uiState.update((currentValue) => {
 		currentValue.showHeaderStripes = showHeaderStripes;
