@@ -40,6 +40,10 @@
 	const stripedColorOpacity = 0.75;
 	const useStripedHyperlinkHoverStyle = false;
 
+	// determine whether page is being actively scrolled or not
+	const scrollTimeoutDuration = 100; //ms
+	let scrollTimeout;
+
 	// app sets window and client width in the ui state
 	// so children don't have to add event handlers
 	const onPageResize = () => {
@@ -49,11 +53,12 @@
 	};
 
 	// set whether page is being scrolled or not
-	const onPageStartScroll = () => {
+	const onPageScroll = () => {
 		setIsScrolling(true);
-	};
-	const onPageEndScroll = () => {
-		setIsScrolling(false);
+		clearTimeout(scrollTimeout);
+		scrollTimeout = setTimeout(() => {
+			setIsScrolling(false);
+		}, scrollTimeoutDuration);
 	};
 
 	// global styles using emotion css
@@ -118,11 +123,7 @@
 </script>
 
 <!-- set up directives for event listeners -->
-<svelte:window
-	on:resize={onPageResize}
-	on:scroll={onPageStartScroll}
-	on:scrollend={onPageEndScroll}
-/>
+<svelte:window on:resize={onPageResize} on:scroll={onPageScroll} />
 
 <div class="jdg-app-container {appContainerCss} {linkStyleDefaultCss}" bind:this={appContainerRef}>
 	<!-- loading overlay - only shown before layout is fully loaded -->
