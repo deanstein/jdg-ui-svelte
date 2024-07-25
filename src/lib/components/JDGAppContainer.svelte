@@ -51,10 +51,10 @@
 	// set whether page is being scrolled or not
 	const onPageStartScroll = () => {
 		setIsScrolling(true);
-	}
+	};
 	const onPageEndScroll = () => {
 		setIsScrolling(false);
-	}
+	};
 
 	// global styles using emotion css
 	const appContainerCss = css`
@@ -118,7 +118,11 @@
 </script>
 
 <!-- set up directives for event listeners -->
-<svelte:window on:resize={onPageResize} on:scroll={onPageStartScroll} on:scrollend={onPageEndScroll} />
+<svelte:window
+	on:resize={onPageResize}
+	on:scroll={onPageStartScroll}
+	on:scrollend={onPageEndScroll}
+/>
 
 <div class="jdg-app-container {appContainerCss} {linkStyleDefaultCss}" bind:this={appContainerRef}>
 	<!-- loading overlay - only shown before layout is fully loaded -->

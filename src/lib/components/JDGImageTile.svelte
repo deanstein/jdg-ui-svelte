@@ -9,7 +9,13 @@
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGStripesHorizontal } from '../index.js';
 	import { setAlphaInRgbaString, verticalSlide } from '$lib/jdg-graphics-factory.js';
-	import { jdgColors, jdgFonts, jdgSizes, jdgDurations, jdgBreakpoints } from '../jdg-shared-styles.js';
+	import {
+		jdgColors,
+		jdgFonts,
+		jdgSizes,
+		jdgDurations,
+		jdgBreakpoints
+	} from '../jdg-shared-styles.js';
 	import uiState from '$lib/states/ui-state.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object to hold all details

@@ -132,7 +132,7 @@ const imageAttributesCollection = {
 		imgCaption:
 			'Cinderella City featured 5 sub-malls: Blue, Rose, Gold, Shamrock, and Cinder Alley.',
 		imgAttribution: 'Englewood Public Library'
-	}),
+	})
 };
 
 export { imageAttributesCollection };
