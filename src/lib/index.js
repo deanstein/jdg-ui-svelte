@@ -98,6 +98,9 @@ export { JDGUpNext };
 import JDGCloseIcon from './assets/svg/JDGCloseIcon.svelte';
 export { JDGCloseIcon };
 
+import JDGLoadingSpinner from './assets/svg/JDGLoadingSpinner.svelte';
+export { JDGLoadingSpinner }
+
 import JDGMenuIcon from './assets/svg/JDGMenuIcon.svelte';
 export { JDGMenuIcon };
 
