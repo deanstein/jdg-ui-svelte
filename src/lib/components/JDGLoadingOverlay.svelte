@@ -1,5 +1,5 @@
 <script>
-	import { JDGOverlay } from '../index.js';
+	import { JDGLoadingSpinner, JDGOverlay } from '../index.js';
 
 	export let isLoading = false;
 	export let loadingIconSrc =
@@ -10,6 +10,7 @@
 	<div class="jdg-loading-overlay-container">
 		<JDGOverlay showTitleBar={false}>
 			<img src={loadingIconSrc} class="jdg-loading-overlay-icon" alt="Loading..." />
+			<JDGLoadingSpinner spinnerHeightPx={25} strokeWidthPx={3} />
 		</JDGOverlay>
 	</div>
 {/if}

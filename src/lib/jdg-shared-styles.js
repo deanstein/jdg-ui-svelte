@@ -236,7 +236,9 @@ export const jdgSizes = {
 };
 
 export const jdgDurations = {
-	default: 300 //ms
+	default: 300,
+	loading: 1500,
+	unit: 'ms'
 };
 
 export const jdgLinkStyles = {

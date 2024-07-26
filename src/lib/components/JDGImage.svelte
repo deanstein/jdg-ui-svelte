@@ -15,8 +15,8 @@
 		instantiateObject
 	} from '$lib/jdg-utils.js';
 
-	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
-	import { JDGImageCaptionAttribution } from '$lib/index.js';
+	import { jdgBreakpoints, jdgDurations, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { JDGImageCaptionAttribution, JDGLoadingSpinner } from '$lib/index.js';
 
 	// show a local image while image is loading
 	// @ts-expect-error
@@ -34,10 +34,12 @@
 	export let showCaption = false;
 	export let showAttribution = false;
 	export let showPlaceholderImage = true;
+	export let showLoadingSpinner = true;
 	export let transition = fade; // fade or scale depending on usage
 
 	// DEBUGGING
 	const showDebugMessagesInConsole = false;
+	export let showDebugLoadingState = false;
 
 	// for cloudinary media, imgSrc will be modified with transforms for optimization
 	// if this isn't a cloudinary image, it will remain the current imgSrc
@@ -183,7 +185,9 @@
 	const onImageLoad = () => {
 		// ensure that the image aspect ratio is captured once the image loads
 		getAspectRatios();
-		isImageLoaded = true;
+		if (!showDebugLoadingState) {
+			isImageLoaded = true;
+		}
 	};
 
 	const imageCssStatic = css`
@@ -220,6 +224,22 @@
 		@media (hover: hover) {
 			:hover {
 				transform: ${showHoverEffect ? 'scale(1.04);' : ''};
+			}
+		}
+	`;
+
+	// fading effect while image is loading
+	const imageLoadingOverlayCss = css`
+		animation: fade ${jdgDurations.loading}${jdgDurations.unit} infinite;
+		@keyframes fade {
+			0% {
+				opacity: 1;
+			}
+			50% {
+				opacity: 0.5;
+			}
+			100% {
+				opacity: 1;
 			}
 		}
 	`;
@@ -313,9 +333,6 @@
 	bind:this={containerRef}
 	class="jdg-image-container {imageContainerCssDynamic}"
 >
-	{#if showPlaceholderImage && !isImageLoaded}
-		<div class="image-loading-overlay" />
-	{/if}
 	<img
 		bind:this={imageRef}
 		on:load={onImageLoad}
@@ -340,6 +357,16 @@
 		<div class="caption-attribution-wrapper {captionAttributionWrapperCssDynamic}">
 			<JDGImageCaptionAttribution {imageAttributes} {showCaption} {showAttribution} />
 		</div>
+	{/if}
+	<!-- show the spinner during loading if requested -->
+	{#if !isImageLoaded && showLoadingSpinner}
+		<div class="image-loading-spinner-container">
+			<JDGLoadingSpinner />
+		</div>
+	{/if}
+	<!-- show the image placeholder during loading if requested -->
+	{#if !isImageLoaded && showPlaceholderImage}
+		<div class="image-loading-overlay {imageLoadingOverlayCss}" />
 	{/if}
 </div>
 
@@ -382,27 +409,25 @@
 		height: 100%;
 	}
 
+	.image-loading-spinner-container {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 3;
+	}
+
 	.image-loading-overlay {
 		position: absolute;
 		width: 100%;
 		height: 100%;
 		display: flex;
 		align-items: center;
+		justify-content: center;
 		background-color: rgba(50, 50, 50, 0.5);
-		animation: fade 2s infinite;
-	}
-
-	/* used for a fading effect while the image is loading */
-	@keyframes fade {
-		0% {
-			opacity: 1;
-		}
-		50% {
-			opacity: 0;
-		}
-		100% {
-			opacity: 1;
-		}
+		z-index: 2;
 	}
 
 	.caption-attribution-wrapper {
