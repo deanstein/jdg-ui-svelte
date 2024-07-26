@@ -53,6 +53,7 @@
 	let imageAspectRatio;
 	let devicePixelRatio;
 	let isImageLoaded = false;
+	let isPlaceholderLoaded = false;
 
 	// height can be in vh or px or even auto
 	// if in vh, convert to pixels for calculations
@@ -188,6 +189,11 @@
 		if (!showDebugLoadingState) {
 			isImageLoaded = true;
 		}
+	};
+
+	// runs after the placeholder image is loaded
+	const onPlaceholderLoad = () => {
+		isPlaceholderLoaded = true;
 	};
 
 	const imageCssStatic = css`
@@ -335,10 +341,14 @@
 >
 	<img
 		bind:this={imageRef}
-		on:load={onImageLoad}
+		on:load={showPlaceholderImage
+			? isPlaceholderLoaded
+				? onImageLoad
+				: onPlaceholderLoad
+			: onImageLoad}
 		class={`image ${imageCssStatic} ${imageAnimationCss}`}
 		src={showPlaceholderImage
-			? isImageLoaded
+			? isImageLoaded || isPlaceholderLoaded
 				? adjustedImgSrc
 				: imagePlaceholder
 			: adjustedImgSrc}
