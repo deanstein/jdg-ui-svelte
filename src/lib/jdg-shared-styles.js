@@ -238,7 +238,7 @@ export const jdgSizes = {
 export const jdgDurations = {
 	default: 300,
 	fadeIn: 500,
-	scrollFadeIn: 500,
+	scrollFadeIn: 750,
 	loadingSpinnerInterval: 1500,
 	unit: 'ms'
 };
