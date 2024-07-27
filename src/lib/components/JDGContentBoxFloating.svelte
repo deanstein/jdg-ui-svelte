@@ -1,5 +1,6 @@
 <script>
 	import { onDestroy, onMount } from 'svelte';
+	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
 	import uiState from '$lib/states/ui-state.js';
@@ -8,7 +9,15 @@
 
 	import { convertStringToAnchorTag, instantiateObject } from '$lib/jdg-utils.js';
 
-	import { jdgBreakpoints, jdgColors, jdgFonts, jdgSizes } from '../jdg-shared-styles.js';
+	import {
+		fadeInSettle,
+		fadeInSettleLoaded,
+		jdgBreakpoints,
+		jdgColors,
+		jdgDurations,
+		jdgFonts,
+		jdgSizes
+	} from '../jdg-shared-styles.js';
 
 	export let title = undefined;
 	export let titleFontFamily = jdgFonts.body;
@@ -16,6 +25,12 @@
 	export let subtitleFontFamily = jdgFonts.body;
 	export let anchorTag = convertStringToAnchorTag(title, false);
 	export let includeInJumpTo = true;
+	export let animateWhenVisible = true;
+	export let animationThreshold = '5%';
+
+	// fade the floating content box
+	let isVisible = false;
+	let isVisibleRef;
 
 	const floatingBoxTitleCss = css`
 		font-family: ${titleFontFamily};
@@ -77,6 +92,24 @@
 				})
 			);
 		}
+
+		if (animateWhenVisible) {
+			// set up the intersection observer
+			// so we know when the container is visible and we update the class
+			const observer = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((entry) => {
+						if (entry.isIntersecting) {
+							isVisible = true;
+							observer.disconnect();
+						}
+					});
+				},
+				{ rootMargin: `0px 0px -${animationThreshold} 0px` }
+			); // Trigger when the top edge of the element is within 25% of the viewport height from the bottom
+
+			observer.observe(isVisibleRef);
+		}
 	});
 
 	onDestroy(() => {
@@ -91,7 +124,15 @@
 	});
 </script>
 
-<div class="jdg-content-box-floating-container {floatingBoxContainerCss}">
+<div
+	bind:this={isVisibleRef}
+	transition:fade={{ duration: jdgDurations.fadeIn }}
+	class="jdg-content-box-floating-container {floatingBoxContainerCss} {animateWhenVisible
+		? isVisible
+			? fadeInSettleLoaded
+			: fadeInSettle
+		: ''}"
+>
 	{#if title || subtitle}
 		<div class="content-box-title-and-subtitle-container">
 			{#if title}
