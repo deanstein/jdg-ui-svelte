@@ -67,6 +67,12 @@
 	let previousWidth = 0;
 	const heightOrWidthChangeThreshold = 100;
 
+	// for the case where the imgSrc is not provided,
+	// consider the image immediately loaded
+	if (imageAttributes.imgSrc === imagePlaceholder && !showDebugLoadingState) {
+		isImageLoaded = true;
+	}
+
 	// self-executing function that gets the pixel height from maxHeight prop
 	// (it may look like this is unused, but it's used! don't delete)
 	const getMaxHeightPxFromProp = () => {
@@ -358,7 +364,11 @@
 	{#if showBlurInUnfilledSpace && !fillContainer}
 		<div
 			class="image-blur"
-			style={adjustedImgSrc ? `background-image: url(${adjustedImgSrc});` : ''}
+			style={adjustedImgSrc
+				? `background-image: url(${adjustedImgSrc}); opacity: ${
+						isImageLoaded ? 1 : 0.25
+					}; transition: opacity 0.5s ease-in-out;`
+				: ''}
 		></div>
 		<div class="image-blur-background"></div>
 	{/if}
@@ -410,7 +420,6 @@
 	}
 
 	.image-blur-background {
-		background-color: white;
 		position: absolute;
 		top: 0;
 		left: 0;
