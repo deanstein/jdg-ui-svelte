@@ -237,9 +237,27 @@ export const jdgSizes = {
 
 export const jdgDurations = {
 	default: 300,
-	loading: 1500,
+	fadeIn: 500,
+	scrollFadeIn: 500,
+	loadingSpinnerInterval: 1500,
 	unit: 'ms'
 };
+
+export const fadeInSettle = css`
+	transform: translateY(-50px);
+	opacity: 0;
+	transition:
+		opacity ${jdgDurations.scrollFadeIn}${jdgDurations.unit},
+		transform ${jdgDurations.scrollFadeIn}${jdgDurations.unit};
+`;
+
+export const fadeInSettleLoaded = css`
+	transform: translateY(0);
+	opacity: 1;
+	transition:
+		opacity ${jdgDurations.scrollFadeIn}${jdgDurations.unit},
+		transform ${jdgDurations.scrollFadeIn}${jdgDurations.unit};
+`;
 
 export const jdgLinkStyles = {
 	animatedBar: css`

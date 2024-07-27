@@ -31,13 +31,13 @@
 			type="rotate"
 			from={`0 ${spinnerHeightPx / 2} ${spinnerHeightPx / 2}`}
 			to={`360 ${spinnerHeightPx / 2} ${spinnerHeightPx / 2}`}
-			dur={`${jdgDurations.loading}${jdgDurations.unit}`}
+			dur={`${jdgDurations.loadingSpinnerInterval}${jdgDurations.unit}`}
 			repeatCount="indefinite"
 		/>
 		<animate
 			attributeName="stroke-dasharray"
 			values={dashArrayValues}
-			dur={`${jdgDurations.loading}${jdgDurations.unit}`}
+			dur={`${jdgDurations.loadingSpinnerInterval}${jdgDurations.unit}`}
 			repeatCount="indefinite"
 		/>
 	</circle>

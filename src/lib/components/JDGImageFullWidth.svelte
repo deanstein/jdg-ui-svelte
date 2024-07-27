@@ -51,7 +51,12 @@
 </script>
 
 <JDGFullWidthContainer>
-	<JDGImage {imageAttributes} {maxHeight} showPlaceholderImage={false} />
+	<JDGImage
+		{imageAttributes}
+		{maxHeight}
+		showPlaceholderImage={false}
+		alignLoadingSpinner={'end'}
+	/>
 	{#if showOverlay || primaryText || secondaryText || overlayImageAttributes}
 		<div class="image-overlay {imageOverlayCss}">
 			{#if superText || primaryText || secondaryText}

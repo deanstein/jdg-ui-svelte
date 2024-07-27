@@ -35,6 +35,7 @@
 	export let showAttribution = false;
 	export let showPlaceholderImage = true;
 	export let showLoadingSpinner = true;
+	export let alignLoadingSpinner = 'center';
 	export let transition = fade; // fade or scale depending on usage
 
 	// DEBUGGING
@@ -242,7 +243,7 @@
 
 	// fading effect while image is loading
 	const imageLoadingOverlayCss = css`
-		animation: fade ${jdgDurations.loading}${jdgDurations.unit} infinite;
+		animation: fade ${jdgDurations.loadingSpinnerInterval}${jdgDurations.unit} infinite;
 		@keyframes fade {
 			0% {
 				opacity: 1;
@@ -254,6 +255,11 @@
 				opacity: 1;
 			}
 		}
+	`;
+
+	const imageLoadingSpinnerContainerCss = css`
+		align-items: ${alignLoadingSpinner};
+		bottom: ${alignLoadingSpinner === 'end' ? '20px' : ''};
 	`;
 
 	// may be updated dynamically later
@@ -341,7 +347,7 @@
 </script>
 
 <div
-	transition:transition={{ duration: 300 }}
+	transition:transition={{ duration: jdgDurations.fadeIn }}
 	bind:this={containerRef}
 	class="jdg-image-container {imageContainerCssDynamic}"
 >
@@ -367,7 +373,7 @@
 			style={adjustedImgSrc
 				? `background-image: url(${adjustedImgSrc}); opacity: ${
 						isImageLoaded ? 1 : 0.25
-					}; transition: opacity 0.5s ease-in-out;`
+					}; transition: opacity ${jdgDurations.fadeIn}${jdgDurations.unit} ease-in-out;`
 				: ''}
 		></div>
 		<div class="image-blur-background"></div>
@@ -380,7 +386,7 @@
 	{/if}
 	<!-- show the spinner during loading if requested -->
 	{#if !isImageLoaded && showLoadingSpinner}
-		<div class="image-loading-spinner-container">
+		<div class="image-loading-spinner-container {imageLoadingSpinnerContainerCss}">
 			<JDGLoadingSpinner />
 		</div>
 	{/if}
@@ -433,7 +439,6 @@
 		width: 100%;
 		height: 100%;
 		display: flex;
-		align-items: center;
 		justify-content: center;
 		z-index: 3;
 	}
