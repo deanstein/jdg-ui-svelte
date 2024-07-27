@@ -2,6 +2,9 @@
 	import { onMount, setContext, tick } from 'svelte';
 	import { css } from '@emotion/css';
 
+	import jdgContexts from '$lib/jdg-contexts.js';
+	import uiState from '$lib/states/ui-state.js';
+
 	import {
 		getAccentColors,
 		setAccentColors,
@@ -19,7 +22,6 @@
 		convertHexToRGBA,
 		scrollToAnchorOnLoad
 	} from '$lib/jdg-utils.js';
-	import jdgContexts from '$lib/jdg-contexts.js';
 
 	export let fontFamily = jdgFonts.body;
 	export let appLoadingIconSrc =
@@ -54,11 +56,13 @@
 
 	// set whether page is being scrolled or not
 	const onPageScroll = () => {
-		setIsScrolling(true);
-		clearTimeout(scrollTimeout);
-		scrollTimeout = setTimeout(() => {
-			setIsScrolling(false);
-		}, scrollTimeoutDuration);
+		if ($uiState.isMobileBreakpoint) {
+			setIsScrolling(true);
+			clearTimeout(scrollTimeout);
+			scrollTimeout = setTimeout(() => {
+				setIsScrolling(false);
+			}, scrollTimeoutDuration);
+		}
 	};
 
 	// global styles using emotion css

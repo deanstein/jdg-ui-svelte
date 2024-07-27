@@ -1,5 +1,5 @@
 <script>
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
@@ -15,8 +15,8 @@
 		instantiateObject
 	} from '$lib/jdg-utils.js';
 
-	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
-	import { JDGImageCaptionAttribution } from '$lib/index.js';
+	import { jdgBreakpoints, jdgDurations, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { JDGImageCaptionAttribution, JDGLoadingSpinner } from '$lib/index.js';
 
 	// show a local image while image is loading
 	// @ts-expect-error
@@ -34,10 +34,12 @@
 	export let showCaption = false;
 	export let showAttribution = false;
 	export let showPlaceholderImage = true;
+	export let showLoadingSpinner = true;
 	export let transition = fade; // fade or scale depending on usage
 
 	// DEBUGGING
 	const showDebugMessagesInConsole = false;
+	export let showDebugLoadingState = false;
 
 	// for cloudinary media, imgSrc will be modified with transforms for optimization
 	// if this isn't a cloudinary image, it will remain the current imgSrc
@@ -51,6 +53,7 @@
 	let imageAspectRatio;
 	let devicePixelRatio;
 	let isImageLoaded = false;
+	let isPlaceholderLoaded = false;
 
 	// height can be in vh or px or even auto
 	// if in vh, convert to pixels for calculations
@@ -63,6 +66,12 @@
 	let previousHeight = 0;
 	let previousWidth = 0;
 	const heightOrWidthChangeThreshold = 100;
+
+	// for the case where the imgSrc is not provided,
+	// consider the image immediately loaded
+	if (imageAttributes.imgSrc === imagePlaceholder && !showDebugLoadingState) {
+		isImageLoaded = true;
+	}
 
 	// self-executing function that gets the pixel height from maxHeight prop
 	// (it may look like this is unused, but it's used! don't delete)
@@ -183,7 +192,14 @@
 	const onImageLoad = () => {
 		// ensure that the image aspect ratio is captured once the image loads
 		getAspectRatios();
-		isImageLoaded = true;
+		if (!showDebugLoadingState) {
+			isImageLoaded = true;
+		}
+	};
+
+	// runs after the placeholder image is loaded
+	const onPlaceholderLoad = () => {
+		isPlaceholderLoaded = true;
 	};
 
 	const imageCssStatic = css`
@@ -220,6 +236,22 @@
 		@media (hover: hover) {
 			:hover {
 				transform: ${showHoverEffect ? 'scale(1.04);' : ''};
+			}
+		}
+	`;
+
+	// fading effect while image is loading
+	const imageLoadingOverlayCss = css`
+		animation: fade ${jdgDurations.loading}${jdgDurations.unit} infinite;
+		@keyframes fade {
+			0% {
+				opacity: 1;
+			}
+			50% {
+				opacity: 0.5;
+			}
+			100% {
+				opacity: 1;
 			}
 		}
 	`;
@@ -313,15 +345,16 @@
 	bind:this={containerRef}
 	class="jdg-image-container {imageContainerCssDynamic}"
 >
-	{#if showPlaceholderImage && !isImageLoaded}
-		<div class="image-loading-overlay" />
-	{/if}
 	<img
 		bind:this={imageRef}
-		on:load={onImageLoad}
+		on:load={showPlaceholderImage
+			? isPlaceholderLoaded
+				? onImageLoad
+				: onPlaceholderLoad
+			: onImageLoad}
 		class={`image ${imageCssStatic} ${imageAnimationCss}`}
 		src={showPlaceholderImage
-			? isImageLoaded
+			? isImageLoaded || isPlaceholderLoaded
 				? adjustedImgSrc
 				: imagePlaceholder
 			: adjustedImgSrc}
@@ -331,7 +364,11 @@
 	{#if showBlurInUnfilledSpace && !fillContainer}
 		<div
 			class="image-blur"
-			style={adjustedImgSrc ? `background-image: url(${adjustedImgSrc});` : ''}
+			style={adjustedImgSrc
+				? `background-image: url(${adjustedImgSrc}); opacity: ${
+						isImageLoaded ? 1 : 0.25
+					}; transition: opacity 0.5s ease-in-out;`
+				: ''}
 		></div>
 		<div class="image-blur-background"></div>
 	{/if}
@@ -340,6 +377,16 @@
 		<div class="caption-attribution-wrapper {captionAttributionWrapperCssDynamic}">
 			<JDGImageCaptionAttribution {imageAttributes} {showCaption} {showAttribution} />
 		</div>
+	{/if}
+	<!-- show the spinner during loading if requested -->
+	{#if !isImageLoaded && showLoadingSpinner}
+		<div class="image-loading-spinner-container">
+			<JDGLoadingSpinner />
+		</div>
+	{/if}
+	<!-- show the image placeholder during loading if requested -->
+	{#if !isImageLoaded && showPlaceholderImage}
+		<div class="image-loading-overlay {imageLoadingOverlayCss}" />
 	{/if}
 </div>
 
@@ -373,7 +420,6 @@
 	}
 
 	.image-blur-background {
-		background-color: white;
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -382,27 +428,25 @@
 		height: 100%;
 	}
 
+	.image-loading-spinner-container {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 3;
+	}
+
 	.image-loading-overlay {
 		position: absolute;
 		width: 100%;
 		height: 100%;
 		display: flex;
 		align-items: center;
+		justify-content: center;
 		background-color: rgba(50, 50, 50, 0.5);
-		animation: fade 2s infinite;
-	}
-
-	/* used for a fading effect while the image is loading */
-	@keyframes fade {
-		0% {
-			opacity: 1;
-		}
-		50% {
-			opacity: 0;
-		}
-		100% {
-			opacity: 1;
-		}
+		z-index: 2;
 	}
 
 	.caption-attribution-wrapper {

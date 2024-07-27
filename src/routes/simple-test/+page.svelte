@@ -15,6 +15,12 @@
 
 <JDGContentContainer>
 	<JDGContentBoxFloating title="TEST SECTION">
+		<!-- <JDGGridLayout>
+			<JDGImageTile />
+			<JDGImageTile />
+			<JDGImageTile />
+		</JDGGridLayout> -->
+
 		<JDGImageFullWidth
 			imageAttributes={imageAttributesCollection.cc_1}
 			showOverlay={true}
@@ -30,6 +36,25 @@
 				imageAttributesCollection.rose_mall_60s70s_2
 			]}
 		/>
+
+		<JDGImageHybridGridCarousel
+			imageAttributeObjects={[
+				imageAttributesCollection.aerial_60s70s_1,
+				imageAttributesCollection.cc_1,
+				imageAttributesCollection.architecture_1,
+				imageAttributesCollection.rose_mall_60s70s_1,
+				imageAttributesCollection.rose_mall_60s70s_2
+			]}
+		/>
+
+		<JDGBodyCopy>
+			<JDGImageTile
+				imageAttributes={imageAttributesCollection.lakeside_1}
+				fillContainer={false}
+				showCaption={true}
+				showAttribution={true}
+			/>
+		</JDGBodyCopy>
 
 		<div style="display: flex; flex-direction: column;">
 			<!-- <JDGContentBoxFloating>

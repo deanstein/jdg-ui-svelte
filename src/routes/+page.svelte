@@ -14,12 +14,14 @@
 		JDGFeatureCard,
 		JDGFullWidthContainer,
 		JDGGridLayout,
+		JDGImage,
 		JDGImageCarousel,
 		JDGImageCompare,
 		JDGImageFullWidth,
 		JDGImageHybridGridCarousel,
 		JDGImageTile,
 		JDGJumpTo,
+		JDGLoadingSpinner,
 		JDGUpNext
 	} from '$lib/index.js';
 
@@ -68,9 +70,15 @@
 		<JDGGridLayout>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.aerial_60s70s_1}
-				compactModeOnMobile={false} label={"A LABEL WITH BODY FONT"}
+				compactModeOnMobile={false}
+				label={'A LABEL WITH BODY FONT'}
 			/>
-			<JDGImageTile imageAttributes={imageAttributesCollection.cc_1} compactModeOnMobile={false} label={"A LABEL WITH A RETRO FONT"} labelFontFamily={jdgFonts.righteous} />
+			<JDGImageTile
+				imageAttributes={imageAttributesCollection.cc_1}
+				compactModeOnMobile={false}
+				label={'A LABEL WITH A RETRO FONT'}
+				labelFontFamily={jdgFonts.righteous}
+			/>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.architecture_1}
 				compactModeOnMobile={false}
@@ -348,20 +356,28 @@
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="PLACEHOLDER IMAGES">
 		<JDGBodyCopy paddingTop="0" textAlign="center">
-			These images weren't provided an src, so they get the default placeholder.
+			These images weren't provided a src property, so they get the default placeholder.
 		</JDGBodyCopy>
 		<JDGGridLayout>
 			<JDGImageTile />
 			<JDGImageTile />
 			<JDGImageTile />
 		</JDGGridLayout>
-			<JDGBodyCopy>
-				These images are always in a loading state for testing
-			</JDGBodyCopy>
+		<JDGBodyCopy textAlign="center">This is the loading spinner, at 50px:</JDGBodyCopy>
 		<JDGGridLayout>
-			<JDGImageTile />
-			<JDGImageTile />
-			<JDGImageTile />
+			<JDGLoadingSpinner />
+		</JDGGridLayout>
+		<JDGBodyCopy textAlign="center">And at 25px:</JDGBodyCopy>
+		<JDGGridLayout>
+			<JDGLoadingSpinner spinnerHeightPx={25} />
+		</JDGGridLayout>
+		<JDGBodyCopy textAlign="center">
+			These images are always in a loading state for testing
+		</JDGBodyCopy>
+		<JDGGridLayout>
+			<JDGImage showDebugLoadingState={true} />
+			<JDGImage showDebugLoadingState={true} />
+			<JDGImage showDebugLoadingState={true} />
 		</JDGGridLayout>
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="TEST SECTION">

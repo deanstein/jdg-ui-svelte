@@ -76,6 +76,7 @@
 						maxHeight={overlayImageMaxHeight}
 						fillContainer={false}
 						showPlaceholderImage={false}
+						showLoadingSpinner={false}
 					/>
 					{#if overlayImageText}
 						<JDGAccentText
