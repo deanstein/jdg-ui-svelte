@@ -53,8 +53,8 @@
 	let imageRef;
 	let imageAspectRatio;
 	let devicePixelRatio;
-	let isImageLoaded = true;
-	let isPlaceholderLoaded = false;
+	let isImageLoaded = false;
+	let isPlaceholderLoaded = true;
 
 	// height can be in vh or px or even auto
 	// if in vh, convert to pixels for calculations
