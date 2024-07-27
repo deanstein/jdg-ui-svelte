@@ -181,7 +181,7 @@
 			<JDGButton onClickFunction={() => {}} label="This is a primary button" />
 			<JDGButton
 				onClickFunction={() => {
-					scrollToAnchor('background');
+					scrollToAnchor('grid-layout');
 				}}
 				label="This button has no icon, and scrolls to an anchor"
 				faIcon={null}
