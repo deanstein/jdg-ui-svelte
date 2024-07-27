@@ -34,7 +34,7 @@
 	export let showCaption = false;
 	export let showAttribution = false;
 	export let showPlaceholderImage = true;
-	export let showLoadingSpinner = false;
+	export let showLoadingSpinner = true;
 	export let alignLoadingSpinner = 'center';
 	export let transition = fade; // fade or scale depending on usage
 
@@ -53,7 +53,7 @@
 	let imageRef;
 	let imageAspectRatio;
 	let devicePixelRatio;
-	let isImageLoaded = false;
+	let isImageLoaded = true;
 	let isPlaceholderLoaded = false;
 
 	// height can be in vh or px or even auto
