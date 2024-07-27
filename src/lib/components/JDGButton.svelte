@@ -56,7 +56,7 @@
 	// hover color by default is a slightly darker version of the background color
 	export let backgroundColorHover = getDefaultBackgroundHoverColor();
 	export let fontSize = '1rem';
-	export let width = 'max-content';
+	export let width = 'fit-content';
 	export let borderRadius = '1.5em';
 	export let paddingTopBottom = '10px';
 	export let paddingLeftRight = '20px';
@@ -69,8 +69,8 @@
 		buttonCss = css`
 			font-size: ${fontSize};
 			width: ${
-				width == 'max-content'
-					? 'max-content'
+				width == 'fit-content'
+					? 'fit-content'
 					: $uiState.isMobileBreakpoint
 						? '100%'
 						: width /* button is 100% width on smallest breakpoint */
@@ -112,5 +112,6 @@
 		border: none;
 		outline: none;
 		font-weight: bold;
+		white-space: normal;
 	}
 </style>
