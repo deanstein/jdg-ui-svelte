@@ -61,8 +61,8 @@
 			<JDGImageTile imageAttributes={imageAttributesCollection.aerial_60s70s_1} />
 			<JDGImageTile imageAttributes={imageAttributesCollection.cc_1} />
 			<JDGImageTile imageAttributes={imageAttributesCollection.architecture_1} />
-			<JDGImageTile imageAttributes={imageAttributesCollection.rose_mall_60s70s_2} />
 			<JDGImageTile imageAttributes={imageAttributesCollection.rose_mall_60s70s_1} />
+			<JDGImageTile imageAttributes={imageAttributesCollection.rose_mall_60s70s_2} />
 		</JDGGridLayout>
 		<JDGBodyCopy paddingBottom="0" textAlign="center"
 			>Grid with more than 3 items, compactModeOnMobile false:</JDGBodyCopy
