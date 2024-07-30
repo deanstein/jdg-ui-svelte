@@ -281,19 +281,20 @@
 	onMount(() => {
 		devicePixelRatio = window.devicePixelRatio || 1;
 		resolutionRef = alternateFitRef ?? containerRef;
+		getMaxHeightPxFromProp();
 
 		// if the image is a cloudinary URL,
 		// get the required height and width from the image container
 		// so we can modify the URL to specify those sizes and get an asset that fits its container
-		if (isUrlCloudinary(imageAttributes.imgSrc)) {
-			const imageLoadingTransformation = `f_auto,q_1,h_${getMaxHeightPxFromProp()}`;
+		// if (isUrlCloudinary(imageAttributes.imgSrc)) {
+		// 	const imageLoadingTransformation = `f_auto,q_1,h_${getMaxHeightPxFromProp()}`;
 
-			// initial image is a very low-quality one for a fast initial load
-			adjustedImgSrc = addCloudinaryUrlTransformation(
-				imageAttributes.imgSrc,
-				imageLoadingTransformation
-			);
-		}
+		// 	// initial image is a very low-quality one for a fast initial load
+		// 	adjustedImgSrc = addCloudinaryUrlTransformation(
+		// 		imageAttributes.imgSrc,
+		// 		imageLoadingTransformation
+		// 	);
+		// }
 	});
 
 	$: {
