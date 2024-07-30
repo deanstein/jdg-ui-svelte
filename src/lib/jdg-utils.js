@@ -626,7 +626,7 @@ export const addCloudinaryUrlTransformation = (url, transformation = 'f_auto') =
 	if (isUrlCloudinary(url)) {
 		// remove existing default f_auto transformation if it exists
 		if (url.includes('/f_auto')) {
-			url = url.replace('/f_auto','');
+			url = url.replace('/f_auto', '');
 		}
 		let parts = url.split('/upload/');
 		return parts[0] + '/upload/' + transformation + '/' + parts[1];
