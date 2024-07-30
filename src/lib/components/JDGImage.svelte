@@ -74,6 +74,11 @@
 		isImageLoaded = true;
 	}
 
+	let imageError = undefined;
+	const onImageError = (event) => {
+		imageError = JSON.stringify(event);
+	};
+
 	// self-executing function that gets the pixel height from maxHeight prop
 	// (it may look like this is unused, but it's used! don't delete)
 	const getMaxHeightPxFromProp = () => {
@@ -358,6 +363,7 @@
 				? onImageLoad
 				: onPlaceholderLoad
 			: onImageLoad}
+		on:error={onImageError}
 		class={`image ${imageCssStatic} ${imageAnimationCss}`}
 		src={showPlaceholderImage
 			? isImageLoaded || isPlaceholderLoaded
@@ -393,6 +399,11 @@
 	<!-- show the image placeholder during loading if requested -->
 	{#if !isImageLoaded && showPlaceholderImage}
 		<div class="image-loading-overlay {imageLoadingOverlayCss}" />
+	{/if}
+	{#if imageError}
+		<div class="image-error-overlay">
+			{imageError}
+		</div>
 	{/if}
 </div>
 
@@ -452,6 +463,17 @@
 		justify-content: center;
 		background-color: rgba(50, 50, 50, 0.5);
 		z-index: 2;
+	}
+
+	.image-error-overlay {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: red;
+		color: white;
 	}
 
 	.caption-attribution-wrapper {
