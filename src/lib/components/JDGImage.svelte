@@ -56,12 +56,6 @@
 	let isImageLoaded = false;
 	let isPlaceholderLoaded = false;
 
-	// height can be in vh or px or even auto
-	// if in vh, convert to pixels for calculations
-	let maxHeightValue;
-	let maxHeightUnit;
-	let maxHeightPx;
-
 	// prevent redundant cloudinary transformation requests
 	// by checking if the height of the image container has changed
 	let previousHeight = 0;
@@ -74,9 +68,13 @@
 		isImageLoaded = true;
 	}
 
-	// self-executing function that gets the pixel height from maxHeight prop
-	// (it may look like this is unused, but it's used! don't delete)
+	// get a pixel value from whatever is passed into the maxHeight prop
 	const getMaxHeightPxFromProp = () => {
+		// height can be in vh or px or even auto
+		// if in vh, convert to pixels for calculations
+		let maxHeightValue;
+		let maxHeightUnit;
+		let maxHeightPx;
 		// only calculate maxHeight if prop is not auto
 		if (maxHeight !== 'auto') {
 			[maxHeightValue, maxHeightUnit] = maxHeight.match(/^(\d+)(\D+)$/).slice(1);
@@ -102,7 +100,7 @@
 
 	// calculate the aspect ratio of the image container and the image (if not already known)
 	const getAspectRatios = () => {
-		if (resolutionRef && imageRef && maxHeightPx) {
+		if (resolutionRef && imageRef) {
 			imageAspectRatio = imageRef.naturalWidth / imageRef.naturalHeight;
 			const style = window.getComputedStyle(resolutionRef);
 			const containerWidth = parseInt(style.getPropertyValue('width'));
@@ -198,14 +196,17 @@
 		}
 	};
 
+	// runs if an image fails to load
+	const onImageError = () => {
+		showImageError = true;
+		imageErrorMessage += adjustedImgSrc;
+	};
+	let showImageError = false;
+	let imageErrorMessage = 'Error loading image: ';
+
 	// runs after the placeholder image is loaded
 	const onPlaceholderLoad = () => {
 		isPlaceholderLoaded = true;
-	};
-
-	let imageError = undefined;
-	const onImageError = () => {
-		imageError = adjustedImgSrc;
 	};
 
 	const imageCssStatic = css`
@@ -281,20 +282,6 @@
 	onMount(() => {
 		devicePixelRatio = window.devicePixelRatio || 1;
 		resolutionRef = alternateFitRef ?? containerRef;
-		getMaxHeightPxFromProp();
-
-		// if the image is a cloudinary URL,
-		// get the required height and width from the image container
-		// so we can modify the URL to specify those sizes and get an asset that fits its container
-		// if (isUrlCloudinary(imageAttributes.imgSrc)) {
-		// 	const imageLoadingTransformation = `f_auto,q_1,h_${getMaxHeightPxFromProp()}`;
-
-		// 	// initial image is a very low-quality one for a fast initial load
-		// 	adjustedImgSrc = addCloudinaryUrlTransformation(
-		// 		imageAttributes.imgSrc,
-		// 		imageLoadingTransformation
-		// 	);
-		// }
 	});
 
 	$: {
@@ -325,7 +312,7 @@
 			// set the height or width depending on the image fit
 			// image is wider than container, so specify height
 			if (getIsUsingContainerHeight()) {
-				const adjustedHeight = Math.ceil(maxHeightPx * devicePixelRatio);
+				const adjustedHeight = Math.ceil(getMaxHeightPxFromProp() * devicePixelRatio);
 				adjustedImgSrc = addCloudinaryUrlHeight(imageAttributes.imgSrc, adjustedHeight);
 				previousHeight = resolutionRef.offsetHeight;
 				if (showDebugMessagesInConsole) {
@@ -401,9 +388,9 @@
 	{#if !isImageLoaded && showPlaceholderImage}
 		<div class="image-loading-overlay {imageLoadingOverlayCss}" />
 	{/if}
-	{#if imageError}
+	{#if showImageError}
 		<div class="image-error-overlay">
-			{imageError}
+			{imageErrorMessage}
 		</div>
 	{/if}
 </div>
