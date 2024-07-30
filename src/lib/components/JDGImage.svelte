@@ -74,11 +74,6 @@
 		isImageLoaded = true;
 	}
 
-	let imageError = undefined;
-	const onImageError = (event) => {
-		imageError = JSON.stringify(event);
-	};
-
 	// self-executing function that gets the pixel height from maxHeight prop
 	// (it may look like this is unused, but it's used! don't delete)
 	const getMaxHeightPxFromProp = () => {
@@ -206,6 +201,11 @@
 	// runs after the placeholder image is loaded
 	const onPlaceholderLoad = () => {
 		isPlaceholderLoaded = true;
+	};
+
+	let imageError = undefined;
+	const onImageError = () => {
+		imageError = adjustedImgSrc;
 	};
 
 	const imageCssStatic = css`
