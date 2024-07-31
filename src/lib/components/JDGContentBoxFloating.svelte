@@ -10,8 +10,8 @@
 	import { convertStringToAnchorTag, instantiateObject } from '$lib/jdg-utils.js';
 
 	import {
-		fadeInSettle,
-		fadeInSettleLoaded,
+		fadeInSettleBefore,
+		fadeInSettleAfter,
 		jdgBreakpoints,
 		jdgColors,
 		jdgDurations,
@@ -129,8 +129,8 @@
 	transition:fade={{ duration: jdgDurations.fadeIn }}
 	class="jdg-content-box-floating-container {floatingBoxContainerCss} {animateWhenVisible
 		? isVisible
-			? fadeInSettleLoaded
-			: fadeInSettle
+			? fadeInSettleAfter
+			: fadeInSettleBefore
 		: ''}"
 >
 	{#if title || subtitle}
