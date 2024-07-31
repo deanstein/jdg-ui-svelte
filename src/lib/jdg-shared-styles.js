@@ -250,7 +250,7 @@ export const jdgDurations = {
 // the translation just before the element is visible
 export const fadeInSettleBefore = css`
 	transform: translateY(-50px);
-	opacity: 0;
+	opacity: 0.2;
 	transition:
 		opacity ${jdgDurations.scrollFadeIn}${jdgDurations.unit},
 		transform ${jdgDurations.scrollFadeIn}${jdgDurations.unit};
