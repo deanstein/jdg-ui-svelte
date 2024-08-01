@@ -187,14 +187,33 @@
 		return false;
 	};
 
+	const preloadImage = (src) => {
+		return new Promise((resolve, reject) => {
+			const img = new Image();
+			img.src = src;
+			img.onload = () => resolve();
+			img.onerror = reject;
+			console.log("IMAGE PRELOADING!", src);
+		});
+	}
+
 	// runs after an image is loaded
-	const onImageLoad = () => {
+	const onImageLoad = async () => {
 		// ensure that the image aspect ratio is captured once the image loads
 		getAspectRatios();
 		if (!showDebugLoadingState) {
+			await preloadImage(adjustedImgSrc);
 			isImageLoaded = true;
+			console.log("IMAGE PRELOADED!", adjustedImgSrc);
 		}
 	};
+	// const onImageLoad = () => {
+	// 	// ensure that the image aspect ratio is captured once the image loads
+	// 	getAspectRatios();
+	// 	if (!showDebugLoadingState) {
+	// 		isImageLoaded = true;
+	// 	}
+	// };
 
 	// runs if an image fails to load
 	const onImageError = () => {
@@ -365,7 +384,7 @@
 		<div
 			class="image-blur"
 			style={adjustedImgSrc
-				? `background-image: url(${adjustedImgSrc}); opacity: ${
+				? `background-image: url(${imageAttributes.imgSrc}); opacity: ${
 						isImageLoaded ? 1 : 0.25
 					}; transition: opacity ${jdgDurations.fadeIn}${jdgDurations.unit} ease-in-out;`
 				: ''}
