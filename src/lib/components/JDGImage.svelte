@@ -364,11 +364,9 @@
 	{#if showBlurInUnfilledSpace && !fillContainer}
 		<div
 			class="image-blur"
-			style={adjustedImgSrc
-				? `background-image: url(${imageAttributes.imgSrc}); opacity: ${
-						isImageLoaded ? 1 : 0.25
-					}; transition: opacity ${jdgDurations.fadeIn}${jdgDurations.unit} ease-in-out;`
-				: ''}
+			style={`background-image: url(${imageAttributes.imgSrc}); opacity: ${
+				isImageLoaded ? 1 : 0.25
+			}; transition: opacity ${jdgDurations.fadeIn}${jdgDurations.unit} ease-in-out;`}
 		></div>
 		<div class="image-blur-background"></div>
 	{/if}
