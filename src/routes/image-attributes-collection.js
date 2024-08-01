@@ -153,7 +153,7 @@ const imageAttributesCollection = {
 				'https://res.cloudinary.com/jdg-main/image/upload/v1721238054/jdg-website/arch/mindful-multifamily-highway.jpg'
 			)
 		})
-	),
+	)
 };
 
 export { imageAttributesCollection };

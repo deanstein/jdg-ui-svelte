@@ -38,12 +38,12 @@
 				]}
 			/>
 			<JDGImageCarousel
-			imageAttributeObjects={[
-				imageAttributesCollection.mindful_multifamily,
-				imageAttributesCollection.mindful_multifamily_close,
-				imageAttributesCollection.mindful_multifamily_highway
-			]}
-		/>
+				imageAttributeObjects={[
+					imageAttributesCollection.mindful_multifamily,
+					imageAttributesCollection.mindful_multifamily_close,
+					imageAttributesCollection.mindful_multifamily_highway
+				]}
+			/>
 		{/if}
 		{#if false}
 			<JDGImageCarousel
