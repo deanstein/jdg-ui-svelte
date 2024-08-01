@@ -45,7 +45,7 @@
 		color: ${jdgColors.textLight};
 	`;
 
-	const floatingBoxContainerCss = css`
+	const floatingBoxContentCss = css`
 		gap: ${jdgSizes.contentBoxPaddingLg};
 		margin-left: ${jdgSizes.contentBoxFloatingMarginLg};
 		margin-right: ${jdgSizes.contentBoxFloatingMarginLg};
@@ -124,35 +124,44 @@
 	});
 </script>
 
-<div
-	bind:this={isVisibleRef}
-	transition:fade={{ duration: jdgDurations.fadeIn }}
-	class="jdg-content-box-floating-container {floatingBoxContainerCss} {animateWhenVisible
-		? isVisible
-			? fadeInSettleAfter
-			: fadeInSettleBefore
-		: ''}"
->
-	{#if title || subtitle}
-		<div class="content-box-title-and-subtitle-container">
-			{#if title}
-				<h1 class="content-box-title-and-subtitle {floatingBoxTitleCss}">
-					{title}
-				</h1>
-				<div id={anchorTag} class="content-box-anchor-tag {floatingBoxAnchorTagCss}" />
-			{/if}
-			{#if subtitle}
-				<h2 class="content-box-title-and-subtitle content-box-subtitle {floatingBoxSubtitleCss}">
-					{subtitle}
-				</h2>
-			{/if}
-		</div>
+<div class="jdg-content-box-floating-container">
+	{#if title}
+		<div class="content-box-anchor-tag {floatingBoxAnchorTagCss}" id={anchorTag} />
 	{/if}
-	<slot />
+	<div
+		bind:this={isVisibleRef}
+		transition:fade={{ duration: jdgDurations.fadeIn }}
+		class="jdg-content-box-floating-content {floatingBoxContentCss} {animateWhenVisible
+			? isVisible
+				? fadeInSettleAfter
+				: fadeInSettleBefore
+			: ''}"
+	>
+		{#if title || subtitle}
+			<div class="content-box-title-and-subtitle-container">
+				{#if title}
+					<h1 class="content-box-title-and-subtitle {floatingBoxTitleCss}">
+						{title}
+					</h1>
+				{/if}
+				{#if subtitle}
+					<h2 class="content-box-title-and-subtitle content-box-subtitle {floatingBoxSubtitleCss}">
+						{subtitle}
+					</h2>
+				{/if}
+			</div>
+		{/if}
+		<slot />
+	</div>
 </div>
 
 <style>
 	.jdg-content-box-floating-container {
+		position: relative;
+		min-height: 50px;
+	}
+
+	.jdg-content-box-floating-content {
 		display: flex;
 		flex-direction: column;
 		position: relative;
