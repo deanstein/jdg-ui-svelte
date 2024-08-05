@@ -140,7 +140,12 @@
 			<a href="./about">longer sections of text which might be hyperlinks but could also wrap</a>.
 		</JDGBodyCopy>
 	</JDGContentBoxFloating>
-	<JDGContentBoxFloating title="ACCENT BLOCK 1" subtitle="Composite, High-Contrast">
+	<JDGContentBoxFloating title="ACCENT BLOCKS">
+		<JDGBodyCopy textAlign="center">
+			Accent blocks can be used with a couple of different approaches:
+		</JDGBodyCopy>
+		<hr />
+		<h2 style="text-align: center;">Composite, high-contrast</h2>
 		<JDGFullWidthContainer>
 			<JDGAccentBlockWithText
 				isQuote={true}
@@ -156,8 +161,8 @@
 				</li>
 			</ul>
 		</JDGBodyCopy>
-	</JDGContentBoxFloating>
-	<JDGContentBoxFloating title="ACCENT BLOCK 2" subtitle="Manually Assembled">
+		<hr />
+		<h2 style="text-align: center;">Manually-assembled</h2>
 		<JDGFullWidthContainer>
 			<JDGAccentBlock backgroundColor={jdgColors.accentColorsCCP[0]}>
 				<JDGAccentText

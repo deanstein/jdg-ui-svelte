@@ -71,6 +71,13 @@
 			letter-spacing: 5px;
 		}
 
+		hr {
+			border: none;
+			height: 1px;
+			width: 100%;
+			background-color: ${jdgColors.text};
+		}
+
 		color: ${jdgColors.text};
 		font-family: ${fontFamily};
 	`;
