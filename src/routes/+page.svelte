@@ -53,9 +53,174 @@
 		</JDGContentBoxFloating>
 	</div>
 	<JDGJumpTo />
-	<JDGContentBoxFloating title="GRID LAYOUT">
+	<JDGContentBoxFloating title="IMAGES">
+		<JDGBodyCopy textAlign="center" paddingTop="0">We've got lots of image components!</JDGBodyCopy>
+		<JDGBodyCopy textAlign="center">
+			<b>IMAGE TILE</b>
+			<br />
+			No fill container, show blur, show caption/attribution
+			<br />
+			Inside BodyCopy
+			<br /><br />
+			<JDGImageTile
+				imageAttributes={imageAttributesCollection.lakeside_1}
+				fillContainer={false}
+				showBlurInUnfilledSpace={true}
+				showCaption={true}
+				showAttribution={true}
+			/>
+		</JDGBodyCopy>
+		<JDGBodyCopy textAlign="center">
+			<b>IMAGE TILE</b>
+			<br />
+			No fill container, no blur in unfilled space
+			<br />
+			Inside BodyCopy
+			<br /><br />
+			<JDGImageTile
+				imageAttributes={imageAttributesCollection.aerial_60s70s_1}
+				fillContainer={false}
+				showCaption={true}
+				showAttribution={true}
+			/>
+		</JDGBodyCopy>
+		<JDGBodyCopy textAlign="center" paddingBottom="0">
+			<b>IMAGE TILE</b>
+			<br />
+			No fill container, no blur in unfilled space, no caption/attr
+			<br />
+			Clicking goes to "./about"
+		</JDGBodyCopy>
+		<JDGImageTile
+			imageAttributes={imageAttributesCollection.aerial_60s70s_1}
+			fillContainer={false}
+			href="./about"
+		/>
+		<JDGBodyCopy textAlign="center" paddingBottom="0"><b>IMAGE FULL WIDTH</b></JDGBodyCopy>
+		<JDGImageFullWidth imageAttributes={imageAttributesCollection.aerial_60s70s_1} />
+		<JDGBodyCopy textAlign="center" paddingBottom="0"
+			><b>IMAGE CAROUSEL</b>
+			<br />
+			in a full-width container</JDGBodyCopy
+		>
+		<JDGFullWidthContainer>
+			<JDGImageCarousel
+				imageAttributeObjects={[
+					imageAttributesCollection.fairgrounds_aerial,
+					imageAttributesCollection.speer_point_after
+				]}
+			/>
+		</JDGFullWidthContainer>
+		<JDGBodyCopy textAlign="center" paddingBottom="0"
+			><b>IMAGE COMPARE</b>
+			<br />
+			in a full-width container</JDGBodyCopy
+		>
+		<JDGFullWidthContainer>
+			<JDGImageCompare
+				imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
+				imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
+				animateSlider={true}
+				useFullWidthAnimation={false}
+				caption="Gold Mall simulated in 1968-1978 and 1987-1997. And this is an even longer caption to test a possible failure case."
+				maxHeight="60vh"
+				showBlurInUnfilledSpace={true}
+			/>
+		</JDGFullWidthContainer>
+	</JDGContentBoxFloating>
+	<JDGContentBoxFloating title="PLACEHOLDER IMAGES">
+		<JDGBodyCopy paddingTop="0" textAlign="center">
+			These images weren't provided a src property, so they get the default placeholder.
+		</JDGBodyCopy>
+		<JDGGridLayout>
+			<JDGImageTile />
+			<JDGImageTile />
+			<JDGImageTile />
+		</JDGGridLayout>
+		<JDGBodyCopy textAlign="center">This is the loading spinner, at 50px:</JDGBodyCopy>
+		<JDGGridLayout>
+			<JDGLoadingSpinner />
+		</JDGGridLayout>
+		<JDGBodyCopy textAlign="center">And at 25px:</JDGBodyCopy>
+		<JDGGridLayout>
+			<JDGLoadingSpinner spinnerHeightPx={25} />
+		</JDGGridLayout>
+		<JDGBodyCopy textAlign="center">
+			These images are always in a loading state for testing
+		</JDGBodyCopy>
+		<JDGGridLayout>
+			<JDGImage showDebugLoadingState={true} />
+			<JDGImage showDebugLoadingState={true} />
+			<JDGImage showDebugLoadingState={true} />
+		</JDGGridLayout>
+	</JDGContentBoxFloating>
+	<JDGContentBoxFloating title="GRID LAYOUTS">
+		<JDGBodyCopy textAlign="center" paddingBottom="0" paddingTop="0">
+			<b>2 ITEMS</b>
+		</JDGBodyCopy>
+		<JDGGridLayout maxColumns={2}>
+			<div style="display: grid; max-width: fit-content;">
+				<JDGImageCompare
+					imageAttributes1={imageAttributesCollection.ccp_blue_mall_60s70s_1}
+					imageAttributes2={imageAttributesCollection.ccp_blue_mall_80s90s_1}
+					maxHeight="400px"
+					showBlurInUnfilledSpace={false}
+				/>
+			</div>
+			<div style="display grid; max-width: fit-content;">
+				<JDGImageTile
+					imageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
+					fillContainer={false}
+					maxHeight="400px"
+				/>
+			</div>
+		</JDGGridLayout>
+		<JDGGridLayout maxColumns={2}>
+			<div style="display: flex; flex-basis: auto;">
+				<JDGImageTile
+					imageAttributes={imageAttributesCollection.cc_1}
+					fillContainer={false}
+					showCaption={false}
+					showAttribution={false}
+					maxHeight="400px"
+				/>
+			</div>
+			<div style="display: flex; flex-basis: auto;">
+				<JDGImageCompare
+					imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
+					imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
+					animateSlider={true}
+					useFullWidthAnimation={true}
+					maxHeight="400px"
+					showBlurInUnfilledSpace={false}
+				/>
+			</div>
+		</JDGGridLayout>
+		<JDGGridLayout maxColumns={2}>
+			<div style="display: flex; flex-basis: auto;">
+				<JDGImageCompare
+					imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
+					imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
+					animateSlider={true}
+					useFullWidthAnimation={true}
+					maxHeight="400px"
+					showBlurInUnfilledSpace={false}
+				/>
+			</div>
+			<div style="display: flex; flex-basis: auto;">
+				<JDGImageTile
+					imageAttributes={imageAttributesCollection.cc_1}
+					fillContainer={false}
+					showCaption={false}
+					showAttribution={false}
+					maxHeight="400px"
+				/>
+			</div>
+		</JDGGridLayout>
 		<JDGBodyCopy paddingBottom="0" textAlign="center"
-			>Grid with more than 3 items, compactModeOnMobile true:</JDGBodyCopy
+			><b>3+ ITEMS</b>
+			<br />
+			compactModeOnMobile true:</JDGBodyCopy
 		>
 		<JDGGridLayout>
 			<JDGImageTile imageAttributes={imageAttributesCollection.aerial_60s70s_1} />
@@ -64,8 +229,10 @@
 			<JDGImageTile imageAttributes={imageAttributesCollection.rose_mall_60s70s_1} />
 			<JDGImageTile imageAttributes={imageAttributesCollection.rose_mall_60s70s_2} />
 		</JDGGridLayout>
-		<JDGBodyCopy paddingBottom="0" textAlign="center"
-			>Grid with more than 3 items, compactModeOnMobile false:</JDGBodyCopy
+		<JDGBodyCopy paddingBottom="0" textAlign="center">
+			<b>3+ ITEMS</b>
+			<br />
+			compactModeOnMobile false:</JDGBodyCopy
 		>
 		<JDGGridLayout>
 			<JDGImageTile
@@ -93,8 +260,10 @@
 			/>
 		</JDGGridLayout>
 		<JDGBodyCopy paddingBottom="0" textAlign="center">
-			Hybrid GridCarousel with more than 3 items:
-			<br /><br />
+			<b>HYBRID GRID/CAROUSEL</b>
+			<br />
+			<b>3+ ITEMS</b>
+			<br />
 			(will become ImageCarousel on smallest breakpoint)
 		</JDGBodyCopy>
 		<JDGImageHybridGridCarousel
@@ -106,65 +275,6 @@
 				imageAttributesCollection.rose_mall_60s70s_2
 			]}
 		/>
-		<JDGBodyCopy paddingBottom="0" textAlign="center">GridLayout with just 2 items:</JDGBodyCopy>
-		<JDGGridLayout maxColumns={2}>
-			<JDGImageCompare
-				imageAttributes1={imageAttributesCollection.ccp_blue_mall_60s70s_1}
-				imageAttributes2={imageAttributesCollection.ccp_blue_mall_80s90s_1}
-				maxHeight="400px"
-				showBlurInUnfilledSpace={false}
-			/>
-			<JDGImageTile
-				imageAttributes={imageAttributesCollection.cc_1}
-				fillContainer={false}
-				maxHeight="400px"
-			/>
-		</JDGGridLayout>
-	</JDGContentBoxFloating>
-	<JDGContentBoxFloating title="IMAGES">
-		<JDGBodyCopy textAlign="center">
-			IMAGE TILE
-			<br />
-			No fill container, show blur, show caption/attribution
-			<br />
-			Inside BodyCopy
-			<br /><br />
-			<JDGImageTile
-				imageAttributes={imageAttributesCollection.lakeside_1}
-				fillContainer={false}
-				showBlurInUnfilledSpace={true}
-				showCaption={true}
-				showAttribution={true}
-			/>
-		</JDGBodyCopy>
-		<JDGBodyCopy textAlign="center">
-			IMAGE TILE
-			<br />
-			No fill container, no blur in unfilled space
-			<br />
-			Inside BodyCopy
-			<br /><br />
-			<JDGImageTile
-				imageAttributes={imageAttributesCollection.aerial_60s70s_1}
-				fillContainer={false}
-				showCaption={true}
-				showAttribution={true}
-			/>
-		</JDGBodyCopy>
-		<JDGBodyCopy textAlign="center" paddingBottom="0">
-			IMAGE TILE
-			<br />
-			No fill container, no blur in unfilled space, no caption/attr
-			<br />
-			Clicking goes to "./about"
-		</JDGBodyCopy>
-		<JDGImageTile
-			imageAttributes={imageAttributesCollection.aerial_60s70s_1}
-			fillContainer={false}
-			href="./about"
-		/>
-		<JDGBodyCopy textAlign="center" paddingBottom="0">IMAGE FULL WIDTH</JDGBodyCopy>
-		<JDGImageFullWidth imageAttributes={imageAttributesCollection.aerial_60s70s_1} />
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="BODY COPY">
 		<JDGBodyCopy textColor="#7C5353">
@@ -301,134 +411,6 @@
 		<JDGBodyCopy paddingTop="0">
 			Displays a colorful rectangle containing an imageTile and description text.
 		</JDGBodyCopy>
-	</JDGContentBoxFloating>
-	<JDGContentBoxFloating title="IMAGE COMPARE">
-		<JDGBodyCopy textAlign="center">ImageCompare in GridLayout</JDGBodyCopy>
-		<JDGGridLayout maxColumns={2}>
-			<div style="display: grid; max-width: fit-content;">
-				<JDGImageCompare
-					imageAttributes1={imageAttributesCollection.ccp_blue_mall_60s70s_1}
-					imageAttributes2={imageAttributesCollection.ccp_blue_mall_80s90s_1}
-					maxHeight="400px"
-					showBlurInUnfilledSpace={false}
-				/>
-			</div>
-			<div style="display grid; max-width: fit-content;">
-				<JDGImageTile
-					imageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
-					fillContainer={false}
-					maxHeight="400px"
-				/>
-			</div>
-		</JDGGridLayout>
-		<JDGGridLayout maxColumns={2}>
-			<div style="display: flex; flex-basis: auto;">
-				<JDGImageTile
-					imageAttributes={imageAttributesCollection.cc_1}
-					fillContainer={false}
-					showCaption={false}
-					showAttribution={false}
-					maxHeight="400px"
-				/>
-			</div>
-			<div style="display: flex; flex-basis: auto;">
-				<JDGImageCompare
-					imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
-					imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
-					animateSlider={true}
-					useFullWidthAnimation={true}
-					maxHeight="400px"
-					showBlurInUnfilledSpace={false}
-				/>
-			</div>
-		</JDGGridLayout>
-		<JDGGridLayout maxColumns={2}>
-			<div style="display: flex; flex-basis: auto;">
-				<JDGImageCompare
-					imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
-					imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
-					animateSlider={true}
-					useFullWidthAnimation={true}
-					maxHeight="400px"
-					showBlurInUnfilledSpace={false}
-				/>
-			</div>
-			<div style="display: flex; flex-basis: auto;">
-				<JDGImageTile
-					imageAttributes={imageAttributesCollection.cc_1}
-					fillContainer={false}
-					showCaption={false}
-					showAttribution={false}
-					maxHeight="400px"
-				/>
-			</div>
-		</JDGGridLayout>
-		<JDGBodyCopy textAlign="center">ImageCompare in FullWidthContainer</JDGBodyCopy>
-		<JDGFullWidthContainer>
-			<JDGImageCompare
-				imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
-				imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
-				animateSlider={true}
-				useFullWidthAnimation={false}
-				caption="Gold Mall simulated in 1968-1978 and 1987-1997. And this is an even longer caption to test a possible failure case."
-				maxHeight="60vh"
-				showBlurInUnfilledSpace={true}
-			/>
-		</JDGFullWidthContainer>
-
-		<JDGBodyCopy>
-			<JDGImageTile
-				imageAttributes={imageAttributesCollection.lakeside_1}
-				fillContainer={false}
-				showCaption={true}
-				showAttribution={true}
-			/>
-		</JDGBodyCopy>
-	</JDGContentBoxFloating>
-	<JDGContentBoxFloating title="IMAGE CAROUSEL">
-		<JDGFullWidthContainer>
-			<JDGImageCarousel
-				imageAttributeObjects={[
-					imageAttributesCollection.fairgrounds_aerial,
-					imageAttributesCollection.speer_point_after
-				]}
-			/>
-		</JDGFullWidthContainer>
-		<JDGFullWidthContainer>
-			<JDGImageCarousel
-				imageAttributeObjects={[
-					imageAttributesCollection.cc_1,
-					imageAttributesCollection.rose_mall_60s70s_1
-				]}
-				maxHeight="70vh"
-			/>
-		</JDGFullWidthContainer>
-	</JDGContentBoxFloating>
-	<JDGContentBoxFloating title="PLACEHOLDER IMAGES">
-		<JDGBodyCopy paddingTop="0" textAlign="center">
-			These images weren't provided a src property, so they get the default placeholder.
-		</JDGBodyCopy>
-		<JDGGridLayout>
-			<JDGImageTile />
-			<JDGImageTile />
-			<JDGImageTile />
-		</JDGGridLayout>
-		<JDGBodyCopy textAlign="center">This is the loading spinner, at 50px:</JDGBodyCopy>
-		<JDGGridLayout>
-			<JDGLoadingSpinner />
-		</JDGGridLayout>
-		<JDGBodyCopy textAlign="center">And at 25px:</JDGBodyCopy>
-		<JDGGridLayout>
-			<JDGLoadingSpinner spinnerHeightPx={25} />
-		</JDGGridLayout>
-		<JDGBodyCopy textAlign="center">
-			These images are always in a loading state for testing
-		</JDGBodyCopy>
-		<JDGGridLayout>
-			<JDGImage showDebugLoadingState={true} />
-			<JDGImage showDebugLoadingState={true} />
-			<JDGImage showDebugLoadingState={true} />
-		</JDGGridLayout>
 	</JDGContentBoxFloating>
 	<JDGAccentBlock>
 		<JDGAccentText primaryText={`"Another quote."`} secondaryText="Another Someone, 1998" />
