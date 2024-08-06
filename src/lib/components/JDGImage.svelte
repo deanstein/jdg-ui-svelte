@@ -9,18 +9,18 @@
 	import {
 		addCloudinaryUrlHeight,
 		addCloudinaryUrlWidth,
-		addCloudinaryUrlTransformation,
 		convertVhToPixels,
 		isUrlCloudinary,
 		instantiateObject
 	} from '$lib/jdg-utils.js';
 
-	import { jdgBreakpoints, jdgDurations, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgColors, jdgDurations, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { JDGImageCaptionAttribution, JDGLoadingSpinner } from '$lib/index.js';
 
 	// show a local image while image is loading
 	// @ts-expect-error
 	import imagePlaceholder from '$lib/assets/raster/jdg-image-placeholder.png';
+	import { setAlphaInRgbaString } from '$lib/jdg-graphics-factory.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object for all image data
 	export let maxHeight = '350px'; // image will never exceed this height, but could be less depending on fillContainer
@@ -368,7 +368,17 @@
 				isImageLoaded ? 1 : 0.25
 			}; transition: opacity ${jdgDurations.fadeIn}${jdgDurations.unit} ease-in-out;`}
 		></div>
-		<div class="image-blur-background"></div>
+		<div class="image-blur-background" style="z-index: -2;"></div>
+		<!-- cover the blur with a color if blur is not allowed -->
+		{#if !imageAttributes.allowBlur}
+			<div
+				class="image-blur-background"
+				style="background-color: {setAlphaInRgbaString(
+					jdgColors.imageLabelBackground,
+					1
+				)}; z-index: -1;"
+			/>
+		{/if}
 	{/if}
 	<!-- caption and attribution -->
 	{#if showCaption || showAttribution}
@@ -426,7 +436,6 @@
 		position: absolute;
 		top: 0;
 		left: 0;
-		z-index: -2;
 		width: 100%;
 		height: 100%;
 	}
