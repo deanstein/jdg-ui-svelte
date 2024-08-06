@@ -6,6 +6,7 @@
 
 	import { getBuildCode } from '../jdg-utils.js';
 	import { jdgUiRepoName } from '../jdg-persistence-management.js';
+	import { jdgSharedStrings } from '$lib/jdg-shared-strings.js';
 	import { toggleDevTools } from '$lib/jdg-state-management.js';
 
 	import { jdgColors, jdgSizes } from '../jdg-shared-styles.js';
@@ -14,7 +15,7 @@
 	export let repoName = jdgUiRepoName;
 	export let appVersion = undefined;
 	export let additionalVersionData = undefined; // optional additional version data, applicable to some sites
-	export let copyright = 'Joshua Dean Goldstein'; // appears after the (C) symbol
+	export let copyright = jdgSharedStrings.jdgCopyrightName; // appears after the (C) symbol
 	export let disclaimer = undefined; // optional disclaimer, applicable to some sites
 	export let alignItems = 'left';
 	export let backgroundColorRgba = jdgColors.headerBackground;

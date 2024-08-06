@@ -1,8 +1,13 @@
+export const jdgSharedStrings = {
+	jdgCopyrightName: 'Joshua Dean Goldstein' /* used for copyright and photo credits */
+};
+
 export const jdgSharedUrls = {
 	adskFormIt: 'https://formit.autodesk.com/',
 	adskDynamo: 'https://dynamobim.org/',
 	ccpFacebook: 'https://www.facebook.com/cinderellacityproject/',
 	ccpInstagram: 'https://www.instagram.com/cinderellacityproject/',
+	ccpWebsite: 'https://www.cinderellacityproject.com/',
 	ccpYouTube: 'https://www.youtube.com/c/TheCinderellaCityProject',
 	ccpGitHubReleases: 'https://github.com/deanstein/CinderellaCityProject/tags',
 	historicEnglewood: 'https://historicenglewood.org/',
