@@ -121,6 +121,51 @@
 			/>
 		</JDGGridLayout>
 	</JDGContentBoxFloating>
+	<JDGContentBoxFloating title="IMAGES">
+		<JDGBodyCopy textAlign="center">
+			IMAGE TILE
+			<br />
+			No fill container, show blur, show caption/attribution
+			<br />
+			Inside BodyCopy
+			<br /><br />
+			<JDGImageTile
+				imageAttributes={imageAttributesCollection.lakeside_1}
+				fillContainer={false}
+				showBlurInUnfilledSpace={true}
+				showCaption={true}
+				showAttribution={true}
+			/>
+		</JDGBodyCopy>
+		<JDGBodyCopy textAlign="center">
+			IMAGE TILE
+			<br />
+			No fill container, no blur in unfilled space
+			<br />
+			Inside BodyCopy
+			<br /><br />
+			<JDGImageTile
+				imageAttributes={imageAttributesCollection.aerial_60s70s_1}
+				fillContainer={false}
+				showCaption={true}
+				showAttribution={true}
+			/>
+		</JDGBodyCopy>
+		<JDGBodyCopy textAlign="center" paddingBottom="0">
+			IMAGE TILE
+			<br />
+			No fill container, no blur in unfilled space, no caption/attr
+			<br />
+			Clicking goes to "./about"
+		</JDGBodyCopy>
+		<JDGImageTile
+			imageAttributes={imageAttributesCollection.aerial_60s70s_1}
+			fillContainer={false}
+			href="./about"
+		/>
+		<JDGBodyCopy textAlign="center" paddingBottom="0">IMAGE FULL WIDTH</JDGBodyCopy>
+		<JDGImageFullWidth imageAttributes={imageAttributesCollection.aerial_60s70s_1} />
+	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="BODY COPY">
 		<JDGBodyCopy textColor="#7C5353">
 			This JDGBodyCopy has a text color override. And a <a href="./">hyperlink for testing!</a> The hyperlink
@@ -385,36 +430,9 @@
 			<JDGImage showDebugLoadingState={true} />
 		</JDGGridLayout>
 	</JDGContentBoxFloating>
-	<JDGContentBoxFloating title="TEST SECTION">
-		<JDGImageTile
-			imageAttributes={imageAttributesCollection.aerial_60s70s_1}
-			fillContainer={false}
-			href="./about"
-		/>
-		<JDGImageTile fillContainer={false} href="/about" />
-	</JDGContentBoxFloating>
 	<JDGAccentBlock>
 		<JDGAccentText primaryText={`"Another quote."`} secondaryText="Another Someone, 1998" />
 	</JDGAccentBlock>
-	<JDGContentBoxFloating title="ANOTHER SECTION">
-		<JDGBodyCopy>
-			<JDGImageTile
-				imageAttributes={imageAttributesCollection.lakeside_1}
-				fillContainer={false}
-				showBlurInUnfilledSpace={true}
-				showCaption={true}
-				showAttribution={true}
-			/>
-		</JDGBodyCopy>
-		<JDGBodyCopy>
-			<JDGImageTile
-				imageAttributes={imageAttributesCollection.aerial_60s70s_1}
-				fillContainer={false}
-				showCaption={true}
-				showAttribution={true}
-			/>
-		</JDGBodyCopy>
-	</JDGContentBoxFloating>
 	<JDGAccentBlock backgroundColor={$uiState.accentColors[1]}>
 		<JDGAccentText
 			isQuote={true}
@@ -422,11 +440,6 @@
 			secondaryText="Gerri Von Frellick, 1960"
 		/>
 	</JDGAccentBlock>
-	<JDGContentBoxFloating title="A THIRD SECTION" />
-	<JDGAccentBlock backgroundColor={$uiState.accentColors[2]} />
-	<JDGContentBoxFloating title="LONG SECTION NAME">
-		<JDGImageFullWidth imageAttributes={imageAttributesCollection.aerial_60s70s_1} />
-	</JDGContentBoxFloating>
 	<JDGUpNext
 		item1Label={'LEARN MORE ABOUT THE PROJECT'}
 		item1Href={'./about'}
