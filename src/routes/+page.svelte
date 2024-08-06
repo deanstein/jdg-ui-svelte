@@ -96,6 +96,15 @@
 			fillContainer={false}
 			href="./about"
 		/>
+		<JDGBodyCopy textAlign="center" paddingBottom="0">
+			<b>IMAGE TILE</b>
+			<br />
+			No blur allowed in imageAttributes
+		</JDGBodyCopy>
+		<JDGImageTile
+			imageAttributes={imageAttributesCollection.hst.fms_2000s_plan_additions}
+			fillContainer={false}
+		/>
 		<JDGBodyCopy textAlign="center" paddingBottom="0"><b>IMAGE FULL WIDTH</b></JDGBodyCopy>
 		<JDGImageFullWidth imageAttributes={imageAttributesCollection.aerial_60s70s_1} />
 		<JDGBodyCopy textAlign="center" paddingBottom="0"
