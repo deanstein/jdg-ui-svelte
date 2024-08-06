@@ -5,7 +5,8 @@ const jdgImageAttributes = {
 	imgTitle: 'A placeholder image',
 	imgAlt: 'A placeholder image',
 	imgCaption: undefined,
-	imgAttribution: undefined
+	imgAttribution: undefined,
+	allowBlur: true /* set to false for images like plans and diagrams */
 };
 
 export default jdgImageAttributes;

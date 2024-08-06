@@ -743,6 +743,18 @@ const imageAttributesCollection = {
 			})
 		)
 	},
+	hst: {
+		fms_2000s_plan_additions: postProcessImageAttributes(
+			instantiateObject(jdgImageAttributes, {
+				imgSrc: addCloudinaryUrlTransformation(
+					'https://res.cloudinary.com/jdg-main/image/upload/v1722737633/jdg-website/hst/fms-2000s-plan-additions.png'
+				),
+				imgCaption: 'The school complex became a mess of additions and renovations by the 2000s.',
+				imgAttribution: 'Josh Goldstein',
+				allowBlur: false
+			})
+		)
+	},
 	products_0: instantiateObject(jdgImageAttributes, {
 		imgSrc: addCloudinaryUrlTransformation(
 			'https://res.cloudinary.com/jdg-main/image/upload/v1720834651/jdg-website/products/products-0.jpg'
