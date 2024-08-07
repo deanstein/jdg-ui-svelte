@@ -46,21 +46,18 @@
 	`;
 
 	afterUpdate(() => {
-		// if there are two max columns requested
-		if (maxColumns === 2) {
-			const items = gridLayoutContainer.children;
-			// ... and if there are only two items passed into the slot
-			if (items.length === 2) {
-				// wrap each item in their own grid so they align toward each other/toward screen center
-				Array.from(items).forEach((node) => {
-					const wrapper = document.createElement('div');
-					wrapper.style.display = 'grid';
-					wrapper.style.maxWidth = 'fit-content';
+		const items = gridLayoutContainer.children;
+		// if there are only two items passed into the slot
+		if (items.length === 2) {
+			// wrap each item in their own grid so they align toward each other/toward screen center
+			Array.from(items).forEach((node) => {
+				const wrapper = document.createElement('div');
+				wrapper.style.display = 'grid';
+				wrapper.style.maxWidth = 'fit-content';
 
-					node.parentNode.insertBefore(wrapper, node);
-					wrapper.appendChild(node);
-				});
-			}
+				node.parentNode.insertBefore(wrapper, node);
+				wrapper.appendChild(node);
+			});
 		}
 	});
 </script>
