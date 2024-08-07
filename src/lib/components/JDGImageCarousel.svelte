@@ -12,7 +12,7 @@
 	export let maxHeight = '50vh';
 	export let activeThumbnailColor = getAccentColors()[0];
 	export let autoAdvance = true; // if true, auto advance through images at given interval
-	export let autoAdvanceInterval = 4500; // ms, interval between auto-advances
+	export let autoAdvanceInterval = 5000; // ms, interval between auto-advances
 	export let showBlurInUnfilledSpace = true;
 
 	let carouselRef; // used for only auto-advancing when carousel is visible
