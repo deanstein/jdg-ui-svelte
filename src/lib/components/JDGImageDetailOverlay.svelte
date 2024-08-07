@@ -13,6 +13,7 @@
 	export let imageAttributes = instantiateObject(jdgImageAttributes);
 
 	const imageAndCaptionWrapperCss = css`
+		display: ${imageAttributes.allowBlur ? 'flex' : 'grid'};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			padding: 0px;
 		}
@@ -50,7 +51,6 @@
 
 <style>
 	.image-and-caption-wrapper {
-		display: flex;
 		align-items: center;
 		justify-content: center;
 		flex-direction: column;

@@ -20,7 +20,6 @@
 	// show a local image while image is loading
 	// @ts-expect-error
 	import imagePlaceholder from '$lib/assets/raster/jdg-image-placeholder.png';
-	import { setAlphaInRgbaString } from '$lib/jdg-graphics-factory.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object for all image data
 	export let maxHeight = '350px'; // image will never exceed this height, but could be less depending on fillContainer
@@ -66,6 +65,11 @@
 	// consider the image immediately loaded
 	if (imageAttributes.imgSrc === imagePlaceholder && !showDebugLoadingState) {
 		isImageLoaded = true;
+	}
+
+	// if the imageAttributes specify no blur, override showBlur to false
+	if (!imageAttributes.allowBlur) {
+		showBlurInUnfilledSpace = false;
 	}
 
 	// get a pixel value from whatever is passed into the maxHeight prop
@@ -368,17 +372,7 @@
 				isImageLoaded ? 1 : 0.25
 			}; transition: opacity ${jdgDurations.fadeIn}${jdgDurations.unit} ease-in-out;`}
 		></div>
-		<div class="image-blur-background" style="z-index: -2;"></div>
-		<!-- cover the blur with a color if blur is not allowed -->
-		{#if !imageAttributes.allowBlur}
-			<div
-				class="image-blur-background"
-				style="background-color: {setAlphaInRgbaString(
-					jdgColors.imageLabelBackground,
-					1
-				)}; z-index: -1;"
-			/>
-		{/if}
+		<div class="image-blur-background"></div>
 	{/if}
 	<!-- caption and attribution -->
 	{#if showCaption || showAttribution}
@@ -434,6 +428,7 @@
 
 	.image-blur-background {
 		position: absolute;
+		z-index: -2;
 		top: 0;
 		left: 0;
 		width: 100%;
