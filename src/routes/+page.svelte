@@ -167,64 +167,52 @@
 		<JDGBodyCopy textAlign="center" paddingBottom="0" paddingTop="0">
 			<b>2 ITEMS</b>
 		</JDGBodyCopy>
-		<JDGGridLayout maxColumns={2}>
-			<div style="display: grid; max-width: fit-content;">
-				<JDGImageCompare
-					imageAttributes1={imageAttributesCollection.ccp_blue_mall_60s70s_1}
-					imageAttributes2={imageAttributesCollection.ccp_blue_mall_80s90s_1}
-					maxHeight="400px"
-					showBlurInUnfilledSpace={false}
-				/>
-			</div>
-			<div style="display grid; max-width: fit-content;">
-				<JDGImageTile
-					imageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
-					fillContainer={false}
-					maxHeight="400px"
-				/>
-			</div>
+		<JDGGridLayout>
+			<JDGImageCompare
+				imageAttributes1={imageAttributesCollection.ccp_blue_mall_60s70s_1}
+				imageAttributes2={imageAttributesCollection.ccp_blue_mall_80s90s_1}
+				maxHeight="400px"
+				showBlurInUnfilledSpace={false}
+			/>
+			<JDGImageTile
+				imageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
+				fillContainer={false}
+				maxHeight="400px"
+			/>
 		</JDGGridLayout>
-		<JDGGridLayout maxColumns={2}>
-			<div style="display: flex; flex-basis: auto;">
-				<JDGImageTile
-					imageAttributes={imageAttributesCollection.cc_1}
-					fillContainer={false}
-					showCaption={false}
-					showAttribution={false}
-					maxHeight="400px"
-				/>
-			</div>
-			<div style="display: flex; flex-basis: auto;">
-				<JDGImageCompare
-					imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
-					imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
-					animateSlider={true}
-					useFullWidthAnimation={true}
-					maxHeight="400px"
-					showBlurInUnfilledSpace={false}
-				/>
-			</div>
+		<JDGGridLayout>
+			<JDGImageTile
+				imageAttributes={imageAttributesCollection.cc_1}
+				fillContainer={false}
+				showCaption={false}
+				showAttribution={false}
+				maxHeight="400px"
+			/>
+			<JDGImageCompare
+				imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
+				imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
+				animateSlider={true}
+				useFullWidthAnimation={true}
+				maxHeight="400px"
+				showBlurInUnfilledSpace={false}
+			/>
 		</JDGGridLayout>
-		<JDGGridLayout maxColumns={2}>
-			<div style="display: flex; flex-basis: auto;">
-				<JDGImageCompare
-					imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
-					imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
-					animateSlider={true}
-					useFullWidthAnimation={true}
-					maxHeight="400px"
-					showBlurInUnfilledSpace={false}
-				/>
-			</div>
-			<div style="display: flex; flex-basis: auto;">
-				<JDGImageTile
-					imageAttributes={imageAttributesCollection.cc_1}
-					fillContainer={false}
-					showCaption={false}
-					showAttribution={false}
-					maxHeight="400px"
-				/>
-			</div>
+		<JDGGridLayout>
+			<JDGImageCompare
+				imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
+				imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
+				animateSlider={true}
+				useFullWidthAnimation={true}
+				maxHeight="400px"
+				showBlurInUnfilledSpace={false}
+			/>
+			<JDGImageTile
+				imageAttributes={imageAttributesCollection.cc_1}
+				fillContainer={false}
+				showCaption={false}
+				showAttribution={false}
+				maxHeight="400px"
+			/>
 		</JDGGridLayout>
 		<JDGBodyCopy paddingBottom="0" textAlign="center"
 			><b>3+ ITEMS</b>
