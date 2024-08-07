@@ -306,6 +306,8 @@
 				? 'auto'
 				: getPreferredContainerHeight()};
 			width: ${showBlurInUnfilledSpace ? '100%' : maxWidth ?? 'auto'};
+			opacity: ${isImageLoaded ? 1 : 0.5};
+			transition: opacity ${jdgDurations.default}${jdgDurations.unit} ease-in-out;
 		`;
 		if (
 			resolutionRef &&
