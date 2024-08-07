@@ -17,7 +17,7 @@
 		justify-content: center;
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			> * {
-				flex: 0 1 ${forceMaxColumns ? 'calc(100% / 3)' : '100%'};
+				flex: 0 1 ${forceMaxColumns ? `calc(100% / ${maxColumns})` : '100%'};
 			}
 			gap: ${(jdgSizes.nContentBoxPaddingSm / 2).toString() + jdgSizes.contentBoxPaddingUnit};
 		}
@@ -27,7 +27,7 @@
 			> * {
 				flex: 0 1
 					calc(
-						${forceMaxColumns ? '(100% / 3)' : '50%'} -
+						${forceMaxColumns ? `(100% / ${maxColumns})` : '50%'} -
 							${jdgSizes.nContentBoxPaddingMd.toString() + jdgSizes.contentBoxPaddingUnit}
 					);
 			}
