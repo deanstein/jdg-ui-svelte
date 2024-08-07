@@ -45,10 +45,10 @@
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-			font-size: 11px;
+			font-size: 11.5px;
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			font-size: 12px;
+			font-size: 13px;
 		}
 	`;
 
@@ -59,10 +59,10 @@
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-			font-size: 8px;
+			font-size: 9px;
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			font-size: 9px;
+			font-size: 10px;
 		}
 	`;
 
