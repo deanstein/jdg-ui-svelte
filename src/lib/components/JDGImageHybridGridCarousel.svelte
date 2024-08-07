@@ -9,6 +9,11 @@
 	} from '$lib/index.js';
 
 	export let imageAttributeObjects = []; // all images shown in thumbnail collection
+	export let fillContainer = true;
+	export let showBlurInUnfilledSpace = true;
+	export let showCaption = true;
+	export let showAttribution = true;
+	export let compactModeOnMobile = true;
 	export let maxColumns = 3;
 </script>
 
@@ -21,13 +26,14 @@
 	{:else}
 		<!-- other breakpoints use the grid layout with image tiles -->
 		<JDGGridLayout {maxColumns}>
-			{#each imageAttributeObjects as imageAttributesObject, i}
+			{#each imageAttributeObjects as imageAttributes, i}
 				<JDGImageTile
-					imageAttributes={imageAttributesObject}
-					showBlurInUnfilledSpace={true}
-					showCaption={true}
-					showAttribution={true}
-					compactModeOnMobile={true}
+					{imageAttributes}
+					{fillContainer}
+					{showBlurInUnfilledSpace}
+					{showCaption}
+					{showAttribution}
+					{compactModeOnMobile}
 				/>
 			{/each}
 		</JDGGridLayout>
