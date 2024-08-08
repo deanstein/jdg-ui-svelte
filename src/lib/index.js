@@ -7,6 +7,9 @@ export { JDGAccentBlockWithText };
 import JDGAccentText from './components/JDGAccentText.svelte';
 export { JDGAccentText };
 
+import JDGAnimateOnVisible from './components/JDGAnimateOnVisible.svelte';
+export { JDGAnimateOnVisible };
+
 import JDGAppContainer from './components/JDGAppContainer.svelte';
 export { JDGAppContainer };
 
