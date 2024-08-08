@@ -14,7 +14,7 @@
 		instantiateObject
 	} from '$lib/jdg-utils.js';
 
-	import { jdgBreakpoints, jdgColors, jdgDurations, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgDurations, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { JDGImageCaptionAttribution, JDGLoadingSpinner } from '$lib/index.js';
 
 	// show a local image while image is loading
