@@ -8,7 +8,7 @@
 		JDGFullWidthContainer,
 		JDGImage
 	} from '$lib/index.js';
-	import { jdgBreakpoints, jdgFonts, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { fadeInSettleBeforeSm, jdgBreakpoints, jdgFonts, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes);
 	export let maxHeight = '80vh';
@@ -58,7 +58,7 @@
 	<JDGImage {imageAttributes} {maxHeight} alignLoadingSpinner={'end'} />
 	{#if showOverlay || primaryText || secondaryText || overlayImageAttributes}
 		<div bind:this={overlayContainerRef} class="image-overlay {imageOverlayCss}">
-			<JDGAnimateOnVisible>
+			<JDGAnimateOnVisible animationCssBefore={fadeInSettleBeforeSm}>
 				{#if superText || primaryText || secondaryText}
 					<div class={overlayContentHeaderOffsetCss}>
 						<JDGAccentText

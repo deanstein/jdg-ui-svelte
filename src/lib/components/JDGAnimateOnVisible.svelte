@@ -1,9 +1,9 @@
 <script>
-	import { fadeInSettleAfter, fadeInSettleBefore, jdgDurations } from '$lib/jdg-shared-styles.js';
+	import { fadeInSettleAfter, fadeInSettleBeforeLg, jdgDurations } from '$lib/jdg-shared-styles.js';
 	import { onMount, onDestroy } from 'svelte';
 	import { fade } from 'svelte/transition';
 
-	export let animationCssBefore = fadeInSettleBefore; // emotion css for before element is visible
+	export let animationCssBefore = fadeInSettleBeforeLg; // emotion css for before element is visible
 	export let animationCssAfter = fadeInSettleAfter; // emotion css for after element is visible
 	export let animationThreshold = '5%';
 

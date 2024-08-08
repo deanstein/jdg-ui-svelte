@@ -247,8 +247,8 @@ export const jdgDurations = {
 // fade-in styles
 //
 
-// the translation just before the element is visible
-export const fadeInSettleBefore = css`
+// animation just before the element is visible
+export const fadeInSettleBeforeLg = css`
 	transform: translateY(-50px);
 	opacity: 0.2;
 	transition:
@@ -256,7 +256,15 @@ export const fadeInSettleBefore = css`
 		transform ${jdgDurations.scrollFadeIn}${jdgDurations.unit};
 `;
 
-// translation just after the element is visible
+export const fadeInSettleBeforeSm = css`
+	transform: translateY(-15px);
+	opacity: 0.2;
+	transition:
+		opacity ${jdgDurations.scrollFadeIn}${jdgDurations.unit},
+		transform ${jdgDurations.scrollFadeIn}${jdgDurations.unit};
+`;
+
+// animation just after the element is visible
 export const fadeInSettleAfter = css`
 	transform: translateY(0);
 	opacity: 1;

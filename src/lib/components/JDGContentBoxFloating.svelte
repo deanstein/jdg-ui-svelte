@@ -10,7 +10,7 @@
 	import { convertStringToAnchorTag, instantiateObject } from '$lib/jdg-utils.js';
 
 	import {
-		fadeInSettleBefore,
+		fadeInSettleBeforeLg,
 		fadeInSettleAfter,
 		jdgBreakpoints,
 		jdgColors,
@@ -28,7 +28,7 @@
 	export let animateWhenVisible = true;
 	export let animationThreshold = '5%';
 
-	// fade the floating content box
+	// fade the floating content box when visible
 	let isVisible = false;
 	let isVisibleRef;
 
@@ -106,7 +106,9 @@
 					});
 				},
 				{ rootMargin: `0px 0px -${animationThreshold} 0px` }
-			); // Trigger when the top edge of the element is within 25% of the viewport height from the bottom
+				// how much of the element must be shown
+				// at the bottom of the screen to be considered visible
+			);
 
 			observer.observe(isVisibleRef);
 		}
@@ -134,7 +136,7 @@
 		class="jdg-content-box-floating-content {floatingBoxContentCss} {animateWhenVisible
 			? isVisible
 				? fadeInSettleAfter
-				: fadeInSettleBefore
+				: fadeInSettleBeforeLg
 			: ''}"
 	>
 		{#if title || subtitle}
