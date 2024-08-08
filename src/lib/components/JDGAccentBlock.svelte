@@ -1,7 +1,8 @@
 <script>
+	import { onMount } from 'svelte';
 	import { css } from '@emotion/css';
 	import { getAccentColors } from '$lib/jdg-state-management.js';
-	import { onMount } from 'svelte';
+	import { JDGAnimateOnVisible } from '$lib/index.js';
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let backgroundColor = getAccentColors()[0];
@@ -26,9 +27,11 @@
 	});
 </script>
 
-<div class="jdg-accent-block-container {accentBlockCss}">
-	<slot />
-</div>
+<JDGAnimateOnVisible>
+	<div class="jdg-accent-block-container {accentBlockCss}">
+		<slot />
+	</div>
+</JDGAnimateOnVisible>
 
 <style>
 	.jdg-accent-block-container {
