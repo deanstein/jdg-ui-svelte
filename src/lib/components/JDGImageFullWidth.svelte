@@ -1,10 +1,13 @@
 <script>
 	import { css } from '@emotion/css';
-
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
-
-	import { JDGAccentText, JDGFullWidthContainer, JDGImage } from '$lib/index.js';
+	import {
+		JDGAccentText,
+		JDGAnimateOnVisible,
+		JDGFullWidthContainer,
+		JDGImage
+	} from '$lib/index.js';
 	import { jdgBreakpoints, jdgFonts, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes);
@@ -23,6 +26,7 @@
 	export let overlayImageText = undefined;
 	export let overlayImageTextFontFamily = jdgFonts.body;
 
+	let overlayContainerRef;
 	let imageOverlayWrapperRef;
 
 	const imageOverlayCss = css`
@@ -53,39 +57,41 @@
 <JDGFullWidthContainer>
 	<JDGImage {imageAttributes} {maxHeight} alignLoadingSpinner={'end'} />
 	{#if showOverlay || primaryText || secondaryText || overlayImageAttributes}
-		<div class="image-overlay {imageOverlayCss}">
-			{#if superText || primaryText || secondaryText}
-				<div class={overlayContentHeaderOffsetCss}>
-					<JDGAccentText
-						{superText}
-						{superTextFontFamily}
-						{primaryText}
-						{primaryTextFontFamily}
-						{secondaryText}
-						{secondaryTextFontFamily}
-					/>
-				</div>
-			{/if}
-			{#if overlayImageAttributes}
-				<div
-					bind:this={imageOverlayWrapperRef}
-					class="image-overlay-wrapper {overlayContentHeaderOffsetCss}"
-				>
-					<JDGImage
-						imageAttributes={overlayImageAttributes}
-						maxHeight={overlayImageMaxHeight}
-						fillContainer={false}
-						showPlaceholderImage={false}
-						showLoadingSpinner={false}
-					/>
-					{#if overlayImageText}
+		<div bind:this={overlayContainerRef} class="image-overlay {imageOverlayCss}">
+			<JDGAnimateOnVisible>
+				{#if superText || primaryText || secondaryText}
+					<div class={overlayContentHeaderOffsetCss}>
 						<JDGAccentText
-							secondaryText={overlayImageText}
-							secondaryTextFontFamily={overlayImageTextFontFamily}
+							{superText}
+							{superTextFontFamily}
+							{primaryText}
+							{primaryTextFontFamily}
+							{secondaryText}
+							{secondaryTextFontFamily}
 						/>
-					{/if}
-				</div>
-			{/if}
+					</div>
+				{/if}
+				{#if overlayImageAttributes}
+					<div
+						bind:this={imageOverlayWrapperRef}
+						class="image-overlay-wrapper {overlayContentHeaderOffsetCss}"
+					>
+						<JDGImage
+							imageAttributes={overlayImageAttributes}
+							maxHeight={overlayImageMaxHeight}
+							fillContainer={false}
+							showPlaceholderImage={false}
+							showLoadingSpinner={false}
+						/>
+						{#if overlayImageText}
+							<JDGAccentText
+								secondaryText={overlayImageText}
+								secondaryTextFontFamily={overlayImageTextFontFamily}
+							/>
+						{/if}
+					</div>
+				{/if}
+			</JDGAnimateOnVisible>
 		</div>
 	{/if}
 </JDGFullWidthContainer>
