@@ -95,13 +95,15 @@
 							showPlaceholderImage={false}
 							showLoadingSpinner={false}
 						/>
-						{#if overlayImageText}
+					</JDGAnimateOnVisible>
+					{#if overlayImageText}
+						<JDGAnimateOnVisible animationCssBefore={fadeInSettleBeforeSm}>
 							<JDGAccentText
 								secondaryText={overlayImageText}
 								secondaryTextFontFamily={overlayImageTextFontFamily}
 							/>
-						{/if}
-					</JDGAnimateOnVisible>
+						</JDGAnimateOnVisible>
+					{/if}
 				</div>
 			{/if}
 		</div>
