@@ -73,7 +73,8 @@ const imageAttributesCollection = {
 			'https://res.cloudinary.com/jdg-main/image/upload/v1716959966/jdg-ui-svelte/history/lakeside-1_kcrblc.jpg'
 		),
 		imgAlt: 'Lakeside Mall in 1956.',
-		imgCaption: 'Lakeside Mall in 1956.',
+		imgCaption:
+			'Lakeside Mall in 1956. And a ton of other words to test a very long caption. Keep going. How long of a caption can we make? Possibly this long. Actually we need an even longer caption if you can believe it!',
 		imgAttribution: 'Denver Public Library'
 	}),
 	rose_mall_60s70s_1: instantiateObject(jdgImageAttributes, {
