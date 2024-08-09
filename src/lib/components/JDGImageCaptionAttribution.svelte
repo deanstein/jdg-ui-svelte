@@ -56,34 +56,34 @@
 	const captionCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: 10px;
-			line-height: 11px;
+			line-height: 12px;
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
 			font-size: 11.5px;
-			line-height: 12.5px;
+			line-height: 13.5px;
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 			font-size: 13px;
-			line-height: 14px;
+			line-height: 15px;
 		}
 	`;
 
 	const attributionCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: 8px;
-			line-height: 9px;
+			line-height: 10px;
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
 			font-size: 9px;
-			line-height: 10px;
+			line-height: 11px;
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 			font-size: 10px;
-			line-height: 11px;
+			line-height: 12px;
 		}
 	`;
 
