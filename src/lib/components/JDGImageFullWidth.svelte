@@ -8,7 +8,13 @@
 		JDGFullWidthContainer,
 		JDGImage
 	} from '$lib/index.js';
-	import { fadeInSettleBeforeSm, jdgBreakpoints, jdgFonts, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import {
+		fadeInSettleBeforeSm,
+		jdgBreakpoints,
+		jdgFonts,
+		jdgSizes
+	} from '$lib/jdg-shared-styles.js';
+	import { fade } from 'svelte/transition';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes);
 	export let maxHeight = '80vh';
@@ -57,10 +63,14 @@
 <JDGFullWidthContainer>
 	<JDGImage {imageAttributes} {maxHeight} alignLoadingSpinner={'end'} />
 	{#if showOverlay || primaryText || secondaryText || overlayImageAttributes}
-		<div bind:this={overlayContainerRef} class="image-overlay {imageOverlayCss}">
-			<JDGAnimateOnVisible animationCssBefore={fadeInSettleBeforeSm}>
-				{#if superText || primaryText || secondaryText}
-					<div class={overlayContentHeaderOffsetCss}>
+		<div
+			bind:this={overlayContainerRef}
+			class="image-overlay {imageOverlayCss}"
+			transition:fade={{ duration: 5000 /* set this high to prevent flashing */ }}
+		>
+			{#if superText || primaryText || secondaryText}
+				<div class={overlayContentHeaderOffsetCss}>
+					<JDGAnimateOnVisible animationCssBefore={fadeInSettleBeforeSm}>
 						<JDGAccentText
 							{superText}
 							{superTextFontFamily}
@@ -69,13 +79,15 @@
 							{secondaryText}
 							{secondaryTextFontFamily}
 						/>
-					</div>
-				{/if}
-				{#if overlayImageAttributes}
-					<div
-						bind:this={imageOverlayWrapperRef}
-						class="image-overlay-wrapper {overlayContentHeaderOffsetCss}"
-					>
+					</JDGAnimateOnVisible>
+				</div>
+			{/if}
+			{#if overlayImageAttributes}
+				<div
+					bind:this={imageOverlayWrapperRef}
+					class="image-overlay-wrapper {overlayContentHeaderOffsetCss}"
+				>
+					<JDGAnimateOnVisible animationCssBefore={fadeInSettleBeforeSm}>
 						<JDGImage
 							imageAttributes={overlayImageAttributes}
 							maxHeight={overlayImageMaxHeight}
@@ -89,9 +101,9 @@
 								secondaryTextFontFamily={overlayImageTextFontFamily}
 							/>
 						{/if}
-					</div>
-				{/if}
-			</JDGAnimateOnVisible>
+					</JDGAnimateOnVisible>
+				</div>
+			{/if}
 		</div>
 	{/if}
 </JDGFullWidthContainer>
