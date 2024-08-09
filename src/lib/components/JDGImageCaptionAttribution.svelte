@@ -3,6 +3,7 @@
 	import uiState from '$lib/states/ui-state.js';
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { JDGButton } from '../index.js';
+	import { adjustColorForContrast } from '$lib/jdg-utils.js';
 
 	export let imageAttributes;
 	export let showCaption = true;
@@ -19,7 +20,11 @@
 	};
 
 	const getIsCaptionTruncated = () => {
-		if (captionTextRef) {
+		if (
+			captionTextRef &&
+			!isNaN(captionTextRef.scrollWidth) &&
+			!isNaN(captionTextRef.clientWidth)
+		) {
 			isCaptionTruncated = captionTextRef.scrollWidth > captionTextRef.clientWidth;
 		}
 	};
@@ -122,9 +127,11 @@
 						event.stopPropagation();
 						toggleCaptionTruncation();
 					}}
+					textColor={jdgColors.textDm}
+					backgroundColor={adjustColorForContrast($uiState.accentColors[0], jdgColors.textDm, 2.5)}
 					paddingLeftRight="5px"
 					paddingTopBottom="3px"
-					fontSize="8px"
+					fontSize="10px"
 					faIcon={null}
 				/>
 			{/if}
