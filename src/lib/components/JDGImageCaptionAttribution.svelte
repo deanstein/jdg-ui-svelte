@@ -11,16 +11,16 @@
 	export let matchBodyCopyPadding = false; // if true, uses same padding as body copy (for full-width use only)
 	export let backgroundColorRgba = jdgColors.imageLabelBackground;
 
-	let captionTextRef; // the element reference for the caption text container
-	let isTruncated = false; // is the caption truncated?
+	let captionTextRef; // the element reference to determine if caption is being truncated
+	let isCaptionTruncated = false;
 
-	const toggleTruncate = () => {
+	const toggleCaptionTruncation = () => {
 		truncateText = !truncateText;
 	};
 
-	const checkTruncation = () => {
+	const getIsCaptionTruncated = () => {
 		if (captionTextRef) {
-			isTruncated = captionTextRef.scrollWidth > captionTextRef.clientWidth;
+			isCaptionTruncated = captionTextRef.scrollWidth > captionTextRef.clientWidth;
 		}
 	};
 
@@ -96,7 +96,7 @@
 	$: {
 		// check for truncation when clientWidth changes
 		$uiState.clientWidth;
-		checkTruncation();
+		getIsCaptionTruncated();
 	}
 </script>
 
@@ -104,7 +104,7 @@
 	class="jdg-caption-attribution-container {captionAttributionContainerCss}"
 	on:click={(event) => {
 		event.stopPropagation();
-		toggleTruncate();
+		toggleCaptionTruncation();
 	}}
 	on:keypress={() => {}}
 	role="button"
@@ -115,11 +115,12 @@
 			<div bind:this={captionTextRef} class="caption-text {captionAttributionDynamicCss}">
 				{imageAttributes.imgCaption}
 			</div>
-			{#if isTruncated}
+			{#if isCaptionTruncated}
 				<JDGButton
+					label={truncateText ? 'Show more' : 'Show less'}
 					onClickFunction={(event) => {
 						event.stopPropagation();
-						toggleTruncate();
+						toggleCaptionTruncation();
 					}}
 					paddingLeftRight="5px"
 					paddingTopBottom="3px"
@@ -149,6 +150,7 @@
 
 	.caption-attribution {
 		display: flex;
+		gap: 5px;
 		align-items: center;
 		justify-content: center;
 		width: 100%;
