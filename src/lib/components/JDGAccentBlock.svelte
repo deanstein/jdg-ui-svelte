@@ -6,6 +6,7 @@
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let backgroundColor = getAccentColors()[0];
+	export let animatableElementRef;
 
 	const accentBlockCss = css`
 		background-color: ${backgroundColor};
@@ -27,11 +28,10 @@
 	});
 </script>
 
-<JDGAnimateOnVisible>
-	<div class="jdg-accent-block-container {accentBlockCss}">
+	<div bind:this={animatableElementRef} class="jdg-accent-block-container {accentBlockCss}">
 		<slot />
 	</div>
-</JDGAnimateOnVisible>
+	<JDGAnimateOnVisible animatableElement={animatableElementRef}/>
 
 <style>
 	.jdg-accent-block-container {
