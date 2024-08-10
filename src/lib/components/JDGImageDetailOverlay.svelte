@@ -13,7 +13,7 @@
 	export let imageAttributes = instantiateObject(jdgImageAttributes);
 
 	const imageAndCaptionWrapperCss = css`
-		display: ${imageAttributes.allowBlur ? 'flex' : 'grid'};
+		display: ${imageAttributes.allowBackgroundBlur ? 'flex' : 'grid'};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			padding: 0px;
 		}

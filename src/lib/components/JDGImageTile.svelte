@@ -43,7 +43,7 @@
 	let alternateFitRef; // use this div to determine aspect ratios
 
 	// if the imageAttributes specify no blur, override showBlur to false
-	if (!imageAttributes.allowBlur) {
+	if (!imageAttributes.allowBackgroundBlur) {
 		showBlurInUnfilledSpace = false;
 	}
 

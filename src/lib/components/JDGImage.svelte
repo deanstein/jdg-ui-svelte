@@ -68,7 +68,7 @@
 	}
 
 	// if the imageAttributes specify no blur, override showBlur to false
-	if (!imageAttributes.allowBlur) {
+	if (!imageAttributes.allowBackgroundBlur) {
 		showBlurInUnfilledSpace = false;
 	}
 
