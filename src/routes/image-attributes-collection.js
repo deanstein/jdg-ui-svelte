@@ -752,7 +752,7 @@ const imageAttributesCollection = {
 				),
 				imgCaption: 'The school complex became a mess of additions and renovations by the 2000s.',
 				imgAttribution: 'Josh Goldstein',
-				allowBlur: false
+				allowBackgroundBlur: false
 			})
 		),
 		ehs_1919_plan: postProcessImageAttributes(
@@ -762,7 +762,7 @@ const imageAttributesCollection = {
 				),
 				imgCaption: "Englewood High School's original layout in 1919.",
 				imgAttribution: 'Englewood Public Library',
-				allowBlur: false
+				allowBackgroundBlur: false
 			})
 		)
 	},
