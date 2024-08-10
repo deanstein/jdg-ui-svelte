@@ -11,7 +11,7 @@
 	let gridLayoutContainer;
 
 	const gridContainerCss = css`
-		align-items: center;
+		align-items: baseline;
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
