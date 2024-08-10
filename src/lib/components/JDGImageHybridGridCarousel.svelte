@@ -10,7 +10,7 @@
 
 	export let imageAttributeObjects = []; // all images shown in thumbnail collection
 	export let fillContainer = true;
-	export let showBlurInUnfilledSpace = true;
+	export let showBlurInUnfilledSpace = false;
 	export let showCaption = true;
 	export let showAttribution = true;
 	export let compactModeOnMobile = true;
