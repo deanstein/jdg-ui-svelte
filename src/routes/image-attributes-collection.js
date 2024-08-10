@@ -754,6 +754,16 @@ const imageAttributesCollection = {
 				imgAttribution: 'Josh Goldstein',
 				allowBlur: false
 			})
+		),
+		ehs_1919_plan: postProcessImageAttributes(
+			instantiateObject(jdgImageAttributes, {
+				imgSrc: addCloudinaryUrlTransformation(
+					'https://res.cloudinary.com/jdg-main/image/upload/v1722737633/jdg-website/hst/ehs-1919-plan.png'
+				),
+				imgCaption: "Englewood High School's original layout in 1919.",
+				imgAttribution: 'Englewood Public Library',
+				allowBlur: false
+			})
 		)
 	},
 	products_0: instantiateObject(jdgImageAttributes, {

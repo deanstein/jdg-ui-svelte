@@ -104,6 +104,8 @@
 		<JDGImageTile
 			imageAttributes={imageAttributesCollection.hst.fms_2000s_plan_additions}
 			fillContainer={false}
+			showCaption={true}
+			showAttribution={true}
 		/>
 		<JDGBodyCopy textAlign="center" paddingBottom="0"><b>IMAGE FULL WIDTH</b></JDGBodyCopy>
 		<JDGImageFullWidth imageAttributes={imageAttributesCollection.aerial_60s70s_1} />
@@ -214,6 +216,13 @@
 				maxHeight="400px"
 			/>
 		</JDGGridLayout>
+		<JDGImageHybridGridCarousel
+			imageAttributeObjects={[
+				imageAttributesCollection.hst.ehs_1919_plan,
+				imageAttributesCollection.hst.fms_2000s_plan_additions
+			]}
+			fillContainer={false}
+		/>
 		<JDGBodyCopy paddingBottom="0" textAlign="center"
 			><b>3+ ITEMS</b>
 			<br />
