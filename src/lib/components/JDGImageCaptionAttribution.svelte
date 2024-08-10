@@ -3,7 +3,7 @@
 	import uiState from '$lib/states/ui-state.js';
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { JDGButton } from '../index.js';
-	import { adjustColorForContrast, darkenColor, rgbaToRgb, rgbToHex } from '$lib/jdg-utils.js';
+	import { setAlphaInRgbaString } from '$lib/jdg-graphics-factory.js';
 
 	export let imageAttributes;
 	export let showCaption = true;
@@ -115,38 +115,47 @@
 	role="button"
 	tabindex="0"
 >
-	{#if showCaption && imageAttributes.imgCaption}
-		<div class="caption-attribution {captionCss}">
-			<div bind:this={captionTextRef} class="caption-text {captionAttributionDynamicCss}">
-				{imageAttributes.imgCaption}
+	<div class="caption-attribution-flex-container">
+		{#if showCaption && imageAttributes.imgCaption}
+			<div class="caption-attribution {captionCss}">
+				<div bind:this={captionTextRef} class="caption-text {captionAttributionDynamicCss}">
+					{imageAttributes.imgCaption}
+				</div>
 			</div>
-			{#if isCaptionTruncated}
-				<JDGButton
-					label={truncateText ? 'Show more' : 'Show less'}
-					onClickFunction={(event) => {
-						event.stopPropagation();
-						toggleCaptionTruncation();
-					}}
-					textColor={jdgColors.active}
-					backgroundColor={rgbToHex(darkenColor(rgbaToRgb(jdgColors.imageLabelBackground), 0.05))}
-					backgroundColorHover={jdgColors.active}
-					paddingLeftRight="5px"
-					paddingTopBottom="3px"
-					fontSize="10px"
-					faIcon={null}
-				/>
-			{/if}
-		</div>
-	{/if}
-	{#if showAttribution && imageAttributes.imgAttribution}
-		<div class="caption-attribution {captionAttributionDynamicCss} {attributionCss}">
-			{attributionPrefix + imageAttributes.imgAttribution}
+		{/if}
+		{#if showAttribution && imageAttributes.imgAttribution}
+			<div class="caption-attribution {captionAttributionDynamicCss} {attributionCss}">
+				{attributionPrefix + imageAttributes.imgAttribution}
+			</div>
+		{/if}
+	</div>
+	{#if isCaptionTruncated}
+		<div class="expand-collapse-button-container">
+			<JDGButton
+				label={truncateText ? 'Show more' : 'Show less'}
+				onClickFunction={(event) => {
+					event.stopPropagation();
+					toggleCaptionTruncation();
+				}}
+				textColor={jdgColors.active}
+				backgroundColor={setAlphaInRgbaString(jdgColors.headerBackground, 0.2)}
+				backgroundColorHover={jdgColors.active}
+				paddingLeftRight="5px"
+				paddingTopBottom="3px"
+				fontSize="10px"
+				faIcon={null}
+			/>
 		</div>
 	{/if}
 </div>
 
 <style>
 	.jdg-caption-attribution-container {
+		display: flex;
+		gap: 5px;
+	}
+
+	.caption-attribution-flex-container {
 		display: grid;
 		align-items: center;
 		justify-content: center;
@@ -154,11 +163,11 @@
 		gap: 0.2rem;
 		width: 100%;
 		box-sizing: border-box;
+		flex: 1;
 	}
 
 	.caption-attribution {
 		display: flex;
-		gap: 5px;
 		align-items: center;
 		justify-content: center;
 		width: 100%;
@@ -166,7 +175,6 @@
 	}
 
 	.caption-text {
-		flex: 1;
 		overflow: hidden;
 	}
 </style>
