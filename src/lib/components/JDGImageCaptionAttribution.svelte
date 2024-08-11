@@ -25,8 +25,8 @@
 			!isNaN(captionTextRef.scrollWidth) &&
 			!isNaN(captionTextRef.clientWidth)
 		) {
-			const buffer = 10; // add some buffer to ensure truncation when widths are nearly equal
-			isCaptionTruncated = captionTextRef.scrollWidth + buffer > captionTextRef.clientWidth;
+			console.log(captionTextRef.scrollWidth, captionTextRef.clientWidth);
+			isCaptionTruncated = captionTextRef.scrollWidth > captionTextRef.clientWidth;
 		}
 	};
 
