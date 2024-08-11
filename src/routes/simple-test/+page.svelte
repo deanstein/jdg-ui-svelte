@@ -2,19 +2,20 @@
 	import {
 		JDGContentBoxFloating,
 		JDGContentContainer,
-		JDGImageHybridGridCarousel
+		JDGGridLayout,
+		JDGImageTile
 	} from '$lib/index.js';
 	import { imageAttributesCollection } from '../image-attributes-collection.js';
 </script>
 
 <JDGContentContainer>
 	<JDGContentBoxFloating title="TEST SECTION">
-		<JDGImageHybridGridCarousel
-			imageAttributeObjects={[
-				imageAttributesCollection.hst.ehs_1919_plan,
-				imageAttributesCollection.hst.fms_2000s_plan_additions
-			]}
-			fillContainer={false}
-		/>
+		<JDGGridLayout>
+			<JDGImageTile
+				imageAttributes={imageAttributesCollection.aerial_60s70s_1}
+				showCaption={true}
+				showAttribution={true}
+			/>
+		</JDGGridLayout>
 	</JDGContentBoxFloating>
 </JDGContentContainer>
