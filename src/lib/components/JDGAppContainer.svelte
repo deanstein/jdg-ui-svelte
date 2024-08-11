@@ -1,6 +1,7 @@
 <script>
 	import { onMount, setContext, tick } from 'svelte';
 	import { css } from '@emotion/css';
+
 	import jdgContexts from '$lib/jdg-contexts.js';
 	import uiState from '$lib/states/ui-state.js';
 	import {
@@ -12,13 +13,15 @@
 		setShowHeaderStripes,
 		setWindowWidth
 	} from '$lib/jdg-state-management.js';
-	import { JDGLoadingOverlay } from '$lib/index.js';
-	import { jdgBreakpoints, jdgColors, jdgFonts, jdgLinkStyles } from '$lib/jdg-shared-styles.js';
+
 	import {
 		adjustColorForContrast,
 		convertHexToRGBA,
 		scrollToAnchorOnLoad
 	} from '$lib/jdg-utils.js';
+
+	import { JDGLoadingOverlay } from '$lib/index.js';
+	import { jdgBreakpoints, jdgColors, jdgFonts, jdgLinkStyles } from '$lib/jdg-shared-styles.js';
 
 	export let fontFamily = jdgFonts.body;
 	export let appLoadingIconSrc =
