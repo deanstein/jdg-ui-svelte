@@ -25,7 +25,8 @@
 			!isNaN(captionTextRef.scrollWidth) &&
 			!isNaN(captionTextRef.clientWidth)
 		) {
-			isCaptionTruncated = captionTextRef.scrollWidth > captionTextRef.clientWidth;
+			const buffer = 10; // add some buffer to ensure truncation when widths are nearly equal
+			isCaptionTruncated = captionTextRef.scrollWidth + buffer > captionTextRef.clientWidth;
 		}
 	};
 
@@ -115,17 +116,24 @@
 	role="button"
 	tabindex="0"
 >
-	<div class="caption-attribution-flex-container">
+	<div class="caption-attribution-grid-container">
 		{#if showCaption && imageAttributes.imgCaption}
-			<div class="caption-attribution {captionCss}">
-				<div bind:this={captionTextRef} class="caption-text {captionAttributionDynamicCss}">
+			<div class="caption-attribution-flex-container {captionCss}">
+				<div
+					bind:this={captionTextRef}
+					class="caption-attribution-text {captionAttributionDynamicCss}"
+				>
 					{imageAttributes.imgCaption}
 				</div>
 			</div>
 		{/if}
 		{#if showAttribution && imageAttributes.imgAttribution}
-			<div class="caption-attribution {captionAttributionDynamicCss} {attributionCss}">
-				{attributionPrefix + imageAttributes.imgAttribution}
+			<div
+				class="caption-attribution-flex-container {captionAttributionDynamicCss} {attributionCss}"
+			>
+				<div class="caption-attribution-text">
+					{attributionPrefix + imageAttributes.imgAttribution}
+				</div>
 			</div>
 		{/if}
 	</div>
@@ -156,7 +164,7 @@
 		gap: 5px;
 	}
 
-	.caption-attribution-flex-container {
+	.caption-attribution-grid-container {
 		display: grid;
 		align-items: center;
 		justify-content: center;
@@ -167,7 +175,7 @@
 		flex: 1;
 	}
 
-	.caption-attribution {
+	.caption-attribution-flex-container {
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -175,7 +183,8 @@
 		overflow: hidden;
 	}
 
-	.caption-text {
+	.caption-attribution-text {
 		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 </style>
