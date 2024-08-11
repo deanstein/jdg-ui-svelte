@@ -1,7 +1,10 @@
 <script>
 	import { css } from '@emotion/css';
+	import { onMount } from 'svelte';
+
 	import uiState from '$lib/states/ui-state.js';
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
+
 	import { JDGButton } from '../index.js';
 	import { setAlphaInRgbaString } from '$lib/jdg-graphics-factory.js';
 
@@ -12,7 +15,10 @@
 	export let matchBodyCopyPadding = false; // if true, uses same padding as body copy (for full-width use only)
 	export let backgroundColorRgba = jdgColors.imageLabelBackground;
 
-	let captionTextRef; // the element reference to determine if caption is being truncated
+	let availableWidthRef; // element to determine available space for caption
+	let availableWidth = 0; // final available width - updated after loading
+	let captionTextRef; // element to determine total length of caption
+	let captionTextWidth = 0; // final caption width - updated after loading
 	let isCaptionTruncated = false;
 
 	const toggleCaptionTruncation = () => {
@@ -20,15 +26,26 @@
 	};
 
 	const getIsCaptionTruncated = () => {
-		if (
-			captionTextRef &&
-			!isNaN(captionTextRef.scrollWidth) &&
-			!isNaN(captionTextRef.clientWidth)
-		) {
-			console.log(captionTextRef.scrollWidth, captionTextRef.clientWidth);
-			isCaptionTruncated = captionTextRef.scrollWidth > captionTextRef.clientWidth;
+		if (availableWidthRef && captionTextRef) {
+			isCaptionTruncated = captionTextWidth >= availableWidth;
 		}
 	};
+
+	onMount(() => {
+		if (showCaption && imageAttributes.imgCaption) {
+			// set up a resize observer to calculate the final available width for text
+			const observer = new ResizeObserver(() => {
+				const availableWidthRefStyles = window.getComputedStyle(availableWidthRef);
+				const captionTextRefStyles = window.getComputedStyle(captionTextRef);
+				availableWidth = parseFloat(availableWidthRefStyles.width);
+				captionTextWidth = parseFloat(captionTextRefStyles.width);
+			});
+			observer.observe(captionTextRef);
+			return () => {
+				observer.disconnect();
+			};
+		}
+	});
 
 	const attributionPrefix = 'Image Source: ';
 
@@ -102,7 +119,10 @@
 	$: {
 		// check for truncation when clientWidth changes
 		$uiState.clientWidth;
-		getIsCaptionTruncated();
+		captionTextWidth;
+		if (truncateText) {
+			getIsCaptionTruncated();
+		}
 	}
 </script>
 
@@ -116,7 +136,7 @@
 	role="button"
 	tabindex="0"
 >
-	<div class="caption-attribution-grid-container">
+	<div bind:this={availableWidthRef} class="caption-attribution-grid-container">
 		{#if showCaption && imageAttributes.imgCaption}
 			<div class="caption-attribution-flex-container {captionCss}">
 				<div
@@ -186,5 +206,6 @@
 	.caption-attribution-text {
 		overflow: hidden;
 		text-overflow: ellipsis;
+		width: 100%;
 	}
 </style>
