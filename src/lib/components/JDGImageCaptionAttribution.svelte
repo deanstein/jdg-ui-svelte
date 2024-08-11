@@ -152,6 +152,7 @@
 <style>
 	.jdg-caption-attribution-container {
 		display: flex;
+		width: -webkit-fill-available;
 		gap: 5px;
 	}
 
