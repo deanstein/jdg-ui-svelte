@@ -55,7 +55,7 @@
 		justify-content: center;
 		flex-direction: column;
 		width: 100%;
-		height: 100%;
+		max-height: 100%;
 		box-sizing: border-box;
 		z-index: 1;
 		pointer-events: none;
