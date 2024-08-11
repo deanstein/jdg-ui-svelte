@@ -1,10 +1,8 @@
 <script>
 	import { onMount, setContext, tick } from 'svelte';
 	import { css } from '@emotion/css';
-
 	import jdgContexts from '$lib/jdg-contexts.js';
 	import uiState from '$lib/states/ui-state.js';
-
 	import {
 		getAccentColors,
 		setAccentColors,
@@ -14,7 +12,6 @@
 		setShowHeaderStripes,
 		setWindowWidth
 	} from '$lib/jdg-state-management.js';
-
 	import { JDGLoadingOverlay } from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgFonts, jdgLinkStyles } from '$lib/jdg-shared-styles.js';
 	import {
@@ -30,6 +27,7 @@
 	export let linkColorDefault = getAccentColors()[0]; /* color for the "banner" hyperlink style */
 	export let linkColorSimple = getAccentColors()[0]; /* color for the simple hyperlink style */
 	export let showHeaderStripes = true;
+	export let allowTextSelection = false;
 
 	// flag to show a loading overlay before app is loaded
 	// to prevent flash of unstyled content
@@ -77,6 +75,14 @@
 			width: 100%;
 			background-color: ${jdgColors.text};
 		}
+
+		${!allowTextSelection &&
+		`
+			-webkit-user-select: none; /* Safari */
+			-moz-user-select: none;    /* Firefox */
+			-ms-user-select: none;     /* Internet Explorer/Edge */
+			user-select: none;         /* Standard syntax */
+		`}
 
 		color: ${jdgColors.text};
 		font-family: ${fontFamily};
