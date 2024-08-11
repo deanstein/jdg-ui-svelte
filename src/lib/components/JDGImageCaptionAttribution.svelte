@@ -119,10 +119,8 @@
 	$: {
 		// check for truncation when clientWidth changes
 		$uiState.clientWidth;
-		captionTextWidth;
-		if (truncateText) {
-			getIsCaptionTruncated();
-		}
+		availableWidth;
+		getIsCaptionTruncated();
 	}
 </script>
 
