@@ -2,10 +2,10 @@
 	import { scale } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
-	import { setImageDetailAttributes, setShowImageDetailModal } from '$lib/jdg-state-management.js';
-	import { instantiateObject } from '$lib/jdg-utils.js';
-
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
+
+	import { hideImageDetailModal } from '$lib/jdg-state-management.js';
+	import { instantiateObject } from '$lib/jdg-utils.js';
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGOverlay } from '$lib/index.js';
 	import { jdgBreakpoints } from '$lib/jdg-shared-styles.js';
@@ -31,8 +31,7 @@
 <JDGOverlay
 	showTitleBar={true}
 	onCloseFunction={() => {
-		setShowImageDetailModal(false);
-		setImageDetailAttributes(undefined);
+		hideImageDetailModal();
 	}}
 	closeOnOverlayClick={false}
 	colorRgba="rgba(255, 255, 255, 0.6)"
