@@ -170,6 +170,16 @@
 			<b>2 ITEMS</b>
 		</JDGBodyCopy>
 		<JDGGridLayout>
+			<JDGImageTile
+				imageAttributes={imageAttributesCollection.hst.ehs_1920_broadway_northeast}
+				showCaption={true}
+			/>
+			<JDGImageTile
+				imageAttributes={imageAttributesCollection.hst.fms_2013_broadway_northeast}
+				showCaption={true}
+			/>
+		</JDGGridLayout>
+		<JDGGridLayout>
 			<JDGImageCompare
 				imageAttributes1={imageAttributesCollection.ccp_blue_mall_60s70s_1}
 				imageAttributes2={imageAttributesCollection.ccp_blue_mall_80s90s_1}

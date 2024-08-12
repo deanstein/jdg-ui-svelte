@@ -755,6 +755,26 @@ const imageAttributesCollection = {
 				allowBackgroundBlur: false
 			})
 		),
+		ehs_1920_broadway_northeast: postProcessImageAttributes(
+			instantiateObject(jdgImageAttributes, {
+				imgSrc: addCloudinaryUrlTransformation(
+					'https://res.cloudinary.com/jdg-main/image/upload/v1722729966/jdg-website/hst/ehs-1920-broadway-northeast.jpg'
+				),
+				imgCaption:
+					'Englewood High School viewed from Broadway in 1920, a year after it was constructed.',
+				imgAttribution: 'Englewood Public Library'
+			})
+		),
+		fms_2013_broadway_northeast: postProcessImageAttributes(
+			instantiateObject(jdgImageAttributes, {
+				imgSrc: addCloudinaryUrlTransformation(
+					'https://res.cloudinary.com/jdg-main/image/upload/v1722729966/jdg-website/hst/fms-2013-broadway-northeast.jpg'
+				),
+				imgCaption:
+					"Flood Middle School's simplistic shell concealed the original Englewood High School building below it, as seen from Broadway during demolition in 2013.",
+				imgAttribution: 'Josh Goldstein'
+			})
+		),
 		ehs_1919_plan: postProcessImageAttributes(
 			instantiateObject(jdgImageAttributes, {
 				imgSrc: addCloudinaryUrlTransformation(
