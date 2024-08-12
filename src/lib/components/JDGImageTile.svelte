@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { setImageDetailAttributes, setShowImageDetailModal } from '$lib/jdg-state-management.js';
+	import { showImageDetailModal } from '$lib/jdg-state-management.js';
 
 	import { instantiateObject } from './../jdg-utils.js';
 
@@ -33,11 +33,6 @@
 	export let showHorizontalStripesOnHover = true;
 	export let showCaption = false;
 	export let showAttribution = false;
-
-	const showImageDetailModal = () => {
-		setShowImageDetailModal(true);
-		setImageDetailAttributes(imageAttributes);
-	};
 
 	let isHovering;
 	let alternateFitRef; // use this div to determine aspect ratios
@@ -115,7 +110,7 @@
 					// if href is provided, do nothing
 				} else {
 					// otherwise, the default behavior is to show image detail modal
-					showImageDetailModal();
+					showImageDetailModal(imageAttributes);
 				}
 				// in any case, ensure the hover goes away eventually
 				setTimeout(() => {
