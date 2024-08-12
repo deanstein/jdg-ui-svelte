@@ -20,6 +20,7 @@
 	// show a local image while image is loading
 	// @ts-expect-error
 	import imagePlaceholder from '$lib/assets/raster/jdg-image-placeholder.png';
+	import { hideImageDetailModal } from '$lib/jdg-state-management.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object for all image data
 	export let maxHeight = '350px'; // image will never exceed this height, but could be less depending on fillContainer
@@ -36,6 +37,7 @@
 	export let showLoadingSpinner = true;
 	export let alignLoadingSpinner = 'center';
 	export let transition = fade; // fade or scale depending on usage
+	export let stopClickPropagation = false; // optional, for certain cases
 
 	// DEBUGGING
 	const showDebugMessagesInConsole = false;
@@ -71,6 +73,12 @@
 	if (!imageAttributes.allowBackgroundBlur) {
 		showBlurInUnfilledSpace = false;
 	}
+
+	const onImageClick = (event) => {
+		if (stopClickPropagation) {
+			event.stopPropagation();
+		}
+	};
 
 	// get a pixel value from whatever is passed into the maxHeight prop
 	const getMaxHeightPxFromProp = () => {
@@ -214,6 +222,8 @@
 	};
 
 	const imageCssStatic = css`
+		width: ${!fillContainer && showBlurInUnfilledSpace ? 'fit-content' : '100%'};
+		height: 100%;
 		object-fit: ${fillContainer || (compactModeOnMobile && $uiState.isMobileBreakpoint)
 			? 'cover'
 			: 'contain'};
@@ -349,6 +359,7 @@
 	class="jdg-image-container {imageContainerCssDynamic}"
 >
 	<img
+		on:click={onImageClick}
 		bind:this={imageRef}
 		on:load={showPlaceholderImage
 			? isPlaceholderLoaded
@@ -372,7 +383,7 @@
 				isImageLoaded ? 1 : 0.25
 			}; transition: opacity ${jdgDurations.fadeIn}${jdgDurations.unit} ease-in-out;`}
 		></div>
-		<div class="image-blur-background"></div>
+		<div on:click|self={hideImageDetailModal} class="image-blur-background"></div>
 	{/if}
 	<!-- caption and attribution -->
 	{#if showCaption || showAttribution}
@@ -409,8 +420,6 @@
 	}
 
 	.image {
-		height: 100%;
-		width: 100%;
 		transition: transform 0.3s ease-in-out;
 	}
 

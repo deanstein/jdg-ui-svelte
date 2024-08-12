@@ -36,13 +36,21 @@
 	closeOnOverlayClick={false}
 	colorRgba="rgba(255, 255, 255, 0.6)"
 >
-	<div class="image-and-caption-wrapper {imageAndCaptionWrapperCss}" transition:scale>
+	<div
+		class="image-and-caption-wrapper {imageAndCaptionWrapperCss}"
+		transition:scale
+		role="button"
+		tabindex="0"
+		on:click={hideImageDetailModal}
+		on:keypress={() => {}}
+	>
 		<JDGImage
 			{imageAttributes}
 			maxHeight="auto"
 			fillContainer={false}
 			showBlurInUnfilledSpace={true}
 			transition={scale}
+			stopClickPropagation={true}
 		/>
 		<JDGImageCaptionAttribution {imageAttributes} truncateText={false} />
 	</div>
@@ -57,6 +65,5 @@
 		max-height: 100%;
 		box-sizing: border-box;
 		z-index: 1;
-		pointer-events: none;
 	}
 </style>
