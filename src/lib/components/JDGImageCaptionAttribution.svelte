@@ -7,6 +7,7 @@
 
 	import { JDGButton } from '../index.js';
 	import { setAlphaInRgbaString } from '$lib/jdg-graphics-factory.js';
+	import { getFullTextWidth } from '$lib/jdg-ui-management.js';
 
 	export let imageAttributes;
 	export let showCaption = true;
@@ -19,10 +20,33 @@
 	let availableWidth = 0; // final available width - updated after loading
 	let captionTextRef; // element to determine total length of caption
 	let captionTextWidth = 0; // final caption width - updated after loading
+	let buttonContainerRef; // the expand/collapse button - hidden for measurements
 	let isCaptionTruncated = false;
 
 	const toggleCaptionTruncation = () => {
 		truncateText = !truncateText;
+	};
+
+	const updateWidths = () => {
+		// temporarily set the button to absolute
+		// so we can calculate the width without the button
+		let previousPositionValue;
+		if (isCaptionTruncated) {
+			previousPositionValue = window.getComputedStyle(buttonContainerRef).position;
+			buttonContainerRef.style.position = 'absolute';
+		}
+
+		// measure and update the widths
+		const availableWidthRefStyles = window.getComputedStyle(availableWidthRef);
+		availableWidth = parseFloat(availableWidthRefStyles.width);
+		captionTextWidth = getFullTextWidth(captionTextRef);
+		//console.log(captionTextWidth, availableWidth);
+
+		// set the button container ref back to its original value
+		// now that we're done measuring
+		if (isCaptionTruncated) {
+			buttonContainerRef.style.position = previousPositionValue;
+		}
 	};
 
 	const getIsCaptionTruncated = () => {
@@ -35,10 +59,7 @@
 		if (showCaption && imageAttributes.imgCaption) {
 			// set up a resize observer to calculate the final available width for text
 			const observer = new ResizeObserver(() => {
-				const availableWidthRefStyles = window.getComputedStyle(availableWidthRef);
-				const captionTextRefStyles = window.getComputedStyle(captionTextRef);
-				availableWidth = parseFloat(availableWidthRefStyles.width);
-				captionTextWidth = parseFloat(captionTextRefStyles.width);
+				updateWidths();
 			});
 			observer.observe(captionTextRef);
 			return () => {
@@ -156,7 +177,7 @@
 		{/if}
 	</div>
 	{#if isCaptionTruncated}
-		<div class="expand-collapse-button-container">
+		<div bind:this={buttonContainerRef} class="expand-collapse-button-container">
 			<JDGButton
 				label={truncateText ? 'Show more' : 'Show less'}
 				onClickFunction={(event) => {
