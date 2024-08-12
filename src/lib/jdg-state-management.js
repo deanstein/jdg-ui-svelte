@@ -85,12 +85,12 @@ export const setImageDetailAttributes = (imageDetailObject) => {
 export const showImageDetailModal = (imageAttributes) => {
 	setShowImageDetailModal(true);
 	setImageDetailAttributes(imageAttributes);
-}
+};
 
 export const hideImageDetailModal = () => {
 	setShowImageDetailModal(false);
 	setImageDetailAttributes(undefined);
-}
+};
 
 //
 // JUMP-TO
@@ -187,7 +187,7 @@ export const getHighestZIndex = () => {
 
 //
 // DEV TOOLS
-// 
+//
 
 export const toggleDevTools = () => {
 	uiState.update((currentValue) => {
