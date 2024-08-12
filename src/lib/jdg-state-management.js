@@ -2,6 +2,10 @@ import { jdgColors } from './jdg-shared-styles.js';
 import { addUniqueValueToArray, removeValueFromArray } from './jdg-utils.js';
 import uiState from './states/ui-state.js';
 
+//
+// ACCENT COLORS + HEADER STRIPES
+//
+
 export const getAccentColors = () => {
 	let accentColors = jdgColors.accentColorsJDG;
 	uiState.subscribe((currentValue) => {
@@ -16,6 +20,17 @@ export const setAccentColors = (accentColors) => {
 		return currentValue;
 	});
 };
+
+export const setShowHeaderStripes = (showHeaderStripes) => {
+	uiState.update((currentValue) => {
+		currentValue.showHeaderStripes = showHeaderStripes;
+		return currentValue;
+	});
+};
+
+//
+// WINDOW + CLIENT WIDTHS
+//
 
 export const setWindowWidth = (windowWidth) => {
 	uiState.update((currentValue) => {
@@ -38,6 +53,10 @@ export const setIsMobileBreakpoint = (isMobileBreakpoint) => {
 	});
 };
 
+//
+// SCROLLING
+//
+
 export const setIsScrolling = (isScrolling) => {
 	uiState.update((currentValue) => {
 		currentValue.isScrolling = isScrolling;
@@ -45,12 +64,9 @@ export const setIsScrolling = (isScrolling) => {
 	});
 };
 
-export const setShowHeaderStripes = (showHeaderStripes) => {
-	uiState.update((currentValue) => {
-		currentValue.showHeaderStripes = showHeaderStripes;
-		return currentValue;
-	});
-};
+//
+// IMAGE DETAIL MODAL
+//
 
 export const setShowImageDetailModal = (showImageDetailModal) => {
 	uiState.update((currentValue) => {
@@ -65,6 +81,20 @@ export const setImageDetailAttributes = (imageDetailObject) => {
 		return currentValue;
 	});
 };
+
+export const showImageDetailModal = (imageAttributes) => {
+	setShowImageDetailModal(true);
+	setImageDetailAttributes(imageAttributes);
+}
+
+export const hideImageDetailModal = () => {
+	setShowImageDetailModal(false);
+	setImageDetailAttributes(undefined);
+}
+
+//
+// JUMP-TO
+//
 
 export const resetJumpToNavItems = () => {
 	uiState.update((currentValue) => {
@@ -92,6 +122,10 @@ export const removeJumpToNavItem = (navItem) => {
 	});
 };
 
+//
+// NAV SIDEBAR
+//
+
 export const getIsNavSideBarOpen = () => {
 	let isOpen;
 
@@ -109,12 +143,29 @@ export const setNavSidebarOpen = (sidebarOpenState) => {
 	});
 };
 
-export const toggleDevTools = () => {
+//
+// NOTIFICATION BANNERS
+//
+
+export const addNotificationBanner = (bannerId) => {
 	uiState.update((currentValue) => {
-		currentValue.showDevTools = !currentValue.showDevTools;
+		const updatedArray = addUniqueValueToArray(currentValue.activeNotificationBanners, bannerId);
+		currentValue.activeNotificationBanners = updatedArray;
 		return currentValue;
 	});
 };
+
+export const removeNotificationBanner = (bannerId) => {
+	uiState.update((currentValue) => {
+		const updatedArray = removeValueFromArray(currentValue.activeNotificationBanners, bannerId);
+		currentValue.activeNotificationBanners = updatedArray;
+		return currentValue;
+	});
+};
+
+//
+// Z-INDICES
+//
 
 export const incrementHighestZIndex = () => {
 	let newZIndex;
@@ -134,18 +185,13 @@ export const getHighestZIndex = () => {
 	return zIndex;
 };
 
-export const addNotificationBanner = (bannerId) => {
-	uiState.update((currentValue) => {
-		const updatedArray = addUniqueValueToArray(currentValue.activeNotificationBanners, bannerId);
-		currentValue.activeNotificationBanners = updatedArray;
-		return currentValue;
-	});
-};
+//
+// DEV TOOLS
+// 
 
-export const removeNotificationBanner = (bannerId) => {
+export const toggleDevTools = () => {
 	uiState.update((currentValue) => {
-		const updatedArray = removeValueFromArray(currentValue.activeNotificationBanners, bannerId);
-		currentValue.activeNotificationBanners = updatedArray;
+		currentValue.showDevTools = !currentValue.showDevTools;
 		return currentValue;
 	});
 };
