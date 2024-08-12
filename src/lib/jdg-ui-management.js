@@ -41,3 +41,13 @@ export const breakpointHandler = (
 		breakpoint2Function();
 	}
 };
+
+// get the full width of text, even if it's being truncated
+export const getFullTextWidth = (element) => {
+	const canvas = document.createElement('canvas');
+	const context = canvas.getContext('2d');
+	const style = window.getComputedStyle(element);
+	context.font = `${style.fontSize} ${style.fontFamily}`;
+	const metrics = context.measureText(element.textContent);
+	return metrics.width;
+}
