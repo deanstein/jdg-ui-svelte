@@ -54,7 +54,6 @@
 				const wrapper = document.createElement('div');
 				wrapper.style.display = 'grid';
 				wrapper.style.maxWidth = 'fit-content';
-				wrapper.style.flexBasis = 'auto';
 
 				node.parentNode.insertBefore(wrapper, node);
 				wrapper.appendChild(node);
