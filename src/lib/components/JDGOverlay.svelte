@@ -74,7 +74,6 @@
 
 	onMount(() => {
 		overlayRef.addEventListener('wheel', preventScroll, { passive: false });
-
 		overlayRef.addEventListener('touchmove', preventScroll, { passive: false });
 	});
 </script>
