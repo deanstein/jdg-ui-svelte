@@ -452,7 +452,6 @@
 		align-items: center;
 		justify-content: center;
 		background-color: rgba(50, 50, 50, 0.5);
-		z-index: 2;
 	}
 
 	.image-error-overlay {
