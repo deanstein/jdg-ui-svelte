@@ -50,4 +50,4 @@ export const getFullTextWidth = (element) => {
 	context.font = `${style.fontSize} ${style.fontFamily}`;
 	const metrics = context.measureText(element.textContent);
 	return metrics.width;
-}
+};
