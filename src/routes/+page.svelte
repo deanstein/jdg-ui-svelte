@@ -99,6 +99,17 @@
 		<JDGBodyCopy textAlign="center" paddingBottom="0">
 			<b>IMAGE TILE</b>
 			<br />
+			Clicking goes to Google but in a new tab.
+		</JDGBodyCopy>
+		<JDGImageTile
+			imageAttributes={imageAttributesCollection.aerial_60s70s_1}
+			fillContainer={false}
+			href="https://www.google.com"
+			hrefOpenInNewTab={true}
+		/>
+		<JDGBodyCopy textAlign="center" paddingBottom="0">
+			<b>IMAGE TILE</b>
+			<br />
 			No blur allowed in imageAttributes
 		</JDGBodyCopy>
 		<JDGImageTile
