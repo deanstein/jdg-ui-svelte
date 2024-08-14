@@ -29,11 +29,13 @@
 	export let labelJustification = 'left';
 	export let labelContainerVerticalAlign = 'bottom';
 	export let href = undefined;
+	export let hrefOpenInNewTab = false;
 	export let onClickFunction = undefined;
 	export let showHorizontalStripesOnHover = true;
 	export let showCaption = false;
 	export let showAttribution = false;
 
+	const hrefTarget = hrefOpenInNewTab ? '_blank' : null;
 	let isHovering;
 	let alternateFitRef; // use this div to determine aspect ratios
 
@@ -89,7 +91,12 @@
 </script>
 
 <div class="jdg-image-tile-container">
-	<a bind:this={alternateFitRef} href={$uiState.isScrolling ? null : href} class={aCss}>
+	<a
+		bind:this={alternateFitRef}
+		href={$uiState.isScrolling ? null : href}
+		target={hrefTarget}
+		class={aCss}
+	>
 		<div
 			class="image-tile {imageTileCss}"
 			on:mouseenter={() => (isHovering = true)}
