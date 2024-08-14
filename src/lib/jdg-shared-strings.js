@@ -14,6 +14,8 @@ export const jdgSharedUrls = {
 	jdgGitHub: 'https://github.com/deanstein',
 	jdgInstagram: 'https://www.instagram.com/jdeangoldstein/',
 	jdgLinkedIn: 'https://www.linkedin.com/in/jdeangoldstein/',
+	jdgResume:
+		'https://res.cloudinary.com/jdg-main/image/upload/v1722571752/jdg-website/jdg-resume.pdf',
 	vipFacebook: 'https://www.facebook.com/villaitaliaproject/',
 	vipInstagram: 'https://www.instagram.com/villaitaliaproject/'
 };
