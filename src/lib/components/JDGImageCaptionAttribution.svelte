@@ -40,7 +40,7 @@
 		const availableWidthRefStyles = window.getComputedStyle(availableWidthRef);
 		availableWidth = parseFloat(availableWidthRefStyles.width);
 		captionTextWidth = getFullTextWidth(captionTextRef);
-		//console.log(captionTextWidth, availableWidth);
+		// console.log('Caption text width: ', captionTextWidth, 'Caption available width: ', availableWidth);
 
 		// set the button container ref back to its original value
 		// now that we're done measuring
@@ -60,6 +60,7 @@
 			// set up a resize observer to calculate the final available width for text
 			const observer = new ResizeObserver(() => {
 				updateWidths();
+				getIsCaptionTruncated();
 			});
 			observer.observe(captionTextRef);
 			return () => {
