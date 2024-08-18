@@ -99,7 +99,9 @@ const imageAttributesCollection = {
 		instantiateObject(jdgImageAttributes, {
 			imgSrc: addCloudinaryUrlTransformation(
 				'https://res.cloudinary.com/jdg-main/image/upload/v1721195162/jdg-website/arch/fairgrounds-aerial.jpg'
-			)
+			),
+			imgCaption:
+				'This is a very long caption. The intent is to demonstrate an image with a caption longer than another image in the same carousel, so the expand/collapse button updates appropriately when the imageAttributes change.'
 		})
 	),
 	speer_point_before: postProcessImageAttributes(
