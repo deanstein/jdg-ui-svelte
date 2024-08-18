@@ -19,7 +19,7 @@
 			> * {
 				flex: 0 1 ${forceMaxColumns ? `calc(100% / ${maxColumns})` : '100%'};
 			}
-			gap: ${(jdgSizes.nContentBoxPaddingSm / 2).toString() + jdgSizes.contentBoxPaddingUnit};
+			gap: ${jdgSizes.nContentBoxPaddingSm.toString() + jdgSizes.contentBoxPaddingUnit};
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
@@ -31,7 +31,7 @@
 							${jdgSizes.nContentBoxPaddingMd.toString() + jdgSizes.contentBoxPaddingUnit}
 					);
 			}
-			gap: ${(jdgSizes.nContentBoxPaddingMd / 2).toString() + jdgSizes.contentBoxPaddingUnit};
+			gap: ${jdgSizes.nContentBoxPaddingMd.toString() + jdgSizes.contentBoxPaddingUnit};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 			> * {
