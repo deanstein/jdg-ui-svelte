@@ -53,19 +53,22 @@
 		margin-right: ${jdgSizes.contentBoxFloatingMarginLg};
 		background-color: ${jdgColors.contentBoxBackground};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			padding: ${paddingTop} ${jdgSizes.contentBoxPaddingSm} ${paddingBottom} ${jdgSizes.contentBoxPaddingSm};
+			padding: ${paddingTop} ${jdgSizes.contentBoxPaddingSm} ${paddingBottom}
+				${jdgSizes.contentBoxPaddingSm};
 			margin-left: ${jdgSizes.contentBoxFloatingMarginSm};
 			margin-right: ${jdgSizes.contentBoxFloatingMarginSm};
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-			padding: ${paddingTop} ${jdgSizes.contentBoxPaddingMd} ${paddingBottom} ${jdgSizes.contentBoxPaddingMd};
+			padding: ${paddingTop} ${jdgSizes.contentBoxPaddingMd} ${paddingBottom}
+				${jdgSizes.contentBoxPaddingMd};
 			margin-left: ${jdgSizes.contentBoxFloatingMarginMd};
 			margin-right: ${jdgSizes.contentBoxFloatingMarginMd};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			padding: ${paddingTop} ${jdgSizes.contentBoxPaddingLg} ${paddingBottom} ${jdgSizes.contentBoxPaddingLg};
+			padding: ${paddingTop} ${jdgSizes.contentBoxPaddingLg} ${paddingBottom}
+				${jdgSizes.contentBoxPaddingLg};
 			margin-left: ${jdgSizes.contentBoxFloatingMarginLg};
 			margin-right: ${jdgSizes.contentBoxFloatingMarginLg};
 		}
