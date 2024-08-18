@@ -16,6 +16,8 @@ export const jdgSharedUrls = {
 	jdgLinkedIn: 'https://www.linkedin.com/in/jdeangoldstein/',
 	jdgResume:
 		'https://res.cloudinary.com/jdg-main/image/upload/v1722571752/jdg-website/jdg-resume.pdf',
+	pmxCgTrader: 'https://www.cgtrader.com/3d-models?author=parametrix',
+	pmxWebsite: 'https://www.parametrix3d.com',
 	vipFacebook: 'https://www.facebook.com/villaitaliaproject/',
 	vipInstagram: 'https://www.instagram.com/villaitaliaproject/'
 };
