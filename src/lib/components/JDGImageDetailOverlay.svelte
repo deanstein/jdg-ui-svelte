@@ -33,30 +33,38 @@
 	onCloseFunction={() => {
 		hideImageDetailModal();
 	}}
-	closeOnOverlayClick={false}
+	closeOnOverlayClick={true}
 	colorRgba="rgba(255, 255, 255, 0.6)"
 >
-	<div class="image-and-caption-wrapper {imageAndCaptionWrapperCss}" transition:scale>
+	<div
+		class="image-and-caption-wrapper {imageAndCaptionWrapperCss}"
+		transition:scale
+		on:click={hideImageDetailModal}
+		role="button"
+		tabindex="0"
+		on:keypress={() => {}}
+	>
 		<JDGImage
 			{imageAttributes}
 			maxHeight="auto"
 			fillContainer={false}
 			showBlurInUnfilledSpace={true}
 			transition={scale}
+			showCaption={true}
+			showAttribution={true}
+			stopEventPropagation={true}
 		/>
-		<JDGImageCaptionAttribution {imageAttributes} truncateText={false} />
 	</div>
 </JDGOverlay>
 
 <style>
 	.image-and-caption-wrapper {
+		display: flex;
 		align-items: center;
 		justify-content: center;
 		flex-direction: column;
 		width: 100%;
 		max-height: 100%;
 		box-sizing: border-box;
-		z-index: 1;
-		pointer-events: none;
 	}
 </style>
