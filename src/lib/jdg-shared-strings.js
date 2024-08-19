@@ -1,5 +1,6 @@
 export const jdgSharedIdentifiers = {
-	imageCompareWrapper: 'jdg-image-compare-wrapper' /* ImageCompare is treated differently in a GridLayout */
+	imageCompareWrapper:
+		'jdg-image-compare-wrapper' /* ImageCompare is treated differently in a GridLayout */
 };
 
 export const jdgSharedStrings = {
