@@ -222,7 +222,9 @@
 
 	const imageCssStatic = css`
 		/* width is typically 100%, but not for a specific stopEventPropagation case */
-		width: ${stopEventPropagation && showBlurInUnfilledSpace && !fillContainer ? 'max-content' : '100%'};
+		width: ${stopEventPropagation && showBlurInUnfilledSpace && !fillContainer
+			? 'max-content'
+			: '100%'};
 		object-fit: ${fillContainer || (compactModeOnMobile && $uiState.isMobileBreakpoint)
 			? 'cover'
 			: 'contain'};
@@ -251,6 +253,10 @@
 				: ''};
 		}
 	`;
+
+	const imageBlurCss = css`
+			filter: blur(${jdgSizes.blurSizeMedium});
+		`;
 
 	const imageAnimationCss = css`
 		@media (hover: hover) {
@@ -357,6 +363,8 @@
 	bind:this={containerRef}
 	class="jdg-image-container {imageContainerCssDynamic}"
 >
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
+	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 	<img
 		bind:this={imageRef}
 		on:load={showPlaceholderImage
@@ -377,7 +385,7 @@
 	<!-- only show blurred image behind if blurUnfilledSpace is true -->
 	{#if showBlurInUnfilledSpace && !fillContainer}
 		<div
-			class="image-blur"
+			class="image-blur {imageBlurCss}"
 			style={`background-image: url(${imageAttributes.imgSrc}); opacity: ${
 				isImageLoaded ? 1 : 0.25
 			}; transition: opacity ${jdgDurations.fadeIn}${jdgDurations.unit} ease-in-out;`}
@@ -430,7 +438,6 @@
 		z-index: -1;
 		width: 100%;
 		height: 100%;
-		filter: blur(5px);
 		background-size: cover;
 		background-position: center;
 	}
