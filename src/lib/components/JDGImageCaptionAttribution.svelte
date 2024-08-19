@@ -213,6 +213,7 @@
 		width: 100%;
 		box-sizing: border-box;
 		flex: 1;
+		min-height: 20px; /* button is about 18px, so this ensures adding button doesn't shift size */
 	}
 
 	.caption-attribution-flex-container {
