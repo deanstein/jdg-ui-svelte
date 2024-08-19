@@ -206,7 +206,7 @@
 
 	.caption-attribution-grid-container {
 		display: grid;
-		align-items: center;
+		align-items: flex-start;
 		justify-content: center;
 		text-align: center;
 		gap: 0.2rem;
@@ -228,5 +228,10 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		width: 100%;
+		padding: 3px 0 3px 0;
+	}
+
+	.expand-collapse-button-container {
+		padding: 3px 0 3px 0;
 	}
 </style>
