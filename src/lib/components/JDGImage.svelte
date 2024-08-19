@@ -35,11 +35,18 @@
 	export let showPlaceholderImage = true;
 	export let showLoadingSpinner = true;
 	export let alignLoadingSpinner = 'center';
+	export let stopEventPropagation = false; // can be used in certain cases to ensure clicking on the image stops the event to its parent
 	export let transition = fade; // fade or scale depending on usage
 
 	// DEBUGGING
 	const showDebugMessagesInConsole = false;
 	export let showDebugLoadingState = false;
+
+	const onImageClick = (event) => {
+		if (stopEventPropagation) {
+			event.stopPropagation();
+		}
+	};
 
 	// for cloudinary media, imgSrc will be modified with transforms for optimization
 	// if this isn't a cloudinary image, it will remain the current imgSrc
@@ -214,6 +221,7 @@
 	};
 
 	const imageCssStatic = css`
+		width: ${showBlurInUnfilledSpace && !fillContainer ? 'max-content' : '100%'};
 		object-fit: ${fillContainer || (compactModeOnMobile && $uiState.isMobileBreakpoint)
 			? 'cover'
 			: 'contain'};
@@ -356,6 +364,7 @@
 				: onPlaceholderLoad
 			: onImageLoad}
 		on:error={onImageError}
+		on:click={onImageClick}
 		class={`image ${imageCssStatic} ${imageAnimationCss}`}
 		src={showPlaceholderImage
 			? isImageLoaded || isPlaceholderLoaded
@@ -410,7 +419,6 @@
 
 	.image {
 		height: 100%;
-		width: 100%;
 		transition: transform 0.3s ease-in-out;
 	}
 
