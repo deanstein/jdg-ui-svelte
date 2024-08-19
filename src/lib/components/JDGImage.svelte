@@ -221,7 +221,8 @@
 	};
 
 	const imageCssStatic = css`
-		width: ${showBlurInUnfilledSpace && !fillContainer ? 'max-content' : '100%'};
+		/* width is typically 100%, but not for a specific stopEventPropagation case */
+		width: ${stopEventPropagation && showBlurInUnfilledSpace && !fillContainer ? 'max-content' : '100%'};
 		object-fit: ${fillContainer || (compactModeOnMobile && $uiState.isMobileBreakpoint)
 			? 'cover'
 			: 'contain'};
