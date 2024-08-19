@@ -148,7 +148,7 @@
 
 <div
 	class="jdg-caption-attribution-container {captionAttributionContainerCss}"
-	on:click={(event) => {
+	on:click|stopPropagation={(event) => {
 		event.stopPropagation();
 		toggleCaptionTruncation();
 	}}
