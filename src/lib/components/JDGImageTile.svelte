@@ -56,7 +56,7 @@
 		font-family: ${labelFontFamily};
 		color: ${jdgColors.text};
 		background-color: ${jdgColors.imageLabelBackground};
-		backdrop-filter: blur(${jdgSizes.blurSizeSmall});
+		backdrop-filter: blur(${jdgSizes.blurSizeLarge});
 		${labelContainerVerticalAlign === 'center'
 			? `top: 50%;
 		transform: translate(0, -50%);`
