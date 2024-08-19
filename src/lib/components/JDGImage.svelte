@@ -255,8 +255,8 @@
 	`;
 
 	const imageBlurCss = css`
-			filter: blur(${jdgSizes.blurSizeMedium});
-		`;
+		filter: blur(${jdgSizes.blurSizeMedium});
+	`;
 
 	const imageAnimationCss = css`
 		@media (hover: hover) {
