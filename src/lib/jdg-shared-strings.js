@@ -1,3 +1,7 @@
+export const jdgSharedIdentifiers = {
+	imageCompareWrapper: 'jdg-image-compare-wrapper' /* ImageCompare is treated differently in a GridLayout */
+};
+
 export const jdgSharedStrings = {
 	jdgCopyrightName: 'Joshua Dean Goldstein' /* used for copyright and photo credits */
 };

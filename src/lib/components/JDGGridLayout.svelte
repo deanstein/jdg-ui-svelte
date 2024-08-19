@@ -3,6 +3,7 @@
 	import { css } from '@emotion/css';
 
 	import { jdgBreakpoints, jdgSizes } from '../jdg-shared-styles.js';
+	import { jdgSharedIdentifiers } from '$lib/jdg-shared-strings.js';
 
 	export let maxColumns = 3;
 	export let forceMaxColumns = false; // if true, max columns even on smallest breakpoints
@@ -54,6 +55,10 @@
 				const wrapper = document.createElement('div');
 				wrapper.style.display = 'grid';
 				wrapper.style.maxWidth = 'fit-content';
+				// if one of the children is an ImageCompare, need to add auto flexBasis
+				if (node.classList.contains(jdgSharedIdentifiers.imageCompareWrapper)) {
+					wrapper.style.flexBasis = 'auto';
+				}
 
 				node.parentNode.insertBefore(wrapper, node);
 				wrapper.appendChild(node);

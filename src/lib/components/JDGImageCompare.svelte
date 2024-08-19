@@ -7,6 +7,7 @@
 
 	import { JDGImage, JDGImageCaptionAttribution } from '$lib/index.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
+	import { jdgSharedIdentifiers } from '$lib/jdg-shared-strings.js';
 
 	export let imageAttributes1;
 	export let imageAttributes2;
@@ -159,7 +160,7 @@
 	});
 </script>
 
-<div class="jdg-image-compare-wrapper" bind:this={imageCompareWrapperRef}>
+<div class={jdgSharedIdentifiers.imageCompareWrapper} bind:this={imageCompareWrapperRef}>
 	<div
 		class="jdg-image-compare-container {compareContainerCss}"
 		bind:this={imageCompareContainerRef}
