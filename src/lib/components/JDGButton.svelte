@@ -91,7 +91,7 @@
 
 <button
 	type="button"
-	on:click={onClickFunction}
+	on:click|stopPropagation={onClickFunction}
 	disabled={!isEnabled}
 	title={tooltip ?? ''}
 	class="jdg-button {buttonCss}"
