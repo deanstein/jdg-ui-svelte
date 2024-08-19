@@ -88,8 +88,8 @@
 				${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingMd : '8px'};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			padding: 6px ${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingLg : '8px'} 6px
-				${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingLg : '8px'};
+			padding: 6px ${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingLg : '10px'} 6px
+				${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingLg : '10px'};
 		}
 	`;
 
@@ -159,10 +159,7 @@
 	<div bind:this={availableWidthRef} class="caption-attribution-grid-container">
 		{#if showCaption && imageAttributes.imgCaption}
 			<div class="caption-attribution-flex-container {captionCss}">
-				<div
-					bind:this={captionTextRef}
-					class="caption-attribution-text {captionAttributionDynamicCss}"
-				>
+				<div bind:this={captionTextRef} class="caption-text {captionAttributionDynamicCss}">
 					{imageAttributes.imgCaption}
 				</div>
 			</div>
@@ -171,7 +168,7 @@
 			<div
 				class="caption-attribution-flex-container {captionAttributionDynamicCss} {attributionCss}"
 			>
-				<div class="caption-attribution-text">
+				<div class="attribution-text">
 					{attributionPrefix + imageAttributes.imgAttribution}
 				</div>
 			</div>
@@ -224,14 +221,21 @@
 		overflow: hidden;
 	}
 
-	.caption-attribution-text {
+	.caption-text {
 		overflow: hidden;
 		text-overflow: ellipsis;
 		width: 100%;
-		padding: 3px 0 3px 0;
+		padding: 3px 0 0 0;
+	}
+
+	.attribution-text {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		width: 100%;
+		padding: 0 0 3px 0;
 	}
 
 	.expand-collapse-button-container {
-		padding: 3px 0 3px 0;
+		padding: 3px 0 0 0;
 	}
 </style>
