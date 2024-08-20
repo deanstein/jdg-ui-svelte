@@ -30,7 +30,7 @@ export const jdgColors = {
 	title: '#4F4F4F',
 	headerBackground: 'rgba(250, 250, 250, 1)',
 	contentBoxBackground: 'rgba(252, 252, 252, 0.7)',
-	imageLabelBackground: 'rgba(255, 255, 255, 0.85)'
+	imageLabelBackground: 'rgba(255, 255, 255, 0.75)'
 };
 
 export const jdgSizes = {
