@@ -303,7 +303,14 @@
 		width: 100%;
 	`;
 	$: {
-		if (lastKnownCloudinaryHeight && imageAspectRatio) {
+		// width only needs to be updated for specific cases
+		if (
+			stopEventPropagation &&
+			showBlurInUnfilledSpace &&
+			!fillContainer &&
+			lastKnownCloudinaryHeight &&
+			imageAspectRatio
+		) {
 			// get the current widths
 			const currentImageWidth = Math.round(lastKnownCloudinaryHeight * imageAspectRatio);
 			const currentWindowWidth = $uiState.windowWidth;
@@ -313,13 +320,8 @@
 				lastKnownWindowWidth !== currentWindowWidth
 			) {
 				imageCssDynamic = css`
-					/* width is typically 100%, but not for a specific stopEventPropagation case */
-					width: ${Math.abs(currentWindowWidth - currentImageWidth) > 1 &&
-					stopEventPropagation &&
-					showBlurInUnfilledSpace &&
-					!fillContainer
-						? 'max-content'
-						: '100%'};
+					/* if image is equal to or narrower than the screen, width is max-content */
+					width: ${Math.abs(currentWindowWidth - currentImageWidth) > 1 ? 'max-content' : '100%'};
 				`;
 
 				// update the last known values with the current values
