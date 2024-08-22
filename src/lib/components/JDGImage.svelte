@@ -425,7 +425,7 @@
 		<div class="image-blur-background"></div>
 	{/if}
 	<!-- caption and attribution -->
-	{#if showCaption || showAttribution}
+	{#if (showCaption && imageAttributes.imgCaption) || (showAttribution && imageAttributes.imgAttribution)}
 		<div class="caption-attribution-wrapper {captionAttributionWrapperCssDynamic}">
 			<JDGImageCaptionAttribution {imageAttributes} {showCaption} {showAttribution} />
 		</div>
