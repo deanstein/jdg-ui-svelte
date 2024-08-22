@@ -3,7 +3,8 @@
 	import { css } from '@emotion/css';
 
 	export let overlapWithHeader = false;
-	export let topBottomPadding = undefined;
+	export let topPadding;
+	export let bottomPadding;
 	export let gap = undefined;
 
 	// if not specified, these are the defaults for padding and gap
@@ -13,22 +14,22 @@
 
 	const jdgContentContainerCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			padding: ${overlapWithHeader ? '0' : topBottomPadding ?? topBottomPaddingAndGapSm} 0
-				${topBottomPadding ?? topBottomPaddingAndGapSm} 0;
+			padding: ${overlapWithHeader ? '0' : topPadding ?? topBottomPaddingAndGapSm} 0
+				${bottomPadding ?? topBottomPaddingAndGapSm} 0;
 			margin-top: ${overlapWithHeader ? '-' + jdgSizes.headerHeightSm : '0'};
 			gap: ${gap ?? topBottomPaddingAndGapSm};
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-			padding: ${overlapWithHeader ? '0' : topBottomPadding ?? topBottompaddingAndGapMd} 0
-				${topBottomPadding ?? topBottompaddingAndGapMd} 0;
+			padding: ${overlapWithHeader ? '0' : topPadding ?? topBottompaddingAndGapMd} 0
+				${bottomPadding ?? topBottompaddingAndGapMd} 0;
 			margin-top: ${overlapWithHeader ? '-' + jdgSizes.headerHeightMd : '0'};
 			gap: ${gap ?? topBottompaddingAndGapMd};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			padding: ${overlapWithHeader ? '0' : topBottomPadding ?? topBottomPaddingAndGapLg} 0
-				${topBottomPadding ?? topBottomPaddingAndGapLg} 0;
+			padding: ${overlapWithHeader ? '0' : topPadding ?? topBottomPaddingAndGapLg} 0
+				${bottomPadding ?? topBottomPaddingAndGapLg} 0;
 			margin-top: ${overlapWithHeader ? '-' + jdgSizes.headerHeightLg : '0'};
 			gap: ${gap ?? topBottomPaddingAndGapLg};
 		}
