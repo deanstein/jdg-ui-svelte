@@ -62,10 +62,13 @@
 	let isImageLoaded = false;
 	let isPlaceholderLoaded = false;
 
-	// prevent redundant cloudinary transformation requests
-	// by checking if the height of the image container has changed
-	let previousHeight = 0;
-	let previousWidth = 0;
+	// prevent redundant calculations
+	// by checking last known sizes with current sizes
+	let lastKnownImageWidth = 0;
+	let lastKnownWindowWidth = 0;
+	// cloudinary transformations
+	let lastKnownCloudinaryHeight = 0;
+	let lastKnownCloudinaryWidth = 0;
 	const heightOrWidthChangeThreshold = 100;
 
 	// for the case where the imgSrc is not provided,
@@ -182,15 +185,17 @@
 	const getHasDimensionChanged = () => {
 		if (getIsUsingContainerHeight()) {
 			if (
-				Math.abs(resolutionRef.offsetHeight - previousHeight) > heightOrWidthChangeThreshold ||
-				previousHeight === 0
+				Math.abs(resolutionRef.offsetHeight - lastKnownCloudinaryHeight) >
+					heightOrWidthChangeThreshold ||
+				lastKnownCloudinaryHeight === 0
 			) {
 				return true;
 			}
 		} else {
 			if (
-				Math.abs(resolutionRef.offsetWidth - previousWidth) > heightOrWidthChangeThreshold ||
-				previousWidth === 0
+				Math.abs(resolutionRef.offsetWidth - lastKnownCloudinaryWidth) >
+					heightOrWidthChangeThreshold ||
+				lastKnownCloudinaryWidth === 0
 			) {
 				return true;
 			}
@@ -221,10 +226,6 @@
 	};
 
 	const imageCssStatic = css`
-		/* width is typically 100%, but not for a specific stopEventPropagation case */
-		width: ${stopEventPropagation && showBlurInUnfilledSpace && !fillContainer
-			? 'max-content'
-			: '100%'};
 		object-fit: ${fillContainer || (compactModeOnMobile && $uiState.isMobileBreakpoint)
 			? 'cover'
 			: 'contain'};
@@ -288,12 +289,8 @@
 	`;
 
 	// may be updated dynamically later
-	let imageContainerCssDynamic = css`
-		height: ${$uiState.isMobileBreakpoint && compactModeOnMobile
-			? 'auto'
-			: getPreferredContainerHeight()};
-		width: ${showBlurInUnfilledSpace ? '100%' : maxWidth ?? 'auto'};
-	`;
+	let imageCssDynamic = css``;
+	let imageContainerCssDynamic = css``;
 
 	// set dynamically by isHovering and showHoverEffect
 	let captionAttributionWrapperCssDynamic = css``;
@@ -302,6 +299,27 @@
 		devicePixelRatio = window.devicePixelRatio || 1;
 		resolutionRef = alternateFitRef ?? containerRef;
 	});
+
+	$: {
+		// only bother updating the css if the values change
+		if (
+			lastKnownImageWidth !== $uiState.windowWidth &&
+			lastKnownWindowWidth !== $uiState.windowWidth
+		) {
+			imageCssDynamic = css`
+				/* width is typically 100%, but not for a specific stopEventPropagation case */
+				width: ${imageRef?.naturalWidth <= $uiState.windowWidth &&
+				stopEventPropagation &&
+				showBlurInUnfilledSpace &&
+				!fillContainer
+					? 'max-content'
+					: '100%'};
+			`;
+			lastKnownImageWidth = imageRef?.naturalWidth;
+			lastKnownWindowWidth = $uiState.windowWidth;
+			//console.log("Updating dynamic css", lastKnownImageWidth, lastKnownWindowWidth);
+		}
+	}
 
 	$: {
 		captionAttributionWrapperCssDynamic = css`
@@ -333,7 +351,7 @@
 			if (getIsUsingContainerHeight()) {
 				const adjustedHeight = Math.ceil(getMaxHeightPxFromProp() * devicePixelRatio);
 				adjustedImgSrc = addCloudinaryUrlHeight(imageAttributes.imgSrc, adjustedHeight);
-				previousHeight = resolutionRef.offsetHeight;
+				lastKnownCloudinaryHeight = resolutionRef.offsetHeight;
 				if (showDebugMessagesInConsole) {
 					console.log(
 						'Specifying height in Cloudinary URL. Adjusted Cloudinary URL: ' + adjustedImgSrc
@@ -347,7 +365,7 @@
 					imageAttributes.imgSrc,
 					Math.ceil(containerRef.offsetWidth * devicePixelRatio)
 				);
-				previousWidth = containerRef.offsetWidth;
+				lastKnownCloudinaryWidth = containerRef.offsetWidth;
 				if (showDebugMessagesInConsole) {
 					console.log(
 						'Specifying width in Cloudinary URL. Adjusted Cloudinary URL: ' + adjustedImgSrc
@@ -363,6 +381,7 @@
 	bind:this={containerRef}
 	class="jdg-image-container {imageContainerCssDynamic}"
 >
+	<!-- need to set an on:click only to potentially ignore clicks in some cases -->
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 	<img
@@ -374,7 +393,7 @@
 			: onImageLoad}
 		on:error={onImageError}
 		on:click={onImageClick}
-		class={`image ${imageCssStatic} ${imageAnimationCss}`}
+		class={`image ${imageCssStatic} ${imageCssDynamic} ${imageAnimationCss}`}
 		src={showPlaceholderImage
 			? isImageLoaded || isPlaceholderLoaded
 				? adjustedImgSrc
