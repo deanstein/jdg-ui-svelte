@@ -8,13 +8,16 @@ export const jdgSharedStrings = {
 };
 
 export const jdgSharedUrls = {
+	adskForma: 'https://www.autodesk.com/in/products/forma/',
 	adskFormIt: 'https://formit.autodesk.com/',
 	adskDynamo: 'https://dynamobim.org/',
+	arch505Design: 'https://www.505design.com',
 	ccpFacebook: 'https://www.facebook.com/cinderellacityproject/',
 	ccpInstagram: 'https://www.instagram.com/cinderellacityproject/',
 	ccpWebsite: 'https://www.cinderellacityproject.com/',
 	ccpYouTube: 'https://www.youtube.com/c/TheCinderellaCityProject',
 	ccpGitHubReleases: 'https://github.com/deanstein/CinderellaCityProject/tags',
+	grasshopper: 'https://www.grasshopper3d.com/',
 	historicEnglewood: 'https://historicenglewood.org/',
 	jdgGitHub: 'https://github.com/deanstein',
 	jdgInstagram: 'https://www.instagram.com/jdeangoldstein/',
