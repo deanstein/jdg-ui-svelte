@@ -3,8 +3,8 @@
 	import { css } from '@emotion/css';
 
 	export let overlapWithHeader = false;
-	export let topPadding;
-	export let bottomPadding;
+	export let topPadding = undefined;
+	export let bottomPadding = undefined;
 	export let gap = undefined;
 
 	// if not specified, these are the defaults for padding and gap
