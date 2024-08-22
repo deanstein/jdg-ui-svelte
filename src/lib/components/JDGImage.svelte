@@ -288,39 +288,49 @@
 		bottom: ${alignLoadingSpinner === 'end' ? '20px' : ''};
 	`;
 
-	// may be updated dynamically later
-	let imageCssDynamic = css``;
-	let imageContainerCssDynamic = css``;
-
-	// set dynamically by isHovering and showHoverEffect
-	let captionAttributionWrapperCssDynamic = css``;
-
 	onMount(() => {
 		devicePixelRatio = window.devicePixelRatio || 1;
 		resolutionRef = alternateFitRef ?? containerRef;
 	});
 
+	//
+	// dynamic css styles
+	//
+
+	// image width is typically 100%
+	// but may be set to max-content for certain situations below
+	let imageCssDynamic = css`
+		width: 100%;
+	`;
 	$: {
-		// only bother updating the css if the values change
-		if (
-			lastKnownImageWidth !== $uiState.windowWidth &&
-			lastKnownWindowWidth !== $uiState.windowWidth
-		) {
-			imageCssDynamic = css`
-				/* width is typically 100%, but not for a specific stopEventPropagation case */
-				width: ${imageRef?.naturalWidth <= $uiState.windowWidth &&
-				stopEventPropagation &&
-				showBlurInUnfilledSpace &&
-				!fillContainer
-					? 'max-content'
-					: '100%'};
-			`;
-			lastKnownImageWidth = imageRef?.naturalWidth;
-			lastKnownWindowWidth = $uiState.windowWidth;
-			//console.log("Updating dynamic css", lastKnownImageWidth, lastKnownWindowWidth);
+		if (lastKnownCloudinaryHeight && imageAspectRatio) {
+			// get the current widths
+			const currentImageWidth = Math.round(lastKnownCloudinaryHeight * imageAspectRatio);
+			const currentWindowWidth = $uiState.windowWidth;
+			// only update the css if the widths have changed
+			if (
+				lastKnownImageWidth !== currentImageWidth &&
+				lastKnownWindowWidth !== currentWindowWidth
+			) {
+				imageCssDynamic = css`
+					/* width is typically 100%, but not for a specific stopEventPropagation case */
+					width: ${Math.abs(currentWindowWidth - currentImageWidth) > 1 &&
+					stopEventPropagation &&
+					showBlurInUnfilledSpace &&
+					!fillContainer
+						? 'max-content'
+						: '100%'};
+				`;
+
+				// update the last known values with the current values
+				lastKnownImageWidth = currentImageWidth;
+				lastKnownWindowWidth = currentWindowWidth;
+				//console.log(lastKnownImageWidth, lastKnownWindowWidth);
+			}
 		}
 	}
 
+	let captionAttributionWrapperCssDynamic = css``;
 	$: {
 		captionAttributionWrapperCssDynamic = css`
 			bottom: ${isHovering && showHoverEffect ? '9px' : '0px'};
@@ -328,6 +338,7 @@
 		`;
 	}
 
+	let imageContainerCssDynamic = css``;
 	$: {
 		// ensure the aspect ratios are updated when the window width changes in state
 		$uiState.windowWidth;
