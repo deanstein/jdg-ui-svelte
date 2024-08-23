@@ -178,6 +178,7 @@
 		<div bind:this={buttonContainerRef} class="expand-collapse-button-container">
 			<JDGButton
 				label={truncateText ? 'Show more' : 'Show less'}
+				faIcon={null}
 				onClickFunction={(event) => {
 					event.stopPropagation();
 					toggleCaptionTruncation();
@@ -188,7 +189,6 @@
 				paddingLeftRight="5px"
 				paddingTopBottom="3px"
 				fontSize="10px"
-				faIcon={null}
 			/>
 		</div>
 	{/if}
