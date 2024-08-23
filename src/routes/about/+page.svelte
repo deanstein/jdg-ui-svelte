@@ -14,7 +14,7 @@
 	import { imageAttributesCollection } from '../image-attributes-collection.js';
 </script>
 
-<JDGContentContainer overlapWithHeader={false} topBottomPadding="0">
+<JDGContentContainer overlapWithHeader={false} topPadding="0">
 	<JDGImageFullWidth
 		imageAttributes={imageAttributesCollection.ccp_gold_mall_80s90s_1}
 		showOverlay={true}
