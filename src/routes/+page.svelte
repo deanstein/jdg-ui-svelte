@@ -1,5 +1,5 @@
 <script>
-	import { openUrl, scrollToAnchor } from '$lib/jdg-utils.js';
+	import { scrollToAnchor } from '$lib/jdg-utils.js';
 
 	import uiState from '$lib/states/ui-state.js';
 

@@ -7,7 +7,7 @@
 	import { hideImageDetailModal } from '$lib/jdg-state-management.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
 
-	import { JDGImage, JDGImageCaptionAttribution, JDGOverlay } from '$lib/index.js';
+	import { JDGImage, JDGOverlay } from '$lib/index.js';
 	import { jdgBreakpoints } from '$lib/jdg-shared-styles.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes);
