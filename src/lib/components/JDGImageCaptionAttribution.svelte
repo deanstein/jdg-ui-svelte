@@ -236,6 +236,6 @@
 	}
 
 	.expand-collapse-button-container {
-		padding: 3px 0 0 0;
+		padding: 1px 0 0 0;
 	}
 </style>
