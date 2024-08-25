@@ -242,30 +242,6 @@
 		}
 	};
 
-	// has the container's width or height changed since last time this was called?
-	// this prevents duplicate/redundant Cloudinary requests
-	const getHasContainerDimensionChanged = () => {
-		return false;
-		// if (getIsUsingContainerHeight()) {
-		// 	if (
-		// 		Math.abs(resolutionRef.offsetHeight - lastKnownCloudinaryHeight) >
-		// 			heightOrWidthChangeThreshold ||
-		// 		lastKnownCloudinaryHeight === 0
-		// 	) {
-		// 		return true;
-		// 	}
-		// } else {
-		// 	if (
-		// 		Math.abs(resolutionRef.offsetWidth - lastKnownCloudinaryWidth) >
-		// 			heightOrWidthChangeThreshold ||
-		// 		lastKnownCloudinaryWidth === 0
-		// 	) {
-		// 		return true;
-		// 	}
-		// }
-		return false;
-	};
-
 	// runs after an image is loaded
 	const onImageLoad = () => {
 		// ensure that the image aspect ratio is captured once the image loads
@@ -352,9 +328,11 @@
 	`;
 
 	onMount(() => {
+		imageContainerCssDynamic = css`
+			height: ${maxHeight};
+		`;
 		devicePixelRatio = window.devicePixelRatio || 1;
 		resolutionRef = alternateFitRef ?? containerRef;
-		//getAspectRatios();
 	});
 
 	//
@@ -362,7 +340,7 @@
 	//
 	$: {
 		$clientWidth;
-		//getAspectRatios();
+		getAspectRatios();
 		getPreferredContainerHeight();
 		if (isNumberValid(containerAspectRatio) && !isNumberValid(validContainerAspectRatio)) {
 			validContainerAspectRatio = containerAspectRatio;
@@ -381,7 +359,7 @@
 	// image width is typically 100%
 	// but may be set to max-content for certain situations below
 	let imageCssDynamic = css`
-		width: 100%;
+		width: ${stopEventPropagation ? '' : '100%'};
 	`;
 	$: {
 		// width only needs to be updated for specific cases
