@@ -116,7 +116,6 @@
 			resolutionRef.style.height = existingHeight;
 		}
 		lastKnownContainerHeight = maxHeightPx;
-		console.log('Max height from prop: ' + maxHeightPx);
 		return maxHeightPx;
 	};
 
@@ -163,15 +162,23 @@
 	const getPreferredContainerHeight = () => {
 		let preferredHeight;
 		if (imageRef && validContainerAspectRatio) {
-			console.log('Getting preferred container height for: ' + imageAttributes.imgSrc);
+			if (showDebugMessagesInConsole) {
+				console.log(
+					'Getting preferred container height for: ' + imageAttributes.imgSrc,
+					'Current valid container height: ' + validContainerHeight,
+					'Max height from prop: ' + getMaxHeightPxFromProp()
+				);
+			}
 			// if we're cropping to fill container,
 			// or showing the blur behind, height is always the max height
 			if (
 				fillContainer ||
 				showBlurInUnfilledSpace ||
-				(compactModeOnMobile && $isMobileBreakpoint)
+				(compactModeOnMobile &&
+					$isMobileBreakpoint &&
+					validContainerHeight <= getMaxHeightPxFromProp())
 			) {
-				console.log('MAXHEIGHT! from props');
+				console.log('Choosing MAXHEIGHT from props only');
 				return maxHeight;
 			}
 
@@ -182,33 +189,34 @@
 					preferredHeight = 'auto';
 					if (showDebugMessagesInConsole) {
 						console.log(
-							'AUTO!',
+							'Choosing AUTO based on aspect ratios',
 							'Image aspect: ' + imageAspectRatio,
 							'Container aspect: ' + validContainerAspectRatio
 						);
 					}
-					break;
+					return preferredHeight;
+
 				// image is taller than container
 				case imageAspectRatio < validContainerAspectRatio:
 					preferredHeight = maxHeight;
 					if (showDebugMessagesInConsole) {
 						console.log(
-							'MAXHEIGHT!',
+							'Choosing MAXHEIGHT based on aspect ratios',
 							'Image aspect: ' + imageAspectRatio,
 							'Container aspect: ' + validContainerAspectRatio
 						);
 					}
-					break;
+					return preferredHeight;
 				default:
 					if (showDebugMessagesInConsole) {
 						console.log(
-							'DEFAULT!',
+							'Choosing DEFAULT (MAX HEIGHT) - unable to determine best fit,',
 							'Image aspect: ' + imageAspectRatio,
 							'Container aspect: ' + validContainerAspectRatio
 						);
 					}
 					preferredHeight = maxHeight;
-					break;
+					return preferredHeight;
 			}
 		}
 		return preferredHeight;
@@ -362,6 +370,7 @@
 		width: ${stopEventPropagation ? '' : '100%'};
 	`;
 	$: {
+		$clientWidth;
 		// width only needs to be updated for specific cases
 		if (
 			stopEventPropagation &&
