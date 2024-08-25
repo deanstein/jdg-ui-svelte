@@ -352,7 +352,6 @@
 	`;
 
 	onMount(() => {
-		getMaxHeightPxFromProp();
 		devicePixelRatio = window.devicePixelRatio || 1;
 		resolutionRef = alternateFitRef ?? containerRef;
 		//getAspectRatios();
