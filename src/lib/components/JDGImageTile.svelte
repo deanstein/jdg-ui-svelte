@@ -16,7 +16,7 @@
 		jdgDurations,
 		jdgBreakpoints
 	} from '../jdg-shared-styles.js';
-	import uiState from '$lib/states/ui-state.js';
+	import { isScrolling } from '$lib/states/ui-state.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object to hold all details
 	export let maxWidth = undefined; // if not defined, takes available space
@@ -91,12 +91,7 @@
 </script>
 
 <div class="jdg-image-tile-container">
-	<a
-		bind:this={alternateFitRef}
-		href={$uiState.isScrolling ? null : href}
-		target={hrefTarget}
-		class={aCss}
-	>
+	<a bind:this={alternateFitRef} href={$isScrolling ? null : href} target={hrefTarget} class={aCss}>
 		<div
 			class="image-tile {imageTileCss}"
 			on:mouseenter={() => (isHovering = true)}
@@ -105,7 +100,7 @@
 			tabindex="0"
 			on:click={(event) => {
 				// prevent click if scrolling
-				if ($uiState.isScrolling) {
+				if ($isScrolling) {
 					event.preventDefault();
 					return;
 				}

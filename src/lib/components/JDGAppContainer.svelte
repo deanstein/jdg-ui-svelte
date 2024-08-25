@@ -3,15 +3,17 @@
 	import { css } from '@emotion/css';
 
 	import jdgContexts from '$lib/jdg-contexts.js';
-	import uiState from '$lib/states/ui-state.js';
+	import uiState, {
+		clientWidth,
+		isMobileBreakpoint,
+		isScrolling,
+		windowWidth
+	} from '$lib/states/ui-state.js';
 	import {
 		getAccentColors,
 		setAccentColors,
 		setClientWidth,
-		setIsMobileBreakpoint,
-		setIsScrolling,
-		setShowHeaderStripes,
-		setWindowWidth
+		setShowHeaderStripes
 	} from '$lib/jdg-state-management.js';
 
 	import {
@@ -22,6 +24,7 @@
 
 	import { JDGLoadingOverlay } from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgFonts, jdgLinkStyles } from '$lib/jdg-shared-styles.js';
+	import { get } from 'svelte/store';
 
 	export let fontFamily = jdgFonts.body;
 	export let appLoadingIconSrc =
@@ -50,18 +53,18 @@
 	// app sets window and client width in the ui state
 	// so children don't have to add event handlers
 	const onPageResize = () => {
-		setWindowWidth(window.innerWidth);
-		setClientWidth(appContainerRef?.clientWidth);
-		setIsMobileBreakpoint(appContainerRef?.clientWidth <= jdgBreakpoints.width[0]);
+		windowWidth.set(window.innerWidth);
+		clientWidth.set(appContainerRef?.clientWidth);
+		isMobileBreakpoint.set(appContainerRef?.clientWidth <= jdgBreakpoints.width[0]);
 	};
 
 	// set whether page is being scrolled or not
 	const onPageScroll = () => {
-		if ($uiState.isMobileBreakpoint) {
-			setIsScrolling(true);
+		if ($isMobileBreakpoint) {
+			isScrolling.set(true);
 			clearTimeout(scrollTimeout);
 			scrollTimeout = setTimeout(() => {
-				setIsScrolling(false);
+				isScrolling.set(false);
 			}, scrollTimeoutDuration);
 		}
 	};

@@ -4,32 +4,20 @@
 		JDGContentBoxFloating,
 		JDGContentContainer,
 		JDGGridLayout,
+		JDGImage,
+		JDGImageFullWidth,
 		JDGImageTile
 	} from '$lib/index.js';
 	import { imageAttributesCollection } from '../image-attributes-collection.js';
 </script>
 
-<JDGContentContainer>
-	<JDGContentBoxFloating title="GRID LAYOUTS">
-		<JDGBodyCopy textAlign="center" paddingBottom="0" paddingTop="0">
-			<b>2 ITEMS</b>
-		</JDGBodyCopy>
-		<JDGGridLayout>
-			<JDGImageTile
-				imageAttributes={imageAttributesCollection.hst.ehs_1920_broadway_northeast}
-				showCaption={true}
-			/>
-			<JDGImageTile
-				imageAttributes={imageAttributesCollection.hst.fms_2013_broadway_northeast}
-				showCaption={true}
-			/>
-		</JDGGridLayout>
-		<JDGGridLayout>
-			<JDGImageTile
-				imageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
-				fillContainer={false}
-				maxHeight="400px"
-			/>
-		</JDGGridLayout>
-	</JDGContentBoxFloating>
+<JDGContentContainer topPadding="0" overlapWithHeader={true}>
+	<JDGImageFullWidth
+		imageAttributes={imageAttributesCollection.cc_1}
+		showOverlay={true}
+		overlayImageAttributes={imageAttributesCollection.ccp_ouatacc_white}
+		overlayImageText="A Secondary Text Test"
+		overlayImageTextFontFamily="Righteous"
+		overlapWithHeader={true}
+	/>
 </JDGContentContainer>

@@ -2,7 +2,7 @@
 	import { css } from '@emotion/css';
 	import { onMount } from 'svelte';
 
-	import uiState from '$lib/states/ui-state.js';
+	import { clientWidth } from '$lib/states/ui-state.js';
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	import { JDGButton } from '../index.js';
@@ -140,7 +140,7 @@
 
 	$: {
 		// check for truncation when clientWidth changes
-		$uiState.clientWidth;
+		$clientWidth;
 		availableWidth;
 		getIsCaptionTruncated();
 	}

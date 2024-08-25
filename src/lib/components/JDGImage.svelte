@@ -4,7 +4,8 @@
 	import { css } from '@emotion/css';
 
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
-	import uiState from '$lib/states/ui-state.js';
+	import { isNumberValid } from '$lib/jdg-utils.js';
+	import uiState, { clientWidth, isMobileBreakpoint, windowWidth } from '$lib/states/ui-state.js';
 
 	import {
 		addCloudinaryUrlHeight,
@@ -23,7 +24,7 @@
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object for all image data
 	export let maxHeight = '350px'; // image will never exceed this height, but could be less depending on fillContainer
-	export let maxWidth = undefined; // if not defined, takes available space
+	export let maxWidth = 'auto'; // if not defined, takes available space
 	export let alternateFitRef = undefined; // optionally use another element for image fit calcs
 	export let fillContainer = true; // if true, image may be cropped to fill its container in both directions
 	export let compactModeOnMobile = false; // if true, ignores fillContainer on smallest breakpoint for no cropping and fitted container (less height)
@@ -39,7 +40,7 @@
 	export let transition = fade; // fade or scale depending on usage
 
 	// DEBUGGING
-	const showDebugMessagesInConsole = false;
+	const showDebugMessagesInConsole = true;
 	export let showDebugLoadingState = false;
 
 	const onImageClick = (event) => {
@@ -52,10 +53,16 @@
 	// if this isn't a cloudinary image, it will remain the current imgSrc
 	let adjustedImgSrc = imageAttributes.imgSrc;
 	let containerRef;
+	let containerAspectRatio;
+	let validContainerAspectRatio;
+	let validContainerHeight;
+	let validContainerWidth;
+	let lastKnownContainerAspectRatio;
+	let lastKnownContainerWidth;
+	let lastKnownContainerHeight;
 	// the ref used for cloudinary resolutions requests
 	// this is either the alternate fit ref or the container ref
 	let resolutionRef;
-	let containerAspectRatio;
 	let imageRef;
 	let imageAspectRatio;
 	let devicePixelRatio;
@@ -101,51 +108,107 @@
 			}
 		} else {
 			// temporarily set the height to 100%
-			const style = window.getComputedStyle(resolutionRef);
-			const existingHeight = style.getPropertyValue('height');
+			const existingHeight = resolutionRef.style.height;
 			resolutionRef.style.height = '100%';
 			// get the maxHeightPx
 			maxHeightPx = resolutionRef.clientHeight;
 			// reset the style to what it was before
-			resolutionRef.style.height = parseInt(existingHeight) === 0 ? '' : existingHeight;
+			resolutionRef.style.height = existingHeight;
 		}
+		lastKnownContainerHeight = maxHeightPx;
+		console.log('Max height from prop: ' + maxHeightPx);
 		return maxHeightPx;
+	};
+
+	// get a pixel value from whatever is passed into the maxHeight prop
+	const getMaxWidthFromProp = () => {
+		// width can be in vh or px or even auto
+		// if in vh, convert to pixels for calculations
+		let maxWidthValue;
+		let maxWidthUnit;
+		let maxWidthPx;
+		// only calculate maxWidth if prop is not auto
+		if (maxWidth !== 'auto') {
+			[maxWidthValue, maxWidthUnit] = maxWidth.match(/^(\d+)(\D+)$/).slice(1);
+			const maxWidthParsed = parseFloat(maxWidthValue);
+			// get the max width in px for calculations
+			if (maxWidthUnit === 'vh') {
+				maxWidthPx = Math.ceil(convertVhToPixels(maxWidthParsed));
+			} else if (maxWidthUnit === 'px') {
+				maxWidthPx = Math.ceil(maxWidthParsed);
+			}
+		} else {
+			// temporarily set the width to 100%
+			const existingWidth = resolutionRef.style.width;
+			resolutionRef.style.width = '100%';
+			// get the maxWidth
+			maxWidthPx = resolutionRef.clientWidth;
+			// reset the style to what it was before
+			resolutionRef.style.width = existingWidth;
+		}
+		lastKnownContainerWidth = maxWidthPx;
+		return maxWidthPx;
 	};
 
 	// calculate the aspect ratio of the image container and the image (if not already known)
 	const getAspectRatios = () => {
 		if (resolutionRef && imageRef) {
 			imageAspectRatio = imageRef.naturalWidth / imageRef.naturalHeight;
-			const style = window.getComputedStyle(resolutionRef);
-			const containerWidth = parseInt(style.getPropertyValue('width'));
-			const containerHeight = parseInt(style.getPropertyValue('height'));
-			containerAspectRatio = containerWidth / containerHeight;
+			lastKnownContainerHeight = getMaxHeightPxFromProp();
+			lastKnownContainerWidth = getMaxWidthFromProp();
+			containerAspectRatio = getMaxWidthFromProp() / getMaxHeightPxFromProp();
 		}
 	};
 
 	const getPreferredContainerHeight = () => {
 		let preferredHeight;
-		if (resolutionRef && imageRef) {
+		if (imageRef && validContainerAspectRatio) {
+			console.log('Getting preferred container height for: ' + imageAttributes.imgSrc);
 			// if we're cropping to fill container,
 			// or showing the blur behind, height is always the max height
 			if (
 				fillContainer ||
-				!showBlurInUnfilledSpace ||
-				(compactModeOnMobile && $uiState.isMobileBreakpoint)
+				showBlurInUnfilledSpace ||
+				(compactModeOnMobile && $isMobileBreakpoint)
 			) {
-				preferredHeight = maxHeight;
+				console.log('MAXHEIGHT! from props');
+				return maxHeight;
 			}
 
 			// otherwise, need to determine crop based on aspect ratios
 			switch (true) {
 				// image is wider than container
-				case imageAspectRatio > containerAspectRatio:
+				case imageAspectRatio > validContainerAspectRatio:
 					preferredHeight = 'auto';
+					if (showDebugMessagesInConsole) {
+						console.log(
+							'AUTO!',
+							'Image aspect: ' + imageAspectRatio,
+							'Container aspect: ' + validContainerAspectRatio
+						);
+					}
+					break;
 				// image is taller than container
-				case imageAspectRatio < containerAspectRatio:
+				case imageAspectRatio < validContainerAspectRatio:
 					preferredHeight = maxHeight;
+					if (showDebugMessagesInConsole) {
+						console.log(
+							'MAXHEIGHT!',
+							'Image aspect: ' + imageAspectRatio,
+							'Container aspect: ' + validContainerAspectRatio
+						);
+					}
+					break;
 				default:
+					if (showDebugMessagesInConsole) {
+						console.log(
+							'DEFAULT!',
+							'Image aspect: ' + imageAspectRatio,
+							'Container aspect: ' + validContainerAspectRatio
+						);
+					}
 					preferredHeight = maxHeight;
+					break;
 			}
 		}
 		return preferredHeight;
@@ -153,13 +216,12 @@
 
 	// is the image sizing and resolution based on the container's height, or its width?
 	const getIsUsingContainerHeight = () => {
-		getAspectRatios();
-		if (!imageAspectRatio || !containerAspectRatio) {
+		if (!imageAspectRatio || !validContainerAspectRatio) {
 			return true;
 		}
 		//debugger;
 		// image is wider than container
-		if (imageAspectRatio > containerAspectRatio) {
+		if (imageAspectRatio > validContainerAspectRatio) {
 			// if filling container, use container height
 			if (fillContainer) {
 				return true;
@@ -182,24 +244,25 @@
 
 	// has the container's width or height changed since last time this was called?
 	// this prevents duplicate/redundant Cloudinary requests
-	const getHasDimensionChanged = () => {
-		if (getIsUsingContainerHeight()) {
-			if (
-				Math.abs(resolutionRef.offsetHeight - lastKnownCloudinaryHeight) >
-					heightOrWidthChangeThreshold ||
-				lastKnownCloudinaryHeight === 0
-			) {
-				return true;
-			}
-		} else {
-			if (
-				Math.abs(resolutionRef.offsetWidth - lastKnownCloudinaryWidth) >
-					heightOrWidthChangeThreshold ||
-				lastKnownCloudinaryWidth === 0
-			) {
-				return true;
-			}
-		}
+	const getHasContainerDimensionChanged = () => {
+		return false;
+		// if (getIsUsingContainerHeight()) {
+		// 	if (
+		// 		Math.abs(resolutionRef.offsetHeight - lastKnownCloudinaryHeight) >
+		// 			heightOrWidthChangeThreshold ||
+		// 		lastKnownCloudinaryHeight === 0
+		// 	) {
+		// 		return true;
+		// 	}
+		// } else {
+		// 	if (
+		// 		Math.abs(resolutionRef.offsetWidth - lastKnownCloudinaryWidth) >
+		// 			heightOrWidthChangeThreshold ||
+		// 		lastKnownCloudinaryWidth === 0
+		// 	) {
+		// 		return true;
+		// 	}
+		// }
 		return false;
 	};
 
@@ -226,7 +289,7 @@
 	};
 
 	const imageCssStatic = css`
-		object-fit: ${fillContainer || (compactModeOnMobile && $uiState.isMobileBreakpoint)
+		object-fit: ${fillContainer || (compactModeOnMobile && $isMobileBreakpoint)
 			? 'cover'
 			: 'contain'};
 		/* if max height is not specified, use all available space below the header */
@@ -289,13 +352,32 @@
 	`;
 
 	onMount(() => {
+		getMaxHeightPxFromProp();
 		devicePixelRatio = window.devicePixelRatio || 1;
 		resolutionRef = alternateFitRef ?? containerRef;
+		//getAspectRatios();
 	});
 
 	//
 	// dynamic css styles
 	//
+	$: {
+		$clientWidth;
+		//getAspectRatios();
+		getPreferredContainerHeight();
+		if (isNumberValid(containerAspectRatio) && !isNumberValid(validContainerAspectRatio)) {
+			validContainerAspectRatio = containerAspectRatio;
+			if (showDebugMessagesInConsole) {
+				console.log('SETTING VALID CONTAINER ASPECT RATIO: ', validContainerAspectRatio);
+			}
+		}
+		if (isNumberValid(lastKnownContainerHeight) && !isNumberValid(validContainerHeight)) {
+			validContainerHeight = lastKnownContainerHeight;
+		}
+		if (isNumberValid(lastKnownContainerWidth) && !isNumberValid(validContainerWidth)) {
+			validContainerWidth = lastKnownContainerWidth;
+		}
+	}
 
 	// image width is typically 100%
 	// but may be set to max-content for certain situations below
@@ -313,7 +395,7 @@
 		) {
 			// get the current widths
 			const currentImageWidth = Math.round(lastKnownCloudinaryHeight * imageAspectRatio);
-			const currentWindowWidth = $uiState.windowWidth;
+			const currentWindowWidth = $windowWidth;
 			// only update the css if the widths have changed
 			if (
 				lastKnownImageWidth !== currentImageWidth &&
@@ -340,49 +422,43 @@
 		`;
 	}
 
-	let imageContainerCssDynamic = css``;
+	let imageContainerCssDynamic = css`
+		height: ${lastKnownContainerHeight}px;
+	`;
 	$: {
-		// ensure the aspect ratios are updated when the window width changes in state
-		$uiState.windowWidth;
-		getAspectRatios();
-		imageAspectRatio;
-		containerAspectRatio;
-		imageContainerCssDynamic = css`
-			height: ${$uiState.isMobileBreakpoint && compactModeOnMobile
-				? 'auto'
-				: getPreferredContainerHeight()};
-			width: ${showBlurInUnfilledSpace ? '100%' : maxWidth ?? 'auto'};
-		`;
-		if (
-			resolutionRef &&
-			getHasDimensionChanged() &&
-			isImageLoaded &&
-			isUrlCloudinary(imageAttributes.imgSrc)
-		) {
-			// set the height or width depending on the image fit
-			// image is wider than container, so specify height
-			if (getIsUsingContainerHeight()) {
-				const adjustedHeight = Math.ceil(getMaxHeightPxFromProp() * devicePixelRatio);
-				adjustedImgSrc = addCloudinaryUrlHeight(imageAttributes.imgSrc, adjustedHeight);
-				lastKnownCloudinaryHeight = resolutionRef.offsetHeight;
-				if (showDebugMessagesInConsole) {
-					console.log(
-						'Specifying height in Cloudinary URL. Adjusted Cloudinary URL: ' + adjustedImgSrc
-					);
+		if (validContainerAspectRatio) {
+			// ensure the aspect ratios are updated when the window width changes in state
+			imageContainerCssDynamic = css`
+				height: ${$isMobileBreakpoint && compactModeOnMobile
+					? 'auto'
+					: getPreferredContainerHeight()};
+				width: ${showBlurInUnfilledSpace ? '100%' : maxWidth ?? 'auto'};
+			`;
+			if (resolutionRef && isImageLoaded && isUrlCloudinary(imageAttributes.imgSrc)) {
+				// set the height or width depending on the image fit
+				// image is wider than container, so specify height
+				if (getIsUsingContainerHeight()) {
+					const adjustedHeight = Math.ceil(validContainerHeight * devicePixelRatio);
+					adjustedImgSrc = addCloudinaryUrlHeight(imageAttributes.imgSrc, adjustedHeight);
+					if (showDebugMessagesInConsole) {
+						console.log(
+							'Specifying height in Cloudinary URL. Adjusted Cloudinary URL:',
+							validContainerHeight,
+							adjustedImgSrc
+						);
+					}
 				}
-			}
-			// otherwise, image is narrower than container
-			// so specify the image width
-			else {
-				adjustedImgSrc = addCloudinaryUrlWidth(
-					imageAttributes.imgSrc,
-					Math.ceil(containerRef.offsetWidth * devicePixelRatio)
-				);
-				lastKnownCloudinaryWidth = containerRef.offsetWidth;
-				if (showDebugMessagesInConsole) {
-					console.log(
-						'Specifying width in Cloudinary URL. Adjusted Cloudinary URL: ' + adjustedImgSrc
-					);
+				// otherwise, image is narrower than container
+				// so specify the image width
+				else {
+					adjustedImgSrc = addCloudinaryUrlWidth(imageAttributes.imgSrc, validContainerWidth);
+					if (showDebugMessagesInConsole) {
+						console.log(
+							'Specifying width in Cloudinary URL. Adjusted Cloudinary URL:',
+							validContainerWidth,
+							adjustedImgSrc
+						);
+					}
 				}
 			}
 		}

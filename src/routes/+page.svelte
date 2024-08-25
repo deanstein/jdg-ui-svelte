@@ -56,6 +56,21 @@
 	<JDGContentBoxFloating title="IMAGES">
 		<JDGBodyCopy textAlign="center" paddingTop="0">We've got lots of image components!</JDGBodyCopy>
 		<JDGBodyCopy textAlign="center">
+			<b>IMAGE</b>
+			<br />
+			No fill container, show blur, show caption/attribution
+			<br />
+			Inside BodyCopy
+			<br /><br />
+			<JDGImage
+				imageAttributes={imageAttributesCollection.lakeside_1}
+				fillContainer={false}
+				showBlurInUnfilledSpace={false}
+				showCaption={true}
+				showAttribution={true}
+			/>
+		</JDGBodyCopy>
+		<JDGBodyCopy textAlign="center">
 			<b>IMAGE TILE</b>
 			<br />
 			No fill container, show blur, show caption/attribution

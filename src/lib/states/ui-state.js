@@ -11,11 +11,12 @@ const uiState = {
 	showHeaderStripes: false,
 	showImageDetailOverlay: false,
 	showNavSidebar: false,
-	showDevTools: false,
-	windowWidth: 0, // full window width, including scrollbar
-	clientWidth: 0, // window minus scrollbar
-	isMobileBreakpoint: false,
-	isScrolling: false
+	showDevTools: false
 };
+
+export let isMobileBreakpoint = writable(false);
+export let isScrolling = writable(false);
+export let clientWidth = writable(0); // window minus scrollbar
+export let windowWidth = writable(0); // full window width, including scrollbar
 
 export default writable(uiState);
