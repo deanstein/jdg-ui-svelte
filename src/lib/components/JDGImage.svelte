@@ -107,15 +107,21 @@
 				maxHeightPx = Math.ceil(maxHeightParsed);
 			}
 		} else {
-			// temporarily set the height to 100%
-			const existingHeight = resolutionRef.style.height;
-			resolutionRef.style.height = '100%';
-			// get the maxHeightPx
-			maxHeightPx = resolutionRef.clientHeight;
-			// reset the style to what it was before
-			resolutionRef.style.height = existingHeight;
+			maxHeightPx = getMaxHeightPxFromContainer();
 		}
 		lastKnownContainerHeight = maxHeightPx;
+		return maxHeightPx;
+	};
+
+	const getMaxHeightPxFromContainer = () => {
+		let maxHeightPx;
+		// temporarily set the height to 100%
+		const existingHeight = resolutionRef.style.height;
+		resolutionRef.style.height = '100%';
+		// get the maxHeightPx
+		maxHeightPx = resolutionRef.clientHeight;
+		// reset the style to what it was before
+		resolutionRef.style.height = existingHeight;
 		return maxHeightPx;
 	};
 
@@ -137,15 +143,21 @@
 				maxWidthPx = Math.ceil(maxWidthParsed);
 			}
 		} else {
-			// temporarily set the width to 100%
-			const existingWidth = resolutionRef.style.width;
-			resolutionRef.style.width = '100%';
-			// get the maxWidth
-			maxWidthPx = resolutionRef.clientWidth;
-			// reset the style to what it was before
-			resolutionRef.style.width = existingWidth;
+			maxWidthPx = getMaxWidthFromContainer();
 		}
 		lastKnownContainerWidth = maxWidthPx;
+		return maxWidthPx;
+	};
+
+	export const getMaxWidthFromContainer = () => {
+		let maxWidthPx;
+		// temporarily set the width to 100%
+		const existingWidth = resolutionRef.style.width;
+		resolutionRef.style.width = '-webkit-fill-available';
+		// get the maxWidth
+		maxWidthPx = resolutionRef.clientWidth;
+		// reset the style to what it was before
+		resolutionRef.style.width = existingWidth;
 		return maxWidthPx;
 	};
 
@@ -153,9 +165,9 @@
 	const getAspectRatios = () => {
 		if (resolutionRef && imageRef) {
 			imageAspectRatio = imageRef.naturalWidth / imageRef.naturalHeight;
-			lastKnownContainerHeight = getMaxHeightPxFromProp();
-			lastKnownContainerWidth = getMaxWidthFromProp();
-			containerAspectRatio = getMaxWidthFromProp() / getMaxHeightPxFromProp();
+			lastKnownContainerHeight = getMaxHeightPxFromContainer();
+			lastKnownContainerWidth = getMaxWidthFromContainer();
+			containerAspectRatio = lastKnownContainerWidth / lastKnownContainerHeight;
 		}
 	};
 
@@ -163,61 +175,91 @@
 		let preferredHeight;
 		if (imageRef && validContainerAspectRatio) {
 			if (showDebugMessagesInConsole) {
-				console.log(
-					'Getting preferred container height for: ' + imageAttributes.imgSrc,
-					'Current valid container height: ' + validContainerHeight,
-					'Max height from prop: ' + getMaxHeightPxFromProp()
-				);
+				console.log('Getting preferred container height for: ' + imageAttributes.imgSrc);
+				console.log('Current valid container height: ' + validContainerHeight);
+				console.log('Max available container height: ' + getMaxHeightPxFromContainer());
+				console.log('Max height from prop: ' + getMaxHeightPxFromProp());
+				console.log('Max width from prop: ' + getMaxWidthFromProp());
+				console.log('Max width from container: ' + getMaxWidthFromContainer());
 			}
+
+			const imageAutoHeight = validContainerWidth / imageAspectRatio;
+			const canUseAuto = Math.abs(imageAutoHeight - getMaxHeightPxFromProp());
+			if (canUseAuto) {
+				console.log('CAN USE AUTO', imageAutoHeight);
+			}
+
 			// if we're cropping to fill container,
 			// or showing the blur behind, height is always the max height
-			if (
-				fillContainer ||
-				showBlurInUnfilledSpace ||
-				(compactModeOnMobile &&
+			if (fillContainer || showBlurInUnfilledSpace) {
+				if (
+					compactModeOnMobile &&
 					$isMobileBreakpoint &&
-					validContainerHeight <= getMaxHeightPxFromProp())
-			) {
-				console.log('Choosing MAXHEIGHT from props only');
-				return maxHeight;
+					imageAutoHeight < getMaxHeightPxFromProp()
+				) {
+					preferredHeight = 'auto';
+					return preferredHeight;
+				} else {
+					if (showDebugMessagesInConsole) {
+						console.log('Choosing MAXHEIGHT from props only');
+					}
+					preferredHeight = maxHeight;
+					return preferredHeight;
+				}
+			}
+
+			// other checks
+
+			// if compact mode
+
+			if (imageAutoHeight > getMaxHeightPxFromProp()) {
+				if (showDebugMessagesInConsole) {
+					console.log('Choosing MAXHEIGHT from height comparison');
+				}
+				preferredHeight = maxHeight;
+			} else {
+				if (showDebugMessagesInConsole) {
+					console.log('Choosing AUTO from height comparison');
+				}
+				preferredHeight = 'auto';
 			}
 
 			// otherwise, need to determine crop based on aspect ratios
-			switch (true) {
-				// image is wider than container
-				case imageAspectRatio > validContainerAspectRatio:
-					preferredHeight = 'auto';
-					if (showDebugMessagesInConsole) {
-						console.log(
-							'Choosing AUTO based on aspect ratios',
-							'Image aspect: ' + imageAspectRatio,
-							'Container aspect: ' + validContainerAspectRatio
-						);
-					}
-					return preferredHeight;
+			// switch (true) {
+			// 	// image is wider than container
+			// 	case imageAspectRatio > validContainerAspectRatio:
+			// 		preferredHeight = 'auto';
+			// 		if (showDebugMessagesInConsole) {
+			// 			console.log(
+			// 				'Choosing AUTO based on aspect ratios',
+			// 				'Image aspect: ' + imageAspectRatio,
+			// 				'Container aspect: ' + validContainerAspectRatio
+			// 			);
+			// 		}
+			// 		return preferredHeight;
 
-				// image is taller than container
-				case imageAspectRatio < validContainerAspectRatio:
-					preferredHeight = maxHeight;
-					if (showDebugMessagesInConsole) {
-						console.log(
-							'Choosing MAXHEIGHT based on aspect ratios',
-							'Image aspect: ' + imageAspectRatio,
-							'Container aspect: ' + validContainerAspectRatio
-						);
-					}
-					return preferredHeight;
-				default:
-					if (showDebugMessagesInConsole) {
-						console.log(
-							'Choosing DEFAULT (MAX HEIGHT) - unable to determine best fit,',
-							'Image aspect: ' + imageAspectRatio,
-							'Container aspect: ' + validContainerAspectRatio
-						);
-					}
-					preferredHeight = maxHeight;
-					return preferredHeight;
-			}
+			// 	// image is taller than container
+			// 	case imageAspectRatio < validContainerAspectRatio:
+			// 		preferredHeight = maxHeight;
+			// 		if (showDebugMessagesInConsole) {
+			// 			console.log(
+			// 				'Choosing MAXHEIGHT based on aspect ratios',
+			// 				'Image aspect: ' + imageAspectRatio,
+			// 				'Container aspect: ' + validContainerAspectRatio
+			// 			);
+			// 		}
+			// 		return preferredHeight;
+			// 	default:
+			// 		if (showDebugMessagesInConsole) {
+			// 			console.log(
+			// 				'Choosing DEFAULT (MAX HEIGHT) - unable to determine best fit,',
+			// 				'Image aspect: ' + imageAspectRatio,
+			// 				'Container aspect: ' + validContainerAspectRatio
+			// 			);
+			// 		}
+			// 		preferredHeight = maxHeight;
+			// 		return preferredHeight;
+			// }
 		}
 		return preferredHeight;
 	};
@@ -409,45 +451,69 @@
 	}
 
 	let imageContainerCssDynamic = css`
-		height: ${lastKnownContainerHeight}px;
+		height: ${maxHeight};
 	`;
 	$: {
 		if (validContainerAspectRatio) {
-			// ensure the aspect ratios are updated when the window width changes in state
 			imageContainerCssDynamic = css`
-				height: ${$isMobileBreakpoint && compactModeOnMobile
-					? 'auto'
-					: getPreferredContainerHeight()};
+				height: ${getPreferredContainerHeight()};
 				width: ${showBlurInUnfilledSpace ? '100%' : maxWidth ?? 'auto'};
 			`;
-			if (resolutionRef && isImageLoaded && isUrlCloudinary(imageAttributes.imgSrc)) {
-				// set the height or width depending on the image fit
-				// image is wider than container, so specify height
-				if (getIsUsingContainerHeight()) {
-					const adjustedHeight = Math.ceil(validContainerHeight * devicePixelRatio);
-					adjustedImgSrc = addCloudinaryUrlHeight(imageAttributes.imgSrc, adjustedHeight);
-					if (showDebugMessagesInConsole) {
-						console.log(
-							'Specifying height in Cloudinary URL. Adjusted Cloudinary URL:',
-							validContainerHeight,
-							adjustedImgSrc
-						);
-					}
+		}
+	}
+
+	$: {
+		if (isImageLoaded && isUrlCloudinary(imageAttributes.imgSrc)) {
+			if (getPreferredContainerHeight() === maxHeight) {
+				// specify height for cloudinary
+				const adjustedHeight = Math.ceil(validContainerHeight * devicePixelRatio);
+				adjustedImgSrc = addCloudinaryUrlHeight(imageAttributes.imgSrc, adjustedHeight);
+				if (showDebugMessagesInConsole) {
+					console.log(
+						'Specifying height in Cloudinary URL. Adjusted Cloudinary URL:',
+						validContainerHeight,
+						adjustedImgSrc
+					);
 				}
-				// otherwise, image is narrower than container
-				// so specify the image width
-				else {
-					adjustedImgSrc = addCloudinaryUrlWidth(imageAttributes.imgSrc, validContainerWidth);
-					if (showDebugMessagesInConsole) {
-						console.log(
-							'Specifying width in Cloudinary URL. Adjusted Cloudinary URL:',
-							validContainerWidth,
-							adjustedImgSrc
-						);
-					}
+			} else {
+				adjustedImgSrc = addCloudinaryUrlWidth(imageAttributes.imgSrc, validContainerWidth);
+				if (showDebugMessagesInConsole) {
+					console.log(
+						'Specifying width in Cloudinary URL. Adjusted Cloudinary URL:',
+						validContainerWidth,
+						adjustedImgSrc
+					);
 				}
 			}
 		}
+
+		// if (resolutionRef && isImageLoaded && isUrlCloudinary(imageAttributes.imgSrc)) {
+		// 	// set the height or width depending on the image fit
+		// 	// image is wider than container, so specify height
+		// 	if (getIsUsingContainerHeight()) {
+		// 		const adjustedHeight = Math.ceil(validContainerHeight * devicePixelRatio);
+		// 		adjustedImgSrc = addCloudinaryUrlHeight(imageAttributes.imgSrc, adjustedHeight);
+		// 		if (showDebugMessagesInConsole) {
+		// 			console.log(
+		// 				'Specifying height in Cloudinary URL. Adjusted Cloudinary URL:',
+		// 				validContainerHeight,
+		// 				adjustedImgSrc
+		// 			);
+		// 		}
+		// 	}
+		// 	// otherwise, image is narrower than container
+		// 	// so specify the image width
+		// 	else {
+		// 		adjustedImgSrc = addCloudinaryUrlWidth(imageAttributes.imgSrc, validContainerWidth);
+		// 		if (showDebugMessagesInConsole) {
+		// 			console.log(
+		// 				'Specifying width in Cloudinary URL. Adjusted Cloudinary URL:',
+		// 				validContainerWidth,
+		// 				adjustedImgSrc
+		// 			);
+		// 		}
+		// 	}
+		// }
 	}
 </script>
 
