@@ -89,6 +89,12 @@
 		showBlurInUnfilledSpace = false;
 	}
 
+	// even if not specified, default compactModeOnMobile to true
+	// if not filling container or showing blur
+	if (!fillContainer && !showBlurInUnfilledSpace) {
+		compactModeOnMobile = true;
+	}
+
 	// get a pixel value from whatever is passed into the maxHeight prop
 	const getMaxHeightPxFromProp = () => {
 		// height can be in vh or px or even auto
@@ -172,7 +178,8 @@
 	};
 
 	const getPreferredContainerHeight = () => {
-		let preferredHeight;
+		let preferredHeight = maxHeight;
+		let preferredHeightTitle = 'MAXHEIGHT (DEFAULT)';
 		if (imageRef && validContainerAspectRatio) {
 			if (showDebugMessagesInConsole) {
 				console.log('Getting preferred container height for: ' + imageAttributes.imgSrc);
@@ -184,45 +191,69 @@
 			}
 
 			const imageAutoHeight = validContainerWidth / imageAspectRatio;
-			const canUseAuto = Math.abs(imageAutoHeight - getMaxHeightPxFromProp());
-			if (canUseAuto) {
-				console.log('CAN USE AUTO', imageAutoHeight);
-			}
 
 			// if we're cropping to fill container,
 			// or showing the blur behind, height is always the max height
 			if (fillContainer || showBlurInUnfilledSpace) {
-				if (
-					compactModeOnMobile &&
-					$isMobileBreakpoint &&
-					imageAutoHeight < getMaxHeightPxFromProp()
-				) {
-					preferredHeight = 'auto';
-					return preferredHeight;
-				} else {
-					if (showDebugMessagesInConsole) {
-						console.log('Choosing MAXHEIGHT from props only');
-					}
-					preferredHeight = maxHeight;
-					return preferredHeight;
-				}
-			}
-
-			// other checks
-
-			// if compact mode
-
-			if (imageAutoHeight > getMaxHeightPxFromProp()) {
-				if (showDebugMessagesInConsole) {
-					console.log('Choosing MAXHEIGHT from height comparison');
-				}
 				preferredHeight = maxHeight;
-			} else {
-				if (showDebugMessagesInConsole) {
-					console.log('Choosing AUTO from height comparison');
-				}
-				preferredHeight = 'auto';
+				preferredHeightTitle = 'MAXHEIGHT';
 			}
+
+			if (
+				!fillContainer &&
+				!showBlurInUnfilledSpace &&
+				!$isMobileBreakpoint &&
+				!compactModeOnMobile
+			) {
+				preferredHeight = maxHeight;
+				preferredHeightTitle = 'MAXHEIGHT';
+			}
+
+			if ($isMobileBreakpoint && compactModeOnMobile) {
+				preferredHeight = 'auto';
+				preferredHeightTitle = 'AUTO';
+			}
+
+			if (!fillContainer && maxWidth === '100%') {
+				preferredHeight = imageAutoHeight.toString();
+				preferredHeightTitle = 'IMAGEAUTOHEIGHT';
+			}
+
+			console.log('Choosing ' + preferredHeightTitle + ' for image: ' + imageAttributes.imgSrc);
+
+			// // other checks
+			// if (
+			// 		getMaxHeightPxFromProp() * imageAspectRatio > $windowWidth &&
+			// 		compactModeOnMobile &&
+			// 		$isMobileBreakpoint
+			// 	) {
+			// 		preferredHeight = imageAutoHeight;
+			// 	}
+
+			// 	if (
+			// 		compactModeOnMobile &&
+			// 		$isMobileBreakpoint &&
+			// 		imageAutoHeight < getMaxHeightPxFromProp()
+			// 	) {
+			// 		preferredHeight = 'auto';
+			// 	} else {
+			// 		if (showDebugMessagesInConsole) {
+			// 			console.log('Choosing MAXHEIGHT from props only');
+			// 		}
+			// 		preferredHeight = imageAutoHeight;
+			// 	}
+
+			// if (imageAutoHeight > getMaxHeightPxFromProp()) {
+			// 	if (showDebugMessagesInConsole) {
+			// 		console.log('Choosing MAXHEIGHT from height comparison');
+			// 	}
+			// 	preferredHeight = maxHeight;
+			// } else {
+			// 	if (showDebugMessagesInConsole) {
+			// 		console.log('Choosing AUTO from height comparison');
+			// 	}
+			// 	preferredHeight = 'auto';
+			// }
 
 			// otherwise, need to determine crop based on aspect ratios
 			// switch (true) {
