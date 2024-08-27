@@ -70,10 +70,6 @@
 
 	// prevent redundant calculations
 	// by checking last known sizes with current sizes
-	let lastKnownImageWidth = 0;
-	let lastKnownWindowWidth = 0;
-	// cloudinary transformations
-	let lastKnownCloudinaryHeight = 0;
 	let lastKnownPreferredContainerHeightType;
 	let lastKnownCloudinaryTransformationValue;
 
@@ -352,40 +348,6 @@
 	let imageCssDynamic = css`
 		width: ${stopEventPropagation ? '' : '100%'};
 	`;
-	// $: {
-	// 	$clientWidth;
-	// 	// width only needs to be updated for specific cases
-	// 	const currentImageWidth = Math.round(lastKnownCloudinaryHeight * imageAspectRatio);
-	// 	console.log("CURRENT IMAGE WIDTH: ", currentImageWidth);
-	// 	if (
-	// 		stopEventPropagation &&
-	// 		showBlurInUnfilledSpace &&
-	// 		!fillContainer &&
-	// 		lastKnownCloudinaryHeight &&
-	// 		imageAspectRatio
-	// 	) {
-	// 		// get the current widths
-	// 		const currentImageWidth = Math.round(lastKnownCloudinaryHeight * imageAspectRatio);
-	// 		console.log("CURRENT IMAGE WIDTH: ", currentImageWidth);
-	// 		const currentWindowWidth = $windowWidth;
-	// 		// only update the css if the widths have changed
-	// 		if (
-	// 			lastKnownImageWidth !== currentImageWidth &&
-	// 			lastKnownWindowWidth !== currentWindowWidth
-	// 		) {
-	// 			console.log("TESTTTTTTT")
-	// 			imageCssDynamic = css`
-	// 				/* if image is equal to or narrower than the screen, width is max-content */
-	// 				width: ${Math.abs(currentWindowWidth - currentImageWidth) > 1 ? 'max-content' : '100%'};
-	// 			`;
-
-	// 			// update the last known values with the current values
-	// 			lastKnownImageWidth = currentImageWidth;
-	// 			lastKnownWindowWidth = currentWindowWidth;
-	// 			//console.log(lastKnownImageWidth, lastKnownWindowWidth);
-	// 		}
-	// 	}
-	// }
 
 	let captionAttributionWrapperCssDynamic = css``;
 	$: {
@@ -417,7 +379,12 @@
 			const containerHeight = style.getPropertyValue('height');
 			const containerWidth = style.getPropertyValue('width');
 			const imageAutoHeight = validContainerWidth / imageAspectRatio;
-			if (isImageLoaded && isUrlCloudinary(imageAttributes.imgSrc) && !isNaN(imageAutoHeight)) {
+			if (
+				isImageLoaded &&
+				isUrlCloudinary(imageAttributes.imgSrc) &&
+				!isNaN(imageAutoHeight) &&
+				!lastKnownCloudinaryTransformationValue
+			) {
 				console.log(
 					'Image auto height: ' + imageAutoHeight,
 					'Container height: ' + parseInt(containerHeight)
@@ -432,7 +399,7 @@
 						// specify cloudinary URL width
 						if (imageAutoHeight >= parseInt(containerHeight)) {
 							const adjustedWidth = Math.ceil(parseInt(containerWidth) * devicePixelRatio);
-							//adjustedImgSrc = addCloudinaryUrlWidth(imageAttributes.imgSrc, adjustedWidth);
+							adjustedImgSrc = addCloudinaryUrlWidth(imageAttributes.imgSrc, adjustedWidth);
 							if (showDebugMessagesInConsole) {
 								console.log(
 									'Specifying width in Cloudinary URL. Adjusted Cloudinary URL:',
@@ -445,7 +412,7 @@
 						// otherwise, specify cloudinary URL height
 						else {
 							const adjustedHeight = Math.ceil(getMaxHeightPxFromProp() * devicePixelRatio);
-							//adjustedImgSrc = addCloudinaryUrlHeight(imageAttributes.imgSrc, adjustedHeight);
+							adjustedImgSrc = addCloudinaryUrlHeight(imageAttributes.imgSrc, adjustedHeight);
 							if (showDebugMessagesInConsole) {
 								console.log(
 									'Specifying height in Cloudinary URL. Adjusted Cloudinary URL:',
@@ -459,7 +426,7 @@
 					// no fill container
 					else {
 						const adjustedHeight = Math.ceil(getMaxHeightPxFromProp() * devicePixelRatio);
-						//adjustedImgSrc = addCloudinaryUrlHeight(imageAttributes.imgSrc, adjustedHeight);
+						adjustedImgSrc = addCloudinaryUrlHeight(imageAttributes.imgSrc, adjustedHeight);
 						if (showDebugMessagesInConsole) {
 							console.log(
 								'Specifying height in Cloudinary URL. Adjusted Cloudinary URL:',
@@ -477,7 +444,7 @@
 					const adjustedHeight = Math.ceil(
 						(validContainerWidth / imageAspectRatio) * devicePixelRatio
 					);
-					//adjustedImgSrc = addCloudinaryUrlHeight(imageAttributes.imgSrc, adjustedHeight);
+					adjustedImgSrc = addCloudinaryUrlHeight(imageAttributes.imgSrc, adjustedHeight);
 					if (showDebugMessagesInConsole) {
 						console.log(
 							'Specifying height in Cloudinary URL. Adjusted Cloudinary URL (auto):',
