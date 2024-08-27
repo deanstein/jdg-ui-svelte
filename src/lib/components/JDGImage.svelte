@@ -385,10 +385,12 @@
 				!isNaN(imageAutoHeight) &&
 				!lastKnownCloudinaryTransformationValue
 			) {
-				console.log(
-					'Image auto height: ' + imageAutoHeight,
-					'Container height: ' + parseInt(containerHeight)
-				);
+				if (showDebugMessagesInConsole) {
+					console.log(
+						'Image auto height: ' + imageAutoHeight,
+						'Container height: ' + parseInt(containerHeight)
+					);
+				}
 				// preferred container height is max height
 				if (
 					lastKnownPreferredContainerHeightType === preferredHeightTypeMaxHeight ||
