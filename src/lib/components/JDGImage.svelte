@@ -43,7 +43,7 @@
 
 	// DEBUGGING
 
-	const showDebugMessagesInConsole = true;
+	const showDebugMessagesInConsole = false;
 	export let showDebugLoadingState = false;
 
 	// WINDOW
@@ -489,17 +489,13 @@
 	// reset last-known values for recalculation
 	$: {
 		if ($windowWidth !== 0) {
-			console.log('WINDOW WIDTH CHANGED: ', $windowWidth);
 			validContainerAspectRatio = undefined;
 			validContainerHeight = undefined;
 			validContainerWidth = undefined;
 			lastKnownContainerHeight = undefined;
 			lastKnownContainerWidth = undefined;
 			lastKnownCloudinaryTransformationValue = undefined;
-			// getAspectRatios();
-			// getPreferredContainerHeight();
-			// getMaxHeightPxFromContainer();
-			// getMaxWidthFromContainer();
+			getAspectRatios();
 		}
 	}
 </script>
