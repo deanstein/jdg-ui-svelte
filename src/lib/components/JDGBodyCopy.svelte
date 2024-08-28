@@ -3,22 +3,26 @@
 	import { css } from '@emotion/css';
 
 	import jdgContexts from '$lib/jdg-contexts.js';
-	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let fontSizeMultiplier = 1; // optionally make fonts larger at all breakpoints
 	export let paddingTop = undefined; // first body copy in a section needs this set to 0
 	export let paddingBottom = undefined;
 	export let textAlign = 'left';
 	export let textColor = undefined; // inherits from app by default
+	export let textWrap = 'wrap'; // change to balanced for certain cases
 	export let simpleHyperlinkStyle = false;
 
 	const bodyCopyContainerCss = css`
 		color: ${textColor ?? ''};
+		text-align: ${textAlign};
+		text-wrap: ${textWrap};
+		line-height: 1.8;
+
 		a {
 			color: ${textColor && !simpleHyperlinkStyle ? textColor : ''};
 		}
-		line-height: 1.8;
-		text-align: ${textAlign};
+
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: ${(fontSizeMultiplier * jdgSizes.nFontSizeBodySm).toString() + jdgSizes.fontUnit};
 			padding: ${paddingTop ?? jdgSizes.contentBoxPaddingSm} ${jdgSizes.bodyCopyVerticalPaddingSm}

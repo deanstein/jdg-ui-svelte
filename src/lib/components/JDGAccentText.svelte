@@ -72,7 +72,7 @@
 
 <div class="jdg-accent-text-container {accentTextContainerCss}">
 	{#if superText}
-		<h2 class="accent-text-secondary {superTextCss}">
+		<h2 class="accent-text-super {superTextCss}">
 			{@html superText}
 		</h2>
 	{/if}
@@ -95,13 +95,11 @@
 		padding: 0px 20px 0px 20px;
 	}
 
-	.accent-text-primary {
-		text-align: center;
-		margin: 0;
-	}
-
+	.accent-text-primary,
+	.accentTextSuper,
 	.accent-text-secondary {
 		text-align: center;
+		text-wrap: balance;
 		margin: 0;
 	}
 </style>
