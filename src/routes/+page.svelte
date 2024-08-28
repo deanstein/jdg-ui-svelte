@@ -475,6 +475,9 @@
 			Displays a colorful rectangle containing an imageTile and description text.
 		</JDGBodyCopy>
 	</JDGContentBoxFloating>
+	<JDGContentBoxFloating title="NICE TO MEET YOU">
+		This section tests the floating content box.
+	</JDGContentBoxFloating>
 	<JDGAccentBlock>
 		<JDGAccentText primaryText={`"Another quote."`} secondaryText="Another Someone, 1998" />
 	</JDGAccentBlock>
