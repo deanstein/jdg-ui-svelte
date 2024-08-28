@@ -476,7 +476,8 @@
 		</JDGBodyCopy>
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="NICE TO MEET YOU">
-		This section tests the floating content box.
+		This section tests the floating content box. The title should balance itself thanks to
+		text-wrap: balance;.
 	</JDGContentBoxFloating>
 	<JDGAccentBlock>
 		<JDGAccentText primaryText={`"Another quote."`} secondaryText="Another Someone, 1998" />
