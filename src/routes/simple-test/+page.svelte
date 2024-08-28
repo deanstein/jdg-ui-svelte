@@ -32,8 +32,9 @@
 				imageAttributes={imageAttributesCollection.lakeside_1}
 				cropToFillContainer={false}
 				showBlurInUnfilledSpace={false}
-				showCaption={true}
-				showAttribution={true}
+				showCaption
+				showAttribution
+				useCompactHeightOnMobile
 			/>
 		</JDGBodyCopy>
 		<JDGBodyCopy textAlign="center" paddingBottom="0" paddingTop="0">
