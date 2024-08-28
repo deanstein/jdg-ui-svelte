@@ -21,8 +21,8 @@
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object to hold all details
 	export let maxWidth = undefined; // if not defined, takes available space
 	export let maxHeight = '350px';
-	export let fillContainer = true; // if true, image may be cropped to fill container in both axes
-	export let compactModeOnMobile = true; // if true, ignores fillContainer on smallest breakpoint for no cropping and fitted container (less height)
+	export let cropToFillContainer = true; // if true, image may be cropped to fill container in both axes
+	export let useCompactHeightOnMobile = true; // if true, ignores fillContainer on smallest breakpoint for no cropping and fitted container (less height)
 	export let showBlurInUnfilledSpace = false; // if true, shows the image blurred in the unfilled space - only applies if fillContainer is false
 	export let label = undefined;
 	export let labelFontFamily = jdgFonts.body;
@@ -45,11 +45,11 @@
 	}
 
 	const aCss = css`
-		display: ${fillContainer ? 'initial' : 'flex'};
+		display: ${cropToFillContainer ? 'initial' : 'flex'};
 	`;
 
 	const imageTileCss = css`
-		width: ${showBlurInUnfilledSpace || fillContainer ? '100%' : 'auto'};
+		width: ${showBlurInUnfilledSpace || cropToFillContainer ? '100%' : 'auto'};
 	`;
 
 	const imageTileLabelContainerCss = css`
@@ -146,15 +146,15 @@
 				{imageAttributes}
 				showHoverEffect={true}
 				{isHovering}
-				{fillContainer}
-				{compactModeOnMobile}
+				{cropToFillContainer}
+				{useCompactHeightOnMobile}
 				{showBlurInUnfilledSpace}
-				showCaption={showCaption && !(showBlurInUnfilledSpace || fillContainer)}
-				showAttribution={showAttribution && !(fillContainer || showBlurInUnfilledSpace)}
+				showCaption={showCaption && !(showBlurInUnfilledSpace || cropToFillContainer)}
+				showAttribution={showAttribution && !(cropToFillContainer || showBlurInUnfilledSpace)}
 			/>
 		</div>
 	</a>
-	{#if (showCaption || showAttribution) && (fillContainer || showBlurInUnfilledSpace)}
+	{#if (showCaption || showAttribution) && (cropToFillContainer || showBlurInUnfilledSpace)}
 		<div class="image-caption-attribution-wrapper">
 			<JDGImageCaptionAttribution
 				{imageAttributes}
