@@ -189,6 +189,7 @@
 
 	.content-box-title-and-subtitle {
 		text-align: center;
+		text-wrap: balance;
 	}
 
 	.content-box-subtitle {
