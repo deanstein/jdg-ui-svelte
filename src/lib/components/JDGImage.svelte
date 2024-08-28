@@ -62,6 +62,8 @@
 	let lastKnownContainerWidth;
 	let lastKnownContainerHeight;
 	let lastKnownContainerAspectRatio;
+	let lastKnownPreferredContainerHeight;
+	let lastKnownCloudinaryTransformationValue;
 
 	// these values have been validated - they're defined, non-zero, and not NaN
 	// they're also not rewritten if valid, unless forced
@@ -74,22 +76,18 @@
 	// for cloudinary images, imgSrc will be modified with transforms for optimization
 	// if this isn't a cloudinary image, it will remain the current imgSrc
 	let adjustedImgSrc = imageAttributes.imgSrc;
-
 	let imageAspectRatio;
+
+	// load states
 	let isImageLoaded = false;
 	let isPlaceholderLoaded = false;
-
-	// prevent redundant calculations
-	// by checking last known sizes with current sizes
-	let lastKnownPreferredContainerHeightType;
-	let lastKnownCloudinaryTransformationValue;
 
 	// FIT TYPES
 
 	const fitTypeMaxHeightDefault = 'MAXHEIGHT (DEFAULT)';
 	const fitTypeMaxHeight = 'MAXHEIGHT';
 	const fitTypeAuto = 'AUTO';
-	const fitTypeCalculatedAuto = 'IMAGEAUTO';
+	const fitTypeCalculatedAuto = 'CALCAUTOHEIGHT';
 
 	// SPECIAL CASES
 
@@ -102,12 +100,6 @@
 	// if the imageAttributes specify no blur, override showBlur to false
 	if (!imageAttributes.allowBackgroundBlur) {
 		showBlurInUnfilledSpace = false;
-	}
-
-	// even if not specified, default compactModeOnMobile to true
-	// if not filling container or showing blur
-	if (!cropToFillContainer && !showBlurInUnfilledSpace) {
-		//compactModeOnMobile = true;
 	}
 
 	// FUNCTIONS
@@ -198,28 +190,36 @@
 		}
 	};
 
+	// get the best container height for the image
+	// could be the maxHeight prop passed in, or auto, or a calculated image height
 	const getPreferredContainerHeight = () => {
 		let preferredHeight = maxHeight;
-		let preferredHeightTitle = 'MAXHEIGHT (DEFAULT)';
+		let preferredHeightFitType = fitTypeMaxHeightDefault;
+
 		if (imageRef && validContainerAspectRatio) {
 			if (showDebugMessagesInConsole) {
 				console.log('Getting preferred container height for: ' + imageAttributes.imgSrc);
-				console.log('Current valid container height: ' + validContainerHeight);
+				console.log('Valid container height: ' + validContainerHeight);
 				console.log('Max height from container: ' + getMaxHeightPxFromContainer());
 				console.log('Max height from prop: ' + getMaxHeightPxFromProp());
 				console.log('Max width from prop: ' + getMaxWidthFromProp());
 				console.log('Max width from container: ' + getMaxWidthFromContainer());
 			}
 
-			const imageAutoHeight = validContainerWidth / imageAspectRatio;
+			// calculate the height of the image if 'auto' was set
+			// this basically assumes the image's width is the full container width
+			// and calculates the resulting height if image was fit into its container
+			const imageCalcAutoHeight = validContainerWidth / imageAspectRatio;
 
 			// if we're cropping to fill container,
-			// or showing the blur behind, height is always the max height
+			// or showing the blur behind, height is always maxHeight
 			if (cropToFillContainer || showBlurInUnfilledSpace) {
 				preferredHeight = maxHeight;
-				preferredHeightTitle = fitTypeMaxHeight;
+				preferredHeightFitType = fitTypeMaxHeight;
 			}
 
+			// if we're not cropping or showing blur,
+			// and we're not on mobile breakpoint, height is always maxHeight
 			if (
 				!cropToFillContainer &&
 				!showBlurInUnfilledSpace &&
@@ -227,29 +227,33 @@
 				!useCompactHeightOnMobile
 			) {
 				preferredHeight = maxHeight;
-				preferredHeightTitle = fitTypeMaxHeight;
+				preferredHeightFitType = fitTypeMaxHeight;
 			}
 
+			// if we're on mobile breakpoint and useCompactHeight is true,
+			// and if the the maxHeight from prop is bigger than imageCalcAutoHeight,
+			// set preferred height to auto
 			if (
 				$isMobileBreakpoint &&
 				useCompactHeightOnMobile &&
-				getMaxHeightPxFromProp() > getMaxHeightPxFromContainer()
+				getMaxHeightPxFromProp() > imageCalcAutoHeight
 			) {
 				preferredHeight = 'auto';
-				preferredHeightTitle = fitTypeAuto;
+				preferredHeightFitType = fitTypeAuto;
 			}
 
+			// for a case like ImageDetailoverlay where width is set to 100%
 			if (!cropToFillContainer && maxWidth === '100%') {
-				preferredHeight = `${imageAutoHeight.toString()}px`;
-				preferredHeightTitle = fitTypeCalculatedAuto;
+				preferredHeight = `${imageCalcAutoHeight.toString()}px`;
+				preferredHeightFitType = fitTypeCalculatedAuto;
 			}
 
 			if (showDebugMessagesInConsole) {
-				console.log('Choosing ' + preferredHeightTitle + ' for image: ' + imageAttributes.imgSrc);
+				console.log('Choosing ' + preferredHeightFitType + ' for image: ' + imageAttributes.imgSrc);
 			}
 		}
-		lastKnownPreferredContainerHeightType = preferredHeightTitle;
-		return { value: preferredHeight, label: preferredHeightTitle };
+		lastKnownPreferredContainerHeight = preferredHeightFitType;
+		return { value: preferredHeight, label: preferredHeightFitType };
 	};
 
 	// runs after an image is loaded
@@ -394,8 +398,9 @@
 	$: {
 		if (containerRef) {
 			if (!lastKnownCloudinaryTransformationValue) {
-				lastKnownPreferredContainerHeightType = getPreferredContainerHeight().label;
+				lastKnownPreferredContainerHeight = getPreferredContainerHeight().label;
 			}
+			// get dimensions
 			const style = getComputedStyle(containerRef);
 			const containerHeight = style.getPropertyValue('height');
 			const containerWidth = style.getPropertyValue('width');
@@ -414,8 +419,8 @@
 				}
 				// preferred container height is max height
 				if (
-					lastKnownPreferredContainerHeightType === fitTypeMaxHeight ||
-					lastKnownPreferredContainerHeightType === fitTypeMaxHeightDefault
+					lastKnownPreferredContainerHeight === fitTypeMaxHeight ||
+					lastKnownPreferredContainerHeight === fitTypeMaxHeightDefault
 				) {
 					if (cropToFillContainer) {
 						// if the calculated image height is less than the container,
@@ -461,8 +466,8 @@
 					}
 					// preferred container height is "image auto" or auto
 				} else if (
-					lastKnownPreferredContainerHeightType === fitTypeCalculatedAuto ||
-					lastKnownPreferredContainerHeightType === fitTypeAuto
+					lastKnownPreferredContainerHeight === fitTypeCalculatedAuto ||
+					lastKnownPreferredContainerHeight === fitTypeAuto
 				) {
 					const adjustedHeight = Math.ceil(
 						(validContainerWidth / imageAspectRatio) * devicePixelRatio
