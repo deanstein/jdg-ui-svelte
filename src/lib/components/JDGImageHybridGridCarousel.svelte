@@ -1,5 +1,5 @@
 <script>
-	import uiState from '$lib/states/ui-state.js';
+	import { isMobileBreakpoint } from '$lib/states/ui-state.js';
 
 	import {
 		JDGFullWidthContainer,
@@ -13,13 +13,13 @@
 	export let showBlurInUnfilledSpace = false;
 	export let showCaption = true;
 	export let showAttribution = true;
-	export let compactModeOnMobile = true;
+	export let useCompactHeightOnMobile = true;
 	export let maxColumns = 3;
 </script>
 
 <div class="jdg-hybrid-image-grid-carousel-container">
 	<!-- mobile always uses image carousel -->
-	{#if $uiState.isMobileBreakpoint}
+	{#if $isMobileBreakpoint}
 		<JDGFullWidthContainer>
 			<JDGImageCarousel {imageAttributeObjects}></JDGImageCarousel>
 		</JDGFullWidthContainer>
@@ -29,11 +29,11 @@
 			{#each imageAttributeObjects as imageAttributes, i}
 				<JDGImageTile
 					{imageAttributes}
-					{fillContainer}
+					cropToFillContainer={fillContainer}
 					{showBlurInUnfilledSpace}
 					{showCaption}
 					{showAttribution}
-					{compactModeOnMobile}
+					{useCompactHeightOnMobile}
 				/>
 			{/each}
 		</JDGGridLayout>

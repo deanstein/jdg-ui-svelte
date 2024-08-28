@@ -7,6 +7,10 @@ import {
 } from './jdg-persistence-management.js';
 import { getDistanceToBottomOfHeader } from './jdg-ui-management.js';
 
+///
+/// ARRAY UTILS
+///
+
 export const addUniqueValueToArray = (array, value) => {
 	if (!array.includes(value)) {
 		array.push(value);
@@ -26,6 +30,10 @@ export const removeValueFromArray = (array, value) => {
 	}
 	return array;
 };
+
+///
+/// ENCRYPTION UTILS
+///
 
 export const decrypt = (encrypted, password) => {
 	try {
@@ -64,6 +72,10 @@ export const decrypt = (encrypted, password) => {
 		throw new Error('Error decrypting: ' + error.message);
 	}
 };
+
+///
+/// OBJECT UTILS
+///
 
 export const areObjectsEqual = (obj1, obj2) => {
 	const logReasons = false;
@@ -175,6 +187,10 @@ export const deleteObjectByKeyValue = (arr, key, value) => {
 	return false; // indicate that object was not found
 };
 
+///
+/// DATE UTILS
+///
+
 export const getIsDateValid = (dateToTest) => {
 	const date = new Date(dateToTest);
 	const isValid = !isNaN(date.getTime());
@@ -209,6 +225,14 @@ export const getNumberOfYearsBetweenEvents = (startDate, endDate) => {
 	}
 
 	return years;
+};
+
+///
+/// NUMBER UTILS
+///
+
+export const isNumberValid = (number) => {
+	return typeof number === 'number' && number !== 0 && !isNaN(number) && number !== Infinity;
 };
 
 ///
@@ -278,6 +302,18 @@ export const getExtensionFromUrl = (url) => {
 
 	return fileExtensionWithDot;
 };
+
+export const openUrl = (url, newTab) => {
+	if (newTab) {
+		window.open(url, '_blank');
+	} else {
+		window.location.href = url;
+	}
+};
+
+///
+/// IMAGE AND PIXEL UTILS
+///
 
 export const getMIMEType = (binaryData) => {
 	if (!binaryData) {
@@ -595,13 +631,9 @@ export const setHexColorSaturation = (hexColor, saturation) => {
 		.padStart(2, '0')}`;
 };
 
-export const openUrl = (url, newTab) => {
-	if (newTab) {
-		window.open(url, '_blank');
-	} else {
-		window.location.href = url;
-	}
-};
+///
+/// CLOUDINARY UTILS
+///
 
 export const isUrlCloudinary = (url) => {
 	if (url.includes('cloudinary.com')) {
@@ -649,6 +681,10 @@ export const addCloudinaryUrlHeight = (url, height) => {
 	}
 	return url;
 };
+
+///
+/// SCROLLING UTILS
+///
 
 // scrolls to the given anchor id
 // with options for accounting for header and additional offset

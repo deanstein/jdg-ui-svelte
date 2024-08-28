@@ -179,11 +179,11 @@
 		<div class="compare-image-absolute">
 			<JDGImage
 				imageAttributes={imageAttributes2}
-				fillContainer={false}
+				cropToFillContainer={false}
 				{maxHeight}
 				{showBlurInUnfilledSpace}
 				alternateFitRef={imageCompareWrapperRef}
-				compactModeOnMobile={true}
+				useCompactHeightOnMobile={true}
 			/>
 		</div>
 		<div
@@ -192,11 +192,11 @@
 		>
 			<JDGImage
 				imageAttributes={imageAttributes1}
-				fillContainer={false}
+				cropToFillContainer={false}
 				{maxHeight}
 				{showBlurInUnfilledSpace}
 				alternateFitRef={imageCompareWrapperRef}
-				compactModeOnMobile={true}
+				useCompactHeightOnMobile={true}
 			/>
 		</div>
 		<div class="slider" style="left: {$sliderPositionStore}%;"></div>

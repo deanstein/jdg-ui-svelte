@@ -1,15 +1,15 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import uiState from '$lib/states/ui-state.js';
+	import { clientWidth } from '$lib/states/ui-state.js';
 
 	let fullWidthContainerDynamicCss = css``;
 
 	$: {
 		fullWidthContainerDynamicCss = css`
-			width: ${$uiState.clientWidth}px;
-			margin-left: -${$uiState.clientWidth / 2}px;
-			margin-right: -${$uiState.clientWidth / 2}px;
+			width: ${$clientWidth}px;
+			margin-left: -${$clientWidth / 2}px;
+			margin-right: -${$clientWidth / 2}px;
 		`;
 	}
 </script>

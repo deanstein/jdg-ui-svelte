@@ -26,7 +26,7 @@
 			/>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.fairgrounds_aerial}
-				fillContainer={false}
+				cropToFillContainer={false}
 			/>
 		{/if}
 		{#if true}

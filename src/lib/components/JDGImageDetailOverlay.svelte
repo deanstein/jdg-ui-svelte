@@ -47,7 +47,8 @@
 		<JDGImage
 			{imageAttributes}
 			maxHeight="auto"
-			fillContainer={false}
+			maxWidth="100%"
+			cropToFillContainer={false}
 			showBlurInUnfilledSpace={true}
 			transition={scale}
 			showCaption={true}

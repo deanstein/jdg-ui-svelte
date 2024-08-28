@@ -56,6 +56,22 @@
 	<JDGContentBoxFloating title="IMAGES">
 		<JDGBodyCopy textAlign="center" paddingTop="0">We've got lots of image components!</JDGBodyCopy>
 		<JDGBodyCopy textAlign="center">
+			<b>IMAGE</b>
+			<br />
+			No fill container, show blur, show caption/attribution
+			<br />
+			Inside BodyCopy
+			<br /><br />
+			<JDGImage
+				imageAttributes={imageAttributesCollection.lakeside_1}
+				cropToFillContainer={false}
+				showBlurInUnfilledSpace={false}
+				showCaption
+				showAttribution
+				useCompactHeightOnMobile
+			/>
+		</JDGBodyCopy>
+		<JDGBodyCopy textAlign="center">
 			<b>IMAGE TILE</b>
 			<br />
 			No fill container, show blur, show caption/attribution
@@ -64,7 +80,7 @@
 			<br /><br />
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.lakeside_1}
-				fillContainer={false}
+				cropToFillContainer={false}
 				showBlurInUnfilledSpace={true}
 				showCaption={true}
 				showAttribution={true}
@@ -79,7 +95,7 @@
 			<br /><br />
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.aerial_60s70s_1}
-				fillContainer={false}
+				cropToFillContainer={false}
 				showCaption={true}
 				showAttribution={true}
 			/>
@@ -93,7 +109,7 @@
 		</JDGBodyCopy>
 		<JDGImageTile
 			imageAttributes={imageAttributesCollection.aerial_60s70s_1}
-			fillContainer={false}
+			cropToFillContainer={false}
 			href="./about"
 		/>
 		<JDGBodyCopy textAlign="center" paddingBottom="0">
@@ -103,7 +119,7 @@
 		</JDGBodyCopy>
 		<JDGImageTile
 			imageAttributes={imageAttributesCollection.aerial_60s70s_1}
-			fillContainer={false}
+			cropToFillContainer={false}
 			href="https://www.google.com"
 			hrefOpenInNewTab={true}
 		/>
@@ -114,7 +130,7 @@
 		</JDGBodyCopy>
 		<JDGImageTile
 			imageAttributes={imageAttributesCollection.hst.fms_2000s_plan_additions}
-			fillContainer={false}
+			cropToFillContainer={false}
 			showCaption={true}
 			showAttribution={true}
 		/>
@@ -199,14 +215,14 @@
 			/>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
-				fillContainer={false}
+				cropToFillContainer={false}
 				maxHeight="400px"
 			/>
 		</JDGGridLayout>
 		<JDGGridLayout>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.cc_1}
-				fillContainer={false}
+				cropToFillContainer={false}
 				showCaption={false}
 				showAttribution={false}
 				maxHeight="400px"
@@ -231,7 +247,7 @@
 			/>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.cc_1}
-				fillContainer={false}
+				cropToFillContainer={false}
 				showCaption={false}
 				showAttribution={false}
 				maxHeight="400px"
@@ -284,26 +300,26 @@
 		<JDGGridLayout>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.aerial_60s70s_1}
-				compactModeOnMobile={false}
+				useCompactHeightOnMobile={false}
 				label={'A LABEL WITH BODY FONT'}
 			/>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.cc_1}
-				compactModeOnMobile={false}
+				useCompactHeightOnMobile={false}
 				label={'A LABEL WITH A RETRO FONT'}
 				labelFontFamily={jdgFonts.righteous}
 			/>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.architecture_1}
-				compactModeOnMobile={false}
+				useCompactHeightOnMobile={false}
 			/>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
-				compactModeOnMobile={false}
+				useCompactHeightOnMobile={false}
 			/>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.rose_mall_60s70s_2}
-				compactModeOnMobile={false}
+				useCompactHeightOnMobile={false}
 			/>
 		</JDGGridLayout>
 		<JDGBodyCopy paddingBottom="0" textAlign="center">
@@ -437,7 +453,7 @@
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.ccp_blue_mall_60s70s_1}
 				maxHeight={'400px'}
-				compactModeOnMobile={true}
+				useCompactHeightOnMobile={true}
 			/>
 		</JDGFeatureCard>
 		<JDGFeatureCard

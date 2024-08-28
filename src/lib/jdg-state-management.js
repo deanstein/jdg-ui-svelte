@@ -54,17 +54,6 @@ export const setIsMobileBreakpoint = (isMobileBreakpoint) => {
 };
 
 //
-// SCROLLING
-//
-
-export const setIsScrolling = (isScrolling) => {
-	uiState.update((currentValue) => {
-		currentValue.isScrolling = isScrolling;
-		return currentValue;
-	});
-};
-
-//
 // IMAGE DETAIL MODAL
 //
 

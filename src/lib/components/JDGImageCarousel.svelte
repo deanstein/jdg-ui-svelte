@@ -86,7 +86,7 @@
 				<JDGImage
 					imageAttributes={activeImage}
 					{maxHeight}
-					fillContainer={false}
+					cropToFillContainer={false}
 					{showBlurInUnfilledSpace}
 				/>
 			</div>
@@ -96,7 +96,7 @@
 				<JDGImage
 					imageAttributes={activeImage}
 					{maxHeight}
-					fillContainer={false}
+					cropToFillContainer={false}
 					{showBlurInUnfilledSpace}
 				/>
 			</div>
@@ -122,7 +122,7 @@
 					imageAttributes={imageAttributesObject}
 					maxHeight="50px"
 					maxWidth="75px"
-					compactModeOnMobile={false}
+					useCompactHeightOnMobile={false}
 				/>
 			</div>
 		{/each}

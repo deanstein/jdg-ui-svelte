@@ -91,7 +91,7 @@
 						<JDGImage
 							imageAttributes={overlayImageAttributes}
 							maxHeight={overlayImageMaxHeight}
-							fillContainer={false}
+							cropToFillContainer={false}
 							showPlaceholderImage={false}
 							showLoadingSpinner={false}
 						/>
