@@ -476,7 +476,7 @@
 		</JDGBodyCopy>
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="NICE TO MEET YOU">
-		<JDGBodyCopy textAlign='center' textWrap='balance' paddingTop="0">
+		<JDGBodyCopy textAlign="center" textWrap="balance" paddingTop="0">
 			This section tests the floating content box. The title should balance itself thanks to
 			text-wrap: balance;.
 		</JDGBodyCopy>
