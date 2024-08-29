@@ -172,7 +172,7 @@
 		let maxWidthPx;
 		// temporarily set the width to 100%
 		const existingWidth = resolutionRef.style.width;
-		resolutionRef.style.width = '-webkit-fill-available';
+		resolutionRef.style.width = '100%';
 		// get the maxWidth
 		maxWidthPx = resolutionRef.clientWidth;
 		// reset the style to what it was before
@@ -253,7 +253,26 @@
 			}
 		}
 		lastKnownPreferredContainerHeight = preferredHeightFitType;
-		return { value: preferredHeight, label: preferredHeightFitType };
+		return { value: preferredHeight, type: preferredHeightFitType };
+	};
+
+	const getPreferredContainerWidth = () => {
+		let preferredContainerWidth;
+
+		// if we're showing blur or cropping to fill container,
+		// width is always 100%
+		if (showBlurInUnfilledSpace || cropToFillContainer) {
+			preferredContainerWidth = '100%';
+			// if we're not cropping to fill or showing blur,
+			// width is always max-content to ensure image container doesn't extend beyond image
+		} else if (!cropToFillContainer && !cropToFillContainer) {
+			preferredContainerWidth = 'max-content';
+			// default is to use the provided max width or 100% if not provided
+		} else {
+			preferredContainerWidth = maxWidth ?? '100%';
+		}
+
+		return preferredContainerWidth;
 	};
 
 	// runs after an image is loaded
@@ -347,9 +366,6 @@
 	// LIFECYCLE
 
 	onMount(() => {
-		imageContainerCssDynamic = css`
-			height: ${maxHeight};
-		`;
 		devicePixelRatio = window.devicePixelRatio || 1;
 		resolutionRef = alternateFitRef ?? containerRef;
 	});
@@ -389,7 +405,7 @@
 		if (validContainerAspectRatio) {
 			imageContainerCssDynamic = css`
 				height: ${getPreferredContainerHeight().value};
-				width: ${showBlurInUnfilledSpace ? '100%' : maxWidth ?? 'auto'};
+				width: ${getPreferredContainerWidth()};
 			`;
 		}
 	}
@@ -398,7 +414,7 @@
 	$: {
 		if (containerRef) {
 			if (!lastKnownCloudinaryTransformationValue) {
-				lastKnownPreferredContainerHeight = getPreferredContainerHeight().label;
+				lastKnownPreferredContainerHeight = getPreferredContainerHeight().type;
 			}
 			// get dimensions
 			const style = getComputedStyle(containerRef);
