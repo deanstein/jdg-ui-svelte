@@ -171,6 +171,7 @@
 	.jdg-content-box-floating-content {
 		display: flex;
 		flex-direction: column;
+		align-items: center;
 		position: relative;
 		width: -webkit-fill-available;
 		width: -moz-available;

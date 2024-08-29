@@ -183,6 +183,7 @@
 	.jdg-image-tile-container {
 		display: flex;
 		flex-direction: column;
+		width: fit-content;
 	}
 
 	.image-tile {

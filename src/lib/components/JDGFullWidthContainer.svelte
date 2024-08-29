@@ -14,8 +14,10 @@
 	}
 </script>
 
-<div class="jdg-full-width-container {fullWidthContainerDynamicCss}">
-	<slot />
+<div class="jdg-full-width-container-wrapper">
+	<div class="jdg-full-width-container {fullWidthContainerDynamicCss}">
+		<slot />
+	</div>
 </div>
 
 <style>
