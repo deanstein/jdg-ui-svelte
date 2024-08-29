@@ -50,6 +50,9 @@
 		justify-content: ${alignItems};
 	`;
 
+	const footerItemCss = css`
+		text-align: ${alignItems};`
+
 	onMount(async () => {
 		// get the lgetBuildCode the deployment repo
 		buildCode = await getBuildCode(repoName);
@@ -66,12 +69,12 @@
 		<slot />
 		<!-- copyright row -->
 		<div class="footer-row">
-			<div class="jdg-footer-item">© {copyrightYear} {copyright}</div>
+			<div class="footer-item {footerItemCss}">© {copyrightYear} {copyright}</div>
 		</div>
 		<!-- disclaimer row -->
 		{#if disclaimer}
 			<div class="footer-row">
-				<div class="jdg-footer-item">
+				<div class="footer-item {footerItemCss}">
 					{disclaimer}
 				</div>
 			</div>
@@ -80,23 +83,23 @@
 		<div class="footer-row">
 			{#if appVersion}
 				{#if additionalVersionData}
-					<div class="jdg-footer-item">
+					<div class="footer-item {footerItemCss}">
 						App: v{appVersion}
 					</div>
 				{:else}
-					<div class="jdg-footer-item">
+					<div class="footer-item {footerItemCss}">
 						v{appVersion}
 					</div>
 				{/if}
 			{/if}
 			{#if additionalVersionData}
 				<div>{divider}</div>
-				<div class="jdg-footer-item">
+				<div class="footer-item {footerItemCss}">
 					{additionalVersionData}
 				</div>
 			{/if}
 			<div>{divider}</div>
-			<div class="jdg-footer-item">
+			<div class="footer-item {footerItemCss}">
 				{#if additionalVersionData}
 					Build: {buildCode}
 				{:else}
@@ -145,6 +148,10 @@
 	.footer-row {
 		display: flex;
 		gap: 7px;
+	}
+
+	.footer-item {
+		text-wrap: balance;
 	}
 
 	.state-view {
