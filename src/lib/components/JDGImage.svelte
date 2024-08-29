@@ -27,7 +27,6 @@
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object for all image data
 	export let maxHeight = '350px'; // image will never exceed this height, but could be less depending on other props
 	export let maxWidth = 'auto'; // if not defined, takes available space
-	export let alternateFitRef = undefined; // optionally use another element for image fit calcs
 	export let cropToFillContainer = true; // if true, image may be cropped to fill its container in both directions
 	export let useCompactHeightOnMobile = false; // if true, sets height to 'auto' on smallest breakpoint for no cropping if calculatedAutoHeight is less than maxHeightPxFromProp (ignores cropToFitContainer)
 	export let showBlurInUnfilledSpace = false; // if true, shows the image blurred in the unfilled space - only applies if fillContainer is false
@@ -54,7 +53,6 @@
 
 	// element references used for measurements
 	let containerRef; // used for determining container aspect ratio
-	let resolutionRef; // used for cloudinary resolution requests - this is either the alternate fit ref or container ref
 	let imageRef; // used for determining image aspect ratio
 
 	// these values could change many times or be invalid numbers
@@ -136,12 +134,12 @@
 	const getMaxHeightPxFromContainer = () => {
 		let maxHeightPx;
 		// temporarily set the height to 100%
-		const existingHeight = resolutionRef.style.height;
-		resolutionRef.style.height = '100%';
+		const existingHeight = containerRef.style.height;
+		containerRef.style.height = '100%';
 		// get the maxHeightPx
-		maxHeightPx = resolutionRef.clientHeight;
+		maxHeightPx = containerRef.clientHeight;
 		// reset the style to what it was before
-		resolutionRef.style.height = existingHeight;
+		containerRef.style.height = existingHeight;
 		return maxHeightPx;
 	};
 
@@ -171,18 +169,18 @@
 	export const getMaxWidthFromContainer = () => {
 		let maxWidthPx;
 		// temporarily set the width to 100%
-		const existingWidth = resolutionRef.style.width;
-		resolutionRef.style.width = '100%';
+		const existingWidth = containerRef.style.width;
+		containerRef.style.width = '100%';
 		// get the maxWidth
-		maxWidthPx = resolutionRef.clientWidth;
+		maxWidthPx = containerRef.clientWidth;
 		// reset the style to what it was before
-		resolutionRef.style.width = existingWidth;
+		containerRef.style.width = existingWidth;
 		return maxWidthPx;
 	};
 
 	// calculate the aspect ratio of the image container and the image (if not already known)
 	const getAspectRatios = () => {
-		if (resolutionRef && imageRef) {
+		if (containerRef && imageRef) {
 			imageAspectRatio = imageRef.naturalWidth / imageRef.naturalHeight;
 			lastKnownContainerHeight = getMaxHeightPxFromContainer();
 			lastKnownContainerWidth = getMaxWidthFromContainer();
@@ -259,17 +257,23 @@
 	const getPreferredContainerWidth = () => {
 		let preferredContainerWidth;
 
-		// if we're showing blur or cropping to fill container,
+		// if we're showing blur
 		// width is always 100%
-		if (showBlurInUnfilledSpace || cropToFillContainer) {
+		if (showBlurInUnfilledSpace) {
 			preferredContainerWidth = '100%';
-			// if we're not cropping to fill or showing blur,
-			// width is always max-content to ensure image container doesn't extend beyond image
-		} else if (!cropToFillContainer && !cropToFillContainer) {
+		}
+		// if we're not cropping to fill or showing blur,
+		// width is always max-content to ensure image container doesn't extend beyond image
+		else if (
+			!cropToFillContainer &&
+			!cropToFillContainer &&
+			parseInt(getMaxHeightPxFromProp()) * imageAspectRatio < parseInt(getMaxWidthFromContainer())
+		) {
 			preferredContainerWidth = 'max-content';
-			// default is to use the provided max width or 100% if not provided
-		} else {
-			preferredContainerWidth = maxWidth ?? '100%';
+		}
+		// default is to use the provided max width or auto if not provided
+		else {
+			preferredContainerWidth = maxWidth ?? 'auto';
 		}
 
 		return preferredContainerWidth;
@@ -367,7 +371,6 @@
 
 	onMount(() => {
 		devicePixelRatio = window.devicePixelRatio || 1;
-		resolutionRef = alternateFitRef ?? containerRef;
 	});
 
 	// REACTIVE BLOCKS

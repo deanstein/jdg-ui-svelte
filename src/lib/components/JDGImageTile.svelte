@@ -37,7 +37,6 @@
 
 	const hrefTarget = hrefOpenInNewTab ? '_blank' : null;
 	let isHovering;
-	let alternateFitRef; // use this div to determine aspect ratios
 
 	// if the imageAttributes specify no blur, override showBlur to false
 	if (!imageAttributes.allowBackgroundBlur) {
@@ -91,7 +90,7 @@
 </script>
 
 <div class="jdg-image-tile-container">
-	<a bind:this={alternateFitRef} href={$isScrolling ? null : href} target={hrefTarget} class={aCss}>
+	<a href={$isScrolling ? null : href} target={hrefTarget} class={aCss}>
 		<div
 			class="image-tile {imageTileCss}"
 			on:mouseenter={() => (isHovering = true)}
@@ -142,7 +141,6 @@
 			<JDGImage
 				{maxHeight}
 				{maxWidth}
-				{alternateFitRef}
 				{imageAttributes}
 				showHoverEffect={true}
 				{isHovering}

@@ -160,7 +160,7 @@
 	});
 </script>
 
-<div class={jdgSharedIdentifiers.imageCompareWrapper} bind:this={imageCompareWrapperRef}>
+<div class={jdgSharedIdentifiers.imageCompareWrapper}>
 	<div
 		class="jdg-image-compare-container {compareContainerCss}"
 		bind:this={imageCompareContainerRef}
@@ -182,7 +182,6 @@
 				cropToFillContainer={false}
 				{maxHeight}
 				{showBlurInUnfilledSpace}
-				alternateFitRef={imageCompareWrapperRef}
 				useCompactHeightOnMobile={true}
 			/>
 		</div>
@@ -195,7 +194,6 @@
 				cropToFillContainer={false}
 				{maxHeight}
 				{showBlurInUnfilledSpace}
-				alternateFitRef={imageCompareWrapperRef}
 				useCompactHeightOnMobile={true}
 			/>
 		</div>
