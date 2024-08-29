@@ -147,6 +147,8 @@
 	.carousel-crossfade-wrapper-absolute {
 		position: absolute;
 		width: 100%;
+		display: flex;
+		justify-content: center;
 	}
 
 	.carousel-thumbnail-container {
