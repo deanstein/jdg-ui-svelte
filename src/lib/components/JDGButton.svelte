@@ -112,6 +112,6 @@
 		border: none;
 		outline: none;
 		font-weight: bold;
-		white-space: normal;
+		text-wrap: balance;
 	}
 </style>
