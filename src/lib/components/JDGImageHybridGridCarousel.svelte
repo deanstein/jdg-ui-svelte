@@ -39,3 +39,9 @@
 		</JDGGridLayout>
 	{/if}
 </div>
+
+<style>
+	.jdg-hybrid-image-grid-carousel-container {
+		width: 100%;
+	}
+</style>

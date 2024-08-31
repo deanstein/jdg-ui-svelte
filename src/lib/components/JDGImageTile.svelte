@@ -47,6 +47,10 @@
 		display: ${cropToFillContainer ? 'initial' : 'flex'};
 	`;
 
+	const imageTileContainerCss = css`
+		width: ${showBlurInUnfilledSpace || cropToFillContainer ? '100%' : 'fit-content'};
+	`;
+
 	const imageTileCss = css`
 		width: ${showBlurInUnfilledSpace || cropToFillContainer ? '100%' : 'auto'};
 	`;
@@ -89,7 +93,7 @@
 	`;
 </script>
 
-<div class="jdg-image-tile-container">
+<div class="jdg-image-tile-container {imageTileContainerCss}">
 	<a href={$isScrolling ? null : href} target={hrefTarget} class={aCss}>
 		<div
 			class="image-tile {imageTileCss}"
@@ -183,7 +187,6 @@
 	.jdg-image-tile-container {
 		display: flex;
 		flex-direction: column;
-		width: fit-content;
 	}
 
 	.image-tile {

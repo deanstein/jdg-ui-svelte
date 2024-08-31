@@ -103,6 +103,10 @@
 </div>
 
 <style>
+	.jdg-feature-card-container {
+		width: 100%;
+	}
+
 	.feature-card-row {
 		display: flex;
 		align-items: center;

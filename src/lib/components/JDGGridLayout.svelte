@@ -16,6 +16,8 @@
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
+		width: 100%;
+
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			> * {
 				flex: 0 1 ${forceMaxColumns ? `calc(100% / ${maxColumns})` : '100%'};
