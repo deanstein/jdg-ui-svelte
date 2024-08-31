@@ -158,7 +158,7 @@
 			<JDGImageCompare
 				imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
 				imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
-				animateSlider={true}
+				animateSlider={false}
 				useFullWidthAnimation={false}
 				caption="Gold Mall simulated in 1968-1978 and 1987-1997. And this is an even longer caption to test a possible failure case."
 				maxHeight="60vh"
@@ -230,7 +230,7 @@
 			<JDGImageCompare
 				imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
 				imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
-				animateSlider={true}
+				animateSlider={false}
 				useFullWidthAnimation={true}
 				maxHeight="400px"
 				showBlurInUnfilledSpace={false}
@@ -240,7 +240,7 @@
 			<JDGImageCompare
 				imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
 				imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
-				animateSlider={true}
+				animateSlider={false}
 				useFullWidthAnimation={true}
 				maxHeight="400px"
 				showBlurInUnfilledSpace={false}
@@ -465,7 +465,7 @@
 			<JDGImageCompare
 				imageAttributes1={imageAttributesCollection.ccp_gold_mall_60s70s_1}
 				imageAttributes2={imageAttributesCollection.ccp_gold_mall_80s90s_1}
-				animateSlider={true}
+				animateSlider={false}
 				useFullWidthAnimation={true}
 				maxHeight="400px"
 				showBlurInUnfilledSpace={true}
