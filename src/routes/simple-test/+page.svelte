@@ -50,5 +50,11 @@
 				showCaption={true}
 			/>
 		</JDGGridLayout>
+		<JDGImageTile
+			imageAttributes={imageAttributesCollection.hst.fms_2000s_plan_additions}
+			cropToFillContainer={false}
+			showCaption={true}
+			showAttribution={true}
+		/>
 	</JDGContentBoxFloating>
 </JDGContentContainer>
