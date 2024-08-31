@@ -51,7 +51,8 @@
 	`;
 
 	const footerItemCss = css`
-		text-align: ${alignItems};`
+		text-align: ${alignItems};
+	`;
 
 	onMount(async () => {
 		// get the lgetBuildCode the deployment repo
