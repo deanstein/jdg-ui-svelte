@@ -5,7 +5,11 @@
 
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 	import { isNumberValid } from '$lib/jdg-utils.js';
-	import uiState, { isMobileBreakpoint, windowWidth } from '$lib/states/ui-state.js';
+	import uiState, {
+		imageDetailWidth,
+		isMobileBreakpoint,
+		windowWidth
+	} from '$lib/states/ui-state.js';
 
 	import {
 		addCloudinaryUrlHeight,
@@ -39,6 +43,7 @@
 	export let alignLoadingSpinner = 'center';
 	export let stopEventPropagation = false; // can be used in certain cases to ensure clicking on the image stops the event to its parent
 	export let transition = fade; // fade or scale depending on usage
+	export let isForImageDetailOverlay = false; // special rules for ImageDetailOverlay context
 
 	// DEBUGGING
 
@@ -389,6 +394,16 @@
 		}
 		if (isNumberValid(lastKnownContainerWidth) && !isNumberValid(validContainerWidth)) {
 			validContainerWidth = lastKnownContainerWidth;
+
+			// if this image is used in the context of ImageDetailOverlay,
+			// need to record the width of the image so the caption/attribution width can match
+			// (required workaround for some reason)
+			if (isForImageDetailOverlay) {
+				const widthToSet = imageAttributes.allowBackgroundBlur
+					? validContainerWidth
+					: getMaxHeightPxFromProp() * imageAspectRatio;
+				imageDetailWidth.set(widthToSet);
+			}
 		}
 	}
 
