@@ -7,8 +7,9 @@
 	import { hideImageDetailModal } from '$lib/jdg-state-management.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
 
-	import { JDGImage, JDGOverlay } from '$lib/index.js';
+	import { JDGImage, JDGImageCaptionAttribution, JDGOverlay } from '$lib/index.js';
 	import { jdgBreakpoints } from '$lib/jdg-shared-styles.js';
+	import { imageDetailWidth } from '$lib/states/ui-state.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes);
 
@@ -51,15 +52,19 @@
 			cropToFillContainer={false}
 			showBlurInUnfilledSpace={true}
 			transition={scale}
-			showCaption={true}
-			showAttribution={true}
 			stopEventPropagation={true}
+			isForImageDetailOverlay={true}
 		/>
+		<div class="image-caption-attribution-wrapper" style="width: {$imageDetailWidth}px">
+			<JDGImageCaptionAttribution {imageAttributes} />
+		</div>
 	</div>
 </JDGOverlay>
 
 <style>
 	.image-and-caption-wrapper {
+		position: relative;
+		overflow: hidden;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -67,5 +72,9 @@
 		width: 100%;
 		max-height: 100%;
 		box-sizing: border-box;
+	}
+
+	.image-caption-attribution-wrapper {
+		position: relative;
 	}
 </style>
