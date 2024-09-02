@@ -44,6 +44,7 @@
 	export let stopEventPropagation = false; // can be used in certain cases to ensure clicking on the image stops the event to its parent
 	export let transition = fade; // fade or scale depending on usage
 	export let isForImageDetailOverlay = false; // special rules for ImageDetailOverlay context
+	export let scaleOnZoom = false;
 
 	// DEBUGGING
 
@@ -111,6 +112,54 @@
 		if (stopEventPropagation) {
 			event.stopPropagation();
 		}
+	};
+
+	// image zoom vars
+	const scaleDelta = 0.05;
+	const maxScale = 3.0;
+	let scale = 1.0;
+	let initialDistance = 0;
+	let originX = 0;
+	let originY = 0;
+
+	const handleWheel = (event) => {
+		const rect = containerRef.getBoundingClientRect();
+		originX = ((event.clientX - rect.left) / rect.width) * 100;
+		originY = ((event.clientY - rect.top) / rect.height) * 100;
+
+		if (event.deltaY < 0) {
+			scale = Math.min(scale + scaleDelta, maxScale); // Scale up, max 2.0
+		} else {
+			scale = Math.max(scale - scaleDelta, 1.0); // Scale down, min 1.0
+		}
+	};
+
+	const handleTouchStart = (event) => {
+		if (event.touches.length === 2) {
+			initialDistance = getDistance(event.touches);
+		}
+	};
+
+	const handleTouchMove = (event) => {
+		if (event.touches.length === 2) {
+			const rect = event.currentTarget.getBoundingClientRect();
+			const touch1 = event.touches[0];
+			const touch2 = event.touches[1];
+			originX = (((touch1.clientX + touch2.clientX) / 2 - rect.left) / rect.width) * 100;
+			originY = (((touch1.clientY + touch2.clientY) / 2 - rect.top) / rect.height) * 100;
+
+			const currentDistance = getDistance(event.touches);
+			const scaleChange = currentDistance / initialDistance;
+			scale = Math.min(Math.max(scale * scaleChange, 1.0), 2.0);
+			initialDistance = currentDistance;
+		}
+	};
+
+	const getDistance = (touches) => {
+		const [touch1, touch2] = touches;
+		const dx = touch2.clientX - touch1.clientX;
+		const dy = touch2.clientY - touch1.clientY;
+		return Math.sqrt(dx * dx + dy * dy);
 	};
 
 	// get a pixel value from whatever is passed into the maxHeight prop
@@ -424,6 +473,8 @@
 			imageContainerCssDynamic = css`
 				height: ${getPreferredContainerHeight().value};
 				width: ${getPreferredContainerWidth()};
+				transform: scale(${scale});
+				transform-origin: ${originX}% ${originY}%;
 			`;
 		}
 	}
@@ -537,9 +588,13 @@
 <div
 	transition:transition={{ duration: jdgDurations.fadeIn }}
 	bind:this={containerRef}
+	on:scroll|stopPropagation={handleWheel}
+	on:wheel|stopPropagation={handleWheel}
+	on:touchstart={handleTouchStart}
+	on:touchmove={handleTouchMove}
 	class="jdg-image-container {imageContainerCssDynamic}"
 >
-	<!-- need to set an on:click only to potentially ignore clicks in some cases -->
+	<!-- need to set an on:click to ignore clicks in some cases -->
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 	<img
