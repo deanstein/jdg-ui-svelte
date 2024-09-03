@@ -54,7 +54,7 @@
 			transition={scale}
 			stopEventPropagation={true}
 			isForImageDetailOverlay={true}
-			doScaleOnZoom={true}
+			doScaleOnScrollOrZoom={true}
 		/>
 		<div class="image-caption-attribution-wrapper" style="width: {$imageDetailWidth}px">
 			<JDGImageCaptionAttribution {imageAttributes} />

@@ -44,7 +44,7 @@
 	export let stopEventPropagation = false; // can be used in certain cases to ensure clicking on the image stops the event to its parent
 	export let transition = fade; // fade or scale depending on usage
 	export let isForImageDetailOverlay = false; // special rules for ImageDetailOverlay context
-	export let doScaleOnZoom = false;
+	export let doScaleOnScrollOrZoom = false; // allow scaling up the image on scroll or zoom events
 
 	// DEBUGGING
 
@@ -125,7 +125,7 @@
 	// image zoom functions
 	// only applicable if doScaleOnZoom is true
 	const handleWheel = (event) => {
-		if (doScaleOnZoom) {
+		if (doScaleOnScrollOrZoom) {
 			const rect = imageRef.getBoundingClientRect();
 			const cursorX = ((event.clientX - rect.left) / rect.width) * 100;
 			const cursorY = ((event.clientY - rect.top) / rect.height) * 100;
@@ -143,14 +143,14 @@
 	};
 
 	const handleTouchStart = (event) => {
-		if (doScaleOnZoom) {
+		if (doScaleOnScrollOrZoom) {
 			if (event.touches.length === 2) {
 				initialDistance = getDistance(event.touches);
 			}
 		}
 	};
 	const handleTouchMove = (event) => {
-		if (doScaleOnZoom) {
+		if (doScaleOnScrollOrZoom) {
 			if (event.touches.length === 2) {
 				const rect = imageRef.getBoundingClientRect();
 				const touch1 = event.touches[0];
