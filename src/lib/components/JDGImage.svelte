@@ -127,16 +127,13 @@
 	// only applicable if doScaleOnZoom is true
 	const handleWheel = (event) => {
 		if (doScaleOnScrollOrZoom) {
-			const rect =
-				scaleContext === 'container'
-					? containerRef.getBoundingClientRect()
-					: imageRef.getBoundingClientRect();
+			const targetElement = scaleContext === 'container' ? containerRef : imageRef;
+			const rect = targetElement.getBoundingClientRect();
+
 			const cursorX = ((event.clientX - rect.left) / rect.width) * 100;
 			const cursorY = ((event.clientY - rect.top) / rect.height) * 100;
 
-			scaleContext === 'container'
-				? (containerRef.style.transformOrigin = `${cursorX}% ${cursorY}%`)
-				: (imageRef.style.transformOrigin = `${cursorX}% ${cursorY}%`);
+			targetElement.style.transformOrigin = `${cursorX}% ${cursorY}%`;
 
 			if (event.deltaY < 0) {
 				scale = Math.min(scale + scaleDelta, maxScale); // scale up
@@ -144,9 +141,7 @@
 				scale = Math.max(scale - scaleDelta, 1.0); // scale down, min 1.0
 			}
 
-			scaleContext === 'container'
-				? (containerRef.style.transform = `scale(${scale})`)
-				: (imageRef.style.transform = `scale(${scale})`);
+			targetElement.style.transform = `scale(${scale})`;
 		}
 	};
 
@@ -160,10 +155,8 @@
 	const handleTouchMove = (event) => {
 		if (doScaleOnScrollOrZoom) {
 			if (event.touches.length === 2) {
-				const rect =
-					scaleContext === 'container'
-						? containerRef.getBoundingClientRect()
-						: imageRef.getBoundingClientRect();
+				const targetElement = scaleContext === 'container' ? containerRef : imageRef;
+				const rect = targetElement.getBoundingClientRect();
 				const touch1 = event.touches[0];
 				const touch2 = event.touches[1];
 				originX = (((touch1.clientX + touch2.clientX) / 2 - rect.left) / rect.width) * 100;
@@ -174,12 +167,8 @@
 				scale = Math.min(Math.max(scale * scaleChange, 1.0), 2.0);
 				initialDistance = currentDistance;
 
-				scaleContext === 'container'
-					? (containerRef.style.transformOrigin = `${originX}% ${originY}%`)
-					: (imageRef.style.transformOrigin = `${originX}% ${originY}%`);
-				scaleContext === 'container'
-					? (containerRef.style.transform = `scale(${scale})`)
-					: (imageRef.style.transform = `scale(${scale})`);
+				targetElement.style.transformOrigin = `${originX}% ${originY}%`;
+				targetElement.style.transform = `scale(${scale})`;
 			}
 		}
 	};
