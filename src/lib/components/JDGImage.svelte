@@ -44,6 +44,7 @@
 	export let stopEventPropagation = false; // can be used in certain cases to ensure clicking on the image stops the event to its parent
 	export let transition = fade; // fade or scale depending on usage
 	export let isForImageDetailOverlay = false; // special rules for ImageDetailOverlay context
+	export let doScaleOnScrollOrZoom = false; // allow scaling up the image on scroll or zoom events
 
 	// DEBUGGING
 
@@ -111,6 +112,64 @@
 		if (stopEventPropagation) {
 			event.stopPropagation();
 		}
+	};
+
+	// image zoom vars
+	const scaleDelta = 0.05;
+	const maxScale = 3.0;
+	let scale = 1.0;
+	let initialDistance = 0;
+	let originX = 0;
+	let originY = 0;
+
+	// image zoom functions
+	// only applicable if doScaleOnZoom is true
+	const handleWheel = (event) => {
+		if (doScaleOnScrollOrZoom) {
+			const rect = imageRef.getBoundingClientRect();
+			const cursorX = ((event.clientX - rect.left) / rect.width) * 100;
+			const cursorY = ((event.clientY - rect.top) / rect.height) * 100;
+
+			imageRef.style.transformOrigin = `${cursorX}% ${cursorY}%`;
+
+			if (event.deltaY < 0) {
+				scale = Math.min(scale + scaleDelta, maxScale); // scale up
+			} else {
+				scale = Math.max(scale - scaleDelta, 1.0); // scale down, min 1.0
+			}
+
+			imageRef.style.transform = `scale(${scale})`;
+		}
+	};
+
+	const handleTouchStart = (event) => {
+		if (doScaleOnScrollOrZoom) {
+			if (event.touches.length === 2) {
+				initialDistance = getDistance(event.touches);
+			}
+		}
+	};
+	const handleTouchMove = (event) => {
+		if (doScaleOnScrollOrZoom) {
+			if (event.touches.length === 2) {
+				const rect = imageRef.getBoundingClientRect();
+				const touch1 = event.touches[0];
+				const touch2 = event.touches[1];
+				originX = (((touch1.clientX + touch2.clientX) / 2 - rect.left) / rect.width) * 100;
+				originY = (((touch1.clientY + touch2.clientY) / 2 - rect.top) / rect.height) * 100;
+
+				const currentDistance = getDistance(event.touches);
+				const scaleChange = currentDistance / initialDistance;
+				scale = Math.min(Math.max(scale * scaleChange, 1.0), 2.0);
+				initialDistance = currentDistance;
+			}
+		}
+	};
+	const getDistance = (touches) => {
+		const [touch1, touch2] = touches;
+		const dx = touch2.clientX - touch1.clientXd;
+		const dy = touch2.clientY - touch1.clientY;
+		return Math.sqrt(dx * dx + dy * dy);
 	};
 
 	// get a pixel value from whatever is passed into the maxHeight prop
@@ -313,6 +372,8 @@
 		object-fit: ${cropToFillContainer || (useCompactHeightOnMobile && $isMobileBreakpoint)
 			? 'cover'
 			: 'contain'};
+		transition: ${isForImageDetailOverlay ? '' : ' transform 0.3s ease-in-out'};
+
 		/* if max height is not specified, use all available space below the header */
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			max-height: ${maxHeight === 'auto'
@@ -539,7 +600,7 @@
 	bind:this={containerRef}
 	class="jdg-image-container {imageContainerCssDynamic}"
 >
-	<!-- need to set an on:click only to potentially ignore clicks in some cases -->
+	<!-- need to set an on:click to ignore clicks in some cases -->
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 	<img
@@ -551,6 +612,10 @@
 			: onImageLoad}
 		on:error={onImageError}
 		on:click={onImageClick}
+		on:scroll={handleWheel}
+		on:wheel={handleWheel}
+		on:touchstart={handleTouchStart}
+		on:touchmove={handleTouchMove}
 		class={`image ${imageCssStatic} ${imageAnimationCss}`}
 		src={showPlaceholderImage
 			? isImageLoaded || isPlaceholderLoaded
@@ -605,7 +670,6 @@
 
 	.image {
 		height: 100%;
-		transition: transform 0.3s ease-in-out;
 	}
 
 	.image-blur {
