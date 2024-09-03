@@ -372,6 +372,8 @@
 		object-fit: ${cropToFillContainer || (useCompactHeightOnMobile && $isMobileBreakpoint)
 			? 'cover'
 			: 'contain'};
+		transition: ${isForImageDetailOverlay ? '' : ' transform 0.3s ease-in-out'};
+
 		/* if max height is not specified, use all available space below the header */
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			max-height: ${maxHeight === 'auto'
