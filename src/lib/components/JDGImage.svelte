@@ -45,6 +45,7 @@
 	export let transition = fade; // fade or scale depending on usage
 	export let isForImageDetailOverlay = false; // special rules for ImageDetailOverlay context
 	export let doScaleOnScrollOrZoom = false; // allow scaling up the image on scroll or zoom events
+	export let scaleContext = 'container'; // which element to scale. other option: 'image'
 
 	// DEBUGGING
 
@@ -126,11 +127,16 @@
 	// only applicable if doScaleOnZoom is true
 	const handleWheel = (event) => {
 		if (doScaleOnScrollOrZoom) {
-			const rect = imageRef.getBoundingClientRect();
+			const rect =
+				scaleContext === 'container'
+					? containerRef.getBoundingClientRect()
+					: imageRef.getBoundingClientRect();
 			const cursorX = ((event.clientX - rect.left) / rect.width) * 100;
 			const cursorY = ((event.clientY - rect.top) / rect.height) * 100;
 
-			imageRef.style.transformOrigin = `${cursorX}% ${cursorY}%`;
+			scaleContext === 'container'
+				? (containerRef.style.transformOrigin = `${cursorX}% ${cursorY}%`)
+				: (imageRef.style.transformOrigin = `${cursorX}% ${cursorY}%`);
 
 			if (event.deltaY < 0) {
 				scale = Math.min(scale + scaleDelta, maxScale); // scale up
@@ -138,7 +144,9 @@
 				scale = Math.max(scale - scaleDelta, 1.0); // scale down, min 1.0
 			}
 
-			imageRef.style.transform = `scale(${scale})`;
+			scaleContext === 'container'
+				? (containerRef.style.transform = `scale(${scale})`)
+				: (imageRef.style.transform = `scale(${scale})`);
 		}
 	};
 
@@ -152,7 +160,10 @@
 	const handleTouchMove = (event) => {
 		if (doScaleOnScrollOrZoom) {
 			if (event.touches.length === 2) {
-				const rect = imageRef.getBoundingClientRect();
+				const rect =
+					scaleContext === 'container'
+						? containerRef.getBoundingClientRect()
+						: imageRef.getBoundingClientRect();
 				const touch1 = event.touches[0];
 				const touch2 = event.touches[1];
 				originX = (((touch1.clientX + touch2.clientX) / 2 - rect.left) / rect.width) * 100;
@@ -163,8 +174,12 @@
 				scale = Math.min(Math.max(scale * scaleChange, 1.0), 2.0);
 				initialDistance = currentDistance;
 
-				imageRef.style.transformOrigin = `${originX}% ${originY}%`;
-				imageRef.style.transform = `scale(${scale})`;
+				scaleContext === 'container'
+					? (containerRef.style.transformOrigin = `${originX}% ${originY}%`)
+					: (imageRef.style.transformOrigin = `${originX}% ${originY}%`);
+				scaleContext === 'container'
+					? (containerRef.style.transform = `scale(${scale})`)
+					: (imageRef.style.transform = `scale(${scale})`);
 			}
 		}
 	};
@@ -601,6 +616,10 @@
 <div
 	transition:transition={{ duration: jdgDurations.fadeIn }}
 	bind:this={containerRef}
+	on:scroll={handleWheel}
+	on:wheel={handleWheel}
+	on:touchstart={handleTouchStart}
+	on:touchmove={handleTouchMove}
 	class="jdg-image-container {imageContainerCssDynamic}"
 >
 	<!-- need to set an on:click to ignore clicks in some cases -->
@@ -615,10 +634,6 @@
 			: onImageLoad}
 		on:error={onImageError}
 		on:click={onImageClick}
-		on:scroll={handleWheel}
-		on:wheel={handleWheel}
-		on:touchstart={handleTouchStart}
-		on:touchmove={handleTouchMove}
 		class={`image ${imageCssStatic} ${imageAnimationCss}`}
 		src={showPlaceholderImage
 			? isImageLoaded || isPlaceholderLoaded
