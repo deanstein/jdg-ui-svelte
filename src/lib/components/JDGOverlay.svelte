@@ -71,11 +71,6 @@
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 			max-height: calc(100vh - ${jdgSizes.headerHeightLg});
 		`;
-
-	onMount(() => {
-		overlayRef.addEventListener('wheel', preventScroll, { passive: false });
-		overlayRef.addEventListener('touchmove', preventScroll, { passive: false });
-	});
 </script>
 
 <div
@@ -83,6 +78,8 @@
 	class="jdg-overlay {overlayCss}"
 	on:click|self={onCloseFunction}
 	on:keypress|self={() => {}}
+	on:wheel={preventScroll}
+	on:touchmove={preventScroll}
 	role="button"
 	tabindex="0"
 	transition:fade={{ duration: jdgDurations.default }}

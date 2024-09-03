@@ -162,12 +162,15 @@
 				const scaleChange = currentDistance / initialDistance;
 				scale = Math.min(Math.max(scale * scaleChange, 1.0), 2.0);
 				initialDistance = currentDistance;
+
+				imageRef.style.transformOrigin = `${originX}% ${originY}%`;
+				imageRef.style.transform = `scale(${scale})`;
 			}
 		}
 	};
 	const getDistance = (touches) => {
 		const [touch1, touch2] = touches;
-		const dx = touch2.clientX - touch1.clientXd;
+		const dx = touch2.clientX - touch1.clientX;
 		const dy = touch2.clientY - touch1.clientY;
 		return Math.sqrt(dx * dx + dy * dy);
 	};
