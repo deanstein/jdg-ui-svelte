@@ -44,7 +44,7 @@
 	export let stopEventPropagation = false; // can be used in certain cases to ensure clicking on the image stops the event to its parent
 	export let transition = fade; // fade or scale depending on usage
 	export let isForImageDetailOverlay = false; // special rules for ImageDetailOverlay context
-	export let scaleOnZoom = false;
+	export let doScaleOnZoom = false;
 
 	// DEBUGGING
 
@@ -122,42 +122,52 @@
 	let originX = 0;
 	let originY = 0;
 
+	// image zoom functions
+	// only applicable if doScaleOnZoom is true
 	const handleWheel = (event) => {
-		const rect = containerRef.getBoundingClientRect();
-		originX = ((event.clientX - rect.left) / rect.width) * 100;
-		originY = ((event.clientY - rect.top) / rect.height) * 100;
+		if (doScaleOnZoom) {
+			const rect = imageRef.getBoundingClientRect();
+			const cursorX = ((event.clientX - rect.left) / rect.width) * 100;
+			const cursorY = ((event.clientY - rect.top) / rect.height) * 100;
 
-		if (event.deltaY < 0) {
-			scale = Math.min(scale + scaleDelta, maxScale); // Scale up, max 2.0
-		} else {
-			scale = Math.max(scale - scaleDelta, 1.0); // Scale down, min 1.0
+			imageRef.style.transformOrigin = `${cursorX}% ${cursorY}%`;
+
+			if (event.deltaY < 0) {
+				scale = Math.min(scale + scaleDelta, maxScale); // scale up
+			} else {
+				scale = Math.max(scale - scaleDelta, 1.0); // scale down, min 1.0
+			}
+
+			imageRef.style.transform = `scale(${scale})`;
 		}
 	};
 
 	const handleTouchStart = (event) => {
-		if (event.touches.length === 2) {
-			initialDistance = getDistance(event.touches);
+		if (doScaleOnZoom) {
+			if (event.touches.length === 2) {
+				initialDistance = getDistance(event.touches);
+			}
 		}
 	};
-
 	const handleTouchMove = (event) => {
-		if (event.touches.length === 2) {
-			const rect = event.currentTarget.getBoundingClientRect();
-			const touch1 = event.touches[0];
-			const touch2 = event.touches[1];
-			originX = (((touch1.clientX + touch2.clientX) / 2 - rect.left) / rect.width) * 100;
-			originY = (((touch1.clientY + touch2.clientY) / 2 - rect.top) / rect.height) * 100;
+		if (doScaleOnZoom) {
+			if (event.touches.length === 2) {
+				const rect = imageRef.getBoundingClientRect();
+				const touch1 = event.touches[0];
+				const touch2 = event.touches[1];
+				originX = (((touch1.clientX + touch2.clientX) / 2 - rect.left) / rect.width) * 100;
+				originY = (((touch1.clientY + touch2.clientY) / 2 - rect.top) / rect.height) * 100;
 
-			const currentDistance = getDistance(event.touches);
-			const scaleChange = currentDistance / initialDistance;
-			scale = Math.min(Math.max(scale * scaleChange, 1.0), 2.0);
-			initialDistance = currentDistance;
+				const currentDistance = getDistance(event.touches);
+				const scaleChange = currentDistance / initialDistance;
+				scale = Math.min(Math.max(scale * scaleChange, 1.0), 2.0);
+				initialDistance = currentDistance;
+			}
 		}
 	};
-
 	const getDistance = (touches) => {
 		const [touch1, touch2] = touches;
-		const dx = touch2.clientX - touch1.clientX;
+		const dx = touch2.clientX - touch1.clientXd;
 		const dy = touch2.clientY - touch1.clientY;
 		return Math.sqrt(dx * dx + dy * dy);
 	};
@@ -473,8 +483,6 @@
 			imageContainerCssDynamic = css`
 				height: ${getPreferredContainerHeight().value};
 				width: ${getPreferredContainerWidth()};
-				transform: scale(${scale});
-				transform-origin: ${originX}% ${originY}%;
 			`;
 		}
 	}
@@ -588,10 +596,6 @@
 <div
 	transition:transition={{ duration: jdgDurations.fadeIn }}
 	bind:this={containerRef}
-	on:scroll|stopPropagation={handleWheel}
-	on:wheel|stopPropagation={handleWheel}
-	on:touchstart={handleTouchStart}
-	on:touchmove={handleTouchMove}
 	class="jdg-image-container {imageContainerCssDynamic}"
 >
 	<!-- need to set an on:click to ignore clicks in some cases -->
@@ -606,6 +610,10 @@
 			: onImageLoad}
 		on:error={onImageError}
 		on:click={onImageClick}
+		on:scroll={handleWheel}
+		on:wheel={handleWheel}
+		on:touchstart={handleTouchStart}
+		on:touchmove={handleTouchMove}
 		class={`image ${imageCssStatic} ${imageAnimationCss}`}
 		src={showPlaceholderImage
 			? isImageLoaded || isPlaceholderLoaded
@@ -660,7 +668,6 @@
 
 	.image {
 		height: 100%;
-		transition: transform 0.3s ease-in-out;
 	}
 
 	.image-blur {
