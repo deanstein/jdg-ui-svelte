@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import uiState from '$lib/states/ui-state.js';
+	import { isMobileBreakpoint } from '$lib/states/ui-state.js';
 
 	import { jdgColors } from '../jdg-shared-styles.js';
 	import {
@@ -71,7 +71,7 @@
 			width: ${
 				width == 'fit-content'
 					? 'fit-content'
-					: $uiState.isMobileBreakpoint
+					: $isMobileBreakpoint
 						? '100%'
 						: width /* button is 100% width on smallest breakpoint */
 			};
