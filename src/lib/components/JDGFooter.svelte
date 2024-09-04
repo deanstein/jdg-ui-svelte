@@ -2,7 +2,22 @@
 	import { onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { doShowDevTools, doShowHeaderStripes } from '$lib/states/ui-state.js';
+	import {
+		accentColors,
+		activeNotificationBanners,
+		clientWidth,
+		doShowDevTools,
+		doShowHeaderStripes,
+		doShowImageDetailOverlay,
+		doShowNavSidebar,
+		highestZIndex,
+		imageDetailAttributes,
+		imageDetailWidth,
+		isMobileBreakpoint,
+		isScrolling,
+		jumpToNavItems,
+		windowWidth
+	} from '$lib/states/ui-state.js';
 
 	import { getBuildCode } from '../jdg-utils.js';
 	import { jdgUiRepoName } from '../jdg-persistence-management.js';
@@ -122,7 +137,41 @@
 		{/if}
 		{#if $doShowDevTools}
 			<div class="dev-tools">
-				<div class="state-view">uiState</div>
+				<div class="state-view">
+					<b>UI STATE:</b>
+					<br />
+					accentColors: {JSON.stringify($accentColors)}
+					<br />
+					activeNotificationBanners: {JSON.stringify($activeNotificationBanners)}
+					<br />
+					doShowDevTools: {JSON.stringify($doShowDevTools)}
+					<br />
+					doShowHeaderStripes: {JSON.stringify($doShowHeaderStripes)}
+					<br />
+					doShowNavSidebar: {JSON.stringify($doShowNavSidebar)}
+					<br />
+					highestZIndex: {JSON.stringify($highestZIndex)}
+					<br />
+					isMobileBreakpoint: {JSON.stringify($isMobileBreakpoint)}
+					<br />
+					isScrolling: {JSON.stringify($isScrolling)}
+					<br />
+					jumpToNavItems: {JSON.stringify($jumpToNavItems)}
+					<br /><br />
+					<i>IMAGE DETAIL OVERLAY</i>
+					<br />
+					doShowImageDetailOverlay: {JSON.stringify($doShowImageDetailOverlay)}
+					<br />
+					imageDetailAttributes: {JSON.stringify($imageDetailAttributes)}
+					<br />
+					imageDetailWidth: {JSON.stringify($imageDetailWidth)}
+					<br /><br />
+					<i>WIDTHS</i>
+					<br />
+					clientWidth: {JSON.stringify($clientWidth)}
+					<br />
+					windowWidth: {JSON.stringify($windowWidth)}
+				</div>
 			</div>
 		{/if}
 	</div>
