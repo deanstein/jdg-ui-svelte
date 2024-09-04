@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import uiState from '$lib/states/ui-state.js';
+	import { doShowNavSidebar } from '$lib/states/ui-state.js';
 
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 
@@ -25,7 +25,7 @@
 	`;
 
 	$: {
-		isOpen = $uiState.showNavSidebar;
+		isOpen = $doShowNavSidebar;
 	}
 </script>
 

@@ -1,8 +1,8 @@
 <script>
-	import uiState from '$lib/states/ui-state.js';
+	import { accentColors } from '$lib/states/ui-state.js';
 	import { jdgDurations } from '$lib/jdg-shared-styles.js';
 
-	export let strokeColor = $uiState.accentColors[0];
+	export let strokeColor = $accentColors[0];
 	export let strokeWidthPx = 4;
 	export let spinnerHeightPx = 50;
 

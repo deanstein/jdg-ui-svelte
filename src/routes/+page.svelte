@@ -1,7 +1,6 @@
 <script>
+	import { accentColors } from '$lib/states/ui-state.js';
 	import { scrollToAnchor } from '$lib/jdg-utils.js';
-
-	import uiState from '$lib/states/ui-state.js';
 
 	import {
 		JDGAccentBlock,
@@ -24,9 +23,9 @@
 		JDGLoadingSpinner,
 		JDGUpNext
 	} from '$lib/index.js';
+	import { jdgColors, jdgFonts } from '$lib/jdg-shared-styles.js';
 
 	import { imageAttributesCollection } from './image-attributes-collection.js';
-	import { jdgColors, jdgFonts } from '$lib/jdg-shared-styles.js';
 
 	let isTestButtonEnabled = true;
 </script>
@@ -484,7 +483,7 @@
 	<JDGAccentBlock>
 		<JDGAccentText primaryText={`"Another quote."`} secondaryText="Another Someone, 1998" />
 	</JDGAccentBlock>
-	<JDGAccentBlock backgroundColor={$uiState.accentColors[1]}>
+	<JDGAccentBlock backgroundColor={$accentColors[1]}>
 		<JDGAccentText
 			isQuote={true}
 			primaryText={`"The people of the City of Englewood want this mall in their community."`}

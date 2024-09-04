@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import uiState from '$lib/states/ui-state.js';
+	import { doShowDevTools, doShowHeaderStripes } from '$lib/states/ui-state.js';
 
 	import { getBuildCode } from '../jdg-utils.js';
 	import { jdgUiRepoName } from '../jdg-persistence-management.js';
@@ -62,7 +62,7 @@
 
 <footer class="jdg-footer-outer-container {footerOuterContainerCss}">
 	<!-- horizontal stripes at top of footer -->
-	{#if $uiState.showHeaderStripes}
+	{#if $doShowHeaderStripes}
 		<JDGStripesHorizontal />
 	{/if}
 	<div class="footer-content-container {footerContentContainerCss}">
@@ -112,7 +112,7 @@
 			<div class="footer-row {footerDevToolsCss}">
 				<JDGButton
 					onClickFunction={toggleDevTools}
-					label={$uiState.showDevTools ? 'Hide Dev Tools' : 'Show Dev Tools'}
+					label={$doShowDevTools ? 'Hide Dev Tools' : 'Show Dev Tools'}
 					paddingTopBottom="5px"
 					paddingLeftRight="10px"
 					faIcon="fa-wrench"
@@ -120,11 +120,9 @@
 				/>
 			</div>
 		{/if}
-		{#if $uiState.showDevTools}
+		{#if $doShowDevTools}
 			<div class="dev-tools">
-				<div class="state-view">
-					{JSON.stringify($uiState)}
-				</div>
+				<div class="state-view">uiState</div>
 			</div>
 		{/if}
 	</div>

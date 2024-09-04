@@ -3,18 +3,14 @@
 	import { css } from '@emotion/css';
 
 	import jdgContexts from '$lib/jdg-contexts.js';
-	import uiState, {
+	import {
+		accentColors,
 		clientWidth,
+		doShowHeaderStripes,
 		isMobileBreakpoint,
 		isScrolling,
 		windowWidth
 	} from '$lib/states/ui-state.js';
-	import {
-		getAccentColors,
-		setAccentColors,
-		setClientWidth,
-		setShowHeaderStripes
-	} from '$lib/jdg-state-management.js';
 
 	import {
 		adjustColorForContrast,
@@ -24,14 +20,13 @@
 
 	import { JDGLoadingOverlay } from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgFonts, jdgLinkStyles } from '$lib/jdg-shared-styles.js';
-	import { get } from 'svelte/store';
 
 	export let fontFamily = jdgFonts.body;
 	export let appLoadingIconSrc =
 		'https://res.cloudinary.com/jdg-main/image/upload/v1718070772/jdg-ui-svelte/jdg-ui-logo_cs4ji5.jpg';
-	export let accentColors = jdgColors.accentColorsJDG;
-	export let linkColorDefault = getAccentColors()[0]; /* color for the "banner" hyperlink style */
-	export let linkColorSimple = getAccentColors()[0]; /* color for the simple hyperlink style */
+	export let appAccentColors = jdgColors.accentColorsJDG;
+	export let linkColorDefault = appAccentColors[0]; /* color for the "banner" hyperlink style */
+	export let linkColorSimple = appAccentColors[0]; /* color for the simple hyperlink style */
 	export let showHeaderStripes = true;
 	export let allowTextSelection = false;
 
@@ -105,10 +100,10 @@
 			background: ${useStripedHyperlinkHoverStyle
 				? `linear-gradient(
 				to bottom,
-				${convertHexToRGBA(accentColors[0], stripedColorOpacity)} 33%,I'm act
-				${convertHexToRGBA(accentColors[1], stripedColorOpacity)} 33%,
-				${convertHexToRGBA(accentColors[1], stripedColorOpacity)} 66%,
-				${convertHexToRGBA(accentColors[2], stripedColorOpacity)} 66%
+				${convertHexToRGBA(appAccentColors[0], stripedColorOpacity)} 33%,I'm act
+				${convertHexToRGBA(appAccentColors[1], stripedColorOpacity)} 33%,
+				${convertHexToRGBA(appAccentColors[1], stripedColorOpacity)} 66%,
+				${convertHexToRGBA(appAccentColors[2], stripedColorOpacity)} 66%
 			)`
 				: `${adjustColorForContrast(linkColorDefault, jdgColors.text, 10)}`};
 		}
@@ -135,8 +130,8 @@
 		isAppLoaded = true;
 
 		// apps have accent colors
-		setAccentColors(accentColors);
-		setShowHeaderStripes(showHeaderStripes);
+		accentColors.set(appAccentColors);
+		doShowHeaderStripes.set(showHeaderStripes);
 		// update the client and window width at the end so they're accurate
 		setTimeout(onPageResize, 0);
 
