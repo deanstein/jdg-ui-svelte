@@ -1,9 +1,9 @@
 <script>
 	import { css } from '@emotion/css';
-	import { getAccentColors } from '$lib/jdg-state-management.js';
 	import { adjustColorForContrast } from '$lib/jdg-utils.js';
 
 	import { jdgBreakpoints, jdgColors, jdgFonts, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { accentColors } from '$lib/states/ui-state.js';
 
 	export let featureTitle = undefined;
 	export let featureDescription;
@@ -11,7 +11,7 @@
 	export let descriptionTextColor = jdgColors.textDm;
 	export let descriptionTextFontFamily = jdgFonts.body;
 	export let nDescriptionTextSizeMultiplier = 1.25; // factor of body copy size
-	export let backgroundColor = getAccentColors()[0];
+	export let backgroundColor = $accentColors[0];
 	export let imageAlign = 'left'; // image on this side, text on opposite
 	export let showBorderImage = true;
 

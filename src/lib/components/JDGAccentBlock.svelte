@@ -1,11 +1,13 @@
 <script>
 	import { onMount } from 'svelte';
 	import { css } from '@emotion/css';
-	import { getAccentColors } from '$lib/jdg-state-management.js';
+
+	import { accentColors } from '$lib/states/ui-state.js';
+
 	import { JDGAnimateOnVisible } from '$lib/index.js';
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 
-	export let backgroundColor = getAccentColors()[0];
+	export let backgroundColor = $accentColors[0];
 
 	const accentBlockCss = css`
 		background-color: ${backgroundColor};
@@ -23,7 +25,7 @@
 	`;
 
 	onMount(() => {
-		backgroundColor = getAccentColors()[0];
+		backgroundColor = $accentColors[0];
 	});
 </script>
 
