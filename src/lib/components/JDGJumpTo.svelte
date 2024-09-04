@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import uiState from '$lib/states/ui-state.js';
+	import { jumpToNavItems } from '$lib/states/ui-state.js';
 
 	import { JDGContentBoxFloating, JDGNavItem } from '$lib/index.js';
 	import { jdgSizes } from '$lib/jdg-shared-styles.js';
@@ -16,7 +16,7 @@
 
 <JDGContentBoxFloating title={sectionTitle} includeInJumpTo={false}>
 	<div class="jumpToItemContainer">
-		{#each $uiState.jumpToNavItems as tocItem, i}
+		{#each $jumpToNavItems as tocItem, i}
 			{#if tocItem.label && tocItem.href}
 				{#if showArrowInItems}
 					<div class="jumpToItemWithSymbol {jumpToItemCss}">

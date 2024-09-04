@@ -1,84 +1,39 @@
-import { jdgColors } from './jdg-shared-styles.js';
 import { addUniqueValueToArray, removeValueFromArray } from './jdg-utils.js';
-import uiState from './states/ui-state.js';
+import {
+	accentColors,
+	activeNotificationBanners,
+	highestZIndex,
+	imageDetailAttributes,
+	jumpToNavItems,
+	doShowImageDetailOverlay,
+	doShowNavSidebar,
+	doShowDevTools
+} from './states/ui-state.js';
 
 //
 // ACCENT COLORS + HEADER STRIPES
 //
 
 export const getAccentColors = () => {
-	let accentColors = jdgColors.accentColorsJDG;
-	uiState.subscribe((currentValue) => {
-		accentColors = currentValue.accentColors;
+	let currentAccentColors;
+	accentColors.subscribe((currentValue) => {
+		currentAccentColors = currentValue;
 	});
-	return accentColors;
-};
-
-export const setAccentColors = (accentColors) => {
-	uiState.update((currentValue) => {
-		currentValue.accentColors = accentColors;
-		return currentValue;
-	});
-};
-
-export const setShowHeaderStripes = (showHeaderStripes) => {
-	uiState.update((currentValue) => {
-		currentValue.showHeaderStripes = showHeaderStripes;
-		return currentValue;
-	});
-};
-
-//
-// WINDOW + CLIENT WIDTHS
-//
-
-export const setWindowWidth = (windowWidth) => {
-	uiState.update((currentValue) => {
-		currentValue.windowWidth = windowWidth;
-		return currentValue;
-	});
-};
-
-export const setClientWidth = (clientWidth) => {
-	uiState.update((currentValue) => {
-		currentValue.clientWidth = clientWidth;
-		return currentValue;
-	});
-};
-
-export const setIsMobileBreakpoint = (isMobileBreakpoint) => {
-	uiState.update((currentValue) => {
-		currentValue.isMobileBreakpoint = isMobileBreakpoint;
-		return currentValue;
-	});
+	return currentAccentColors;
 };
 
 //
 // IMAGE DETAIL MODAL
 //
 
-export const setShowImageDetailModal = (showImageDetailModal) => {
-	uiState.update((currentValue) => {
-		currentValue.showImageDetailOverlay = showImageDetailModal;
-		return currentValue;
-	});
-};
-
-export const setImageDetailAttributes = (imageDetailObject) => {
-	uiState.update((currentValue) => {
-		currentValue.imageDetailAttributes = imageDetailObject;
-		return currentValue;
-	});
-};
-
 export const showImageDetailModal = (imageAttributes) => {
-	setShowImageDetailModal(true);
-	setImageDetailAttributes(imageAttributes);
+	doShowImageDetailOverlay.set(true);
+	imageDetailAttributes.set(imageAttributes);
 };
 
 export const hideImageDetailModal = () => {
-	setShowImageDetailModal(false);
-	setImageDetailAttributes(undefined);
+	doShowImageDetailOverlay.set(false);
+	imageDetailAttributes.set(undefined);
 };
 
 //
@@ -86,26 +41,26 @@ export const hideImageDetailModal = () => {
 //
 
 export const resetJumpToNavItems = () => {
-	uiState.update((currentValue) => {
-		currentValue.jumpToNavItems = [];
+	jumpToNavItems.update((currentValue) => {
+		currentValue = [];
 		return currentValue;
 	});
 };
 
 export const addJumpToNavItem = (navItem) => {
-	uiState.update((currentValue) => {
-		currentValue.jumpToNavItems.push(navItem);
+	jumpToNavItems.update((currentValue) => {
+		currentValue.push(navItem);
 		return currentValue;
 	});
 };
 
 export const removeJumpToNavItem = (navItem) => {
-	uiState.update((currentValue) => {
-		const index = currentValue.jumpToNavItems.findIndex(
+	jumpToNavItems.update((currentValue) => {
+		const index = currentValue.findIndex(
 			(item) => JSON.stringify(item) === JSON.stringify(navItem)
 		);
 		if (index !== -1) {
-			currentValue.jumpToNavItems.splice(index, 1);
+			currentValue.splice(index, 1);
 		}
 		return currentValue;
 	});
@@ -117,19 +72,11 @@ export const removeJumpToNavItem = (navItem) => {
 
 export const getIsNavSideBarOpen = () => {
 	let isOpen;
-
-	uiState.subscribe((currentValue) => {
-		isOpen = currentValue.showNavSidebar;
+	doShowNavSidebar.subscribe((currentValue) => {
+		isOpen = currentValue;
 	});
 
 	return isOpen;
-};
-
-export const setNavSidebarOpen = (sidebarOpenState) => {
-	uiState.update((currentValue) => {
-		currentValue.showNavSidebar = sidebarOpenState;
-		return currentValue;
-	});
 };
 
 //
@@ -137,17 +84,17 @@ export const setNavSidebarOpen = (sidebarOpenState) => {
 //
 
 export const addNotificationBanner = (bannerId) => {
-	uiState.update((currentValue) => {
-		const updatedArray = addUniqueValueToArray(currentValue.activeNotificationBanners, bannerId);
-		currentValue.activeNotificationBanners = updatedArray;
+	activeNotificationBanners.update((currentValue) => {
+		const updatedArray = addUniqueValueToArray(currentValue, bannerId);
+		currentValue = updatedArray;
 		return currentValue;
 	});
 };
 
 export const removeNotificationBanner = (bannerId) => {
-	uiState.update((currentValue) => {
-		const updatedArray = removeValueFromArray(currentValue.activeNotificationBanners, bannerId);
-		currentValue.activeNotificationBanners = updatedArray;
+	activeNotificationBanners.update((currentValue) => {
+		const updatedArray = removeValueFromArray(currentValue, bannerId);
+		currentValue = updatedArray;
 		return currentValue;
 	});
 };
@@ -158,9 +105,9 @@ export const removeNotificationBanner = (bannerId) => {
 
 export const incrementHighestZIndex = () => {
 	let newZIndex;
-	uiState.update((currentValue) => {
-		currentValue.highestZIndex + 1;
-		newZIndex = currentValue.highestZIndex;
+	highestZIndex.update((currentValue) => {
+		currentValue + 1;
+		newZIndex = currentValue;
 		return currentValue;
 	});
 	return newZIndex;
@@ -168,8 +115,8 @@ export const incrementHighestZIndex = () => {
 
 export const getHighestZIndex = () => {
 	let zIndex = 0;
-	uiState.subscribe((currentValue) => {
-		zIndex = currentValue.highestZIndex;
+	highestZIndex.subscribe((currentValue) => {
+		zIndex = currentValue;
 	});
 	return zIndex;
 };
@@ -179,8 +126,8 @@ export const getHighestZIndex = () => {
 //
 
 export const toggleDevTools = () => {
-	uiState.update((currentValue) => {
-		currentValue.showDevTools = !currentValue.showDevTools;
+	doShowDevTools.update((currentValue) => {
+		currentValue = !currentValue;
 		return currentValue;
 	});
 };

@@ -1,9 +1,9 @@
 <script>
 	import jdgNavItem from '$lib/schemas/jdg-nav-item.js';
-
-	import uiState from '$lib/states/ui-state.js';
-
+	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
+	import { imageDetailAttributes, doShowImageDetailOverlay } from '$lib/states/ui-state.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
+	import { jdgSharedUrls } from '$lib/jdg-shared-strings.js';
 
 	import {
 		JDGAppContainer,
@@ -15,8 +15,6 @@
 		JDGSocialMedia
 	} from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
-	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
-	import { jdgSharedUrls } from '$lib/jdg-shared-strings.js';
 
 	// define the nav items in the header
 	const newNavItem1 = instantiateObject(jdgNavItem);
@@ -53,7 +51,7 @@
 	const showHeaderStripes = false;
 </script>
 
-<JDGAppContainer accentColors={jdgColors.accentColorsCCP} {showHeaderStripes}>
+<JDGAppContainer appAccentColors={jdgColors.accentColorsCCP} {showHeaderStripes}>
 	<JDGNotificationBanner notificationType={jdgNotificationTypes.information.id} />
 	<JDGHeader
 		logoJustification="left"
@@ -83,7 +81,7 @@
 		/>
 	</JDGFooter>
 	<!-- show the image detail overlay when appropriate -->
-	{#if $uiState.showImageDetailOverlay}
-		<JDGImageDetailOverlay imageAttributes={$uiState.imageDetailAttributes} />
+	{#if $doShowImageDetailOverlay}
+		<JDGImageDetailOverlay imageAttributes={$imageDetailAttributes} />
 	{/if}
 </JDGAppContainer>

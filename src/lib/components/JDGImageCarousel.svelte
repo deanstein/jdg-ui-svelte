@@ -2,15 +2,14 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { getAccentColors } from '$lib/jdg-state-management.js';
+	import { accentColors } from '$lib/states/ui-state.js';
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGImageTile } from '$lib/index.js';
-
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let imageAttributeObjects; // all images shown in thumbnail collection
 	export let maxHeight = '50vh';
-	export let activeThumbnailColor = getAccentColors()[0];
+	export let activeThumbnailColor = $accentColors[0];
 	export let autoAdvance = true; // if true, auto advance through images at given interval
 	export let autoAdvanceInterval = 5000; // ms, interval between auto-advances
 	export let showBlurInUnfilledSpace = true;

@@ -5,9 +5,10 @@
 
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 	import { isNumberValid } from '$lib/jdg-utils.js';
-	import uiState, {
+	import {
 		imageDetailWidth,
 		isMobileBreakpoint,
+		doShowHeaderStripes,
 		windowWidth
 	} from '$lib/states/ui-state.js';
 
@@ -385,7 +386,7 @@
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			max-height: ${maxHeight === 'auto'
 				? `calc(100vh - ${jdgSizes.headerHeightSm} - ${
-						$uiState.showHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightSm : 0
+						$doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightSm : 0
 					}px)`
 				: ''};
 		}
@@ -394,14 +395,14 @@
 			jdgBreakpoints.unit}) {
 			max-height: ${maxHeight === 'auto'
 				? `calc(100vh - ${jdgSizes.headerHeightMd}  - ${
-						$uiState.showHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightMd : 0
+						$doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightMd : 0
 					}px)`
 				: ''};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 			max-height: ${maxHeight === 'auto'
 				? `calc(100vh - ${jdgSizes.headerHeightLg} - ${
-						$uiState.showHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightLg : 0
+						$doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightLg : 0
 					}px)`
 				: ''};
 		}

@@ -2,7 +2,22 @@
 	import { onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import uiState from '$lib/states/ui-state.js';
+	import {
+		accentColors,
+		activeNotificationBanners,
+		clientWidth,
+		doShowDevTools,
+		doShowHeaderStripes,
+		doShowImageDetailOverlay,
+		doShowNavSidebar,
+		highestZIndex,
+		imageDetailAttributes,
+		imageDetailWidth,
+		isMobileBreakpoint,
+		isScrolling,
+		jumpToNavItems,
+		windowWidth
+	} from '$lib/states/ui-state.js';
 
 	import { getBuildCode } from '../jdg-utils.js';
 	import { jdgUiRepoName } from '../jdg-persistence-management.js';
@@ -62,7 +77,7 @@
 
 <footer class="jdg-footer-outer-container {footerOuterContainerCss}">
 	<!-- horizontal stripes at top of footer -->
-	{#if $uiState.showHeaderStripes}
+	{#if $doShowHeaderStripes}
 		<JDGStripesHorizontal />
 	{/if}
 	<div class="footer-content-container {footerContentContainerCss}">
@@ -112,7 +127,7 @@
 			<div class="footer-row {footerDevToolsCss}">
 				<JDGButton
 					onClickFunction={toggleDevTools}
-					label={$uiState.showDevTools ? 'Hide Dev Tools' : 'Show Dev Tools'}
+					label={$doShowDevTools ? 'Hide Dev Tools' : 'Show Dev Tools'}
 					paddingTopBottom="5px"
 					paddingLeftRight="10px"
 					faIcon="fa-wrench"
@@ -120,10 +135,42 @@
 				/>
 			</div>
 		{/if}
-		{#if $uiState.showDevTools}
+		{#if $doShowDevTools}
 			<div class="dev-tools">
 				<div class="state-view">
-					{JSON.stringify($uiState)}
+					<b>UI STATE:</b>
+					<br />
+					accentColors: {JSON.stringify($accentColors)}
+					<br />
+					activeNotificationBanners: {JSON.stringify($activeNotificationBanners)}
+					<br />
+					doShowDevTools: {JSON.stringify($doShowDevTools)}
+					<br />
+					doShowHeaderStripes: {JSON.stringify($doShowHeaderStripes)}
+					<br />
+					doShowNavSidebar: {JSON.stringify($doShowNavSidebar)}
+					<br />
+					highestZIndex: {JSON.stringify($highestZIndex)}
+					<br />
+					isMobileBreakpoint: {JSON.stringify($isMobileBreakpoint)}
+					<br />
+					isScrolling: {JSON.stringify($isScrolling)}
+					<br />
+					jumpToNavItems: {JSON.stringify($jumpToNavItems)}
+					<br /><br />
+					<i>IMAGE DETAIL OVERLAY</i>
+					<br />
+					doShowImageDetailOverlay: {JSON.stringify($doShowImageDetailOverlay)}
+					<br />
+					imageDetailAttributes: {JSON.stringify($imageDetailAttributes)}
+					<br />
+					imageDetailWidth: {JSON.stringify($imageDetailWidth)}
+					<br /><br />
+					<i>WIDTHS</i>
+					<br />
+					clientWidth: {JSON.stringify($clientWidth)}
+					<br />
+					windowWidth: {JSON.stringify($windowWidth)}
 				</div>
 			</div>
 		{/if}

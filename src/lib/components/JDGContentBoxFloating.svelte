@@ -3,7 +3,7 @@
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
-	import uiState from '$lib/states/ui-state.js';
+	import { doShowHeaderStripes } from '$lib/states/ui-state.js';
 	import { addJumpToNavItem, removeJumpToNavItem } from '$lib/jdg-state-management.js';
 	import jdgNavItem from '$lib/schemas/jdg-nav-item.js';
 
@@ -76,15 +76,15 @@
 
 	const floatingBoxAnchorTagCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			top: -${jdgSizes.nHeaderHeightSm + jdgSizes.nContentContainerGapSm + ($uiState.showHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightSm : 0)}px;
+			top: -${jdgSizes.nHeaderHeightSm + jdgSizes.nContentContainerGapSm + ($doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightSm : 0)}px;
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-			top: -${jdgSizes.nHeaderHeightMd + jdgSizes.nContentContainerGapMd + ($uiState.showHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightMd : 0)}px;
+			top: -${jdgSizes.nHeaderHeightMd + jdgSizes.nContentContainerGapMd + ($doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightMd : 0)}px;
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			top: -${jdgSizes.nHeaderHeightLg + jdgSizes.nContentContainerGapLg + ($uiState.showHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightLg : 0)}px;
+			top: -${jdgSizes.nHeaderHeightLg + jdgSizes.nContentContainerGapLg + ($doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightLg : 0)}px;
 		}
 	`;
 

@@ -2,10 +2,9 @@
 	import { css } from '@emotion/css';
 	import { slide } from 'svelte/transition';
 
-	import uiState from '../states/ui-state.js';
+	import { doShowNavSidebar } from '../states/ui-state.js';
 
 	import { setAlphaInRgbaString } from '$lib/jdg-graphics-factory.js';
-	import { setNavSidebarOpen } from '../jdg-state-management.js';
 	import { jdgColors, jdgDurations, jdgSizes } from '../jdg-shared-styles.js';
 
 	export let navItems;
@@ -31,7 +30,7 @@
 	let blurCss;
 
 	// only apply the blur after the animation is complete
-	$: if ($uiState.showNavSidebar) {
+	$: if ($doShowNavSidebar) {
 		setTimeout(() => {
 			blurCss = css`
 				backdrop-filter: blur(${jdgSizes.blurSizeSmall});
@@ -42,14 +41,14 @@
 	}
 </script>
 
-{#if $uiState.showNavSidebar}
+{#if $doShowNavSidebar}
 	<!-- mobile nav container -->
 	<div class="jdg-nav-sidebar-layout">
 		<div class="jdg-nav-sidebar-alignment-container">
 			<div
 				class="jdg-nav-sidebar-click-overlay"
 				on:click={() => {
-					setNavSidebarOpen(false);
+					doShowNavSidebar.set(false);
 				}}
 				on:keypress={() => {
 					() => {};
@@ -68,7 +67,7 @@
 								class="jdg-nav-sidebar-item {sideNavItemCss}"
 								href={navItem?.href}
 								on:click={() => {
-									setNavSidebarOpen(false);
+									doShowNavSidebar.set(false);
 								}}
 							>
 								<div class="jdg-nav-sidebar-item {sideNavItemCss} jdg-highlight-container">
