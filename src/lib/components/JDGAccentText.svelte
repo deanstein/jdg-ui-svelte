@@ -95,8 +95,8 @@
 		padding: 0px 20px 0px 20px;
 	}
 
+	.accent-text-super,
 	.accent-text-primary,
-	.accentTextSuper,
 	.accent-text-secondary {
 		text-align: center;
 		text-wrap: balance;
