@@ -7,10 +7,20 @@
 		JDGContentContainer,
 		JDGFullWidthContainer,
 		JDGGridLayout,
+		JDGImageFullWidth,
 		JDGImageTile
 	} from '$lib/index.js';
 </script>
 
+<JDGContentContainer overlapWithHeader={true} paddingTop="0" paddingBottom="0">
+	<JDGImageFullWidth
+		imageAttributes={imageAttributesCollection.arch.fairgrounds_river}
+		overlayColorRgba={'rgba(50, 50, 50, 0.8)'}
+		superText={`Hi! 👋 I'm Josh.`}
+		primaryText={"I'm a 3D creator"}
+		secondaryText={'with experience in:'}
+	/>
+</JDGContentContainer>
 <JDGContentContainer>
 	<JDGContentBoxFloating>
 		<div class="intro-content-1">Hi! 👋 I'm Josh.</div>
