@@ -89,6 +89,7 @@
 	`;
 
 	onMount(() => {
+		// add the jumpToNavItems if requested
 		if (includeInJumpTo) {
 			addJumpToNavItem(
 				instantiateObject(jdgNavItem, {
@@ -98,6 +99,7 @@
 			);
 		}
 
+		// add the intersection observer if requested
 		if (animateWhenVisible) {
 			// set up the intersection observer
 			// so we know when the container is visible and we update the class
@@ -117,6 +119,24 @@
 
 			observer.observe(isVisibleRef);
 		}
+
+		// ensure anchor tags are created for any h2 elements
+		const h2Elements = isVisibleRef.querySelectorAll('h2');
+		const h3Elements = isVisibleRef.querySelectorAll('h3');
+		const allHeaderElements = [...h2Elements, ...h3Elements];
+		allHeaderElements.forEach((headerElement) => {
+			// create a new div element
+			const anchorTagDiv = document.createElement('div');
+			// the id is a modified version of the text content
+			const anchorTagId = convertStringToAnchorTag(headerElement.textContent, false);
+			anchorTagDiv.setAttribute('id', anchorTagId);
+			// add the anchor tag div as a child of the header element
+			headerElement.style.position = 'relative';
+			headerElement.appendChild(anchorTagDiv);
+			// adjust the position of the anchor tag div to account for the header height
+			anchorTagDiv.style.position = 'relative';
+			anchorTagDiv.classList.add(floatingBoxAnchorTagCss);
+		});
 	});
 
 	onDestroy(() => {
