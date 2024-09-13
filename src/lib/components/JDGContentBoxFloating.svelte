@@ -131,10 +131,10 @@
 			const anchorTagId = convertStringToAnchorTag(headerElement.textContent, false);
 			anchorTagDiv.setAttribute('id', anchorTagId);
 			// add the anchor tag div as a child of the header element
-			headerElement.style.position = 'relative';
 			headerElement.appendChild(anchorTagDiv);
 			// adjust the position of the anchor tag div to account for the header height
 			anchorTagDiv.style.position = 'relative';
+			// TODO: make this reactive when reactive header is added
 			anchorTagDiv.classList.add(floatingBoxAnchorTagCss);
 		});
 	});
