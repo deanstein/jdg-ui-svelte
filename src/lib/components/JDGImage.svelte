@@ -632,7 +632,7 @@
 			: adjustedImgSrc}
 		alt={imageAttributes.imgAlt}
 	/>
-	<!-- only show blurred image behind if blurUnfilledSpace is true -->
+	<!-- only show blurred image behind if showBlurInUnfilledSpace is true -->
 	{#if showBlurInUnfilledSpace && !cropToFillContainer}
 		<div
 			class="image-blur {imageBlurCss}"
@@ -706,7 +706,7 @@
 		height: 100%;
 		display: flex;
 		justify-content: center;
-		z-index: 3;
+		z-index: 2;
 	}
 
 	.image-loading-overlay {
