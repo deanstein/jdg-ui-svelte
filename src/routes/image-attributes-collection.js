@@ -788,6 +788,25 @@ const imageAttributesCollection = {
 			})
 		)
 	},
+	ind: {
+		planter_003F_1: postProcessImageAttributes(
+			instantiateObject(jdgImageAttributes, {
+				imgSrc: addCloudinaryUrlTransformation(
+					'https://res.cloudinary.com/jdg-main/image/upload/v1726422539/pmx-website/003F-1.jpg'
+				),
+				imgCaption: 'Advanced Planter'
+			})
+		)
+	},
+	swe: {
+		ccp_1: instantiateObject(jdgImageAttributes, {
+			imgSrc: addCloudinaryUrlTransformation(
+				'https://res.cloudinary.com/jdg-main/image/upload/f_auto/v1716962800/ccp-website/ccp/ccp-composite-2.jpg'
+			),
+			imgCaption:
+				'A composite image of two different time periods of a mid-century modern shopping center, powered by Unity.'
+		})
+	},
 	products_0: instantiateObject(jdgImageAttributes, {
 		imgSrc: addCloudinaryUrlTransformation(
 			'https://res.cloudinary.com/jdg-main/image/upload/v1720834651/jdg-website/products/products-0.jpg'

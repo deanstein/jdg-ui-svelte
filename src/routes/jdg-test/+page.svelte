@@ -10,6 +10,32 @@
 		JDGImageFullWidth,
 		JDGImageTile
 	} from '$lib/index.js';
+	import { breakpointHandler } from '$lib/jdg-ui-management.js';
+
+	const imageHeightLg = 350;
+	const imageHeightSm = 250;
+	let currentImageHeight = 0;
+	const imageHeightBreakpointHandler = () => {
+		breakpointHandler(
+			// breakpoint 0
+			() => {
+				// force the mobile nav on
+				currentImageHeight = imageHeightSm;
+			},
+			// breakpoint 1
+			() => {
+				currentImageHeight = imageHeightSm;
+			},
+			// breakpoint 2
+			() => {
+				currentImageHeight = imageHeightLg;
+			}
+		);
+	};
+
+	$: {
+		imageHeightBreakpointHandler();
+	}
 </script>
 
 <JDGContentContainer overlapWithHeader={true} paddingTop="0" paddingBottom="0">
@@ -21,35 +47,59 @@
 		secondaryText={'with experience in:'}
 	/>
 </JDGContentContainer>
-<JDGContentContainer>
-	<JDGContentBoxFloating>
-		<div class="intro-content-1">Hi! 👋 I'm Josh.</div>
-		<div class="intro-content-2">I'm a 3D creator</div>
-		<div class="intro-content-1">with experience in:</div>
-		<JDGGridLayout>
-			<JDGImageTile
-				imageAttributes={imageAttributesCollection.exp.corporate_showroom_corner}
-				label={'ARCHITECTURE'}
-				labelContainerVerticalAlign="bottom"
-				labelJustification="center"
-				href="#architecture"
-			/>
-			<JDGImageTile
-				imageAttributes={imageAttributesCollection.products_0}
-				label={'PRODUCTS'}
-				labelContainerVerticalAlign="bottom"
-				labelJustification="center"
-				href="#products"
-			/>
-			<JDGImageTile
-				imageAttributes={imageAttributesCollection.software_0}
-				label={'SOFTWARE'}
-				labelContainerVerticalAlign="bottom"
-				labelJustification="center"
-				href="#software"
-			/>
-		</JDGGridLayout>
+<JDGContentContainer paddingTop="0">
+	<JDGContentBoxFloating animateWhenVisible={false} paddingTop="0px">
+		<div class="hero-image-overlap" style={`margin-top: -${currentImageHeight / 2}px;`}>
+			<JDGGridLayout>
+				<JDGImageTile
+					imageAttributes={imageAttributesCollection.exp.corporate_showroom_corner}
+					label={'ARCHITECTURE'}
+					labelContainerVerticalAlign="top"
+					labelJustification="center"
+					href="#architecture"
+					useCompactHeightOnMobile={false}
+					maxHeight={`${currentImageHeight}px`}
+				/>
+				<JDGImageTile
+					imageAttributes={imageAttributesCollection.ind.planter_003F_1}
+					label={'PRODUCTS'}
+					labelContainerVerticalAlign="top"
+					labelJustification="center"
+					href="#industrial-design"
+					useCompactHeightOnMobile={false}
+					maxHeight={`${currentImageHeight}px`}
+				/>
+				<JDGImageTile
+					imageAttributes={imageAttributesCollection.swe.ccp_1}
+					label={'SOFTWARE'}
+					labelContainerVerticalAlign="top"
+					labelJustification="center"
+					href="#software"
+					useCompactHeightOnMobile={false}
+					maxHeight={`${currentImageHeight}px`}
+				/>
+			</JDGGridLayout>
+		</div>
+		<JDGBodyCopy>
+			Inspired by the natural and built environments of Colorado, my passion for 3D design of all
+			things ignited a career in architecture that evolved into a unique software legacy, spanning
+			domains and defying categorization.
+			<br /><br />
+			By day, I'm a Senior Product Manager building the next generation of 3D architectural modeling
+			software at <a href="https://www.autodesk.com" target="blank">Autodesk</a>. By night, I'm a
+			software and simulation developer, product designer, and architectural historian.
+			<br /><br />
+			I'm also the creator of
+			<a href="https://www.cinderellacityproject.com/" target="blank">The Cinderella City Project</a
+			>, an immersive digital reconstruction of a unique mid-century shopping center of the same
+			name in Englewood, Colorado.
+			<br /><br />
+			See all my experience below, learn more <a href="./about">about me</a>, or
+			<a href="./contact">get in touch</a>. Enjoy!
+		</JDGBodyCopy>
 	</JDGContentBoxFloating>
+</JDGContentContainer>
+<JDGContentContainer>
 	<JDGContentBoxFloating title={'ARCHITECTURE'}>
 		<JDGBodyCopy paddingTop="0" textAlign="center">
 			Architecture is where it all started for me. 🎉
