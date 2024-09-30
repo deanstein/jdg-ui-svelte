@@ -258,15 +258,4 @@
 	h3 {
 		text-align: center;
 	}
-
-	.intro-content-1 {
-		display: flex;
-		justify-content: center;
-		font-size: 1.5rem;
-	}
-	.intro-content-2 {
-		display: flex;
-		justify-content: center;
-		font-size: 2rem;
-	}
 </style>
