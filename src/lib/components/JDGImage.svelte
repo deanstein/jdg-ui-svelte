@@ -377,11 +377,11 @@
 	// EMOTION STYLES
 
 	const imageCssStatic = css`
+		transition: object-position ${jdgDurations.fadeIn}${jdgDurations.unit} ease-in-out;
 		width: ${stopEventPropagation ? '' : '100%'};
 		object-fit: ${cropToFillContainer || (useCompactHeightOnMobile && $isMobileBreakpoint)
 			? 'cover'
 			: 'contain'};
-		object-position: ${cropToFillContainer ? objectPosition : ''};
 		transition: ${isForImageDetailOverlay ? '' : ' transform 0.3s ease-in-out'};
 
 		/* if max height is not specified, use all available space below the header */
@@ -497,6 +497,12 @@
 				width: ${getPreferredContainerWidth()};
 			`;
 		}
+	}
+	let imageCssDynamic = css``;
+	$: {
+		imageCssDynamic = css`
+			object-position: ${isImageLoaded ? (cropToFillContainer ? objectPosition : '') : 'center'};
+		`;
 	}
 
 	// update cloudinary URLs
@@ -626,7 +632,7 @@
 			: onImageLoad}
 		on:error={onImageError}
 		on:click={onImageClick}
-		class={`image ${imageCssStatic} ${imageAnimationCss}`}
+		class={`image ${imageCssStatic} ${imageCssDynamic} ${imageAnimationCss}`}
 		src={showPlaceholderImage
 			? isImageLoaded || isPlaceholderLoaded
 				? adjustedImgSrc

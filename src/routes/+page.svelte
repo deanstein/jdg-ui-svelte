@@ -31,6 +31,34 @@
 </script>
 
 <JDGContentContainer overlapWithHeader={true}>
+	<JDGBodyCopy textAlign="center" paddingBottom="0">
+		<b>IMAGE TILE</b>
+		<br />
+		objectPosition: left, center, right
+	</JDGBodyCopy>
+	<JDGGridLayout>
+		<JDGImageTile
+			imageAttributes={imageAttributesCollection.aerial_60s70s_1}
+			cropToFillContainer={true}
+			showCaption={true}
+			showAttribution={true}
+			objectPosition="left"
+		/>
+		<JDGImageTile
+			imageAttributes={imageAttributesCollection.aerial_60s70s_1}
+			cropToFillContainer={true}
+			showCaption={true}
+			showAttribution={true}
+			objectPosition="center"
+		/>
+		<JDGImageTile
+			imageAttributes={imageAttributesCollection.aerial_60s70s_1}
+			cropToFillContainer={true}
+			showCaption={true}
+			showAttribution={true}
+			objectPosition="right"
+		/>
+	</JDGGridLayout>
 	<div style="display: flex; flex-direction: column;">
 		<JDGImageFullWidth
 			imageAttributes={imageAttributesCollection.cc_1}
