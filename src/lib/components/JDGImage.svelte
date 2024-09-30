@@ -33,6 +33,7 @@
 	export let maxHeight = '350px'; // image will never exceed this height, but could be less depending on other props
 	export let maxWidth = 'auto'; // if not defined, takes available space
 	export let cropToFillContainer = true; // if true, image may be cropped to fill its container in both directions
+	export let objectPosition = 'center'; // only applies when cropToFillContainer is true
 	export let useCompactHeightOnMobile = false; // if true, sets height to 'auto' on smallest breakpoint for no cropping if calculatedAutoHeight is less than maxHeightPxFromProp (ignores cropToFitContainer)
 	export let showBlurInUnfilledSpace = false; // if true, shows the image blurred in the unfilled space - only applies if fillContainer is false
 	export let isHovering = false; // parent can let image know of hover
@@ -380,6 +381,7 @@
 		object-fit: ${cropToFillContainer || (useCompactHeightOnMobile && $isMobileBreakpoint)
 			? 'cover'
 			: 'contain'};
+		object-position: ${cropToFillContainer ? objectPosition : ''};
 		transition: ${isForImageDetailOverlay ? '' : ' transform 0.3s ease-in-out'};
 
 		/* if max height is not specified, use all available space below the header */

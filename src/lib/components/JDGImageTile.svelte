@@ -22,6 +22,7 @@
 	export let maxWidth = undefined; // if not defined, takes available space
 	export let maxHeight = '350px';
 	export let cropToFillContainer = true; // if true, image may be cropped to fill container in both axes
+	export let objectPosition = 'center'; // only applies if cropToFillContainer is true
 	export let useCompactHeightOnMobile = true; // if true, ignores fillContainer on smallest breakpoint for no cropping and fitted container (less height)
 	export let showBlurInUnfilledSpace = false; // if true, shows the image blurred in the unfilled space - only applies if fillContainer is false
 	export let label = undefined;
@@ -149,6 +150,7 @@
 				showHoverEffect={true}
 				{isHovering}
 				{cropToFillContainer}
+				{objectPosition}
 				{useCompactHeightOnMobile}
 				{showBlurInUnfilledSpace}
 				showCaption={showCaption && !(showBlurInUnfilledSpace || cropToFillContainer)}
