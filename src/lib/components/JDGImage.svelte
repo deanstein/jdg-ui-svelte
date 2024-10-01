@@ -54,7 +54,7 @@
 	const showDebugMessagesInConsole = false;
 	export let showDebugLoadingState = false;
 
-	// WINDOW
+	// DEVICE
 
 	let devicePixelRatio;
 
@@ -95,6 +95,14 @@
 	const fitTypeMaxHeight = 'MAXHEIGHT';
 	const fitTypeAuto = 'AUTO';
 	const fitTypeCalculatedAuto = 'CALCAUTOHEIGHT';
+
+	// INTERSECTION OBSERVER
+
+	// distance from the bottom of the screen
+	// that the element is considered visible
+	// (positive goes below the screen, negative goes above)
+	const isVisibleThreshold = '500px';
+	let isVisible = false;
 
 	// SPECIAL CASES
 
@@ -447,6 +455,23 @@
 
 	onMount(() => {
 		devicePixelRatio = window.devicePixelRatio || 1;
+
+		// set up an observer to set the isVisible flag
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						isVisible = true;
+						observer.disconnect();
+					}
+				});
+			},
+			// distance from screen edges
+			// that the element should be considered visible
+			{ rootMargin: `0px 0px ${isVisibleThreshold} 0px` }
+		);
+
+		observer.observe(containerRef);
 	});
 
 	// REACTIVE BLOCKS
@@ -501,7 +526,7 @@
 
 	// update cloudinary URLs
 	$: {
-		if (containerRef) {
+		if (containerRef && isVisible) {
 			if (!lastKnownCloudinaryTransformationValue) {
 				lastKnownPreferredContainerHeight = getPreferredContainerHeight().type;
 			}
@@ -513,7 +538,7 @@
 			if (
 				isImageLoaded &&
 				isUrlCloudinary(imageAttributes.imgSrc) &&
-				!imageAttributes.imgSrc.includes(".gif") &&
+				!imageAttributes.imgSrc.includes('.gif') &&
 				!isNaN(imageAutoHeight) &&
 				!lastKnownCloudinaryTransformationValue
 			) {
@@ -629,7 +654,7 @@
 		on:click={onImageClick}
 		class={`image ${imageCssStatic} ${imageAnimationCss}`}
 		src={showPlaceholderImage
-			? isImageLoaded || isPlaceholderLoaded
+			? (isImageLoaded || isPlaceholderLoaded) && isVisible
 				? adjustedImgSrc
 				: imagePlaceholder
 			: adjustedImgSrc}
