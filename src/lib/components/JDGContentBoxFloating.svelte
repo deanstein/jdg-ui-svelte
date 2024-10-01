@@ -112,9 +112,9 @@
 						}
 					});
 				},
-				{ rootMargin: `0px 0px -${animationThreshold} 0px` }
 				// how much of the element must be shown
 				// at the bottom of the screen to be considered visible
+				{ rootMargin: `0px 0px -${animationThreshold} 0px` }
 			);
 
 			observer.observe(isVisibleRef);
