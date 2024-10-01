@@ -513,6 +513,7 @@
 			if (
 				isImageLoaded &&
 				isUrlCloudinary(imageAttributes.imgSrc) &&
+				!imageAttributes.imgSrc.includes(".gif") &&
 				!isNaN(imageAutoHeight) &&
 				!lastKnownCloudinaryTransformationValue
 			) {
