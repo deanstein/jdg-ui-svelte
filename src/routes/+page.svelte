@@ -71,6 +71,19 @@
 			/>
 		</JDGBodyCopy>
 		<JDGBodyCopy textAlign="center">
+			<b>IMAGE</b>
+			<br />
+			This is a .gif, and won't get the height or width optimized if it's Cloudinary (for some reason,
+			that causes an error).
+		</JDGBodyCopy>
+		<JDGImage
+			imageAttributes={imageAttributesCollection.exp.ranch_elsie_optioneering}
+			maxHeight="600px"
+			cropToFillContainer={false}
+			showBlurInUnfilledSpace={false}
+			showCaption={true}
+		/>
+		<JDGBodyCopy textAlign="center">
 			<b>IMAGE TILE</b>
 			<br />
 			No fill container, show blur, show caption/attribution
