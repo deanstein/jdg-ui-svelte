@@ -1,5 +1,6 @@
 <script>
 	import { getAvailableWidth, getRequiredHeightFromIFrame } from '$lib/jdg-utils.js';
+	import { windowWidth } from '$lib/states/ui-state.js';
 
 	export let title;
 	export let src;
@@ -14,6 +15,14 @@
 		availableWidth = getAvailableWidth(containerRef);
 		requiredHeight = getRequiredHeightFromIFrame(iframeRef);
 	};
+
+    $: {
+        // ensure the available width updates when the window width changes
+        $windowWidth;
+        if (containerRef) {
+            availableWidth = getAvailableWidth(containerRef);
+        }
+    }
 </script>
 
 <div bind:this={containerRef} class="jdg-iframe-wrapper">

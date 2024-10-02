@@ -328,6 +328,7 @@ export const getAvailableWidth = (elementRef) => {
 };
 
 export const getRequiredHeightFromIFrame = (iframeRef) => {
+	// TODO: this doesn't work right
 	return iframeRef.offsetHeight;
 };
 ///
