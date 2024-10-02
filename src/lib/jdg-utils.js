@@ -327,10 +327,6 @@ export const getAvailableWidth = (elementRef) => {
 	return maxWidthPx;
 };
 
-export const getRequiredHeightFromIFrame = (iframeRef) => {
-	// TODO: this doesn't work right
-	return iframeRef.offsetHeight;
-};
 ///
 /// IMAGE AND PIXEL UTILS
 ///

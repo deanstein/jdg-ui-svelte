@@ -1,19 +1,16 @@
 <script>
-	import { getAvailableWidth, getRequiredHeightFromIFrame } from '$lib/jdg-utils.js';
+	import { getAvailableWidth } from '$lib/jdg-utils.js';
 	import { windowWidth } from '$lib/states/ui-state.js';
 
 	export let title;
 	export let src;
 
 	let availableWidth = 0;
-	let requiredHeight = 0;
 
 	let containerRef;
-	let iframeRef;
 
 	const onIFrameLoad = () => {
 		availableWidth = getAvailableWidth(containerRef);
-		requiredHeight = getRequiredHeightFromIFrame(iframeRef);
 	};
 
     $: {
@@ -27,7 +24,6 @@
 
 <div bind:this={containerRef} class="jdg-iframe-wrapper">
 	<iframe
-		bind:this={iframeRef}
 		on:load={onIFrameLoad}
 		{title}
 		{src}
