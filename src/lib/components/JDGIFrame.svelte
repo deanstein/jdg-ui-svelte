@@ -32,7 +32,7 @@
 		{title}
 		{src}
 		width={availableWidth}
-		height="800px"
+		height="900px"
 		frameborder="0"
 		marginheight="0"
 		>Loading...
