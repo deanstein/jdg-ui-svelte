@@ -312,6 +312,25 @@ export const openUrl = (url, newTab) => {
 };
 
 ///
+/// ELEMENT UTILS
+///
+
+export const getAvailableWidth = (elementRef) => {
+	let maxWidthPx;
+	// temporarily set the width to 100%
+	const existingWidth = elementRef.style.width;
+	elementRef.style.width = '100%';
+	// get the maxWidth
+	maxWidthPx = elementRef.clientWidth;
+	// reset the style to what it was before
+	elementRef.style.width = existingWidth;
+	return maxWidthPx;
+};
+
+export const getRequiredHeightFromIFrame = (iframeRef) => {
+	return iframeRef.offsetHeight;
+};
+///
 /// IMAGE AND PIXEL UTILS
 ///
 

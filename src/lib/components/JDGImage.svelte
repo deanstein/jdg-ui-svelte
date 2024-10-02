@@ -4,7 +4,7 @@
 	import { css } from '@emotion/css';
 
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
-	import { isNumberValid } from '$lib/jdg-utils.js';
+	import { getAvailableWidth, isNumberValid } from '$lib/jdg-utils.js';
 	import {
 		imageDetailWidth,
 		isMobileBreakpoint,
@@ -48,7 +48,7 @@
 	export let isForImageDetailOverlay = false; // special rules for ImageDetailOverlay context
 	export let doScaleOnScrollOrZoom = false; // allow scaling up the image on scroll or zoom events
 	export let scaleContext = 'container'; // which element to scale. other option: 'image'
-	export let bottomVisibilityOffset = "1000px"; // distance from bottom of screen before loading (positive is down)
+	export let bottomVisibilityOffset = '1000px'; // distance from bottom of screen before loading (positive is down)
 
 	// DEBUGGING
 
@@ -239,20 +239,8 @@
 				maxWidthPx = Math.ceil(maxWidthParsed);
 			}
 		} else {
-			maxWidthPx = getMaxWidthFromContainer();
+			maxWidthPx = getAvailableWidth(containerRef);
 		}
-		return maxWidthPx;
-	};
-
-	export const getMaxWidthFromContainer = () => {
-		let maxWidthPx;
-		// temporarily set the width to 100%
-		const existingWidth = containerRef.style.width;
-		containerRef.style.width = '100%';
-		// get the maxWidth
-		maxWidthPx = containerRef.clientWidth;
-		// reset the style to what it was before
-		containerRef.style.width = existingWidth;
 		return maxWidthPx;
 	};
 
@@ -261,7 +249,7 @@
 		if (containerRef && imageRef) {
 			imageAspectRatio = imageRef.naturalWidth / imageRef.naturalHeight;
 			lastKnownContainerHeight = getMaxHeightPxFromContainer();
-			lastKnownContainerWidth = getMaxWidthFromContainer();
+			lastKnownContainerWidth = getAvailableWidth(containerRef);
 			lastKnownContainerAspectRatio = lastKnownContainerWidth / lastKnownContainerHeight;
 		}
 	};
@@ -279,7 +267,7 @@
 				console.log('Max height from container: ' + getMaxHeightPxFromContainer());
 				console.log('Max height from prop: ' + getMaxHeightPxFromProp());
 				console.log('Max width from prop: ' + getMaxWidthFromProp());
-				console.log('Max width from container: ' + getMaxWidthFromContainer());
+				console.log('Max width from container: ' + getAvailableWidth(containerRef));
 			}
 
 			// calculate the height of the image if 'auto' was set
@@ -345,7 +333,8 @@
 		else if (
 			!cropToFillContainer &&
 			!cropToFillContainer &&
-			parseInt(getMaxHeightPxFromProp()) * imageAspectRatio < parseInt(getMaxWidthFromContainer())
+			parseInt(getMaxHeightPxFromProp()) * imageAspectRatio <
+				parseInt(getAvailableWidth(containerRef))
 		) {
 			preferredContainerWidth = 'max-content';
 		}
