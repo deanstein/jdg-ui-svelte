@@ -190,7 +190,7 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		gap: 1.25vh;
+		gap: 20px;
 	}
 
 	.footer-row {
