@@ -43,6 +43,9 @@ export { JDGGridLayout };
 import JDGHeader from './components/JDGHeader.svelte';
 export { JDGHeader };
 
+import JDGIFrame from './components/JDGIFrame.svelte';
+export { JDGIFrame };
+
 import JDGImage from './components/JDGImage.svelte';
 export { JDGImage };
 
