@@ -48,6 +48,7 @@
 	export let isForImageDetailOverlay = false; // special rules for ImageDetailOverlay context
 	export let doScaleOnScrollOrZoom = false; // allow scaling up the image on scroll or zoom events
 	export let scaleContext = 'container'; // which element to scale. other option: 'image'
+	export let bottomVisibilityOffset = "1000px"; // distance from bottom of screen before loading (positive is down)
 
 	// DEBUGGING
 
@@ -98,10 +99,6 @@
 
 	// INTERSECTION OBSERVER
 
-	// distance from the bottom of the screen
-	// that the element is considered visible
-	// (positive goes below the screen, negative goes above)
-	const isVisibleThreshold = '500px';
 	let isVisible = false;
 
 	// SPECIAL CASES
@@ -468,7 +465,7 @@
 			},
 			// distance from screen edges
 			// that the element should be considered visible
-			{ rootMargin: `0px 0px ${isVisibleThreshold} 0px` }
+			{ rootMargin: `0px 0px ${bottomVisibilityOffset} 0px` }
 		);
 
 		observer.observe(containerRef);
