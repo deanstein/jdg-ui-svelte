@@ -7,6 +7,7 @@
 		accentColors,
 		clientWidth,
 		doShowHeaderStripes,
+		imagesLoading,
 		isMobileBreakpoint,
 		isScrolling,
 		windowWidth
@@ -138,6 +139,10 @@
 		// if an anchor tag is provided in the URL, scroll to it when available
 		scrollToAnchorOnLoad();
 	});
+
+	$: {
+		console.log($imagesLoading);
+	}
 </script>
 
 <!-- set up directives for event listeners -->

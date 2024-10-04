@@ -26,6 +26,7 @@
 	// show a local image while image is loading
 	// @ts-expect-error
 	import imagePlaceholder from '$lib/assets/raster/jdg-image-placeholder.png';
+	import { addImageLoading, removeImageLoading } from '$lib/jdg-state-management.js';
 
 	// EXPORTS
 
@@ -353,6 +354,7 @@
 		if (!showDebugLoadingState) {
 			isImageLoaded = true;
 		}
+		removeImageLoading(imageAttributes.imgSrc);
 	};
 
 	// runs if an image fails to load
@@ -448,6 +450,9 @@
 				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
 						isVisible = true;
+						if (!imageAttributes.imgSrc.includes('placeholder')) {
+							addImageLoading(imageAttributes.imgSrc)
+						}
 						observer.disconnect();
 					}
 				});

@@ -13,48 +13,19 @@
 
 <JDGContentContainer paddingTop="0" overlapWithHeader={true}>
 	<JDGContentBoxFloating>
-		<JDGImageFullWidth
-			imageAttributes={imageAttributesCollection.cc_1}
-			showOverlay={true}
-			overlayImageAttributes={imageAttributesCollection.ccp_ouatacc_white}
-			overlayImageText="A Secondary Text Test"
-			overlayImageTextFontFamily="Righteous"
-			overlapWithHeader={true}
-		/>
 		<JDGBodyCopy textAlign="center">
 			<b>IMAGE</b>
 			<br />
-			No fill container, show blur, show caption/attribution
-			<br />
-			Inside BodyCopy
-			<br /><br />
-			<JDGImage
-				imageAttributes={imageAttributesCollection.lakeside_1}
-				cropToFillContainer={false}
-				showBlurInUnfilledSpace={false}
-				showCaption
-				showAttribution
-				useCompactHeightOnMobile
-			/>
+			This is a .gif, and won't get the height or width set if it's Cloudinary (for some reason, that
+			causes an error).
 		</JDGBodyCopy>
-		<JDGBodyCopy textAlign="center" paddingBottom="0" paddingTop="0">
-			<b>2 ITEMS</b>
-		</JDGBodyCopy>
-		<JDGGridLayout>
-			<JDGImageTile
-				imageAttributes={imageAttributesCollection.hst.ehs_1920_broadway_northeast}
-				showCaption={true}
-			/>
-			<JDGImageTile
-				imageAttributes={imageAttributesCollection.hst.fms_2013_broadway_northeast}
-				showCaption={true}
-			/>
-		</JDGGridLayout>
-		<JDGImageTile
-			imageAttributes={imageAttributesCollection.hst.fms_2000s_plan_additions}
+		<JDGImage
+			imageAttributes={imageAttributesCollection.exp.ranch_elsie_roof_optioneering}
+			maxHeight="600px"
 			cropToFillContainer={false}
+			showBlurInUnfilledSpace={false}
 			showCaption={true}
-			showAttribution={true}
 		/>
+		<JDGBodyCopy textAlign="center"></JDGBodyCopy>
 	</JDGContentBoxFloating>
 </JDGContentContainer>
