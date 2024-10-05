@@ -12,6 +12,10 @@ export let isMobileBreakpoint = writable(false);
 export let isScrolling = writable(false);
 export let jumpToNavItems = writable([]);
 
+// images
+export let imagesLoading = writable([]); // any images currently loading
+export let imageAspectRatioMap = writable(new Map());
+
 // image detail overlay
 export let imageDetailAttributes = writable({});
 export let imageDetailWidth = writable(0); // width of the image for caption alignment

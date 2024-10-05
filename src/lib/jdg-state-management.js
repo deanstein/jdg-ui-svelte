@@ -3,11 +3,13 @@ import {
 	accentColors,
 	activeNotificationBanners,
 	highestZIndex,
+	imageAspectRatioMap,
 	imageDetailAttributes,
 	jumpToNavItems,
 	doShowImageDetailOverlay,
 	doShowNavSidebar,
-	doShowDevTools
+	doShowDevTools,
+	imagesLoading
 } from './states/ui-state.js';
 
 //
@@ -20,6 +22,52 @@ export const getAccentColors = () => {
 		currentAccentColors = currentValue;
 	});
 	return currentAccentColors;
+};
+
+//
+// IMAGES
+//
+
+export const addImageAspectRatioToMap = (src, aspectRatio) => {
+	imageAspectRatioMap.update((store) => {
+		if (!store.has(src) || Math.abs(store.get(src) - aspectRatio) > 0.5) {
+			store.set(src, aspectRatio);
+			console.log('Adding or updating image aspect ratio in map!', store);
+		}
+		return store;
+	});
+};
+
+export const removeImageAspectRatioFromMap = (src) => {
+	imageAspectRatioMap.update((store) => {
+		store.delete(src);
+		return store;
+	});
+};
+
+export const getImageAspectRatioFromMap = (src) => {
+	let aspectRatio = 0.0;
+	imageAspectRatioMap.subscribe((store) => {
+		aspectRatio = store.get(src) || 0.0;
+	})();
+	return aspectRatio;
+};
+
+export const addImageLoading = (imgSrc) => {
+	imagesLoading.update((currentValue) => {
+		currentValue.push(imgSrc);
+		return currentValue;
+	});
+};
+
+export const removeImageLoading = (imgSrc) => {
+	imagesLoading.update((currentValue) => {
+		const index = currentValue.findIndex((item) => JSON.stringify(item) === JSON.stringify(imgSrc));
+		if (index !== -1) {
+			currentValue.splice(index, 1);
+		}
+		return currentValue;
+	});
 };
 
 //

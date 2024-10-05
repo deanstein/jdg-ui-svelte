@@ -4,7 +4,12 @@
 	import { css } from '@emotion/css';
 
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
-	import { getAvailableWidth, isNumberValid } from '$lib/jdg-utils.js';
+	import {
+		getMaxElementHeightPx,
+		getMaxElementWidthPx,
+		getPixelValueFromString,
+		isNumberValid
+	} from '$lib/jdg-utils.js';
 	import {
 		imageDetailWidth,
 		isMobileBreakpoint,
@@ -26,6 +31,11 @@
 	// show a local image while image is loading
 	// @ts-expect-error
 	import imagePlaceholder from '$lib/assets/raster/jdg-image-placeholder.png';
+	import {
+		addImageAspectRatioToMap,
+		addImageLoading,
+		removeImageLoading
+	} from '$lib/jdg-state-management.js';
 
 	// EXPORTS
 
@@ -67,6 +77,8 @@
 
 	// these values could change many times or be invalid numbers
 	// as the page loads, layout adjusts, or the page loads
+	let lastKnownImageWidth;
+	let lastKnownImageHeight;
 	let lastKnownContainerWidth;
 	let lastKnownContainerHeight;
 	let lastKnownContainerAspectRatio;
@@ -188,58 +200,24 @@
 
 	// get a pixel value from whatever is passed into the maxHeight prop
 	const getMaxHeightPxFromProp = () => {
-		// height can be in vh or px or even auto
-		// if in vh, convert to pixels for calculations
-		let maxHeightValue;
-		let maxHeightUnit;
 		let maxHeightPx;
-		// only calculate maxHeight if prop is not auto
+		// only calculate maxHeight if prop is not autos
 		if (maxHeight !== 'auto') {
-			[maxHeightValue, maxHeightUnit] = maxHeight.match(/^(\d+)(\D+)$/).slice(1);
-			const maxHeightParsed = parseFloat(maxHeightValue);
-			// get the max height in px for calculations
-			if (maxHeightUnit === 'vh') {
-				maxHeightPx = Math.ceil(convertVhToPixels(maxHeightParsed));
-			} else if (maxHeightUnit === 'px') {
-				maxHeightPx = Math.ceil(maxHeightParsed);
-			}
+			maxHeightPx = getPixelValueFromString(maxHeight);
 		} else {
-			maxHeightPx = getMaxHeightPxFromContainer();
+			maxHeightPx = getMaxElementHeightPx(containerRef);
 		}
-		return maxHeightPx;
-	};
-
-	const getMaxHeightPxFromContainer = () => {
-		let maxHeightPx;
-		// temporarily set the height to 100%
-		const existingHeight = containerRef.style.height;
-		containerRef.style.height = '100%';
-		// get the maxHeightPx
-		maxHeightPx = containerRef.clientHeight;
-		// reset the style to what it was before
-		containerRef.style.height = existingHeight;
 		return maxHeightPx;
 	};
 
 	// get a pixel value from whatever is passed into the maxHeight prop
 	const getMaxWidthFromProp = () => {
-		// width can be in vh or px or even auto
-		// if in vh, convert to pixels for calculations
-		let maxWidthValue;
-		let maxWidthUnit;
 		let maxWidthPx;
 		// only calculate maxWidth if prop is not auto
 		if (maxWidth !== 'auto') {
-			[maxWidthValue, maxWidthUnit] = maxWidth.match(/^(\d+)(\D+)$/).slice(1);
-			const maxWidthParsed = parseFloat(maxWidthValue);
-			// get the max width in px for calculations
-			if (maxWidthUnit === 'vh') {
-				maxWidthPx = Math.ceil(convertVhToPixels(maxWidthParsed));
-			} else if (maxWidthUnit === 'px') {
-				maxWidthPx = Math.ceil(maxWidthParsed);
-			}
+			maxWidthPx = getPixelValueFromString(maxWidth);
 		} else {
-			maxWidthPx = getAvailableWidth(containerRef);
+			maxWidthPx = getMaxElementWidthPx(containerRef);
 		}
 		return maxWidthPx;
 	};
@@ -247,9 +225,22 @@
 	// calculate the aspect ratio of the image container and the image (if not already known)
 	const getAspectRatios = () => {
 		if (containerRef && imageRef) {
-			imageAspectRatio = imageRef.naturalWidth / imageRef.naturalHeight;
-			lastKnownContainerHeight = getMaxHeightPxFromContainer();
-			lastKnownContainerWidth = getAvailableWidth(containerRef);
+			const currentImageWidth = imageRef.naturalWidth;
+			const currentImageHeight = imageRef.naturalHeight;
+			// only update the aspect ratio if the image's width and height changed
+			if (
+				Math.abs(currentImageWidth - lastKnownImageWidth) > 10 ||
+				Math.abs(currentImageHeight - lastKnownImageHeight) > 10
+			) {
+				imageAspectRatio = imageRef.naturalWidth / imageRef.naturalHeight;
+				console.log('Image aspect ratio for ' + imageAttributes.imgSrc + ': ' + imageAspectRatio);
+				// each image records its aspect ratio for other components to know about
+				addImageAspectRatioToMap(imageAttributes.imgSrc, imageAspectRatio);
+			}
+			lastKnownImageWidth = currentImageWidth;
+			lastKnownImageHeight = currentImageHeight;
+			lastKnownContainerHeight = getMaxElementHeightPx(containerRef);
+			lastKnownContainerWidth = getMaxElementWidthPx(containerRef);
 			lastKnownContainerAspectRatio = lastKnownContainerWidth / lastKnownContainerHeight;
 		}
 	};
@@ -264,10 +255,10 @@
 			if (showDebugMessagesInConsole) {
 				console.log('Getting preferred container height for: ' + imageAttributes.imgSrc);
 				console.log('Valid container height: ' + validContainerHeight);
-				console.log('Max height from container: ' + getMaxHeightPxFromContainer());
+				console.log('Max height from container: ' + getMaxElementHeightPx(containerRef));
 				console.log('Max height from prop: ' + getMaxHeightPxFromProp());
 				console.log('Max width from prop: ' + getMaxWidthFromProp());
-				console.log('Max width from container: ' + getAvailableWidth(containerRef));
+				console.log('Max width from container: ' + getMaxElementWidthPx(containerRef));
 			}
 
 			// calculate the height of the image if 'auto' was set
@@ -334,7 +325,7 @@
 			!cropToFillContainer &&
 			!cropToFillContainer &&
 			parseInt(getMaxHeightPxFromProp()) * imageAspectRatio <
-				parseInt(getAvailableWidth(containerRef))
+				parseInt(getMaxElementWidthPx(containerRef))
 		) {
 			preferredContainerWidth = 'max-content';
 		}
@@ -353,6 +344,7 @@
 		if (!showDebugLoadingState) {
 			isImageLoaded = true;
 		}
+		removeImageLoading(imageAttributes.imgSrc);
 	};
 
 	// runs if an image fails to load
@@ -448,6 +440,9 @@
 				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
 						isVisible = true;
+						if (!imageAttributes.imgSrc.includes('placeholder')) {
+							addImageLoading(imageAttributes.imgSrc);
+						}
 						observer.disconnect();
 					}
 				});
@@ -464,7 +459,7 @@
 
 	// set valid values just once, if not already defined
 	$: {
-		getAspectRatios();
+		//getAspectRatios();
 		if (isNumberValid(lastKnownContainerAspectRatio) && !isNumberValid(validContainerAspectRatio)) {
 			validContainerAspectRatio = lastKnownContainerAspectRatio;
 			if (showDebugMessagesInConsole) {

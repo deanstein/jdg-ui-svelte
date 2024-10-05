@@ -239,6 +239,27 @@ export const isNumberValid = (number) => {
 /// STRING UTILS
 ///
 
+// get a pixel value from a strin
+export const getPixelValueFromString = (string) => {
+	// height can be in vh or px or even auto
+	// if in vh, convert to pixels for calculations
+	let pixelValue;
+	let pixelUnit;
+	let pixelValueFinal;
+	// only calculate maxHeight if prop is not auto
+	if (string !== 'auto') {
+		[pixelValue, pixelUnit] = string.match(/^(\d+)(\D+)$/).slice(1);
+		const maxHeightParsed = parseFloat(pixelValue);
+		// get the max height in px for calculations
+		if (pixelUnit === 'vh') {
+			pixelValueFinal = Math.ceil(convertVhToPixels(maxHeightParsed));
+		} else if (pixelUnit === 'px') {
+			pixelValueFinal = Math.ceil(maxHeightParsed);
+		}
+	}
+	return pixelValueFinal;
+};
+
 // replaces spaces with hyphens, and converts to lowercase
 // for use in converting section titles into anchor tags
 export const convertStringToAnchorTag = (string, addHash = true) => {
@@ -315,7 +336,7 @@ export const openUrl = (url, newTab) => {
 /// ELEMENT UTILS
 ///
 
-export const getAvailableWidth = (elementRef) => {
+export const getMaxElementWidthPx = (elementRef) => {
 	let maxWidthPx;
 	// temporarily set the width to 100%
 	const existingWidth = elementRef.style.width;
@@ -325,6 +346,18 @@ export const getAvailableWidth = (elementRef) => {
 	// reset the style to what it was before
 	elementRef.style.width = existingWidth;
 	return maxWidthPx;
+};
+
+export const getMaxElementHeightPx = (elementRef) => {
+	let maxHeightPx;
+	// temporarily set the height to 100%
+	const existingHeight = elementRef.style.height;
+	elementRef.style.height = '100%';
+	// get the maxHeightPx
+	maxHeightPx = elementRef.clientHeight;
+	// reset the style to what it was before
+	elementRef.style.height = existingHeight;
+	return maxHeightPx;
 };
 
 ///

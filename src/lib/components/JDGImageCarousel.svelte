@@ -2,10 +2,16 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { accentColors } from '$lib/states/ui-state.js';
+	import { accentColors, imageAspectRatioMap, imagesLoading } from '$lib/states/ui-state.js';
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGImageTile } from '$lib/index.js';
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { getImageAspectRatioFromMap } from '$lib/jdg-state-management.js';
+	import {
+		getMaxElementHeightPx,
+		getMaxElementWidthPx,
+		getPixelValueFromString
+	} from '$lib/jdg-utils.js';
 
 	export let imageAttributeObjects; // all images shown in thumbnail collection
 	export let maxHeight = '50vh';
@@ -14,10 +20,40 @@
 	export let autoAdvanceInterval = 5000; // ms, interval between auto-advances
 	export let showBlurInUnfilledSpace = true;
 
+	let maxheightPxFromProp;
+	let allFittedHeights;
+
 	let carouselRef; // used for only auto-advancing when carousel is visible
 	let activeImage = imageAttributeObjects[0]; // start with the first image
 	let kludge = true; // kludge to force a "crossfade" effect by swapping divs via flag
 	let intervalId; // identifier for the auto-advance setInterval() call
+
+	const getMaxHeightPxFromProp = () => {
+		let maxHeightPx;
+		// only calculate maxHeight if prop is not auto
+		if (maxHeight !== 'auto') {
+			getPixelValueFromString(maxHeight);
+		} else {
+			maxHeightPx = getMaxElementHeightPx(carouselRef);
+		}
+		return maxHeightPx;
+	};
+
+	// gets the largest height from all images provided
+	// by multiplying each image aspect ratio by the available container width
+	const getAllFittedHeights = () => {
+		const fittedHeights = [];
+
+		// for each, record the aspect ratio
+		imageAttributeObjects.forEach((imageAttributeObject) => {
+			const aspectRatio = getImageAspectRatioFromMap(imageAttributeObject.imgSrc);
+			const containerWidth = getMaxElementWidthPx(carouselRef);
+			const fittedHeight = containerWidth / aspectRatio;
+			fittedHeights.push(fittedHeight);
+		});
+
+		return fittedHeights;
+	};
 
 	const setActiveImage = (imageAttributesObject, endAutoAdvance = false) => {
 		activeImage = imageAttributesObject;
@@ -28,10 +64,6 @@
 			autoAdvance = false;
 		}
 	};
-
-	const crossfadeWrapperCss = css`
-		height: ${maxHeight};
-	`;
 
 	const thumbnailContainerCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
@@ -51,6 +83,7 @@
 	`;
 
 	onMount(() => {
+		maxheightPxFromProp = getMaxHeightPxFromProp();
 		if (autoAdvance) {
 			// only start auto-advancing if carousel is visible
 			const observer = new IntersectionObserver(
@@ -75,10 +108,35 @@
 	onDestroy(() => {
 		clearInterval(intervalId);
 	});
+
+	$: {
+		$imageAspectRatioMap;
+		if (carouselRef) {
+			const newFittedHeights = getAllFittedHeights();
+			if (JSON.stringify(newFittedHeights) !== JSON.stringify(allFittedHeights)) {
+				allFittedHeights = newFittedHeights;
+				console.log('GETTING FITTED HEIGHTS!');
+			}
+		}
+	}
+
+	let dynamicHeightCss = css``;
+	$: {
+		if (carouselRef && allFittedHeights?.length > 0) {
+			const maxFittedHeight = Math.max(...allFittedHeights);
+			if (maxFittedHeight !== 0 && !isNaN(maxFittedHeight) && isFinite(maxFittedHeight)) {
+				console.log('Max fitted height: ', maxFittedHeight);
+				maxHeight = `${Math.round(maxFittedHeight)}px`;
+				dynamicHeightCss = css`
+					height: ${maxHeight};
+				`;
+			}
+		}
+	}
 </script>
 
 <div bind:this={carouselRef} class="jdg-image-carousel-container">
-	<div class="carousel-crossfade-wrapper-relative {crossfadeWrapperCss}">
+	<div class="carousel-crossfade-wrapper-relative {dynamicHeightCss}">
 		<!-- kludge to force a "crossfade" effect by swapping divs via flag -->
 		{#if kludge}
 			<div class="carousel-crossfade-wrapper-absolute">

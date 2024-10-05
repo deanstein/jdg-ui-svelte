@@ -1,5 +1,5 @@
 <script>
-	import { getAvailableWidth } from '$lib/jdg-utils.js';
+	import { getMaxElementWidthPx } from '$lib/jdg-utils.js';
 	import { windowWidth } from '$lib/states/ui-state.js';
 
 	export let title;
@@ -10,14 +10,14 @@
 	let containerRef;
 
 	const onIFrameLoad = () => {
-		availableWidth = getAvailableWidth(containerRef);
+		availableWidth = getMaxElementWidthPx(containerRef);
 	};
 
 	$: {
 		// ensure the available width updates when the window width changes
 		$windowWidth;
 		if (containerRef) {
-			availableWidth = getAvailableWidth(containerRef);
+			availableWidth = getMaxElementWidthPx(containerRef);
 		}
 	}
 </script>
