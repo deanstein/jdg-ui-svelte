@@ -24,6 +24,7 @@
 	export let superText = undefined;
 	export let superTextFontFamily = jdgFonts.body;
 	export let primaryText = undefined;
+	export let primaryTextBold = false;
 	export let primaryTextFontFamily = jdgFonts.body;
 	export let secondaryText = undefined;
 	export let secondaryTextFontFamily = jdgFonts.body;
@@ -75,6 +76,7 @@
 							{superText}
 							{superTextFontFamily}
 							{primaryText}
+							{primaryTextBold}
 							{primaryTextFontFamily}
 							{secondaryText}
 							{secondaryTextFontFamily}
