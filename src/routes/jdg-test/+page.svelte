@@ -44,6 +44,7 @@
 		overlayColorRgba={'rgba(50, 50, 50, 0.8)'}
 		superText={`Hi! 👋 I'm Josh.`}
 		primaryText={"I'm a 3D creator"}
+		primaryTextBold
 		secondaryText={'with experience in:'}
 	/>
 </JDGContentContainer>
