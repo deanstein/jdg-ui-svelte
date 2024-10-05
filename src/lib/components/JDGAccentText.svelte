@@ -15,7 +15,7 @@
 	export let textColor = jdgColors.textDm;
 
 	const accentTextContainerCss = css`
-		gap: ${isQuote ? '0.7rem' : '0.1rem'};
+		gap: ${isQuote ? '0.7rem' : '0.2rem'};
 	`;
 
 	const superTextCss = css`
