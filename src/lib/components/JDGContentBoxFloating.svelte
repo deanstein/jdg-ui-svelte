@@ -3,7 +3,6 @@
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
-	import { doShowHeaderStripes } from '$lib/states/ui-state.js';
 	import { addJumpToNavItem, removeJumpToNavItem } from '$lib/jdg-state-management.js';
 	import jdgNavItem from '$lib/schemas/jdg-nav-item.js';
 
@@ -18,6 +17,7 @@
 		jdgFonts,
 		jdgSizes
 	} from '../jdg-shared-styles.js';
+	import { JDGAnchorTag } from '$lib/index.js';
 
 	export let title = undefined;
 	export let titleFontFamily = jdgFonts.body;
@@ -74,20 +74,6 @@
 		}
 	`;
 
-	const floatingBoxAnchorTagCss = css`
-		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			top: -${jdgSizes.nHeaderHeightSm + jdgSizes.nContentContainerGapSm + ($doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightSm : 0)}px;
-		}
-		@media (min-width: ${jdgBreakpoints.width[0].toString() +
-			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
-			jdgBreakpoints.unit}) {
-			top: -${jdgSizes.nHeaderHeightMd + jdgSizes.nContentContainerGapMd + ($doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightMd : 0)}px;
-		}
-		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			top: -${jdgSizes.nHeaderHeightLg + jdgSizes.nContentContainerGapLg + ($doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightLg : 0)}px;
-		}
-	`;
-
 	onMount(() => {
 		// add the jumpToNavItems if requested
 		if (includeInJumpTo) {
@@ -123,19 +109,16 @@
 		// ensure anchor tags are created for any h2 elements
 		const h2Elements = isVisibleRef.querySelectorAll('h2');
 		const h3Elements = isVisibleRef.querySelectorAll('h3');
-		const allHeaderElements = [...h2Elements, ...h3Elements];
-		allHeaderElements.forEach((headerElement) => {
-			// create a new div element
-			const anchorTagDiv = document.createElement('div');
-			// the id is a modified version of the text content
-			const anchorTagId = convertStringToAnchorTag(headerElement.textContent, false);
-			anchorTagDiv.setAttribute('id', anchorTagId);
-			// add the anchor tag div as a child of the header element
-			headerElement.appendChild(anchorTagDiv);
-			// adjust the position of the anchor tag div to account for the header height
-			anchorTagDiv.style.position = 'relative';
-			// TODO: make this reactive when reactive header is added
-			anchorTagDiv.classList.add(floatingBoxAnchorTagCss);
+
+		const allSubheaderElements = [...h2Elements, ...h3Elements];
+		allSubheaderElements.forEach((subheaderElement) => {
+			const anchorTagId = convertStringToAnchorTag(subheaderElement.textContent, false);
+			const anchorTagDiv = new JDGAnchorTag({
+				target: subheaderElement,
+				props: {
+					anchorTag: anchorTagId
+				}
+			});
 		});
 	});
 
@@ -153,7 +136,7 @@
 
 <div class="jdg-content-box-floating-container">
 	{#if title}
-		<div class="content-box-anchor-tag {floatingBoxAnchorTagCss}" id={anchorTag} />
+		<JDGAnchorTag {anchorTag} />
 	{/if}
 	<div
 		bind:this={isVisibleRef}
@@ -216,9 +199,5 @@
 	.content-box-subtitle {
 		margin-top: 0;
 		font-weight: 100;
-	}
-
-	.content-box-anchor-tag {
-		position: absolute;
 	}
 </style>
