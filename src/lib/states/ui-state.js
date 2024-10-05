@@ -17,6 +17,6 @@ export let imageDetailAttributes = writable({});
 export let imageDetailWidth = writable(0); // width of the image for caption alignment
 export let doShowImageDetailOverlay = writable(false);
 
-// widths
+// sizes
 export let clientWidth = writable(0); // window minus scrollbar
 export let windowWidth = writable(0); // full window width, including scrollbar

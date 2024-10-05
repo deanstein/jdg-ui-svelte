@@ -55,6 +55,7 @@
 			cropToFillContainer={false}
 			showCaption={true}
 			showAttribution={true}
+			useCompactHeightOnMobile
 		/>
 	</JDGContentBoxFloating>
 </JDGContentContainer>
