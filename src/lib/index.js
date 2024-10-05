@@ -10,6 +10,9 @@ export { JDGAccentText };
 import JDGAnimateOnVisible from './components/JDGAnimateOnVisible.svelte';
 export { JDGAnimateOnVisible };
 
+import JDGAnchorTag from './components/JDGAnchorTag.svelte';
+export { JDGAnchorTag };
+
 import JDGAppContainer from './components/JDGAppContainer.svelte';
 export { JDGAppContainer };
 
