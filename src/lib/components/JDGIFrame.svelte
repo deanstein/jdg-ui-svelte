@@ -13,13 +13,13 @@
 		availableWidth = getAvailableWidth(containerRef);
 	};
 
-    $: {
-        // ensure the available width updates when the window width changes
-        $windowWidth;
-        if (containerRef) {
-            availableWidth = getAvailableWidth(containerRef);
-        }
-    }
+	$: {
+		// ensure the available width updates when the window width changes
+		$windowWidth;
+		if (containerRef) {
+			availableWidth = getAvailableWidth(containerRef);
+		}
+	}
 </script>
 
 <div bind:this={containerRef} class="jdg-iframe-wrapper">
