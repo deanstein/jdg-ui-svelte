@@ -196,7 +196,7 @@
 	// get a pixel value from whatever is passed into the maxHeight prop
 	const getMaxHeightPxFromProp = () => {
 		let maxHeightPx;
-		// only calculate maxHeight if prop is not autos
+		// only calculate maxHeight if prop is not auto
 		if (maxHeight !== 'auto') {
 			maxHeightPx = getPixelValueFromString(maxHeight);
 		} else {
