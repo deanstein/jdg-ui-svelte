@@ -31,7 +31,6 @@ export const addImageAspectRatioToMap = (src, aspectRatio) => {
 	imageAspectRatioMap.update((store) => {
 		if (!store.has(src) || Math.abs(store.get(src) - aspectRatio) > 0.5) {
 			store.set(src, aspectRatio);
-			console.log('Adding or updating image aspect ratio in map!', store);
 		}
 		return store;
 	});

@@ -228,7 +228,9 @@
 				Math.abs(currentImageHeight - lastKnownImageHeight) > 10
 			) {
 				imageAspectRatio = imageRef.naturalWidth / imageRef.naturalHeight;
-				console.log('Image aspect ratio for ' + imageAttributes.imgSrc + ': ' + imageAspectRatio);
+				if (showDebugMessagesInConsole) {
+					console.log('Image aspect ratio for ' + imageAttributes.imgSrc + ': ' + imageAspectRatio);
+				}
 				// each image records its aspect ratio for other components to know about
 				addImageAspectRatioToMap(imageAttributes.imgSrc, imageAspectRatio);
 			}

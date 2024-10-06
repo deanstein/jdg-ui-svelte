@@ -2,7 +2,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { accentColors, imageAspectRatioMap } from '$lib/states/ui-state.js';
+	import { accentColors, imageAspectRatioMap, windowWidth } from '$lib/states/ui-state.js';
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGImageTile } from '$lib/index.js';
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
@@ -110,12 +110,12 @@
 	});
 
 	$: {
-		$imageAspectRatioMap;
+		$imageAspectRatioMap,
+		$windowWidth;
 		if (carouselRef) {
 			const newFittedHeights = getAllFittedHeights();
 			if (JSON.stringify(newFittedHeights) !== JSON.stringify(allFittedHeights)) {
 				allFittedHeights = newFittedHeights;
-				console.log('GETTING FITTED HEIGHTS!');
 			}
 		}
 	}
@@ -125,7 +125,6 @@
 		if (carouselRef && allFittedHeights?.length > 0) {
 			const maxFittedHeight = Math.max(...allFittedHeights);
 			if (maxFittedHeight !== 0 && !isNaN(maxFittedHeight) && isFinite(maxFittedHeight)) {
-				console.log('Max fitted height: ', maxFittedHeight);
 				maxHeight = `${Math.round(maxFittedHeight)}px`;
 				dynamicHeightCss = css`
 					height: ${maxHeight};
