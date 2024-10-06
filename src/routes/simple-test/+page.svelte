@@ -1,14 +1,9 @@
 <script>
 	import {
-		JDGBodyCopy,
 		JDGContentBoxFloating,
 		JDGContentContainer,
 		JDGFullWidthContainer,
-		JDGGridLayout,
-		JDGImage,
 		JDGImageCarousel,
-		JDGImageFullWidth,
-		JDGImageTile
 	} from '$lib/index.js';
 	import { imageAttributesCollection } from '../image-attributes-collection.js';
 </script>
