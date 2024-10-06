@@ -16,6 +16,7 @@
 		doShowHeaderStripes,
 		windowWidth
 	} from '$lib/states/ui-state.js';
+	import { addImageAspectRatioToMap } from '$lib/jdg-state-management.js';
 
 	import {
 		addCloudinaryUrlHeight,
@@ -30,7 +31,6 @@
 	// show a local image while image is loading
 	// @ts-expect-error
 	import imagePlaceholder from '$lib/assets/raster/jdg-image-placeholder.png';
-	import { addImageAspectRatioToMap } from '$lib/jdg-state-management.js';
 
 	// EXPORTS
 
