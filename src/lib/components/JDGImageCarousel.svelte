@@ -20,8 +20,9 @@
 	export let autoAdvanceInterval = 5000; // ms, interval between auto-advances
 	export let showBlurInUnfilledSpace = true;
 
+	// height calculations - raw numeric values in px
 	let maxheightPxFromProp;
-	let allFittedHeights;
+	let allFittedHeightsPx;
 
 	let carouselRef; // used for only auto-advancing when carousel is visible
 	let activeImage = imageAttributeObjects[0]; // start with the first image
@@ -32,7 +33,7 @@
 		let maxHeightPx;
 		// only calculate maxHeight if prop is not auto
 		if (maxHeight !== 'auto') {
-			getPixelValueFromString(maxHeight);
+			maxHeightPx = getPixelValueFromString(maxHeight);
 		} else {
 			maxHeightPx = getMaxElementHeightPx(carouselRef);
 		}
@@ -41,7 +42,7 @@
 
 	// gets the largest height from all images provided
 	// by multiplying each image aspect ratio by the available container width
-	const getAllFittedHeights = () => {
+	const getAllFittedHeightsPx = () => {
 		const fittedHeights = [];
 
 		// for each, record the aspect ratio
@@ -110,24 +111,30 @@
 	});
 
 	$: {
-		$imageAspectRatioMap,
-		$windowWidth;
+		$imageAspectRatioMap, $windowWidth;
 		if (carouselRef) {
-			const newFittedHeights = getAllFittedHeights();
-			if (JSON.stringify(newFittedHeights) !== JSON.stringify(allFittedHeights)) {
-				allFittedHeights = newFittedHeights;
+			const newFittedHeights = getAllFittedHeightsPx();
+			if (JSON.stringify(newFittedHeights) !== JSON.stringify(allFittedHeightsPx)) {
+				allFittedHeightsPx = newFittedHeights;
 			}
 		}
 	}
 
 	let dynamicHeightCss = css``;
 	$: {
-		if (carouselRef && allFittedHeights?.length > 0) {
-			const maxFittedHeight = Math.max(...allFittedHeights);
-			if (maxFittedHeight !== 0 && !isNaN(maxFittedHeight) && isFinite(maxFittedHeight)) {
-				maxHeight = `${Math.round(maxFittedHeight)}px`;
+		if (carouselRef && allFittedHeightsPx?.length > 0) {
+			const maxFittedHeightPxFromArray = Math.round(Math.max(...allFittedHeightsPx));
+			if (
+				maxFittedHeightPxFromArray !== 0 &&
+				!isNaN(maxFittedHeightPxFromArray) &&
+				isFinite(maxFittedHeightPxFromArray) &&
+				isFinite(maxheightPxFromProp) &&
+				maxheightPxFromProp > 0
+			) {
+				const finalMaxHeightPx = Math.min(maxheightPxFromProp, maxFittedHeightPxFromArray);
+				maxHeight = `${finalMaxHeightPx}px`;
 				dynamicHeightCss = css`
-					height: ${maxHeight};
+					height: ${finalMaxHeightPx}px;
 				`;
 			}
 		}
