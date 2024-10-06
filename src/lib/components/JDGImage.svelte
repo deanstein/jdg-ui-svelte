@@ -20,7 +20,6 @@
 	import {
 		addCloudinaryUrlHeight,
 		addCloudinaryUrlWidth,
-		convertVhToPixels,
 		isUrlCloudinary,
 		instantiateObject
 	} from '$lib/jdg-utils.js';
@@ -31,11 +30,7 @@
 	// show a local image while image is loading
 	// @ts-expect-error
 	import imagePlaceholder from '$lib/assets/raster/jdg-image-placeholder.png';
-	import {
-		addImageAspectRatioToMap,
-		addImageLoading,
-		removeImageLoading
-	} from '$lib/jdg-state-management.js';
+	import { addImageAspectRatioToMap } from '$lib/jdg-state-management.js';
 
 	// EXPORTS
 
@@ -344,7 +339,6 @@
 		if (!showDebugLoadingState) {
 			isImageLoaded = true;
 		}
-		removeImageLoading(imageAttributes.imgSrc);
 	};
 
 	// runs if an image fails to load
@@ -440,9 +434,6 @@
 				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
 						isVisible = true;
-						if (!imageAttributes.imgSrc.includes('placeholder')) {
-							addImageLoading(imageAttributes.imgSrc);
-						}
 						observer.disconnect();
 					}
 				});
@@ -459,7 +450,6 @@
 
 	// set valid values just once, if not already defined
 	$: {
-		//getAspectRatios();
 		if (isNumberValid(lastKnownContainerAspectRatio) && !isNumberValid(validContainerAspectRatio)) {
 			validContainerAspectRatio = lastKnownContainerAspectRatio;
 			if (showDebugMessagesInConsole) {
@@ -497,6 +487,7 @@
 		height: ${maxHeight};
 	`;
 	$: {
+		maxHeight;
 		if (validContainerAspectRatio) {
 			imageContainerCssDynamic = css`
 				height: ${getPreferredContainerHeight().value};

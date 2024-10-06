@@ -8,8 +8,7 @@ import {
 	jumpToNavItems,
 	doShowImageDetailOverlay,
 	doShowNavSidebar,
-	doShowDevTools,
-	imagesLoading
+	doShowDevTools
 } from './states/ui-state.js';
 
 //
@@ -51,23 +50,6 @@ export const getImageAspectRatioFromMap = (src) => {
 		aspectRatio = store.get(src) || 0.0;
 	})();
 	return aspectRatio;
-};
-
-export const addImageLoading = (imgSrc) => {
-	imagesLoading.update((currentValue) => {
-		currentValue.push(imgSrc);
-		return currentValue;
-	});
-};
-
-export const removeImageLoading = (imgSrc) => {
-	imagesLoading.update((currentValue) => {
-		const index = currentValue.findIndex((item) => JSON.stringify(item) === JSON.stringify(imgSrc));
-		if (index !== -1) {
-			currentValue.splice(index, 1);
-		}
-		return currentValue;
-	});
 };
 
 //

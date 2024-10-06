@@ -13,7 +13,6 @@ export let isScrolling = writable(false);
 export let jumpToNavItems = writable([]);
 
 // images
-export let imagesLoading = writable([]); // any images currently loading
 export let imageAspectRatioMap = writable(new Map());
 
 // image detail overlay
