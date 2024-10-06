@@ -120,7 +120,9 @@
 		}
 	}
 
-	let dynamicHeightCss = css``;
+	let dynamicHeightCss = css`
+		height: ${maxHeight};
+	`;
 	$: {
 		if (carouselRef && allFittedHeightsPx?.length > 0) {
 			const maxFittedHeightPxFromArray = Math.round(Math.max(...allFittedHeightsPx));
