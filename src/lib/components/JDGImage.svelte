@@ -1,5 +1,5 @@
 <script>
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
@@ -428,6 +428,15 @@
 	onMount(() => {
 		devicePixelRatio = window.devicePixelRatio || 1;
 
+		// set up event listeners
+		// we're not using Svelte directives here because the event listeners are conditional
+		if (doScaleOnScrollOrZoom) {
+			containerRef.addEventListener('wheel', handleWheel, { passive: false });
+			containerRef.addEventListener('scroll', handleWheel, { passive: false });
+			containerRef.addEventListener('touchstart', handleTouchStart, { passive: false });
+			containerRef.addEventListener('touchmove', handleTouchMove, { passive: false });
+		}
+
 		// set up an observer to set the isVisible flag
 		const observer = new IntersectionObserver(
 			(entries) => {
@@ -444,6 +453,13 @@
 		);
 
 		observer.observe(containerRef);
+	});
+
+	onDestroy(() => {
+		containerRef.removeEventListener('wheel', handleWheel);
+		containerRef.removeEventListener('scroll', handleWheel);
+		containerRef.removeEventListener('touchstart', handleTouchStart);
+		containerRef.removeEventListener('touchmove', handleTouchMove);
 	});
 
 	// REACTIVE BLOCKS
@@ -606,10 +622,6 @@
 <div
 	transition:transition={{ duration: jdgDurations.fadeIn }}
 	bind:this={containerRef}
-	on:scroll={handleWheel}
-	on:wheel={handleWheel}
-	on:touchstart={handleTouchStart}
-	on:touchmove={handleTouchMove}
 	class="jdg-image-container {imageContainerCssDynamic}"
 >
 	<!-- need to set an on:click to ignore clicks in some cases -->
