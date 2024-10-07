@@ -3,6 +3,7 @@ import {
 	accentColors,
 	activeNotificationBanners,
 	highestZIndex,
+	imageAspectRatios,
 	imageDetailAttributes,
 	jumpToNavItems,
 	doShowImageDetailOverlay,
@@ -20,6 +21,48 @@ export const getAccentColors = () => {
 		currentAccentColors = currentValue;
 	});
 	return currentAccentColors;
+};
+
+//
+// IMAGES
+//
+
+export const recordImageAspectRatio = (src, imageWidth, imageHeight, overwriteIfLarger = false) => {
+	const imageAspectRatio = imageWidth / imageHeight;
+	let updateNeeded = false; // only update the store when needed
+
+	imageAspectRatios.subscribe((store) => {
+		const prevAspectRatio = store[src]?.aspectRatio || 0;
+		const prevWidth = store[src]?.width || 0;
+		const prevHeight = store[src]?.height || 0;
+
+		if (
+			(imageWidth * imageHeight > prevWidth * prevHeight && overwriteIfLarger) ||
+			Math.abs(imageAspectRatio - prevAspectRatio) > 0.01
+		) {
+			updateNeeded = true;
+		}
+	});
+
+	// only update the store the aspectRatio has changed considerably
+	// and if the source width and height are larger (more accurate aspect ratio)
+	if (updateNeeded) {
+		imageAspectRatios.update((store) => {
+			store = {
+				...store,
+				[src]: { width: imageWidth, height: imageHeight, aspectRatio: imageAspectRatio }
+			};
+			return store;
+		});
+	}
+};
+
+export const getImageAspectRatioRecord = (src) => {
+	let aspectRatio = 0.0;
+	imageAspectRatios.subscribe((store) => {
+		aspectRatio = store[src]?.aspectRatio || 0.0;
+	})();
+	return aspectRatio;
 };
 
 //

@@ -35,6 +35,7 @@
 	export let showHorizontalStripesOnHover = true;
 	export let showCaption = false;
 	export let showAttribution = false;
+	export let recordAspectRatioInState = false;
 
 	const hrefTarget = hrefOpenInNewTab ? '_blank' : null;
 	let isHovering;
@@ -155,6 +156,7 @@
 				{showBlurInUnfilledSpace}
 				showCaption={showCaption && !(showBlurInUnfilledSpace || cropToFillContainer)}
 				showAttribution={showAttribution && !(cropToFillContainer || showBlurInUnfilledSpace)}
+				{recordAspectRatioInState}
 			/>
 		</div>
 	</a>

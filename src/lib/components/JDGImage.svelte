@@ -4,18 +4,23 @@
 	import { css } from '@emotion/css';
 
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
-	import { getAvailableWidth, isNumberValid } from '$lib/jdg-utils.js';
+	import {
+		getMaxElementHeightPx,
+		getMaxElementWidthPx,
+		getPixelValueFromString,
+		isNumberValid
+	} from '$lib/jdg-utils.js';
 	import {
 		imageDetailWidth,
 		isMobileBreakpoint,
 		doShowHeaderStripes,
 		windowWidth
 	} from '$lib/states/ui-state.js';
+	import { recordImageAspectRatio } from '$lib/jdg-state-management.js';
 
 	import {
 		addCloudinaryUrlHeight,
 		addCloudinaryUrlWidth,
-		convertVhToPixels,
 		isUrlCloudinary,
 		instantiateObject
 	} from '$lib/jdg-utils.js';
@@ -49,6 +54,7 @@
 	export let doScaleOnScrollOrZoom = false; // allow scaling up the image on scroll or zoom events
 	export let scaleContext = 'container'; // which element to scale. other option: 'image'
 	export let bottomVisibilityOffset = '1000px'; // distance from bottom of screen before loading (positive is down)
+	export let recordAspectRatioInState = false;
 
 	// DEBUGGING
 
@@ -188,58 +194,24 @@
 
 	// get a pixel value from whatever is passed into the maxHeight prop
 	const getMaxHeightPxFromProp = () => {
-		// height can be in vh or px or even auto
-		// if in vh, convert to pixels for calculations
-		let maxHeightValue;
-		let maxHeightUnit;
 		let maxHeightPx;
 		// only calculate maxHeight if prop is not auto
 		if (maxHeight !== 'auto') {
-			[maxHeightValue, maxHeightUnit] = maxHeight.match(/^(\d+)(\D+)$/).slice(1);
-			const maxHeightParsed = parseFloat(maxHeightValue);
-			// get the max height in px for calculations
-			if (maxHeightUnit === 'vh') {
-				maxHeightPx = Math.ceil(convertVhToPixels(maxHeightParsed));
-			} else if (maxHeightUnit === 'px') {
-				maxHeightPx = Math.ceil(maxHeightParsed);
-			}
+			maxHeightPx = getPixelValueFromString(maxHeight);
 		} else {
-			maxHeightPx = getMaxHeightPxFromContainer();
+			maxHeightPx = getMaxElementHeightPx(containerRef);
 		}
-		return maxHeightPx;
-	};
-
-	const getMaxHeightPxFromContainer = () => {
-		let maxHeightPx;
-		// temporarily set the height to 100%
-		const existingHeight = containerRef.style.height;
-		containerRef.style.height = '100%';
-		// get the maxHeightPx
-		maxHeightPx = containerRef.clientHeight;
-		// reset the style to what it was before
-		containerRef.style.height = existingHeight;
 		return maxHeightPx;
 	};
 
 	// get a pixel value from whatever is passed into the maxHeight prop
 	const getMaxWidthFromProp = () => {
-		// width can be in vh or px or even auto
-		// if in vh, convert to pixels for calculations
-		let maxWidthValue;
-		let maxWidthUnit;
 		let maxWidthPx;
 		// only calculate maxWidth if prop is not auto
 		if (maxWidth !== 'auto') {
-			[maxWidthValue, maxWidthUnit] = maxWidth.match(/^(\d+)(\D+)$/).slice(1);
-			const maxWidthParsed = parseFloat(maxWidthValue);
-			// get the max width in px for calculations
-			if (maxWidthUnit === 'vh') {
-				maxWidthPx = Math.ceil(convertVhToPixels(maxWidthParsed));
-			} else if (maxWidthUnit === 'px') {
-				maxWidthPx = Math.ceil(maxWidthParsed);
-			}
+			maxWidthPx = getPixelValueFromString(maxWidth);
 		} else {
-			maxWidthPx = getAvailableWidth(containerRef);
+			maxWidthPx = getMaxElementWidthPx(containerRef);
 		}
 		return maxWidthPx;
 	};
@@ -247,9 +219,23 @@
 	// calculate the aspect ratio of the image container and the image (if not already known)
 	const getAspectRatios = () => {
 		if (containerRef && imageRef) {
+			// update the aspect ratio
 			imageAspectRatio = imageRef.naturalWidth / imageRef.naturalHeight;
-			lastKnownContainerHeight = getMaxHeightPxFromContainer();
-			lastKnownContainerWidth = getAvailableWidth(containerRef);
+
+			// if requested, record aspect ratio for other components to know about
+			if (recordAspectRatioInState) {
+				recordImageAspectRatio(
+					imageAttributes.imgSrc,
+					imageRef.naturalWidth,
+					imageRef.naturalHeight
+				);
+			}
+
+			if (showDebugMessagesInConsole) {
+				console.log('Image aspect ratio for ' + imageAttributes.imgSrc + ': ' + imageAspectRatio);
+			}
+			lastKnownContainerHeight = getMaxElementHeightPx(containerRef);
+			lastKnownContainerWidth = getMaxElementWidthPx(containerRef);
 			lastKnownContainerAspectRatio = lastKnownContainerWidth / lastKnownContainerHeight;
 		}
 	};
@@ -264,10 +250,10 @@
 			if (showDebugMessagesInConsole) {
 				console.log('Getting preferred container height for: ' + imageAttributes.imgSrc);
 				console.log('Valid container height: ' + validContainerHeight);
-				console.log('Max height from container: ' + getMaxHeightPxFromContainer());
+				console.log('Max height from container: ' + getMaxElementHeightPx(containerRef));
 				console.log('Max height from prop: ' + getMaxHeightPxFromProp());
 				console.log('Max width from prop: ' + getMaxWidthFromProp());
-				console.log('Max width from container: ' + getAvailableWidth(containerRef));
+				console.log('Max width from container: ' + getMaxElementWidthPx(containerRef));
 			}
 
 			// calculate the height of the image if 'auto' was set
@@ -334,7 +320,7 @@
 			!cropToFillContainer &&
 			!cropToFillContainer &&
 			parseInt(getMaxHeightPxFromProp()) * imageAspectRatio <
-				parseInt(getAvailableWidth(containerRef))
+				parseInt(getMaxElementWidthPx(containerRef))
 		) {
 			preferredContainerWidth = 'max-content';
 		}
@@ -464,7 +450,6 @@
 
 	// set valid values just once, if not already defined
 	$: {
-		getAspectRatios();
 		if (isNumberValid(lastKnownContainerAspectRatio) && !isNumberValid(validContainerAspectRatio)) {
 			validContainerAspectRatio = lastKnownContainerAspectRatio;
 			if (showDebugMessagesInConsole) {
@@ -502,6 +487,7 @@
 		height: ${maxHeight};
 	`;
 	$: {
+		maxHeight;
 		if (validContainerAspectRatio) {
 			imageContainerCssDynamic = css`
 				height: ${getPreferredContainerHeight().value};

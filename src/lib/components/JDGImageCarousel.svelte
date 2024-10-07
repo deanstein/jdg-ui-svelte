@@ -2,10 +2,16 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { accentColors } from '$lib/states/ui-state.js';
+	import { accentColors, imageAspectRatios, windowWidth } from '$lib/states/ui-state.js';
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGImageTile } from '$lib/index.js';
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { getImageAspectRatioRecord } from '$lib/jdg-state-management.js';
+	import {
+		getMaxElementHeightPx,
+		getMaxElementWidthPx,
+		getPixelValueFromString
+	} from '$lib/jdg-utils.js';
 
 	export let imageAttributeObjects; // all images shown in thumbnail collection
 	export let maxHeight = '50vh';
@@ -14,10 +20,41 @@
 	export let autoAdvanceInterval = 5000; // ms, interval between auto-advances
 	export let showBlurInUnfilledSpace = true;
 
+	// height calculations - raw numeric values in px
+	let maxHeightPxFromProp;
+	let allFittedHeightsPx;
+
 	let carouselRef; // used for only auto-advancing when carousel is visible
 	let activeImage = imageAttributeObjects[0]; // start with the first image
 	let kludge = true; // kludge to force a "crossfade" effect by swapping divs via flag
 	let intervalId; // identifier for the auto-advance setInterval() call
+
+	const getMaxHeightPxFromProp = () => {
+		let maxHeightPx;
+		// only calculate maxHeight if prop is not auto
+		if (maxHeight !== 'auto') {
+			maxHeightPx = getPixelValueFromString(maxHeight);
+		} else {
+			maxHeightPx = getMaxElementHeightPx(carouselRef);
+		}
+		return maxHeightPx;
+	};
+
+	// gets the largest height from all images provided
+	// by multiplying each image aspect ratio by the available container width
+	const getAllFittedHeightsPx = () => {
+		const fittedHeights = [];
+
+		// for each, record the aspect ratio
+		imageAttributeObjects.forEach((imageAttributeObject) => {
+			const aspectRatio = getImageAspectRatioRecord(imageAttributeObject.imgSrc);
+			const containerWidth = getMaxElementWidthPx(carouselRef);
+			const fittedHeight = containerWidth / aspectRatio;
+			fittedHeights.push(fittedHeight);
+		});
+
+		return fittedHeights;
+	};
 
 	const setActiveImage = (imageAttributesObject, endAutoAdvance = false) => {
 		activeImage = imageAttributesObject;
@@ -28,10 +65,6 @@
 			autoAdvance = false;
 		}
 	};
-
-	const crossfadeWrapperCss = css`
-		height: ${maxHeight};
-	`;
 
 	const thumbnailContainerCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
@@ -51,6 +84,7 @@
 	`;
 
 	onMount(() => {
+		maxHeightPxFromProp = getMaxHeightPxFromProp();
 		if (autoAdvance) {
 			// only start auto-advancing if carousel is visible
 			const observer = new IntersectionObserver(
@@ -75,10 +109,43 @@
 	onDestroy(() => {
 		clearInterval(intervalId);
 	});
+
+	$: {
+		$imageAspectRatios, $windowWidth;
+		if (carouselRef) {
+			const newFittedHeights = getAllFittedHeightsPx();
+			if (JSON.stringify(newFittedHeights) !== JSON.stringify(allFittedHeightsPx)) {
+				allFittedHeightsPx = newFittedHeights;
+			}
+		}
+	}
+
+	let dynamicHeightCss = css`
+		height: ${maxHeight};
+	`;
+	$: {
+		$windowWidth;
+		if (carouselRef && allFittedHeightsPx?.length > 0) {
+			const maxFittedHeightPxFromArray = Math.round(Math.max(...allFittedHeightsPx));
+			if (
+				maxFittedHeightPxFromArray !== 0 &&
+				!isNaN(maxFittedHeightPxFromArray) &&
+				isFinite(maxFittedHeightPxFromArray) &&
+				isFinite(maxHeightPxFromProp) &&
+				maxHeightPxFromProp > 0
+			) {
+				const finalMaxHeightPx = Math.min(maxHeightPxFromProp, maxFittedHeightPxFromArray);
+				maxHeight = `${finalMaxHeightPx}px`;
+				dynamicHeightCss = css`
+					height: ${finalMaxHeightPx}px;
+				`;
+			}
+		}
+	}
 </script>
 
 <div bind:this={carouselRef} class="jdg-image-carousel-container">
-	<div class="carousel-crossfade-wrapper-relative {crossfadeWrapperCss}">
+	<div class="carousel-crossfade-wrapper-relative {dynamicHeightCss}">
 		<!-- kludge to force a "crossfade" effect by swapping divs via flag -->
 		{#if kludge}
 			<div class="carousel-crossfade-wrapper-absolute">
@@ -87,6 +154,7 @@
 					{maxHeight}
 					cropToFillContainer={false}
 					{showBlurInUnfilledSpace}
+					recordAspectRatioInState
 				/>
 			</div>
 			<!-- kludge to force a "crossfade" effect by swapping divs via flag -->
@@ -97,6 +165,7 @@
 					{maxHeight}
 					cropToFillContainer={false}
 					{showBlurInUnfilledSpace}
+					recordAspectRatioInState
 				/>
 			</div>
 		{/if}
@@ -122,6 +191,7 @@
 					maxHeight="50px"
 					maxWidth="75px"
 					useCompactHeightOnMobile={false}
+					recordAspectRatioInState
 				/>
 			</div>
 		{/each}

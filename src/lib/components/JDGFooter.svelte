@@ -11,6 +11,7 @@
 		doShowImageDetailOverlay,
 		doShowNavSidebar,
 		highestZIndex,
+		imageAspectRatios,
 		imageDetailAttributes,
 		imageDetailWidth,
 		isMobileBreakpoint,
@@ -157,6 +158,10 @@
 					isScrolling: {JSON.stringify($isScrolling)}
 					<br />
 					jumpToNavItems: {JSON.stringify($jumpToNavItems)}
+					<br /><br />
+					<i>IMAGES</i>
+					<br />
+					imageAspectRatioMap: {JSON.stringify($imageAspectRatios)}
 					<br /><br />
 					<i>IMAGE DETAIL OVERLAY</i>
 					<br />
