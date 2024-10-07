@@ -58,7 +58,7 @@
 
 	// DEBUGGING
 
-	const showDebugMessagesInConsole = true;
+	const showDebugMessagesInConsole = false;
 	export let showDebugLoadingState = false;
 
 	// DEVICE
