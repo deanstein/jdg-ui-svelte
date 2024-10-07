@@ -78,6 +78,7 @@
 	let lastKnownContainerHeight;
 	let lastKnownContainerAspectRatio;
 	let lastKnownPreferredContainerHeight;
+	let lastKnownPreferredContainerWidth;
 	let lastKnownCloudinaryTransformationValue;
 
 	// these values have been validated - they're defined, non-zero, and not NaN
@@ -220,8 +221,17 @@
 	// calculate the aspect ratio of the image container and the image (if not already known)
 	const getAspectRatios = () => {
 		if (containerRef && imageRef) {
-			// update the aspect ratio
-			imageAspectRatio = imageRef.naturalWidth / imageRef.naturalHeight;
+			// update the aspect ratio if it hasn't changed considerably since last time
+			const newImageAspectRatio = imageRef.naturalWidth / imageRef.naturalHeight;
+			if (
+				!isFinite(imageAspectRatio) ||
+				Math.abs(newImageAspectRatio - imageAspectRatio) > jdgSizes.imageAspectRatioUpdateThreshold
+			) {
+				imageAspectRatio = imageRef.naturalWidth / imageRef.naturalHeight;
+				if (showDebugMessagesInConsole) {
+					console.log('Updating image aspect ratio:', imageAspectRatio);
+				}
+			}
 
 			// if requested, record aspect ratio for other components to know about
 			if (recordAspectRatioInState) {
@@ -300,7 +310,12 @@
 			}
 
 			if (showDebugMessagesInConsole) {
-				console.log('Choosing ' + preferredHeightFitType + ' for image: ' + imageAttributes.imgSrc);
+				console.log(
+					'getPreferredContainerHeight: Choosing ' +
+						preferredHeightFitType +
+						' for image: ' +
+						imageAttributes.imgSrc
+				);
 			}
 		}
 		lastKnownPreferredContainerHeight = preferredHeightFitType;
@@ -316,6 +331,8 @@
 		// use 100%
 		if (showBlurInUnfilledSpace || imageWidthAtMaxHeightFromProp >= validContainerWidth) {
 			preferredContainerWidth = '100%';
+			if (showDebugMessagesInConsole) {
+			}
 		}
 		// if we're not cropping to fill and the image width at the max height is less than the container width
 		// use max-content to ensure image container doesn't extend beyond image
@@ -327,6 +344,16 @@
 			preferredContainerWidth = maxWidth ?? 'auto';
 		}
 
+		if (showDebugMessagesInConsole) {
+			console.log(
+				'getPreferredContainerWidth: Choosing ' +
+					preferredContainerWidth +
+					' for image: ' +
+					imageAttributes.imgSrc
+			);
+		}
+
+		lastKnownPreferredContainerWidth = preferredContainerWidth;
 		return preferredContainerWidth;
 	};
 
@@ -501,7 +528,7 @@
 		height: ${maxHeight};
 	`;
 	$: {
-		maxHeight;
+		lastKnownContainerWidth, imageAspectRatio, maxHeight;
 		if (validContainerAspectRatio) {
 			imageContainerCssDynamic = css`
 				height: ${getPreferredContainerHeight().value};
@@ -675,9 +702,13 @@
 	{/if}
 	{#if showDebugOverlay}
 		<div class="debug-overlay">
-			Preferred container height: {JSON.stringify(getPreferredContainerHeight())};
+			Calculated image width: {getMaxHeightPxFromProp() * imageAspectRatio};
 			<br />
-			Preferred container width: {getPreferredContainerWidth()};
+			Valid container width: {validContainerWidth};
+			<br />
+			Preferred container width: {lastKnownPreferredContainerWidth};
+			<br />
+			Preferred container height: {lastKnownPreferredContainerHeight};
 		</div>
 	{/if}
 </div>

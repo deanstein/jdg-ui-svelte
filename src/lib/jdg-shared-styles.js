@@ -232,7 +232,9 @@ export const jdgSizes = {
 	headerSidePaddingUnit: 'rem',
 	get headerSidePadding() {
 		return this.nHeaderSidePadding.toString() + this.headerSidePaddingUnit;
-	}
+	},
+	/* don't update aspect ratio if change is below this threshold */
+	imageAspectRatioUpdateThreshold: 0.01
 };
 
 export const jdgDurations = {

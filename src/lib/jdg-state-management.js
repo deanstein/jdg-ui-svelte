@@ -10,6 +10,7 @@ import {
 	doShowNavSidebar,
 	doShowDevTools
 } from './states/ui-state.js';
+import { jdgSizes } from './jdg-shared-styles.js';
 
 //
 // ACCENT COLORS + HEADER STRIPES
@@ -38,7 +39,7 @@ export const recordImageAspectRatio = (src, imageWidth, imageHeight, overwriteIf
 
 		if (
 			(imageWidth * imageHeight > prevWidth * prevHeight && overwriteIfLarger) ||
-			Math.abs(imageAspectRatio - prevAspectRatio) > 0.01
+			Math.abs(imageAspectRatio - prevAspectRatio) > jdgSizes.imageAspectRatioUpdateThreshold
 		) {
 			updateNeeded = true;
 		}
