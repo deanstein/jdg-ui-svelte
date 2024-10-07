@@ -27,21 +27,39 @@ export const getAccentColors = () => {
 // IMAGES
 //
 
-export const addImageAspectRatioToMap = (src, aspectRatio) => {
-	imageAspectRatios.update((store) => {
-		// aspect ratios can run into floating point equality precision
-		// so check for near-equality
-		if (!store[src] || isNaN(store[src]) || Math.abs(store[src] - aspectRatio) > 0.01) {
-			store = { ...store, [src]: aspectRatio };
+export const recordImageAspectRatio = (src, imageWidth, imageHeight) => {
+	const newAspectRatio = imageWidth / imageHeight;
+	let updateNeeded = false;
+
+	imageAspectRatios.subscribe((store) => {
+		const prevAspectRatio = store[src]?.aspectRatio || 0;
+		const prevWidth = store[src]?.width || 0;
+		const prevHeight = store[src]?.height || 0;
+
+		if (
+			imageWidth * imageHeight > prevWidth * prevHeight &&
+			Math.abs(newAspectRatio - prevAspectRatio) > 0.01
+		) {
+			updateNeeded = true;
 		}
-		return store;
 	});
+
+	// only update the store if needed
+	if (updateNeeded) {
+		imageAspectRatios.update((store) => {
+			store = {
+				...store,
+				[src]: { width: imageWidth, height: imageHeight, aspectRatio: newAspectRatio }
+			};
+			return store;
+		});
+	}
 };
 
-export const getImageAspectRatioFromMap = (src) => {
+export const getImageAspectRatioRecord = (src) => {
 	let aspectRatio = 0.0;
 	imageAspectRatios.subscribe((store) => {
-		aspectRatio = store[src] || 0.0;
+		aspectRatio = store[src]?.aspectRatio || 0.0;
 	})();
 	return aspectRatio;
 };

@@ -6,7 +6,7 @@
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGImageTile } from '$lib/index.js';
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
-	import { getImageAspectRatioFromMap } from '$lib/jdg-state-management.js';
+	import { getImageAspectRatioRecord } from '$lib/jdg-state-management.js';
 	import {
 		getMaxElementHeightPx,
 		getMaxElementWidthPx,
@@ -47,7 +47,7 @@
 
 		// for each, record the aspect ratio
 		imageAttributeObjects.forEach((imageAttributeObject) => {
-			const aspectRatio = getImageAspectRatioFromMap(imageAttributeObject.imgSrc);
+			const aspectRatio = getImageAspectRatioRecord(imageAttributeObject.imgSrc);
 			const containerWidth = getMaxElementWidthPx(carouselRef);
 			const fittedHeight = containerWidth / aspectRatio;
 			fittedHeights.push(fittedHeight);
@@ -165,6 +165,7 @@
 					{maxHeight}
 					cropToFillContainer={false}
 					{showBlurInUnfilledSpace}
+					recordAspectRatioInState
 				/>
 			</div>
 		{/if}
@@ -190,6 +191,7 @@
 					maxHeight="50px"
 					maxWidth="75px"
 					useCompactHeightOnMobile={false}
+					recordAspectRatioInState
 				/>
 			</div>
 		{/each}

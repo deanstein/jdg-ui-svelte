@@ -16,7 +16,7 @@
 		doShowHeaderStripes,
 		windowWidth
 	} from '$lib/states/ui-state.js';
-	import { addImageAspectRatioToMap } from '$lib/jdg-state-management.js';
+	import { recordImageAspectRatio } from '$lib/jdg-state-management.js';
 
 	import {
 		addCloudinaryUrlHeight,
@@ -224,7 +224,11 @@
 
 			// if requested, record aspect ratio for other components to know about
 			if (recordAspectRatioInState) {
-				addImageAspectRatioToMap(imageAttributes.imgSrc, imageAspectRatio);
+				recordImageAspectRatio(
+					imageAttributes.imgSrc,
+					imageRef.naturalWidth,
+					imageRef.naturalHeight
+				);
 			}
 
 			if (showDebugMessagesInConsole) {
