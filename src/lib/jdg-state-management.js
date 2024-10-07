@@ -28,28 +28,23 @@ export const getAccentColors = () => {
 //
 
 export const addImageAspectRatioToMap = (src, aspectRatio) => {
-	imageAspectRatioMap.update((store) => {
-		if (!store.has(src) || Math.abs(store.get(src) - aspectRatio) > 0.5) {
-			store.set(src, aspectRatio);
-		}
-		return store;
-	});
-};
-
-export const removeImageAspectRatioFromMap = (src) => {
-	imageAspectRatioMap.update((store) => {
-		store.delete(src);
-		return store;
-	});
+    imageAspectRatioMap.update((store) => {
+        if (!store[src] || isNaN(store[src]) || Math.abs(store[src] - aspectRatio) > 0.01) {
+            store = { ...store, [src]: aspectRatio };
+            console.log("SETTING STORE", store);
+        }
+        return store;
+    });
 };
 
 export const getImageAspectRatioFromMap = (src) => {
-	let aspectRatio = 0.0;
-	imageAspectRatioMap.subscribe((store) => {
-		aspectRatio = store.get(src) || 0.0;
-	})();
-	return aspectRatio;
+    let aspectRatio = 0.0;
+    imageAspectRatioMap.subscribe((store) => {
+        aspectRatio = store[src] || 0.0;
+    })();
+    return aspectRatio;
 };
+
 
 //
 // IMAGE DETAIL MODAL

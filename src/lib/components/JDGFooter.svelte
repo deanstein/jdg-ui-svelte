@@ -11,6 +11,7 @@
 		doShowImageDetailOverlay,
 		doShowNavSidebar,
 		highestZIndex,
+		imageAspectRatioMap,
 		imageDetailAttributes,
 		imageDetailWidth,
 		isMobileBreakpoint,
@@ -158,6 +159,10 @@
 					<br />
 					jumpToNavItems: {JSON.stringify($jumpToNavItems)}
 					<br /><br />
+					<i>IMAGES</i>
+					<br />
+					imageAspectRatioMap: {JSON.stringify($imageAspectRatioMap)}
+					<br /><br>
 					<i>IMAGE DETAIL OVERLAY</i>
 					<br />
 					doShowImageDetailOverlay: {JSON.stringify($doShowImageDetailOverlay)}
