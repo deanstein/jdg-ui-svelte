@@ -205,7 +205,7 @@
 	};
 
 	// get a pixel value from whatever is passed into the maxHeight prop
-	const getMaxWidthFromProp = () => {
+	const getMaxWidthPxFromProp = () => {
 		let maxWidthPx;
 		// only calculate maxWidth if prop is not auto
 		if (maxWidth !== 'auto') {
@@ -252,7 +252,7 @@
 				console.log('Valid container height: ' + validContainerHeight);
 				console.log('Max height from container: ' + getMaxElementHeightPx(containerRef));
 				console.log('Max height from prop: ' + getMaxHeightPxFromProp());
-				console.log('Max width from prop: ' + getMaxWidthFromProp());
+				console.log('Max width from prop: ' + getMaxWidthPxFromProp());
 				console.log('Max width from container: ' + getMaxElementWidthPx(containerRef));
 			}
 
@@ -308,24 +308,22 @@
 
 	const getPreferredContainerWidth = () => {
 		let preferredContainerWidth;
+		const imageWidthAtMaxHeightFromProp = getMaxHeightPxFromProp() * imageAspectRatio;
 
 		// if we're showing blur
-		// width is always 100%
-		if (showBlurInUnfilledSpace) {
+		// or if the image width would exceed the container at the given max height,
+		// use 100%
+		if (showBlurInUnfilledSpace || imageWidthAtMaxHeightFromProp > validContainerWidth) {
 			preferredContainerWidth = '100%';
 		}
-		// if we're not cropping to fill or showing blur,
-		// width is always max-content to ensure image container doesn't extend beyond image
-		else if (
-			!cropToFillContainer &&
-			getMaxHeightPxFromProp() * imageAspectRatio <
-				validContainerWidth
-		) {
-			//preferredContainerWidth = 'max-content';
+		// if we're not cropping to fill and the image width at the max height is less than the container width
+		// use max-content to ensure image container doesn't extend beyond image
+		else if (!cropToFillContainer && imageWidthAtMaxHeightFromProp < validContainerWidth) {
+			preferredContainerWidth = 'max-content';
 		}
 		// default is to use the provided max width or auto if not provided
 		else {
-			//preferredContainerWidth = maxWidth ?? 'auto';
+			preferredContainerWidth = maxWidth ?? 'auto';
 		}
 
 		return preferredContainerWidth;
