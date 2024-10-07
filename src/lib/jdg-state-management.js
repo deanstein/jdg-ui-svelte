@@ -3,7 +3,7 @@ import {
 	accentColors,
 	activeNotificationBanners,
 	highestZIndex,
-	imageAspectRatioMap,
+	imageAspectRatios,
 	imageDetailAttributes,
 	jumpToNavItems,
 	doShowImageDetailOverlay,
@@ -28,7 +28,9 @@ export const getAccentColors = () => {
 //
 
 export const addImageAspectRatioToMap = (src, aspectRatio) => {
-	imageAspectRatioMap.update((store) => {
+	imageAspectRatios.update((store) => {
+		// aspect ratios can run into floating point equality precision
+		// so check for near-equality
 		if (!store[src] || isNaN(store[src]) || Math.abs(store[src] - aspectRatio) > 0.01) {
 			store = { ...store, [src]: aspectRatio };
 		}
@@ -38,7 +40,7 @@ export const addImageAspectRatioToMap = (src, aspectRatio) => {
 
 export const getImageAspectRatioFromMap = (src) => {
 	let aspectRatio = 0.0;
-	imageAspectRatioMap.subscribe((store) => {
+	imageAspectRatios.subscribe((store) => {
 		aspectRatio = store[src] || 0.0;
 	})();
 	return aspectRatio;

@@ -54,10 +54,11 @@
 	export let doScaleOnScrollOrZoom = false; // allow scaling up the image on scroll or zoom events
 	export let scaleContext = 'container'; // which element to scale. other option: 'image'
 	export let bottomVisibilityOffset = '1000px'; // distance from bottom of screen before loading (positive is down)
+	export let recordAspectRatioInState = false;
 
 	// DEBUGGING
 
-	const showDebugMessagesInConsole = false;
+	const showDebugMessagesInConsole = true;
 	export let showDebugLoadingState = false;
 
 	// DEVICE
@@ -72,8 +73,6 @@
 
 	// these values could change many times or be invalid numbers
 	// as the page loads, layout adjusts, or the page loads
-	let lastKnownImageWidth;
-	let lastKnownImageHeight;
 	let lastKnownContainerWidth;
 	let lastKnownContainerHeight;
 	let lastKnownContainerAspectRatio;
@@ -220,22 +219,17 @@
 	// calculate the aspect ratio of the image container and the image (if not already known)
 	const getAspectRatios = () => {
 		if (containerRef && imageRef) {
-			const currentImageWidth = imageRef.naturalWidth;
-			const currentImageHeight = imageRef.naturalHeight;
-			// only update the aspect ratio if the image's width and height changed
-			if (
-				Math.abs(currentImageWidth - lastKnownImageWidth) > 10 ||
-				Math.abs(currentImageHeight - lastKnownImageHeight) > 10
-			) {
-				imageAspectRatio = imageRef.naturalWidth / imageRef.naturalHeight;
-				if (showDebugMessagesInConsole) {
-					console.log('Image aspect ratio for ' + imageAttributes.imgSrc + ': ' + imageAspectRatio);
-				}
-				// each image records its aspect ratio for other components to know about
+			// update the aspect ratio
+			imageAspectRatio = imageRef.naturalWidth / imageRef.naturalHeight;
+
+			// if requested, record aspect ratio for other components to know about
+			if (recordAspectRatioInState) {
 				addImageAspectRatioToMap(imageAttributes.imgSrc, imageAspectRatio);
 			}
-			lastKnownImageWidth = currentImageWidth;
-			lastKnownImageHeight = currentImageHeight;
+
+			if (showDebugMessagesInConsole) {
+				console.log('Image aspect ratio for ' + imageAttributes.imgSrc + ': ' + imageAspectRatio);
+			}
 			lastKnownContainerHeight = getMaxElementHeightPx(containerRef);
 			lastKnownContainerWidth = getMaxElementWidthPx(containerRef);
 			lastKnownContainerAspectRatio = lastKnownContainerWidth / lastKnownContainerHeight;

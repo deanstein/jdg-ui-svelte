@@ -2,7 +2,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { accentColors, imageAspectRatioMap, windowWidth } from '$lib/states/ui-state.js';
+	import { accentColors, imageAspectRatios, windowWidth } from '$lib/states/ui-state.js';
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGImageTile } from '$lib/index.js';
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
@@ -111,7 +111,7 @@
 	});
 
 	$: {
-		$imageAspectRatioMap, $windowWidth;
+		$imageAspectRatios, $windowWidth;
 		if (carouselRef) {
 			const newFittedHeights = getAllFittedHeightsPx();
 			if (JSON.stringify(newFittedHeights) !== JSON.stringify(allFittedHeightsPx)) {
@@ -154,6 +154,7 @@
 					{maxHeight}
 					cropToFillContainer={false}
 					{showBlurInUnfilledSpace}
+					recordAspectRatioInState
 				/>
 			</div>
 			<!-- kludge to force a "crossfade" effect by swapping divs via flag -->

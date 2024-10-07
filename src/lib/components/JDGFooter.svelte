@@ -11,7 +11,7 @@
 		doShowImageDetailOverlay,
 		doShowNavSidebar,
 		highestZIndex,
-		imageAspectRatioMap,
+		imageAspectRatios,
 		imageDetailAttributes,
 		imageDetailWidth,
 		isMobileBreakpoint,
@@ -161,7 +161,7 @@
 					<br /><br />
 					<i>IMAGES</i>
 					<br />
-					imageAspectRatioMap: {JSON.stringify($imageAspectRatioMap)}
+					imageAspectRatioMap: {JSON.stringify($imageAspectRatios)}
 					<br /><br />
 					<i>IMAGE DETAIL OVERLAY</i>
 					<br />
