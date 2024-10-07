@@ -36,6 +36,7 @@
 	export let showCaption = false;
 	export let showAttribution = false;
 	export let recordAspectRatioInState = false;
+	export let showDebugOverlay = false;
 
 	const hrefTarget = hrefOpenInNewTab ? '_blank' : null;
 	let isHovering;
@@ -157,6 +158,7 @@
 				showCaption={showCaption && !(showBlurInUnfilledSpace || cropToFillContainer)}
 				showAttribution={showAttribution && !(cropToFillContainer || showBlurInUnfilledSpace)}
 				{recordAspectRatioInState}
+				{showDebugOverlay}
 			/>
 		</div>
 	</a>

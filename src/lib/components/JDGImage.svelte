@@ -55,6 +55,7 @@
 	export let scaleContext = 'container'; // which element to scale. other option: 'image'
 	export let bottomVisibilityOffset = '1000px'; // distance from bottom of screen before loading (positive is down)
 	export let recordAspectRatioInState = false;
+	export let showDebugOverlay = false;
 
 	// DEBUGGING
 
@@ -672,6 +673,13 @@
 			{imageErrorMessage}
 		</div>
 	{/if}
+	{#if showDebugOverlay}
+		<div class="debug-overlay">
+			Preferred container height: {JSON.stringify(getPreferredContainerHeight())};
+			<br />
+			Preferred container width: {getPreferredContainerWidth()};
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -742,5 +750,11 @@
 	.caption-attribution-wrapper {
 		position: absolute;
 		width: 100%;
+	}
+
+	.debug-overlay {
+		background-color: rgba(255, 255, 255, 0.5);
+		font-size: 8px;
+		position: absolute;
 	}
 </style>
