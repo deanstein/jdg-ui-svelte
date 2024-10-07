@@ -27,9 +27,9 @@ export const getAccentColors = () => {
 // IMAGES
 //
 
-export const recordImageAspectRatio = (src, imageWidth, imageHeight) => {
-	const newAspectRatio = imageWidth / imageHeight;
-	let updateNeeded = false;
+export const recordImageAspectRatio = (src, imageWidth, imageHeight, overwriteIfLarger = false) => {
+	const imageAspectRatio = imageWidth / imageHeight;
+	let updateNeeded = false; // only update the store when needed
 
 	imageAspectRatios.subscribe((store) => {
 		const prevAspectRatio = store[src]?.aspectRatio || 0;
@@ -37,19 +37,20 @@ export const recordImageAspectRatio = (src, imageWidth, imageHeight) => {
 		const prevHeight = store[src]?.height || 0;
 
 		if (
-			imageWidth * imageHeight > prevWidth * prevHeight &&
-			Math.abs(newAspectRatio - prevAspectRatio) > 0.01
+			(imageWidth * imageHeight > prevWidth * prevHeight && overwriteIfLarger) ||
+			Math.abs(imageAspectRatio - prevAspectRatio) > 0.01
 		) {
 			updateNeeded = true;
 		}
 	});
 
-	// only update the store if needed
+	// only update the store the aspectRatio has changed considerably
+	// and if the source width and height are larger (more accurate aspect ratio)
 	if (updateNeeded) {
 		imageAspectRatios.update((store) => {
 			store = {
 				...store,
-				[src]: { width: imageWidth, height: imageHeight, aspectRatio: newAspectRatio }
+				[src]: { width: imageWidth, height: imageHeight, aspectRatio: imageAspectRatio }
 			};
 			return store;
 		});
