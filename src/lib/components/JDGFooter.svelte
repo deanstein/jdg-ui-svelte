@@ -62,6 +62,10 @@
 			${jdgSizes.headerTopBottomPadding} ${jdgSizes.headerSidePadding};
 	`;
 
+	const footerDisclaimerCss = css`
+		color: ${jdgColors.textLight};
+	`;
+
 	const footerDevToolsCss = css`
 		justify-content: ${alignItems};
 	`;
@@ -90,7 +94,7 @@
 		</div>
 		<!-- disclaimer row -->
 		{#if disclaimer}
-			<div class="footer-row">
+			<div class="footer-row {footerDisclaimerCss}">
 				<div class="footer-item {footerItemCss}">
 					{disclaimer}
 				</div>
@@ -155,7 +159,7 @@
 					<br />
 					isMobileBreakpoint: {JSON.stringify($isMobileBreakpoint)}
 					<br />
-					isScrolling: {JSON.stringify($isScrolling)}
+					isScrolling (mobile only): {JSON.stringify($isScrolling)}
 					<br />
 					jumpToNavItems: {JSON.stringify($jumpToNavItems)}
 					<br /><br />
