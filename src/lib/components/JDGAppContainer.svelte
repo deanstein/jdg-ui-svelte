@@ -141,7 +141,7 @@
 </script>
 
 <!-- set up directives for event listeners -->
-<svelte:window on:resize={onPageResize} on:scroll={onPageScroll} />
+<svelte:window on:resize={onPageResize} on:scroll={onPageScroll} on:touchstart={onPageScroll} />
 
 <div class="jdg-app-container {appContainerCss} {linkStyleDefaultCss}" bind:this={appContainerRef}>
 	<!-- loading overlay - only shown before layout is fully loaded -->
