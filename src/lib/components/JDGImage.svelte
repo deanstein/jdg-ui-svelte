@@ -318,9 +318,8 @@
 		// width is always max-content to ensure image container doesn't extend beyond image
 		else if (
 			!cropToFillContainer &&
-			!cropToFillContainer &&
-			parseInt(getMaxHeightPxFromProp()) * imageAspectRatio <
-				parseInt(getMaxElementWidthPx(containerRef))
+			getMaxHeightPxFromProp() * imageAspectRatio <
+				validContainerWidth
 		) {
 			preferredContainerWidth = 'max-content';
 		}
