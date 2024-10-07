@@ -8,14 +8,17 @@
 	export let item1Label;
 	export let item1Href;
 	export let item1ImageAttributes;
+	export let item1ObjectPosition = 'center';
 
 	export let item2Label;
 	export let item2Href;
 	export let item2ImageAttributes;
+	export let item2ObjectPosition = 'center';
 
 	export let item3Label;
 	export let item3Href;
 	export let item3ImageAttributes;
+	export let item3ObjectPosition = 'center';
 </script>
 
 <JDGContentBoxFloating title={contentBoxFloatingTitle} includeInJumpTo={false}>
@@ -26,6 +29,7 @@
 			imageAttributes={item1ImageAttributes}
 			labelJustification={'center'}
 			useCompactHeightOnMobile={false}
+			objectPosition={item1ObjectPosition}
 		/>
 		<JDGImageTile
 			label={item2Label}
@@ -33,6 +37,7 @@
 			imageAttributes={item2ImageAttributes}
 			labelJustification={'center'}
 			useCompactHeightOnMobile={false}
+			objectPosition={item2ObjectPosition}
 		/>
 		<JDGImageTile
 			label={item3Label}
@@ -40,6 +45,7 @@
 			imageAttributes={item3ImageAttributes}
 			labelJustification={'center'}
 			useCompactHeightOnMobile={false}
+			objectPosition={item3ObjectPosition}
 		/>
 	</JDGGridLayout>
 </JDGContentBoxFloating>
