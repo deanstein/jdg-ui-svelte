@@ -313,7 +313,7 @@
 		// if we're showing blur
 		// or if the image width would exceed the container at the given max height,
 		// use 100%
-		if (showBlurInUnfilledSpace || imageWidthAtMaxHeightFromProp > validContainerWidth) {
+		if (showBlurInUnfilledSpace || imageWidthAtMaxHeightFromProp >= validContainerWidth) {
 			preferredContainerWidth = '100%';
 		}
 		// if we're not cropping to fill and the image width at the max height is less than the container width
