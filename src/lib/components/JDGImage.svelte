@@ -321,11 +321,11 @@
 			getMaxHeightPxFromProp() * imageAspectRatio <
 				validContainerWidth
 		) {
-			preferredContainerWidth = 'max-content';
+			//preferredContainerWidth = 'max-content';
 		}
 		// default is to use the provided max width or auto if not provided
 		else {
-			preferredContainerWidth = maxWidth ?? 'auto';
+			//preferredContainerWidth = maxWidth ?? 'auto';
 		}
 
 		return preferredContainerWidth;
