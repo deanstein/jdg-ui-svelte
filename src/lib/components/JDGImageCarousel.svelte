@@ -21,7 +21,7 @@
 	export let showBlurInUnfilledSpace = true;
 
 	// height calculations - raw numeric values in px
-	let maxheightPxFromProp;
+	let maxHeightPxFromProp;
 	let allFittedHeightsPx;
 
 	let carouselRef; // used for only auto-advancing when carousel is visible
@@ -84,7 +84,7 @@
 	`;
 
 	onMount(() => {
-		maxheightPxFromProp = getMaxHeightPxFromProp();
+		maxHeightPxFromProp = getMaxHeightPxFromProp();
 		if (autoAdvance) {
 			// only start auto-advancing if carousel is visible
 			const observer = new IntersectionObserver(
@@ -131,10 +131,10 @@
 				maxFittedHeightPxFromArray !== 0 &&
 				!isNaN(maxFittedHeightPxFromArray) &&
 				isFinite(maxFittedHeightPxFromArray) &&
-				isFinite(maxheightPxFromProp) &&
-				maxheightPxFromProp > 0
+				isFinite(maxHeightPxFromProp) &&
+				maxHeightPxFromProp > 0
 			) {
-				const finalMaxHeightPx = Math.min(maxheightPxFromProp, maxFittedHeightPxFromArray);
+				const finalMaxHeightPx = Math.min(maxHeightPxFromProp, maxFittedHeightPxFromArray);
 				maxHeight = `${finalMaxHeightPx}px`;
 				dynamicHeightCss = css`
 					height: ${finalMaxHeightPx}px;
