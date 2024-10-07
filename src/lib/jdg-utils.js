@@ -239,7 +239,7 @@ export const isNumberValid = (number) => {
 /// STRING UTILS
 ///
 
-// get a pixel value from a strin
+// get a pixel value from a string
 export const getPixelValueFromString = (string) => {
 	// height can be in vh or px or even auto
 	// if in vh, convert to pixels for calculations

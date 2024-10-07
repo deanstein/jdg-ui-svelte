@@ -31,7 +31,6 @@ export const addImageAspectRatioToMap = (src, aspectRatio) => {
 	imageAspectRatioMap.update((store) => {
 		if (!store[src] || isNaN(store[src]) || Math.abs(store[src] - aspectRatio) > 0.01) {
 			store = { ...store, [src]: aspectRatio };
-			console.log('SETTING STORE', store);
 		}
 		return store;
 	});
