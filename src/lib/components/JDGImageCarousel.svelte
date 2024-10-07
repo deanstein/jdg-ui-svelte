@@ -124,7 +124,7 @@
 		height: ${maxHeight};
 	`;
 	$: {
-		$windowWidth
+		$windowWidth;
 		if (carouselRef && allFittedHeightsPx?.length > 0) {
 			const maxFittedHeightPxFromArray = Math.round(Math.max(...allFittedHeightsPx));
 			if (

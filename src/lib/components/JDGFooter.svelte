@@ -162,7 +162,7 @@
 					<i>IMAGES</i>
 					<br />
 					imageAspectRatioMap: {JSON.stringify($imageAspectRatioMap)}
-					<br /><br>
+					<br /><br />
 					<i>IMAGE DETAIL OVERLAY</i>
 					<br />
 					doShowImageDetailOverlay: {JSON.stringify($doShowImageDetailOverlay)}

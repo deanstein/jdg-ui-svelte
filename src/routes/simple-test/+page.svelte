@@ -3,7 +3,7 @@
 		JDGContentBoxFloating,
 		JDGContentContainer,
 		JDGFullWidthContainer,
-		JDGImageCarousel,
+		JDGImageCarousel
 	} from '$lib/index.js';
 	import { imageAttributesCollection } from '../image-attributes-collection.js';
 </script>
