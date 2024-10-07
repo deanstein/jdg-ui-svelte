@@ -2,9 +2,16 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { accentColors, imageAspectRatios, windowWidth } from '$lib/states/ui-state.js';
+	import {
+		accentColors,
+		doShowImageDetailOverlay,
+		imageAspectRatios,
+		imageDetailAttributes,
+		isMobileBreakpoint,
+		windowWidth
+	} from '$lib/states/ui-state.js';
 
-	import { JDGImage, JDGImageCaptionAttribution, JDGImageTile } from '$lib/index.js';
+	import { JDGButton, JDGImage, JDGImageCaptionAttribution, JDGImageTile } from '$lib/index.js';
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { getImageAspectRatioRecord } from '$lib/jdg-state-management.js';
 	import {
@@ -169,6 +176,20 @@
 				/>
 			</div>
 		{/if}
+		<div class="carousel-button-overlay">
+			<JDGButton
+				onClickFunction={() => {
+					doShowImageDetailOverlay.set(true);
+					imageDetailAttributes.set(activeImage);
+				}}
+				faIcon="fa-solid fa-expand"
+				label={null}
+				paddingLeftRight={'8px'}
+				paddingTopBottom={'8px'}
+				backgroundColor={$accentColors[0]}
+				tooltip="Expand image"
+			/>
+		</div>
 	</div>
 	<JDGImageCaptionAttribution
 		imageAttributes={activeImage}
@@ -218,6 +239,13 @@
 		width: 100%;
 		display: flex;
 		justify-content: center;
+	}
+
+	.carousel-button-overlay {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		padding: 10px;
 	}
 
 	.carousel-thumbnail-container {
