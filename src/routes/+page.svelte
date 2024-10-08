@@ -454,6 +454,21 @@
 				width="300px"
 			/>
 		</div>
+		<JDGBodyCopy textAlign="center" paddingBottom="0">Square aspect ratio:</JDGBodyCopy>
+		<div
+			style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;"
+		>
+			<JDGButton
+				onClickFunction={() => {}}
+				faIcon="fa-solid fa-expand"
+				label={null}
+				paddingLeftRight={'8px'}
+				paddingTopBottom={'8px'}
+				backgroundColor={$accentColors[0]}
+				tooltip="Expand image"
+				forceSquareRatio
+			/>
+		</div>
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="FEATURE CARD">
 		<JDGFeatureCard
