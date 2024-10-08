@@ -60,6 +60,7 @@
 	export let borderRadius = '1.5em';
 	export let paddingTopBottom = '10px';
 	export let paddingLeftRight = '20px';
+	export let forceSquareRatio = false;
 	export let gap = '8px';
 	export let tooltip = undefined;
 
@@ -75,7 +76,7 @@
 						? '100%'
 						: width /* button is 100% width on smallest breakpoint */
 			};
-			border-radius: ${borderRadius};
+			border-radius: ${forceSquareRatio ? '50%' : borderRadius};
 			padding: ${`${paddingTopBottom} ${paddingLeftRight} ${paddingTopBottom} ${paddingLeftRight}`};
 			gap: ${gap};
 			color: ${textColor};
@@ -85,6 +86,7 @@
 				background-color: ${isEnabled ? backgroundColorHover : jdgColors.disabled};
 			}
 			cursor: ${isEnabled ? 'pointer' : 'default'};
+			aspect-ratio: ${forceSquareRatio ? '1' : ''};
 		`;
 	}
 </script>

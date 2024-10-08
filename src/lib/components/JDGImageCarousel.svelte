@@ -188,6 +188,7 @@
 				paddingTopBottom={'8px'}
 				backgroundColor={$accentColors[0]}
 				tooltip="Expand image"
+				forceSquareRatio
 			/>
 		</div>
 	</div>
