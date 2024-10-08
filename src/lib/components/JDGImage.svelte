@@ -337,7 +337,7 @@
 		// if we're not cropping to fill and the image width at the max height is less than the container width
 		// use max-content to ensure image container doesn't extend beyond image
 		else if (!cropToFillContainer && imageWidthAtMaxHeightFromProp < validContainerWidth) {
-			preferredContainerWidth = 'max-content';
+			preferredContainerWidth = '';
 		}
 		// default is to use the provided max width or auto if not provided
 		else {
