@@ -2,14 +2,69 @@
 	import { css } from '@emotion/css';
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { doShowHeaderStripes } from '$lib/states/ui-state.js';
-	import { onMount, onDestroy } from 'svelte';
-	import { scrollToAnchorOnLoad } from '$lib/jdg-utils.js';
+	import { onDestroy, onMount } from 'svelte';
+	import { scrollToAnchor } from '$lib/jdg-utils.js';
 
 	export let anchorTag;
 
+	// for this amount of time after a hash change,
+	// attempt to re-scroll if the element moves
+	const observerTimeout = 1500;
 	let anchorTagRef;
-	let currentPosition;
-	let observer;
+	let anchorTagObserver;
+
+	// is this anchor tag in the URL bar?
+	const doesAnchorTagMatch = () => {
+		const hash = window.location.hash;
+		return hash && hash.substring(1) === anchorTag;
+	};
+
+	const handleHashChange = () => {
+		if (doesAnchorTagMatch()) {
+			startAnchorTagMoveObserver();
+		}
+	};
+
+	// if the anchor tag detects it's been moved,
+	// get the latest position and try to scroll to it
+	const startAnchorTagMoveObserver = () => {
+		if (anchorTagObserver) return;
+
+		anchorTagObserver = new ResizeObserver(() => {
+			console.log('Element moved, updating position');
+			setTimeout(() => {
+				scrollToAnchor(anchorTag, false);
+			}, observerTimeout);
+		});
+
+		anchorTagObserver.observe(anchorTagRef);
+
+		// Ensure observer disconnects after a second no matter what
+		setTimeout(() => {
+			if (anchorTagObserver) {
+				anchorTagObserver.disconnect();
+				console.log('Observer disconnected after timeout');
+				anchorTagObserver = null;
+			}
+		}, observerTimeout);
+
+		console.log('Observer started');
+	};
+
+	onMount(() => {
+		window.addEventListener('hashchange', handleHashChange);
+		if (doesAnchorTagMatch()) {
+			startAnchorTagMoveObserver();
+		}
+	});
+
+	onDestroy(() => {
+		window.removeEventListener('hashchange', handleHashChange);
+		if (anchorTagObserver) {
+			anchorTagObserver.disconnect();
+			anchorTagObserver = null;
+		}
+	});
 
 	const floatingBoxAnchorTagCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
@@ -24,53 +79,6 @@
 			top: -${jdgSizes.nHeaderHeightLg + jdgSizes.nContentContainerGapLg + ($doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightLg : 0)}px;
 		}
 	`;
-
-	function handleHashChange() {
-		const hash = window.location.hash;
-		if (hash && hash.substring(1) === anchorTag) {
-			// Call the user-defined function to scroll to the anchor tag
-			scrollToAnchorOnLoad();
-			console.log('Hash change detected. Initial scroll attempt.');
-
-			const targetPosition = 100; // Set your desired vertical position here
-
-			observer = new IntersectionObserver(
-				() => {
-					currentPosition = anchorTagRef.getBoundingClientRect().top;
-					console.log(
-						'Anchor tag position changed: ' + anchorTag,
-						'Current position: ' + currentPosition,
-						'Target position: ' + targetPosition
-					);
-
-					// Re-scroll if necessary
-					scrollToAnchorOnLoad();
-					console.log('Attempting to re-scroll due to movement.');
-
-					// Stop observing if the anchor tag reaches the target position
-					if (currentPosition <= targetPosition) {
-						observer.disconnect();
-						console.log('Anchor tag reached the target position. Stopped observing.');
-					}
-				},
-				{
-					threshold: [0.1, 0.5, 1.0] // Increased thresholds to detect changes more frequently
-				}
-			);
-
-			observer.observe(anchorTagRef);
-		}
-	}
-
-	onMount(() => {
-		window.addEventListener('hashchange', handleHashChange);
-		handleHashChange(); // Initial check on mount
-
-		return () => {
-			window.removeEventListener('hashchange', handleHashChange);
-			if (observer) observer.disconnect();
-		};
-	});
 </script>
 
 <div

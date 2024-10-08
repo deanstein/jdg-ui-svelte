@@ -5,7 +5,7 @@ import {
 	getTotalCommitsInPublicRepo,
 	getLatestCommitDateFromPublicRepo
 } from './jdg-persistence-management.js';
-import { getDistanceToBottomOfHeader } from './jdg-ui-management.js';
+import { getDistancePxToBottomOfHeader } from './jdg-ui-management.js';
 
 ///
 /// ARRAY UTILS
@@ -752,7 +752,7 @@ export const scrollToAnchor = (anchorId, accountForHeader = false, additionalOff
 			const rect = element.getBoundingClientRect();
 			const scrollTop = window.scrollY || document.documentElement.scrollTop;
 			const topValue = accountForHeader
-				? rect.top + scrollTop - getDistanceToBottomOfHeader().value - additionalOffset
+				? rect.top + scrollTop - getDistancePxToBottomOfHeader() - additionalOffset
 				: rect.top + scrollTop - additionalOffset;
 			window.scrollTo({
 				top: topValue,

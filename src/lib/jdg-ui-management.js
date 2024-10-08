@@ -9,15 +9,12 @@ export const getScreenCentroid = () => {
 
 // get the bottom of the header so any main content can start there
 // returns value in pixels
-export const getDistanceToBottomOfHeader = (includeStripes = false) => {
-	let distanceToBottom = {
-		value: 0,
-		unit: 'px'
-	};
+export const getDistancePxToBottomOfHeader = (includeStripes = false) => {
+	let distanceToBottom = 0;
 	const headerHeight = jdgSizes.nHeaderHeightLg;
 	const headerPadding = jdgSizes.nHeaderTopBottomPadding * 2;
 	const stripeHeight = includeStripes ? 3 * jdgSizes.nHorizontalStripeHeightLg : 0;
-	distanceToBottom.value = headerHeight + headerPadding + stripeHeight;
+	distanceToBottom = headerHeight + headerPadding + stripeHeight;
 	return distanceToBottom;
 };
 

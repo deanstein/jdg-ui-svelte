@@ -52,7 +52,7 @@
 	export let transition = fade; // fade or scale depending on usage
 	export let isForImageDetailOverlay = false; // special rules for ImageDetailOverlay context
 	export let doScaleOnScrollOrZoom = false; // allow scaling up the image on scroll or zoom events
-	export let scaleContext = 'container'; // which element to scale. other option: 'image'
+	export let scaleContext = 'container'; // which element to scale. "container" or "image"
 	export let bottomVisibilityOffset = '1000px'; // distance from bottom of screen before loading (positive is down)
 	export let recordAspectRatioInState = false;
 	export let showDebugOverlay = false;
