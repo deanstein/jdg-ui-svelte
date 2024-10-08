@@ -24,6 +24,13 @@
 			maxHeight="40vh"
 			showDebugOverlay
 		/>
+		<JDGImageTile
+			imageAttributes={imageAttributesCollection.hst.fms_2000s_plan_additions}
+			cropToFillContainer={false}
+			showCaption={true}
+			showAttribution={true}
+			showDebugOverlay
+		/>
 		<JDGBodyCopy>
 			The hulking expanse of a partially-demolished structure and its surrounding parking deck was
 			jarring, providing eerie views into cavernous spaces of a once-thriving place. Josh asked his
