@@ -16,7 +16,11 @@
 		doShowHeaderStripes,
 		windowWidth
 	} from '$lib/states/ui-state.js';
-	import { recordImageAspectRatio } from '$lib/jdg-state-management.js';
+	import {
+		addImageLoading,
+		recordImageAspectRatio,
+		removeImageLoading
+	} from '$lib/jdg-state-management.js';
 
 	import {
 		addCloudinaryUrlHeight,
@@ -52,7 +56,7 @@
 	export let transition = fade; // fade or scale depending on usage
 	export let isForImageDetailOverlay = false; // special rules for ImageDetailOverlay context
 	export let doScaleOnScrollOrZoom = false; // allow scaling up the image on scroll or zoom events
-	export let scaleContext = 'container'; // which element to scale. other option: 'image'
+	export let scaleContext = 'container'; // which element to scale. "container" or "image"
 	export let bottomVisibilityOffset = '1000px'; // distance from bottom of screen before loading (positive is down)
 	export let recordAspectRatioInState = false;
 	export let showDebugOverlay = false;
@@ -365,6 +369,7 @@
 		if (!showDebugLoadingState) {
 			isImageLoaded = true;
 		}
+		removeImageLoading(imageAttributes.imgSrc);
 	};
 
 	// runs if an image fails to load
@@ -469,6 +474,9 @@
 				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
 						isVisible = true;
+						if (!imageAttributes.imgSrc.includes('placeholder')) {
+							addImageLoading(imageAttributes.imgSrc);
+						}
 						observer.disconnect();
 					}
 				});

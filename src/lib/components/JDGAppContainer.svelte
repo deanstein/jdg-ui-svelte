@@ -6,20 +6,19 @@
 	import {
 		accentColors,
 		clientWidth,
+		currentHeaderHeightPx,
 		doShowHeaderStripes,
 		isMobileBreakpoint,
 		isScrolling,
+		windowScrollPosition,
 		windowWidth
 	} from '$lib/states/ui-state.js';
 
-	import {
-		adjustColorForContrast,
-		convertHexToRGBA,
-		scrollToAnchorOnLoad
-	} from '$lib/jdg-utils.js';
+	import { adjustColorForContrast, convertHexToRGBA } from '$lib/jdg-utils.js';
 
 	import { JDGLoadingOverlay } from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgFonts, jdgLinkStyles } from '$lib/jdg-shared-styles.js';
+	import { getDistancePxToBottomOfHeader } from '$lib/jdg-ui-management.js';
 
 	export let fontFamily = jdgFonts.body;
 	export let appLoadingIconSrc =
@@ -50,11 +49,13 @@
 	const onPageResize = () => {
 		windowWidth.set(window.innerWidth);
 		clientWidth.set(appContainerRef?.clientWidth);
+		currentHeaderHeightPx.set(getDistancePxToBottomOfHeader($doShowHeaderStripes));
 		isMobileBreakpoint.set(appContainerRef?.clientWidth <= jdgBreakpoints.width[0]);
 	};
 
 	// set whether page is being scrolled or not
 	const onPageScroll = () => {
+		windowScrollPosition.set(window.scrollY);
 		if ($isMobileBreakpoint) {
 			isScrolling.set(true);
 			clearTimeout(scrollTimeout);
@@ -134,9 +135,6 @@
 		doShowHeaderStripes.set(showHeaderStripes);
 		// update the client and window width at the end so they're accurate
 		setTimeout(onPageResize, 0);
-
-		// if an anchor tag is provided in the URL, scroll to it when available
-		scrollToAnchorOnLoad();
 	});
 </script>
 

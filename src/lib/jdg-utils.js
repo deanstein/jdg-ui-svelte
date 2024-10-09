@@ -5,7 +5,7 @@ import {
 	getTotalCommitsInPublicRepo,
 	getLatestCommitDateFromPublicRepo
 } from './jdg-persistence-management.js';
-import { getDistanceToBottomOfHeader } from './jdg-ui-management.js';
+import { getDistancePxToBottomOfHeader } from './jdg-ui-management.js';
 
 ///
 /// ARRAY UTILS
@@ -752,7 +752,7 @@ export const scrollToAnchor = (anchorId, accountForHeader = false, additionalOff
 			const rect = element.getBoundingClientRect();
 			const scrollTop = window.scrollY || document.documentElement.scrollTop;
 			const topValue = accountForHeader
-				? rect.top + scrollTop - getDistanceToBottomOfHeader().value - additionalOffset
+				? rect.top + scrollTop - getDistancePxToBottomOfHeader() - additionalOffset
 				: rect.top + scrollTop - additionalOffset;
 			window.scrollTo({
 				top: topValue,
@@ -764,25 +764,6 @@ export const scrollToAnchor = (anchorId, accountForHeader = false, additionalOff
 	}
 };
 
-// when loading a page with an anchor tag in the URL,
-// the anchor might not be loaded, so keep trying
-// and scroll to it when it becomes available
-export const scrollToAnchorOnLoad = () => {
-	let attempts = 0;
-	const maxAttempts = 10; // how long to keep trying?
-
-	const checkForElement = () => {
-		const { hash } = document.location;
-		const scrollToElement = hash && document.getElementById(hash.slice(1));
-		if (scrollToElement) {
-			scrollToElement.scrollIntoView({ behavior: 'smooth' });
-		} else if (attempts < maxAttempts) {
-			// if the element isn't available yet and we haven't reached the max number of attempts, check again in 500 milliseconds
-			setTimeout(checkForElement, 500);
-			attempts++;
-		}
-	};
-
-	// Start checking for the element
-	checkForElement();
+export const getIsWindowScrolledToBottom = () => {
+	return window.innerHeight + window.scrollY >= document.body.offsetHeight;
 };
