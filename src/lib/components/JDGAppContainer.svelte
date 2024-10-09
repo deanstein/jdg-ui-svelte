@@ -65,6 +65,12 @@
 		}
 	};
 
+	const onPageScrollEnd = () => {
+		if ($isMobileBreakpoint) {
+			isScrolling.set(false);
+		}
+	};
+
 	// global styles using emotion css
 	const appContainerCss = css`
 		.jdg-letter-spacing-title {
@@ -139,7 +145,12 @@
 </script>
 
 <!-- set up directives for event listeners -->
-<svelte:window on:resize={onPageResize} on:scroll={onPageScroll} on:touchstart={onPageScroll} />
+<svelte:window
+	on:resize={onPageResize}
+	on:scroll={onPageScroll}
+	on:touchstart={onPageScroll}
+	on:touchend={onPageScrollEnd}
+/>
 
 <div class="jdg-app-container {appContainerCss} {linkStyleDefaultCss}" bind:this={appContainerRef}>
 	<!-- loading overlay - only shown before layout is fully loaded -->
