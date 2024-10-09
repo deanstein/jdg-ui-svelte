@@ -25,6 +25,7 @@ export let imagesLoading = writable([]);
 // image detail overlay
 export let imageDetailAttributes = writable({});
 export let imageDetailWidth = writable(0); // width of the image for caption alignment
+export let imageDetailScale = writable(1.0);
 export let doShowImageDetailOverlay = writable(false);
 
 // sizes

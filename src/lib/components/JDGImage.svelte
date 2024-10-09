@@ -14,7 +14,8 @@
 		imageDetailWidth,
 		isMobileBreakpoint,
 		doShowHeaderStripes,
-		windowWidth
+		windowWidth,
+		imageDetailScale
 	} from '$lib/states/ui-state.js';
 	import {
 		addImageLoading,
@@ -161,6 +162,8 @@
 			}
 
 			targetElement.style.transform = `scale(${scale})`;
+			// update the scale state for other components to use
+			imageDetailScale.set(scale);
 		}
 	};
 
@@ -188,6 +191,8 @@
 
 				targetElement.style.transformOrigin = `${originX}% ${originY}%`;
 				targetElement.style.transform = `scale(${scale})`;
+				// update the scale state for other components to use
+				imageDetailScale.set(scale);
 			}
 		}
 	};

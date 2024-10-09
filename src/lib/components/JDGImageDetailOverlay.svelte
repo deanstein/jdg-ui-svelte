@@ -1,4 +1,5 @@
 <script>
+	import { onDestroy } from 'svelte';
 	import { scale } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
@@ -9,7 +10,7 @@
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGOverlay } from '$lib/index.js';
 	import { jdgBreakpoints } from '$lib/jdg-shared-styles.js';
-	import { imageDetailWidth } from '$lib/states/ui-state.js';
+	import { imageDetailScale, imageDetailWidth } from '$lib/states/ui-state.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes);
 
@@ -27,6 +28,11 @@
 			padding: 2rem;
 		}
 	`;
+
+	// when the overlay is closed, reset the scale so we show caption/attribution next time
+	onDestroy(() => {
+		imageDetailScale.set(1.0);
+	});
 </script>
 
 <JDGOverlay
@@ -56,9 +62,12 @@
 			isForImageDetailOverlay={true}
 			doScaleOnScrollOrZoom={true}
 		/>
-		<div class="image-caption-attribution-wrapper" style="width: {$imageDetailWidth}px">
-			<JDGImageCaptionAttribution {imageAttributes} truncateText={false}/>
-		</div>
+		<!-- only show caption/attribution if image is not scaled -->
+		{#if $imageDetailScale === 1.0}
+			<div class="image-caption-attribution-wrapper" style="width: {$imageDetailWidth}px">
+				<JDGImageCaptionAttribution {imageAttributes} truncateText={false} />
+			</div>
+		{/if}
 	</div>
 </JDGOverlay>
 

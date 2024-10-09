@@ -14,6 +14,7 @@
 		highestZIndex,
 		imageAspectRatios,
 		imageDetailAttributes,
+		imageDetailScale,
 		imageDetailWidth,
 		isMobileBreakpoint,
 		isScrolling,
@@ -180,7 +181,8 @@
 					windowScrollPosition: {JSON.stringify($windowScrollPosition)}
 					<br /><br />
 
-					<i>SCROLLING</i>
+					<i>HEADER</i>
+					<br>
 					currentHeaderHeightPx: {JSON.stringify($currentHeaderHeightPx)}
 					<br />
 					doShowHeaderStripes: {JSON.stringify($doShowHeaderStripes)}
@@ -198,6 +200,8 @@
 					imageDetailAttributes: {JSON.stringify($imageDetailAttributes)}
 					<br />
 					imageDetailWidth: {JSON.stringify($imageDetailWidth)}
+					<br />
+					imageDetailScale: {JSON.stringify($imageDetailScale)}
 					<br /><br />
 
 					<i>SIZES</i>
