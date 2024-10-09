@@ -6,6 +6,7 @@
 		accentColors,
 		activeNotificationBanners,
 		clientWidth,
+		currentHeaderHeightPx,
 		doShowDevTools,
 		doShowHeaderStripes,
 		doShowImageDetailOverlay,
@@ -16,7 +17,9 @@
 		imageDetailWidth,
 		isMobileBreakpoint,
 		isScrolling,
+		isScrollingToAnchorTag,
 		jumpToNavItems,
+		windowScrollPosition,
 		windowWidth
 	} from '$lib/states/ui-state.js';
 
@@ -73,6 +76,14 @@
 	const footerItemCss = css`
 		text-align: ${alignItems};
 	`;
+
+	// for some reason, with URLs included in state, need to set the width to match clientWidth
+	let stateViewCss = css``;
+	$: {
+		stateViewCss = css`
+			width: ${$clientWidth - 20}px;
+		`;
+	}
 
 	onMount(async () => {
 		// get the lgetBuildCode the deployment repo
@@ -142,7 +153,7 @@
 		{/if}
 		{#if $doShowDevTools}
 			<div class="dev-tools">
-				<div class="state-view">
+				<div class="state-view {stateViewCss}">
 					<b>UI STATE:</b>
 					<br />
 					accentColors: {JSON.stringify($accentColors)}
@@ -151,22 +162,35 @@
 					<br />
 					doShowDevTools: {JSON.stringify($doShowDevTools)}
 					<br />
-					doShowHeaderStripes: {JSON.stringify($doShowHeaderStripes)}
-					<br />
 					doShowNavSidebar: {JSON.stringify($doShowNavSidebar)}
 					<br />
 					highestZIndex: {JSON.stringify($highestZIndex)}
 					<br />
 					isMobileBreakpoint: {JSON.stringify($isMobileBreakpoint)}
 					<br />
-					isScrolling (mobile only): {JSON.stringify($isScrolling)}
-					<br />
 					jumpToNavItems: {JSON.stringify($jumpToNavItems)}
 					<br /><br />
+
+					<i>SCROLLING</i>
+					<br />
+					isScrolling (used for mobile only): {JSON.stringify($isScrolling)}
+					<br />
+					isScrollingToAnchorTag: {JSON.stringify($isScrollingToAnchorTag)}
+					<br />
+					windowScrollPosition: {JSON.stringify($windowScrollPosition)}
+					<br /><br />
+
+					<i>SCROLLING</i>
+					currentHeaderHeightPx: {JSON.stringify($currentHeaderHeightPx)}
+					<br />
+					doShowHeaderStripes: {JSON.stringify($doShowHeaderStripes)}
+					<br /><br />
+
 					<i>IMAGES</i>
 					<br />
 					imageAspectRatioMap: {JSON.stringify($imageAspectRatios)}
 					<br /><br />
+
 					<i>IMAGE DETAIL OVERLAY</i>
 					<br />
 					doShowImageDetailOverlay: {JSON.stringify($doShowImageDetailOverlay)}
@@ -175,7 +199,8 @@
 					<br />
 					imageDetailWidth: {JSON.stringify($imageDetailWidth)}
 					<br /><br />
-					<i>WIDTHS</i>
+
+					<i>SIZES</i>
 					<br />
 					clientWidth: {JSON.stringify($clientWidth)}
 					<br />
