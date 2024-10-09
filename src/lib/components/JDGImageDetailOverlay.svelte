@@ -57,7 +57,7 @@
 			doScaleOnScrollOrZoom={true}
 		/>
 		<div class="image-caption-attribution-wrapper" style="width: {$imageDetailWidth}px">
-			<JDGImageCaptionAttribution {imageAttributes} />
+			<JDGImageCaptionAttribution {imageAttributes} truncateText={false}/>
 		</div>
 	</div>
 </JDGOverlay>
