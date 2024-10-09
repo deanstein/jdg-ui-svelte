@@ -16,7 +16,11 @@
 		doShowHeaderStripes,
 		windowWidth
 	} from '$lib/states/ui-state.js';
-	import { recordImageAspectRatio } from '$lib/jdg-state-management.js';
+	import {
+		addImageLoading,
+		recordImageAspectRatio,
+		removeImageLoading
+	} from '$lib/jdg-state-management.js';
 
 	import {
 		addCloudinaryUrlHeight,
@@ -365,6 +369,7 @@
 		if (!showDebugLoadingState) {
 			isImageLoaded = true;
 		}
+		removeImageLoading(imageAttributes.imgSrc);
 	};
 
 	// runs if an image fails to load
@@ -469,6 +474,9 @@
 				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
 						isVisible = true;
+						if (!imageAttributes.imgSrc.includes('placeholder')) {
+							addImageLoading(imageAttributes.imgSrc);
+						}
 						observer.disconnect();
 					}
 				});

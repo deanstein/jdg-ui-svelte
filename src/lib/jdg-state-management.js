@@ -8,7 +8,8 @@ import {
 	jumpToNavItems,
 	doShowImageDetailOverlay,
 	doShowNavSidebar,
-	doShowDevTools
+	doShowDevTools,
+	imagesLoading
 } from './states/ui-state.js';
 import { jdgSizes } from './jdg-shared-styles.js';
 
@@ -64,6 +65,27 @@ export const getImageAspectRatioRecord = (src) => {
 		aspectRatio = store[src]?.aspectRatio || 0.0;
 	})();
 	return aspectRatio;
+};
+
+//
+// IMAGE LOADING STATE
+//
+
+export const addImageLoading = (imgSrc) => {
+	imagesLoading.update((currentValue) => {
+		currentValue.push(imgSrc);
+		return currentValue;
+	});
+};
+
+export const removeImageLoading = (imgSrc) => {
+	imagesLoading.update((currentValue) => {
+		const index = currentValue.findIndex((item) => JSON.stringify(item) === JSON.stringify(imgSrc));
+		if (index !== -1) {
+			currentValue.splice(index, 1);
+		}
+		return currentValue;
+	});
 };
 
 //

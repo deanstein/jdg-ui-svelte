@@ -1,69 +1,51 @@
 <script>
-	import { css } from '@emotion/css';
-	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
-	import { doShowHeaderStripes } from '$lib/states/ui-state.js';
 	import { onDestroy, onMount } from 'svelte';
-	import { scrollToAnchor } from '$lib/jdg-utils.js';
+	import { css } from '@emotion/css';
+
+	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import {
+		doShowHeaderStripes,
+		isScrollingToAnchorTag,
+		imagesLoading,
+		isScrolling
+	} from '$lib/states/ui-state.js';
+	import { getIsWindowScrolledToBottom, scrollToAnchor } from '$lib/jdg-utils.js';
 
 	export let anchorTag;
 
-	// for this amount of time after a hash change,
-	// attempt to re-scroll if the element moves
-	const observerTimeout = 1500;
 	let anchorTagRef;
-	let anchorTagObserver;
+	let lastKnownAnchorTagYPos = 0;
+	const doShowDebugMessagesInConsole = false;
 
 	// is this anchor tag in the URL bar?
-	const doesAnchorTagMatch = () => {
+	const getIsAnchorTagInURL = () => {
 		const hash = window.location.hash;
 		return hash && hash.substring(1) === anchorTag;
 	};
 
-	const handleHashChange = () => {
-		if (doesAnchorTagMatch()) {
-			startAnchorTagMoveObserver();
-		}
+	const getCurrentAnchorTagYPos = () => {
+		return anchorTagRef.getBoundingClientRect().top + document.documentElement.scrollTop;
 	};
 
-	// if the anchor tag detects it's been moved,
-	// get the latest position and try to scroll to it
-	const startAnchorTagMoveObserver = () => {
-		if (anchorTagObserver) return;
-
-		anchorTagObserver = new ResizeObserver(() => {
-			console.log('Element moved, updating position');
-			setTimeout(() => {
-				scrollToAnchor(anchorTag, false);
-			}, observerTimeout);
-		});
-
-		anchorTagObserver.observe(anchorTagRef);
-
-		// Ensure observer disconnects after a second no matter what
-		setTimeout(() => {
-			if (anchorTagObserver) {
-				anchorTagObserver.disconnect();
-				console.log('Observer disconnected after timeout');
-				anchorTagObserver = null;
+	// runs whenever the page loads with an anchor tag,
+	// or when anchor tag changes
+	const onHashChange = () => {
+		if (getIsAnchorTagInURL()) {
+			if (doShowDebugMessagesInConsole) {
+				console.log('Hash changed, attempting to scroll to anchor tag: ' + anchorTag);
 			}
-		}, observerTimeout);
-
-		console.log('Observer started');
+			isScrollingToAnchorTag.set(true);
+		}
 	};
 
 	onMount(() => {
-		window.addEventListener('hashchange', handleHashChange);
-		if (doesAnchorTagMatch()) {
-			startAnchorTagMoveObserver();
-		}
+		window.addEventListener('hashchange', onHashChange);
+		lastKnownAnchorTagYPos = getCurrentAnchorTagYPos();
+		onHashChange();
 	});
 
 	onDestroy(() => {
-		window.removeEventListener('hashchange', handleHashChange);
-		if (anchorTagObserver) {
-			anchorTagObserver.disconnect();
-			anchorTagObserver = null;
-		}
+		window.removeEventListener('hashchange', onHashChange);
 	});
 
 	const floatingBoxAnchorTagCss = css`
@@ -79,6 +61,44 @@
 			top: -${jdgSizes.nHeaderHeightLg + jdgSizes.nContentContainerGapLg + ($doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightLg : 0)}px;
 		}
 	`;
+
+	// to ensure scrolling to anchor tag works as dynamic content loads,
+	// we attempt to scroll again if anchor tag position changed after previous image loaded
+	$: {
+		if (getIsAnchorTagInURL() && anchorTagRef && $isScrollingToAnchorTag) {
+			// no more images loading
+			if ($imagesLoading.length === 0) {
+				const currentYPos = getCurrentAnchorTagYPos();
+				// anchor tag position changed since last time
+				if (lastKnownAnchorTagYPos !== currentYPos) {
+					if (doShowDebugMessagesInConsole) {
+						console.log('Anchor tag moved, attempting to scroll to anchor again!', anchorTag);
+					}
+					lastKnownAnchorTagYPos = currentYPos;
+					scrollToAnchor(anchorTag, false);
+				}
+			}
+		}
+	}
+
+	// if we've reached the destination
+	// or if window is scrolled to bottom
+	// set the isScrollingToAnchorTag to false
+	$: {
+		if (getIsAnchorTagInURL()) {
+			if (
+				(!$isScrolling &&
+					$isScrollingToAnchorTag &&
+					Math.abs(lastKnownAnchorTagYPos - window.scrollY) < 10) ||
+				getIsWindowScrolledToBottom()
+			) {
+				if (doShowDebugMessagesInConsole) {
+					console.log('Reached destination!', anchorTag);
+				}
+				isScrollingToAnchorTag.set(false);
+			}
+		}
+	}
 </script>
 
 <div

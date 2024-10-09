@@ -11,6 +11,7 @@ export let jumpToNavItems = writable([]);
 
 // scrolling
 export let isScrolling = writable(false);
+export let isScrollingToAnchorTag = writable(false);
 export let windowScrollPosition = writable(0);
 
 // header
@@ -19,6 +20,7 @@ export let doShowHeaderStripes = writable(false);
 
 // images
 export let imageAspectRatios = writable({}); // { imgSrc: "", aspectRatio: 0 }
+export let imagesLoading = writable([]);
 
 // image detail overlay
 export let imageDetailAttributes = writable({});
