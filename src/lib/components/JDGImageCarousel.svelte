@@ -135,7 +135,7 @@
 		$windowWidth;
 		if (carouselRef && allFittedHeightsPx?.length > 0) {
 			// ensure we're getting the max from only finite numbers
-			const validHeightsPx = allFittedHeightsPx.filter(height => isFinite(height));
+			const validHeightsPx = allFittedHeightsPx.filter((height) => isFinite(height));
 			const maxFittedHeightPxFromArray = Math.round(Math.max(...validHeightsPx));
 			if (
 				maxFittedHeightPxFromArray !== 0 &&
