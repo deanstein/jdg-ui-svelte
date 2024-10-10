@@ -16,6 +16,7 @@
 		imageDetailAttributes,
 		imageDetailScale,
 		imageDetailWidth,
+		imagesLoading,
 		isMobileBreakpoint,
 		isScrolling,
 		isScrollingToAnchorTag,
@@ -190,7 +191,9 @@
 
 					<i>IMAGES</i>
 					<br />
-					imageAspectRatioMap: {JSON.stringify($imageAspectRatios)}
+					imageAspectRatios: {JSON.stringify($imageAspectRatios)}
+					<br /><br />
+					imagesLoading: {JSON.stringify($imagesLoading)}
 					<br /><br />
 
 					<i>IMAGE DETAIL OVERLAY</i>
