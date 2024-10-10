@@ -127,13 +127,16 @@
 		}
 	}
 
+	// set the carousel height based on the max height in fitted heights array
 	let dynamicHeightCss = css`
 		height: ${maxHeight};
 	`;
 	$: {
 		$windowWidth;
 		if (carouselRef && allFittedHeightsPx?.length > 0) {
-			const maxFittedHeightPxFromArray = Math.round(Math.max(...allFittedHeightsPx));
+			// ensure we're getting the max from only finite numbers
+			const validHeightsPx = allFittedHeightsPx.filter(height => isFinite(height));
+			const maxFittedHeightPxFromArray = Math.round(Math.max(...validHeightsPx));
 			if (
 				maxFittedHeightPxFromArray !== 0 &&
 				!isNaN(maxFittedHeightPxFromArray) &&
