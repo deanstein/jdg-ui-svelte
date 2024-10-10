@@ -1,6 +1,6 @@
 {
 	"name": "jdg-ui-svelte",
-	"version": "0.23.5",
+	"version": "0.23.6",
 	"license": "MIT",
 	"scripts": {
 		"dev": "vite dev",
