@@ -12,10 +12,10 @@
 	import { getIsWindowScrolledToBottom, scrollToAnchor } from '$lib/jdg-utils.js';
 
 	export let anchorTag;
+	export let doShowDebugMessagesInConsole = false;
 
 	let anchorTagRef;
 	let lastKnownAnchorTagYPos = 0;
-	const doShowDebugMessagesInConsole = false;
 
 	// is this anchor tag in the URL bar?
 	const getIsAnchorTagInURL = () => {
@@ -27,21 +27,45 @@
 		return anchorTagRef.getBoundingClientRect().top + document.documentElement.scrollTop;
 	};
 
+	const getHasArrived = () => {
+		if (
+			(!$isScrolling &&
+				$isScrollingToAnchorTag &&
+				lastKnownAnchorTagYPos > 0 &&
+				window.scrollY > 0 &&
+				Math.abs(lastKnownAnchorTagYPos - window.scrollY) < 10) ||
+			getIsWindowScrolledToBottom()
+		) {
+			if (doShowDebugMessagesInConsole) {
+				console.log('Reached destination!', anchorTag);
+			}
+			return true;
+		}
+	};
+
 	// runs whenever the page loads with an anchor tag,
 	// or when anchor tag changes
 	const onHashChange = () => {
-		if (getIsAnchorTagInURL()) {
-			if (doShowDebugMessagesInConsole) {
-				console.log('Hash changed, attempting to scroll to anchor tag: ' + anchorTag);
-			}
+		if (getIsAnchorTagInURL() && !$isScrollingToAnchorTag) {
+			// start scrolling initially
+			scrollToAnchor(anchorTag, false);
+			// set the flag so we can keep trying to scroll to this anchor tag
 			isScrollingToAnchorTag.set(true);
+
+			if (doShowDebugMessagesInConsole) {
+				console.log(
+					'Hash changed, checking for arrival and re-scrolling for anchor tag: ' + anchorTag
+				);
+			}
 		}
 	};
 
 	onMount(() => {
 		window.addEventListener('hashchange', onHashChange);
-		lastKnownAnchorTagYPos = getCurrentAnchorTagYPos();
-		onHashChange();
+		if (getIsAnchorTagInURL()) {
+			lastKnownAnchorTagYPos = getCurrentAnchorTagYPos();
+			onHashChange();
+		}
 	});
 
 	onDestroy(() => {
@@ -62,8 +86,9 @@
 		}
 	`;
 
-	// to ensure scrolling to anchor tag works as dynamic content loads,
-	// we attempt to scroll again if anchor tag position changed after previous image loaded
+	// if the isScrolling flag is set,
+	// check the last known Y-position for changes
+	// and attempt to scroll to the anchor again if it moved
 	$: {
 		if (getIsAnchorTagInURL() && anchorTagRef && $isScrollingToAnchorTag) {
 			// no more images loading
@@ -85,17 +110,13 @@
 	// or if window is scrolled to bottom
 	// set the isScrollingToAnchorTag to false
 	$: {
-		if (getIsAnchorTagInURL()) {
-			if (
-				(!$isScrolling &&
-					$isScrollingToAnchorTag &&
-					Math.abs(lastKnownAnchorTagYPos - window.scrollY) < 10) ||
-				getIsWindowScrolledToBottom()
-			) {
-				if (doShowDebugMessagesInConsole) {
-					console.log('Reached destination!', anchorTag);
-				}
+		$isScrolling, lastKnownAnchorTagYPos;
+		if (getIsAnchorTagInURL() && !$isScrolling) {
+			if (getHasArrived()) {
 				isScrollingToAnchorTag.set(false);
+				if (doShowDebugMessagesInConsole) {
+					console.log('Arrived, no longer checking for arrival.', anchorTag);
+				}
 			}
 		}
 	}

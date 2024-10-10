@@ -765,5 +765,5 @@ export const scrollToAnchor = (anchorId, accountForHeader = false, additionalOff
 };
 
 export const getIsWindowScrolledToBottom = () => {
-	return window.innerHeight + window.scrollY >= document.body.offsetHeight;
+	return window.innerHeight + window.scrollY === document.body.offsetHeight;
 };

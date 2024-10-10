@@ -175,7 +175,7 @@
 
 					<i>SCROLLING</i>
 					<br />
-					isScrolling (used for mobile only): {JSON.stringify($isScrolling)}
+					isScrolling: {JSON.stringify($isScrolling)}
 					<br />
 					isScrollingToAnchorTag: {JSON.stringify($isScrollingToAnchorTag)}
 					<br />
@@ -183,7 +183,7 @@
 					<br /><br />
 
 					<i>HEADER</i>
-					<br>
+					<br />
 					currentHeaderHeightPx: {JSON.stringify($currentHeaderHeightPx)}
 					<br />
 					doShowHeaderStripes: {JSON.stringify($doShowHeaderStripes)}

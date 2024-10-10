@@ -56,13 +56,11 @@
 	// set whether page is being scrolled or not
 	const onPageScroll = () => {
 		windowScrollPosition.set(window.scrollY);
-		if ($isMobileBreakpoint) {
-			isScrolling.set(true);
-			clearTimeout(scrollTimeout);
-			scrollTimeout = setTimeout(() => {
-				isScrolling.set(false);
-			}, scrollTimeoutDuration);
-		}
+		isScrolling.set(true);
+		clearTimeout(scrollTimeout);
+		scrollTimeout = setTimeout(() => {
+			isScrolling.set(false);
+		}, scrollTimeoutDuration);
 	};
 
 	const onPageScrollEnd = () => {
