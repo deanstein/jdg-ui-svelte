@@ -10,7 +10,7 @@
 	import { imageAttributesCollection } from '../image-attributes-collection.js';
 </script>
 
-<JDGContentContainer paddingTop="0" overlapWithHeader={false}>
+<JDGContentContainer overlapWithHeader={false}>
 	<JDGJumpTo />
 	<JDGContentBoxFloating title="BACKGROUND">
 		<JDGBodyCopy paddingTop="0" paddingBottom="0">
