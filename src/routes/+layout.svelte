@@ -11,10 +11,12 @@
 		JDGFooter,
 		JDGHeader,
 		JDGImageDetailOverlay,
+		JDGMetaTags,
 		JDGNotificationBanner,
 		JDGSocialMedia
 	} from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
+	import sharedStrings from './shared-strings.js';
 
 	// define the nav items in the header
 	const newNavItem1 = instantiateObject(jdgNavItem);
@@ -51,6 +53,12 @@
 	const showHeaderStripes = false;
 </script>
 
+<JDGMetaTags
+	title1={sharedStrings.websiteTitle}
+	imageSrc={sharedStrings.websiteIconSrc}
+	faviconSrc={sharedStrings.websiteIconSrc}
+	description={sharedStrings.websiteDescription}
+/>
 <JDGAppContainer appAccentColors={jdgColors.accentColorsCCP} {showHeaderStripes}>
 	<JDGNotificationBanner notificationType={jdgNotificationTypes.information.id} />
 	<JDGHeader

@@ -21,15 +21,22 @@
 		JDGImageTile,
 		JDGJumpTo,
 		JDGLoadingSpinner,
+		JDGMetaTags,
 		JDGUpNext
 	} from '$lib/index.js';
 	import { jdgColors, jdgFonts } from '$lib/jdg-shared-styles.js';
 
 	import { imageAttributesCollection } from './image-attributes-collection.js';
+	import sharedStrings from './shared-strings.js';
 
 	let isTestButtonEnabled = true;
 </script>
 
+<JDGMetaTags
+	title1={sharedStrings.websiteTitle}
+	imageSrc={sharedStrings.websiteIconSrc}
+	description={sharedStrings.websiteDescription}
+/>
 <JDGContentContainer overlapWithHeader={true}>
 	<div style="display: flex; flex-direction: column;">
 		<JDGImageFullWidth
