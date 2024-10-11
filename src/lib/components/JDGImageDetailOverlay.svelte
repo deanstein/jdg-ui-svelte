@@ -63,7 +63,7 @@
 			doScaleOnScrollOrZoom={true}
 		/>
 		<!-- only show caption/attribution if image is not scaled -->
-		{#if $imageDetailScale === 1.0}
+		{#if $imageDetailScale === 1.0 && (imageAttributes.imgCaption || imageAttributes.imgAttribution)}
 			<div class="image-caption-attribution-wrapper" style="width: {$imageDetailWidth}px">
 				<JDGImageCaptionAttribution {imageAttributes} truncateText={false} />
 			</div>
