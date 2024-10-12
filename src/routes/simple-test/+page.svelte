@@ -5,9 +5,7 @@
 		JDGContentContainer,
 		JDGImageTile,
 		JDGJumpTo,
-
 		JDGMetaTags
-
 	} from '$lib/index.js';
 	import { jdgSharedUrls } from '$lib/jdg-shared-strings.js';
 	import { imageAttributesCollection } from '../image-attributes-collection.js';
@@ -16,7 +14,7 @@
 
 <JDGMetaTags
 	title1={sharedStrings.websiteTitle}
-	title2={"Simple Test"}
+	title2={'Simple Test'}
 	description={sharedStrings.websiteDescription}
 />
 <JDGContentContainer overlapWithHeader={false}>
