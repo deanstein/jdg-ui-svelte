@@ -152,6 +152,7 @@
 	on:resize={onPageResize}
 	on:scroll={onPageScroll}
 	on:touchstart={onPageScroll}
+	on:touchmove={onPageScroll}
 	on:touchend={onPageScrollEnd}
 />
 
