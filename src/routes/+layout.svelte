@@ -1,7 +1,6 @@
 <script>
 	import jdgNavItem from '$lib/schemas/jdg-nav-item.js';
 	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
-	import { imageDetailAttributes, doShowImageDetailOverlay } from '$lib/states/ui-state.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
 	import { jdgSharedUrls } from '$lib/jdg-shared-strings.js';
 
@@ -10,7 +9,6 @@
 		JDGBackground,
 		JDGFooter,
 		JDGHeader,
-		JDGImageDetailOverlay,
 		JDGMetaTags,
 		JDGNotificationBanner,
 		JDGSocialMedia
@@ -88,8 +86,4 @@
 			githubHref={jdgSharedUrls.ccpGitHubReleases}
 		/>
 	</JDGFooter>
-	<!-- show the image detail overlay when appropriate -->
-	{#if $doShowImageDetailOverlay}
-		<JDGImageDetailOverlay imageAttributes={$imageDetailAttributes} />
-	{/if}
 </JDGAppContainer>

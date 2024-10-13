@@ -6,8 +6,11 @@
 	import {
 		accentColors,
 		clientWidth,
+		doShowDevOverlay,
 		doShowHeaderStripes,
+		doShowImageDetailOverlay,
 		headerHeightPx,
+		imageDetailAttributes,
 		isMobileBreakpoint,
 		isScrolling,
 		windowScrollPosition,
@@ -16,7 +19,7 @@
 
 	import { adjustColorForContrast, convertHexToRGBA } from '$lib/jdg-utils.js';
 
-	import { JDGLoadingOverlay } from '$lib/index.js';
+	import { JDGDevOverlay, JDGImageDetailOverlay, JDGLoadingOverlay } from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgFonts, jdgLinkStyles } from '$lib/jdg-shared-styles.js';
 	import { getDistancePxToBottomOfHeader } from '$lib/jdg-ui-management.js';
 
@@ -156,6 +159,13 @@
 	<JDGLoadingOverlay isLoading={!isAppLoaded} loadingIconSrc={appLoadingIconSrc} />
 	{#if isAppLoaded}
 		<slot />
+	{/if}
+	<!-- show overlays when requested -->
+	{#if $doShowImageDetailOverlay}
+		<JDGImageDetailOverlay imageAttributes={$imageDetailAttributes} />
+	{/if}
+	{#if $doShowDevOverlay}
+		<JDGDevOverlay />
 	{/if}
 </div>
 
