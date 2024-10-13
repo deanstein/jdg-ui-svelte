@@ -7,7 +7,6 @@
 		doShowImageDetailOverlay,
 		imageAspectRatios,
 		imageDetailAttributes,
-		isMobileBreakpoint,
 		windowWidth
 	} from '$lib/states/ui-state.js';
 
