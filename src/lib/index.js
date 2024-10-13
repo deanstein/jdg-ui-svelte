@@ -31,6 +31,9 @@ export { JDGContentBoxFloating };
 import JDGContentContainer from './components/JDGContentContainer.svelte';
 export { JDGContentContainer };
 
+import JDGDevOverlay from './components/JDGDevOverlay.svelte';
+export { JDGDevOverlay };
+
 import JDGFeatureCard from './components/JDGFeatureCard.svelte';
 export { JDGFeatureCard };
 
