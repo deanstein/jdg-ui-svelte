@@ -30,5 +30,4 @@ export let doShowImageDetailOverlay = writable(false);
 
 // sizes
 export let clientWidth = writable(0); // window minus scrollbar
-export let windowWidth = writable(0); // full window width, including scrollbar
-export let window1VhPx = writable(); // 1vh in px to avoid browser navbar resizing issues when using actual vh
+export let windowWidth = writable(0); // full window width, including scrollbar issues when using actual vh

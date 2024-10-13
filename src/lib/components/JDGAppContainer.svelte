@@ -10,7 +10,6 @@
 		headerHeightPx,
 		isMobileBreakpoint,
 		isScrolling,
-		window1VhPx,
 		windowScrollPosition,
 		windowWidth
 	} from '$lib/states/ui-state.js';
@@ -50,7 +49,6 @@
 	const onPageResize = () => {
 		windowWidth.set(window.innerWidth);
 		clientWidth.set(appContainerRef?.clientWidth);
-		window1VhPx.set(1 / window.innerHeight);
 		headerHeightPx.set(getDistancePxToBottomOfHeader($doShowHeaderStripes));
 		isMobileBreakpoint.set(appContainerRef?.clientWidth <= jdgBreakpoints.width[0]);
 	};
@@ -133,9 +131,6 @@
 	setContext(jdgContexts.linkStyleSimple, linkStyleSimpleCss);
 
 	onMount(async () => {
-		// record what the effective px equivalent of 1vh is
-		window1VhPx.set(1 / window.innerHeight);
-
 		await tick(); // delay until layout and all children are loaded
 		isAppLoaded = true;
 
