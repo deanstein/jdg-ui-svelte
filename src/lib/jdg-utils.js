@@ -241,17 +241,17 @@ export const isNumberValid = (number) => {
 
 // get a pixel value from a string
 export const getPixelValueFromString = (string) => {
-	let pixelValue;
-	let pixelUnit;
+	let stringValue;
+	let stringUnit;
 	let pixelValueFinal;
-
+	// only try if prop is not auto
 	if (string !== 'auto') {
-		[pixelValue, pixelUnit] = string.match(/^(\d*\.?\d+)(\D+)$/).slice(1);
-		const maxHeightParsed = parseFloat(pixelValue);
+		[stringValue, stringUnit] = string.match(/^(\d*\.?\d+)(\D+)$/).slice(1);
+		const maxHeightParsed = parseFloat(stringValue);
 
-		if (pixelUnit === 'vh') {
+		if (stringUnit === 'vh') {
 			pixelValueFinal = Math.ceil(convertVhToPixels(maxHeightParsed));
-		} else if (pixelUnit === 'px') {
+		} else if (stringUnit === 'px') {
 			pixelValueFinal = Math.ceil(maxHeightParsed);
 		}
 	}
