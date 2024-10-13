@@ -330,7 +330,10 @@
 				);
 			}
 		}
-		preferredHeight = doesStringContainVh(preferredHeight) ? convertVhToPixels(preferredHeight) + 'px' : preferredHeight;
+		// if the preferred height is in vh, convert it to pixels
+		preferredHeight = doesStringContainVh(preferredHeight)
+			? convertVhToPixels(preferredHeight) + 'px'
+			: preferredHeight;
 		lastKnownPreferredContainerHeight = preferredHeightFitType;
 		return { value: preferredHeight, type: preferredHeightFitType };
 	};

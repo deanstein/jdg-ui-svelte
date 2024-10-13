@@ -403,11 +403,17 @@ export const doesStringContainVh = (string) => {
 // or a string containing 'vh' to pixels
 // based on the current window height
 export const convertVhToPixels = (vhValue) => {
-	// handle non-vh values
-	if (typeof window === 'undefined' || (!doesStringContainVh(vhValue) && isNaN(vhValue))) {
+	// if no window, can't calculate equivalent pixels
+	if (typeof window === 'undefined') {
 		return vhValue;
-	} else {
+	}
+	// only handle raw numbers or strings containing 'vh'
+	if (isFinite(vhValue) || doesStringContainVh(vhValue)) {
 		return (parseFloat(vhValue) / 100) * window.innerHeight;
+	}
+	// otherwise, pass the value through and do nothing
+	else {
+		return vhValue;
 	}
 };
 
