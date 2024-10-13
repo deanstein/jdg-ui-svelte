@@ -1,7 +1,6 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 
 	import { getHighestZIndex } from '../jdg-state-management.js';
@@ -12,7 +11,7 @@
 	export let colorRgba = 'rgba(255, 255, 255, 1.0)';
 	export let showTitleBar = true;
 	export let onCloseFunction = () => {};
-	export let closeOnOverlayClick = false;
+	export let closeOnOverlayClick = true;
 
 	let overlayRef;
 	const preventScroll = function (event) {
