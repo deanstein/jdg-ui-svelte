@@ -3,26 +3,10 @@
 	import { css } from '@emotion/css';
 
 	import {
-		accentColors,
-		activeNotificationBanners,
+		allStateValues,
 		clientWidth,
-		headerHeightPx,
 		doShowDevTools,
-		doShowHeaderStripes,
-		doShowImageDetailOverlay,
-		doShowNavSidebar,
-		highestZIndex,
-		imageAspectRatios,
-		imageDetailAttributes,
-		imageDetailScale,
-		imageDetailWidth,
-		imagesLoading,
-		isMobileBreakpoint,
-		isScrolling,
-		isScrollingToAnchorTag,
-		jumpToNavItems,
-		windowScrollPosition,
-		windowWidth
+		doShowHeaderStripes
 	} from '$lib/states/ui-state.js';
 
 	import { getBuildCode } from '../jdg-utils.js';
@@ -156,62 +140,11 @@
 		{#if $doShowDevTools}
 			<div class="dev-tools">
 				<div class="state-view {stateViewCss}">
-					<b>UI STATE:</b>
-					<br />
-					accentColors: {JSON.stringify($accentColors)}
-					<br />
-					activeNotificationBanners: {JSON.stringify($activeNotificationBanners)}
-					<br />
-					doShowDevTools: {JSON.stringify($doShowDevTools)}
-					<br />
-					doShowNavSidebar: {JSON.stringify($doShowNavSidebar)}
-					<br />
-					highestZIndex: {JSON.stringify($highestZIndex)}
-					<br />
-					isMobileBreakpoint: {JSON.stringify($isMobileBreakpoint)}
-					<br />
-					jumpToNavItems: {JSON.stringify($jumpToNavItems)}
+					<b>UI STATE</b>
 					<br /><br />
-
-					<i>SCROLLING</i>
-					<br />
-					isScrolling: {JSON.stringify($isScrolling)}
-					<br />
-					isScrollingToAnchorTag: {JSON.stringify($isScrollingToAnchorTag)}
-					<br />
-					windowScrollPosition: {JSON.stringify($windowScrollPosition)}
-					<br /><br />
-
-					<i>HEADER</i>
-					<br />
-					headerHeightPx: {JSON.stringify($headerHeightPx)}
-					<br />
-					doShowHeaderStripes: {JSON.stringify($doShowHeaderStripes)}
-					<br /><br />
-
-					<i>IMAGES</i>
-					<br />
-					imageAspectRatios: {JSON.stringify($imageAspectRatios)}
-					<br /><br />
-					imagesLoading: {JSON.stringify($imagesLoading)}
-					<br /><br />
-
-					<i>IMAGE DETAIL OVERLAY</i>
-					<br />
-					doShowImageDetailOverlay: {JSON.stringify($doShowImageDetailOverlay)}
-					<br />
-					imageDetailAttributes: {JSON.stringify($imageDetailAttributes)}
-					<br />
-					imageDetailWidth: {JSON.stringify($imageDetailWidth)}
-					<br />
-					imageDetailScale: {JSON.stringify($imageDetailScale)}
-					<br /><br />
-
-					<i>SIZES</i>
-					<br />
-					clientWidth: {JSON.stringify($clientWidth)}
-					<br />
-					windowWidth: {JSON.stringify($windowWidth)}
+					{#each Object.entries($allStateValues) as [key, value]}
+						<b>{key}:</b> {JSON.stringify(value)}<br /><br />
+					{/each}
 				</div>
 			</div>
 		{/if}

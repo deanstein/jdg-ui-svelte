@@ -1,9 +1,7 @@
-import { writable } from 'svelte/store';
+import { derived, writable } from 'svelte/store';
 import { jdgColors } from '$lib/jdg-shared-styles.js';
 
-export let accentColors = writable(jdgColors.accentColorsJDG);
 export let activeNotificationBanners = writable([]);
-export let doShowDevTools = writable(false);
 export let doShowNavSidebar = writable(false);
 export let highestZIndex = writable(1);
 export let isMobileBreakpoint = writable(false);
@@ -31,3 +29,39 @@ export let doShowImageDetailOverlay = writable(false);
 // sizes
 export let clientWidth = writable(0); // window minus scrollbar
 export let windowWidth = writable(0); // full window width, including scrollbar issues when using actual vh
+
+// colors
+export let accentColors = writable(jdgColors.accentColorsJDG);
+
+// dev tools
+export let doShowDevTools = writable(false); // state view and tools in footer
+export let doShowDevOverlay = writable(false); // overlay with specific dev output
+export let devOverlayContent = writable({});
+
+// create a combined store to display in footer dev tools
+const storeMap = {
+	activeNotificationBanners,
+	doShowNavSidebar,
+	highestZIndex,
+	isMobileBreakpoint,
+	jumpToNavItems,
+	isScrolling,
+	isScrollingToAnchorTag,
+	windowScrollPosition,
+	headerHeightPx,
+	doShowHeaderStripes,
+	imageAspectRatios,
+	imagesLoading,
+	doShowImageDetailOverlay,
+	imageDetailAttributes,
+	imageDetailWidth,
+	imageDetailScale,
+	clientWidth,
+	windowWidth
+};
+const storeEntries = Object.entries(storeMap);
+// derived store containing all states
+export let allStateValues = derived(
+	storeEntries.map(([key, store]) => store),
+	($stores) => Object.fromEntries(storeEntries.map(([key], index) => [key, $stores[index]]))
+);
