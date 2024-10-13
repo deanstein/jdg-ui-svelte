@@ -17,8 +17,7 @@
 		isMobileBreakpoint,
 		doShowHeaderStripes,
 		windowWidth,
-		imageDetailScale,
-		window1VhPx
+		imageDetailScale
 	} from '$lib/states/ui-state.js';
 	import {
 		addImageLoading,
@@ -410,7 +409,7 @@
 		/* if max height is not specified, use all available space below the header */
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			max-height: ${maxHeight === 'auto'
-				? `calc(${100 * $window1VhPx} - ${jdgSizes.headerHeightSm} - ${
+				? `calc(100vh - ${jdgSizes.headerHeightSm} - ${
 						$doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightSm : 0
 					}px)`
 				: ''};
@@ -419,14 +418,14 @@
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
 			max-height: ${maxHeight === 'auto'
-				? `calc(${100 * $window1VhPx} - ${jdgSizes.headerHeightMd}  - ${
+				? `calc(100vh - ${jdgSizes.headerHeightMd}  - ${
 						$doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightMd : 0
 					}px)`
 				: ''};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 			max-height: ${maxHeight === 'auto'
-				? `calc(${100 * $window1VhPx} - ${jdgSizes.headerHeightLg} - ${
+				? `calc(100vh - ${jdgSizes.headerHeightLg} - ${
 						$doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightLg : 0
 					}px)`
 				: ''};
