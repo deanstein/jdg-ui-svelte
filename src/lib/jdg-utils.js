@@ -248,7 +248,7 @@ export const getPixelValueFromString = (string) => {
 	let pixelValueFinal;
 	// only calculate maxHeight if prop is not auto
 	if (string !== 'auto') {
-		[pixelValue, pixelUnit] = string.match(/^(\d+)(\D+)$/).slice(1);
+		[pixelValue, pixelUnit] = string.match(/^(\d*\.?\d+)(\D+)$/).slice(1);
 		const maxHeightParsed = parseFloat(pixelValue);
 		// get the max height in px for calculations
 		if (pixelUnit === 'vh') {
