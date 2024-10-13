@@ -5,6 +5,8 @@
 
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 	import {
+		convertVhToPixels,
+		doesStringContainVh,
 		getMaxElementHeightPx,
 		getMaxElementWidthPx,
 		getPixelValueFromString,
@@ -15,7 +17,8 @@
 		isMobileBreakpoint,
 		doShowHeaderStripes,
 		windowWidth,
-		imageDetailScale
+		imageDetailScale,
+		window1VhPx
 	} from '$lib/states/ui-state.js';
 	import {
 		addImageLoading,
@@ -327,6 +330,7 @@
 				);
 			}
 		}
+		preferredHeight = doesStringContainVh(preferredHeight) ? convertVhToPixels(preferredHeight) + 'px' : preferredHeight;
 		lastKnownPreferredContainerHeight = preferredHeightFitType;
 		return { value: preferredHeight, type: preferredHeightFitType };
 	};
@@ -403,7 +407,7 @@
 		/* if max height is not specified, use all available space below the header */
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			max-height: ${maxHeight === 'auto'
-				? `calc(100vh - ${jdgSizes.headerHeightSm} - ${
+				? `calc(${100 * $window1VhPx} - ${jdgSizes.headerHeightSm} - ${
 						$doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightSm : 0
 					}px)`
 				: ''};
@@ -412,14 +416,14 @@
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
 			max-height: ${maxHeight === 'auto'
-				? `calc(100vh - ${jdgSizes.headerHeightMd}  - ${
+				? `calc(${100 * $window1VhPx} - ${jdgSizes.headerHeightMd}  - ${
 						$doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightMd : 0
 					}px)`
 				: ''};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 			max-height: ${maxHeight === 'auto'
-				? `calc(100vh - ${jdgSizes.headerHeightLg} - ${
+				? `calc(${100 * $window1VhPx} - ${jdgSizes.headerHeightLg} - ${
 						$doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightLg : 0
 					}px)`
 				: ''};
@@ -542,7 +546,7 @@
 		height: ${maxHeight};
 	`;
 	$: {
-		lastKnownContainerWidth, imageAspectRatio, maxHeight;
+		lastKnownContainerWidth, imageAspectRatio, maxHeight, $window1VhPx;
 		if (validContainerAspectRatio) {
 			imageContainerCssDynamic = css`
 				height: ${getPreferredContainerHeight().value};

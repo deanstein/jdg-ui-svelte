@@ -241,16 +241,14 @@ export const isNumberValid = (number) => {
 
 // get a pixel value from a string
 export const getPixelValueFromString = (string) => {
-	// height can be in vh or px or even auto
-	// if in vh, convert to pixels for calculations
 	let pixelValue;
 	let pixelUnit;
 	let pixelValueFinal;
-	// only calculate maxHeight if prop is not auto
+
 	if (string !== 'auto') {
 		[pixelValue, pixelUnit] = string.match(/^(\d*\.?\d+)(\D+)$/).slice(1);
 		const maxHeightParsed = parseFloat(pixelValue);
-		// get the max height in px for calculations
+
 		if (pixelUnit === 'vh') {
 			pixelValueFinal = Math.ceil(convertVhToPixels(maxHeightParsed));
 		} else if (pixelUnit === 'px') {
@@ -396,11 +394,20 @@ export const getMIMEType = (binaryData) => {
 	return 'data:image/png'; // Unknown format
 };
 
+export const doesStringContainVh = (string) => {
+	return typeof string === 'string' && string.includes('vh')
+}
+
+// converts either a number (assuming vh)
+// or a string containing 'vh' to pixels
+// based on the current window height
 export const convertVhToPixels = (vhValue) => {
-	if (typeof window === 'undefined') {
-		return 0;
-	} else {
-		return (vhValue / 100) * window.innerHeight;
+	// handle non-vh values
+	if (typeof window === 'undefined' || !doesStringContainVh()) {
+		return vhValue;
+	}
+	else {
+		return (parseFloat(vhValue) / 100) * window.innerHeight;
 	}
 };
 
