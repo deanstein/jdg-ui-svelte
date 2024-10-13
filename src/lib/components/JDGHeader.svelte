@@ -266,13 +266,13 @@
 
 	.logo-supertitle {
 		width: 100%;
-		line-height: 2vh;
+		line-height: 1.4rem;
 	}
 
 	.logo-title {
 		display: inline;
 		width: 100%;
 		font-weight: bold;
-		line-height: 1vh;
+		line-height: 0.7rem;
 	}
 </style>
