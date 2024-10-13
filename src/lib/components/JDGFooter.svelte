@@ -6,7 +6,7 @@
 		accentColors,
 		activeNotificationBanners,
 		clientWidth,
-		currentHeaderHeightPx,
+		headerHeightPx,
 		doShowDevTools,
 		doShowHeaderStripes,
 		doShowImageDetailOverlay,
@@ -184,7 +184,7 @@
 
 					<i>HEADER</i>
 					<br />
-					currentHeaderHeightPx: {JSON.stringify($currentHeaderHeightPx)}
+					headerHeightPx: {JSON.stringify($headerHeightPx)}
 					<br />
 					doShowHeaderStripes: {JSON.stringify($doShowHeaderStripes)}
 					<br /><br />

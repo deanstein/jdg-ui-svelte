@@ -15,7 +15,7 @@ export let isScrollingToAnchorTag = writable(false);
 export let windowScrollPosition = writable(0);
 
 // header
-export let currentHeaderHeightPx = writable(0);
+export let headerHeightPx = writable(0);
 export let doShowHeaderStripes = writable(false);
 
 // images

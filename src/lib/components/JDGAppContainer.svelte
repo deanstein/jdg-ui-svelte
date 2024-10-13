@@ -6,8 +6,8 @@
 	import {
 		accentColors,
 		clientWidth,
-		currentHeaderHeightPx,
 		doShowHeaderStripes,
+		headerHeightPx,
 		isMobileBreakpoint,
 		isScrolling,
 		windowScrollPosition,
@@ -49,7 +49,7 @@
 	const onPageResize = () => {
 		windowWidth.set(window.innerWidth);
 		clientWidth.set(appContainerRef?.clientWidth);
-		currentHeaderHeightPx.set(getDistancePxToBottomOfHeader($doShowHeaderStripes));
+		headerHeightPx.set(getDistancePxToBottomOfHeader($doShowHeaderStripes));
 		isMobileBreakpoint.set(appContainerRef?.clientWidth <= jdgBreakpoints.width[0]);
 	};
 
