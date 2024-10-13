@@ -549,7 +549,7 @@
 		height: ${maxHeight};
 	`;
 	$: {
-		lastKnownContainerWidth, imageAspectRatio, maxHeight, $window1VhPx;
+		lastKnownContainerWidth, imageAspectRatio, maxHeight;
 		if (validContainerAspectRatio) {
 			imageContainerCssDynamic = css`
 				height: ${getPreferredContainerHeight().value};
