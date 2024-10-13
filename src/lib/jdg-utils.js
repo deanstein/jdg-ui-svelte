@@ -395,18 +395,18 @@ export const getMIMEType = (binaryData) => {
 };
 
 export const doesStringContainVh = (string) => {
-	return typeof string === 'string' && string.includes('vh')
-}
+	const contains = typeof string === 'string' && string.includes('vh');
+	return contains;
+};
 
 // converts either a number (assuming vh)
 // or a string containing 'vh' to pixels
 // based on the current window height
 export const convertVhToPixels = (vhValue) => {
 	// handle non-vh values
-	if (typeof window === 'undefined' || !doesStringContainVh()) {
+	if (typeof window === 'undefined' || (!doesStringContainVh(vhValue) && isNaN(vhValue))) {
 		return vhValue;
-	}
-	else {
+	} else {
 		return (parseFloat(vhValue) / 100) * window.innerHeight;
 	}
 };
