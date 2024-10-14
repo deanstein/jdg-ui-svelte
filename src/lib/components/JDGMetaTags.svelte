@@ -1,4 +1,6 @@
 <script>
+	import { onMount } from "svelte";
+
 	// this component sets meta tags
 	// and can be used both at the +layout.svelte and +page.svelte levels
 	// best practice is to use this at +layout.svelte and override when needed on +page.svelte
@@ -19,6 +21,11 @@
 	} else {
 		combinedTitle = title2;
 	}
+
+	onMount(() => {
+		// remove all tags to ensure this overrides
+		document.querySelectorAll('meta[property^="og:"], link[rel="icon"]').forEach(tag => tag.remove());
+	})
 </script>
 
 <svelte:head>

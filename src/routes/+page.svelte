@@ -34,7 +34,8 @@
 
 <JDGMetaTags
 	title1={sharedStrings.websiteTitle}
-	imageSrc={sharedStrings.websiteIconSrc}
+	title2={"HOME"}
+	imageSrc={imageAttributesCollection.cc_1}
 	description={sharedStrings.websiteDescription}
 />
 <JDGContentContainer overlapWithHeader={true}>
