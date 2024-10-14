@@ -60,6 +60,10 @@
 	};
 
 	onMount(() => {
+		captionAttributionDynamicCss = css`
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	`;
 		if (showCaption && imageAttributes.imgCaption) {
 			// set up a resize observer to calculate the final available width for text
 			const observer = new ResizeObserver(() => {
