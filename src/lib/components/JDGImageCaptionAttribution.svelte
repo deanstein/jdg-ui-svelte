@@ -29,7 +29,7 @@
 	};
 
 	const updateWidths = () => {
-		if (!buttonContainerRef || !availableWidthRef) {
+		if (!buttonContainerRef || !availableWidthRef || !captionTextRef) {
 			return;
 		}
 		// temporarily set the button to absolute
