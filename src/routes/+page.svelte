@@ -32,6 +32,7 @@
 	let isTestButtonEnabled = true;
 </script>
 
+<svelte:head>
 <JDGMetaTags
 	title1={sharedStrings.websiteTitle}
 	title2={"HOME"}
@@ -39,6 +40,7 @@
 	description={sharedStrings.websiteDescription}
 	url={"https://deanstein.github.io/jdg-ui-svelte/"}
 />
+</svelte:head>
 <JDGContentContainer overlapWithHeader={true}>
 	<div style="display: flex; flex-direction: column;">
 		<JDGImageFullWidth
