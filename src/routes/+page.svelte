@@ -32,6 +32,9 @@
 	let isTestButtonEnabled = true;
 </script>
 
+<svelte:head>
+	<meta property="og:title" content={"THIS IS A NEW TITLE"}>
+</svelte:head>
 <JDGMetaTags
 	title1={sharedStrings.websiteTitle}
 	title2={'HOME'}
