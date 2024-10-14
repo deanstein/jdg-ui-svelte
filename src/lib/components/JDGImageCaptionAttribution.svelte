@@ -5,8 +5,7 @@
 	import {
 		clientWidth,
 		devOverlayContent,
-		doShowDevOverlay,
-		imagesLoading
+		doShowDevOverlay
 	} from '$lib/states/ui-state.js';
 	import { setAlphaInRgbaString } from '$lib/jdg-graphics-factory.js';
 	import { getFullTextWidth } from '$lib/jdg-ui-management.js';
@@ -42,8 +41,6 @@
 		let previousPositionValue;
 		previousPositionValue = window.getComputedStyle(buttonContainerRef).position;
 		buttonContainerRef.style.position = 'absolute';
-		// ensure the css is a particular way before measuring
-		captionAttributionDynamicCss = captionAttributionDynamiCssTruncate;
 
 		// measure and update the widths
 		availableWidth = getMaxElementWidthPx(availableWidthRef);
@@ -53,7 +50,6 @@
 		// set the button container ref back to its original value
 		// now that we're done measuring
 		buttonContainerRef.style.position = previousPositionValue;
-		captionAttributionDynamicCss = truncateText ? captionAttributionDynamiCssTruncate : captionAttributionDynamicCssNoTruncate;
 	};
 
 	const getIsCaptionTooLong = () => {
@@ -139,17 +135,12 @@
 	`;
 
 	// dynamic css, updated whenever truncateText changes
-	const captionAttributionDynamiCssTruncate = css`
+	let captionAttributionDynamicCss = css`
 		text-overflow: ellipsis;
 		white-space: nowrap;
 	`;
-	const captionAttributionDynamicCssNoTruncate = css`
-		text-overflow: clip;
-		white-space: normal;
-	`;
-	let captionAttributionDynamicCss = css`
-	`;
 	$: {
+		availableWidth;
 		captionAttributionDynamicCss = css`
         text-overflow: ${truncateText ? 'ellipsis' : 'clip'};
         white-space: ${truncateText ? 'nowrap' : 'normal'};
