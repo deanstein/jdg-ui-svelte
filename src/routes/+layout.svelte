@@ -55,7 +55,7 @@
 <JDGMetaTags
 	title1={sharedStrings.websiteTitle}
 	title2={"HOME"}
-	imageSrc={imageAttributesCollection.cc_1}
+	imageSrc={imageAttributesCollection.cc_1.imgSrc}
 	description={sharedStrings.websiteDescription}
 	faviconSrc={sharedStrings.websiteIconSrc}
 />
