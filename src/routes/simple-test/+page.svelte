@@ -28,5 +28,11 @@
 			overlayImageTextFontFamily="Righteous"
 			overlapWithHeader={true}
 		/>
+		<JDGImageTile
+			imageAttributes={imageAttributesCollection.aerial_60s70s_1}
+			cropToFillContainer={false}
+			showCaption={true}
+			showAttribution={true}
+		/>
 	</JDGContentBoxFloating>
 </JDGContentContainer>
