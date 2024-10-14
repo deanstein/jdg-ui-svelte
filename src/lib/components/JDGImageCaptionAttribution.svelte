@@ -44,7 +44,7 @@
 		buttonContainerRef.style.position = 'absolute';
 
 		// measure and update the widths
-		availableWidth = getMaxElementWidthPx(availableWidthRef) || $clientWidth;
+		availableWidth = getMaxElementWidthPx(availableWidthRef);
 		captionTextWidth = getFullTextWidth(captionTextRef);
 		// console.log('Caption text width: ', captionTextWidth, 'Caption available width: ', availableWidth);
 
@@ -148,14 +148,14 @@
 		iterations++;
 		updateWidths();
 		isCaptionTooLong = getIsCaptionTooLong();
-
+		
 		// debug stuff
 		doShowDevOverlay.set(true);
 		devOverlayContent.set({
 			availableWidth: availableWidth,
 			captionTextWidth: captionTextWidth,
 			isCaptionTooLong: isCaptionTooLong,
-			iterations: iterations
+			"iterations": iterations
 		});
 	}
 </script>
@@ -213,6 +213,7 @@
 		display: flex;
 		width: -webkit-fill-available;
 		gap: 5px;
+		min-width: 0;
 	}
 
 	.caption-attribution-grid-container {
@@ -233,6 +234,7 @@
 		justify-content: center;
 		width: 100%;
 		overflow: hidden;
+		min-width: 0;
 	}
 
 	.caption-text {
