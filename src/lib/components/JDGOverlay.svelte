@@ -15,13 +15,12 @@
 
 	let overlayRef;
 	const preventScroll = function (event) {
-		event.preventDefault();
+		//event.preventDefault();
 	};
 
 	const overlayCss = css`
 		z-index: ${getHighestZIndex()};
 		background-color: ${colorRgba};
-		backdrop-filter: blur(${jdgSizes.blurSizeMedium});
 	`;
 
 	const closeButtonCss = css`

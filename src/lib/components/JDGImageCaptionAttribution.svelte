@@ -141,15 +141,21 @@
     `;
 	}
 
+	let iterations = 0;
 	// check for truncation when clientWidth changes
 	$: {
 		availableWidthRef, captionTextRef, buttonContainerRef, $imagesLoading, $clientWidth;
+		iterations++;
 		updateWidths();
 		isCaptionTooLong = getIsCaptionTooLong();
+		
+		// debug stuff
 		doShowDevOverlay.set(true);
 		devOverlayContent.set({
 			availableWidth: availableWidth,
-			isCaptionTooLong: isCaptionTooLong
+			captionTextWidth: captionTextWidth,
+			isCaptionTooLong: isCaptionTooLong,
+			"iterations": iterations
 		});
 	}
 </script>
