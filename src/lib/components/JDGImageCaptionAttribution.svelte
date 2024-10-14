@@ -2,12 +2,7 @@
 	import { css } from '@emotion/css';
 	import { onMount } from 'svelte';
 
-	import {
-		clientWidth,
-		devOverlayContent,
-		doShowDevOverlay,
-		imagesLoading
-	} from '$lib/states/ui-state.js';
+	import { clientWidth, devOverlayContent, doShowDevOverlay } from '$lib/states/ui-state.js';
 	import { setAlphaInRgbaString } from '$lib/jdg-graphics-factory.js';
 	import { getFullTextWidth } from '$lib/jdg-ui-management.js';
 	import { getMaxElementWidthPx } from '$lib/jdg-utils.js';
@@ -61,9 +56,9 @@
 
 	onMount(() => {
 		captionAttributionDynamicCss = css`
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	`;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		`;
 		if (showCaption && imageAttributes.imgCaption) {
 			// set up a resize observer to calculate the final available width for text
 			const observer = new ResizeObserver(() => {
@@ -136,11 +131,9 @@
 	`;
 
 	// dynamic css, updated whenever truncateText changes
-	let captionAttributionDynamicCss = css`
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	`;
+	let captionAttributionDynamicCss = css``;
 	$: {
+		$clientWidth, availableWidthRef, captionTextRef;
 		captionAttributionDynamicCss = css`
         text-overflow: ${truncateText ? 'ellipsis' : 'clip'};
         white-space: ${truncateText ? 'nowrap' : 'normal'};
