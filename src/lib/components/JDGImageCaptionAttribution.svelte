@@ -2,11 +2,7 @@
 	import { css } from '@emotion/css';
 	import { onMount } from 'svelte';
 
-	import {
-		clientWidth,
-		devOverlayContent,
-		doShowDevOverlay
-	} from '$lib/states/ui-state.js';
+	import { clientWidth } from '$lib/states/ui-state.js';
 	import { setAlphaInRgbaString } from '$lib/jdg-graphics-factory.js';
 	import { getFullTextWidth } from '$lib/jdg-ui-management.js';
 	import { getMaxElementWidthPx } from '$lib/jdg-utils.js';
@@ -59,10 +55,9 @@
 	};
 
 	onMount(() => {
-		captionAttributionDynamicCss = css`
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	`;
+		// need to initially set the dynamic css for initialization
+		captionAttributionDynamicCss = captionAttributionDyamicCssInitial;
+
 		if (showCaption && imageAttributes.imgCaption) {
 			// set up a resize observer to calculate the final available width for text
 			const observer = new ResizeObserver(() => {
@@ -77,6 +72,14 @@
 	});
 
 	const attributionPrefix = 'Image Source: ';
+
+	// when this component mounts, need to apply these styles
+	// to ensure sizing works correctly
+	// these values may change depending on truncateText
+	const captionAttributionDyamicCssInitial = css`
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	`;
 
 	const captionAttributionContainerCss = css`
 		color: ${jdgColors.text};
@@ -135,12 +138,10 @@
 	`;
 
 	// dynamic css, updated whenever truncateText changes
-	let captionAttributionDynamicCss = css`
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	`;
+	let captionAttributionDynamicCss = captionAttributionDyamicCssInitial;
 	$: {
 		availableWidth;
+		// update css based on truncateText
 		captionAttributionDynamicCss = css`
         text-overflow: ${truncateText ? 'ellipsis' : 'clip'};
         white-space: ${truncateText ? 'nowrap' : 'normal'};
@@ -148,22 +149,11 @@
     `;
 	}
 
-	let iterations = 0;
 	// check for truncation when clientWidth changes
 	$: {
 		$clientWidth, availableWidthRef, captionTextRef;
-		iterations++;
 		updateWidths();
 		isCaptionTooLong = getIsCaptionTooLong();
-
-		// debug stuff
-		doShowDevOverlay.set(true);
-		devOverlayContent.set({
-			availableWidth: availableWidth,
-			captionTextWidth: captionTextWidth,
-			isCaptionTooLong: isCaptionTooLong,
-			iterations: iterations
-		});
 	}
 </script>
 
