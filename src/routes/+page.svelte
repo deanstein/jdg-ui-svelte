@@ -37,6 +37,7 @@
 	title2={"HOME"}
 	imageSrc={imageAttributesCollection.cc_1}
 	description={sharedStrings.websiteDescription}
+	url={"https://deanstein.github.io/jdg-ui-svelte/"}
 />
 <JDGContentContainer overlapWithHeader={true}>
 	<div style="display: flex; flex-direction: column;">

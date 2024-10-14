@@ -11,6 +11,7 @@
 	export let imageSrc = undefined; // URL or path to an image supporting the description
 	export let description = undefined; // short blurb about the page
 	export let faviconSrc = undefined; // primarily for the +layout.svelte level but can be used at +page.svelte too
+	export let url = undefined;
 	export let type = 'website';
 
 	let combinedTitle;
@@ -34,5 +35,8 @@
 	{#if imageSrc}<meta property="og:image" content={imageSrc} />{/if}
 	{#if description}<meta property="og:description" content={description} />{/if}
 	{#if faviconSrc}<link rel="icon" href={faviconSrc} />{/if}
+	{#if url}
+		<meta property="og:url" content={url} />
+	{/if}
 	<meta property="og:type" content={type} />
 </svelte:head>
