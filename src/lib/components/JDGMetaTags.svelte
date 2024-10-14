@@ -1,34 +1,33 @@
 <script>
-	import { onMount } from 'svelte';
-
-	// this component sets meta tags
-	// and can be used both at the +layout.svelte and +page.svelte levels
-	// best practice is to use this at +layout.svelte and override when needed on +page.svelte
+	// this component sets meta tags and also the <title> and favicon, instead of in app.html
+	// should be used at +layout.svelte with good site-wide defaults
+	// then each +page.svelte gets a +page.js with a load() function that sets per-page tags and title
 
 	export let title1 = undefined; // for example, the website name
 	export let title2 = undefined; // for example, a page name
 	export let titleSeparator = ' | '; // used between title1 and title2
 	export let imageSrc = undefined; // URL or path to an image supporting the description
 	export let description = undefined; // short blurb about the page
-	export let faviconSrc = undefined; // primarily for the +layout.svelte level but can be used at +page.svelte too
+	export let faviconSrc = undefined; // likely doesn't need to be set per-page
 	export let url = undefined;
 	export let type = 'website';
 
 	let combinedTitle;
-	if (title1 && title2) {
-		combinedTitle = title1 + titleSeparator + title2;
-	} else if (title1 && title1 !== '') {
-		combinedTitle = title1;
-	} else {
-		combinedTitle = title2;
+	// keep combined title and <title> tags updated
+	$: {
+		if (title1 && title2) {
+			combinedTitle = title1 + titleSeparator + title2;
+		} else if (title1 && title1 !== '') {
+			combinedTitle = title1;
+		} else {
+			combinedTitle = title2;
+		}
+		// force update the title so the browser tab always shows the latest
+		if (typeof document !== 'undefined') {
+			console.log('FORCING TITLE CHANGE!', title1, title2, combinedTitle);
+			document.title = combinedTitle;
+		}
 	}
-
-	onMount(() => {
-		// remove all tags to ensure this overrides
-		document
-			.querySelectorAll('meta[property^="og:"], link[rel="icon"]')
-			.forEach((tag) => tag.remove());
-	});
 </script>
 
 <svelte:head>
