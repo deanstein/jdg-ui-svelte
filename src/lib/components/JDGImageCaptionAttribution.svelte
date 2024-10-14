@@ -132,11 +132,14 @@
 	`;
 
 	// dynamic css, updated whenever truncateText changes
-	let captionAttributionDynamicCss = css``;
+	let captionAttributionDynamicCss = css`
+		text-overflow: clip;
+		white-space: normal;
+	`;
 	$: {
 		captionAttributionDynamicCss = css`
-        text-overflow: ${truncateText && availableWidth !== 0 ? 'ellipsis' : 'clip'};
-        white-space: ${truncateText && availableWidth !==0 ? 'nowrap' : 'normal'};
+        text-overflow: ${truncateText ? 'ellipsis' : 'clip'};
+        white-space: ${truncateText ? 'nowrap' : 'normal'};
         }
     `;
 	}
@@ -148,14 +151,14 @@
 		iterations++;
 		updateWidths();
 		isCaptionTooLong = getIsCaptionTooLong();
-		
+
 		// debug stuff
 		doShowDevOverlay.set(true);
 		devOverlayContent.set({
 			availableWidth: availableWidth,
 			captionTextWidth: captionTextWidth,
 			isCaptionTooLong: isCaptionTooLong,
-			"iterations": iterations
+			iterations: iterations
 		});
 	}
 </script>
