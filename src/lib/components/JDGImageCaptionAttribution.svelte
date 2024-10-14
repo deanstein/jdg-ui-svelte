@@ -213,7 +213,7 @@
 		display: flex;
 		width: -webkit-fill-available;
 		gap: 5px;
-		min-width: 0;
+		width: 100%;
 	}
 
 	.caption-attribution-grid-container {
@@ -234,7 +234,6 @@
 		justify-content: center;
 		width: 100%;
 		overflow: hidden;
-		min-width: 0;
 	}
 
 	.caption-text {
