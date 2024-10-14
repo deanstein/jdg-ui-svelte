@@ -34,10 +34,9 @@
 
 <JDGMetaTags
 	title1={sharedStrings.websiteTitle}
-	title2={"HOME"}
-	imageSrc={imageAttributesCollection.cc_1}
+	title2={'HOME'}
+	imageSrc={imageAttributesCollection.cc_1.imgSrc}
 	description={sharedStrings.websiteDescription}
-	url={"https://deanstein.github.io/jdg-ui-svelte/"}
 />
 <JDGContentContainer overlapWithHeader={true}>
 	<div style="display: flex; flex-direction: column;">

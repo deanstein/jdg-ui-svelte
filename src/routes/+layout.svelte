@@ -54,10 +54,9 @@
 
 <JDGMetaTags
 	title1={sharedStrings.websiteTitle}
-	title2={"HOME"}
-	imageSrc={imageAttributesCollection.cc_1.imgSrc}
-	description={sharedStrings.websiteDescription}
+	imageSrc={sharedStrings.websiteIconSrc}
 	faviconSrc={sharedStrings.websiteIconSrc}
+	description={sharedStrings.websiteDescription}
 />
 <JDGAppContainer appAccentColors={jdgColors.accentColorsCCP} {showHeaderStripes}>
 	<JDGNotificationBanner notificationType={jdgNotificationTypes.information.id} />
