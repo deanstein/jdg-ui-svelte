@@ -138,7 +138,7 @@
 
 	// check for truncation when clientWidth changes
 	$: {
-		availableWidthRef, captionTextRef, $clientWidth, availableWidth;
+		availableWidthRef, captionTextRef, buttonContainerRef, $clientWidth, availableWidth;
 		updateWidths();
 		isCaptionTooLong = getIsCaptionTooLong();
 		doShowDevOverlay.set(true);
