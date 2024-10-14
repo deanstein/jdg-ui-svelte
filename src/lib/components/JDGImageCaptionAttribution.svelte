@@ -151,6 +151,7 @@
 
 <div
 	class="jdg-caption-attribution-container {captionAttributionContainerCss}"
+	bind:this={availableWidthRef}
 	on:click|stopPropagation={(event) => {
 		event.stopPropagation();
 		toggleCaptionTruncation();
@@ -159,7 +160,7 @@
 	role="button"
 	tabindex="0"
 >
-	<div bind:this={availableWidthRef} class="caption-attribution-grid-container">
+	<div class="caption-attribution-grid-container">
 		{#if showCaption && imageAttributes.imgCaption}
 			<div class="caption-attribution-flex-container {captionCss}">
 				<div bind:this={captionTextRef} class="caption-text {captionAttributionDynamicCss}">
