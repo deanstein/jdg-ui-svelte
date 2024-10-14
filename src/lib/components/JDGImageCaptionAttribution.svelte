@@ -44,7 +44,7 @@
 		buttonContainerRef.style.position = 'absolute';
 
 		// measure and update the widths
-		availableWidth = getMaxElementWidthPx(availableWidthRef);
+		availableWidth = getMaxElementWidthPx(availableWidthRef) || $clientWidth;
 		captionTextWidth = getFullTextWidth(captionTextRef);
 		// console.log('Caption text width: ', captionTextWidth, 'Caption available width: ', availableWidth);
 
