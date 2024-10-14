@@ -133,8 +133,8 @@
 
 	// dynamic css, updated whenever truncateText changes
 	let captionAttributionDynamicCss = css`
-		text-overflow: clip;
-		white-space: normal;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	`;
 	$: {
 		captionAttributionDynamicCss = css`
