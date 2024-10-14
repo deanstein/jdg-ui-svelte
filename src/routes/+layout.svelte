@@ -15,7 +15,6 @@
 	} from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
 	import sharedStrings from './shared-strings.js';
-	import { imageAttributesCollection } from './image-attributes-collection.js';
 
 	// define the nav items in the header
 	const newNavItem1 = instantiateObject(jdgNavItem);
