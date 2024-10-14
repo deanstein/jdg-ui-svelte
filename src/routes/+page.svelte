@@ -38,7 +38,6 @@
 	title2={"HOME"}
 	imageSrc={imageAttributesCollection.cc_1}
 	description={sharedStrings.websiteDescription}
-	url={"https://deanstein.github.io/jdg-ui-svelte/"}
 />
 </svelte:head>
 <JDGContentContainer overlapWithHeader={true}>
