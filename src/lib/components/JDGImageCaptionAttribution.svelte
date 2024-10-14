@@ -185,8 +185,8 @@
 			</div>
 		{/if}
 	</div>
-	{#if isCaptionTooLong}
-		<div bind:this={buttonContainerRef} class="expand-collapse-button-container">
+	<div bind:this={buttonContainerRef} class="expand-collapse-button-container">
+		{#if isCaptionTooLong}
 			<JDGButton
 				label={truncateText ? 'Show more' : 'Show less'}
 				faIcon={null}
@@ -201,8 +201,8 @@
 				paddingTopBottom="3px"
 				fontSize="10px"
 			/>
-		</div>
-	{/if}
+		{/if}
+	</div>
 </div>
 
 <style>
