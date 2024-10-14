@@ -147,7 +147,7 @@
 	let iterations = 0;
 	// check for truncation when clientWidth changes
 	$: {
-		$clientWidth;
+		$clientWidth, availableWidthRef, captionTextRef;
 		iterations++;
 		updateWidths();
 		isCaptionTooLong = getIsCaptionTooLong();
