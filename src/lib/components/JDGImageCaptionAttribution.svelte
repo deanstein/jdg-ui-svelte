@@ -126,9 +126,8 @@
 		}
 	`;
 
-	// dynamic - updated whenever the container is clicked
+	// dynamic css, updated whenever truncateText changes
 	let captionAttributionDynamicCss = css``;
-
 	$: {
 		captionAttributionDynamicCss = css`
         text-overflow: ${truncateText ? 'ellipsis' : 'clip'};
@@ -137,10 +136,9 @@
     `;
 	}
 
+	// check for truncation when clientWidth changes
 	$: {
-		// check for truncation when clientWidth changes
-		$clientWidth;
-		availableWidth;
+		availableWidthRef, captionTextRef, $clientWidth, availableWidth;
 		updateWidths();
 		isCaptionTooLong = getIsCaptionTooLong();
 		doShowDevOverlay.set(true);
