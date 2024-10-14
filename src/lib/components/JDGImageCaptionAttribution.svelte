@@ -135,8 +135,8 @@
 	let captionAttributionDynamicCss = css``;
 	$: {
 		captionAttributionDynamicCss = css`
-        text-overflow: ${truncateText ? 'ellipsis' : 'clip'};
-        white-space: ${truncateText ? 'nowrap' : 'normal'};
+        text-overflow: ${truncateText && availableWidth !== 0 ? 'ellipsis' : 'clip'};
+        white-space: ${truncateText && availableWidth !==0 ? 'nowrap' : 'normal'};
         }
     `;
 	}
@@ -144,7 +144,7 @@
 	let iterations = 0;
 	// check for truncation when clientWidth changes
 	$: {
-		availableWidthRef, captionTextRef, buttonContainerRef, $imagesLoading, $clientWidth;
+		$clientWidth;
 		iterations++;
 		updateWidths();
 		isCaptionTooLong = getIsCaptionTooLong();
@@ -213,7 +213,6 @@
 		display: flex;
 		width: -webkit-fill-available;
 		gap: 5px;
-		width: 100%;
 	}
 
 	.caption-attribution-grid-container {
