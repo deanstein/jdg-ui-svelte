@@ -2,7 +2,7 @@
 	import { css } from '@emotion/css';
 	import { onMount } from 'svelte';
 
-	import { clientWidth } from '$lib/states/ui-state.js';
+	import { clientWidth, devOverlayContent, doShowDevOverlay } from '$lib/states/ui-state.js';
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	import { JDGButton } from '../index.js';
@@ -21,20 +21,21 @@
 	let captionTextRef; // element to determine total length of caption
 	let captionTextWidth = 0; // final caption width - updated after loading
 	let buttonContainerRef; // the expand/collapse button - hidden for measurements
-	let isCaptionTruncated = false;
+	let isCaptionTooLong = false;
 
 	const toggleCaptionTruncation = () => {
 		truncateText = !truncateText;
 	};
 
 	const updateWidths = () => {
+		if (!buttonContainerRef || !availableWidthRef) {
+			return;
+		}
 		// temporarily set the button to absolute
 		// so we can calculate the width without the button
 		let previousPositionValue;
-		if (isCaptionTruncated) {
-			previousPositionValue = window.getComputedStyle(buttonContainerRef).position;
-			buttonContainerRef.style.position = 'absolute';
-		}
+		previousPositionValue = window.getComputedStyle(buttonContainerRef).position;
+		buttonContainerRef.style.position = 'absolute';
 
 		// measure and update the widths
 		const availableWidthRefStyles = window.getComputedStyle(availableWidthRef);
@@ -44,14 +45,12 @@
 
 		// set the button container ref back to its original value
 		// now that we're done measuring
-		if (isCaptionTruncated) {
-			buttonContainerRef.style.position = previousPositionValue;
-		}
+		buttonContainerRef.style.position = previousPositionValue;
 	};
 
-	const getIsCaptionTruncated = () => {
+	const getIsCaptionTooLong = () => {
 		if (availableWidthRef && captionTextRef) {
-			isCaptionTruncated = captionTextWidth >= availableWidth;
+			return captionTextWidth >= availableWidth;
 		}
 	};
 
@@ -60,7 +59,7 @@
 			// set up a resize observer to calculate the final available width for text
 			const observer = new ResizeObserver(() => {
 				updateWidths();
-				getIsCaptionTruncated();
+				isCaptionTooLong = getIsCaptionTooLong();
 			});
 			observer.observe(captionTextRef);
 			return () => {
@@ -142,7 +141,13 @@
 		// check for truncation when clientWidth changes
 		$clientWidth;
 		availableWidth;
-		getIsCaptionTruncated();
+		updateWidths();
+		isCaptionTooLong = getIsCaptionTooLong();
+		doShowDevOverlay.set(true);
+		devOverlayContent.set({
+			availableWidth: availableWidth,
+			isCaptionTooLong: isCaptionTooLong
+		});
 	}
 </script>
 
@@ -174,7 +179,7 @@
 			</div>
 		{/if}
 	</div>
-	{#if isCaptionTruncated}
+	{#if isCaptionTooLong}
 		<div bind:this={buttonContainerRef} class="expand-collapse-button-container">
 			<JDGButton
 				label={truncateText ? 'Show more' : 'Show less'}
