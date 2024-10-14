@@ -2,7 +2,12 @@
 	import { css } from '@emotion/css';
 	import { onMount } from 'svelte';
 
-	import { clientWidth, devOverlayContent, doShowDevOverlay } from '$lib/states/ui-state.js';
+	import {
+		clientWidth,
+		devOverlayContent,
+		doShowDevOverlay,
+		imagesLoading
+	} from '$lib/states/ui-state.js';
 	import { setAlphaInRgbaString } from '$lib/jdg-graphics-factory.js';
 	import { getFullTextWidth } from '$lib/jdg-ui-management.js';
 	import { getMaxElementWidthPx } from '$lib/jdg-utils.js';
@@ -37,6 +42,8 @@
 		let previousPositionValue;
 		previousPositionValue = window.getComputedStyle(buttonContainerRef).position;
 		buttonContainerRef.style.position = 'absolute';
+		// ensure the css is a particular way before measuring
+		captionAttributionDynamicCss = captionAttributionDynamiCssTruncate;
 
 		// measure and update the widths
 		availableWidth = getMaxElementWidthPx(availableWidthRef);
@@ -46,6 +53,7 @@
 		// set the button container ref back to its original value
 		// now that we're done measuring
 		buttonContainerRef.style.position = previousPositionValue;
+		captionAttributionDynamicCss = truncateText ? captionAttributionDynamiCssTruncate : captionAttributionDynamicCssNoTruncate;
 	};
 
 	const getIsCaptionTooLong = () => {
@@ -56,9 +64,9 @@
 
 	onMount(() => {
 		captionAttributionDynamicCss = css`
-			text-overflow: ellipsis;
-			white-space: nowrap;
-		`;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	`;
 		if (showCaption && imageAttributes.imgCaption) {
 			// set up a resize observer to calculate the final available width for text
 			const observer = new ResizeObserver(() => {
@@ -131,9 +139,17 @@
 	`;
 
 	// dynamic css, updated whenever truncateText changes
-	let captionAttributionDynamicCss = css``;
+	const captionAttributionDynamiCssTruncate = css`
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	`;
+	const captionAttributionDynamicCssNoTruncate = css`
+		text-overflow: clip;
+		white-space: normal;
+	`;
+	let captionAttributionDynamicCss = css`
+	`;
 	$: {
-		$clientWidth, availableWidthRef, captionTextRef;
 		captionAttributionDynamicCss = css`
         text-overflow: ${truncateText ? 'ellipsis' : 'clip'};
         white-space: ${truncateText ? 'nowrap' : 'normal'};
