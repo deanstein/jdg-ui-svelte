@@ -57,7 +57,11 @@ const storeMap = {
 	imageDetailWidth,
 	imageDetailScale,
 	clientWidth,
-	windowWidth
+	windowWidth,
+	accentColors,
+	doShowDevTools,
+	doShowDevOverlay,
+	devOverlayContent
 };
 const storeEntries = Object.entries(storeMap);
 // derived store containing all states
