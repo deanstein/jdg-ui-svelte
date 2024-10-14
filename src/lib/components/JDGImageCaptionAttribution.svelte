@@ -3,11 +3,12 @@
 	import { onMount } from 'svelte';
 
 	import { clientWidth, devOverlayContent, doShowDevOverlay } from '$lib/states/ui-state.js';
-	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
-
-	import { JDGButton } from '../index.js';
 	import { setAlphaInRgbaString } from '$lib/jdg-graphics-factory.js';
 	import { getFullTextWidth } from '$lib/jdg-ui-management.js';
+	import { getMaxElementWidthPx } from '$lib/jdg-utils.js';
+
+	import { JDGButton } from '../index.js';
+	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let imageAttributes;
 	export let showCaption = true;
@@ -38,8 +39,7 @@
 		buttonContainerRef.style.position = 'absolute';
 
 		// measure and update the widths
-		const availableWidthRefStyles = window.getComputedStyle(availableWidthRef);
-		availableWidth = parseFloat(availableWidthRefStyles.width);
+		availableWidth = getMaxElementWidthPx(availableWidthRef);
 		captionTextWidth = getFullTextWidth(captionTextRef);
 		// console.log('Caption text width: ', captionTextWidth, 'Caption available width: ', availableWidth);
 
