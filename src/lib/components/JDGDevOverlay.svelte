@@ -9,7 +9,6 @@
 	onCloseFunction={() => {
 		doShowDevOverlay.set(false);
 	}}
-	closeOnOverlayClick={false}
 	colorRgba="rgba(255, 255, 255, 0.6)"
 >
 	<div class="dev-overlay-content">
