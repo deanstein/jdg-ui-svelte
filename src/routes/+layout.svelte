@@ -52,10 +52,7 @@
 </script>
 
 <JDGMetaTags
-	title1={sharedStrings.websiteTitle}
-	imageSrc={sharedStrings.websiteIconSrc}
 	faviconSrc={sharedStrings.websiteIconSrc}
-	description={sharedStrings.websiteDescription}
 />
 <JDGAppContainer appAccentColors={jdgColors.accentColorsCCP} {showHeaderStripes}>
 	<JDGNotificationBanner notificationType={jdgNotificationTypes.information.id} />
