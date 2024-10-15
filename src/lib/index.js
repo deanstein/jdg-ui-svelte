@@ -82,9 +82,6 @@ export { JDGJumpTo };
 import JDGLoadingOverlay from './components/JDGLoadingOverlay.svelte';
 export { JDGLoadingOverlay };
 
-import JDGMetaTags from './components/JDGMetaTags.svelte';
-export { JDGMetaTags };
-
 import JDGNavItem from './components/JDGNavItem.svelte';
 export { JDGNavItem };
 

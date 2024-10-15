@@ -21,39 +21,15 @@
 		JDGImageTile,
 		JDGJumpTo,
 		JDGLoadingSpinner,
-		JDGMetaTags,
 		JDGUpNext
 	} from '$lib/index.js';
 	import { jdgColors, jdgFonts } from '$lib/jdg-shared-styles.js';
 
 	import { imageAttributesCollection } from './image-attributes-collection.js';
-	import sharedStrings from './shared-strings.js';
-	import { MetaTags } from 'svelte-meta-tags';
 
 	let isTestButtonEnabled = true;
 </script>
 
-<MetaTags 
-	title="+PAGE: META TAGS TITLE" 
-	openGraph={{
-		title: '+PAGE: META TAGS TITLE',
-		description: '+PAGE: META TAGS DESC',
-		images: [
-		  {
-			url: imageAttributesCollection.cc_1.imgSrc,
-			width: 800,
-			height: 600,
-			alt: 'Og Image Alt'
-		  }
-		],
-	  }}
-	/>
-<!-- <JDGMetaTags
-	title1={sharedStrings.websiteTitle}
-	title2={'HOME'}
-	imageSrc={imageAttributesCollection.cc_1.imgSrc}
-	description={sharedStrings.websiteDescription}
-/> -->
 <JDGContentContainer overlapWithHeader={true}>
 	<div style="display: flex; flex-direction: column;">
 		<JDGImageFullWidth

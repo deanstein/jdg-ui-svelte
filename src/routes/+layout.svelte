@@ -10,7 +10,6 @@
 		JDGBackground,
 		JDGFooter,
 		JDGHeader,
-		JDGMetaTags,
 		JDGNotificationBanner,
 		JDGSocialMedia
 	} from '$lib/index.js';
@@ -52,28 +51,22 @@
 	const showHeaderStripes = false;
 </script>
 
-<!-- <MetaTags 
-	title="+LAYOUT: META TAGS TITLE" 
+<!-- this a unique usage of MetaTags; don't use for Svelte websites -->
+<!-- see jdg-website repo for correct website usage of MetaTags -->
+<MetaTags 
+	title={sharedStrings.websiteTitle}
 	openGraph={{
-		title: '+LAYOUT: META TAGS TITLE',
-		description: '+LAYOUT: META TAGS DESC',
+		title: sharedStrings.websiteTitle,
+		description: sharedStrings.websiteDescription,
 		images: [
 		  {
-			url: sharedStrings.websiteIconSrc,
+			url: sharedStrings.web,
 			width: 800,
 			height: 600,
-			alt: 'Og Image Alt'
 		  }
 		],
 	  }}
-	/> -->
-
-<!-- <JDGMetaTags
-	title1={sharedStrings.websiteTitle}
-	imageSrc={sharedStrings.websiteIconSrc}
-	faviconSrc={sharedStrings.websiteIconSrc}
-	description={sharedStrings.websiteDescription}
-/> -->
+	/>
 <JDGAppContainer appAccentColors={jdgColors.accentColorsCCP} {showHeaderStripes}>
 	<JDGNotificationBanner notificationType={jdgNotificationTypes.information.id} />
 	<JDGHeader
