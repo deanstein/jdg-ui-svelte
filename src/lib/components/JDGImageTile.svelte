@@ -16,7 +16,7 @@
 		jdgDurations,
 		jdgBreakpoints
 	} from '../jdg-shared-styles.js';
-	import { isMobileBreakpoint, isScrolling } from '$lib/states/ui-state.js';
+	import { isMobileBreakpoint } from '$lib/states/ui-state.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object to hold all details
 	export let maxWidth = undefined; // if not defined, takes available space
@@ -97,7 +97,7 @@
 </script>
 
 <div class="jdg-image-tile-container {imageTileContainerCss}">
-	<a href={$isScrolling && $isMobileBreakpoint ? null : href} target={hrefTarget} class={aCss}>
+	<a href={$isMobileBreakpoint ? null : href} target={hrefTarget} class={aCss}>
 		<div
 			class="image-tile {imageTileCss}"
 			on:mouseenter={() => (isHovering = true)}
@@ -106,7 +106,7 @@
 			tabindex="0"
 			on:click={(event) => {
 				// prevent click if scrolling for mobile only
-				if ($isScrolling && $isMobileBreakpoint) {
+				if ($isMobileBreakpoint) {
 					event.preventDefault();
 					return;
 				}
