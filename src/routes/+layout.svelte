@@ -52,7 +52,7 @@
 	const showHeaderStripes = false;
 </script>
 
-<MetaTags 
+<!-- <MetaTags 
 	title="+LAYOUT: META TAGS TITLE" 
 	openGraph={{
 		title: '+LAYOUT: META TAGS TITLE',
@@ -66,7 +66,7 @@
 		  }
 		],
 	  }}
-	/>
+	/> -->
 
 <!-- <JDGMetaTags
 	title1={sharedStrings.websiteTitle}
