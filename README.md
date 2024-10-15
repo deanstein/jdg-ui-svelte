@@ -3,10 +3,10 @@ Svelte components for the family of JDG UI elements.
 
 # Developing
 
-### First time install
+### Install dependencies
 
 ```bash
-yarn install
+yarn
 ```
 
 ### Run the dev package
@@ -17,25 +17,7 @@ This doesn't build the package, but just runs it for local debugging.
 yarn run dev
 ```
 
-> NOTE: When testing, you may notice that styles flash when the page initially loads. This can be ignored as it shouldn't happen when the final website host is compiled.
-
-# Building
-
-### Build and preview the final package
-Use this when changes are not in progress, and the package should be actually built for final testing.
-
-First, build the `jdg-ui-svelte` package locally:
-
-```bash
-yarn build
-```
-Then host the package (and demo site) locally for viewing:
-```bash
-yarn preview
-```
-> NOTE: When testing, you may notice that styles flash when the page initially loads. This can be ignored as it shouldn't happen when the final website host is compiled.
-
-> NOTE: If changes are made after building, cancel the preview server, and run `yarn build` and `yarn preview` again to ensure the latest version of the package is built. This also helps ensure any linked websites use the latest local package.
+> NOTE: Styles may flash more during first load. This won't happen in the final package.
 
 # Testing
 
@@ -74,6 +56,24 @@ To revert to using the official package (not the linked one), be sure to un-link
 yarn unlink jdg-ui-svelte
 ```
 > After this, need to run ```yarn install --force```
+
+# Previewing
+
+### Build and preview the final package
+Use this when changes are not in progress, and the package should be actually built for final testing.
+
+First, build the `jdg-ui-svelte` package locally:
+
+```bash
+yarn build
+```
+Then host the package (and demo site) locally for viewing:
+```bash
+yarn preview
+```
+> NOTE: When testing, you may notice that styles flash when the page initially loads. This can be ignored as it shouldn't happen when the final website host is compiled.
+
+> NOTE: If changes are made after building, cancel the preview server, and run `yarn build` and `yarn preview` again to ensure the latest version of the package is built. This also helps ensure any linked websites use the latest local package.
 
 # Publishing
 First, update the version in package.json by incrementing whichever field makes sense given the current changes.
