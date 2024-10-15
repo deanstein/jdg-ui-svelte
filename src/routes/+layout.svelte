@@ -1,4 +1,5 @@
 <script>
+	import { MetaTags } from 'svelte-meta-tags';
 	import jdgNavItem from '$lib/schemas/jdg-nav-item.js';
 	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
@@ -51,12 +52,28 @@
 	const showHeaderStripes = false;
 </script>
 
-<JDGMetaTags
+<MetaTags 
+	title="+LAYOUT: META TAGS TITLE" 
+	openGraph={{
+		title: '+LAYOUT: META TAGS TITLE',
+		description: '+LAYOUT: META TAGS DESC',
+		images: [
+		  {
+			url: sharedStrings.websiteIconSrc,
+			width: 800,
+			height: 600,
+			alt: 'Og Image Alt'
+		  }
+		],
+	  }}
+	/>
+
+<!-- <JDGMetaTags
 	title1={sharedStrings.websiteTitle}
 	imageSrc={sharedStrings.websiteIconSrc}
 	faviconSrc={sharedStrings.websiteIconSrc}
 	description={sharedStrings.websiteDescription}
-/>
+/> -->
 <JDGAppContainer appAccentColors={jdgColors.accentColorsCCP} {showHeaderStripes}>
 	<JDGNotificationBanner notificationType={jdgNotificationTypes.information.id} />
 	<JDGHeader
