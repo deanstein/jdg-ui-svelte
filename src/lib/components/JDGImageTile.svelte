@@ -97,7 +97,7 @@
 </script>
 
 <div class="jdg-image-tile-container {imageTileContainerCss}">
-	<a href={$isMobileBreakpoint ? null : href} target={hrefTarget} class={aCss}>
+	<a {href} target={hrefTarget} class={aCss}>
 		<div
 			class="image-tile {imageTileCss}"
 			on:mouseenter={() => (isHovering = true)}
@@ -105,11 +105,6 @@
 			role="button"
 			tabindex="0"
 			on:click={(event) => {
-				// prevent click if scrolling for mobile only
-				if ($isMobileBreakpoint) {
-					event.preventDefault();
-					return;
-				}
 				// if provided, use the onclick prop
 				if (onClickFunction) {
 					//@ts-expect-error
