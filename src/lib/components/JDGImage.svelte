@@ -62,12 +62,12 @@
 	export let scaleContext = 'container'; // which element to scale. "container" or "image"
 	export let bottomVisibilityOffset = '1000px'; // distance from bottom of screen before loading (positive is down)
 	export let recordAspectRatioInState = false;
-	export let showDebugOverlay = false;
 
 	// DEBUGGING
 
 	const showDebugMessagesInConsole = false;
-	export let showDebugLoadingState = false;
+	export let showDebugOverlay = false;
+	export let showDebugLoadingState = false; // force loading state
 
 	// DEVICE
 
