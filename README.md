@@ -35,28 +35,45 @@ yarn preview
 ```
 > NOTE: When testing, you may notice that styles flash when the page initially loads. This can be ignored as it shouldn't happen when the final website host is compiled.
 
->NOTE: If changes are made after building, cancel the preview server, and run `yarn build` and `yarn preview` again to ensure the latest version of the package is built. This also helps ensure any linked websites use the latest local package.
+> NOTE: If changes are made after building, cancel the preview server, and run `yarn build` and `yarn preview` again to ensure the latest version of the package is built. This also helps ensure any linked websites use the latest local package.
 
 # Testing
 
 It's a good idea to test the locally-built package in a locally-built website before publishing, to make sure everything is working.
 
-First, create a link in the `jdg-ui-svelte` repo:
+## In the `jdg-ui-svelte` repo
 
+First, create a link:
 ```bash
 yarn link
 ```
-Then, switch to the repo where you want to use `jdg-ui-svelte`, and run:
+> Only need to do this once, unless a link is already present from a while ago, in which case run ```yarn unlink``` 
 
+Then, build the `jdg-ui-svelte` package locally:
+```bash
+yarn build
+```
+> Repeat this step after every package change you want to test locally
+
+## In the `consuming website` repo
+Link to the `jdg-ui-svelte` package:
 ```bash
 yarn link jdg-ui-svelte
 ```
+> Only need to do this once, unless a link is already present from a while ago, in which case run ```yarn unlink jdg-ui-svelte```
 
-In the host app, if you want to use the official package (not the linked one), be sure to un-link:
+Cancel any current ```yarn run dev``` command and re-run the dev server using ```--force```:
+```bash
+yarn run dev --force
+```
+> Need to cancel the server and re-run using `--force` any time the UI package has changed locally
+
+To revert to using the official package (not the linked one), be sure to un-link:
 
 ```bash
 yarn unlink jdg-ui-svelte
 ```
+> After this, need to run ```yarn install --force```
 
 # Publishing
 First, update the version in package.json by incrementing whichever field makes sense given the current changes.
