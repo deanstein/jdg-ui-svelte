@@ -706,7 +706,7 @@
 		</div>
 	{/if}
 	<!-- show the spinner during loading if requested -->
-	{#if !isImageLoaded && showLoadingSpinner}
+	{#if !isImageLoaded && showLoadingSpinner && isVisible}
 		<div class="image-loading-spinner-container {imageLoadingSpinnerContainerCss}">
 			<JDGLoadingSpinner />
 		</div>
