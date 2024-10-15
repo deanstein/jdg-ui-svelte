@@ -53,20 +53,20 @@
 
 <!-- this a unique usage of MetaTags; don't use for Svelte websites -->
 <!-- see jdg-website repo for correct website usage of MetaTags -->
-<MetaTags 
+<MetaTags
 	title={sharedStrings.websiteTitle}
 	openGraph={{
 		title: sharedStrings.websiteTitle,
 		description: sharedStrings.websiteDescription,
 		images: [
-		  {
-			url: sharedStrings.web,
-			width: 800,
-			height: 600,
-		  }
-		],
-	  }}
-	/>
+			{
+				url: sharedStrings.web,
+				width: 800,
+				height: 600
+			}
+		]
+	}}
+/>
 <JDGAppContainer appAccentColors={jdgColors.accentColorsCCP} {showHeaderStripes}>
 	<JDGNotificationBanner notificationType={jdgNotificationTypes.information.id} />
 	<JDGHeader
