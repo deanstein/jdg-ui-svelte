@@ -121,9 +121,6 @@
 	`;
 
 	onMount(() => {
-		// need to initially set the dynamic css for initialization
-		captionAttributionDynamicCss = captionAttributionDyamicCssInitial;
-
 		if (showCaption && imageAttributes.imgCaption) {
 			// set up a resize observer to calculate the final available width for text
 			const observer = new ResizeObserver(() => {
@@ -138,19 +135,23 @@
 	});
 
 	// dynamic css, updated whenever truncateText changes
-	let captionAttributionDynamicCss = captionAttributionDyamicCssInitial;
+	let captionAttributionDynamicCss = css``;
 	$: {
-		availableWidthRef, availableWidth;
-		// update css based on truncateText
-		if (availableWidth === 0) {
-			captionAttributionDynamicCss = captionAttributionDyamicCssInitial;
-		} else {
-			captionAttributionDynamicCss = css`
-				text-overflow: ${truncateText ? 'ellipsis' : 'clip'};
-				white-space: ${truncateText ? 'nowrap' : 'normal'};
-			}
-		`;
-		}
+		availableWidthRef, isCaptionTooLong;
+		captionAttributionDynamicCss = css`
+			text-overflow: ${truncateText || availableWidth === 0 ? 'ellipsis' : 'clip'};
+			white-space: ${truncateText || availableWidth === 0 ? 'nowrap' : 'normal'};
+		}`;
+
+		// 		// debug stuff
+		// 		doShowDevOverlay.set(true);
+		// devOverlayContent.set({
+		// 	availableWidth: availableWidth,
+		// 	captionTextWidth: captionTextWidth,
+		// 	isCaptionTooLong: isCaptionTooLong,
+		// 	truncateText: truncateText,
+		// 	css: captionAttributionDynamicCss
+		// });
 	}
 
 	// check for truncation when clientWidth changes
@@ -158,16 +159,6 @@
 		$clientWidth, availableWidthRef, captionTextRef;
 		updateWidths();
 		isCaptionTooLong = getIsCaptionTooLong();
-
-		// debug stuff
-		doShowDevOverlay.set(true);
-		devOverlayContent.set({
-			availableWidth: availableWidth,
-			captionTextWidth: captionTextWidth,
-			isCaptionTooLong: isCaptionTooLong,
-			truncateText: truncateText,
-			css: captionAttributionDynamicCss
-		});
 	}
 </script>
 
