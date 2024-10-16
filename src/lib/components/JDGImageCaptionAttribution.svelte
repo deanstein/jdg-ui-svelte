@@ -23,6 +23,7 @@
 	let captionTextWidth = 0; // final caption width - updated after loading
 	let buttonContainerRef; // the expand/collapse button - hidden for measurements
 	let isCaptionTooLong = false;
+	let hasMounted = false;
 
 	const toggleCaptionTruncation = () => {
 		truncateText = !truncateText;
@@ -119,13 +120,8 @@
 			line-height: 12px;
 		}
 	`;
-	
+
 	onMount(() => {
-		let revertAfter = false;
-		if (!truncateText) {
-			truncateText = true;
-			revertAfter = true;
-		}
 		// need to initially set the dynamic css for initialization
 		captionAttributionDynamicCss = captionAttributionDyamicCssInitial;
 
@@ -141,21 +137,21 @@
 			};
 		}
 
-		if (revertAfter) {
-			truncateText = false;
-		}
+		hasMounted = true;
 	});
 
 	// dynamic css, updated whenever truncateText changes
 	let captionAttributionDynamicCss = captionAttributionDyamicCssInitial;
 	$: {
 		availableWidth;
-		// update css based on truncateText
-		captionAttributionDynamicCss = css`
-        text-overflow: ${truncateText ? 'ellipsis' : 'clip'};
-        white-space: ${truncateText ? 'nowrap' : 'normal'};
-        }
-    `;
+		if (hasMounted) {
+			// update css based on truncateText
+			captionAttributionDynamicCss = css`
+			text-overflow: ${truncateText ? 'ellipsis' : 'clip'};
+			white-space: ${truncateText ? 'nowrap' : 'normal'};
+			}
+		`;
+		}
 	}
 
 	// check for truncation when clientWidth changes
