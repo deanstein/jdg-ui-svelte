@@ -1,5 +1,10 @@
 <script>
-	import { JDGContentBoxFloating, JDGContentContainer, JDGImageCarousel } from '$lib/index.js';
+	import {
+		JDGContentBoxFloating,
+		JDGContentContainer,
+		JDGImageCarousel,
+		JDGImageTile
+	} from '$lib/index.js';
 	import { imageAttributesCollection } from '../image-attributes-collection.js';
 </script>
 
@@ -10,6 +15,11 @@
 				imageAttributesCollection.fairgrounds_aerial,
 				imageAttributesCollection.speer_point_after
 			]}
+		/>
+		<JDGImageTile
+			imageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
+			cropToFillContainer={false}
+			maxHeight="400px"
 		/>
 	</JDGContentBoxFloating>
 </JDGContentContainer>
