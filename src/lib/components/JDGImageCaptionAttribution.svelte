@@ -23,7 +23,6 @@
 	let captionTextWidth = 0; // final caption width - updated after loading
 	let buttonContainerRef; // the expand/collapse button - hidden for measurements
 	let isCaptionTooLong = false;
-	let hasMounted = false;
 
 	const toggleCaptionTruncation = () => {
 		truncateText = !truncateText;
@@ -130,7 +129,6 @@
 			const observer = new ResizeObserver(() => {
 				updateWidths();
 				isCaptionTooLong = getIsCaptionTooLong();
-				hasMounted = true;
 			});
 			observer.observe(captionTextRef);
 			return () => {
@@ -142,15 +140,13 @@
 	// dynamic css, updated whenever truncateText changes
 	let captionAttributionDynamicCss = captionAttributionDyamicCssInitial;
 	$: {
-		availableWidth, availableWidthRef;
-		if (hasMounted) {
-			// update css based on truncateText
-			captionAttributionDynamicCss = css`
-				text-overflow: ${truncateText ? 'ellipsis' : 'clip'};
-				white-space: ${truncateText ? 'nowrap' : 'normal'};
-			}
-		`;
-		}
+		availableWidthRef;
+		// update css based on truncateText
+		captionAttributionDynamicCss = css`
+        text-overflow: ${truncateText ? 'ellipsis' : 'clip'};
+        white-space: ${truncateText ? 'nowrap' : 'normal'};
+        }
+    `;
 	}
 
 	// check for truncation when clientWidth changes
