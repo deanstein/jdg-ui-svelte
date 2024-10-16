@@ -106,9 +106,11 @@
 	};
 
 	const handleMouseMove = (event) => {
-		const rect = imageCompareContainerRef.getBoundingClientRect();
-		const x = event.clientX - rect.left;
-		sliderPositionStore.set((x / rect.width) * 100);
+		if (isInView) {
+			const rect = imageCompareContainerRef.getBoundingClientRect();
+			const x = event.clientX - rect.left;
+			sliderPositionStore.set((x / rect.width) * 100);
+		}
 	};
 	const handleTouchMove = (event) => {
 		const rect = imageCompareContainerRef.getBoundingClientRect();
