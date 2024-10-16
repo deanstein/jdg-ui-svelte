@@ -22,5 +22,6 @@
 		font-size: 8px;
 		justify-content: center;
 		align-items: center;
+        overflow-wrap: anywhere;
 	}
 </style>
