@@ -143,7 +143,7 @@
 	// dynamic css, updated whenever truncateText changes
 	let captionAttributionDynamicCss = captionAttributionDyamicCssInitial;
 	$: {
-		availableWidth;
+		availableWidth, availableWidthRef;
 		if (hasMounted) {
 			// update css based on truncateText
 			captionAttributionDynamicCss = css`
