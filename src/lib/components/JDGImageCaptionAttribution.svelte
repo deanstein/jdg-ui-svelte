@@ -122,7 +122,7 @@
 
 	onMount(() => {
 		// need to initially set the dynamic css for initialization
-		captionAttributionDynamicCss = captionAttributionDyamicCssInitial;
+		//captionAttributionDynamicCss = captionAttributionDyamicCssInitial;
 
 		if (showCaption && imageAttributes.imgCaption) {
 			// set up a resize observer to calculate the final available width for text
