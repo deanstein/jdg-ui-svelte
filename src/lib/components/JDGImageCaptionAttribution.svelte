@@ -2,7 +2,7 @@
 	import { css } from '@emotion/css';
 	import { onMount } from 'svelte';
 
-	import { clientWidth, devOverlayContent, doShowDevOverlay } from '$lib/states/ui-state.js';
+	import { clientWidth } from '$lib/states/ui-state.js';
 	import { setAlphaInRgbaString } from '$lib/jdg-graphics-factory.js';
 	import { getFullTextWidth } from '$lib/jdg-ui-management.js';
 	import { getMaxElementWidthPx } from '$lib/jdg-utils.js';
@@ -55,14 +55,6 @@
 	};
 
 	const attributionPrefix = 'Image Source: ';
-
-	// when this component mounts, need to apply these styles
-	// to ensure sizing works correctly
-	// these values may change depending on truncateText
-	const captionAttributionDyamicCssInitial = css`
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	`;
 
 	const captionAttributionContainerCss = css`
 		color: ${jdgColors.text};
@@ -142,16 +134,6 @@
 			text-overflow: ${truncateText || availableWidth === 0 ? 'ellipsis' : 'clip'};
 			white-space: ${truncateText || availableWidth === 0 ? 'nowrap' : 'normal'};
 		}`;
-
-		// 		// debug stuff
-		// 		doShowDevOverlay.set(true);
-		// devOverlayContent.set({
-		// 	availableWidth: availableWidth,
-		// 	captionTextWidth: captionTextWidth,
-		// 	isCaptionTooLong: isCaptionTooLong,
-		// 	truncateText: truncateText,
-		// 	css: captionAttributionDynamicCss
-		// });
 	}
 
 	// check for truncation when clientWidth changes
