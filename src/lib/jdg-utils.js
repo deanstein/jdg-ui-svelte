@@ -449,6 +449,10 @@ export const adjustColorForContrast = (
 	baseColor,
 	minContrastRatio = 2.5 /* WCAG contrast value (ideal is 4.5) */
 ) => {
+	// if incoming color is transparent, do nothing
+	if (colorToChange === 'transparent') {
+		return colorToChange;
+	}
 	//console.log("Adjusting color for contrast. Color to change: " + colorToChange + " and base color: " + baseColor);
 	// Check if color and baseColor are in HEX or RGBA format
 	let isColorHex = typeof colorToChange === 'string' && colorToChange.startsWith('#');
