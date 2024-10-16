@@ -54,23 +54,6 @@
 		}
 	};
 
-	onMount(() => {
-		// need to initially set the dynamic css for initialization
-		captionAttributionDynamicCss = captionAttributionDyamicCssInitial;
-
-		if (showCaption && imageAttributes.imgCaption) {
-			// set up a resize observer to calculate the final available width for text
-			const observer = new ResizeObserver(() => {
-				updateWidths();
-				isCaptionTooLong = getIsCaptionTooLong();
-			});
-			observer.observe(captionTextRef);
-			return () => {
-				observer.disconnect();
-			};
-		}
-	});
-
 	const attributionPrefix = 'Image Source: ';
 
 	// when this component mounts, need to apply these styles
@@ -136,11 +119,37 @@
 			line-height: 12px;
 		}
 	`;
+	
+	onMount(() => {
+		let revertAfter = false;
+		if (!truncateText) {
+			truncateText = true;
+			revertAfter = true;
+		}
+		// need to initially set the dynamic css for initialization
+		captionAttributionDynamicCss = captionAttributionDyamicCssInitial;
+
+		if (showCaption && imageAttributes.imgCaption) {
+			// set up a resize observer to calculate the final available width for text
+			const observer = new ResizeObserver(() => {
+				updateWidths();
+				isCaptionTooLong = getIsCaptionTooLong();
+			});
+			observer.observe(captionTextRef);
+			return () => {
+				observer.disconnect();
+			};
+		}
+
+		if (revertAfter) {
+			truncateText = false;
+		}
+	});
 
 	// dynamic css, updated whenever truncateText changes
 	let captionAttributionDynamicCss = captionAttributionDyamicCssInitial;
 	$: {
-		availableWidthRef, availableWidth;
+		availableWidth;
 		// update css based on truncateText
 		captionAttributionDynamicCss = css`
         text-overflow: ${truncateText ? 'ellipsis' : 'clip'};
