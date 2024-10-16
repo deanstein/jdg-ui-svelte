@@ -130,25 +130,24 @@
 			const observer = new ResizeObserver(() => {
 				updateWidths();
 				isCaptionTooLong = getIsCaptionTooLong();
+				hasMounted = true;
 			});
 			observer.observe(captionTextRef);
 			return () => {
 				observer.disconnect();
 			};
 		}
-
-		hasMounted = true;
 	});
 
 	// dynamic css, updated whenever truncateText changes
 	let captionAttributionDynamicCss = captionAttributionDyamicCssInitial;
 	$: {
-		availableWidth, availableWidthRef, captionTextRef, captionTextWidth;
+		availableWidth, availableWidthRef;
 		if (hasMounted) {
 			// update css based on truncateText
 			captionAttributionDynamicCss = css`
-			text-overflow: ${truncateText ? 'ellipsis' : 'clip'};
-			white-space: ${truncateText ? 'nowrap' : 'normal'};
+				text-overflow: ${truncateText ? 'ellipsis' : 'clip'};
+				white-space: ${truncateText ? 'nowrap' : 'normal'};
 			}
 		`;
 		}
