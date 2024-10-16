@@ -124,34 +124,33 @@
 		// need to initially set the dynamic css for initialization
 		captionAttributionDynamicCss = captionAttributionDyamicCssInitial;
 
-		requestAnimationFrame(() => {
-			updateWidths();
-			isCaptionTooLong = getIsCaptionTooLong();
-
-			// Set up the resize observer after initial calculations
-			if (showCaption && imageAttributes.imgCaption) {
-				const observer = new ResizeObserver(() => {
-					updateWidths();
-					isCaptionTooLong = getIsCaptionTooLong();
-				});
-				observer.observe(captionTextRef);
-				return () => {
-					observer.disconnect();
-				};
-			}
-		});
+		if (showCaption && imageAttributes.imgCaption) {
+			// set up a resize observer to calculate the final available width for text
+			const observer = new ResizeObserver(() => {
+				updateWidths();
+				isCaptionTooLong = getIsCaptionTooLong();
+			});
+			observer.observe(captionTextRef);
+			return () => {
+				observer.disconnect();
+			};
+		}
 	});
 
 	// dynamic css, updated whenever truncateText changes
 	let captionAttributionDynamicCss = captionAttributionDyamicCssInitial;
 	$: {
-		availableWidthRef;
+		availableWidthRef, availableWidth;
 		// update css based on truncateText
-		captionAttributionDynamicCss = css`
-        text-overflow: ${truncateText ? 'ellipsis' : 'clip'};
-        white-space: ${truncateText ? 'nowrap' : 'normal'};
-        }
-    `;
+		if (availableWidth === 0) {
+			captionAttributionDynamicCss = captionAttributionDyamicCssInitial;
+		} else {
+			captionAttributionDynamicCss = css`
+				text-overflow: ${truncateText ? 'ellipsis' : 'clip'};
+				white-space: ${truncateText ? 'nowrap' : 'normal'};
+			}
+		`;
+		}
 	}
 
 	// check for truncation when clientWidth changes
