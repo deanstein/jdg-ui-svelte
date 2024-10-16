@@ -53,6 +53,8 @@
 	export let textColor = jdgColors.textDm;
 	export let textColorHover = jdgColors.textDm;
 	export let backgroundColor = getDefaultBackgroundColor();
+	export let doAdjustBackgroundColorForContrast = true;
+	export let contrastRatio = 2;
 	// hover color by default is a slightly darker version of the background color
 	export let backgroundColorHover = getDefaultBackgroundHoverColor();
 	export let fontSize = '1rem';
@@ -60,7 +62,7 @@
 	export let borderRadius = '1.5em';
 	export let paddingTopBottom = '10px';
 	export let paddingLeftRight = '20px';
-	export let forceSquareRatio = false;
+	export let doForceSquareRatio = false;
 	export let gap = '8px';
 	export let tooltip = undefined;
 
@@ -76,17 +78,21 @@
 						? '100%'
 						: width /* button is 100% width on smallest breakpoint */
 			};
-			border-radius: ${forceSquareRatio ? '50%' : borderRadius};
+			border-radius: ${doForceSquareRatio ? '50%' : borderRadius};
 			padding: ${`${paddingTopBottom} ${paddingLeftRight} ${paddingTopBottom} ${paddingLeftRight}`};
 			gap: ${gap};
 			color: ${textColor};
-			background-color: ${isEnabled ? backgroundColor : jdgColors.disabled};
+			background-color: ${isEnabled
+				? doAdjustBackgroundColorForContrast
+					? adjustColorForContrast(backgroundColor, textColor, contrastRatio)
+					: backgroundColor
+				: jdgColors.disabled};
 			:hover {
 				color: ${textColorHover};
 				background-color: ${isEnabled ? backgroundColorHover : jdgColors.disabled};
 			}
 			cursor: ${isEnabled ? 'pointer' : 'default'};
-			aspect-ratio: ${forceSquareRatio ? '1' : ''};
+			aspect-ratio: ${doForceSquareRatio ? '1' : ''};
 		`;
 	}
 </script>
