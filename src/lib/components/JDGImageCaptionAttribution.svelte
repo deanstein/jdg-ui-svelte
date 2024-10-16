@@ -140,7 +140,7 @@
 	// dynamic css, updated whenever truncateText changes
 	let captionAttributionDynamicCss = captionAttributionDyamicCssInitial;
 	$: {
-		availableWidth;
+		availableWidthRef, availableWidth;
 		// update css based on truncateText
 		captionAttributionDynamicCss = css`
         text-overflow: ${truncateText ? 'ellipsis' : 'clip'};
