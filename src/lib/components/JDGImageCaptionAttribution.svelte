@@ -32,13 +32,6 @@
 		if (!buttonContainerRef || !availableWidthRef || !captionTextRef) {
 			return;
 		}
-		
-		let revert = false;
-		if (!truncateText) {
-			truncateText = true;
-			revert = true;
-		}
-
 		// temporarily set the button to absolute
 		// so we can calculate the width without the button
 		let previousPositionValue;
@@ -53,10 +46,6 @@
 		// set the button container ref back to its original value
 		// now that we're done measuring
 		buttonContainerRef.style.position = previousPositionValue;
-
-		if (revert) {
-			truncateText = false;
-		}
 	};
 
 	const getIsCaptionTooLong = () => {
@@ -135,17 +124,22 @@
 		// need to initially set the dynamic css for initialization
 		captionAttributionDynamicCss = captionAttributionDyamicCssInitial;
 
-		if (showCaption && imageAttributes.imgCaption) {
-			// set up a resize observer to calculate the final available width for text
-			const observer = new ResizeObserver(() => {
-				updateWidths();
-				isCaptionTooLong = getIsCaptionTooLong();
-			});
-			observer.observe(captionTextRef);
-			return () => {
-				observer.disconnect();
-			};
-		}
+		requestAnimationFrame(() => {
+			updateWidths();
+			isCaptionTooLong = getIsCaptionTooLong();
+
+			// Set up the resize observer after initial calculations
+			if (showCaption && imageAttributes.imgCaption) {
+				const observer = new ResizeObserver(() => {
+					updateWidths();
+					isCaptionTooLong = getIsCaptionTooLong();
+				});
+				observer.observe(captionTextRef);
+				return () => {
+					observer.disconnect();
+				};
+			}
+		});
 	});
 
 	// dynamic css, updated whenever truncateText changes
