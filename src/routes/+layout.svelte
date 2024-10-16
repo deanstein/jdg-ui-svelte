@@ -17,31 +17,33 @@
 	import sharedStrings from './shared-strings.js';
 
 	// define the nav items in the header
-	const newNavItem1 = instantiateObject(jdgNavItem);
-	newNavItem1.label = 'HOME';
-	newNavItem1.href = '/';
+	const navItemHome = instantiateObject(jdgNavItem);
+	navItemHome.label = 'HOME';
+	navItemHome.href = '/';
 
-	const newNavItem2 = instantiateObject(jdgNavItem);
-	newNavItem2.label = 'ABOUT';
-	newNavItem2.href = '/about';
+	const navItemPlaceholder = instantiateObject(jdgNavItem);
+	navItemPlaceholder.label = 'PLACEHOLDER TEST';
+	navItemPlaceholder.href = '/jdg-test';
 
-	const newNavItem3 = instantiateObject(jdgNavItem);
-	newNavItem3.label = 'CONTACT';
-	newNavItem3.href = '/contact';
+	const navItemSimpleTest = instantiateObject(jdgNavItem);
+	navItemSimpleTest.label = 'SIMPLE TEST';
+	navItemSimpleTest.href = '/simple-test';
 
-	const newNavItem4 = instantiateObject(jdgNavItem);
-	newNavItem4.label = 'SIMPLE TEST';
-	newNavItem4.href = '/simple-test';
+	const navItemCloudinaryTest = instantiateObject(jdgNavItem);
+	navItemCloudinaryTest.label = 'CLOUDINARY TEST';
+	navItemCloudinaryTest.href = '/cloudinary-test';
 
-	const newNavItem5 = instantiateObject(jdgNavItem);
-	newNavItem5.label = 'CLOUDINARY TEST';
-	newNavItem5.href = '/cloudinary-test';
+	const navItemJdgTest = instantiateObject(jdgNavItem);
+	navItemJdgTest.label = 'JDG TEST';
+	navItemJdgTest.href = '/jdg-test';
 
-	const newNavItem6 = instantiateObject(jdgNavItem);
-	newNavItem6.label = 'JDG TEST';
-	newNavItem6.href = '/jdg-test';
-
-	const navItems = [newNavItem1, newNavItem2, newNavItem3, newNavItem4, newNavItem5, newNavItem6];
+	const navItems = [
+		navItemHome,
+		navItemSimpleTest,
+		navItemCloudinaryTest,
+		navItemJdgTest,
+		navItemPlaceholder
+	];
 
 	// get the app version from package.json
 	//@ts-expect-error
@@ -76,7 +78,7 @@
 		logoAlt="JDG SVELTE UI"
 		{navItems}
 		useMobileNav={true}
-		suppressAlphaOnScroll={true}
+		suppressAlphaOnScroll={false}
 	/>
 	<JDGBackground />
 	<!-- all content goes in this slot -->
