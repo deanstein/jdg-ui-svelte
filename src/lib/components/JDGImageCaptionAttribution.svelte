@@ -138,7 +138,7 @@
 	});
 
 	// dynamic css, updated whenever truncateText changes
-	let captionAttributionDynamicCss = captionAttributionDyamicCssInitial;
+	let captionAttributionDynamicCss = css``;
 	$: {
 		availableWidthRef, availableWidth;
 		// update css based on truncateText
