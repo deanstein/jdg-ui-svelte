@@ -712,7 +712,7 @@
 		</div>
 	{/if}
 	<!-- show the image placeholder during loading if requested -->
-	{#if !isImageLoaded && showPlaceholderImage}
+	{#if !isImageLoaded && showPlaceholderImage && isVisible}
 		<div class="image-loading-overlay {imageLoadingOverlayCss}" />
 	{/if}
 	{#if showImageError}
