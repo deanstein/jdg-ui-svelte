@@ -8,7 +8,7 @@
 	import { imageAttributesCollection } from '../image-attributes-collection.js';
 </script>
 
-<JDGContentContainer overlapWithHeader={true} paddingTop="0">
+<JDGContentContainer overlapWithHeader={false}>
 	<JDGContentBoxFloating>
 		<JDGImageCarousel
 			imageAttributeObjects={[
