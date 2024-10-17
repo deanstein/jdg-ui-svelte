@@ -11,7 +11,7 @@
 	} from '$lib/states/ui-state.js';
 
 	import { JDGButton, JDGImage, JDGImageCaptionAttribution, JDGImageTile } from '$lib/index.js';
-	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { getImageAspectRatioRecord } from '$lib/jdg-state-management.js';
 	import {
 		getMaxElementHeightPx,
@@ -31,7 +31,7 @@
 	let allFittedHeightsPx;
 
 	let carouselRef; // used for only auto-advancing when carousel is visible
-	let activeImage = imageAttributeObjects[0]; // start with the first image
+	let activeImageAttributes = imageAttributeObjects[0]; // start with the first image
 	let kludge = true; // kludge to force a "crossfade" effect by swapping divs via flag
 	let intervalId; // identifier for the auto-advance setInterval() call
 
@@ -63,7 +63,7 @@
 	};
 
 	const setActiveImage = (imageAttributesObject, endAutoAdvance = false) => {
-		activeImage = imageAttributesObject;
+		activeImageAttributes = imageAttributesObject;
 		kludge = !kludge;
 		// when user clicks on a thumbnail, auto advance stops
 		if (endAutoAdvance) {
@@ -97,7 +97,7 @@
 				([entry]) => {
 					if (entry.isIntersecting) {
 						intervalId = setInterval(() => {
-							let currentIndex = imageAttributeObjects.indexOf(activeImage);
+							let currentIndex = imageAttributeObjects.indexOf(activeImageAttributes);
 							currentIndex = (currentIndex + 1) % imageAttributeObjects.length;
 							setActiveImage(imageAttributeObjects[currentIndex]);
 						}, autoAdvanceInterval);
@@ -159,7 +159,7 @@
 		{#if kludge}
 			<div class="carousel-crossfade-wrapper-absolute">
 				<JDGImage
-					imageAttributes={activeImage}
+					imageAttributes={activeImageAttributes}
 					{maxHeight}
 					cropToFillContainer={false}
 					{showBlurInUnfilledSpace}
@@ -170,7 +170,7 @@
 		{:else}
 			<div class="carousel-crossfade-wrapper-absolute">
 				<JDGImage
-					imageAttributes={activeImage}
+					imageAttributes={activeImageAttributes}
 					{maxHeight}
 					cropToFillContainer={false}
 					{showBlurInUnfilledSpace}
@@ -182,7 +182,7 @@
 			<JDGButton
 				onClickFunction={() => {
 					doShowImageDetailOverlay.set(true);
-					imageDetailAttributes.set(activeImage);
+					imageDetailAttributes.set(activeImageAttributes);
 				}}
 				faIcon="fa-solid fa-expand"
 				label={null}
@@ -195,15 +195,17 @@
 		</div>
 	</div>
 	<JDGImageCaptionAttribution
-		imageAttributes={activeImage}
-		backgroundColorRgba="rgba(0, 0, 0, 0)"
+		imageAttributes={activeImageAttributes}
+		backgroundColorRgba={activeImageAttributes.allowBackgroundBlur
+			? jdgColors.imageLabelBackground
+			: 'rgba(0, 0, 0, 0)'}
 		matchBodyCopyPadding={true}
 	/>
 	<div class="carousel-thumbnail-container {thumbnailContainerCss}">
 		{#each imageAttributeObjects as imageAttributesObject, i}
 			<div
 				class="carousel-thumbnail-wrapper"
-				style={imageAttributesObject === activeImage
+				style={imageAttributesObject === activeImageAttributes
 					? `outline: 5px solid ${activeThumbnailColor}`
 					: ''}
 			>

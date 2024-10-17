@@ -58,7 +58,6 @@
 
 	const captionAttributionContainerCss = css`
 		color: ${jdgColors.text};
-		background-color: ${backgroundColorRgba};
 		backdrop-filter: ${backgroundColorRgba !== 'rgba(0, 0, 0, 0)'
 			? `blur(${jdgSizes.blurSizeSmall})`
 			: ''};
@@ -126,7 +125,14 @@
 		}
 	});
 
-	// dynamic css, updated whenever truncateText changes
+	// dynamic css
+	let captionAttributionContainerDynamicCss = css``;
+	$: {
+		captionAttributionContainerDynamicCss = css`
+			background-color: ${backgroundColorRgba};
+		`;
+	}
+
 	let captionAttributionDynamicCss = css``;
 	$: {
 		availableWidthRef, isCaptionTooLong;
@@ -145,7 +151,7 @@
 </script>
 
 <div
-	class="jdg-caption-attribution-container {captionAttributionContainerCss}"
+	class="jdg-caption-attribution-container {captionAttributionContainerCss} {captionAttributionContainerDynamicCss}"
 	on:click|stopPropagation={(event) => {
 		event.stopPropagation();
 		toggleCaptionTruncation();
