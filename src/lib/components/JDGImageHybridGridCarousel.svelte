@@ -8,11 +8,15 @@
 		JDGImageTile
 	} from '$lib/index.js';
 
-	export let imageAttributeObjects = []; // all images shown in thumbnail collection
-	export let fillContainer = true;
+	// shared props
+	export let cropToFillContainer = true;
 	export let showBlurInUnfilledSpace = false;
 	export let showCaption = true;
 	export let showAttribution = true;
+	export let imageAttributeObjects = []; // all images shown in thumbnail collection
+	// carousel props
+	export let fullWidthCarouselOnMobile = true;
+	// image + grid layout props
 	export let useCompactHeightOnMobile = true;
 	export let maxColumns = 3;
 </script>
@@ -20,16 +24,21 @@
 <div class="jdg-hybrid-image-grid-carousel-container">
 	<!-- mobile always uses image carousel -->
 	{#if $isMobileBreakpoint}
-		<JDGFullWidthContainer>
+		<!-- carousel can be full-width or not -->
+		{#if fullWidthCarouselOnMobile}
+			<JDGFullWidthContainer>
+				<JDGImageCarousel {imageAttributeObjects}></JDGImageCarousel>
+			</JDGFullWidthContainer>
+		{:else}
 			<JDGImageCarousel {imageAttributeObjects}></JDGImageCarousel>
-		</JDGFullWidthContainer>
+		{/if}
+		<!-- all other breakpoints use the grid layout with image tiles -->
 	{:else}
-		<!-- other breakpoints use the grid layout with image tiles -->
 		<JDGGridLayout {maxColumns}>
 			{#each imageAttributeObjects as imageAttributes, i}
 				<JDGImageTile
 					{imageAttributes}
-					cropToFillContainer={fillContainer}
+					{cropToFillContainer}
 					{showBlurInUnfilledSpace}
 					{showCaption}
 					{showAttribution}
