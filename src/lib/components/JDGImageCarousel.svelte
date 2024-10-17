@@ -1,5 +1,5 @@
 <script>
-	import { onDestroy, onMount } from 'svelte';
+	import { onDestroy, onMount, tick } from 'svelte';
 	import { css } from '@emotion/css';
 
 	import {
@@ -11,7 +11,7 @@
 	} from '$lib/states/ui-state.js';
 
 	import { JDGButton, JDGImage, JDGImageCaptionAttribution, JDGImageTile } from '$lib/index.js';
-	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgColors, jdgDurations, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { getImageAspectRatioRecord } from '$lib/jdg-state-management.js';
 	import {
 		getMaxElementHeightPx,
@@ -126,6 +126,8 @@
 		}
 	}
 
+	// dynamic css
+
 	// set the carousel height based on the max height in fitted heights array
 	let dynamicHeightCss = css`
 		height: ${maxHeight};
@@ -151,13 +153,46 @@
 			}
 		}
 	}
+
+	const applyStylesWithDelay = async () => {
+		await tick();
+		setTimeout(() => {
+			relativeWrapperCssDynamic = css`
+				width: ${activeImageAttributes.allowBackgroundBlur ? '100%' : 'max-content'};
+			`;
+			absoluteWrapperCssDynamic = css`
+				position: ${activeImageAttributes.allowBackgroundBlur ? 'absolute' : ''};
+				width: ${activeImageAttributes.allowBackgroundBlur ? '100%' : ''};
+				top: ${activeImageAttributes.allowBackgroundBlur ? '0' : ''};
+			`;
+		}, jdgDurations.fadeIn); // Adjust delay as needed
+	};
+
+	let relativeWrapperCssDynamic = css``;
+	// $: {
+	// 	relativeWrapperCssDynamic = css`
+	// 		width: ${activeImageAttributes.allowBackgroundBlur ? '100%' : 'max-content'};
+	// 		`;
+	// }
+
+	let absoluteWrapperCssDynamic = css``;
+	$: {
+		activeImageAttributes.allowBackgroundBlur, kludge;
+		applyStylesWithDelay();
+	}
+	// $: {
+	// 	absoluteWrapperCssDynamic = css`
+	// 		position: ${activeImageAttributes.allowBackgroundBlur ? 'absolute' : ''};
+	// 		width: ${activeImageAttributes.allowBackgroundBlur ? '100%' : ''};
+	// 		`;
+	// }
 </script>
 
 <div bind:this={carouselRef} class="jdg-image-carousel-container">
-	<div class="carousel-crossfade-wrapper-relative {dynamicHeightCss}">
+	<div class="carousel-crossfade-wrapper-relative {dynamicHeightCss} {relativeWrapperCssDynamic}">
 		<!-- kludge to force a "crossfade" effect by swapping divs via flag -->
 		{#if kludge}
-			<div class="carousel-crossfade-wrapper-absolute">
+			<div class="carousel-crossfade-wrapper-absolute {absoluteWrapperCssDynamic}">
 				<JDGImage
 					imageAttributes={activeImageAttributes}
 					{maxHeight}
@@ -168,7 +203,7 @@
 			</div>
 			<!-- kludge to force a "crossfade" effect by swapping divs via flag -->
 		{:else}
-			<div class="carousel-crossfade-wrapper-absolute">
+			<div class="carousel-crossfade-wrapper-absolute {absoluteWrapperCssDynamic}">
 				<JDGImage
 					imageAttributes={activeImageAttributes}
 					{maxHeight}
@@ -236,12 +271,9 @@
 
 	.carousel-crossfade-wrapper-relative {
 		position: relative;
-		width: 100%;
 	}
 
 	.carousel-crossfade-wrapper-absolute {
-		position: absolute;
-		width: 100%;
 		display: flex;
 		justify-content: center;
 	}
