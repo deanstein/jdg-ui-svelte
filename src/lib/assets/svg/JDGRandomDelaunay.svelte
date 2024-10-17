@@ -7,13 +7,11 @@
 	import { generateGradient } from '../../jdg-graphics-factory.js';
 	import { getAccentColors } from '$lib/jdg-state-management.js';
 
-	export let numberOfPoints = 16;
-
-	export let drawBorders = false;
-
+	export let numberOfPoints = 8;
+	export let edgeBufferRatio = 0.25; // points will be this far away from screen edges (ratio of total width or height)
+	export let drawBorders = true;
+	export let borderColorsHex = ['#C3C3C3FF']; // only used if drawBorders is true
 	export let heightMultiplier = 1; // set to > 1 if this image is used in a parallax context
-
-	let borderColors = []; // only used if drawBorders is true
 
 	onMount(() => {
 		const svg = d3
@@ -24,24 +22,23 @@
 			.attr('preserveAspectRatio', 'xMidYMid slice')
 			.attr('viewBox', `0 0 ${window.innerWidth} ${window.innerHeight}`);
 
-		// Define a buffer to prevent points from being too close to the edges
-		const buffer = 150;
-
-		// Generate evenly distributed points
+		// generate evenly-distributed random points
 		let points = d3.range(numberOfPoints).map(() => {
+			const widthBuffer = window.innerWidth * edgeBufferRatio;
+			const heightBuffer = window.innerHeight * heightMultiplier * edgeBufferRatio;
 			return [
-				d3.randomUniform(buffer, window.innerWidth - buffer)(),
-				d3.randomUniform(buffer, window.innerHeight * heightMultiplier - buffer)()
+				d3.randomUniform(widthBuffer, window.innerWidth - widthBuffer)(),
+				d3.randomUniform(heightBuffer, window.innerHeight * heightMultiplier - heightBuffer)()
 			];
 		});
 
-		// Add corners of the SVG
+		// add the four corners of the SVG
 		points.push([0, 0]); // Top-left corner
 		points.push([window.innerWidth, 0]); // Top-right corner
 		points.push([0, window.innerHeight * heightMultiplier]); // Bottom-left corner
 		points.push([window.innerWidth, window.innerHeight * heightMultiplier]); // Bottom-right corner
 
-		// Divide each side into 4 segments and add those points
+		// divide each side into 4 segments and add those points
 		for (let i = 1; i < 4; i++) {
 			points.push([(i * window.innerWidth) / 4, 0]); // Top side
 			points.push([(i * window.innerWidth) / 4, window.innerHeight * heightMultiplier]); // Bottom side
@@ -49,11 +46,11 @@
 			points.push([window.innerWidth, (i * window.innerHeight * heightMultiplier) / 4]); // Right side
 		}
 
-		// Create Delaunay triangulation
+		// create Delaunay triangulation
 		const delaunay = Delaunay.from(points);
 		const triangles = delaunay.triangles;
 
-		// Define fill colors and border colors
+		// define fill colors and border colors
 		const fillColors = generateGradient(
 			triangles.length,
 			jdgColors.backgroundFillRangeLm[0],
@@ -63,7 +60,7 @@
 
 		// console.log("created " + triangles.length + " delaunay triangles for background image.")
 		if (drawBorders) {
-			borderColors = getAccentColors();
+			borderColorsHex ?? getAccentColors();
 		}
 
 		// Draw triangles
@@ -82,7 +79,7 @@
 
 			if (drawBorders) {
 				polygon
-					.style('stroke', borderColors[Math.floor(Math.random() * borderColors.length)]) // Randomly select one of the border colors
+					.style('stroke', borderColorsHex[Math.floor(Math.random() * borderColorsHex.length)]) // Randomly select one of the border colors
 					.style('stroke-width', '2px'); // Set the stroke width
 			}
 		}
