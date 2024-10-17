@@ -245,7 +245,7 @@
 				imageAttributesCollection.hst.ehs_1919_plan,
 				imageAttributesCollection.hst.fms_2000s_plan_additions
 			]}
-			fillContainer={false}
+			cropToFillContainer={false}
 		/>
 		<JDGBodyCopy paddingBottom="0" textAlign="center"
 			><b>3+ ITEMS</b>

@@ -118,7 +118,8 @@ const imageAttributesCollection = {
 				'https://res.cloudinary.com/jdg-main/image/upload/v1721164767/jdg-website/exp/speer-point-after.jpg'
 			),
 			imgCaption:
-				'The alternate use scheme includes artist studios, a cafe, a restaurant, and event space.'
+				'The alternate use scheme includes artist studios, a cafe, a restaurant, and event space.',
+			allowBackgroundBlur: false
 		})
 	),
 	rose_mall_60s70s_construction_1: instantiateObject(jdgImageAttributes, {
