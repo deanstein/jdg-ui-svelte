@@ -8,6 +8,17 @@ import {
 import { getDistancePxToBottomOfHeader } from './jdg-ui-management.js';
 
 ///
+/// WINDOW UTILS
+///
+
+// remove an anchor tag from the URL
+export const removeAnchorTagFromHistory = () => {
+	const url = new URL(window.location.href);
+	const cleanUrl = url.origin + url.pathname;
+	window.history.replaceState(null, '', cleanUrl);
+};
+
+///
 /// ARRAY UTILS
 ///
 

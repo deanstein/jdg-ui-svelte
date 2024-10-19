@@ -9,9 +9,14 @@
 		imagesLoading,
 		isScrolling
 	} from '$lib/states/ui-state.js';
-	import { getIsWindowScrolledToBottom, scrollToAnchor } from '$lib/jdg-utils.js';
+	import {
+		getIsWindowScrolledToBottom,
+		removeAnchorTagFromHistory,
+		scrollToAnchor
+	} from '$lib/jdg-utils.js';
 
 	export let anchorTag;
+	export let doRemoveAnchorTagFromHistory = false; // removes anchor tag from URL bar
 	export let doShowDebugMessagesInConsole = false;
 
 	let anchorTagRef;
@@ -114,6 +119,9 @@
 		if (getIsAnchorTagInURL() && !$isScrolling) {
 			if (getHasArrived()) {
 				isScrollingToAnchorTag.set(false);
+				if (doRemoveAnchorTagFromHistory) {
+					removeAnchorTagFromHistory();
+				}
 				if (doShowDebugMessagesInConsole) {
 					console.log('Arrived, no longer checking for arrival.', anchorTag);
 				}
