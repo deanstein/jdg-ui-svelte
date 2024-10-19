@@ -2,6 +2,7 @@
 	import { JDGContentBoxFloating, JDGGridLayout, JDGImageTile } from '$lib/index.js';
 
 	export let contentBoxFloatingTitle = 'UP NEXT';
+	export let maxImageHeight = '250px';
 
 	// this is effectively a wrapper for 3 ImageTiles,
 	// so we need to supply all those props
@@ -30,6 +31,7 @@
 			labelJustification={'center'}
 			useCompactHeightOnMobile={false}
 			objectPosition={item1ObjectPosition}
+			maxHeight={maxImageHeight}
 		/>
 		<JDGImageTile
 			label={item2Label}
@@ -38,6 +40,7 @@
 			labelJustification={'center'}
 			useCompactHeightOnMobile={false}
 			objectPosition={item2ObjectPosition}
+			maxHeight={maxImageHeight}
 		/>
 		<JDGImageTile
 			label={item3Label}
@@ -46,6 +49,7 @@
 			labelJustification={'center'}
 			useCompactHeightOnMobile={false}
 			objectPosition={item3ObjectPosition}
+			maxHeight={maxImageHeight}
 		/>
 	</JDGGridLayout>
 </JDGContentBoxFloating>
