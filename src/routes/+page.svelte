@@ -20,7 +20,6 @@
 		JDGImageHybridGridCarousel,
 		JDGImageTile,
 		JDGJumpTo,
-		JDGLoadingSpinner,
 		JDGUpNext
 	} from '$lib/index.js';
 	import { jdgColors, jdgFonts } from '$lib/jdg-shared-styles.js';
