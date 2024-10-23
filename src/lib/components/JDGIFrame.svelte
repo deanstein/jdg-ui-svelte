@@ -6,13 +6,13 @@
 	export let src;
 	export let maxHeightPx = undefined;
 	export let aspectRatio = undefined;
-
+	
+	let containerRef;
 	let availableWidthPx = 0;
 	let preferredHeightPx = 0;
-	let isIframeLoaded = false;
 	const defaultPreferredHeightPx = 600;
 
-	let getPreferredHeight = () => {
+	const getPreferredHeight = () => {
 		let preferredHeight = 0;
 		// if maxHeightPx is provided, use it
 		if (isFinite(maxHeightPx)) {
@@ -34,10 +34,8 @@
 		return preferredHeight;
 	};
 
-	let containerRef;
-
 	$: {
-		// ensure the available width updates when the window width changes
+		// ensure both the available width and preferred height update when the window width changes
 		$windowWidth;
 		if (containerRef) {
 			availableWidthPx = getMaxElementWidthPx(containerRef);
