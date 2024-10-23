@@ -37,12 +37,17 @@
 	navItemJdgTest.label = 'JDG TEST';
 	navItemJdgTest.href = '/jdg-test';
 
+	const navItemIframe = instantiateObject(jdgNavItem);
+	navItemIframe.label = 'IFRAME TEST';
+	navItemIframe.href = '/iframe-test';
+
 	const navItems = [
 		navItemHome,
 		navItemSimpleTest,
 		navItemCloudinaryTest,
 		navItemJdgTest,
-		navItemPlaceholder
+		navItemPlaceholder,
+		navItemIframe
 	];
 
 	// get the app version from package.json
