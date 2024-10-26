@@ -150,53 +150,55 @@
 	}
 </script>
 
-<div
-	class="jdg-caption-attribution-container {captionAttributionContainerCss} {captionAttributionContainerDynamicCss}"
-	on:click|stopPropagation={(event) => {
-		event.stopPropagation();
-		toggleCaptionTruncation();
-	}}
-	on:keypress={() => {}}
-	role="button"
-	tabindex="0"
->
-	<div bind:this={availableWidthRef} class="caption-attribution-grid-container">
-		{#if showCaption && imageAttributes.imgCaption}
-			<div class="caption-attribution-flex-container {captionCss}">
-				<div bind:this={captionTextRef} class="caption-text {captionAttributionDynamicCss}">
-					{imageAttributes.imgCaption}
+{#if imageAttributes.imgCaption || imageAttributes.imageAttribution}
+	<div
+		class="jdg-caption-attribution-container {captionAttributionContainerCss} {captionAttributionContainerDynamicCss}"
+		on:click|stopPropagation={(event) => {
+			event.stopPropagation();
+			toggleCaptionTruncation();
+		}}
+		on:keypress={() => {}}
+		role="button"
+		tabindex="0"
+	>
+		<div bind:this={availableWidthRef} class="caption-attribution-grid-container">
+			{#if showCaption && imageAttributes.imgCaption}
+				<div class="caption-attribution-flex-container {captionCss}">
+					<div bind:this={captionTextRef} class="caption-text {captionAttributionDynamicCss}">
+						{imageAttributes.imgCaption}
+					</div>
 				</div>
-			</div>
-		{/if}
-		{#if showAttribution && imageAttributes.imgAttribution}
-			<div
-				class="caption-attribution-flex-container {captionAttributionDynamicCss} {attributionCss}"
-			>
-				<div class="attribution-text">
-					{attributionPrefix + imageAttributes.imgAttribution}
+			{/if}
+			{#if showAttribution && imageAttributes.imgAttribution}
+				<div
+					class="caption-attribution-flex-container {captionAttributionDynamicCss} {attributionCss}"
+				>
+					<div class="attribution-text">
+						{attributionPrefix + imageAttributes.imgAttribution}
+					</div>
 				</div>
-			</div>
-		{/if}
+			{/if}
+		</div>
+		<div bind:this={buttonContainerRef} class="expand-collapse-button-container">
+			{#if isCaptionTooLong}
+				<JDGButton
+					label={truncateText ? 'Show more' : 'Show less'}
+					faIcon={null}
+					onClickFunction={(event) => {
+						event.stopPropagation();
+						toggleCaptionTruncation();
+					}}
+					textColor={jdgColors.active}
+					backgroundColor={setAlphaInRgbaString(jdgColors.headerBackground, 0.2)}
+					backgroundColorHover={jdgColors.active}
+					paddingLeftRight="5px"
+					paddingTopBottom="3px"
+					fontSize="10px"
+				/>
+			{/if}
+		</div>
 	</div>
-	<div bind:this={buttonContainerRef} class="expand-collapse-button-container">
-		{#if isCaptionTooLong}
-			<JDGButton
-				label={truncateText ? 'Show more' : 'Show less'}
-				faIcon={null}
-				onClickFunction={(event) => {
-					event.stopPropagation();
-					toggleCaptionTruncation();
-				}}
-				textColor={jdgColors.active}
-				backgroundColor={setAlphaInRgbaString(jdgColors.headerBackground, 0.2)}
-				backgroundColorHover={jdgColors.active}
-				paddingLeftRight="5px"
-				paddingTopBottom="3px"
-				fontSize="10px"
-			/>
-		{/if}
-	</div>
-</div>
+{/if}
 
 <style>
 	.jdg-caption-attribution-container {
