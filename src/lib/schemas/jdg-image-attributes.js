@@ -2,8 +2,8 @@ import imagePlaceholder from '$lib/assets/raster/jdg-image-placeholder.png';
 
 const jdgImageAttributes = {
 	imgSrc: imagePlaceholder,
-	imgTitle: 'A placeholder image',
-	imgAlt: 'A placeholder image',
+	imgTitle: undefined,
+	imgAlt: undefined,
 	imgCaption: undefined,
 	imgAttribution: undefined,
 	allowBackgroundBlur: true /* set to false for images like plans and diagrams */
