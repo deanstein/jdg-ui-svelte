@@ -3,6 +3,7 @@
 		JDGBodyCopy,
 		JDGContentBoxFloating,
 		JDGContentContainer,
+		JDGH3H4,
 		JDGIFrame
 	} from '$lib/index.js';
 </script>
@@ -10,8 +11,8 @@
 <JDGContentContainer>
 	<JDGContentBoxFloating>
 		<JDGBodyCopy>
-			GOOGLE DOCS
-			<br /><br />
+			<JDGH3H4 h3String="GOOGLE DOCS" />
+			<br />
 			This is a really long sentence in order to fill up the div. Is it full? Maybe. Let's check. Nope.
 			Adding more text! What about now? We'll never know.
 			<JDGIFrame
@@ -20,8 +21,8 @@
 			/>
 		</JDGBodyCopy>
 		<JDGBodyCopy>
-			YOUTUBE
-			<br /><br />
+			<JDGH3H4 h3String="YOUTUBE" />
+			<br />
 			This is a really long sentence in order to fill up the div. Is it full? Maybe. Let's check. Nope.
 			Adding more text! What about now? We'll never know.
 			<JDGIFrame

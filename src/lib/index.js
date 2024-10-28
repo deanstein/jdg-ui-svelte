@@ -31,6 +31,12 @@ export { JDGContentBoxFloating };
 import JDGContentContainer from './components/JDGContentContainer.svelte';
 export { JDGContentContainer };
 
+import JDGDevToolbar from './components/JDGDevToolbar.svelte';
+export { JDGDevToolbar };
+
+import JDGDevToolbarSticky from './components/JDGDevToolbarSticky.svelte';
+export { JDGDevToolbarSticky };
+
 import JDGDevOverlay from './components/JDGDevOverlay.svelte';
 export { JDGDevOverlay };
 
@@ -45,6 +51,9 @@ export { JDGFullWidthContainer };
 
 import JDGGridLayout from './components/JDGGridLayout.svelte';
 export { JDGGridLayout };
+
+import JDGH3H4 from './components/JDGH3H4.svelte';
+export { JDGH3H4 };
 
 import JDGHeader from './components/JDGHeader.svelte';
 export { JDGHeader };

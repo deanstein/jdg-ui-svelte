@@ -8,6 +8,7 @@
 	import {
 		JDGAppContainer,
 		JDGBackground,
+		JDGDevToolbarSticky,
 		JDGFooter,
 		JDGHeader,
 		JDGNotificationBanner,
@@ -15,6 +16,11 @@
 	} from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
 	import sharedStrings from './shared-strings.js';
+	import {
+		doShowDevToolbarSticky,
+		imagesLoading,
+		isScrollingToAnchorTag
+	} from '$lib/states/ui-state.js';
 
 	// define the nav items in the header
 	const navItemHome = instantiateObject(jdgNavItem);
@@ -103,4 +109,12 @@
 			githubHref={jdgSharedUrls.ccpGitHubReleases}
 		/>
 	</JDGFooter>
+	{#if $doShowDevToolbarSticky}
+	<JDGDevToolbarSticky
+		stringContent={'Scrolling to anchor tag? ' +
+			$isScrollingToAnchorTag +
+			' Images loading: ' +
+			$imagesLoading}
+	/>
+{/if}
 </JDGAppContainer>

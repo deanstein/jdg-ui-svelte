@@ -6,6 +6,7 @@
 		allStateValues,
 		clientWidth,
 		doShowDevTools,
+		doShowDevToolbarSticky,
 		doShowHeaderStripes
 	} from '$lib/states/ui-state.js';
 
@@ -15,7 +16,7 @@
 	import { toggleDevTools } from '$lib/jdg-state-management.js';
 
 	import { jdgColors, jdgSizes } from '../jdg-shared-styles.js';
-	import { JDGButton, JDGStripesHorizontal } from '../index.js';
+	import { JDGButton, JDGH3H4, JDGDevToolbar, JDGDevToolbarSticky, JDGStripesHorizontal } from '../index.js';
 
 	export let repoName = jdgUiRepoName;
 	export let appVersion = undefined;
@@ -139,9 +140,11 @@
 		{/if}
 		{#if $doShowDevTools}
 			<div class="dev-tools">
+				<JDGDevToolbar />
 				<div class="state-view {stateViewCss}">
-					<b>UI STATE</b>
-					<br /><br />
+					<br>
+					<JDGH3H4 h3String="UI STATE" paddingTop="10px"/>
+					<br>
 					{#each Object.entries($allStateValues) as [key, value]}
 						<b>{key}:</b> {JSON.stringify(value)}<br /><br />
 					{/each}
@@ -178,5 +181,6 @@
 
 	.state-view {
 		word-wrap: break-word;
+		text-align: center;
 	}
 </style>
