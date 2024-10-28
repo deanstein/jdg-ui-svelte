@@ -6,7 +6,7 @@
 	export let src;
 	export let maxHeightPx = undefined;
 	export let aspectRatio = undefined;
-	
+
 	let containerRef;
 	let availableWidthPx = 0;
 	let preferredHeightPx = 0;
