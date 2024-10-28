@@ -115,8 +115,8 @@
 	// or if window is scrolled to bottom
 	// set the isScrollingToAnchorTag to false
 	$: {
-		$isScrolling, lastKnownAnchorTagYPos;
-		if (getIsAnchorTagInURL() && !$isScrolling) {
+		lastKnownAnchorTagYPos;
+		if (getIsAnchorTagInURL() && !$isScrolling && $imagesLoading.length === 0) {
 			if (getHasArrived()) {
 				isScrollingToAnchorTag.set(false);
 				if (doRemoveAnchorTagFromHistory) {
