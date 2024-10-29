@@ -1,10 +1,7 @@
 <script>
-	import { doShowDevOverlay } from '$lib/states/ui-state.js';
+	import { devOverlayContent, doShowDevOverlay } from '$lib/states/ui-state.js';
 
 	import { JDGH3H4, JDGOverlay } from '$lib/index.js';
-
-	// optionally output a string, like a snippet of uiState
-	export let stringContent = undefined;
 </script>
 
 <JDGOverlay
@@ -15,9 +12,12 @@
 >
 	<!-- show the dev overlay content state at a minimum -->
 	<JDGH3H4 h3String="DEV OVERLAY" />
-	<div class="dev-overlay-content">
-		{#if stringContent}
-			{stringContent}
+	<JDGH3H4 h4String="OVERLAY CONTENT STATE" />
+	<div class="state-output">
+		{#if $devOverlayContent}
+			{$devOverlayContent}
+		{:else}
+			No data found in $devOverlayContent state.
 		{/if}
 		<!-- consumers can also insert their own content -->
 		<slot />
@@ -25,7 +25,7 @@
 </JDGOverlay>
 
 <style>
-	.dev-overlay-content {
+	.state-output {
 		background-color: rgba(255, 255, 255, 1);
 		font-size: 8px;
 		justify-content: center;

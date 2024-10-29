@@ -36,7 +36,9 @@ export let accentColors = writable(jdgColors.accentColorsJDG);
 // dev tools
 export let doShowDevTools = writable(false); // state view and tools in footer
 export let doShowDevToolbarSticky = writable(false); // sticky toolbar with specific dev output
+export let devToolbarStickyContent = writable({});
 export let doShowDevOverlay = writable(false); // overlay with specific dev output
+export let devOverlayContent = writable({});
 
 // create a combined store to display in footer dev tools
 const storeMap = {
@@ -61,10 +63,12 @@ const storeMap = {
 	accentColors,
 	doShowDevTools,
 	doShowDevToolbarSticky,
-	doShowDevOverlay
+	devToolbarStickyContent,
+	doShowDevOverlay,
+	devOverlayContent
 };
 const storeEntries = Object.entries(storeMap);
-// derived store containing all states
+// derived store containing all ui state values
 export let allStateValues = derived(
 	storeEntries.map(([key, store]) => store),
 	($stores) => Object.fromEntries(storeEntries.map(([key], index) => [key, $stores[index]]))

@@ -7,6 +7,7 @@
 		accentColors,
 		clientWidth,
 		doShowDevOverlay,
+		doShowDevToolbarSticky,
 		doShowHeaderStripes,
 		doShowImageDetailOverlay,
 		headerHeightPx,
@@ -19,7 +20,12 @@
 
 	import { adjustColorForContrast, convertHexToRGBA } from '$lib/jdg-utils.js';
 
-	import { JDGDevOverlay, JDGImageDetailOverlay, JDGLoadingOverlay } from '$lib/index.js';
+	import {
+		JDGDevOverlay,
+		JDGDevToolbarSticky,
+		JDGImageDetailOverlay,
+		JDGLoadingOverlay
+	} from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgFonts, jdgLinkStyles } from '$lib/jdg-shared-styles.js';
 	import { getDistancePxToBottomOfHeader } from '$lib/jdg-ui-management.js';
 
@@ -152,8 +158,12 @@
 	{#if $doShowImageDetailOverlay}
 		<JDGImageDetailOverlay imageAttributes={$imageDetailAttributes} />
 	{/if}
+	<!-- show dev UI when requested -->
 	{#if $doShowDevOverlay}
 		<JDGDevOverlay />
+	{/if}
+	{#if $doShowDevToolbarSticky}
+		<JDGDevToolbarSticky />
 	{/if}
 </div>
 

@@ -17,7 +17,8 @@
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
 	import sharedStrings from './shared-strings.js';
 	import {
-		doShowDevToolbarSticky,
+		devOverlayContent,
+		devToolbarStickyContent,
 		imagesLoading,
 		isScrollingToAnchorTag
 	} from '$lib/states/ui-state.js';
@@ -62,6 +63,16 @@
 	const disclaimerMessage =
 		'This is text for the footer! It could be a disclaimer or something else.';
 	const showHeaderStripes = false;
+
+	// optional: configure dev toolbar or dev overlay data in state
+	$: {
+		devToolbarStickyContent.set(
+			`Is scrolling to anchor tag? ${$isScrollingToAnchorTag} Images loading: ${$imagesLoading}`
+		);
+		devOverlayContent.set(
+			`Is scrolling to anchor tag? ${$isScrollingToAnchorTag} Images loading: ${$imagesLoading}`
+		);
+	}
 </script>
 
 <!-- this a unique usage of MetaTags; don't use for Svelte websites -->
@@ -109,12 +120,4 @@
 			githubHref={jdgSharedUrls.ccpGitHubReleases}
 		/>
 	</JDGFooter>
-	{#if $doShowDevToolbarSticky}
-		<JDGDevToolbarSticky
-			stringContent={'Scrolling to anchor tag? ' +
-				$isScrollingToAnchorTag +
-				' Images loading: ' +
-				$imagesLoading}
-		/>
-	{/if}
 </JDGAppContainer>

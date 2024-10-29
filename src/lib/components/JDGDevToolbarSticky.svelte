@@ -1,19 +1,19 @@
 <script>
 	import { JDGDevToolbar, JDGH3H4 } from '$lib/index.js';
-
-	// optionally output a string, like a snippet of uiState
-	export let stringContent = undefined;
+	import { devToolbarStickyContent } from '$lib/states/ui-state.js';
 </script>
 
 <div class="jdg-dev-toolbar-placement-container">
 	<div class="dev-toolbar-sticky-content">
 		<JDGDevToolbar />
-		{#if stringContent}
-			<div class="custom-output-container">
-				<JDGH3H4 h3String="CUSTOM OUTPUT" />
-				{stringContent}
-			</div>
-		{/if}
+		<div class="state-output">
+			<JDGH3H4 h3String="TOOLBAR CONTENT STATE" />
+			{#if $devToolbarStickyContent}
+				{$devToolbarStickyContent}
+			{:else}
+				No data found in $devToolbarStickyContent state.
+			{/if}
+		</div>
 		<!-- consumers can also insert their own content -->
 		<slot />
 	</div>
@@ -34,7 +34,7 @@
 		background-color: rgba(200, 200, 200, 1);
 	}
 
-	.custom-output-container {
+	.state-output {
 		display: flex;
 		flex-direction: column;
 		text-align: center;
