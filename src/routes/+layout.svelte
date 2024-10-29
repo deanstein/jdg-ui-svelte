@@ -110,11 +110,11 @@
 		/>
 	</JDGFooter>
 	{#if $doShowDevToolbarSticky}
-	<JDGDevToolbarSticky
-		stringContent={'Scrolling to anchor tag? ' +
-			$isScrollingToAnchorTag +
-			' Images loading: ' +
-			$imagesLoading}
-	/>
-{/if}
+		<JDGDevToolbarSticky
+			stringContent={'Scrolling to anchor tag? ' +
+				$isScrollingToAnchorTag +
+				' Images loading: ' +
+				$imagesLoading}
+		/>
+	{/if}
 </JDGAppContainer>
