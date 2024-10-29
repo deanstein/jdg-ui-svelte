@@ -107,6 +107,7 @@
 	<slot />
 	<JDGFooter
 		{appVersion}
+		copyrightHref='/'
 		disclaimer={disclaimerMessage}
 		showDevToolsButton={true}
 		alignItems="center"

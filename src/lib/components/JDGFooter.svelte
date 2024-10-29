@@ -16,18 +16,13 @@
 	import { toggleDevTools } from '$lib/jdg-state-management.js';
 
 	import { jdgColors, jdgSizes } from '../jdg-shared-styles.js';
-	import {
-		JDGButton,
-		JDGH3H4,
-		JDGDevToolbar,
-		JDGDevToolbarSticky,
-		JDGStripesHorizontal
-	} from '../index.js';
+	import { JDGButton, JDGH3H4, JDGDevToolbar, JDGStripesHorizontal } from '../index.js';
 
 	export let repoName = jdgUiRepoName;
 	export let appVersion = undefined;
 	export let additionalVersionData = undefined; // optional additional version data, applicable to some sites
 	export let copyright = jdgSharedStrings.jdgCopyrightName; // appears after the (C) symbol
+	export let copyrightHref = undefined; // optional href for <a> element around copyright name
 	export let disclaimer = undefined; // optional disclaimer, applicable to some sites
 	export let alignItems = 'left';
 	export let backgroundColorRgba = jdgColors.headerBackground;
@@ -93,9 +88,22 @@
 		<!-- any extra content goes here -->
 		<slot />
 		<!-- copyright row -->
-		<div class="footer-row">
-			<div class="footer-item {footerItemCss}">© {copyrightYear} {copyright}</div>
-		</div>
+		{#if copyright}
+			<div class="footer-row">
+				<div class="footer-item {footerItemCss}">
+					<!-- wrap copyright in href if provided -->
+					{#if copyrightHref}
+						© {copyrightYear}
+						<a href={copyrightHref}>
+							{copyright}
+						</a>
+						<!-- otherwise just copyright, no href -->
+					{:else}
+						© {copyrightYear} {copyright}
+					{/if}
+				</div>
+			</div>
+		{/if}
 		<!-- disclaimer row -->
 		{#if disclaimer}
 			<div class="footer-row {footerDisclaimerCss}">
