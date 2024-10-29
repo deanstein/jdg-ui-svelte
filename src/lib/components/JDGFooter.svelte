@@ -94,7 +94,7 @@
 					<!-- wrap copyright in href if provided -->
 					{#if copyrightHref}
 						© {copyrightYear}
-						<a href={copyrightHref}>
+						<a href={copyrightHref} class="no-initial-highlight">
 							{copyright}
 						</a>
 						<!-- otherwise just copyright, no href -->
