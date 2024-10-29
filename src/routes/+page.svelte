@@ -207,9 +207,9 @@
 		</JDGGridLayout>
 		<JDGGridLayout>
 			<JDGImageTile
-				imageAttributes={imageAttributesCollection.cc_1}
+				imageAttributes={imageAttributesCollection.cc_2}
 				cropToFillContainer={false}
-				showCaption={false}
+				showCaption={true}
 				showAttribution={false}
 				maxHeight="400px"
 			/>
@@ -234,7 +234,7 @@
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.cc_1}
 				cropToFillContainer={false}
-				showCaption={false}
+				showCaption={true}
 				showAttribution={false}
 				maxHeight="400px"
 			/>
