@@ -3,8 +3,8 @@
 
 	export let h3String = undefined;
 	export let h4String = undefined;
-	export let paddingTop = "0";
-	export let paddingBottom = "0";
+	export let paddingTop = '0';
+	export let paddingBottom = '0';
 
 	const h3h4ContainerCss = css`
 		padding-top: ${paddingTop};
