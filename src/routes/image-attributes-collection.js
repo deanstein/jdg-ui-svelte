@@ -34,6 +34,12 @@ const imageAttributesCollection = {
 		imgCaption: 'The Blue Mall as seen in 1968.',
 		imgAttribution: 'Englewood Public Library'
 	}),
+	get cc_2() {
+		const newImageAttributes = Object.assign({}, this.cc_1);
+		newImageAttributes.imgCaption =
+			'This image is cc_2 but is a copy of cc_1 with a caption override.';
+		return newImageAttributes;
+	},
 	ccp_ouatacc_white: instantiateObject(jdgImageAttributes, {
 		imgSrc: addCloudinaryUrlTransformation(
 			'https://res.cloudinary.com/jdg-main/image/upload/v1716959962/jdg-ui-svelte/ccp/ouatacc-white_sa1pne.png'
