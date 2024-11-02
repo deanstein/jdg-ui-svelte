@@ -52,6 +52,9 @@ export { JDGFullWidthContainer };
 import JDGGridLayout from './components/JDGGridLayout.svelte';
 export { JDGGridLayout };
 
+import JDGGridLayoutFade from './components/JDGGridLayoutFade.svelte';
+export { JDGGridLayoutFade };
+
 import JDGH3H4 from './components/JDGH3H4.svelte';
 export { JDGH3H4 };
 
