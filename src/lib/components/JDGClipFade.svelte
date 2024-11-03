@@ -4,27 +4,30 @@
 	import { accentColors, isMobileBreakpoint, windowWidth } from '$lib/states/ui-state.js';
 	import { lightenColor } from '$lib/jdg-utils.js';
 
-	import { JDGGridLayout } from '$lib/index.js';
-
 	export let maxHeightPx = 500;
+
 	const buttonHeightPx = 50;
 	const overlapFactor = 0.35;
 
+	// is the grid content clipped?
 	let isClipped = true;
 
 	const toggleClipping = () => {
 		isClipped = !isClipped;
 	};
 
-	const getCalculatedMaxHeight = () => {
+	const getCalculatedMaxHeightPx = () => {
+		let finalMaxHeightPx = 0;
 		if ($isMobileBreakpoint) {
-			return maxHeightPx * (3 + (1 + overlapFactor));
+			finalMaxHeightPx = maxHeightPx * (3 + (1 + overlapFactor));
 		} else {
-			return maxHeightPx * (1 + overlapFactor);
+			finalMaxHeightPx = maxHeightPx * (1 + overlapFactor);
 		}
+		console.log(finalMaxHeightPx);
+		return finalMaxHeightPx;
 	};
 
-	const gradientCss = css`
+	const clipFadeGradientCss = css`
 		height: 200px;
 		background: linear-gradient(to top, white ${`${buttonHeightPx}px`}, transparent 200px);
 
@@ -37,22 +40,24 @@
 		}
 	`;
 
-	let containerCss = css``;
+	// set the max height or no height if no clipping requested
+	let clipFadeContainerCssDynamic = css``;
 	$: {
-		containerCss = css`
-			height: ${isClipped ? `${getCalculatedMaxHeight()}px` : ''};
+		$windowWidth;
+		clipFadeContainerCssDynamic = css`
+			height: ${isClipped ? `${getCalculatedMaxHeightPx()}px` : ''};
 		`;
 	}
 </script>
 
-<div class="jdg-grid-layout-fade-container {containerCss}">
+<div class="jdg-clip-fade-container {clipFadeContainerCssDynamic}">
 	{#if isClipped}
-		<div class="gradient-fade-absolute">
-			<div class="grid-layout-fade-see-more">
+		<div class="clip-fade-absolute">
+			<div class="clip-fade-see-more">
 				SHOW MORE&nbsp;<i class="fa-solid fa-chevron-down"></i>
 			</div>
 			<div
-				class="gradient {gradientCss}"
+				class="clip-fade-gradient {clipFadeGradientCss}"
 				role="button"
 				tabindex="0"
 				on:click={toggleClipping}
@@ -60,28 +65,26 @@
 			/>
 		</div>
 	{/if}
-	<JDGGridLayout>
-		<slot />
-	</JDGGridLayout>
+	<slot />
 </div>
 
 <style>
-	.jdg-grid-layout-fade-container {
+	.jdg-clip-fade-container {
 		position: relative;
 		overflow: hidden;
 	}
 
-	.gradient-fade-absolute {
+	.clip-fade-absolute {
 		content: '';
 		position: absolute;
 		bottom: 0;
 		left: 0;
 		width: 100%;
 		z-index: 1;
-        cursor: pointer;
+		cursor: pointer;
 	}
 
-	.grid-layout-fade-see-more {
+	.clip-fade-see-more {
 		display: flex;
 		align-items: center;
 		justify-content: center;

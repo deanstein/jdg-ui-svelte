@@ -1,8 +1,9 @@
 <script>
 	import {
+		JDGClipFade,
 		JDGContentBoxFloating,
 		JDGContentContainer,
-		JDGGridLayoutFade,
+		JDGGridLayout,
 		JDGImageCarousel,
 		JDGImageTile
 	} from '$lib/index.js';
@@ -11,33 +12,35 @@
 
 <JDGContentContainer overlapWithHeader={false}>
 	<JDGContentBoxFloating>
-		<JDGGridLayoutFade>
-			<JDGImageTile
-				imageAttributes={imageAttributesCollection.aerial_60s70s_1}
-				showCaption={true}
-				showAttribution={true}
-			/>
-			<JDGImageTile
-				imageAttributes={imageAttributesCollection.cc_1}
-				showCaption={true}
-				showAttribution={true}
-			/>
-			<JDGImageTile
-				imageAttributes={imageAttributesCollection.architecture_1}
-				showCaption={true}
-				showAttribution={true}
-			/>
-			<JDGImageTile
-				imageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
-				showCaption={true}
-				showAttribution={true}
-			/>
-			<JDGImageTile
-				imageAttributes={imageAttributesCollection.rose_mall_60s70s_2}
-				showCaption={true}
-				showAttribution={true}
-			/>
-		</JDGGridLayoutFade>
+		<JDGClipFade>
+			<JDGGridLayout>
+				<JDGImageTile
+					imageAttributes={imageAttributesCollection.aerial_60s70s_1}
+					showCaption={true}
+					showAttribution={true}
+				/>
+				<JDGImageTile
+					imageAttributes={imageAttributesCollection.cc_1}
+					showCaption={true}
+					showAttribution={true}
+				/>
+				<JDGImageTile
+					imageAttributes={imageAttributesCollection.architecture_1}
+					showCaption={true}
+					showAttribution={true}
+				/>
+				<JDGImageTile
+					imageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
+					showCaption={true}
+					showAttribution={true}
+				/>
+				<JDGImageTile
+					imageAttributes={imageAttributesCollection.rose_mall_60s70s_2}
+					showCaption={true}
+					showAttribution={true}
+				/>
+			</JDGGridLayout>
+		</JDGClipFade>
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating>
 		<JDGImageCarousel

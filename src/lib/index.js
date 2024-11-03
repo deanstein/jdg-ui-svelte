@@ -25,6 +25,9 @@ export { JDGBodyCopy };
 import JDGButton from './components/JDGButton.svelte';
 export { JDGButton };
 
+import JDGClipFade from './components/JDGClipFade.svelte';
+export { JDGClipFade };
+
 import JDGContentBoxFloating from './components/JDGContentBoxFloating.svelte';
 export { JDGContentBoxFloating };
 
@@ -51,9 +54,6 @@ export { JDGFullWidthContainer };
 
 import JDGGridLayout from './components/JDGGridLayout.svelte';
 export { JDGGridLayout };
-
-import JDGGridLayoutFade from './components/JDGGridLayoutFade.svelte';
-export { JDGGridLayoutFade };
 
 import JDGH3H4 from './components/JDGH3H4.svelte';
 export { JDGH3H4 };
