@@ -2,15 +2,21 @@
 	import { css } from '@emotion/css';
 
 	import { accentColors, isMobileBreakpoint, windowWidth } from '$lib/states/ui-state.js';
+	import { lightenColor } from '$lib/jdg-utils.js';
 
-	import { JDGButton, JDGGridLayout } from '$lib/index.js';
-	import { getAccentColors } from '$lib/jdg-state-management.js';
-	import { darkenColor, lightenColor } from '$lib/jdg-utils.js';
+	import { JDGGridLayout } from '$lib/index.js';
 
 	export let maxHeightPx = 500;
+	const buttonHeightPx = 50;
+	const overlapFactor = 0.35;
+
+	let isClipped = true;
+
+	const toggleClipping = () => {
+		isClipped = !isClipped;
+	};
 
 	const getCalculatedMaxHeight = () => {
-		const overlapFactor = 0.35;
 		if ($isMobileBreakpoint) {
 			return maxHeightPx * (3 + (1 + overlapFactor));
 		} else {
@@ -18,49 +24,63 @@
 		}
 	};
 
-	const gridLayoutFadeContainerCss = css`
-		position: relative;
-		overflow: hidden;
+	const gradientCss = css`
+		height: 200px;
+		background: linear-gradient(to top, white ${`${buttonHeightPx}px`}, transparent 200px);
 
-		&::after {
-			content: '';
-			position: absolute;
-			bottom: 0;
-			left: 0;
-			width: 100%;
-			height: ${getCalculatedMaxHeight()}px;
-			background: linear-gradient(to top, white, transparent);
-			pointer-events: none;
+		:hover {
+			background: linear-gradient(
+				to top,
+				${lightenColor($accentColors[0], 0.5)} ${`${buttonHeightPx}px`},
+				transparent 200px
+			);
 		}
 	`;
 
-	let gridLayoutFadeContainerDynamicCss = css``;
+	let containerCss = css``;
 	$: {
-		windowWidth;
-		gridLayoutFadeContainerDynamicCss = css`
-			height: ${getCalculatedMaxHeight()}px;
+		containerCss = css`
+			height: ${isClipped ? `${getCalculatedMaxHeight()}px` : ''};
 		`;
 	}
-
-	let seeMoreButtonDynamicCss = css`
-		:hover {
-			background-color: ${lightenColor($accentColors[0], 0.25)};
-		}
-	`;
 </script>
 
-<div
-	class="jdg-grid-layout-fade-container {gridLayoutFadeContainerCss} {gridLayoutFadeContainerDynamicCss}"
->
-	<div class={gridLayoutFadeContainerCss}>
-		<JDGGridLayout>
-			<slot />
-		</JDGGridLayout>
-	</div>
-	<div class="grid-layout-fade-see-more {seeMoreButtonDynamicCss}">SHOW MORE</div>
+<div class="jdg-grid-layout-fade-container {containerCss}">
+	{#if isClipped}
+		<div class="gradient-fade-absolute">
+			<div class="grid-layout-fade-see-more">
+				SHOW MORE&nbsp;<i class="fa-solid fa-chevron-down"></i>
+			</div>
+			<div
+				class="gradient {gradientCss}"
+				role="button"
+				tabindex="0"
+				on:click={toggleClipping}
+				on:keypress={toggleClipping}
+			/>
+		</div>
+	{/if}
+	<JDGGridLayout>
+		<slot />
+	</JDGGridLayout>
 </div>
 
 <style>
+	.jdg-grid-layout-fade-container {
+		position: relative;
+		overflow: hidden;
+	}
+
+	.gradient-fade-absolute {
+		content: '';
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		z-index: 1;
+        cursor: pointer;
+	}
+
 	.grid-layout-fade-see-more {
 		display: flex;
 		align-items: center;
@@ -71,5 +91,6 @@
 		height: 50px;
 		width: 100%;
 		text-align: center;
+		pointer-events: none;
 	}
 </style>
