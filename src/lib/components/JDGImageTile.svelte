@@ -16,7 +16,6 @@
 		jdgDurations,
 		jdgBreakpoints
 	} from '../jdg-shared-styles.js';
-	import { isMobileBreakpoint } from '$lib/states/ui-state.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object to hold all details
 	export let maxWidth = undefined; // if not defined, takes available space

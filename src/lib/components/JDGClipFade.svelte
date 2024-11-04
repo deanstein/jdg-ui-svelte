@@ -1,53 +1,126 @@
 <script>
+	import { afterUpdate } from 'svelte';
 	import { css } from '@emotion/css';
 
 	import { accentColors, isMobileBreakpoint, windowWidth } from '$lib/states/ui-state.js';
 	import { lightenColor } from '$lib/jdg-utils.js';
+	import { jdgSharedIdentifiers } from '$lib/jdg-shared-strings.js';
 
-	export let maxHeightPx = 500;
+	export let moduleHeightPx = 350; // if slot is GridLayout, this gets overridden
+	export let moduleCountDesktop = 1.5; // how many rows to show before fading (desktop)
+	export let moduleCountMobile = 4.5; // how many rows to show before fading (mobile)
 
-	const buttonHeightPx = 50;
-	const overlapFactor = 0.35;
+	let gradientHeightPx = 200; // if slot is GridLayout, this gets overridden
 
-	// is the grid content clipped?
+	// initial calculated height is based on moduleHeight * moduleCount
+	// but if child is GridLayout, will get adjusted based on children height
+	const getInitialMaxHeightPx = () => {
+		let finalMaxHeightPx = 0;
+		if ($isMobileBreakpoint) {
+			finalMaxHeightPx = moduleHeightPx * moduleCountMobile;
+		} else {
+			finalMaxHeightPx = moduleHeightPx * moduleCountDesktop;
+		}
+		return finalMaxHeightPx;
+	};
+	let calculatedTotalHeightPx = getInitialMaxHeightPx();
+
+	const textDivHeight = 50;
+
+	// is the content clipped?
 	let isClipped = true;
+	// content ref for child calculations
+	let clipFadeContentRef;
 
 	const toggleClipping = () => {
 		isClipped = !isClipped;
 	};
 
-	const getCalculatedMaxHeightPx = () => {
-		let finalMaxHeightPx = 0;
-		if ($isMobileBreakpoint) {
-			finalMaxHeightPx = maxHeightPx * (3 + (1 + overlapFactor));
-		} else {
-			finalMaxHeightPx = maxHeightPx * (1 + overlapFactor);
-		}
-		console.log(finalMaxHeightPx);
-		return finalMaxHeightPx;
-	};
-
 	const clipFadeGradientCss = css`
 		height: 200px;
-		background: linear-gradient(to top, white ${`${buttonHeightPx}px`}, transparent 200px);
+		background: linear-gradient(to top, white ${`${textDivHeight}px`}, transparent 200px);
 
 		:hover {
 			background: linear-gradient(
 				to top,
-				${lightenColor($accentColors[0], 0.5)} ${`${buttonHeightPx}px`},
+				${lightenColor($accentColors[0], 0.5)} ${`${textDivHeight}px`},
 				transparent 200px
 			);
 		}
 	`;
+
+	// adjust the gradient height based on the last child height
+	let clipFadeGradientDynamicCss = css``;
+	$: {
+		clipFadeGradientDynamicCss = css`
+			height: ${gradientHeightPx}px;
+		`;
+	}
 
 	// set the max height or no height if no clipping requested
 	let clipFadeContainerCssDynamic = css``;
 	$: {
 		$windowWidth;
 		clipFadeContainerCssDynamic = css`
-			height: ${isClipped ? `${getCalculatedMaxHeightPx()}px` : ''};
+			height: ${isClipped ? `${calculatedTotalHeightPx}px` : ''};
 		`;
 	}
+
+	// check if the slot contains a GridLayout
+	// if so, use the first child + gap as the module size
+	const updateCalculatedHeight = () => {
+		const slotItems = clipFadeContentRef.children;
+		if (slotItems.length === 1) {
+			Array.from(slotItems).forEach((node) => {
+				// is the first node a GridLayout?
+				if (node.classList.contains(jdgSharedIdentifiers.gridLayout)) {
+					// if so, get the gap size
+					const computedStyles = getComputedStyle(node);
+					const gapSizePx = parseInt(computedStyles.gap);
+
+					// if mobile, check for each of the children up to the requested amount
+					// and add them together to determine the overall height
+					if ($isMobileBreakpoint) {
+						const moduleCountCeil = Math.ceil(moduleCountMobile);
+						let additiveHeightPx = 0;
+						// for each child, get the height and gap size and add them together
+						for (var i = 0; i < node.children.length - 1 || i < moduleCountCeil - 1; i++) {
+							// add an event listener on the image to run this again when it loads
+							const img = node.children[i].querySelector('img');
+							if (img) {
+								img.addEventListener('load', updateCalculatedHeight);
+							}
+
+							// if this is the final child, only count half of its height
+							if (i === moduleCountCeil - 2) {
+								additiveHeightPx += node.children[i].offsetHeight / 2 + gapSizePx;
+								gradientHeightPx = node.children[i].offsetHeight / 2;
+							}
+							// otherwise, count the whole height
+							else {
+								additiveHeightPx += node.children[i].offsetHeight + gapSizePx;
+							}
+						}
+						// redefine the calculated height as the additive height
+						if (calculatedTotalHeightPx !== additiveHeightPx) {
+							calculatedTotalHeightPx = additiveHeightPx;
+						}
+					}
+					// otherwise, if desktop, use the first child height as the module size
+					else {
+						const moduleCountCeil = Math.ceil(moduleCountDesktop);
+						calculatedTotalHeightPx =
+							moduleCountDesktop * (node.children[0].offsetHeight + gapSizePx);
+						gradientHeightPx = moduleCountCeil - moduleCountDesktop;
+					}
+				}
+			});
+		}
+	};
+
+	afterUpdate(() => {
+		updateCalculatedHeight();
+	});
 </script>
 
 <div class="jdg-clip-fade-container {clipFadeContainerCssDynamic}">
@@ -65,7 +138,9 @@
 			/>
 		</div>
 	{/if}
-	<slot />
+	<div bind:this={clipFadeContentRef} class="clip-fade-content">
+		<slot />
+	</div>
 </div>
 
 <style>

@@ -1,4 +1,5 @@
 export const jdgSharedIdentifiers = {
+	gridLayout: 'jdg-grid-layout' /* GridLayout may need to communicate its children in some cases */,
 	imageCompareWrapper:
 		'jdg-image-compare-wrapper' /* ImageCompare is treated differently in a GridLayout */
 };
