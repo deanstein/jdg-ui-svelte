@@ -167,15 +167,6 @@
 <svelte:window on:resize={onPageResize} on:scroll={onPageScroll} />
 
 <div class="jdg-app-container {appContainerCss} {linkStyleDefaultCss}" bind:this={appContainerRef}>
-	<!-- loading overlay - only shown before layout is fully loaded -->
-	<JDGLoadingOverlay isLoading={!isAppLoaded} loadingIconSrc={appLoadingIconSrc} />
-	{#if isAppLoaded}
-		<slot />
-	{/if}
-	<!-- show overlays when requested -->
-	{#if $doShowImageDetailOverlay}
-		<JDGImageDetailOverlay imageAttributes={$imageDetailAttributes} />
-	{/if}
 	<!-- show dev UI when requested -->
 	{#if $doShowDevOverlay}
 		<JDGDevOverlay />
@@ -185,6 +176,14 @@
 	{/if}
 	{#if showScrollToTopButton}
 		<JDGScrollToTop />
+	{/if}
+	<!-- show overlays when requested -->
+	<JDGLoadingOverlay isLoading={!isAppLoaded} loadingIconSrc={appLoadingIconSrc} />
+	{#if isAppLoaded}
+		<slot />
+	{/if}
+	{#if $doShowImageDetailOverlay}
+		<JDGImageDetailOverlay imageAttributes={$imageDetailAttributes} />
 	{/if}
 </div>
 

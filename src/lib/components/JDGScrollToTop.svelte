@@ -3,9 +3,10 @@
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
-	import { accentColors, windowScrollPosition } from '$lib/states/ui-state.js';
+	import { accentColors, isMobileBreakpoint, windowScrollPosition } from '$lib/states/ui-state.js';
 	import { JDGButton } from '$lib/index.js';
 	import { jdgBreakpoints, jdgDurations, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { incrementHighestZIndex } from '$lib/jdg-state-management.js';
 
 	let buttonPlacementRef;
 	let calculatedButtonWidth;
@@ -14,6 +15,7 @@
 	let scrollToTopCss = css``;
 
 	onMount(() => {
+		incrementHighestZIndex();
 		calculatedButtonWidth = buttonPlacementRef.offsetWidth;
 		scrollToTopCss = css`
 			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
@@ -49,6 +51,7 @@
 		class="jdg-scroll-to-top-absolute-container"
 		in:fade={{ duration: jdgDurations.fade }}
 		out:fade={{ duration: jdgDurations.fade }}
+		style={$windowScrollPosition > 0 ? 'opacity: 1' : 'opacity: 0'}
 	>
 		<div class="scroll-to-top-relative">
 			<div bind:this={buttonPlacementRef} class="scroll-to-top-button-placement {scrollToTopCss}">
@@ -64,6 +67,8 @@
 					backgroundColor={$accentColors[0]}
 					borderRadius="50%"
 					doForceSquareRatio
+					paddingTopBottom={$isMobileBreakpoint ? '8px' : '12px'}
+					paddingLeftRight={$isMobileBreakpoint ? '8px' : '12px'}
 				/>
 			</div>
 		</div>
@@ -76,6 +81,7 @@
 		height: 100%;
 		width: 100%;
 		pointer-events: none;
+		z-index: 1;
 	}
 
 	.scroll-to-top-relative {
