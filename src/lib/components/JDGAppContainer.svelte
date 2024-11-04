@@ -14,6 +14,7 @@
 		imageDetailAttributes,
 		isMobileBreakpoint,
 		isScrolling,
+		scrollDirection,
 		windowScrollPosition,
 		windowWidth
 	} from '$lib/states/ui-state.js';
@@ -24,7 +25,8 @@
 		JDGDevOverlay,
 		JDGDevToolbarSticky,
 		JDGImageDetailOverlay,
-		JDGLoadingOverlay
+		JDGLoadingOverlay,
+		JDGScrollToTop
 	} from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgFonts, jdgLinkStyles } from '$lib/jdg-shared-styles.js';
 	import { getDistancePxToBottomOfHeader } from '$lib/jdg-ui-management.js';
@@ -36,6 +38,7 @@
 	export let linkColorDefault = appAccentColors[0]; /* color for the "banner" hyperlink style */
 	export let linkColorSimple = appAccentColors[0]; /* color for the simple hyperlink style */
 	export let showHeaderStripes = true;
+	export let showScrollToTopButton = true;
 	export let allowTextSelection = false;
 
 	// flag to show a loading overlay before app is loaded
@@ -53,6 +56,9 @@
 	const scrollTimeoutDuration = 100; //ms
 	let scrollTimeout;
 
+	// helps determine if last scroll direction was up or down
+	let lastWindowScrollY = 0;
+
 	// app sets window and client width in the ui state
 	// so children don't have to add event handlers
 	const onPageResize = () => {
@@ -64,8 +70,20 @@
 
 	// set whether page is being scrolled or not
 	const onPageScroll = () => {
+		// set window position and scrolling state
 		windowScrollPosition.set(window.scrollY);
 		isScrolling.set(true);
+
+		// set scrolling direction
+		const currentScrollPos = window.scrollY;
+		if (currentScrollPos > lastWindowScrollY) {
+			scrollDirection.set('down');
+		} else {
+			scrollDirection.set('up');
+		}
+		lastWindowScrollY = currentScrollPos;
+
+		// slight delay before we decide scrolling is not happening anymore
 		clearTimeout(scrollTimeout);
 		scrollTimeout = setTimeout(() => {
 			isScrolling.set(false);
@@ -164,6 +182,9 @@
 	{/if}
 	{#if $doShowDevToolbarSticky}
 		<JDGDevToolbarSticky />
+	{/if}
+	{#if showScrollToTopButton}
+		<JDGScrollToTop />
 	{/if}
 </div>
 

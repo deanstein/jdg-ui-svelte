@@ -103,6 +103,9 @@ export { JDGNotificationBanner };
 import JDGOverlay from './components/JDGOverlay.svelte';
 export { JDGOverlay };
 
+import JDGScrollToTop from './components/JDGScrollToTop.svelte';
+export { JDGScrollToTop };
+
 import JDGSideNav from './components/JDGSideNav.svelte';
 export { JDGSideNav };
 

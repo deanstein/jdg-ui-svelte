@@ -11,6 +11,7 @@ export let jumpToNavItems = writable([]);
 export let isScrolling = writable(false);
 export let isScrollingToAnchorTag = writable(false);
 export let windowScrollPosition = writable(0);
+export let scrollDirection = writable('down');
 
 // header
 export let headerHeightPx = writable(0);
