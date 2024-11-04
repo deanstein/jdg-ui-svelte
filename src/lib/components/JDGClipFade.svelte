@@ -5,12 +5,14 @@
 	import { accentColors, isMobileBreakpoint, windowWidth } from '$lib/states/ui-state.js';
 	import { lightenColor } from '$lib/jdg-utils.js';
 	import { jdgSharedIdentifiers } from '$lib/jdg-shared-strings.js';
+	import { jdgDurations } from '$lib/jdg-shared-styles.js';
 
 	export let moduleHeightPx = 350; // if slot is GridLayout, this gets overridden
 	export let moduleCountDesktop = 1.5; // how many rows to show before fading (desktop)
 	export let moduleCountMobile = 4.5; // how many rows to show before fading (mobile)
 
 	let gradientHeightPx = 200; // if slot is GridLayout, this gets overridden
+	let isAnimatingClipState = false;
 
 	// initial calculated height is based on moduleHeight * moduleCount
 	// but if child is GridLayout, will get adjusted based on children height
@@ -34,10 +36,27 @@
 
 	const toggleClipping = () => {
 		isClipped = !isClipped;
+
+		// force animation by setting the height initially to the calculated height, before setting it to auto
+		clipFadeContainerCssDynamic = css`
+			height: ${isClipped ? '0' : `${clipFadeContentRef.scrollHeight}px`};
+		`;
+		isAnimatingClipState = true;
+		setTimeout(() => {
+			isAnimatingClipState = false;
+			if (!isClipped) {
+				clipFadeContainerCssDynamic = css`
+					height: auto;
+				`;
+			}
+		}, jdgDurations.default);
 	};
 
+	const clipFadeContainerCss = css`
+		transition: height ${jdgDurations.default}ms ease-in-out;
+	`;
+
 	const clipFadeGradientCss = css`
-		height: 200px;
 		background: linear-gradient(to top, white ${`${textDivHeight}px`}, transparent 200px);
 
 		:hover {
@@ -49,20 +68,22 @@
 		}
 	`;
 
+	// set the max height or no height if no clipping requested
+	let clipFadeContainerCssDynamic = css``;
+	$: {
+		$windowWidth;
+		if (!isAnimatingClipState) {
+			clipFadeContainerCssDynamic = css`
+				height: ${isClipped ? `${calculatedTotalHeightPx}px` : 'auto'};
+			`;
+		}
+	}
+
 	// adjust the gradient height based on the last child height
 	let clipFadeGradientDynamicCss = css``;
 	$: {
 		clipFadeGradientDynamicCss = css`
 			height: ${gradientHeightPx}px;
-		`;
-	}
-
-	// set the max height or no height if no clipping requested
-	let clipFadeContainerCssDynamic = css``;
-	$: {
-		$windowWidth;
-		clipFadeContainerCssDynamic = css`
-			height: ${isClipped ? `${calculatedTotalHeightPx}px` : ''};
 		`;
 	}
 
@@ -94,7 +115,7 @@
 							// if this is the final child, only count half of its height
 							if (i === moduleCountCeil - 2) {
 								additiveHeightPx += node.children[i].offsetHeight / 2 + gapSizePx;
-								gradientHeightPx = node.children[i].offsetHeight / 2;
+								gradientHeightPx = node.children[i].offsetHeight / 2 + gapSizePx;
 							}
 							// otherwise, count the whole height
 							else {
@@ -111,7 +132,9 @@
 						const moduleCountCeil = Math.ceil(moduleCountDesktop);
 						calculatedTotalHeightPx =
 							moduleCountDesktop * (node.children[0].offsetHeight + gapSizePx);
-						gradientHeightPx = moduleCountCeil - moduleCountDesktop;
+						gradientHeightPx =
+							Math.abs(moduleCountCeil - moduleCountDesktop) *
+							(node.children[0].offsetHeight + gapSizePx);
 					}
 				}
 			});
@@ -123,14 +146,14 @@
 	});
 </script>
 
-<div class="jdg-clip-fade-container {clipFadeContainerCssDynamic}">
+<div class="jdg-clip-fade-container {clipFadeContainerCss} {clipFadeContainerCssDynamic}">
 	{#if isClipped}
 		<div class="clip-fade-absolute">
 			<div class="clip-fade-see-more">
 				SHOW MORE&nbsp;<i class="fa-solid fa-chevron-down"></i>
 			</div>
 			<div
-				class="clip-fade-gradient {clipFadeGradientCss}"
+				class="clip-fade-gradient {clipFadeGradientCss} {clipFadeGradientDynamicCss}"
 				role="button"
 				tabindex="0"
 				on:click={toggleClipping}
