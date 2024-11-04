@@ -53,7 +53,7 @@
 	};
 
 	const clipFadeContainerCss = css`
-		transition: height ${jdgDurations.default}ms ease-in-out;
+		transition: height ${jdgDurations.default}${jdgDurations.unit} ease-in-out;
 	`;
 
 	const clipFadeGradientCss = css`
