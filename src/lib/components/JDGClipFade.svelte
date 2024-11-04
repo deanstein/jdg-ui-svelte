@@ -61,7 +61,7 @@
 		:hover {
 			background: linear-gradient(
 				to top,
-				${lightenColor($accentColors[0], 0.5)} ${`${textDivHeight}px`},
+				${lightenColor($accentColors[0], 1)} ${`${textDivHeight}px`},
 				transparent 200px
 			);
 		}
