@@ -107,7 +107,7 @@
 	<slot />
 	<JDGFooter
 		{appVersion}
-		copyrightHref='https://jdeangoldstein.com/'
+		copyrightHref="https://jdeangoldstein.com/"
 		disclaimer={disclaimerMessage}
 		showDevToolsButton={true}
 		alignItems="center"

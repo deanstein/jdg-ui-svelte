@@ -25,6 +25,9 @@ export { JDGBodyCopy };
 import JDGButton from './components/JDGButton.svelte';
 export { JDGButton };
 
+import JDGClipFade from './components/JDGClipFade.svelte';
+export { JDGClipFade };
+
 import JDGContentBoxFloating from './components/JDGContentBoxFloating.svelte';
 export { JDGContentBoxFloating };
 

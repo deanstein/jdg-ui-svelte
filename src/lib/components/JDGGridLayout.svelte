@@ -11,7 +11,7 @@
 	// used for determining number of children passed into slot
 	let gridLayoutContainer;
 
-	const gridContainerCss = css`
+	const gridLayoutCss = css`
 		align-items: baseline;
 		display: flex;
 		flex-wrap: wrap;
@@ -69,6 +69,6 @@
 	});
 </script>
 
-<div bind:this={gridLayoutContainer} class="jdg-grid-container {gridContainerCss}">
+<div bind:this={gridLayoutContainer} class="{jdgSharedIdentifiers.gridLayout} {gridLayoutCss}">
 	<slot />
 </div>
