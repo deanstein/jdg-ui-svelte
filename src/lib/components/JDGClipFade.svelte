@@ -10,6 +10,7 @@
 	export let moduleHeightPx = 350; // if slot is GridLayout, this gets overridden
 	export let moduleCountDesktop = 1.5; // how many rows to show before fading (desktop)
 	export let moduleCountMobile = 4.5; // how many rows to show before fading (mobile)
+	export let hoverColor = $accentColors[0];
 	export let hoverColorLightenFactor = 0.75; // how much to lighten the accent color for the hover color
 
 	let gradientHeightPx = 200; // if slot is GridLayout, this gets overridden
@@ -62,7 +63,7 @@
 		:hover {
 			background: linear-gradient(
 				to top,
-				${lightenColor($accentColors[0], hoverColorLightenFactor)} ${`${textDivHeight}px`},
+				${lightenColor(hoverColor, hoverColorLightenFactor)} ${`${textDivHeight}px`},
 				transparent 200px
 			);
 		}
