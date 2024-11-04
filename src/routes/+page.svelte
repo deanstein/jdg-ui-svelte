@@ -280,6 +280,31 @@
 					showCaption={true}
 					showAttribution={true}
 				/>
+				<JDGImageTile
+					imageAttributes={imageAttributesCollection.aerial_60s70s_1}
+					showCaption={true}
+					showAttribution={true}
+				/>
+				<JDGImageTile
+					imageAttributes={imageAttributesCollection.cc_1}
+					showCaption={true}
+					showAttribution={true}
+				/>
+				<JDGImageTile
+					imageAttributes={imageAttributesCollection.architecture_1}
+					showCaption={true}
+					showAttribution={true}
+				/>
+				<JDGImageTile
+					imageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
+					showCaption={true}
+					showAttribution={true}
+				/>
+				<JDGImageTile
+					imageAttributes={imageAttributesCollection.rose_mall_60s70s_2}
+					showCaption={true}
+					showAttribution={true}
+				/>
 			</JDGGridLayout>
 		</JDGClipFade>
 		<JDGBodyCopy paddingBottom="0" textAlign="center">
