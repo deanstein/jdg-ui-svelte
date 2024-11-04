@@ -58,7 +58,6 @@
 
 	const clipFadeGradientCss = css`
 		background: linear-gradient(to top, white ${`${textDivHeight}px`}, transparent 200px);
-
 		:hover {
 			background: linear-gradient(
 				to top,
