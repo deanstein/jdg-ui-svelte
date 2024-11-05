@@ -106,7 +106,7 @@
 						const moduleCountCeil = Math.ceil(moduleCountMobile);
 						let additiveHeightPx = 0;
 						// for each child, get the height and gap size and add them together
-						for (var i = 0; i < node.children.length - 1 && i < moduleCountCeil - 1; i++) {
+						for (var i = 0; i < node.children.length - 1 && i < moduleCountCeil; i++) {
 							// add an event listener on the image to run this again when it loads
 							const img = node.children[i].querySelector('img');
 							if (img) {
@@ -114,7 +114,7 @@
 							}
 
 							// if this is the final child, only count half of its height
-							if (i === moduleCountCeil - 2) {
+							if (i === moduleCountCeil - 1) {
 								additiveHeightPx += node.children[i].offsetHeight / 2 + gapSizePx;
 								gradientHeightPx = node.children[i].offsetHeight / 2 + gapSizePx;
 							}
