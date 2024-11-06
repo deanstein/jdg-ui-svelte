@@ -180,6 +180,7 @@
 		width: -moz-available;
 		min-height: 50px;
 		z-index: 0;
+		box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
 	}
 
 	.content-box-title-and-subtitle-container {
