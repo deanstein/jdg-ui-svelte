@@ -6,7 +6,6 @@
 		allStateValues,
 		clientWidth,
 		doShowDevTools,
-		doShowDevToolbarSticky,
 		doShowHeaderStripes
 	} from '$lib/states/ui-state.js';
 
@@ -145,6 +144,7 @@
 				<JDGButton
 					onClickFunction={toggleDevTools}
 					label={$doShowDevTools ? 'Hide Dev Tools' : 'Show Dev Tools'}
+					isPrimary={false}
 					paddingTopBottom="5px"
 					paddingLeftRight="10px"
 					faIcon="fa-wrench"
