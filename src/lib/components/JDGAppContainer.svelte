@@ -6,6 +6,7 @@
 	import {
 		accentColors,
 		clientWidth,
+		doAllowTextSelection,
 		doShowDevOverlay,
 		doShowDevToolbarSticky,
 		doShowHeaderStripes,
@@ -103,14 +104,6 @@
 			background-color: ${jdgColors.text};
 		}
 
-		${!allowTextSelection &&
-		`
-			-webkit-user-select: none; /* Safari */
-			-moz-user-select: none;    /* Firefox */
-			-ms-user-select: none;     /* Internet Explorer/Edge */
-			user-select: none;         /* Standard syntax */
-		`}
-
 		color: ${jdgColors.text};
 		font-family: ${fontFamily};
 	`;
@@ -155,18 +148,37 @@
 		await tick(); // delay until layout and all children are loaded
 		isAppLoaded = true;
 
+		// use the text selection prop to set the state initially
+		doAllowTextSelection.set(allowTextSelection);
+
 		// apps have accent colors
 		accentColors.set(appAccentColors);
 		doShowHeaderStripes.set(showHeaderStripes);
 		// update the client and window width at the end so they're accurate
 		setTimeout(onPageResize, 0);
 	});
+
+	let appContainerCssDynamic = css``;
+	$: {
+		appContainerCssDynamic = css`
+			${!$doAllowTextSelection &&
+			`
+				-webkit-user-select: none; /* Safari */
+				-moz-user-select: none;    /* Firefox */
+				-ms-user-select: none;     /* Internet Explorer/Edge */
+				user-select: none;         /* Standard syntax */
+			`}
+		`;
+	}
 </script>
 
 <!-- set up directives for event listeners -->
 <svelte:window on:resize={onPageResize} on:scroll={onPageScroll} />
 
-<div class="jdg-app-container {appContainerCss} {linkStyleDefaultCss}" bind:this={appContainerRef}>
+<div
+	class="jdg-app-container {appContainerCss} {appContainerCssDynamic} {linkStyleDefaultCss}"
+	bind:this={appContainerRef}
+>
 	<!-- all content goes here after the app is loaded -->
 	{#if isAppLoaded}
 		<slot />

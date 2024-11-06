@@ -2,6 +2,7 @@ import { derived, writable } from 'svelte/store';
 import { jdgColors } from '$lib/jdg-shared-styles.js';
 
 export let activeNotificationBanners = writable([]);
+export let doAllowTextSelection = writable(false);
 export let doShowNavSidebar = writable(false);
 export let highestZIndex = writable(1);
 export let isMobileBreakpoint = writable(false);
@@ -44,12 +45,14 @@ export let devOverlayContent = writable('No data found in $devOverlayContent sta
 // create a combined store to display in footer dev tools
 const storeMap = {
 	activeNotificationBanners,
+	doAllowTextSelection,
 	doShowNavSidebar,
 	highestZIndex,
 	isMobileBreakpoint,
 	jumpToNavItems,
 	isScrolling,
 	isScrollingToAnchorTag,
+	scrollDirection,
 	windowScrollPosition,
 	headerHeightPx,
 	doShowHeaderStripes,

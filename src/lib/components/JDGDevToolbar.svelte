@@ -1,5 +1,9 @@
 <script>
-	import { doShowDevToolbarSticky, doShowDevOverlay } from '$lib/states/ui-state.js';
+	import {
+		doShowDevToolbarSticky,
+		doShowDevOverlay,
+		doAllowTextSelection
+	} from '$lib/states/ui-state.js';
 	import { JDGButton, JDGH3H4 } from '$lib/index.js';
 	import { jdgSizes } from '$lib/jdg-shared-styles.js';
 
@@ -29,6 +33,17 @@
 			paddingTopBottom="5px"
 			paddingLeftRight="10px"
 			faIcon={$doShowDevOverlay ? 'fa-eye-slash' : 'fa-eye'}
+			fontSize={jdgSizes.fontSizeBodyXSm}
+		/>
+		<JDGButton
+			onClickFunction={() => {
+				doAllowTextSelection.set(!$doAllowTextSelection);
+			}}
+			label={$doAllowTextSelection ? 'Disallow Text Selection' : 'Allow Text Selection'}
+			backgroundColor={buttonColor}
+			paddingTopBottom="5px"
+			paddingLeftRight="10px"
+			faIcon={$doAllowTextSelection ? 'fa-text-slash' : 'fa-arrow-pointer'}
 			fontSize={jdgSizes.fontSizeBodyXSm}
 		/>
 	</div>
