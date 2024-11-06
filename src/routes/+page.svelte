@@ -424,12 +424,7 @@
 				label="This button has no icon, and scrolls to an anchor"
 				faIcon={null}
 			/>
-			<JDGButton
-				onClickFunction={() => {}}
-				label="This is a secondary button"
-				backgroundColor={jdgColors.buttonSecondaryBackground}
-				isPrimary={false}
-			/>
+			<JDGButton onClickFunction={() => {}} label="This is a secondary button" isPrimary={false} />
 			<JDGButton
 				onClickFunction={() => {}}
 				label="This is a custom button"
@@ -453,7 +448,6 @@
 				onClickFunction={() => {}}
 				label="This is a secondary button"
 				isPrimary={false}
-				backgroundColor={jdgColors.buttonSecondaryBackground}
 				width="300px"
 			/>
 		</div>
