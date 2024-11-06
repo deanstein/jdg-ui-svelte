@@ -64,6 +64,7 @@
 					}}
 					faIcon="fa-chevron-up"
 					label={null}
+					tooltip="Scroll to Top"
 					backgroundColor={$accentColors[0]}
 					borderRadius="50%"
 					doForceSquareRatio
