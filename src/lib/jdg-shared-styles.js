@@ -405,3 +405,11 @@ export const jdgLinkStyles = {
 		}
 	`
 };
+
+//
+// shadow styles
+//
+
+export const jdgBoxShadowStandard = css`
+	box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+`;

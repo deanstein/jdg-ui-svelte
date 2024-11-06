@@ -15,7 +15,8 @@
 		jdgColors,
 		jdgDurations,
 		jdgFonts,
-		jdgSizes
+		jdgSizes,
+		jdgBoxShadowStandard
 	} from '../jdg-shared-styles.js';
 	import { JDGAnchorTag } from '$lib/index.js';
 
@@ -141,7 +142,7 @@
 	<div
 		bind:this={isVisibleRef}
 		transition:fade={{ duration: jdgDurations.fadeIn }}
-		class="jdg-content-box-floating-content {floatingBoxContentCss} {animateWhenVisible
+		class="jdg-content-box-floating-content {floatingBoxContentCss} {jdgBoxShadowStandard} {animateWhenVisible
 			? isVisible
 				? fadeInSettleAfter
 				: fadeInSettleBeforeLg
@@ -180,7 +181,6 @@
 		width: -moz-available;
 		min-height: 50px;
 		z-index: 0;
-		box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
 	}
 
 	.content-box-title-and-subtitle-container {

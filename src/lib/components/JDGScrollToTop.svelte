@@ -5,7 +5,12 @@
 
 	import { accentColors, isMobileBreakpoint, windowScrollPosition } from '$lib/states/ui-state.js';
 	import { JDGButton } from '$lib/index.js';
-	import { jdgBreakpoints, jdgDurations, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import {
+		jdgBoxShadowStandard,
+		jdgBreakpoints,
+		jdgDurations,
+		jdgSizes
+	} from '$lib/jdg-shared-styles.js';
 	import { incrementHighestZIndex } from '$lib/jdg-state-management.js';
 
 	let buttonPlacementRef;
@@ -54,7 +59,10 @@
 		style={$windowScrollPosition > 0 ? 'opacity: 1' : 'opacity: 0'}
 	>
 		<div class="scroll-to-top-relative">
-			<div bind:this={buttonPlacementRef} class="scroll-to-top-button-placement {scrollToTopCss}">
+			<div
+				bind:this={buttonPlacementRef}
+				class="scroll-to-top-button-placement {scrollToTopCss} {jdgBoxShadowStandard}"
+			>
 				<JDGButton
 					onClickFunction={() => {
 						window.scrollTo({
@@ -95,6 +103,5 @@
 		position: absolute;
 		pointer-events: auto;
 		border-radius: 50%;
-		box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
 	}
 </style>

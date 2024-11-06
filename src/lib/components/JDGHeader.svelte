@@ -5,7 +5,12 @@
 
 	import { doShowHeaderStripes } from '$lib/states/ui-state.js';
 
-	import { jdgBreakpoints, jdgColors, jdgSizes } from '../jdg-shared-styles.js';
+	import {
+		jdgBoxShadowStandard,
+		jdgBreakpoints,
+		jdgColors,
+		jdgSizes
+	} from '../jdg-shared-styles.js';
 	import { incrementHighestZIndex } from '$lib/jdg-state-management.js';
 	import { breakpointHandler } from '../jdg-ui-management.js';
 
@@ -162,7 +167,10 @@
 	}
 </script>
 
-<header class="jdg-header-outer-container {headerContainerOuterCss}" transition:fade>
+<header
+	class="jdg-header-outer-container {headerContainerOuterCss} {jdgBoxShadowStandard}"
+	transition:fade
+>
 	<div class="jdg-header-inner-container {headerContainerInnerCss}">
 		<!-- logo -->
 		{#if showLogo}
@@ -218,7 +226,6 @@
 		width: -webkit-fill-available;
 		z-index: 1;
 		font-weight: 900;
-		box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
 	}
 
 	.jdg-header-inner-container {
