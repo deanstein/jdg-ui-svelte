@@ -465,22 +465,31 @@ export const adjustColorForContrast = (
 		return colorToChange;
 	}
 	//console.log("Adjusting color for contrast. Color to change: " + colorToChange + " and base color: " + baseColor);
-	// Check if color and baseColor are in HEX or RGBA format
+	// check if color and baseColor are in HEX or RGBA format
 	let isColorHex = typeof colorToChange === 'string' && colorToChange.startsWith('#');
 	let isBaseColorHex = typeof baseColor === 'string' && baseColor.startsWith('#');
 
-	// Convert color and baseColor to RGB
+	// convert color and baseColor to RGB
 	let rgbColor = isColorHex ? hexToRgb(colorToChange) : rgbaToRgb(colorToChange);
 	let rgbBaseColor = isBaseColorHex ? hexToRgb(baseColor) : rgbaToRgb(baseColor);
 
-	// Calculate the contrast ratio
+	// extract alpha value if colorToChange is in RGBA format
+	let alpha = 1; // Default alpha value
+	if (!isColorHex && typeof colorToChange === 'string') {
+		let rgbaMatch = colorToChange.match(/rgba\((\d+), (\d+), (\d+), (\d+\.?\d*)\)/);
+		if (rgbaMatch) {
+			alpha = parseFloat(rgbaMatch[4]);
+		}
+	}
+
+	// calculate the contrast ratio
 	let contrastRatio = calculateContrastRatio(rgbColor, rgbBaseColor);
 	//console.log("Contrast ratio for " + colorToChange + ": " + contrastRatio);
 
 	const maxIterations = 10;
 	let iterations = 0;
 
-	// If the contrast ratio is less than the minimum contrast ratio, adjust the color
+	// if the contrast ratio is less than the minimum contrast ratio, adjust the color
 	while (contrastRatio < minContrastRatio && iterations < maxIterations) {
 		// If the base color is light, make the color darker
 		if (isLight(rgbBaseColor)) {
@@ -492,14 +501,14 @@ export const adjustColorForContrast = (
 			rgbColor = lightenColor(rgbColor, 0.1);
 		}
 
-		// Recalculate the contrast ratio
+		// recalculate the contrast ratio
 		contrastRatio = calculateContrastRatio(rgbColor, rgbBaseColor);
 
 		iterations++;
 	}
 
-	// Convert the color back to its original format
-	let adjustedColor = isColorHex ? rgbToHex(rgbColor) : rgbToRgba(rgbColor, colorToChange.a);
+	// convert the color back to its original format
+	let adjustedColor = isColorHex ? rgbToHex(rgbColor) : rgbToRgba(rgbColor, alpha);
 
 	return adjustedColor;
 };
