@@ -37,9 +37,9 @@ export let accentColors = writable(jdgColors.accentColorsJDG);
 // dev tools
 export let doShowDevTools = writable(false); // state view and tools in footer
 export let doShowDevToolbarSticky = writable(false); // sticky toolbar with specific dev output
-export let devToolbarStickyContent = writable({});
+export let devToolbarStickyContent = writable('No data found in $devToolbarStickyContent state.');
 export let doShowDevOverlay = writable(false); // overlay with specific dev output
-export let devOverlayContent = writable({});
+export let devOverlayContent = writable('No data found in $devOverlayContent state.');
 
 // create a combined store to display in footer dev tools
 const storeMap = {

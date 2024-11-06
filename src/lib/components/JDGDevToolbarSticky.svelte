@@ -8,11 +8,7 @@
 		<JDGDevToolbar />
 		<div class="state-output">
 			<JDGH3H4 h3String="TOOLBAR CONTENT STATE" />
-			{#if $devToolbarStickyContent}
-				{$devToolbarStickyContent}
-			{:else}
-				No data found in $devToolbarStickyContent state.
-			{/if}
+			{$devToolbarStickyContent}
 		</div>
 		<!-- consumers can also insert their own content -->
 		<slot />
@@ -24,6 +20,7 @@
 		width: 100%;
 		position: fixed;
 		bottom: 0;
+		z-index: 1;
 	}
 
 	.dev-toolbar-sticky-content {

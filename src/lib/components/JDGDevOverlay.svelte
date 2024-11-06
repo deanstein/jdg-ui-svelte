@@ -14,11 +14,7 @@
 	<JDGH3H4 h3String="DEV OVERLAY" />
 	<JDGH3H4 h4String="OVERLAY CONTENT STATE" />
 	<div class="state-output">
-		{#if $devOverlayContent}
-			{$devOverlayContent}
-		{:else}
-			No data found in $devOverlayContent state.
-		{/if}
+		{$devOverlayContent}
 		<!-- consumers can also insert their own content -->
 		<slot />
 	</div>
