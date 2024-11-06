@@ -21,7 +21,7 @@
 			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 				bottom: ${jdgSizes.nContentBoxFloatingMarginSm.toString() +
 				jdgSizes.contentBoxFloatingMarginUnit};
-				right: ${(3 * jdgSizes.nContentBoxFloatingMarginSm).toString() +
+				right: ${(2 * jdgSizes.nContentBoxFloatingMarginSm).toString() +
 				jdgSizes.contentBoxFloatingMarginUnit};
 			}
 			@media (min-width: ${jdgBreakpoints.width[0].toString() +
@@ -29,7 +29,7 @@
 				jdgBreakpoints.unit}) {
 				bottom: ${jdgSizes.nContentBoxFloatingMarginMd.toString() +
 				jdgSizes.contentBoxFloatingMarginUnit};
-				right: ${(3 * jdgSizes.nContentBoxFloatingMarginMd).toString() +
+				right: ${(2 * jdgSizes.nContentBoxFloatingMarginMd).toString() +
 					jdgSizes.contentBoxFloatingMarginUnit} - ${calculatedButtonWidth / 2};
 			}
 			@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
