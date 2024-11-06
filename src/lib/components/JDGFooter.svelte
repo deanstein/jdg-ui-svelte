@@ -143,12 +143,14 @@
 			<div class="footer-row {footerDevToolsCss}">
 				<JDGButton
 					onClickFunction={toggleDevTools}
-					label={$doShowDevTools ? 'Hide Dev Tools' : 'Show Dev Tools'}
+					label={null}
+					tooltip={$doShowDevTools ? 'Hide Dev Tools' : 'Show Dev Tools'}
 					isPrimary={false}
 					paddingTopBottom="5px"
 					paddingLeftRight="10px"
-					faIcon="fa-wrench"
+					faIcon={$doShowDevTools ? 'fa-eye-slash' : 'fa-wrench'}
 					fontSize={jdgSizes.fontSizeBodyXSm}
+					doForceSquareRatio
 				/>
 			</div>
 		{/if}
