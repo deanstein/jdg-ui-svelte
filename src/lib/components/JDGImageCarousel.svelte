@@ -63,8 +63,11 @@
 	};
 
 	const setActiveImage = (imageAttributesObject, endAutoAdvance = false) => {
-		activeImageAttributes = imageAttributesObject;
-		kludge = !kludge;
+		// only set active image if image is different
+		if (activeImageAttributes.imgSrc !== imageAttributesObject.imgSrc) {
+			activeImageAttributes = imageAttributesObject;
+			kludge = !kludge;
+		}
 		// when user clicks on a thumbnail, auto advance stops
 		if (endAutoAdvance) {
 			clearInterval(intervalId);
