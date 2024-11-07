@@ -87,7 +87,7 @@
 	const handleTouchMove = (e) => {
 		touchEndX = e.touches[0].clientX;
 	};
-	
+
 	const handleTouchEnd = () => {
 		if (touchStartX - touchEndX > minSwipeDistance) {
 			// swipe left
