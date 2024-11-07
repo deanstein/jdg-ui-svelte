@@ -35,6 +35,11 @@
 	let kludge = true; // kludge to force a "crossfade" effect by swapping divs via flag
 	let intervalId; // identifier for the auto-advance setInterval() call
 
+	// variables for touch events
+	let touchStartX = 0;
+	let touchEndX = 0;
+	const minSwipeDistance = 50;
+
 	const getMaxHeightPxFromProp = () => {
 		let maxHeightPx;
 		// only calculate maxHeight if prop is not auto
@@ -72,6 +77,30 @@
 		if (endAutoAdvance) {
 			clearInterval(intervalId);
 			autoAdvance = false;
+		}
+	};
+
+	const handleTouchStart = (e) => {
+		touchStartX = e.touches[0].clientX;
+	};
+
+	const handleTouchMove = (e) => {
+		touchEndX = e.touches[0].clientX;
+	};
+	
+	const handleTouchEnd = () => {
+		if (touchStartX - touchEndX > minSwipeDistance) {
+			// swipe left
+			let currentIndex = imageAttributeObjects.indexOf(activeImageAttributes);
+			currentIndex = (currentIndex + 1) % imageAttributeObjects.length;
+			setActiveImage(imageAttributeObjects[currentIndex], true);
+		}
+		if (touchEndX - touchStartX > minSwipeDistance) {
+			// swipe right
+			let currentIndex = imageAttributeObjects.indexOf(activeImageAttributes);
+			currentIndex =
+				(currentIndex - 1 + imageAttributeObjects.length) % imageAttributeObjects.length;
+			setActiveImage(imageAttributeObjects[currentIndex], true);
 		}
 	};
 
@@ -156,7 +185,13 @@
 	}
 </script>
 
-<div bind:this={carouselRef} class="jdg-image-carousel-container">
+<div
+	bind:this={carouselRef}
+	class="jdg-image-carousel-container"
+	on:touchstart={handleTouchStart}
+	on:touchmove={handleTouchMove}
+	on:touchend={handleTouchEnd}
+>
 	<div class="carousel-crossfade-wrapper-relative {dynamicHeightCss}">
 		<!-- kludge to force a "crossfade" effect by swapping divs via flag -->
 		{#if kludge}
