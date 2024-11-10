@@ -1,5 +1,5 @@
 <script>
-	import { onMount } from 'svelte';
+	import { onMount, afterUpdate } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
@@ -18,13 +18,19 @@
 
 	onMount(() => {
 		incrementHighestZIndex();
-		calculatedButtonWidth = buttonPlacementRef.offsetWidth;
+	});
+
+	afterUpdate(() => {
+		// only calculate the button width once:
+		// if the placement ref is defined and the calculated width isn't known yet
+		if (buttonPlacementRef && !isFinite(calculatedButtonWidth)) {
+			calculatedButtonWidth = buttonPlacementRef.offsetWidth;
+		}
 	});
 
 	// defined once calculatedButtonWidth is known
 	let scrollToTopCss = css``;
 	$: {
-		calculatedButtonWidth;
 		scrollToTopCss = css`
 			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 				bottom: ${jdgSizes.nContentBoxFloatingMarginSm.toString() +
@@ -54,7 +60,7 @@
 	}
 </script>
 
-{#if (typeof window !== 'undefined' && $windowScrollPosition > 0) || !calculatedButtonWidth}
+{#if typeof window !== 'undefined' && $windowScrollPosition > 0}
 	<div
 		class="jdg-scroll-to-top-absolute-container"
 		in:fade={{ duration: jdgDurations.fade }}
