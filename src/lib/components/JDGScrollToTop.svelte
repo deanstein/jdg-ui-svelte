@@ -16,12 +16,15 @@
 	let buttonPlacementRef;
 	let calculatedButtonWidth;
 
-	// defined once mounted
-	let scrollToTopCss = css``;
-
 	onMount(() => {
 		incrementHighestZIndex();
 		calculatedButtonWidth = buttonPlacementRef.offsetWidth;
+	});
+
+	// defined once calculatedButtonWidth is known
+	let scrollToTopCss = css``;
+	$: {
+		calculatedButtonWidth;
 		scrollToTopCss = css`
 			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 				bottom: ${jdgSizes.nContentBoxFloatingMarginSm.toString() +
@@ -48,7 +51,7 @@
 				);
 			}
 		`;
-	});
+	}
 </script>
 
 {#if (typeof window !== 'undefined' && $windowScrollPosition > 0) || !calculatedButtonWidth}
