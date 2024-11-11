@@ -4,6 +4,7 @@
 		JDGContentBoxFloating,
 		JDGContentContainer,
 		JDGGridLayout,
+		JDGH3H4,
 		JDGImageCarousel,
 		JDGImageTile
 	} from '$lib/index.js';
@@ -68,6 +69,7 @@
 		</JDGClipFade>
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating>
+		<JDGH3H4 h3String="THIS IS AN H3 STRING" h4String="And this is an h4" />
 		<JDGImageCarousel
 			imageAttributeObjects={[
 				imageAttributesCollection.fairgrounds_aerial,

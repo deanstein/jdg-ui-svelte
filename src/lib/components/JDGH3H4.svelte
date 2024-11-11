@@ -1,4 +1,5 @@
 <script>
+	import { jdgColors } from '$lib/jdg-shared-styles.js';
 	import { css } from '@emotion/css';
 
 	export let h3String = undefined;
@@ -11,15 +12,20 @@
 		padding-bottom: ${paddingBottom};
 	`;
 
+	const h3Css = css`
+		color: ${jdgColors.title};
+	`;
+
 	// h4 gets top margin when h3 is present
 	const h4Css = css`
 		margin: ${h3String ? '10px' : '0'} 0 0 0;
+		color: ${jdgColors.textLight};
 	`;
 </script>
 
 <div class="jdg-h3-h4-container {h3h4ContainerCss}">
 	{#if h3String}
-		<h3>
+		<h3 class={h3Css}>
 			{h3String}
 		</h3>
 	{/if}
@@ -40,6 +46,5 @@
 	h4 {
 		text-align: center;
 		padding: 0;
-		color: gray;
 	}
 </style>
