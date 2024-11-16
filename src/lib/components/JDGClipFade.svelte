@@ -76,6 +76,7 @@
 		if (!isAnimatingClipState) {
 			clipFadeContainerCssDynamic = css`
 				height: ${isClipped ? `${calculatedTotalHeightPx}px` : 'auto'};
+				overflow: ${isClipped ? 'hidden' : 'visible'};
 			`;
 		}
 	}
@@ -170,7 +171,6 @@
 <style>
 	.jdg-clip-fade-container {
 		position: relative;
-		overflow: hidden;
 	}
 
 	.clip-fade-absolute {
