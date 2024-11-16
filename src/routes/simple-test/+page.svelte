@@ -60,9 +60,7 @@
 					showCaption={true}
 					showAttribution={true}
 				/>
-				<JDGImageTile
-					imageAttributes={imageAttributesCollection.rose_mall_60s70s_2}
-				/>
+				<JDGImageTile imageAttributes={imageAttributesCollection.rose_mall_60s70s_2} />
 			</JDGGridLayout>
 		</JDGClipFade>
 	</JDGContentBoxFloating>
