@@ -62,8 +62,6 @@
 				/>
 				<JDGImageTile
 					imageAttributes={imageAttributesCollection.rose_mall_60s70s_2}
-					showCaption={true}
-					showAttribution={true}
 				/>
 			</JDGGridLayout>
 		</JDGClipFade>
