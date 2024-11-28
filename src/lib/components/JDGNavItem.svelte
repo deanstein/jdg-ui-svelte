@@ -8,11 +8,13 @@
 	export let onClickFunction = () => {};
 	export let nLetterSpacing = 5;
 	export let letterSpacingUnit = 'px';
+	export let marginBottom = '0';
 
 	const navItemCss = css`
 		font-size: ${jdgSizes.fontSizeHeaderTitle};
 		letter-spacing: ${nLetterSpacing.toString() + letterSpacingUnit};
 		padding-left: ${(nLetterSpacing / 2).toString() + letterSpacingUnit};
+		margin-bottom: ${marginBottom};
 	`;
 </script>
 
@@ -31,6 +33,5 @@
 		align-items: baseline;
 		display: flex;
 		font-weight: bold;
-		line-height: 0px; /* not sure why, but required to get text at bottom of div */
 	}
 </style>

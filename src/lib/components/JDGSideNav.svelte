@@ -6,6 +6,7 @@
 
 	import { setAlphaInRgbaString } from '$lib/jdg-graphics-factory.js';
 	import { jdgColors, jdgDurations, jdgSizes } from '../jdg-shared-styles.js';
+	import { JDGNavItem } from '$lib/index.js';
 
 	export let navItems;
 	export let sideNavWidth = '250px';
@@ -63,19 +64,9 @@
 				<div class="jdg-nav-sidebar-slide-wrapper {sideNavSlideWrapperCss}">
 					<nav class="jdg-nav-sidebar-item-container">
 						{#each navItems as navItem, i}
-							<a
-								class="jdg-nav-sidebar-item {sideNavItemCss}"
-								href={navItem?.href}
-								on:click={() => {
-									doShowNavSidebar.set(false);
-								}}
-							>
-								<div class="jdg-nav-sidebar-item {sideNavItemCss} jdg-highlight-container">
-									<span class="jdg-highlight no-initial-highlight">
-										{navItem?.label}
-									</span>
-								</div></a
-							>
+							<div class="jdg-nav-sidebar-item">
+								<JDGNavItem {navItem} />
+							</div>
 						{/each}
 					</nav>
 				</div>

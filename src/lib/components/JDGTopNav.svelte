@@ -91,7 +91,7 @@
 {:else}
 	<nav class="desktop-nav-container jdg-letter-spacing-title">
 		{#each navItems as navItem, i}
-			<JDGNavItem {navItem} />
+			<JDGNavItem {navItem} marginBottom="-3px" />
 		{/each}
 	</nav>
 {/if}

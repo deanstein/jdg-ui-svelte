@@ -339,14 +339,13 @@ export const jdgLinkStyles = {
 		.jdg-letter-spacing-title a.no-initial-highlight::before,
 		.jdg-letter-spacing-title .jdg-highlight-container .jdg-highlight.no-initial-highlight::before {
 			left: -6px;
-			bottom: -9px;
 		}
 
 		/* logo highlight on hover */
 		.logo-container a.no-initial-highlight::before,
 		.logo-container .jdg-highlight-container .jdg-highlight.no-initial-highlight::before {
 			left: -6px;
-			bottom: -4px;
+			bottom: -6px;
 		}
 
 		/* primarily for BodyCopy links */
