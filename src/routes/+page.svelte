@@ -354,6 +354,7 @@
 	<JDGContentBoxFloating title="TITLES + SUBHEADERS">
 		<JDGH3H4 h3String="THIS IS AN H3 STRING" h4String="And this is an h4" />
 		<JDGH3H4 h3String="PARAMETRIX3D" h4String="Generative 3D-printed products" />
+		<JDGH3H4 h3String="LEGACY ARCHITECTURE" h4String="2012-2015" />
 		<JDGBodyCopy>And this is body copy!</JDGBodyCopy>
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="BODY COPY">
