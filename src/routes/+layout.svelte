@@ -8,7 +8,6 @@
 	import {
 		JDGAppContainer,
 		JDGBackground,
-		JDGDevToolbarSticky,
 		JDGFooter,
 		JDGHeader,
 		JDGNotificationBanner,
@@ -16,12 +15,6 @@
 	} from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
 	import sharedStrings from './shared-strings.js';
-	import {
-		devOverlayContent,
-		devToolbarStickyContent,
-		imagesLoading,
-		isScrollingToAnchorTag
-	} from '$lib/states/ui-state.js';
 
 	// define the nav items in the header
 	const navItemHome = instantiateObject(jdgNavItem);
