@@ -41,10 +41,12 @@
 		text-align: center;
 		margin: 0;
 		padding: 0;
+		line-height: 1;
 	}
 
 	h4 {
 		text-align: center;
 		padding: 0;
+		line-height: 1;
 	}
 </style>
