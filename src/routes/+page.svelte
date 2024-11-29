@@ -14,6 +14,7 @@
 		JDGFeatureCard,
 		JDGFullWidthContainer,
 		JDGGridLayout,
+		JDGH3H4,
 		JDGImage,
 		JDGImageCarousel,
 		JDGImageCompare,
@@ -349,6 +350,11 @@
 				imageAttributesCollection.rose_mall_60s70s_2
 			]}
 		/>
+	</JDGContentBoxFloating>
+	<JDGContentBoxFloating title="TITLES + SUBHEADERS">
+		<JDGH3H4 h3String="THIS IS AN H3 STRING" h4String="And this is an h4" />
+		<JDGH3H4 h3String="PARAMETRIX3D" h4String="Generative 3D-printed products" />
+		<JDGBodyCopy>And this is body copy!</JDGBodyCopy>
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="BODY COPY">
 		<JDGBodyCopy textColor="#7C5353">

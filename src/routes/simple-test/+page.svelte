@@ -64,7 +64,7 @@
 			</JDGGridLayout>
 		</JDGClipFade>
 	</JDGContentBoxFloating>
-	<JDGContentBoxFloating>
+	<JDGContentBoxFloating title="THIS IS A TITLE">
 		<JDGH3H4 h3String="THIS IS AN H3 STRING" h4String="And this is an h4" />
 		<JDGImageCarousel
 			imageAttributeObjects={[
