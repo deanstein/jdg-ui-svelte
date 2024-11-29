@@ -38,6 +38,7 @@
 
 <style>
 	h3 {
+		font-size: 1.4rem;
 		text-align: center;
 		margin: 0;
 		padding: 0;
@@ -45,6 +46,7 @@
 	}
 
 	h4 {
+		font-size: 1.15rem;
 		text-align: center;
 		padding: 0;
 		line-height: 1;
