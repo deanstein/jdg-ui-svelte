@@ -75,7 +75,6 @@
 						{/each}
 					</nav>
 				</div>
-				<!-- Add this line -->
 			</div>
 		</div>
 	</div>
