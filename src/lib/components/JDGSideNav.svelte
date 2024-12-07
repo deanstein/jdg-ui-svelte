@@ -65,7 +65,12 @@
 					<nav class="jdg-nav-sidebar-item-container">
 						{#each navItems as navItem, i}
 							<div class="jdg-nav-sidebar-item">
-								<JDGNavItem {navItem} />
+								<JDGNavItem
+									{navItem}
+									onClickFunction={() => {
+										doShowNavSidebar.set(!$doShowNavSidebar);
+									}}
+								/>
 							</div>
 						{/each}
 					</nav>
