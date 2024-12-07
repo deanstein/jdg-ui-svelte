@@ -43,7 +43,6 @@
 </script>
 
 {#if $doShowNavSidebar}
-	<!-- mobile nav container -->
 	<div class="jdg-nav-sidebar-layout">
 		<div class="jdg-nav-sidebar-alignment-container">
 			<div
