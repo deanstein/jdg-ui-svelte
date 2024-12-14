@@ -75,7 +75,7 @@
 	}}
 />
 <JDGAppContainer
-	appAccentColors={jdgColors.accentColorsCCP}
+	accentColors={jdgColors.accentColorsCCP}
 	{showHeaderStripes}
 	fontFamily="Goldman"
 >
