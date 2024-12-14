@@ -1,12 +1,16 @@
 import { derived, writable } from 'svelte/store';
-import { jdgColors } from '$lib/jdg-shared-styles.js';
+import { jdgColors, jdgFonts } from '$lib/jdg-shared-styles.js';
 
 export let activeNotificationBanners = writable([]);
-export let doAllowTextSelection = writable(false);
 export let doShowNavSidebar = writable(false);
 export let highestZIndex = writable(1);
 export let isMobileBreakpoint = writable(false);
 export let jumpToNavItems = writable([]);
+
+// font, colors, settings
+export let appFont = writable(jdgFonts.body);
+export let accentColors = writable(jdgColors.accentColorsJDG);
+export let doAllowTextSelection = writable(false);
 
 // scrolling
 export let isScrolling = writable(false);
@@ -32,9 +36,6 @@ export let doShowImageDetailOverlay = writable(false);
 export let clientWidth = writable(0); // window minus scrollbar
 export let windowWidth = writable(0); // full window width, including scrollbar issues when using actual vh
 
-// colors
-export let accentColors = writable(jdgColors.accentColorsJDG);
-
 // dev tools
 export let doShowDevTools = writable(false); // state view and tools in footer
 export let doShowDevToolbarSticky = writable(false); // sticky toolbar with specific dev output
@@ -44,8 +45,10 @@ export let devOverlayContent = writable('No data found in $devOverlayContent sta
 
 // create a combined store to display in footer dev tools
 const storeMap = {
-	activeNotificationBanners,
+	appFont,
+	accentColors,
 	doAllowTextSelection,
+	activeNotificationBanners,
 	doShowNavSidebar,
 	highestZIndex,
 	isMobileBreakpoint,
@@ -64,7 +67,6 @@ const storeMap = {
 	imageDetailScale,
 	clientWidth,
 	windowWidth,
-	accentColors,
 	doShowDevTools,
 	doShowDevToolbarSticky,
 	devToolbarStickyContent,

@@ -11,11 +11,11 @@
 	import { setAlphaInRgbaString, verticalSlide } from '$lib/jdg-graphics-factory.js';
 	import {
 		jdgColors,
-		jdgFonts,
 		jdgSizes,
 		jdgDurations,
 		jdgBreakpoints
 	} from '../jdg-shared-styles.js';
+	import { appFont } from '$lib/states/ui-state.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object to hold all details
 	export let maxWidth = undefined; // if not defined, takes available space
@@ -25,7 +25,7 @@
 	export let useCompactHeightOnMobile = true; // if true, ignores fillContainer on smallest breakpoint for no cropping and fitted container (less height)
 	export let showBlurInUnfilledSpace = false; // if true, shows the image blurred in the unfilled space - only applies if fillContainer is false
 	export let label = undefined;
-	export let labelFontFamily = jdgFonts.body;
+	export let labelFontFamily = $appFont;
 	export let labelJustification = 'left';
 	export let labelContainerVerticalAlign = 'bottom';
 	export let href = undefined;

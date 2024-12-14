@@ -5,6 +5,7 @@
 	import jdgContexts from '$lib/jdg-contexts.js';
 	import {
 		accentColors,
+		appFont,
 		clientWidth,
 		doAllowTextSelection,
 		doShowDevOverlay,
@@ -151,7 +152,8 @@
 		// use the text selection prop to set the state initially
 		doAllowTextSelection.set(allowTextSelection);
 
-		// apps have accent colors
+		// set stores based on props
+		appFont.set(fontFamily);
 		accentColors.set(appAccentColors);
 		doShowHeaderStripes.set(showHeaderStripes);
 		// update the client and window width at the end so they're accurate

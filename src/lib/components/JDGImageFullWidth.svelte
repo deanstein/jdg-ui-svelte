@@ -8,13 +8,9 @@
 		JDGFullWidthContainer,
 		JDGImage
 	} from '$lib/index.js';
-	import {
-		fadeInSettleBeforeSm,
-		jdgBreakpoints,
-		jdgFonts,
-		jdgSizes
-	} from '$lib/jdg-shared-styles.js';
+	import { fadeInSettleBeforeSm, jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { fade } from 'svelte/transition';
+	import { appFont } from '$lib/states/ui-state.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes);
 	export let maxHeight = '80vh';
@@ -22,16 +18,16 @@
 	export let showOverlay = false;
 	export let overlayColorRgba = 'rgba(50, 50, 50, 0.2)';
 	export let superText = undefined;
-	export let superTextFontFamily = jdgFonts.body;
+	export let superTextFontFamily = $appFont;
 	export let primaryText = undefined;
 	export let primaryTextBold = false;
-	export let primaryTextFontFamily = jdgFonts.body;
+	export let primaryTextFontFamily = $appFont;
 	export let secondaryText = undefined;
-	export let secondaryTextFontFamily = jdgFonts.body;
+	export let secondaryTextFontFamily = $appFont;
 	export let overlayImageAttributes = undefined; // for example, a logo or vector graphic over the image
 	export let overlayImageMaxHeight = '18vh';
 	export let overlayImageText = undefined;
-	export let overlayImageTextFontFamily = jdgFonts.body;
+	export let overlayImageTextFontFamily = $appFont;
 
 	let overlayContainerRef;
 	let imageOverlayWrapperRef;

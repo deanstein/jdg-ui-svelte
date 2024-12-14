@@ -14,16 +14,16 @@
 		jdgBreakpoints,
 		jdgColors,
 		jdgDurations,
-		jdgFonts,
 		jdgSizes,
 		jdgBoxShadowStandard
 	} from '../jdg-shared-styles.js';
 	import { JDGAnchorTag } from '$lib/index.js';
+	import { appFont } from '$lib/states/ui-state.js';
 
 	export let title = undefined;
-	export let titleFontFamily = jdgFonts.body;
+	export let titleFontFamily = $appFont;
 	export let subtitle = undefined;
-	export let subtitleFontFamily = jdgFonts.body;
+	export let subtitleFontFamily = $appFont;
 	export let anchorTag = convertStringToAnchorTag(title, false);
 	export let paddingTop = '2rem';
 	export let paddingBottom = '2rem';
