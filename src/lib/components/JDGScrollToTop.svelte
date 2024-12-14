@@ -3,7 +3,11 @@
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
-	import { appAccentColors, isMobileBreakpoint, windowScrollPosition } from '$lib/states/ui-state.js';
+	import {
+		appAccentColors,
+		isMobileBreakpoint,
+		windowScrollPosition
+	} from '$lib/states/ui-state.js';
 	import { JDGButton } from '$lib/index.js';
 	import {
 		jdgBoxShadowStandard,
