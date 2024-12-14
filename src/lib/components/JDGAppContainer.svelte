@@ -37,8 +37,8 @@
 	export let appLoadingIconSrc =
 		'https://res.cloudinary.com/jdg-main/image/upload/v1718070772/jdg-ui-svelte/jdg-ui-logo_cs4ji5.jpg';
 	export let accentColors = jdgColors.accentColorsJDG;
-	export let linkColorDefault = appAccentColors[0]; /* color for the "banner" hyperlink style */
-	export let linkColorSimple = appAccentColors[0]; /* color for the simple hyperlink style */
+	export let linkColorDefault = $appAccentColors[0]; /* color for the "banner" hyperlink style */
+	export let linkColorSimple = $appAccentColors[0]; /* color for the simple hyperlink style */
 	export let showHeaderStripes = true;
 	export let showScrollToTopButton = true;
 	export let allowTextSelection = false;
