@@ -8,8 +8,8 @@ export let isMobileBreakpoint = writable(false);
 export let jumpToNavItems = writable([]);
 
 // font, colors, settings
-export let appFont = writable(jdgFonts.body);
-export let accentColors = writable(jdgColors.accentColorsJDG);
+export let appAccentColors = writable(jdgColors.accentColorsJDG);
+export let appFontFamily = writable(jdgFonts.body);
 export let doAllowTextSelection = writable(false);
 
 // scrolling
@@ -45,8 +45,8 @@ export let devOverlayContent = writable('No data found in $devOverlayContent sta
 
 // create a combined store to display in footer dev tools
 const storeMap = {
-	appFont,
-	accentColors,
+	appFont: appFontFamily,
+	accentColors: appAccentColors,
 	doAllowTextSelection,
 	activeNotificationBanners,
 	doShowNavSidebar,

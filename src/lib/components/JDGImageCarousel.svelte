@@ -3,7 +3,7 @@
 	import { css } from '@emotion/css';
 
 	import {
-		accentColors,
+		appAccentColors,
 		doShowImageDetailOverlay,
 		imageAspectRatios,
 		imageDetailAttributes,
@@ -21,7 +21,7 @@
 
 	export let imageAttributeObjects; // all images shown in thumbnail collection
 	export let maxHeight = '50vh';
-	export let activeThumbnailColor = $accentColors[0];
+	export let activeThumbnailColor = $appAccentColors[0];
 	export let autoAdvance = true; // if true, auto advance through images at given interval
 	export let autoAdvanceInterval = 5000; // ms, interval between auto-advances
 	export let showBlurInUnfilledSpace = true;
@@ -226,7 +226,7 @@
 				label={null}
 				paddingLeftRight={'8px'}
 				paddingTopBottom={'8px'}
-				backgroundColor={$accentColors[0]}
+				backgroundColor={$appAccentColors[0]}
 				tooltip="Expand image"
 				doForceSquareRatio
 			/>

@@ -4,8 +4,8 @@
 
 	import jdgContexts from '$lib/jdg-contexts.js';
 	import {
-		accentColors,
-		appFont,
+		appAccentColors,
+		appFontFamily,
 		clientWidth,
 		doAllowTextSelection,
 		doShowDevOverlay,
@@ -36,7 +36,7 @@
 	export let fontFamily = jdgFonts.body;
 	export let appLoadingIconSrc =
 		'https://res.cloudinary.com/jdg-main/image/upload/v1718070772/jdg-ui-svelte/jdg-ui-logo_cs4ji5.jpg';
-	export let appAccentColors = jdgColors.accentColorsJDG;
+	export let accentColors = jdgColors.accentColorsJDG;
 	export let linkColorDefault = appAccentColors[0]; /* color for the "banner" hyperlink style */
 	export let linkColorSimple = appAccentColors[0]; /* color for the simple hyperlink style */
 	export let showHeaderStripes = true;
@@ -153,8 +153,8 @@
 		doAllowTextSelection.set(allowTextSelection);
 
 		// set stores based on props
-		appFont.set(fontFamily);
-		accentColors.set(appAccentColors);
+		appFontFamily.set(fontFamily);
+		appAccentColors.set(accentColors);
 		doShowHeaderStripes.set(showHeaderStripes);
 		// update the client and window width at the end so they're accurate
 		setTimeout(onPageResize, 0);

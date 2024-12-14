@@ -3,15 +3,15 @@
 	import { adjustColorForContrast } from '$lib/jdg-utils.js';
 
 	import { jdgBreakpoints, jdgColors, jdgFonts, jdgSizes } from '$lib/jdg-shared-styles.js';
-	import { accentColors, appFont } from '$lib/states/ui-state.js';
+	import { appAccentColors, appFontFamily } from '$lib/states/ui-state.js';
 
 	export let featureTitle = undefined;
 	export let featureDescription;
-	export let titleFontFamily = $appFont;
+	export let titleFontFamily = $appFontFamily;
 	export let descriptionTextColor = jdgColors.textDm;
-	export let descriptionTextFontFamily = $appFont;
+	export let descriptionTextFontFamily = $appFontFamily;
 	export let nDescriptionTextSizeMultiplier = 1.25; // factor of body copy size
-	export let backgroundColor = $accentColors[0];
+	export let backgroundColor = $appAccentColors[0];
 	export let imageAlign = 'left'; // image on this side, text on opposite
 	export let showBorderImage = true;
 

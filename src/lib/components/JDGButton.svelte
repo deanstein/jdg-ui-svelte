@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { appFont, isMobileBreakpoint } from '$lib/states/ui-state.js';
+	import { appFontFamily, isMobileBreakpoint } from '$lib/states/ui-state.js';
 
 	import { jdgColors } from '../jdg-shared-styles.js';
 	import {
@@ -71,7 +71,7 @@
 	$: {
 		buttonCss = css`
 			font-size: ${fontSize};
-			font-family: ${$appFont};
+			font-family: ${$appFontFamily};
 			width: ${
 				width == 'fit-content'
 					? 'fit-content'

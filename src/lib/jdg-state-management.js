@@ -1,6 +1,6 @@
 import { addUniqueValueToArray, removeValueFromArray } from './jdg-utils.js';
 import {
-	accentColors,
+	appAccentColors,
 	activeNotificationBanners,
 	highestZIndex,
 	imageAspectRatios,
@@ -19,7 +19,7 @@ import { jdgSizes } from './jdg-shared-styles.js';
 
 export const getAccentColors = () => {
 	let currentAccentColors;
-	accentColors.subscribe((currentValue) => {
+	appAccentColors.subscribe((currentValue) => {
 		currentAccentColors = currentValue;
 	});
 	return currentAccentColors;

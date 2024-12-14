@@ -2,7 +2,7 @@
 	import { afterUpdate } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { accentColors, isMobileBreakpoint, windowWidth } from '$lib/states/ui-state.js';
+	import { appAccentColors, isMobileBreakpoint, windowWidth } from '$lib/states/ui-state.js';
 	import { lightenColor } from '$lib/jdg-utils.js';
 	import { jdgSharedIdentifiers } from '$lib/jdg-shared-strings.js';
 	import { jdgDurations } from '$lib/jdg-shared-styles.js';
@@ -10,7 +10,7 @@
 	export let moduleHeightPx = 350; // if slot is GridLayout, this gets overridden
 	export let moduleCountDesktop = 1.5; // how many rows to show before fading (desktop)
 	export let moduleCountMobile = 3.5; // how many rows to show before fading (mobile)
-	export let hoverColor = $accentColors[0];
+	export let hoverColor = $appAccentColors[0];
 	export let hoverColorLightenFactor = 0.75; // how much to lighten the accent color for the hover color
 
 	let gradientHeightPx = 200; // if slot is GridLayout, this gets overridden

@@ -18,12 +18,12 @@
 		jdgBoxShadowStandard
 	} from '../jdg-shared-styles.js';
 	import { JDGAnchorTag } from '$lib/index.js';
-	import { appFont } from '$lib/states/ui-state.js';
+	import { appFontFamily } from '$lib/states/ui-state.js';
 
 	export let title = undefined;
-	export let titleFontFamily = $appFont;
+	export let titleFontFamily = $appFontFamily;
 	export let subtitle = undefined;
-	export let subtitleFontFamily = $appFont;
+	export let subtitleFontFamily = $appFontFamily;
 	export let anchorTag = convertStringToAnchorTag(title, false);
 	export let paddingTop = '2rem';
 	export let paddingBottom = '2rem';

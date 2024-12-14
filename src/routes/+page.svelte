@@ -1,5 +1,5 @@
 <script>
-	import { accentColors } from '$lib/states/ui-state.js';
+	import { appAccentColors } from '$lib/states/ui-state.js';
 	import { scrollToAnchor } from '$lib/jdg-utils.js';
 
 	import {
@@ -464,7 +464,7 @@
 				label={null}
 				paddingLeftRight={'8px'}
 				paddingTopBottom={'8px'}
-				backgroundColor={$accentColors[0]}
+				backgroundColor={$appAccentColors[0]}
 				tooltip="Expand image"
 				doForceSquareRatio
 			/>
@@ -511,7 +511,7 @@
 	<JDGAccentBlock>
 		<JDGAccentText primaryText={`"Another quote."`} secondaryText="Another Someone, 1998" />
 	</JDGAccentBlock>
-	<JDGAccentBlock backgroundColor={$accentColors[1]}>
+	<JDGAccentBlock backgroundColor={$appAccentColors[1]}>
 		<JDGAccentText
 			isQuote={true}
 			primaryText={`"The people of the City of Englewood want this mall in their community."`}

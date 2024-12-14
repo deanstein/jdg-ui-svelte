@@ -3,7 +3,7 @@
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
-	import { accentColors, isMobileBreakpoint, windowScrollPosition } from '$lib/states/ui-state.js';
+	import { appAccentColors, isMobileBreakpoint, windowScrollPosition } from '$lib/states/ui-state.js';
 	import { JDGButton } from '$lib/index.js';
 	import {
 		jdgBoxShadowStandard,
@@ -82,7 +82,7 @@
 					faIcon="fa-chevron-up"
 					label={null}
 					tooltip="Scroll to Top"
-					backgroundColor={$accentColors[0]}
+					backgroundColor={$appAccentColors[0]}
 					borderRadius="50%"
 					doForceSquareRatio
 					paddingTopBottom={$isMobileBreakpoint ? '8px' : '12px'}
