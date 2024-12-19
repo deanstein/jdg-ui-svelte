@@ -193,7 +193,7 @@
 	<JDGLoadingOverlay
 		isLoading={!isAppLoaded}
 		loadingIconSrc={appLoadingIconSrc}
-		loadingSpinnerColor={loadingSpinnerColor}
+		{loadingSpinnerColor}
 	/>
 	{#if $doShowImageDetailOverlay}
 		<JDGImageDetailOverlay imageAttributes={$imageDetailAttributes} />
