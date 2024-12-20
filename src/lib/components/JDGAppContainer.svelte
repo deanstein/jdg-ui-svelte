@@ -121,7 +121,7 @@
 			background: ${useStripedHyperlinkHoverStyle
 				? `linear-gradient(
 				to bottom,
-				${convertHexToRGBA(appAccentColors[0], stripedColorOpacity)} 33%,I'm act
+				${convertHexToRGBA(appAccentColors[0], stripedColorOpacity)} 33%,
 				${convertHexToRGBA(appAccentColors[1], stripedColorOpacity)} 33%,
 				${convertHexToRGBA(appAccentColors[1], stripedColorOpacity)} 66%,
 				${convertHexToRGBA(appAccentColors[2], stripedColorOpacity)} 66%
