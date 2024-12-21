@@ -20,6 +20,8 @@
 	} from '$lib/jdg-utils.js';
 
 	export let imageAttributeObjects; // all images shown in thumbnail collection
+	export let showCaption = true;
+	export let showAttribution = true;
 	export let maxHeight = '50vh';
 	export let activeThumbnailColor = $appAccentColors[0];
 	export let autoAdvance = true; // if true, auto advance through images at given interval
@@ -198,6 +200,8 @@
 			<div class="carousel-crossfade-wrapper-absolute">
 				<JDGImage
 					imageAttributes={activeImageAttributes}
+					{showCaption}
+					{showAttribution}
 					{maxHeight}
 					cropToFillContainer={false}
 					{showBlurInUnfilledSpace}
