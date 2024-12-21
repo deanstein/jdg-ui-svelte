@@ -13,6 +13,7 @@
 	import { appFontFamily } from '$lib/states/ui-state.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes);
+	export let objectPosition = 'center';
 	export let maxHeight = '80vh';
 	export let overlapWithHeader = false; // if true, the overlays will be moved down so they're visually centered
 	export let showOverlay = false;
@@ -58,7 +59,7 @@
 </script>
 
 <JDGFullWidthContainer>
-	<JDGImage {imageAttributes} {maxHeight} alignLoadingSpinner={'end'} />
+	<JDGImage {imageAttributes} {maxHeight} {objectPosition} alignLoadingSpinner={'end'} />
 	{#if showOverlay || primaryText || secondaryText || overlayImageAttributes}
 		<div
 			bind:this={overlayContainerRef}
