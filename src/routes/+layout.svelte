@@ -74,7 +74,13 @@
 		]
 	}}
 />
-<JDGAppContainer accentColors={jdgColors.accentColorsPMX} {showHeaderStripes} fontFamily="Goldman">
+<JDGAppContainer
+	accentColors={jdgColors.accentColorsPMX}
+	linkColorContrastAdjustment={0}
+	linkColorDefault={jdgColors.accentColorsPMX[0]}
+	{showHeaderStripes}
+	fontFamily="Goldman"
+>
 	<JDGNotificationBanner notificationType={jdgNotificationTypes.information.id} />
 	<JDGHeader
 		logoJustification="left"
