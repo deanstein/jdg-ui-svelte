@@ -536,30 +536,30 @@ export const rgbToRgba = (rgb, alpha) => {
 };
 
 export const hexToRgb = (hex) => {
-    let result;
-    if (hex.length === 9) {
-        // handle 8-digit hex (with alpha)
-        result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        return result
-            ? {
-                  r: parseInt(result[1], 16),
-                  g: parseInt(result[2], 16),
-                  b: parseInt(result[3], 16),
-                  a: parseInt(result[4], 16) / 255 // alpha value between 0 and 1
-              }
-            : null;
-    } else {
-        // handle 6-digit hex (without alpha)
-        result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        return result
-            ? {
-                  r: parseInt(result[1], 16),
-                  g: parseInt(result[2], 16),
-                  b: parseInt(result[3], 16),
-                  a: 1
-              }
-            : null;
-    }
+	let result;
+	if (hex.length === 9) {
+		// handle 8-digit hex (with alpha)
+		result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+		return result
+			? {
+					r: parseInt(result[1], 16),
+					g: parseInt(result[2], 16),
+					b: parseInt(result[3], 16),
+					a: parseInt(result[4], 16) / 255 // alpha value between 0 and 1
+				}
+			: null;
+	} else {
+		// handle 6-digit hex (without alpha)
+		result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+		return result
+			? {
+					r: parseInt(result[1], 16),
+					g: parseInt(result[2], 16),
+					b: parseInt(result[3], 16),
+					a: 1
+				}
+			: null;
+	}
 };
 
 export const rgbToHex = (rgb) => {

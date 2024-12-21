@@ -38,7 +38,7 @@
 		'https://res.cloudinary.com/jdg-main/image/upload/v1718070772/jdg-ui-svelte/jdg-ui-logo_cs4ji5.jpg';
 	export let accentColors = jdgColors.accentColorsJDG;
 	export let linkColorDefault = accentColors[0]; // color for the "banner" hyperlink style
-	export let linkColorSimple = accentColors[0]; // color for the simple hyperlink style 
+	export let linkColorSimple = accentColors[0]; // color for the simple hyperlink style
 	export let linkColorContrastAdjustment = 10; // how much the link color will be adjusted for contrast with text
 	export let loadingSpinnerColor = accentColors[0];
 	export let showHeaderStripes = true;
@@ -127,10 +127,18 @@
 				${convertHexToRGBA(appAccentColors[1], stripedColorOpacity)} 66%,
 				${convertHexToRGBA(appAccentColors[2], stripedColorOpacity)} 66%
 			)`
-				: `${adjustColorForContrast(linkColorDefault, jdgColors.text, linkColorContrastAdjustment)}`};
+				: `${adjustColorForContrast(
+						linkColorDefault,
+						jdgColors.text,
+						linkColorContrastAdjustment
+					)}`};
 		}
 		a:before {
-			background: ${adjustColorForContrast(linkColorDefault, jdgColors.text, linkColorContrastAdjustment)};
+			background: ${adjustColorForContrast(
+				linkColorDefault,
+				jdgColors.text,
+				linkColorContrastAdjustment
+			)};
 		}
 	`;
 
