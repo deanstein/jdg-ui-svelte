@@ -22,8 +22,10 @@
 
 	export let title = undefined;
 	export let titleFontFamily = $appFontFamily;
+	export let titleColor = jdgColors.title;
 	export let subtitle = undefined;
 	export let subtitleFontFamily = $appFontFamily;
+	export let subtitleColor = jdgColors.textLight;
 	export let anchorTag = convertStringToAnchorTag(title, false);
 	export let paddingTop = '2rem';
 	export let paddingBottom = '2rem';
@@ -38,14 +40,14 @@
 	const floatingBoxTitleCss = css`
 		font-family: ${titleFontFamily};
 		font-size: ${jdgSizes.fontSizeFloatingContentBoxTitle};
-		color: ${jdgColors.title};
+		color: ${titleColor};
 		margin-bottom: ${subtitle ? 0 : 'revert'};
 	`;
 
 	const floatingBoxSubtitleCss = css`
 		font-family: ${subtitleFontFamily};
 		font-size: ${jdgSizes.fontSizeFloatingContentBoxSubtitle};
-		color: ${jdgColors.textLight};
+		color: ${subtitleColor};
 	`;
 
 	const floatingBoxContentCss = css`
