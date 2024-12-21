@@ -351,7 +351,7 @@
 			]}
 		/>
 	</JDGContentBoxFloating>
-	<JDGContentBoxFloating title="TITLES + SUBHEADERS">
+	<JDGContentBoxFloating title="TITLES + SUBHEADERS" titleColor="#336E68FF" subtitle="This is a colorful subtitle" subtitleColor="#BF6B6BFF">
 		<JDGH3H4 h3String="THIS IS AN H3 STRING" h4String="And this is an h4" />
 		<JDGH3H4 h3String="PARAMETRIX3D" h4String="Generative 3D-printed products" />
 		<JDGH3H4 h3String="LEGACY ARCHITECTURE" h4String="2012-2015" />
