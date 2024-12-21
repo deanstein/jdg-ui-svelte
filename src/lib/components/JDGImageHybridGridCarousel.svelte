@@ -9,11 +9,12 @@
 	} from '$lib/index.js';
 
 	// shared props
+	export let imageAttributeObjects = []; // all images shown in thumbnail collection
+	export let objectPosition = 'center';
 	export let cropToFillContainer = true;
 	export let showBlurInUnfilledSpace = false;
 	export let showCaption = true;
 	export let showAttribution = true;
-	export let imageAttributeObjects = []; // all images shown in thumbnail collection
 	// carousel props
 	export let fullWidthCarouselOnMobile = true;
 	// image + grid layout props
@@ -38,6 +39,7 @@
 			{#each imageAttributeObjects as imageAttributes, i}
 				<JDGImageTile
 					{imageAttributes}
+					{objectPosition}
 					{cropToFillContainer}
 					{showBlurInUnfilledSpace}
 					{showCaption}
