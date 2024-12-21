@@ -20,6 +20,7 @@
 	} from '$lib/jdg-utils.js';
 
 	export let imageAttributeObjects; // all images shown in thumbnail collection
+	export let objectPosition = 'center';
 	export let showCaption = true;
 	export let showAttribution = true;
 	export let maxHeight = '50vh';
@@ -200,6 +201,7 @@
 			<div class="carousel-crossfade-wrapper-absolute">
 				<JDGImage
 					imageAttributes={activeImageAttributes}
+					{objectPosition}
 					{showCaption}
 					{showAttribution}
 					{maxHeight}
