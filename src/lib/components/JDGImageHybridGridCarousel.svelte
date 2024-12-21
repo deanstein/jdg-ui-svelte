@@ -28,10 +28,11 @@
 		<!-- carousel can be full-width or not -->
 		{#if fullWidthCarouselOnMobile}
 			<JDGFullWidthContainer>
-				<JDGImageCarousel {imageAttributeObjects}></JDGImageCarousel>
+				<JDGImageCarousel {imageAttributeObjects} {showCaption} {showAttribution}
+				></JDGImageCarousel>
 			</JDGFullWidthContainer>
 		{:else}
-			<JDGImageCarousel {imageAttributeObjects}></JDGImageCarousel>
+			<JDGImageCarousel {imageAttributeObjects} {showCaption} {showAttribution}></JDGImageCarousel>
 		{/if}
 		<!-- all other breakpoints use the grid layout with image tiles -->
 	{:else}
