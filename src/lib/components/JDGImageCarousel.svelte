@@ -202,8 +202,6 @@
 				<JDGImage
 					imageAttributes={activeImageAttributes}
 					{objectPosition}
-					{showCaption}
-					{showAttribution}
 					{maxHeight}
 					cropToFillContainer={false}
 					{showBlurInUnfilledSpace}
@@ -238,13 +236,15 @@
 			/>
 		</div>
 	</div>
-	<JDGImageCaptionAttribution
-		imageAttributes={activeImageAttributes}
-		backgroundColorRgba={activeImageAttributes.allowBackgroundBlur
-			? jdgColors.imageLabelBackground
-			: 'rgba(0, 0, 0, 0)'}
-		matchBodyCopyPadding={true}
-	/>
+	{#if (showCaption && activeImageAttributes.imgCaption) || (showAttribution && activeImageAttributes.imgAttribution)}
+		<JDGImageCaptionAttribution
+			imageAttributes={activeImageAttributes}
+			backgroundColorRgba={activeImageAttributes.allowBackgroundBlur
+				? jdgColors.imageLabelBackground
+				: 'rgba(0, 0, 0, 0)'}
+			matchBodyCopyPadding={true}
+		/>
+	{/if}
 	<div class="carousel-thumbnail-container {thumbnailContainerCss}">
 		{#each imageAttributeObjects as imageAttributesObject, i}
 			<div
