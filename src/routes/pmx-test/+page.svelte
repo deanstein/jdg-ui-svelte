@@ -43,11 +43,13 @@
 	.pmx-product-container-flex {
 		display: flex;
 		flex-direction: row;
+		justify-content: center;
 		gap: 20px;
 	}
 
 	.flex-container-left {
-		flex: 1;
+		display: flex;
+		justify-content: right;
 	}
 
 	.flex-container-right {
@@ -58,10 +60,5 @@
 		display: flex;
 		flex-direction: column;
 		gap: 40px;
-	}
-
-	.icon-and-text {
-		display: flex;
-		gap: 5px;
 	}
 </style>
