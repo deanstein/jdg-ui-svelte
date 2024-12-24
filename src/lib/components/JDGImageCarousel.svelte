@@ -127,23 +127,6 @@
 		}
 	};
 
-	const thumbnailContainerCss = css`
-		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			padding: 0.75rem ${jdgSizes.bodyCopyVerticalPaddingSm} 0.75rem
-				${jdgSizes.bodyCopyVerticalPaddingSm};
-		}
-		@media (min-width: ${jdgBreakpoints.width[0].toString() +
-			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
-			jdgBreakpoints.unit}) {
-			padding: 0.75rem ${jdgSizes.bodyCopyVerticalPaddingMd} 0.75rem
-				${jdgSizes.bodyCopyVerticalPaddingMd};
-		}
-		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			padding: 0.75rem ${jdgSizes.bodyCopyVerticalPaddingLg} 0.75rem
-				${jdgSizes.bodyCopyVerticalPaddingLg};
-		}
-	`;
-
 	onMount(() => {
 		maxHeightPxFromProp = getMaxHeightPxFromProp();
 		if (autoAdvance) {
@@ -232,6 +215,16 @@
 			}
 		}
 	}
+
+	// the thumbnail container shouldn't be wider than the image
+	let dynamicThumbnailContainerWidthCss = css``;
+	$: {
+		if (isFinite(finalMaxWidthPx)) {
+			dynamicThumbnailContainerWidthCss = css`
+				width: ${finalMaxHeightPx}px;
+			`;
+		}
+	}
 </script>
 
 <div
@@ -291,7 +284,7 @@
 			matchBodyCopyPadding={true}
 		/>
 	{/if}
-	<div class="carousel-thumbnail-container {thumbnailContainerCss}">
+	<div class="carousel-thumbnail-container {dynamicThumbnailContainerWidthCss}">
 		{#each imageAttributeObjects as imageAttributesObject, i}
 			<div
 				class="carousel-thumbnail-wrapper"
@@ -347,6 +340,7 @@
 		flex-wrap: wrap;
 		gap: 1rem;
 		justify-content: center;
+		padding: 0.75rem;
 	}
 
 	.carousel-thumbnail-wrapper {
