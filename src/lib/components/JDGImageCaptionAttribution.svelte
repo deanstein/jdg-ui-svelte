@@ -15,6 +15,7 @@
 	export let showAttribution = true;
 	export let truncateText = true;
 	export let matchBodyCopyPadding = false; // if true, uses same padding as body copy (for full-width use only)
+	export let maxTextWidthPx = undefined; // useful for cases where caption/attribution is outside image but must match image width
 	export let backgroundColorRgba = jdgColors.imageLabelBackground;
 
 	let availableWidthRef; // element to determine available space for caption
@@ -39,8 +40,12 @@
 		buttonContainerRef.style.position = 'absolute';
 
 		// measure and update the widths
-		availableWidth = getMaxElementWidthPx(availableWidthRef);
-		captionTextWidth = getFullTextWidth(captionTextRef);
+		const currentAvailableWidth = getMaxElementWidthPx(availableWidthRef);
+		if (isFinite(currentAvailableWidth)) {
+			availableWidth = currentAvailableWidth;
+			captionTextWidth = getFullTextWidth(captionTextRef);
+		}
+
 		// console.log('Caption text width: ', captionTextWidth, 'Caption available width: ', availableWidth);
 
 		// set the button container ref back to its original value
@@ -50,8 +55,15 @@
 
 	const getIsCaptionTooLong = () => {
 		if (availableWidthRef && captionTextRef) {
-			return captionTextWidth >= availableWidth;
+			return maxTextWidthPx
+				? captionTextWidth >= maxTextWidthPx
+				: captionTextWidth >= availableWidth;
 		}
+	};
+
+	const getPaddingForMaxWidth = () => {
+		// @ts-ignore
+		return Math.abs(availableWidth - maxTextWidthPx) / 2;
 	};
 
 	const attributionPrefix = 'Image Source: ';
@@ -61,20 +73,6 @@
 		backdrop-filter: ${backgroundColorRgba !== 'rgba(0, 0, 0, 0)'
 			? `blur(${jdgSizes.blurSizeSmall})`
 			: ''};
-		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			padding: 3px ${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingSm : '8px'} 3px
-				${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingSm : '8px'};
-		}
-		@media (min-width: ${jdgBreakpoints.width[0].toString() +
-			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
-			jdgBreakpoints.unit}) {
-			padding: 4px ${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingMd : '8px'} 4px
-				${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingMd : '8px'};
-		}
-		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			padding: 6px ${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingLg : '10px'} 6px
-				${matchBodyCopyPadding ? jdgSizes.bodyCopyVerticalPaddingLg : '10px'};
-		}
 	`;
 
 	const captionCss = css`
@@ -115,8 +113,10 @@
 		if (showCaption && imageAttributes.imgCaption) {
 			// set up a resize observer to calculate the final available width for text
 			const observer = new ResizeObserver(() => {
-				updateWidths();
-				isCaptionTooLong = getIsCaptionTooLong();
+				setTimeout(() => {
+					updateWidths();
+					isCaptionTooLong = getIsCaptionTooLong();
+				}, 100);
 			});
 			observer.observe(captionTextRef);
 			return () => {
@@ -144,58 +144,112 @@
 
 	// check for truncation when clientWidth changes
 	$: {
-		$clientWidth, availableWidthRef, captionTextRef;
+		$clientWidth, availableWidthRef, captionTextRef, availableWidth;
 		updateWidths();
 		isCaptionTooLong = getIsCaptionTooLong();
+	}
+
+	let textWidthSizingCss = css``;
+	// set the available text width
+	$: {
+		availableWidth;
+		textWidthSizingCss = css`
+			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+				padding: 3px
+					${maxTextWidthPx
+						? `${getPaddingForMaxWidth()}px`
+						: matchBodyCopyPadding
+							? jdgSizes.bodyCopyVerticalPaddingSm
+							: '8px'}
+					3px
+					${maxTextWidthPx
+						? `${getPaddingForMaxWidth()}px`
+						: matchBodyCopyPadding
+							? jdgSizes.bodyCopyVerticalPaddingSm
+							: '8px'};
+			}
+			@media (min-width: ${jdgBreakpoints.width[0].toString() +
+				jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+				jdgBreakpoints.unit}) {
+				padding: 4px
+					${maxTextWidthPx
+						? `${getPaddingForMaxWidth()}px`
+						: matchBodyCopyPadding
+							? jdgSizes.bodyCopyVerticalPaddingMd
+							: '8px'}
+					4px
+					${maxTextWidthPx
+						? `${getPaddingForMaxWidth()}px`
+						: matchBodyCopyPadding
+							? jdgSizes.bodyCopyVerticalPaddingMd
+							: '8px'};
+			}
+			@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+				padding: 6px
+					${maxTextWidthPx
+						? `${getPaddingForMaxWidth()}px`
+						: matchBodyCopyPadding
+							? jdgSizes.bodyCopyVerticalPaddingLg
+							: '10px'}
+					6px
+					${maxTextWidthPx
+						? `${getPaddingForMaxWidth()}px`
+						: matchBodyCopyPadding
+							? jdgSizes.bodyCopyVerticalPaddingLg
+							: '10px'};
+			}
+		`;
 	}
 </script>
 
 {#if imageAttributes.imgCaption || imageAttributes.imageAttribution}
-	<div
-		class="jdg-caption-attribution-container {captionAttributionContainerCss} {captionAttributionContainerDynamicCss}"
-		on:click|stopPropagation={(event) => {
-			event.stopPropagation();
-			toggleCaptionTruncation();
-		}}
-		on:keypress={() => {}}
-		role="button"
-		tabindex="0"
-	>
-		<div bind:this={availableWidthRef} class="caption-attribution-grid-container">
-			{#if showCaption && imageAttributes.imgCaption}
-				<div class="caption-attribution-flex-container {captionCss}">
-					<div bind:this={captionTextRef} class="caption-text {captionAttributionDynamicCss}">
-						{imageAttributes.imgCaption}
+	<div bind:this={availableWidthRef} class="jdg-caption-attribution-available-width-ref">
+		<div
+			class="jdg-caption-attribution-container {captionAttributionContainerCss} {captionAttributionContainerDynamicCss} {textWidthSizingCss}"
+			on:click|stopPropagation={(event) => {
+				event.stopPropagation();
+				toggleCaptionTruncation();
+			}}
+			on:keypress={() => {}}
+			role="button"
+			tabindex="0"
+		>
+			<div class="caption-attribution-grid-container">
+				{#if showCaption && imageAttributes.imgCaption}
+					<div class="caption-attribution-flex-container {captionCss}">
+						<div bind:this={captionTextRef} class="caption-text {captionAttributionDynamicCss}">
+							{imageAttributes.imgCaption}
+						</div>
 					</div>
-				</div>
-			{/if}
-			{#if showAttribution && imageAttributes.imgAttribution}
-				<div
-					class="caption-attribution-flex-container {captionAttributionDynamicCss} {attributionCss}"
-				>
-					<div class="attribution-text">
-						{attributionPrefix + imageAttributes.imgAttribution}
+				{/if}
+				{#if showAttribution && imageAttributes.imgAttribution}
+					<div
+						class="caption-attribution-flex-container {captionAttributionDynamicCss} {attributionCss}"
+					>
+						<div class="attribution-text">
+							{attributionPrefix + imageAttributes.imgAttribution}
+						</div>
 					</div>
-				</div>
-			{/if}
-		</div>
-		<div bind:this={buttonContainerRef} class="expand-collapse-button-container">
-			{#if isCaptionTooLong}
-				<JDGButton
-					label={truncateText ? 'Show more' : 'Show less'}
-					faIcon={null}
-					onClickFunction={(event) => {
-						event.stopPropagation();
-						toggleCaptionTruncation();
-					}}
-					textColor={jdgColors.active}
-					backgroundColor={setAlphaInRgbaString(jdgColors.headerBackground, 0.2)}
-					backgroundColorHover={jdgColors.active}
-					paddingLeftRight="5px"
-					paddingTopBottom="3px"
-					fontSize="10px"
-				/>
-			{/if}
+				{/if}
+			</div>
+			<div bind:this={buttonContainerRef} class="expand-collapse-button-container">
+				{#if isCaptionTooLong}
+					<JDGButton
+						label={truncateText ? 'Show more' : 'Show less'}
+						faIcon={null}
+						onClickFunction={(event) => {
+							event.stopPropagation();
+							toggleCaptionTruncation();
+						}}
+						textColor={jdgColors.active}
+						backgroundColor={setAlphaInRgbaString(jdgColors.headerBackground, 0.2)}
+						backgroundColorHover={jdgColors.active}
+						paddingLeftRight="5px"
+						paddingTopBottom="3px"
+						fontSize="10px"
+					/>
+				{/if}
+			</div>
 		</div>
 	</div>
 {/if}
@@ -223,7 +277,6 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 100%;
 		overflow: hidden;
 	}
 
