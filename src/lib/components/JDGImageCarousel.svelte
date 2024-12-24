@@ -20,7 +20,6 @@
 	} from '$lib/jdg-utils.js';
 
 	export let imageAttributeObjects; // all images shown in thumbnail collection
-	export let objectPosition = 'center';
 	export let showCaption = true;
 	export let showAttribution = true;
 	export let maxHeight = '50vh';
@@ -28,6 +27,7 @@
 	export let autoAdvance = true; // if true, auto advance through images at given interval
 	export let autoAdvanceInterval = 5000; // ms, interval between auto-advances
 	export let showBlurInUnfilledSpace = true;
+	export let justifyContent = 'center';
 
 	// width and height calculations - raw numeric values in px
 	let maxHeightPxFromProp;
@@ -166,6 +166,10 @@
 		clearInterval(intervalId);
 	});
 
+	const justificationCss = css`
+		justify-content: ${justifyContent};
+	`;
+
 	$: {
 		$imageAspectRatios, $windowWidth, availableWidth;
 		if (carouselRef) {
@@ -251,10 +255,9 @@
 	<div class="carousel-crossfade-wrapper-relative {dynamicHeightCss} {dynamicWidthCss}">
 		<!-- kludge to force a "crossfade" effect by swapping divs via flag -->
 		{#if kludge}
-			<div class="carousel-crossfade-wrapper-absolute">
+			<div class="carousel-crossfade-wrapper-absolute {justificationCss}">
 				<JDGImage
 					imageAttributes={activeImageAttributes}
-					{objectPosition}
 					{maxHeight}
 					cropToFillContainer={false}
 					{showBlurInUnfilledSpace}
@@ -263,7 +266,7 @@
 			</div>
 			<!-- kludge to force a "crossfade" effect by swapping divs via flag -->
 		{:else}
-			<div class="carousel-crossfade-wrapper-absolute">
+			<div class="carousel-crossfade-wrapper-absolute {justificationCss}">
 				<JDGImage
 					imageAttributes={activeImageAttributes}
 					{maxHeight}
@@ -298,7 +301,7 @@
 			maxTextWidthPx={finalMaxFittedWidthPx}
 		/>
 	{/if}
-	<div class="carousel-thumbnail-container {dynamicThumbnailContainerWidthCss}">
+	<div class="carousel-thumbnail-container {dynamicThumbnailContainerWidthCss} {justificationCss}">
 		{#each imageAttributeObjects as imageAttributesObject, i}
 			<div
 				class="carousel-thumbnail-wrapper"
@@ -339,7 +342,6 @@
 		position: absolute;
 		width: 100%;
 		display: flex;
-		justify-content: center;
 	}
 
 	.carousel-button-overlay {
@@ -353,7 +355,6 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 1rem;
-		justify-content: center;
 		padding: 0.75rem;
 	}
 
