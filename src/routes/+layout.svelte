@@ -37,6 +37,10 @@
 	navItemJdgTest.label = 'JDG TEST';
 	navItemJdgTest.href = '/jdg-test';
 
+	const navItemPmxTest = instantiateObject(jdgNavItem);
+	navItemPmxTest.label = 'PMX TEST';
+	navItemPmxTest.href = '/pmx-test';
+
 	const navItemIframe = instantiateObject(jdgNavItem);
 	navItemIframe.label = 'IFRAME TEST';
 	navItemIframe.href = '/iframe-test';
@@ -46,6 +50,7 @@
 		navItemSimpleTest,
 		navItemCloudinaryTest,
 		navItemJdgTest,
+		navItemPmxTest,
 		navItemPlaceholder,
 		navItemIframe
 	];
