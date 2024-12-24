@@ -29,9 +29,13 @@
 	export let autoAdvanceInterval = 5000; // ms, interval between auto-advances
 	export let showBlurInUnfilledSpace = true;
 
-	// height calculations - raw numeric values in px
+	// width and height calculations - raw numeric values in px
 	let maxHeightPxFromProp;
 	let allFittedHeightsPx;
+	let finalMaxHeightPx;
+
+	let allFittedWidthsPx;
+	let finalMaxWidthPx;
 
 	let carouselRef; // used for only auto-advancing when carousel is visible
 	let activeImageAttributes = imageAttributeObjects[0]; // start with the first image
@@ -59,7 +63,7 @@
 	const getAllFittedHeightsPx = () => {
 		const fittedHeights = [];
 
-		// for each, record the aspect ratio
+		// for each, record the fitted height
 		imageAttributeObjects.forEach((imageAttributeObject) => {
 			const aspectRatio = getImageAspectRatioRecord(imageAttributeObject.imgSrc);
 			const containerWidth = getMaxElementWidthPx(carouselRef);
@@ -68,6 +72,22 @@
 		});
 
 		return fittedHeights;
+	};
+
+	// uses the aspect ratio and maxHeight to determine
+	// maximum required width for the carousel
+	// only applies if showBlurInUnfilledSpace is false
+	const getAllFittedWidthsPx = () => {
+		const fittedWidths = [];
+
+		// for each, record the fitted width
+		imageAttributeObjects.forEach((imageAttributeObject) => {
+			const aspectRatio = getImageAspectRatioRecord(imageAttributeObject.imgSrc);
+			const maxWidth = maxHeightPxFromProp * aspectRatio;
+			fittedWidths.push(maxWidth);
+		});
+
+		return fittedWidths;
 	};
 
 	const setActiveImage = (imageAttributesObject, endAutoAdvance = false) => {
@@ -155,8 +175,12 @@
 		$imageAspectRatios, $windowWidth;
 		if (carouselRef) {
 			const newFittedHeights = getAllFittedHeightsPx();
+			const newFittedWidths = getAllFittedWidthsPx();
 			if (JSON.stringify(newFittedHeights) !== JSON.stringify(allFittedHeightsPx)) {
 				allFittedHeightsPx = newFittedHeights;
+			}
+			if (JSON.stringify(newFittedWidths) !== JSON.stringify(allFittedWidthsPx)) {
+				allFittedWidthsPx = newFittedWidths;
 			}
 		}
 	}
@@ -178,10 +202,32 @@
 				isFinite(maxHeightPxFromProp) &&
 				maxHeightPxFromProp > 0
 			) {
-				const finalMaxHeightPx = Math.min(maxHeightPxFromProp, maxFittedHeightPxFromArray);
+				finalMaxHeightPx = Math.min(maxHeightPxFromProp, maxFittedHeightPxFromArray);
 				maxHeight = `${finalMaxHeightPx}px`;
 				dynamicHeightCss = css`
 					height: ${finalMaxHeightPx}px;
+				`;
+			}
+		}
+	}
+
+	// set the carousel dynamic width to ensure it takes up only the width it needs
+	// this only applies if showBlurInUnfilledSpace is false
+	let dynamicWidthCss = css``;
+	$: {
+		if (carouselRef && allFittedWidthsPx?.length > 0) {
+			// ensure we're getting the max from only finite numbers
+			const validWidthsPx = allFittedWidthsPx.filter((width) => isFinite(width));
+			const maxFittedWidthPxFromArray = Math.round(Math.max(...validWidthsPx));
+
+			if (
+				maxFittedWidthPxFromArray !== 0 &&
+				!isNaN(maxFittedWidthPxFromArray) &&
+				isFinite(maxFittedWidthPxFromArray)
+			) {
+				finalMaxWidthPx = Math.max(maxFittedWidthPxFromArray);
+				dynamicWidthCss = css`
+					width: ${showBlurInUnfilledSpace ? '100%;' : `${finalMaxWidthPx}`}px;
 				`;
 			}
 		}
@@ -190,7 +236,7 @@
 
 <div
 	bind:this={carouselRef}
-	class="jdg-image-carousel-container"
+	class="jdg-image-carousel-container {dynamicWidthCss}"
 	on:touchstart={handleTouchStart}
 	on:touchmove={handleTouchMove}
 	on:touchend={handleTouchEnd}
@@ -275,7 +321,6 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		width: 100%;
 	}
 
 	.carousel-crossfade-wrapper-relative {
