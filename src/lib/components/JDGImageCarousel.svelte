@@ -11,7 +11,7 @@
 	} from '$lib/states/ui-state.js';
 
 	import { JDGButton, JDGImage, JDGImageCaptionAttribution, JDGImageTile } from '$lib/index.js';
-	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgColors } from '$lib/jdg-shared-styles.js';
 	import { getImageAspectRatioRecord } from '$lib/jdg-state-management.js';
 	import {
 		getMaxElementHeightPx,
@@ -32,10 +32,12 @@
 	// width and height calculations - raw numeric values in px
 	let maxHeightPxFromProp;
 	let allFittedHeightsPx;
-	let finalMaxHeightPx;
+	let finalMaxFittedHeightPx; // max image height of all images
 
 	let allFittedWidthsPx;
-	let finalMaxWidthPx;
+	let finalMaxFittedWidthPx; // max image width of all images
+
+	let availableWidth; // total available width for the carousel
 
 	let carouselRef; // used for only auto-advancing when carousel is visible
 	let activeImageAttributes = imageAttributeObjects[0]; // start with the first image
@@ -66,8 +68,7 @@
 		// for each, record the fitted height
 		imageAttributeObjects.forEach((imageAttributeObject) => {
 			const aspectRatio = getImageAspectRatioRecord(imageAttributeObject.imgSrc);
-			const containerWidth = getMaxElementWidthPx(carouselRef);
-			const fittedHeight = containerWidth / aspectRatio;
+			const fittedHeight = availableWidth / aspectRatio;
 			fittedHeights.push(fittedHeight);
 		});
 
@@ -148,6 +149,17 @@
 
 			observer.observe(carouselRef);
 		}
+
+		// set up a resize observer to calculate the final available width for the carousel
+		const observer = new ResizeObserver(() => {
+			setTimeout(() => {
+				availableWidth = getMaxElementWidthPx(carouselRef);
+			}, 100);
+		});
+		observer.observe(carouselRef);
+		return () => {
+			observer.disconnect();
+		};
 	});
 
 	onDestroy(() => {
@@ -155,7 +167,7 @@
 	});
 
 	$: {
-		$imageAspectRatios, $windowWidth;
+		$imageAspectRatios, $windowWidth, availableWidth;
 		if (carouselRef) {
 			const newFittedHeights = getAllFittedHeightsPx();
 			const newFittedWidths = getAllFittedWidthsPx();
@@ -185,10 +197,10 @@
 				isFinite(maxHeightPxFromProp) &&
 				maxHeightPxFromProp > 0
 			) {
-				finalMaxHeightPx = Math.min(maxHeightPxFromProp, maxFittedHeightPxFromArray);
-				maxHeight = `${finalMaxHeightPx}px`;
+				finalMaxFittedHeightPx = Math.min(maxHeightPxFromProp, maxFittedHeightPxFromArray);
+				maxHeight = `${finalMaxFittedHeightPx}px`;
 				dynamicHeightCss = css`
-					height: ${finalMaxHeightPx}px;
+					height: ${finalMaxFittedHeightPx}px;
 				`;
 			}
 		}
@@ -208,9 +220,11 @@
 				!isNaN(maxFittedWidthPxFromArray) &&
 				isFinite(maxFittedWidthPxFromArray)
 			) {
-				finalMaxWidthPx = Math.max(maxFittedWidthPxFromArray);
+				finalMaxFittedWidthPx = Math.max(maxFittedWidthPxFromArray);
 				dynamicWidthCss = css`
-					width: ${showBlurInUnfilledSpace ? '100%;' : `${finalMaxWidthPx}`}px;
+					width: ${showBlurInUnfilledSpace && activeImageAttributes.allowBackgroundBlur
+						? '100%;'
+						: `${finalMaxFittedWidthPx}`}px;
 				`;
 			}
 		}
@@ -219,9 +233,9 @@
 	// the thumbnail container shouldn't be wider than the image
 	let dynamicThumbnailContainerWidthCss = css``;
 	$: {
-		if (isFinite(finalMaxWidthPx)) {
+		if (isFinite(finalMaxFittedWidthPx)) {
 			dynamicThumbnailContainerWidthCss = css`
-				width: ${finalMaxHeightPx}px;
+				width: ${finalMaxFittedWidthPx}px;
 			`;
 		}
 	}
@@ -229,12 +243,12 @@
 
 <div
 	bind:this={carouselRef}
-	class="jdg-image-carousel-container {dynamicWidthCss}"
+	class="jdg-image-carousel-container"
 	on:touchstart={handleTouchStart}
 	on:touchmove={handleTouchMove}
 	on:touchend={handleTouchEnd}
 >
-	<div class="carousel-crossfade-wrapper-relative {dynamicHeightCss}">
+	<div class="carousel-crossfade-wrapper-relative {dynamicHeightCss} {dynamicWidthCss}">
 		<!-- kludge to force a "crossfade" effect by swapping divs via flag -->
 		{#if kludge}
 			<div class="carousel-crossfade-wrapper-absolute">
@@ -281,7 +295,7 @@
 			backgroundColorRgba={activeImageAttributes.allowBackgroundBlur
 				? jdgColors.imageLabelBackground
 				: 'rgba(0, 0, 0, 0)'}
-			matchBodyCopyPadding={true}
+			maxTextWidthPx={finalMaxFittedWidthPx}
 		/>
 	{/if}
 	<div class="carousel-thumbnail-container {dynamicThumbnailContainerWidthCss}">
@@ -314,11 +328,11 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+		width: 100%;
 	}
 
 	.carousel-crossfade-wrapper-relative {
 		position: relative;
-		width: 100%;
 	}
 
 	.carousel-crossfade-wrapper-absolute {
