@@ -161,6 +161,11 @@
 					imageAttributesCollection.speer_point_after
 				]}
 			/>
+			<JDGBodyCopy textAlign="center" paddingBottom="0"
+				><b>IMAGE CAROUSEL</b>
+				<br />
+				right-aligned</JDGBodyCopy
+			>
 		</JDGFullWidthContainer>
 		<div class="pmx-product-container-flex">
 			<div class="flex-container-left">
@@ -174,6 +179,7 @@
 					showCaption={false}
 					showAttribution={false}
 					showBlurInUnfilledSpace={false}
+					justifyContent="right"
 				/>
 			</div>
 			<div class="flex-container-right">
@@ -573,6 +579,7 @@
 	.flex-container-left {
 		display: flex;
 		justify-content: right;
+		flex: 1;
 	}
 
 	.flex-container-right {
