@@ -22,6 +22,8 @@
 					showCaption={false}
 					showAttribution={false}
 					showBlurInUnfilledSpace={false}
+					justifyContent="right"
+					matchMaxImageWidth
 				/>
 			</div>
 			<div class="flex-container-right">
