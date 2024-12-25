@@ -52,7 +52,8 @@ const imageAttributesCollection = {
 		),
 		imgAlt: `Cinderella City's central Blue Mall, simulated in the 1968-1978 era.`,
 		imgCaption: `Cinderella City's central Blue Mall, simulated in the 1968-1978 era.`,
-		imgAttribution: 'Englewood Public Library (AI recolored)'
+		imgAttribution: 'Englewood Public Library (AI recolored)',
+		toolbarAlignment: 'center'
 	}),
 	ccp_blue_mall_80s90s_1: instantiateObject(jdgImageAttributes, {
 		imgSrc: addCloudinaryUrlTransformation(
