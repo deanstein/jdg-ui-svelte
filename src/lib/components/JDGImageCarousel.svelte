@@ -170,6 +170,7 @@
 
 	const justificationCss = css`
 		justify-content: ${justifyContent};
+		align-items: ${justifyContent === 'right' ? 'end' : 'center'};
 	`;
 
 	$: {
@@ -260,13 +261,17 @@
 	let dynamicExpandButtonOverlayCss = css``;
 	$: {
 		dynamicExpandButtonOverlayCss = css`
+			width: ${justifyContent === 'center' ? '100%' : activeImageFittedWidthPx + 'px'};
 			justify-content: ${activeImageAttributes?.toolbarAlignment};
+			right: ${justifyContent !== 'center' ? '0' : ''};
 			padding: 10px
-				${showBlurInUnfilledSpace && activeImageAttributes.allowBackgroundBlur
+				${(showBlurInUnfilledSpace && activeImageAttributes.allowBackgroundBlur) ||
+				(matchMaxImageWidth && justifyContent === 'center')
 					? Math.abs(availableWidthPx - activeImageFittedWidthPx) / 2 + 10 + 'px'
 					: '10px'}
 				10px
-				${showBlurInUnfilledSpace && activeImageAttributes.allowBackgroundBlur
+				${(showBlurInUnfilledSpace && activeImageAttributes.allowBackgroundBlur) ||
+				(matchMaxImageWidth && justifyContent === 'center')
 					? Math.abs(availableWidthPx - activeImageFittedWidthPx) / 2 + 10 + 'px'
 					: '10px'};
 		`;
@@ -275,7 +280,7 @@
 
 <div
 	bind:this={carouselRef}
-	class="jdg-image-carousel-container"
+	class="jdg-image-carousel-container {justificationCss}"
 	on:touchstart={handleTouchStart}
 	on:touchmove={handleTouchMove}
 	on:touchend={handleTouchEnd}
@@ -359,7 +364,6 @@
 		position: relative;
 		display: flex;
 		flex-direction: column;
-		align-items: center;
 		justify-content: center;
 		width: 100%;
 	}
@@ -379,7 +383,6 @@
 		display: flex;
 		box-sizing: border-box;
 		bottom: 0;
-		width: 100%;
 	}
 
 	.carousel-thumbnail-container {
@@ -387,6 +390,7 @@
 		flex-wrap: wrap;
 		gap: 1rem;
 		padding: 0.75rem;
+		box-sizing: border-box;
 	}
 
 	.carousel-thumbnail-wrapper {
