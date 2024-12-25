@@ -28,6 +28,7 @@
 	export let autoAdvanceInterval = 5000; // ms, interval between auto-advances
 	export let showBlurInUnfilledSpace = true;
 	export let justifyContent = 'center';
+	export let matchMaxImageWidth = false; // sets the carousel to the widest image
 
 	// width and height calculations - raw numeric values in px
 	let maxHeightPxFromProp;
@@ -37,7 +38,8 @@
 	let allFittedWidthsPx;
 	let finalMaxFittedWidthPx; // max image width of all images
 
-	let availableWidth; // total available width for the carousel
+	let availableWidthPx; // total available width for the carousel
+	let activeImageFittedWidthPx; // the fitted width of the active image
 
 	let carouselRef; // used for only auto-advancing when carousel is visible
 	let activeImageAttributes = imageAttributeObjects[0]; // start with the first image
@@ -68,7 +70,7 @@
 		// for each, record the fitted height
 		imageAttributeObjects.forEach((imageAttributeObject) => {
 			const aspectRatio = getImageAspectRatioRecord(imageAttributeObject.imgSrc);
-			const fittedHeight = availableWidth / aspectRatio;
+			const fittedHeight = availableWidthPx / aspectRatio;
 			fittedHeights.push(fittedHeight);
 		});
 
@@ -153,7 +155,7 @@
 		// set up a resize observer to calculate the final available width for the carousel
 		const observer = new ResizeObserver(() => {
 			setTimeout(() => {
-				availableWidth = getMaxElementWidthPx(carouselRef);
+				availableWidthPx = getMaxElementWidthPx(carouselRef);
 			}, 100);
 		});
 		observer.observe(carouselRef);
@@ -171,7 +173,7 @@
 	`;
 
 	$: {
-		$imageAspectRatios, $windowWidth, availableWidth;
+		$imageAspectRatios, $windowWidth, availableWidthPx;
 		if (carouselRef) {
 			const newFittedHeights = getAllFittedHeightsPx();
 			const newFittedWidths = getAllFittedWidthsPx();
@@ -182,6 +184,13 @@
 				allFittedWidthsPx = newFittedWidths;
 			}
 		}
+	}
+
+	// update the active image fitted width for downstream components
+	$: {
+		allFittedHeightsPx;
+		activeImageFittedWidthPx =
+			getImageAspectRatioRecord(activeImageAttributes.imgSrc) * finalMaxFittedHeightPx;
 	}
 
 	// set the carousel height based on the max height in fitted heights array
@@ -225,10 +234,13 @@
 				isFinite(maxFittedWidthPxFromArray)
 			) {
 				finalMaxFittedWidthPx = Math.max(maxFittedWidthPxFromArray);
+				const compositeCarouselWidthPx = matchMaxImageWidth
+					? finalMaxFittedWidthPx
+					: `${activeImageFittedWidthPx}`;
 				dynamicWidthCss = css`
 					width: ${showBlurInUnfilledSpace && activeImageAttributes.allowBackgroundBlur
 						? '100%;'
-						: `${finalMaxFittedWidthPx}`}px;
+						: `${compositeCarouselWidthPx}`}px;
 				`;
 			}
 		}
@@ -239,9 +251,25 @@
 	$: {
 		if (isFinite(finalMaxFittedWidthPx)) {
 			dynamicThumbnailContainerWidthCss = css`
-				width: ${finalMaxFittedWidthPx}px;
+				width: ${showBlurInUnfilledSpace ? '100%' : `${activeImageFittedWidthPx}px`};
 			`;
 		}
+	}
+
+	// the expand button overlay should appear in the corner of the active image
+	let dynamicExpandButtonOverlayCss = css``;
+	$: {
+		dynamicExpandButtonOverlayCss = css`
+			justify-content: ${activeImageAttributes?.toolbarAlignment};
+			padding: 10px
+				${showBlurInUnfilledSpace && activeImageAttributes.allowBackgroundBlur
+					? Math.abs(availableWidthPx - activeImageFittedWidthPx) / 2 + 10 + 'px'
+					: '10px'}
+				10px
+				${showBlurInUnfilledSpace && activeImageAttributes.allowBackgroundBlur
+					? Math.abs(availableWidthPx - activeImageFittedWidthPx) / 2 + 10 + 'px'
+					: '10px'};
+		`;
 	}
 </script>
 
@@ -276,7 +304,7 @@
 				/>
 			</div>
 		{/if}
-		<div class="carousel-button-overlay">
+		<div class="carousel-button-overlay {dynamicExpandButtonOverlayCss}">
 			<JDGButton
 				onClickFunction={() => {
 					doShowImageDetailOverlay.set(true);
@@ -293,13 +321,15 @@
 		</div>
 	</div>
 	{#if (showCaption && activeImageAttributes.imgCaption) || (showAttribution && activeImageAttributes.imgAttribution)}
-		<JDGImageCaptionAttribution
-			imageAttributes={activeImageAttributes}
-			backgroundColorRgba={activeImageAttributes.allowBackgroundBlur
-				? jdgColors.imageLabelBackground
-				: 'rgba(0, 0, 0, 0)'}
-			maxTextWidthPx={finalMaxFittedWidthPx}
-		/>
+		<div class="caption-attribution-wrapper {dynamicThumbnailContainerWidthCss}">
+			<JDGImageCaptionAttribution
+				imageAttributes={activeImageAttributes}
+				backgroundColorRgba={activeImageAttributes.allowBackgroundBlur
+					? jdgColors.imageLabelBackground
+					: 'rgba(0, 0, 0, 0)'}
+				maxTextWidthPx={activeImageFittedWidthPx}
+			/>
+		</div>
 	{/if}
 	<div class="carousel-thumbnail-container {dynamicThumbnailContainerWidthCss} {justificationCss}">
 		{#each imageAttributeObjects as imageAttributesObject, i}
@@ -346,9 +376,10 @@
 
 	.carousel-button-overlay {
 		position: absolute;
+		display: flex;
+		box-sizing: border-box;
 		bottom: 0;
-		right: 0;
-		padding: 10px;
+		width: 100%;
 	}
 
 	.carousel-thumbnail-container {
