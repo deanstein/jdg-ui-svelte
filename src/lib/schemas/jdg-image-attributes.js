@@ -6,7 +6,9 @@ const jdgImageAttributes = {
 	imgAlt: undefined,
 	imgCaption: undefined,
 	imgAttribution: undefined,
-	allowBackgroundBlur: true /* set to false for images like plans and diagrams */
+	allowBackgroundBlur: true /* set to false for images like plans and diagrams */,
+	toolbarAlignment:
+		'right' /* in some contexts, images will have a toolbar and its alignment can be set depending on the image layout */
 };
 
 export default jdgImageAttributes;
