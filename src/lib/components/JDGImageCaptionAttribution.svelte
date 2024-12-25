@@ -255,6 +255,10 @@
 {/if}
 
 <style>
+	.jdg-caption-attribution-available-width-ref {
+		width: 100%;
+	}
+
 	.jdg-caption-attribution-container {
 		display: flex;
 		width: -webkit-fill-available;
