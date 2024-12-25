@@ -69,8 +69,12 @@
 		<JDGImageCarousel
 			imageAttributeObjects={[
 				imageAttributesCollection.fairgrounds_aerial,
-				imageAttributesCollection.speer_point_after
+				imageAttributesCollection.speer_point_after,
+				imageAttributesCollection.cc_1,
+				imageAttributesCollection.ccp_blue_mall_60s70s_1
 			]}
+			justifyContent="center"
+			showBlurInUnfilledSpace={true}
 		/>
 		<JDGImageTile
 			imageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
