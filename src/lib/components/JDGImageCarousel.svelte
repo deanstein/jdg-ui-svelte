@@ -28,7 +28,7 @@
 	export let autoAdvanceInterval = 5000; // ms, interval between auto-advances
 	export let showBlurInUnfilledSpace = true;
 	export let justifyContent = 'center';
-	export let matchMaxImageWidth = false; // sets the carousel to the widest image
+	export let matchMaxImageWidth = false; // maintains the carousel width at the widest image width
 
 	// width and height calculations - raw numeric values in px
 	let maxHeightPxFromProp;
