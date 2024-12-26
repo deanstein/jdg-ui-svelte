@@ -252,7 +252,7 @@
 	$: {
 		if (isFinite(finalMaxFittedWidthPx)) {
 			dynamicThumbnailContainerWidthCss = css`
-				width: ${showBlurInUnfilledSpace ? '100%' : `${activeImageFittedWidthPx}px`};
+				width: ${showBlurInUnfilledSpace ? '100%' : `${finalMaxFittedWidthPx}px`};
 			`;
 		}
 	}
