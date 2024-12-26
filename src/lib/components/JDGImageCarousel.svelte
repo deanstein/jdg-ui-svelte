@@ -364,7 +364,7 @@
 		position: relative;
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
+		justify-content: flex-start;
 		width: 100%;
 	}
 
