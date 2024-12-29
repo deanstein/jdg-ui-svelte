@@ -191,8 +191,15 @@
 	// update the active image fitted width for downstream components
 	$: {
 		allFittedHeightsPx;
-		activeImageFittedWidthPx =
+		// first, get the fitted width from the aspect ratio records
+		const activeImageFittedWidthPxFromRecord =
 			getImageAspectRatioRecord(activeImageAttributes.imgSrc) * finalMaxFittedHeightPx;
+		// if the fitted width from record is wider than the available width,
+		// set the fitted width to the available width
+		activeImageFittedWidthPx =
+			activeImageFittedWidthPxFromRecord >= availableWidthPx
+				? availableWidthPx
+				: activeImageFittedWidthPxFromRecord;
 	}
 
 	// set the carousel height based on the max height in fitted heights array
