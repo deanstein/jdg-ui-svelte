@@ -157,13 +157,13 @@
 			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 				padding: 3px
 					${maxTextWidthPx
-						? `${getPaddingForMaxWidth()}px`
+						? `${getPaddingForMaxWidth() + 8}px`
 						: matchBodyCopyPadding
 							? jdgSizes.bodyCopyVerticalPaddingSm
 							: '8px'}
 					3px
 					${maxTextWidthPx
-						? `${getPaddingForMaxWidth()}px`
+						? `${getPaddingForMaxWidth() + 8}px`
 						: matchBodyCopyPadding
 							? jdgSizes.bodyCopyVerticalPaddingSm
 							: '8px'};
@@ -173,13 +173,13 @@
 				jdgBreakpoints.unit}) {
 				padding: 4px
 					${maxTextWidthPx
-						? `${getPaddingForMaxWidth()}px`
+						? `${getPaddingForMaxWidth() + 8}px`
 						: matchBodyCopyPadding
 							? jdgSizes.bodyCopyVerticalPaddingMd
 							: '8px'}
 					4px
 					${maxTextWidthPx
-						? `${getPaddingForMaxWidth()}px`
+						? `${getPaddingForMaxWidth() + 8}px`
 						: matchBodyCopyPadding
 							? jdgSizes.bodyCopyVerticalPaddingMd
 							: '8px'};
@@ -187,13 +187,13 @@
 			@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 				padding: 6px
 					${maxTextWidthPx
-						? `${getPaddingForMaxWidth()}px`
+						? `${getPaddingForMaxWidth() + 10}px`
 						: matchBodyCopyPadding
 							? jdgSizes.bodyCopyVerticalPaddingLg
 							: '10px'}
 					6px
 					${maxTextWidthPx
-						? `${getPaddingForMaxWidth()}px`
+						? `${getPaddingForMaxWidth() + 10}px`
 						: matchBodyCopyPadding
 							? jdgSizes.bodyCopyVerticalPaddingLg
 							: '10px'};
