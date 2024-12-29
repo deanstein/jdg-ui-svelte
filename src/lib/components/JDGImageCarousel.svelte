@@ -116,13 +116,13 @@
 
 	const handleTouchEnd = (e) => {
 		touchEndX = e.changedTouches[0].clientX;
-		if (Math.abs(touchStartX - touchEndX) > minSwipeDistance) {
+		if (touchStartX - touchEndX > minSwipeDistance) {
 			// swipe left
 			let currentIndex = imageAttributeObjects.indexOf(activeImageAttributes);
 			currentIndex = (currentIndex + 1) % imageAttributeObjects.length;
 			setActiveImage(imageAttributeObjects[currentIndex], true);
 		}
-		if (Math.abs(touchEndX - touchStartX) > minSwipeDistance) {
+		if (touchEndX - touchStartX > minSwipeDistance) {
 			// swipe right
 			let currentIndex = imageAttributeObjects.indexOf(activeImageAttributes);
 			currentIndex =
