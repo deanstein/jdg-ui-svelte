@@ -289,9 +289,9 @@
 <div
 	bind:this={carouselRef}
 	class="jdg-image-carousel-container {justificationCss}"
-	on:touchstart={handleTouchStart}
-	on:touchmove={handleTouchMove}
-	on:touchend={handleTouchEnd}
+	on:touchstart|passive={handleTouchStart}
+	on:touchmove|passive={handleTouchMove}
+	on:touchend|passive={handleTouchEnd}
 >
 	<div class="carousel-crossfade-wrapper-relative {dynamicHeightCss} {dynamicWidthCss}">
 		<!-- kludge to force a "crossfade" effect by swapping divs via flag -->
