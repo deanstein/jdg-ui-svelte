@@ -242,7 +242,8 @@
 				!isNaN(maxFittedWidthPxFromArray) &&
 				isFinite(maxFittedWidthPxFromArray)
 			) {
-				finalMaxFittedWidthPx = Math.max(maxFittedWidthPxFromArray);
+				// final max fitted width is used only if it can fit within the available width
+				finalMaxFittedWidthPx = Math.max(maxFittedWidthPxFromArray) <= availableWidthPx ? Math.max(maxFittedWidthPxFromArray) : availableWidthPx;
 				const compositeCarouselWidthPx = matchMaxImageWidth
 					? finalMaxFittedWidthPx
 					: `${activeImageFittedWidthPx}`;
