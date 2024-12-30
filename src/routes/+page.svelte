@@ -24,11 +24,26 @@
 		JDGJumpTo,
 		JDGUpNext
 	} from '$lib/index.js';
-	import { jdgColors, jdgFonts } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgColors, jdgFonts } from '$lib/jdg-shared-styles.js';
 
 	import { imageAttributesCollection } from './image-attributes-collection.js';
+	import { css } from '@emotion/css';
 
 	let isTestButtonEnabled = true;
+
+	const pmxTestCss = css`
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			flex-direction: column;
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			flex-direction: row;
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			flex-direction: row;
+		}
+	`;
 </script>
 
 <JDGContentContainer overlapWithHeader={true}>
@@ -167,7 +182,7 @@
 				right-aligned</JDGBodyCopy
 			>
 		</JDGFullWidthContainer>
-		<div class="pmx-product-container-flex">
+		<div class="pmx-product-container-flex {pmxTestCss}">
 			<div class="flex-container-left">
 				<JDGImageCarousel
 					imageAttributeObjects={[
@@ -572,9 +587,9 @@
 <style>
 	.pmx-product-container-flex {
 		display: flex;
-		flex-direction: row;
 		justify-content: center;
 		gap: 20px;
+		width: 100%;
 	}
 
 	.flex-container-left {
