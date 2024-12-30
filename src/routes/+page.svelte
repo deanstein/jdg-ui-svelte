@@ -174,7 +174,8 @@
 						imageAttributesCollection.aerial_60s70s_1,
 						imageAttributesCollection.architecture_1,
 						imageAttributesCollection.cc_2,
-						imageAttributesCollection.ccp_blue_mall_60s70s_1
+						imageAttributesCollection.ccp_blue_mall_60s70s_1,
+						imageAttributesCollection.fairgrounds_aerial
 					]}
 					showCaption={false}
 					showAttribution={false}

@@ -775,6 +775,55 @@ const imageAttributesCollection = {
 				imgAttribution: 'Englewood Public Library'
 			})
 		),
+		ehs_1936_southeast_wing: postProcessImageAttributes(
+			instantiateObject(jdgImageAttributes, {
+				imgSrc: addCloudinaryUrlTransformation(
+					'https://res.cloudinary.com/jdg-main/image/upload/v1722745253/jdg-website/hst/ehs-1936-southeast-wing.jpg'
+				),
+				imgCaption:
+					'The south wing under construction in 1936. This would become the main entrance of Flood Junior High in the 1960s.',
+				imgAttribution: 'Englewood Public Library'
+			})
+		),
+		ehs_1950s_broadway_entrance: postProcessImageAttributes(
+			instantiateObject(jdgImageAttributes, {
+				imgSrc: addCloudinaryUrlTransformation(
+					'https://res.cloudinary.com/jdg-main/image/upload/v1722747056/jdg-website/hst/ehs-1950s-broadway-entrance.jpg'
+				),
+				imgCaption: 'The original main entrance of Englewood High School as seen in the 1950s.',
+				imgAttribution: 'Englewood Public Library'
+			})
+		),
+		fms_1960s_broadway_entrance: postProcessImageAttributes(
+			instantiateObject(jdgImageAttributes, {
+				imgSrc: addCloudinaryUrlTransformation(
+					'https://res.cloudinary.com/jdg-main/image/upload/v1722747053/jdg-website/hst/fms-1960s-broadway-entrance.jpg'
+				),
+				imgCaption:
+					'After the 1960s remodel, little remains of the former grand entrance off of Broadway.',
+				imgAttribution: 'Englewood Public Library'
+			})
+		),
+		fms_1960s_broadway_entrance_renovation: postProcessImageAttributes(
+			instantiateObject(jdgImageAttributes, {
+				imgSrc: addCloudinaryUrlTransformation(
+					'https://res.cloudinary.com/jdg-main/image/upload/v1722747336/jdg-website/hst/fms-1960s-broadway-entrance-renovation.jpg'
+				),
+				imgCaption:
+					"In 1965, crews began to remove ornate architectural details around the former entrance to match the district's new architectural standards.",
+				imgAttribution: 'Englewood Public Library'
+			})
+		),
+		fms_1968_southeast_corner_entrance: postProcessImageAttributes(
+			instantiateObject(jdgImageAttributes, {
+				imgSrc: addCloudinaryUrlTransformation(
+					'https://res.cloudinary.com/jdg-main/image/upload/v1722746162/jdg-website/hst/fms-1968-southeast-corner-entrance.jpg'
+				),
+				imgCaption:
+					'The renovated south wing, new east wing, and new junior high school main entrance in the 1960s.',
+				imgAttribution: 'Englewood Public Library'
+			})
+		),
 		fms_2013_broadway_northeast: postProcessImageAttributes(
 			instantiateObject(jdgImageAttributes, {
 				imgSrc: addCloudinaryUrlTransformation(

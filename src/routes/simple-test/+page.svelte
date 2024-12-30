@@ -6,6 +6,7 @@
 		JDGGridLayout,
 		JDGH3H4,
 		JDGImageCarousel,
+		JDGImageHybridGridCarousel,
 		JDGImageTile
 	} from '$lib/index.js';
 	import { imageAttributesCollection } from '../image-attributes-collection.js';
@@ -68,13 +69,16 @@
 		<JDGH3H4 h3String="THIS IS AN H3 STRING" h4String="And this is an h4" />
 		<JDGImageCarousel
 			imageAttributeObjects={[
-				imageAttributesCollection.fairgrounds_aerial,
-				imageAttributesCollection.speer_point_after,
-				imageAttributesCollection.cc_1,
-				imageAttributesCollection.ccp_blue_mall_60s70s_1
+				imageAttributesCollection.hst.ehs_1950s_broadway_entrance,
+				imageAttributesCollection.hst.fms_1960s_broadway_entrance_renovation,
+				imageAttributesCollection.hst.fms_1960s_broadway_entrance
 			]}
-			justifyContent="center"
-			showBlurInUnfilledSpace={true}
+		/>
+		<JDGImageHybridGridCarousel
+			imageAttributeObjects={[
+				imageAttributesCollection.hst.ehs_1936_southeast_wing,
+				imageAttributesCollection.hst.fms_1968_southeast_corner_entrance
+			]}
 		/>
 		<JDGImageTile
 			imageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
