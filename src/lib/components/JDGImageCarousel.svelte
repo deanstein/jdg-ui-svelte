@@ -295,7 +295,7 @@
 >
 	<div class="carousel-crossfade-wrapper-relative {dynamicHeightCss} {dynamicWidthCss}">
 		<!-- kludge to force a "crossfade" effect by swapping divs via flag -->
-		{#if kludge}
+		{#if kludge && finalMaxFittedHeightPx}
 			<div class="carousel-crossfade-wrapper-absolute {justificationCss}">
 				<JDGImage
 					imageAttributes={activeImageAttributes}
