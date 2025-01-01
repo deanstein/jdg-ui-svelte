@@ -179,7 +179,7 @@
 			<JDGBodyCopy textAlign="center" paddingBottom="0"
 				><b>IMAGE CAROUSEL</b>
 				<br />
-				right-aligned</JDGBodyCopy
+				right-aligned, and in a flex box</JDGBodyCopy
 			>
 		</JDGFullWidthContainer>
 		<div class="pmx-product-container-flex {pmxTestCss}">
@@ -595,7 +595,6 @@
 	.flex-container-left {
 		display: flex;
 		justify-content: right;
-		flex: 1;
 	}
 
 	.flex-container-right {
