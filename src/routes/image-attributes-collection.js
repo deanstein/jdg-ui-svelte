@@ -849,7 +849,7 @@ const imageAttributesCollection = {
 		planter_003F_1: postProcessImageAttributes(
 			instantiateObject(jdgImageAttributes, {
 				imgSrc: addCloudinaryUrlTransformation(
-					'https://res.cloudinary.com/jdg-main/image/upload/v1726422539/pmx-website/003F-1.jpg'
+					'https://res.cloudinary.com/jdg-main/image/upload/v1726422539/pmx-website/products/003F-1.jpg'
 				),
 				imgCaption: 'Advanced Planter'
 			})
