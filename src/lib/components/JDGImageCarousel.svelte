@@ -41,6 +41,7 @@
 	let availableWidthPx; // total available width for the carousel
 	let activeImageFittedWidthPx; // the fitted width of the active image
 
+	let parentRef;
 	let carouselRef; // used for only auto-advancing when carousel is visible
 	let activeImageAttributes = imageAttributeObjects[0]; // start with the first image
 	let kludge = true; // kludge to force a "crossfade" effect by swapping divs via flag
@@ -132,7 +133,13 @@
 	};
 
 	onMount(() => {
+		// get the parent ref so we can check if it's a flexbox later, for width calculations
+		parentRef = carouselRef.parentNode;
+
+		// get the initial max height
 		maxHeightPxFromProp = getMaxHeightPxFromProp();
+
+		// handle auto-advancing, if requested
 		if (autoAdvance) {
 			// only start auto-advancing if carousel is visible
 			const observer = new IntersectionObserver(
@@ -153,13 +160,19 @@
 			observer.observe(carouselRef);
 		}
 
+		// the element ref we use to determine the width depends on
+		// whether the parent is a flex or not
+		// a flex parent will cause width calculations to go wrong
+		const widthRef =
+			window.getComputedStyle(parentRef).display === 'flex' ? parentRef : carouselRef;
+
 		// set up a resize observer to calculate the final available width for the carousel
 		const observer = new ResizeObserver(() => {
 			setTimeout(() => {
-				availableWidthPx = getMaxElementWidthPx(carouselRef);
+				availableWidthPx = getMaxElementWidthPx(widthRef);
 			}, 100);
 		});
-		observer.observe(carouselRef);
+		observer.observe(widthRef);
 		return () => {
 			observer.disconnect();
 		};
@@ -244,8 +257,8 @@
 			) {
 				// final max fitted width is used only if it can fit within the available width
 				finalMaxFittedWidthPx =
-					Math.max(maxFittedWidthPxFromArray) <= availableWidthPx
-						? Math.max(maxFittedWidthPxFromArray)
+					maxFittedWidthPxFromArray <= availableWidthPx
+						? maxFittedWidthPxFromArray
 						: availableWidthPx;
 				const compositeCarouselWidthPx = matchMaxImageWidth
 					? finalMaxFittedWidthPx
