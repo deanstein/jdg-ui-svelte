@@ -69,13 +69,13 @@
 	<JDGContentBoxFloating title="THIS IS A TITLE">
 		<JDGH3H4 h3String="THIS IS AN H3 STRING" h4String="And this is an h4" />
 		<JDGFullWidthContainer>
-		<JDGImageCarousel
-			imageAttributeObjects={[
-				imageAttributesCollection.hst.ehs_1950s_broadway_entrance,
-				imageAttributesCollection.hst.fms_1960s_broadway_entrance_renovation,
-				imageAttributesCollection.hst.fms_1960s_broadway_entrance
-			]}
-		/>
+			<JDGImageCarousel
+				imageAttributeObjects={[
+					imageAttributesCollection.hst.ehs_1950s_broadway_entrance,
+					imageAttributesCollection.hst.fms_1960s_broadway_entrance_renovation,
+					imageAttributesCollection.hst.fms_1960s_broadway_entrance
+				]}
+			/>
 		</JDGFullWidthContainer>
 		<JDGImageHybridGridCarousel
 			imageAttributeObjects={[
