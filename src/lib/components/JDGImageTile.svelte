@@ -22,6 +22,9 @@
 	export let label = undefined;
 	export let labelFontFamily = $appFontFamily;
 	export let labelJustification = 'left';
+	export let labelColor = jdgColors.text;
+	export let labelContainerColor = jdgColors.imageLabelBackground;
+	export let labelContainerBlurSize = jdgSizes.blurSizeLarge;
 	export let labelContainerVerticalAlign = 'bottom';
 	export let href = undefined;
 	export let hrefOpenInNewTab = false;
@@ -54,9 +57,9 @@
 
 	const imageTileLabelContainerCss = css`
 		font-family: ${labelFontFamily};
-		color: ${jdgColors.text};
-		background-color: ${jdgColors.imageLabelBackground};
-		backdrop-filter: blur(${jdgSizes.blurSizeLarge});
+		color: ${labelColor};
+		background-color: ${labelContainerColor};
+		backdrop-filter: blur(${labelContainerBlurSize});
 		${labelContainerVerticalAlign === 'center'
 			? `top: 50%;
 		transform: translate(0, -50%);`
