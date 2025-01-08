@@ -154,6 +154,19 @@
 		<JDGBodyCopy textAlign="center" paddingBottom="0">
 			<b>IMAGE TILE</b>
 			<br />
+			With label and custom label background color.
+		</JDGBodyCopy>
+		<JDGImageTile
+			imageAttributes={imageAttributesCollection.cc_1}
+			cropToFillContainer={false}
+			label="THIS IS A LABEL"
+			labelColor="rgba(255, 255, 255, 1)"
+			labelContainerColor="rgba(255, 0, 0, 0.2)"
+			labelContainerBlurSize="5px"
+		/>
+		<JDGBodyCopy textAlign="center" paddingBottom="0">
+			<b>IMAGE TILE</b>
+			<br />
 			No blur allowed in imageAttributes
 		</JDGBodyCopy>
 		<JDGImageTile
