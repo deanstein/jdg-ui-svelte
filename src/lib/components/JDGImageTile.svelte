@@ -56,39 +56,31 @@
 	`;
 
 	const imageTileLabelContainerCss = css`
-		font-family: ${labelFontFamily};
-		color: ${labelColor};
 		background-color: ${labelContainerColor};
 		backdrop-filter: blur(${labelContainerBlurSize});
 		${labelContainerVerticalAlign === 'center'
 			? `top: 50%;
 		transform: translate(0, -50%);`
 			: `${labelContainerVerticalAlign}: 0;`};
-		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			padding: 8px;
-		}
-		@media (min-width: ${jdgBreakpoints.width[0].toString() +
-			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
-			jdgBreakpoints.unit}) {
-			padding: 10px;
-		}
-		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			padding: 12px;
-		}
 	`;
 
 	const imageTileLabelCss = css`
+		font-family: ${labelFontFamily};
+		color: ${labelColor};
 		text-align: ${labelJustification};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			padding: 8px;
 			font-size: 12px;
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
 			font-size: 14px;
+			padding: 10px;
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 			font-size: 16px;
+			padding: 12px;
 		}
 	`;
 </script>
@@ -121,6 +113,8 @@
 		>
 			{#if label}
 				<div class="image-tile-label-container {imageTileLabelContainerCss}">
+					<!-- a slot for a pre-label, like for PMX3D use cases -->
+					<slot />
 					<div class="image-tile-label {imageTileLabelCss}">
 						{label}
 					</div>
@@ -214,6 +208,7 @@
 
 	.image-tile-label-container {
 		position: absolute;
+		display: flex;
 		width: -webkit-fill-available;
 		width: -moz-available;
 		font-weight: bold;
