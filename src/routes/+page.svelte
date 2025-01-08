@@ -143,27 +143,34 @@
 		<JDGBodyCopy textAlign="center" paddingBottom="0">
 			<b>IMAGE TILE</b>
 			<br />
-			Clicking goes to Google but in a new tab.
+			Clicking goes to Google but in a new tab. It also shows a label.
 		</JDGBodyCopy>
 		<JDGImageTile
 			imageAttributes={imageAttributesCollection.aerial_60s70s_1}
 			cropToFillContainer={false}
 			href="https://www.google.com"
 			hrefOpenInNewTab={true}
+			label="THIS OPENS GOOGLE"
 		/>
 		<JDGBodyCopy textAlign="center" paddingBottom="0">
 			<b>IMAGE TILE</b>
 			<br />
-			With label and custom label background color.
+			With label and custom label background color. Also has a custom "pre-label."
 		</JDGBodyCopy>
 		<JDGImageTile
 			imageAttributes={imageAttributesCollection.cc_1}
 			cropToFillContainer={false}
 			label="THIS IS A LABEL"
 			labelColor="rgba(255, 255, 255, 1)"
-			labelContainerColor="rgba(255, 0, 0, 0.2)"
+			labelContainerColor="rgba(50, 100, 255, 0.2)"
 			labelContainerBlurSize="5px"
-		/>
+		>
+			<div
+				style="display: flex; align-items: center; font-weight: thin; color: white; font-family: REM; font-style: italic; padding-left: 17px; padding-right: 2px;"
+			>
+				#014
+			</div></JDGImageTile
+		>
 		<JDGBodyCopy textAlign="center" paddingBottom="0">
 			<b>IMAGE TILE</b>
 			<br />
