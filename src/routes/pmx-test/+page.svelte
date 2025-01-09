@@ -1,7 +1,14 @@
 <script>
-	import { JDGContentBoxFloating, JDGContentContainer, JDGImageCarousel } from '$lib/index.js';
 	import { imageAttributesCollection } from '../image-attributes-collection.js';
 	import { appAccentColors } from '$lib/states/ui-state.js';
+
+	import { JDGContentBoxFloating, JDGContentContainer } from '$lib/index.js';
+	import PMXProductDetailsSection from './PMXProductDetailsSection.svelte';
+	import PMXProductTypeContainer from './PMXProductTypeContainer.svelte';
+	import PMXProductTypeSelector from './PMXProductTypeSelector.svelte';
+
+	const model003D = '003D';
+	const model003F = '003F';
 </script>
 
 <JDGContentContainer>
@@ -10,57 +17,57 @@
 		titleColor={$appAccentColors[2]}
 		subtitle="Denver in the palm of your hands"
 	>
-		<div class="pmx-product-container-flex">
-			<div class="flex-container-left">
-				<JDGImageCarousel
-					imageAttributeObjects={[
-						imageAttributesCollection.aerial_60s70s_1,
-						imageAttributesCollection.architecture_1,
-						imageAttributesCollection.cc_2,
-						imageAttributesCollection.ccp_blue_mall_60s70s_1
-					]}
-					showCaption={false}
-					showAttribution={false}
-					showBlurInUnfilledSpace={false}
-					justifyContent="right"
-					matchMaxImageWidth
-				/>
-			</div>
-			<div class="flex-container-right">
-				<div class="right-panel-container">
-					The Denver Cityscape features over 70 of Denver's most iconic buildings at 1:5280 scale.
+		<PMXProductTypeSelector
+			activeProductId={model003F}
+			productTypeIds={[model003D, model003F]}
+			productTypeThumbnailImageAttributes={[
+				imageAttributesCollection.aerial_60s70s_1,
+				imageAttributesCollection.architecture_1
+			]}
+		>
+			<PMXProductTypeContainer
+				productId={model003D}
+				imageAttributeObjects={[
+					imageAttributesCollection.cc_1,
+					imageAttributesCollection.cc_2,
+					imageAttributesCollection.ccp_blue_mall_60s70s_1
+				]}
+			>
+				<PMXProductDetailsSection sectionTitle={`MODEL ${model003D}`}>
+					A blended pentagon-based form, small enough for windowsills.
 					<br /><br />
-					Our custom algorithm approximates the building locations based on actual addresses, then adjusts
-					their locations on the platform to minimize overlap and maximize visibility.
+					Features an overflow protection reservoir.
 					<br /><br />
-					The Cityscape model is occasionally updated as Denver's skyline changes. Check the version
-					number on the bottom of the product and match it with the legend below.
-				</div>
-			</div>
-		</div></JDGContentBoxFloating
+					Available with choice of exterior relief patterns.
+				</PMXProductDetailsSection>
+				<PMXProductDetailsSection sectionTitle={'DETAILS'}>
+					Dimensions: 4.71"W x 4.71"D x 3.21"H
+					<br />
+					Latest version: v1.10.5
+				</PMXProductDetailsSection>
+			</PMXProductTypeContainer>
+			<PMXProductTypeContainer
+				productId={model003F}
+				imageAttributeObjects={[
+					imageAttributesCollection.ccp_blue_mall_80s90s_1,
+					imageAttributesCollection.ccp_gold_mall_60s70s_1,
+					imageAttributesCollection.ccp_gold_mall_80s90s_1
+				]}
+			>
+				<PMXProductDetailsSection sectionTitle={`MODEL ${model003F}`}>
+					A simple cuboid shape, enhanced with a hidden aeration system and overflow protection
+					reservoir.
+					<br /><br />
+					Optionally features a subtle exterior relief pattern.
+					<br /><br />
+					Other sizes and proportions available below.
+				</PMXProductDetailsSection>
+				<PMXProductDetailsSection sectionTitle={'DETAILS'}>
+					Dimensions: 4.00"W x 4.00"D x 3.69"H
+					<br />
+					Latest version: v1.15.4
+				</PMXProductDetailsSection>
+			</PMXProductTypeContainer>
+		</PMXProductTypeSelector></JDGContentBoxFloating
 	>
 </JDGContentContainer>
-
-<style>
-	.pmx-product-container-flex {
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		gap: 20px;
-	}
-
-	.flex-container-left {
-		display: flex;
-		justify-content: right;
-	}
-
-	.flex-container-right {
-		flex: 0 0 30%;
-	}
-
-	.right-panel-container {
-		display: flex;
-		flex-direction: column;
-		gap: 40px;
-	}
-</style>
