@@ -230,7 +230,7 @@
 	};
 
 	// calculate the aspect ratio of the image container and the image (if not already known)
-	const getAspectRatios = () => {
+	const getAndRecordAspectRatio = () => {
 		if (containerRef && imageRef) {
 			// update the aspect ratio if it hasn't changed considerably since last time
 			const newImageAspectRatio = imageRef.naturalWidth / imageRef.naturalHeight;
@@ -376,7 +376,7 @@
 	// runs after an image is loaded
 	const onImageLoad = () => {
 		// ensure that the image aspect ratio is captured once the image loads
-		getAspectRatios();
+		getAndRecordAspectRatio();
 		if (!showDebugLoadingState) {
 			isImageLoaded = true;
 		}
@@ -659,7 +659,7 @@
 			lastKnownContainerHeight = undefined;
 			lastKnownContainerWidth = undefined;
 			lastKnownCloudinaryTransformationValue = undefined;
-			getAspectRatios();
+			getAndRecordAspectRatio();
 		}
 	}
 </script>
