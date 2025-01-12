@@ -470,6 +470,9 @@
 	onMount(() => {
 		devicePixelRatio = window.devicePixelRatio || 1;
 
+		const defaultWidth = 1000;
+		recordImageAspectRatio(imagePlaceholder, defaultWidth, defaultWidth / 1.3333);
+
 		// set up event listeners
 		// we're not using Svelte directives here because the event listeners are conditional
 		if (doScaleOnScrollOrZoom) {

@@ -373,6 +373,20 @@ export const getMaxElementHeightPx = (elementRef) => {
 /// IMAGE AND PIXEL UTILS
 ///
 
+export const getImageAspectRatio = (url) => {
+	return new Promise((resolve, reject) => {
+		const img = new Image();
+		img.onload = () => {
+			const width = img.naturalWidth;
+			const height = img.naturalHeight;
+			const aspectRatio = width / height;
+			resolve(aspectRatio);
+		};
+		img.onerror = (error) => reject(error);
+		img.src = url;
+	});
+};
+
 export const getMIMEType = (binaryData) => {
 	if (!binaryData) {
 		return;

@@ -19,6 +19,9 @@
 		getPixelValueFromString
 	} from '$lib/jdg-utils.js';
 
+	// @ts-expect-error
+	import imagePlaceholder from '$lib/assets/raster/jdg-image-placeholder.png';
+
 	export let imageAttributeObjects; // all images shown in thumbnail collection
 	export let showCaption = true;
 	export let showAttribution = true;
@@ -207,12 +210,20 @@
 		// first, get the fitted width from the aspect ratio records
 		const activeImageFittedWidthPxFromRecord =
 			getImageAspectRatioRecord(activeImageAttributes.imgSrc) * finalMaxFittedHeightPx;
+		const placeholderImageFittedWidthPxFromRecord =
+			getImageAspectRatioRecord(imagePlaceholder) * finalMaxFittedHeightPx;
+
 		// if the fitted width from record is wider than the available width,
 		// set the fitted width to the available width
 		activeImageFittedWidthPx =
 			activeImageFittedWidthPxFromRecord >= availableWidthPx
-				? availableWidthPx
-				: activeImageFittedWidthPxFromRecord;
+				? isFinite(availableWidthPx) && availableWidthPx > 0
+					? availableWidthPx
+					: placeholderImageFittedWidthPxFromRecord
+				: isFinite(activeImageFittedWidthPxFromRecord) && activeImageFittedWidthPxFromRecord > 0
+					? activeImageFittedWidthPx
+					: placeholderImageFittedWidthPxFromRecord;
+		console.log('Active fitted width:', activeImageFittedWidthPx);
 	}
 
 	// set the carousel height based on the max height in fitted heights array
