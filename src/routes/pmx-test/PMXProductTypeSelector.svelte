@@ -12,13 +12,12 @@
 	let topLevelRef;
 	let productTypeSelectorRef;
 	let productTypeLoading = false;
-	let clonedContentRef;
-	const cloneId = 'matchStyles';
+	let clonedProductTypeSelectorRef;
 
 	// show or hide the appropriate product type
-	const filterProductTypeDisplay = () => {
+	const filterProductTypeDisplay = (elementRef) => {
 		// all top-level children, which should be ProductTypeContainer components
-		const productTypeContainerElements = Array.from(productTypeSelectorRef.children);
+		const productTypeContainerElements = Array.from(elementRef.children);
 		productTypeContainerElements.forEach((productTypeElement) => {
 			if (productTypeElement.id === activeProductId) {
 				productTypeElement.style.display = '';
@@ -30,32 +29,20 @@
 
 	const setActiveProductType = (productTypeId) => {
 		const clonedElement = topLevelRef.cloneNode(true);
-		clonedContentRef.appendChild(clonedElement);
-		applyComputedStyles(topLevelRef, clonedContentRef, productTypeSelectorRef);
+		clonedProductTypeSelectorRef.appendChild(clonedElement);
 
-		activeProductId = productTypeId;
-		filterProductTypeDisplay();
+		if (productTypeSelectorRef) {
+			filterProductTypeDisplay(productTypeSelectorRef);
+		}
 
 		productTypeLoading = true;
-		setTimeout(() => {
-			productTypeLoading = false;
-		}, 100000);
-	};
+		activeProductId = productTypeId;
 
-	const applyComputedStyles = (sourceElem, targetElem, parentElem) => {
-		// Apply styles only if the element is a descendant of the specified parent
-		console.log('Target:', targetElem.id, 'Source:', sourceElem.id);
-		if (targetElem.id === sourceElem.id) {
-			console.log('MATCH!!!');
-			const computedStyle = getComputedStyle(sourceElem);
-			for (let prop of computedStyle) {
-				targetElem.style[prop] = computedStyle.getPropertyValue(prop);
-			}
-
-			// Apply styles to children recursively
-			for (let i = 0; i < sourceElem.children.length; i++) {
-				applyComputedStyles(sourceElem.children[i], targetElem.children[i], parentElem.id);
-			}
+		if (clonedProductTypeSelectorRef) {
+			filterProductTypeDisplay(clonedProductTypeSelectorRef);
+			setTimeout(() => {
+				productTypeLoading = false;
+			}, 1000);
 		}
 	};
 
@@ -75,7 +62,9 @@
 	};
 
 	afterUpdate(() => {
-		filterProductTypeDisplay();
+		if (productTypeSelectorRef) {
+			filterProductTypeDisplay(productTypeSelectorRef);
+		}
 	});
 
 	$: {
@@ -128,17 +117,18 @@
 	</div>
 
 	<!-- actual product type display -->
-	<div bind:this={productTypeSelectorRef} class="product-type-selector" id={cloneId}>
+	<div bind:this={productTypeSelectorRef} class="product-type-selector">
 		<slot />
 	</div>
 	<div
-		bind:this={clonedContentRef}
+		bind:this={clonedProductTypeSelectorRef}
 		class="product-type-selector-clone-overlay"
 		style="display: {productTypeLoading ? 'block' : 'none'};"
-		id={cloneId}
 	>
 		{#if productTypeLoading}
-			<slot />
+			<div bind:this={productTypeSelectorRef} class="product-type-selector">
+				<slot />
+			</div>
 		{/if}
 	</div>
 </div>
@@ -162,6 +152,7 @@
 		left: 0;
 		background-color: red;
 		z-index: 2;
+		width: 100%;
 	}
 
 	.product-type-thumbnail-and-title-container {
