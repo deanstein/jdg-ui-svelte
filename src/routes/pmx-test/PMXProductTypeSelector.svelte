@@ -17,9 +17,11 @@
 		const productTypeContainerElements = Array.from(productTypeSelectorRef.children);
 		productTypeContainerElements.forEach((productTypeElement) => {
 			if (productTypeElement.id === activeProductId) {
-				productTypeElement.style.display = '';
+				productTypeElement.style.visibility = 'visible';
+				productTypeElement.style.position = 'relative';
 			} else {
-				productTypeElement.style.display = 'none';
+				productTypeElement.style.visibility = 'hidden';
+				productTypeElement.style.position = 'absolute';
 			}
 		});
 	};
