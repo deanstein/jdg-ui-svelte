@@ -112,16 +112,19 @@
 		// ensure anchor tags are created for any h2 elements
 		const h2Elements = isVisibleRef.querySelectorAll('h2');
 		const h3Elements = isVisibleRef.querySelectorAll('h3');
-
 		const allSubheaderElements = [...h2Elements, ...h3Elements];
 		allSubheaderElements.forEach((subheaderElement) => {
 			const anchorTagId = convertStringToAnchorTag(subheaderElement.textContent, false);
-			const anchorTagDiv = new JDGAnchorTag({
-				target: subheaderElement,
+			// create a container that can be set to relative positioning
+			const anchorTagContainerDiv = document.createElement('div');
+			anchorTagContainerDiv.style.position = 'relative';
+			new JDGAnchorTag({
+				target: anchorTagContainerDiv,
 				props: {
 					anchorTag: anchorTagId
 				}
 			});
+			subheaderElement.parentNode.insertBefore(anchorTagContainerDiv, subheaderElement);
 		});
 	});
 
@@ -139,7 +142,7 @@
 
 <div class="jdg-content-box-floating-container">
 	{#if title}
-		<JDGAnchorTag {anchorTag} />
+		<JDGAnchorTag {anchorTag} isForFloatingContentContainer />
 	{/if}
 	<div
 		bind:this={isVisibleRef}

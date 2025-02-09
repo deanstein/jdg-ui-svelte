@@ -16,6 +16,7 @@
 	} from '$lib/jdg-utils.js';
 
 	export let anchorTag;
+	export let isForFloatingContentContainer = false; // adjusts position for gap between floating containers
 	export let doRemoveAnchorTagFromHistory = false; // removes anchor tag from URL bar
 	export let doShowDebugMessagesInConsole = false;
 
@@ -79,15 +80,15 @@
 
 	const floatingBoxAnchorTagCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			top: -${jdgSizes.nHeaderHeightSm + jdgSizes.nContentContainerGapSm + ($doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightSm : 0)}px;
+			top: -${jdgSizes.nHeaderHeightSm + (isForFloatingContentContainer ? jdgSizes.nContentContainerGapSm : 10) + ($doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightSm : 0)}px;
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-			top: -${jdgSizes.nHeaderHeightMd + jdgSizes.nContentContainerGapMd + ($doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightMd : 0)}px;
+			top: -${jdgSizes.nHeaderHeightMd + (isForFloatingContentContainer ? jdgSizes.nContentContainerGapMd : 15) + ($doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightMd : 0)}px;
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			top: -${jdgSizes.nHeaderHeightLg + jdgSizes.nContentContainerGapLg + ($doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightLg : 0)}px;
+			top: -${jdgSizes.nHeaderHeightLg + (isForFloatingContentContainer ? jdgSizes.nContentContainerGapLg : 20) + ($doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightLg : 0)}px;
 		}
 	`;
 
