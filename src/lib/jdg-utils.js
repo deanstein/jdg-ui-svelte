@@ -301,8 +301,8 @@ export const getBuildCode = async (repoName) => {
 	}
 
 	return year
-		.concat(month)
-		.concat(day)
+		.concat('.' + month)
+		.concat('.' + day)
 		.concat('.' + buildNumber);
 };
 
