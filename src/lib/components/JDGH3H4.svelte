@@ -1,13 +1,20 @@
 <script>
-	import { jdgColors } from '$lib/jdg-shared-styles.js';
 	import { css } from '@emotion/css';
 
+	import { jdgSharedIdentifiers } from '$lib/jdg-shared-strings.js';
+	import { convertStringToAnchorTag } from '$lib/jdg-utils.js';
+
+	import { JDGAnchorTag } from '$lib/index.js';
+	import { jdgColors } from '$lib/jdg-shared-styles.js';
+
 	export let h3String = undefined;
+	export let h3Id = undefined; // optionally specify a different id than the string
 	export let h4String = undefined;
 	export let paddingTop = '0';
 	export let paddingBottom = '0';
 
 	const h3h4ContainerCss = css`
+		position: relative;
 		padding-top: ${paddingTop};
 		padding-bottom: ${paddingBottom};
 	`;
@@ -23,8 +30,11 @@
 	`;
 </script>
 
-<div class="jdg-h3-h4-container {h3h4ContainerCss}">
+<div class="{jdgSharedIdentifiers.h3h4Container} {h3h4ContainerCss}">
 	{#if h3String}
+		<JDGAnchorTag
+			anchorTag={convertStringToAnchorTag(h3Id, false) ?? convertStringToAnchorTag(h3String, false)}
+		/>
 		<h3 class={h3Css}>
 			{h3String}
 		</h3>

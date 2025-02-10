@@ -3,9 +3,10 @@
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
-	import { addJumpToNavItem, removeJumpToNavItem } from '$lib/jdg-state-management.js';
+	import { jdgSharedIdentifiers } from '$lib/jdg-shared-strings.js';
 	import jdgNavItem from '$lib/schemas/jdg-nav-item.js';
-
+	import { appFontFamily } from '$lib/states/ui-state.js';
+	import { addJumpToNavItem, removeJumpToNavItem } from '$lib/jdg-state-management.js';
 	import { convertStringToAnchorTag, instantiateObject } from '$lib/jdg-utils.js';
 
 	import {
@@ -18,7 +19,6 @@
 		jdgBoxShadowStandard
 	} from '../jdg-shared-styles.js';
 	import { JDGAnchorTag } from '$lib/index.js';
-	import { appFontFamily } from '$lib/states/ui-state.js';
 
 	export let title = undefined;
 	export let titleFontFamily = $appFontFamily;
@@ -109,11 +109,18 @@
 			observer.observe(isVisibleRef);
 		}
 
-		// ensure anchor tags are created for any h2 elements
+		// ensure anchor tags are created for any h2 or h3 elements
 		const h2Elements = isVisibleRef.querySelectorAll('h2');
 		const h3Elements = isVisibleRef.querySelectorAll('h3');
 		const allSubheaderElements = [...h2Elements, ...h3Elements];
 		allSubheaderElements.forEach((subheaderElement) => {
+			// skip h3 elements if they're already inside the JDGH3H4 component
+			if (
+				subheaderElement.tagName === 'H3' &&
+				subheaderElement.closest(`.${jdgSharedIdentifiers.h3h4Container}`)
+			) {
+				return;
+			}
 			const anchorTagId = convertStringToAnchorTag(subheaderElement.textContent, false);
 			// create a container that can be set to relative positioning
 			const anchorTagContainerDiv = document.createElement('div');
