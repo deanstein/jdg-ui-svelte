@@ -128,7 +128,7 @@
 			new JDGAnchorTag({
 				target: anchorTagContainerDiv,
 				props: {
-					anchorTag: anchorTagId
+					anchorTagString: anchorTagId
 				}
 			});
 			subheaderElement.parentNode.insertBefore(anchorTagContainerDiv, subheaderElement);
@@ -149,7 +149,7 @@
 
 <div class="jdg-content-box-floating-container">
 	{#if title}
-		<JDGAnchorTag {anchorTag} isForFloatingContentContainer />
+		<JDGAnchorTag anchorTagString={anchorTag} isForFloatingContentContainer />
 	{/if}
 	<div
 		bind:this={isVisibleRef}

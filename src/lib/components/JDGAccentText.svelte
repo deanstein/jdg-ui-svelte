@@ -1,15 +1,24 @@
 <script>
-	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
-	import { appFontFamily } from '$lib/states/ui-state.js';
 	import { css } from '@emotion/css';
+	import { appFontFamily } from '$lib/states/ui-state.js';
+
+	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let isQuote = false; // if true, more gap is used
-	export let superText = undefined; // appears above the main text, like a quote segment
+
+	// supertext: appears above the primary text
+	// can be used as an intro to the primary text
+	export let superText = undefined;
 	export let superTextFontFamily = $appFontFamily;
 	export let superTextBold = false;
+
+	// primary text: the largest text in the center
 	export let primaryText = undefined; // main text in large font
 	export let primaryTextFontFamily = $appFontFamily;
 	export let primaryTextBold = false;
+
+	// secondary text: the text below the main text
+	// can be used for things like quote attributions
 	export let secondaryText = undefined; // appears below the main text, like a quote attribution
 	export let secondaryTextFontFamily = $appFontFamily;
 	export let secondaryTextBold = false;

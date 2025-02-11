@@ -10,13 +10,16 @@
 		isScrolling
 	} from '$lib/states/ui-state.js';
 	import {
+		convertStringToAnchorTag,
 		getIsWindowScrolledToBottom,
 		removeAnchorTagFromHistory,
 		scrollToAnchor
 	} from '$lib/jdg-utils.js';
 
-	export let anchorTag;
-	export let isForFloatingContentContainer = false; // adjusts position for gap between floating containers
+	export let anchorTagString; // string can be anything - it will get converted to a proper anchor tag
+	export let isForFloatingContentContainer = false; // adjusts pos for header based on ContentContainer gap
+	export let adjustPosForHeader = true; // ensure content starts below header
+	export let adjustPosForPadding = true && !isForFloatingContentContainer; // additional padding below the top edge for visual buffer
 	export let doRemoveAnchorTagFromHistory = false; // removes anchor tag from URL bar
 	export let doShowDebugMessagesInConsole = false;
 
@@ -26,7 +29,7 @@
 	// is this anchor tag in the URL bar?
 	const getIsAnchorTagInURL = () => {
 		const hash = window.location.hash;
-		return hash && hash.substring(1) === anchorTag;
+		return hash && hash.substring(1) === anchorTagString;
 	};
 
 	const getCurrentAnchorTagYPos = () => {
@@ -43,7 +46,7 @@
 			getIsWindowScrolledToBottom()
 		) {
 			if (doShowDebugMessagesInConsole) {
-				console.log('Reached destination!', anchorTag);
+				console.log('Reached destination!', anchorTagString);
 			}
 			return true;
 		}
@@ -54,19 +57,20 @@
 	const onHashChange = () => {
 		if (getIsAnchorTagInURL() && !$isScrollingToAnchorTag) {
 			// start scrolling initially
-			scrollToAnchor(anchorTag, false);
+			scrollToAnchor(anchorTagString, false);
 			// set the flag so we can keep trying to scroll to this anchor tag
 			isScrollingToAnchorTag.set(true);
 
 			if (doShowDebugMessagesInConsole) {
 				console.log(
-					'Hash changed, checking for arrival and re-scrolling for anchor tag: ' + anchorTag
+					'Hash changed, checking for arrival and re-scrolling for anchor tag: ' + anchorTagString
 				);
 			}
 		}
 	};
 
 	onMount(() => {
+		anchorTagString = convertStringToAnchorTag(anchorTagString, false);
 		window.addEventListener('hashchange', onHashChange);
 		if (getIsAnchorTagInURL()) {
 			lastKnownAnchorTagYPos = getCurrentAnchorTagYPos();
@@ -80,15 +84,15 @@
 
 	const floatingBoxAnchorTagCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			top: -${jdgSizes.nHeaderHeightSm + (isForFloatingContentContainer ? jdgSizes.nContentContainerGapSm : 10) + ($doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightSm : 0)}px;
+			top: -${(adjustPosForHeader ? jdgSizes.nHeaderHeightSm : 0) + (isForFloatingContentContainer ? jdgSizes.nContentContainerGapSm : 0) + (adjustPosForPadding ? 10 : 0) + ($doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightSm : 0)}px;
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-			top: -${jdgSizes.nHeaderHeightMd + (isForFloatingContentContainer ? jdgSizes.nContentContainerGapMd : 15) + ($doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightMd : 0)}px;
+			top: -${(adjustPosForHeader ? jdgSizes.nHeaderHeightMd : 0) + (isForFloatingContentContainer ? jdgSizes.nContentContainerGapMd : 0) + (adjustPosForPadding ? 15 : 0) + ($doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightMd : 0)}px;
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			top: -${jdgSizes.nHeaderHeightLg + (isForFloatingContentContainer ? jdgSizes.nContentContainerGapLg : 20) + ($doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightLg : 0)}px;
+			top: -${(adjustPosForHeader ? jdgSizes.nHeaderHeightLg : 0) + (isForFloatingContentContainer ? jdgSizes.nContentContainerGapLg : 0) + (adjustPosForPadding ? 20 : 0) + ($doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightLg : 0)}px;
 		}
 	`;
 
@@ -103,10 +107,10 @@
 				// anchor tag position changed since last time
 				if (lastKnownAnchorTagYPos !== currentYPos) {
 					if (doShowDebugMessagesInConsole) {
-						console.log('Anchor tag moved, attempting to scroll to anchor again!', anchorTag);
+						console.log('Anchor tag moved, attempting to scroll to anchor again!', anchorTagString);
 					}
 					lastKnownAnchorTagYPos = currentYPos;
-					scrollToAnchor(anchorTag, false);
+					scrollToAnchor(anchorTagString, false);
 				}
 			}
 		}
@@ -124,7 +128,7 @@
 					removeAnchorTagFromHistory();
 				}
 				if (doShowDebugMessagesInConsole) {
-					console.log('Arrived, no longer checking for arrival.', anchorTag);
+					console.log('Arrived, no longer checking for arrival.', anchorTagString);
 				}
 			}
 		}
@@ -133,12 +137,12 @@
 
 <div
 	bind:this={anchorTagRef}
-	class="content-box-anchor-tag {floatingBoxAnchorTagCss}"
-	id={anchorTag}
+	class="jdg-anchor-tag {floatingBoxAnchorTagCss}"
+	id={anchorTagString}
 />
 
 <style>
-	.content-box-anchor-tag {
+	.jdg-anchor-tag {
 		position: absolute;
 	}
 </style>

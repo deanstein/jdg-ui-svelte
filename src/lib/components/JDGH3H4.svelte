@@ -33,7 +33,8 @@
 <div class="{jdgSharedIdentifiers.h3h4Container} {h3h4ContainerCss}">
 	{#if h3String}
 		<JDGAnchorTag
-			anchorTag={convertStringToAnchorTag(h3Id, false) ?? convertStringToAnchorTag(h3String, false)}
+			anchorTagString={convertStringToAnchorTag(h3Id, false) ??
+				convertStringToAnchorTag(h3String, false)}
 		/>
 		<h3 class={h3Css}>
 			{h3String}

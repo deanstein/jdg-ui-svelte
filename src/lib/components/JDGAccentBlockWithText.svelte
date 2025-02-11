@@ -2,7 +2,7 @@
 	import { appAccentColors, appFontFamily } from '$lib/states/ui-state.js';
 	import { adjustColorForContrast } from '$lib/jdg-utils.js';
 
-	import { JDGAccentBlock, JDGAccentText } from '$lib/index.js';
+	import { JDGAccentBlock, JDGAccentText, JDGAnchorTag } from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
 
 	// pass-through all the props from accent text
@@ -23,6 +23,10 @@
 
 <!-- this combo of AccentBlock and AccentText always ensures the right background color for given text color -->
 <JDGAccentBlock backgroundColor={adjustColorForContrast(backgroundColor, textColor)}>
+	<!-- use the primary text as an anchor tag if present -->
+	{#if primaryText}
+		<JDGAnchorTag anchorTagString={primaryText} adjustPosForPadding={false} />
+	{/if}
 	<JDGAccentText
 		{isQuote}
 		{superText}

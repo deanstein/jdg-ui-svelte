@@ -4,6 +4,7 @@
 	import { instantiateObject } from '$lib/jdg-utils.js';
 	import {
 		JDGAccentText,
+		JDGAnchorTag,
 		JDGAnimateOnVisible,
 		JDGFullWidthContainer,
 		JDGImage
@@ -59,6 +60,10 @@
 </script>
 
 <JDGFullWidthContainer>
+	<!-- use the primary text as an anchor tag if present -->
+	{#if primaryText}
+		<JDGAnchorTag anchorTagString={primaryText} adjustPosForPadding={false} />
+	{/if}
 	<JDGImage {imageAttributes} {maxHeight} {objectPosition} alignLoadingSpinner={'end'} />
 	{#if showOverlay || primaryText || secondaryText || overlayImageAttributes}
 		<div
