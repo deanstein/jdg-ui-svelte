@@ -183,7 +183,13 @@
 			showAttribution={true}
 		/>
 		<JDGBodyCopy textAlign="center" paddingBottom="0"><b>IMAGE FULL WIDTH</b></JDGBodyCopy>
-		<JDGImageFullWidth imageAttributes={imageAttributesCollection.aerial_60s70s_1} />
+		<JDGImageFullWidth
+			imageAttributes={imageAttributesCollection.aerial_60s70s_1}
+			superText="This is a"
+			primaryText="FULL WIDTH IMAGE"
+			secondaryText="better known has a HERO image"
+			overlayColorRgba={'rgba(100, 100, 100, 0.5)'}
+		/>
 		<JDGBodyCopy textAlign="center" paddingBottom="0"
 			><b>IMAGE CAROUSEL</b>
 			<br />
@@ -461,6 +467,13 @@
 				isQuote={true}
 				primaryText={`"A very important quote."`}
 				secondaryText="- John K. Doe"
+			/>
+		</JDGFullWidthContainer>
+		<JDGFullWidthContainer>
+			<JDGAccentBlockWithText
+				primaryText={'ANOTHER EXAMPLE'}
+				secondaryText={'for fun!'}
+				backgroundColor={jdgColors.accentColorsCCP[1]}
 			/>
 		</JDGFullWidthContainer>
 		<JDGBodyCopy paddingTop="0">
