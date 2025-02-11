@@ -471,6 +471,7 @@
 		</JDGFullWidthContainer>
 		<JDGFullWidthContainer>
 			<JDGAccentBlockWithText
+				superText={'This is'}
 				primaryText={'ANOTHER EXAMPLE'}
 				secondaryText={'for fun!'}
 				backgroundColor={jdgColors.accentColorsCCP[1]}
