@@ -5,6 +5,7 @@
 
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
 	import {
+		addCloudinaryUrlTransformation,
 		convertVhToPixels,
 		doesStringContainVh,
 		getMaxElementHeightPx,
@@ -97,8 +98,8 @@
 	// IMAGE
 
 	// for cloudinary images, imgSrc will be modified with transforms for optimization
-	// if this isn't a cloudinary image, it will remain the current imgSrc
-	let adjustedImgSrc = imageAttributes.imgSrc;
+	// if this isn't a cloudinary image, it will remain unchanged
+	let adjustedImgSrc = addCloudinaryUrlTransformation(imageAttributes.imgSrc, 'f_auto');
 	let imageAspectRatio;
 
 	// load states

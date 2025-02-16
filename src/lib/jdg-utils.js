@@ -761,32 +761,30 @@ export const postProcessImageAttributes = (jdgImageAttributes) => {
 	return jdgImageAttributes;
 };
 
-// adds "f_auto" where required
-// to automatically optimize a given cloudinary URL
 export const addCloudinaryUrlTransformation = (url, transformation = 'f_auto') => {
 	if (isUrlCloudinary(url)) {
-		// remove existing default f_auto transformation if it exists
-		if (url.includes('/f_auto')) {
-			url = url.replace('/f_auto', '');
-		}
 		let parts = url.split('/upload/');
-		return parts[0] + '/upload/' + transformation + '/' + parts[1];
+		let baseUrl = parts[0];
+		let path = parts[1];
+
+		// remove existing f_auto transformation if it exists
+		path = path.replace(/^f_auto\/|\/f_auto\/|\/f_auto$/, '');
+
+		return `${baseUrl}/upload/${transformation}/${path}`;
 	}
 	return url;
 };
 
 export const addCloudinaryUrlWidth = (url, width) => {
 	if (isUrlCloudinary(url)) {
-		let parts = url.split('/f_auto/');
-		return parts[0] + '/f_auto,' + `w_${width},c_fill` + '/' + parts[1];
+		return addCloudinaryUrlTransformation(url, `f_auto,w_${width},c_fill`);
 	}
 	return url;
 };
 
 export const addCloudinaryUrlHeight = (url, height) => {
 	if (isUrlCloudinary(url)) {
-		let parts = url.split('/f_auto/');
-		return parts[0] + '/f_auto,' + `h_${height},c_fill` + '/' + parts[1];
+		return addCloudinaryUrlTransformation(url, `f_auto,h_${height},c_fill`);
 	}
 	return url;
 };
