@@ -181,7 +181,7 @@
 			jdgSharedUrls.jdgSharedUrlsStoreFileName
 		);
 		if (updatedSharedUrlsJson) {
-			// ensure the default UrlsStore is merged with the new json
+			// ensure the existing store structure is merged with the new json
 			return { ...jdgSharedUrlsStore, ...updatedSharedUrlsJson };
 		}
 
