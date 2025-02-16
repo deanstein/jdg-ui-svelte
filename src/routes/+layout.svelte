@@ -3,7 +3,7 @@
 	import jdgNavItem from '$lib/schemas/jdg-nav-item.js';
 	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
-	import { jdgSharedUrls } from '$lib/jdg-shared-strings.js';
+	import jdgSharedUrlsStore from '$lib/stores/jdg-shared-urls-store.js';
 
 	import {
 		JDGAppContainer,
@@ -108,11 +108,11 @@
 	>
 		<JDGSocialMedia
 			iconColor={'gray'}
-			instagramHref={jdgSharedUrls.ccpInstagram}
-			facebookHref={jdgSharedUrls.ccpFacebook}
-			youtubeHref={jdgSharedUrls.ccpYouTube}
-			linkedinHref={jdgSharedUrls.jdgLinkedIn}
-			githubHref={jdgSharedUrls.ccpGitHubReleases}
+			instagramHref={$jdgSharedUrlsStore.ccpInstagram}
+			facebookHref={$jdgSharedUrlsStore.ccpFacebook}
+			youtubeHref={$jdgSharedUrlsStore.ccpYouTube}
+			linkedinHref={$jdgSharedUrlsStore.jdgLinkedIn}
+			githubHref={$jdgSharedUrlsStore.ccpGitHubReleases}
 		/>
 	</JDGFooter>
 </JDGAppContainer>

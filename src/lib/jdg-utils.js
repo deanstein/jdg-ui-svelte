@@ -1,6 +1,6 @@
 import CryptoJS from 'crypto-js';
 import {
-	repoOwner,
+	jdgRepoOwner,
 	fetchLatestBuildDate,
 	fetchTotalCommitsQty,
 	fetchLatestCommitDate
@@ -292,10 +292,10 @@ export const convertStringToAnchorTag = (string, addHash = true) => {
 export const getBuildCode = async (repoName) => {
 	// build date is either the latest build date or the latest commit date
 	const buildDate =
-		(await fetchLatestBuildDate(repoOwner, repoName)) ??
-		(await fetchLatestCommitDate(repoOwner, repoName));
+		(await fetchLatestBuildDate(jdgRepoOwner, repoName)) ??
+		(await fetchLatestCommitDate(jdgRepoOwner, repoName));
 	// build number is number of commits
-	const buildNumber = await fetchTotalCommitsQty(repoOwner, repoName);
+	const buildNumber = await fetchTotalCommitsQty(jdgRepoOwner, repoName);
 	const newDate = new Date(buildDate);
 	const year = newDate.getFullYear().toString();
 	let month = (newDate.getMonth() + 1).toString();

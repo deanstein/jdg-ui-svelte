@@ -32,6 +32,13 @@
 	} from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgFonts, jdgLinkStyles } from '$lib/jdg-shared-styles.js';
 	import { getDistancePxToBottomOfHeader } from '$lib/jdg-ui-management.js';
+	import {
+		fetchJsonFromRepo,
+		jdgRepoOwner,
+		jdgUiRepoName
+	} from '$lib/jdg-persistence-management.js';
+	import { jdgSharedUrls } from '$lib/jdg-shared-strings.js';
+	import jdgSharedUrlsStore from '$lib/stores/jdg-shared-urls-store.js';
 
 	export let fontFamily = jdgFonts.body;
 	export let appLoadingIconSrc =
@@ -166,6 +173,18 @@
 		appFontFamily.set(fontFamily);
 		appAccentColors.set(accentColors);
 		doShowHeaderStripes.set(showHeaderStripes);
+
+		// set the shared url store once by fetching the json
+		const updatedSharedUrlsJson = await fetchJsonFromRepo(
+			jdgRepoOwner,
+			jdgUiRepoName,
+			jdgSharedUrls.jdgSharedUrlsStoreFileName
+		);
+		if (updatedSharedUrlsJson) {
+			// ensure the default UrlsStore is merged with the new json
+			return { ...jdgSharedUrlsStore, ...updatedSharedUrlsJson };
+		}
+
 		// update the client and window width at the end so they're accurate
 		setTimeout(onPageResize, 0);
 	});
