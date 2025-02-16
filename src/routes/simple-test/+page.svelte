@@ -15,78 +15,17 @@
 
 <JDGContentContainer overlapWithHeader={false}>
 	<JDGContentBoxFloating>
-		<JDGClipFade>
-			<JDGGridLayout>
-				<JDGImageTile
-					imageAttributes={imageAttributesCollection.aerial_60s70s_1}
-					showCaption={true}
-					showAttribution={true}
-				/>
-				<JDGImageTile
-					imageAttributes={imageAttributesCollection.cc_1}
-					showCaption={true}
-					showAttribution={true}
-				/>
-				<JDGImageTile
-					imageAttributes={imageAttributesCollection.architecture_1}
-					showCaption={true}
-					showAttribution={true}
-				/>
-				<JDGImageTile
-					imageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
-					showCaption={true}
-					showAttribution={true}
-				/>
-				<JDGImageTile
-					imageAttributes={imageAttributesCollection.rose_mall_60s70s_2}
-					showCaption={true}
-					showAttribution={true}
-				/>
-				<JDGImageTile
-					imageAttributes={imageAttributesCollection.aerial_60s70s_1}
-					showCaption={true}
-					showAttribution={true}
-				/>
-				<JDGImageTile
-					imageAttributes={imageAttributesCollection.cc_1}
-					showCaption={true}
-					showAttribution={true}
-				/>
-				<JDGImageTile
-					imageAttributes={imageAttributesCollection.architecture_1}
-					showCaption={true}
-					showAttribution={true}
-				/>
-				<JDGImageTile
-					imageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
-					showCaption={true}
-					showAttribution={true}
-				/>
-				<JDGImageTile imageAttributes={imageAttributesCollection.rose_mall_60s70s_2} />
-			</JDGGridLayout>
-		</JDGClipFade>
-	</JDGContentBoxFloating>
-	<JDGContentBoxFloating title="THIS IS A TITLE">
-		<JDGH3H4 h3String="THIS IS AN H3 STRING" h4String="And this is an h4" />
-		<JDGFullWidthContainer>
-			<JDGImageCarousel
-				imageAttributeObjects={[
-					imageAttributesCollection.hst.ehs_1950s_broadway_entrance,
-					imageAttributesCollection.hst.fms_1960s_broadway_entrance_renovation,
-					imageAttributesCollection.hst.fms_1960s_broadway_entrance
-				]}
-			/>
-		</JDGFullWidthContainer>
-		<JDGImageHybridGridCarousel
-			imageAttributeObjects={[
-				imageAttributesCollection.hst.ehs_1936_southeast_wing,
-				imageAttributesCollection.hst.fms_1968_southeast_corner_entrance
-			]}
+		<JDGImageTile
+			imageAttributes={imageAttributesCollection.ecc_existing_1}
+			showCaption={true}
+			showAttribution={true}
+			cropToFillContainer={false}
 		/>
 		<JDGImageTile
-			imageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
+			imageAttributes={imageAttributesCollection.cc_1}
+			showCaption={true}
+			showAttribution={true}
 			cropToFillContainer={false}
-			maxHeight="400px"
 		/>
 	</JDGContentBoxFloating>
 </JDGContentContainer>
