@@ -11,25 +11,89 @@ export const bioPhotoFileName = 'bio-photo';
 export const encryptedPAT =
 	'U2FsdGVkX19E4XXmu4s1Y76A+iKILjKYG1n92+pqbtzdoJpeMyl6Pit0H8Kq8G28M+ZuqmdhHEfb/ud4GEe5gw==';
 
-export const getLatestCommitDateFromPublicRepo = async (repoOwner, repoName) => {
-	const url = `https://api.github.com/repos/${repoOwner}/${repoName}/commits/main`;
+const getAuthHeaders = (password) => ({
+	Authorization: `Bearer ${decrypt(encryptedPAT, password)}`,
+	Accept: 'application/vnd.github.v3.raw'
+});
+
+export const fetchLatestCommitDate = async (
+	repoOwner,
+	repoName,
+	isPrivate = false,
+	password = null,
+	branch = 'main'
+) => {
+	const url = isPrivate
+		? `https://api.github.com/repos/${repoOwner}/${repoName}/commits?sha=${branch}`
+		: `https://api.github.com/repos/${repoOwner}/${repoName}/commits/${branch}`;
+
 	let latestCommitDate;
 
-	await fetch(url)
+	await fetch(url, isPrivate ? { headers: getAuthHeaders(password) } : {})
 		.then((response) => response.json())
 		.then((data) => {
-			latestCommitDate = new Date(data.commit.committer.date);
+			latestCommitDate = new Date(data[0]?.commit.committer.date);
 		})
 		.catch((error) => console.error('Failed to get latest commit date. Error:', error));
 
 	return latestCommitDate;
 };
 
-export const getLatestBuildDateFromPublicRepo = async (repoOwner, repoName) => {
+/**
+ * Fetches the latest tag and its commit details from a GitHub repository.
+ * @param {string} owner - The owner of the repository.
+ * @param {string} repo - The name of the repository.
+ * @param {boolean} isPrivate - Whether the repository is private.
+ * @param {string} password - The password for decrypting the token for private repositories.
+ * @returns {Promise<{name: string, date: string, url: string}>} An object containing the name of the latest tag, the formatted date of the associated commit, and the URL to the tag.
+ */
+export const fetchLatestTagDetails = async (owner, repo, isPrivate = false, password = null) => {
+	const response = await fetch(
+		`https://api.github.com/repos/${owner}/${repo}/tags`,
+		isPrivate ? { headers: getAuthHeaders(password) } : {}
+	);
+	const tags = await response.json();
+
+	if (tags.length === 0) {
+		throw new Error('No tags found in the repository');
+	}
+
+	const latestTag = tags[0];
+
+	if (!latestTag.commit.sha) {
+		throw new Error('SHA for the latest tag commit is undefined');
+	}
+
+	const commitDetailsResponse = await fetch(
+		`https://api.github.com/repos/${owner}/${repo}/commits/${latestTag.commit.sha}`,
+		isPrivate ? { headers: getAuthHeaders(password) } : {}
+	);
+	const commitDetails = await commitDetailsResponse.json();
+
+	const date = new Date(commitDetails.commit.committer.date);
+	const formattedDate = `${date.getFullYear()}${(date.getMonth() + 1)
+		.toString()
+		.padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}`;
+
+	const url = `https://github.com/${owner}/${repo}/releases/tag/${latestTag.name}`;
+
+	return {
+		name: latestTag.name,
+		date: formattedDate,
+		url: url
+	};
+};
+
+export const fetchLatestBuildDate = async (
+	repoOwner,
+	repoName,
+	isPrivate = false,
+	password = null
+) => {
 	const url = `https://api.github.com/repos/${repoOwner}/${repoName}/actions/runs?status=success`;
 	let latestBuildDate;
 
-	await fetch(url)
+	await fetch(url, isPrivate ? { headers: getAuthHeaders(password) } : {})
 		.then((response) => response.json())
 		.then((data) => {
 			if (data.total_count > 0) {
@@ -43,11 +107,16 @@ export const getLatestBuildDateFromPublicRepo = async (repoOwner, repoName) => {
 	return latestBuildDate;
 };
 
-export const getTotalCommitsInPublicRepo = async (repoOwner, repoName) => {
+export const fetchTotalCommitsQty = async (
+	repoOwner,
+	repoName,
+	isPrivate = false,
+	password = null
+) => {
 	const url = `https://api.github.com/repos/${repoOwner}/${repoName}/contributors`;
 	let totalCommits = 0;
 
-	await fetch(url)
+	await fetch(url, isPrivate ? { headers: getAuthHeaders(password) } : {})
 		.then((response) => response.json())
 		.then((data) => {
 			if (Array.isArray(data)) {
@@ -63,15 +132,12 @@ export const getTotalCommitsInPublicRepo = async (repoOwner, repoName) => {
 	return totalCommits;
 };
 
-export const getFileFromRepo = async (repoOwner, repoName, fileName, password) => {
-	let fileData = undefined;
+export const fetchFileFromRepo = async (repoOwner, repoName, fileName, password) => {
+	let fileData;
 	const url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${fileName}`;
 
 	await fetch(url, {
-		headers: {
-			Authorization: `Bearer ${decrypt(encryptedPAT, password)}`,
-			Accept: 'application/vnd.github.v3.raw'
-		}
+		headers: getAuthHeaders(password)
 	})
 		.then((response) => {
 			if (!response.ok) {
@@ -90,15 +156,13 @@ export const getFileFromRepo = async (repoOwner, repoName, fileName, password) =
 };
 
 // for binary large objects (blobs)
-export const readBlobFromRepo = async (repoOwner, repoName, password, filePath) => {
+export const fetchBlobFromRepo = async (repoOwner, repoName, password, filePath) => {
 	// First, get the file's SHA
 	const url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`;
 	let sha;
 	try {
 		const response = await fetch(url, {
-			headers: {
-				Authorization: `Bearer ${decrypt(encryptedPAT, password)}`
-			}
+			headers: getAuthHeaders(password)
 		});
 
 		if (response.ok) {
@@ -115,9 +179,7 @@ export const readBlobFromRepo = async (repoOwner, repoName, password, filePath) 
 	const blobUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/git/blobs/${sha}`;
 	try {
 		const response = await fetch(blobUrl, {
-			headers: {
-				Authorization: `Bearer ${decrypt(encryptedPAT, password)}`
-			}
+			headers: getAuthHeaders(password)
 		});
 
 		if (response.ok) {
@@ -144,10 +206,7 @@ export const uploadFileToRepo = async (
 
 	const response = await fetch(url, {
 		method: 'GET',
-		headers: {
-			Authorization: `Bearer ${decrypt(encryptedPAT, password)}`,
-			'Content-Type': 'application/json'
-		}
+		headers: getAuthHeaders(password)
 	});
 
 	if (response.ok) {
@@ -160,10 +219,7 @@ export const uploadFileToRepo = async (
 
 		const updateResponse = await fetch(url, {
 			method: 'PUT',
-			headers: {
-				Authorization: `Bearer ${decrypt(encryptedPAT, password)}`,
-				'Content-Type': 'application/json'
-			},
+			headers: getAuthHeaders(password),
 			body: JSON.stringify(data)
 		});
 
@@ -181,10 +237,7 @@ export const uploadFileToRepo = async (
 
 		const uploadResponse = await fetch(url, {
 			method: 'PUT',
-			headers: {
-				Authorization: `Bearer ${decrypt(encryptedPAT, password)}`,
-				'Content-Type': 'application/json'
-			},
+			headers: getAuthHeaders(password),
 			body: JSON.stringify(data)
 		});
 

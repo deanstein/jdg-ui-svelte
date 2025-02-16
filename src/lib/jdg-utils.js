@@ -1,9 +1,9 @@
 import CryptoJS from 'crypto-js';
 import {
 	repoOwner,
-	getLatestBuildDateFromPublicRepo,
-	getTotalCommitsInPublicRepo,
-	getLatestCommitDateFromPublicRepo
+	fetchLatestBuildDate,
+	fetchTotalCommitsQty,
+	fetchLatestCommitDate
 } from './jdg-persistence-management.js';
 import { getDistancePxToBottomOfHeader } from './jdg-ui-management.js';
 
@@ -292,10 +292,10 @@ export const convertStringToAnchorTag = (string, addHash = true) => {
 export const getBuildCode = async (repoName) => {
 	// build date is either the latest build date or the latest commit date
 	const buildDate =
-		(await getLatestBuildDateFromPublicRepo(repoOwner, repoName)) ??
-		(await getLatestCommitDateFromPublicRepo(repoOwner, repoName));
+		(await fetchLatestBuildDate(repoOwner, repoName)) ??
+		(await fetchLatestCommitDate(repoOwner, repoName));
 	// build number is number of commits
-	const buildNumber = await getTotalCommitsInPublicRepo(repoOwner, repoName);
+	const buildNumber = await fetchTotalCommitsQty(repoOwner, repoName);
 	const newDate = new Date(buildDate);
 	const year = newDate.getFullYear().toString();
 	let month = (newDate.getMonth() + 1).toString();
