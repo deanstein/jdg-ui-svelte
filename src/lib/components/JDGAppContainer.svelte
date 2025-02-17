@@ -182,7 +182,7 @@
 		);
 		if (updatedSharedUrlsJson) {
 			// ensure the existing store structure is merged with the new json
-			return { ...jdgSharedUrlsStore, ...updatedSharedUrlsJson };
+			jdgSharedUrlsStore.set({ ...jdgSharedUrlsStore, ...updatedSharedUrlsJson });
 		}
 
 		// update the client and window width at the end so they're accurate
