@@ -1,15 +1,5 @@
 <script>
-	import {
-		JDGClipFade,
-		JDGContentBoxFloating,
-		JDGContentContainer,
-		JDGFullWidthContainer,
-		JDGGridLayout,
-		JDGH3H4,
-		JDGImageCarousel,
-		JDGImageHybridGridCarousel,
-		JDGImageTile
-	} from '$lib/index.js';
+	import { JDGContentBoxFloating, JDGContentContainer, JDGImageTile } from '$lib/index.js';
 	import { imageAttributesCollection } from '../image-attributes-collection.js';
 </script>
 

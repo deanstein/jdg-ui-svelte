@@ -80,9 +80,9 @@
 	}}
 />
 <JDGAppContainer
-	accentColors={jdgColors.accentColorsPMX}
-	linkColorContrastAdjustment={0}
-	linkColorDefault={jdgColors.accentColorsPMX[0]}
+	accentColors={jdgColors.accentColorsCCP}
+	linkColorContrastAdjustment={2}
+	linkColorDefault={jdgColors.accentColorsCCP[0]}
 	{showHeaderStripes}
 	fontFamily="Goldman"
 >
