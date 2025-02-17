@@ -35,7 +35,7 @@
 	import {
 		fetchJsonFromRepo,
 		jdgRepoOwner,
-		jdgUiRepoName
+		jdgUiSvelteRepoName
 	} from '$lib/jdg-persistence-management.js';
 	import { jdgSharedUrls } from '$lib/jdg-shared-strings.js';
 	import jdgSharedUrlsStore from '$lib/stores/jdg-shared-urls-store.js';
@@ -160,7 +160,7 @@
 			color: ${adjustColorForContrast(linkColorSimple, jdgColors.contentBoxBackground, 5)};
 		}
 	`;
-	setContext(jdgContexts.linkStyleSimple, linkStyleSimpleCss);
+	setContext(jdgContexts.linkStyleSimpleClassName, linkStyleSimpleCss);
 
 	onMount(async () => {
 		await tick(); // delay until layout and all children are loaded
@@ -177,12 +177,12 @@
 		// set the shared url store once by fetching the json
 		const updatedSharedUrlsJson = await fetchJsonFromRepo(
 			jdgRepoOwner,
-			jdgUiRepoName,
+			jdgUiSvelteRepoName,
 			jdgSharedUrls.jdgSharedUrlsStoreFileName
 		);
 		if (updatedSharedUrlsJson) {
 			// ensure the existing store structure is merged with the new json
-			return { ...jdgSharedUrlsStore, ...updatedSharedUrlsJson };
+			jdgSharedUrlsStore.set({ ...jdgSharedUrlsStore, ...updatedSharedUrlsJson });
 		}
 
 		// update the client and window width at the end so they're accurate

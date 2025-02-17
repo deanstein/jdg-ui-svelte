@@ -45,7 +45,7 @@
 
 <p
 	class="jdg-body-copy-container {bodyCopyContainerCss} {simpleHyperlinkStyle
-		? getContext(jdgContexts.linkStyleSimple)
+		? getContext(jdgContexts.linkStyleSimpleClassName)
 		: ''}"
 >
 	<slot />

@@ -1,5 +1,5 @@
 <script>
-	import { onMount } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
 	import {
@@ -10,14 +10,20 @@
 	} from '$lib/states/ui-state.js';
 
 	import { getBuildCode } from '../jdg-utils.js';
-	import { jdgUiRepoName } from '../jdg-persistence-management.js';
+	import {
+		fetchLatestCommitUrl,
+		getCommitHistoryUrl,
+		jdgRepoOwner,
+		jdgUiSvelteRepoName
+	} from '../jdg-persistence-management.js';
 	import { jdgSharedStrings } from '$lib/jdg-shared-strings.js';
 	import { toggleDevTools } from '$lib/jdg-state-management.js';
 
 	import { jdgColors, jdgSizes } from '../jdg-shared-styles.js';
 	import { JDGButton, JDGH3H4, JDGDevToolbar, JDGStripesHorizontal } from '../index.js';
+	import jdgContexts from '$lib/jdg-contexts.js';
 
-	export let repoName = jdgUiRepoName;
+	export let repoName = jdgUiSvelteRepoName;
 	export let appVersion = undefined;
 	export let additionalVersionData = undefined; // optional additional version data, applicable to some sites
 	export let copyright = jdgSharedStrings.jdgCopyrightName; // appears after the (C) symbol
@@ -25,6 +31,7 @@
 	export let disclaimer = undefined; // optional disclaimer, applicable to some sites
 	export let alignItems = 'left';
 	export let backgroundColorRgba = jdgColors.headerBackground;
+	export let showJdgUiVersion = true;
 	export let showDevToolsButton = false;
 
 	const divider = '|';
@@ -36,6 +43,17 @@
 
 	// date and number of commits is in this format
 	let buildCode = 'yyymmdd.nnn';
+	let buildCodeHref = undefined; // href for build code
+
+	// define versions to be shown in the footer
+	// @ts-expect-error
+	const jdgUiSvelteVersion = packageJson?.dependencies['jdg-ui-svelte']; // jdg-ui-svelte version
+	let jdgUiSvelteVersionHref = undefined; // href on jdg-ui-svelte version number
+	// @ts-expect-error
+	const packageJsonName = packageJson?.name; // this package name
+	// @ts-expect-error
+	const packageJsonVersion = packageJson?.version; // this package version
+	let packageJsonVersionHref = undefined; // href on this package version number
 
 	// ensure the copyright is always the current year
 	const copyrightYear = new Date().getFullYear();
@@ -64,6 +82,8 @@
 		text-align: ${alignItems};
 	`;
 
+	const linkStyleSimpleClassName = getContext(jdgContexts.linkStyleSimpleClassName);
+
 	// for some reason, with URLs included in state, need to set the width to match clientWidth
 	let stateViewCss = css``;
 	$: {
@@ -73,8 +93,13 @@
 	}
 
 	onMount(async () => {
-		// get the lgetBuildCode the deployment repo
+		// get the version of jdg-ui-svelte and this package
+		jdgUiSvelteVersionHref = getCommitHistoryUrl(jdgRepoOwner, jdgUiSvelteRepoName);
+		packageJsonVersionHref = getCommitHistoryUrl(jdgRepoOwner, repoName);
+
+		// get the build code from the deployment repo
 		buildCode = await getBuildCode(repoName);
+		buildCodeHref = await fetchLatestCommitUrl(jdgRepoOwner, repoName);
 	});
 </script>
 
@@ -114,28 +139,36 @@
 		<!-- versions row -->
 		<div class="footer-row">
 			{#if appVersion}
-				{#if additionalVersionData}
-					<div class="footer-item {footerItemCss}">
-						App: v{appVersion}
+				{#if additionalVersionData || showJdgUiVersion}
+					<div class="footer-item {footerItemCss} {linkStyleSimpleClassName}">
+						App: <a href={packageJsonVersionHref} target="_blank">v{appVersion}</a>
 					</div>
 				{:else}
-					<div class="footer-item {footerItemCss}">
+					<div class="footer-item {footerItemCss} {linkStyleSimpleClassName}">
 						v{appVersion}
 					</div>
 				{/if}
 			{/if}
+			{#if showJdgUiVersion}
+				<div>{divider}</div>
+				<div class="footer-item {footerItemCss} {linkStyleSimpleClassName}">
+					JDG UI: <a href={jdgUiSvelteVersionHref} target="_blank"
+						>v{packageJsonName === jdgUiSvelteRepoName ? packageJsonVersion : jdgUiSvelteVersion}</a
+					>
+				</div>
+			{/if}
 			{#if additionalVersionData}
 				<div>{divider}</div>
-				<div class="footer-item {footerItemCss}">
+				<div class="footer-item {footerItemCss} {linkStyleSimpleClassName}">
 					{additionalVersionData}
 				</div>
 			{/if}
 			<div>{divider}</div>
-			<div class="footer-item {footerItemCss}">
-				{#if additionalVersionData}
-					Build: {buildCode}
+			<div class="footer-item {footerItemCss} {linkStyleSimpleClassName}">
+				{#if additionalVersionData || showJdgUiVersion}
+					Build: <a href={buildCodeHref} target="_blank">{buildCode}</a>
 				{:else}
-					{buildCode}
+					<a href={buildCodeHref} target="_blank">{buildCode}</a>
 				{/if}
 			</div>
 		</div>

@@ -1,7 +1,7 @@
 import { decrypt } from './jdg-utils.js';
 
 export const jdgRepoOwner = 'deanstein';
-export const jdgUiRepoName = 'jdg-ui-svelte';
+export const jdgUiSvelteRepoName = 'jdg-ui-svelte';
 export const jdgWebsiteRepoName = 'jdg-website';
 export const pmx3dWebsiteRepoName = 'pmx-website';
 export const ccpWebsiteRepoName = 'ccp-website';
@@ -125,6 +125,35 @@ export const fetchLatestCommitDate = async (
 		.catch((error) => console.error('Failed to get latest commit date. Error:', error));
 
 	return latestCommitDate;
+};
+
+// all commit history url
+export const getCommitHistoryUrl = (repoOwner, repoName, branch = 'main') => {
+	return `https://github.com/${repoOwner}/${repoName}/commits/${branch}`;
+};
+
+// latest commit url
+export const fetchLatestCommitUrl = async (
+	repoOwner,
+	repoName,
+	isPrivate = false,
+	password = null,
+	branch = 'main'
+) => {
+	const url = isPrivate
+		? `https://api.github.com/repos/${repoOwner}/${repoName}/commits?sha=${branch}`
+		: `https://api.github.com/repos/${repoOwner}/${repoName}/commits/${branch}`;
+
+	let latestCommitUrl;
+
+	await fetch(url, isPrivate ? { headers: getAuthHeaders(password) } : {})
+		.then((response) => response.json())
+		.then((data) => {
+			latestCommitUrl = data?.html_url;
+		})
+		.catch((error) => console.error('Failed to get latest commit URL. Error:', error));
+
+	return latestCommitUrl;
 };
 
 /**

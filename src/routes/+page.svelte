@@ -187,7 +187,7 @@
 			imageAttributes={imageAttributesCollection.aerial_60s70s_1}
 			superText="This is a"
 			primaryText="FULL WIDTH IMAGE"
-			secondaryText="better known has a HERO image"
+			secondaryText="better known as a HERO image"
 			overlayColorRgba={'rgba(100, 100, 100, 0.5)'}
 		/>
 		<JDGBodyCopy textAlign="center" paddingBottom="0"
