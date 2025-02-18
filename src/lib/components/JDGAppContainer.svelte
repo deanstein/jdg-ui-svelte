@@ -145,7 +145,11 @@
 		);
 		setUpdatedHyperlinkStyleSimple(linkColorSimple);
 
+		// call onPageResize() once at the end of onMount() for initialization
+		setTimeout(onPageResize, 0);
+
 		// set the shared url store once by fetching the json
+		// note that this must be below the setTimeout above
 		const updatedSharedUrlsJson = await fetchJsonFromRepo(
 			jdgRepoOwner,
 			jdgUiSvelteRepoName,
@@ -155,9 +159,6 @@
 			// ensure the existing store structure is merged with the new json
 			jdgSharedUrlsStore.set({ ...jdgSharedUrlsStore, ...updatedSharedUrlsJson });
 		}
-
-		// update the client and window width at the end so they're accurate
-		setTimeout(onPageResize, 0);
 	});
 
 	let appContainerCssDynamic = css``;
