@@ -1,8 +1,10 @@
 <script>
-	import { onMount, setContext, tick } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import jdgContexts from '$lib/jdg-contexts.js';
+	import { jdgSharedUrls } from '$lib/jdg-shared-strings.js';
+	import jdgSharedUrlsStore from '$lib/stores/jdg-shared-urls-store.js';
+
 	import {
 		appAccentColors,
 		appFontFamily,
@@ -18,10 +20,16 @@
 		isScrolling,
 		scrollDirection,
 		windowScrollPosition,
-		windowWidth
+		windowWidth,
+		appCssHyperlinkBar
 	} from '$lib/states/ui-state.js';
 
-	import { adjustColorForContrast, convertHexToRGBA } from '$lib/jdg-utils.js';
+	import { getDistancePxToBottomOfHeader } from '$lib/jdg-ui-management.js';
+	import {
+		fetchJsonFromRepo,
+		jdgRepoOwner,
+		jdgUiSvelteRepoName
+	} from '$lib/jdg-persistence-management.js';
 
 	import {
 		JDGDevOverlay,
@@ -30,15 +38,13 @@
 		JDGLoadingOverlay,
 		JDGScrollToTop
 	} from '$lib/index.js';
-	import { jdgBreakpoints, jdgColors, jdgFonts, jdgLinkStyles } from '$lib/jdg-shared-styles.js';
-	import { getDistancePxToBottomOfHeader } from '$lib/jdg-ui-management.js';
 	import {
-		fetchJsonFromRepo,
-		jdgRepoOwner,
-		jdgUiSvelteRepoName
-	} from '$lib/jdg-persistence-management.js';
-	import { jdgSharedUrls } from '$lib/jdg-shared-strings.js';
-	import jdgSharedUrlsStore from '$lib/stores/jdg-shared-urls-store.js';
+		setUpdatedHyperlinkStyleSimple,
+		jdgBreakpoints,
+		jdgColors,
+		jdgFonts,
+		setUpdatedHyperlinkStyleBar
+	} from '$lib/jdg-shared-styles.js';
 
 	export let fontFamily = jdgFonts.body;
 	export let appLoadingIconSrc =
@@ -118,50 +124,6 @@
 		font-family: ${fontFamily};
 	`;
 
-	const linkStyleDefaultCss = css`
-		${jdgLinkStyles.animatedBar}
-		a {
-			color: ${jdgColors.text};
-		}
-
-		a.no-initial-highlight::before,
-		.jdg-highlight-container .jdg-highlight::before {
-			background: ${useStripedHyperlinkHoverStyle
-				? `linear-gradient(
-				to bottom,
-				${convertHexToRGBA(appAccentColors[0], stripedColorOpacity)} 33%,
-				${convertHexToRGBA(appAccentColors[1], stripedColorOpacity)} 33%,
-				${convertHexToRGBA(appAccentColors[1], stripedColorOpacity)} 66%,
-				${convertHexToRGBA(appAccentColors[2], stripedColorOpacity)} 66%
-			)`
-				: `${adjustColorForContrast(
-						linkColorDefault,
-						jdgColors.text,
-						linkColorContrastAdjustment
-					)}`};
-		}
-		a:before {
-			background: ${adjustColorForContrast(
-				linkColorDefault,
-				jdgColors.text,
-				linkColorContrastAdjustment
-			)};
-		}
-	`;
-
-	// other link styles which may not be used here but need to be defined here and
-	// made available via setContext for other components to possibly access
-	const linkStyleSimpleCss = css`
-		${jdgLinkStyles.simple}
-		a {
-			color: ${adjustColorForContrast(linkColorSimple, jdgColors.contentBoxBackground, 3)};
-		}
-		a:hover {
-			color: ${adjustColorForContrast(linkColorSimple, jdgColors.contentBoxBackground, 5)};
-		}
-	`;
-	setContext(jdgContexts.linkStyleSimpleClassName, linkStyleSimpleCss);
-
 	onMount(async () => {
 		await tick(); // delay until layout and all children are loaded
 		isAppLoaded = true;
@@ -169,10 +131,19 @@
 		// use the text selection prop to set the state initially
 		doAllowTextSelection.set(allowTextSelection);
 
-		// set stores based on props
+		// set UI state based on props
 		appFontFamily.set(fontFamily);
 		appAccentColors.set(accentColors);
 		doShowHeaderStripes.set(showHeaderStripes);
+		// update shared style states
+		setUpdatedHyperlinkStyleBar(
+			linkColorDefault,
+			linkColorContrastAdjustment,
+			accentColors,
+			useStripedHyperlinkHoverStyle,
+			stripedColorOpacity
+		);
+		setUpdatedHyperlinkStyleSimple(linkColorSimple);
 
 		// set the shared url store once by fetching the json
 		const updatedSharedUrlsJson = await fetchJsonFromRepo(
@@ -207,7 +178,7 @@
 <svelte:window on:resize={onPageResize} on:scroll={onPageScroll} />
 
 <div
-	class="jdg-app-container {appContainerCss} {appContainerCssDynamic} {linkStyleDefaultCss}"
+	class="jdg-app-container {appContainerCss} {appContainerCssDynamic} {$appCssHyperlinkBar}"
 	bind:this={appContainerRef}
 >
 	<!-- all content goes here after the app is loaded -->

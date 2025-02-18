@@ -1,5 +1,4 @@
 import { derived, writable } from 'svelte/store';
-import { jdgColors, jdgFonts } from '$lib/jdg-shared-styles.js';
 
 export let activeNotificationBanners = writable([]);
 export let doShowNavSidebar = writable(false);
@@ -8,9 +7,12 @@ export let isMobileBreakpoint = writable(false);
 export let jumpToNavItems = writable([]);
 
 // font, colors, settings
-export let appAccentColors = writable(jdgColors.accentColorsJDG);
-export let appFontFamily = writable(jdgFonts.body);
+export let appAccentColors = writable([]);
+export let appFontFamily = writable('');
 export let doAllowTextSelection = writable(false);
+// shared dynamic emotion css styles
+export let appCssHyperlinkBar = writable('');
+export let appCssHyperlinkSimple = writable('');
 
 // scrolling
 export let isScrolling = writable(false);
@@ -45,8 +47,10 @@ export let devOverlayContent = writable('No data found in $devOverlayContent sta
 
 // create a combined store to display in footer dev tools
 const storeMap = {
-	appFont: appFontFamily,
-	accentColors: appAccentColors,
+	appFontFamily,
+	appAccentColors,
+	appCssHyperlinkBar,
+	appCssHyperlinkSimple,
 	doAllowTextSelection,
 	activeNotificationBanners,
 	doShowNavSidebar,

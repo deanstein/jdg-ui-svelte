@@ -1,8 +1,7 @@
 <script>
-	import { getContext } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import jdgContexts from '$lib/jdg-contexts.js';
+	import { appCssHyperlinkSimple } from '$lib/states/ui-state.js';
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let fontSizeMultiplier = 1; // optionally make fonts larger at all breakpoints
@@ -45,7 +44,7 @@
 
 <p
 	class="jdg-body-copy-container {bodyCopyContainerCss} {simpleHyperlinkStyle
-		? getContext(jdgContexts.linkStyleSimpleClassName)
+		? $appCssHyperlinkSimple
 		: ''}"
 >
 	<slot />

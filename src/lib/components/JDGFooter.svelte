@@ -1,9 +1,10 @@
 <script>
-	import { getContext, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
 	import {
 		allStateValues,
+		appCssHyperlinkSimple,
 		clientWidth,
 		doShowDevTools,
 		doShowHeaderStripes
@@ -19,9 +20,8 @@
 	import { jdgSharedStrings } from '$lib/jdg-shared-strings.js';
 	import { toggleDevTools } from '$lib/jdg-state-management.js';
 
-	import { jdgColors, jdgSizes } from '../jdg-shared-styles.js';
 	import { JDGButton, JDGH3H4, JDGDevToolbar, JDGStripesHorizontal } from '../index.js';
-	import jdgContexts from '$lib/jdg-contexts.js';
+	import { jdgColors, jdgSizes } from '../jdg-shared-styles.js';
 
 	export let repoName = jdgUiSvelteRepoName;
 	export let appVersion = undefined;
@@ -82,8 +82,6 @@
 		text-align: ${alignItems};
 	`;
 
-	const linkStyleSimpleClassName = getContext(jdgContexts.linkStyleSimpleClassName);
-
 	// for some reason, with URLs included in state, need to set the width to match clientWidth
 	let stateViewCss = css``;
 	$: {
@@ -140,18 +138,18 @@
 		<div class="footer-row">
 			{#if appVersion}
 				{#if additionalVersionData || showJdgUiVersion}
-					<div class="footer-item {footerItemCss} {linkStyleSimpleClassName}">
+					<div class="footer-item {footerItemCss} {$appCssHyperlinkSimple}">
 						App: <a href={packageJsonVersionHref} target="_blank">v{appVersion}</a>
 					</div>
 				{:else}
-					<div class="footer-item {footerItemCss} {linkStyleSimpleClassName}">
+					<div class="footer-item {footerItemCss} {$appCssHyperlinkSimple}">
 						v{appVersion}
 					</div>
 				{/if}
 			{/if}
 			{#if showJdgUiVersion}
 				<div>{divider}</div>
-				<div class="footer-item {footerItemCss} {linkStyleSimpleClassName}">
+				<div class="footer-item {footerItemCss} {$appCssHyperlinkSimple}">
 					JDG UI: <a href={jdgUiSvelteVersionHref} target="_blank"
 						>v{packageJsonName === jdgUiSvelteRepoName ? packageJsonVersion : jdgUiSvelteVersion}</a
 					>
@@ -159,12 +157,12 @@
 			{/if}
 			{#if additionalVersionData}
 				<div>{divider}</div>
-				<div class="footer-item {footerItemCss} {linkStyleSimpleClassName}">
+				<div class="footer-item {footerItemCss} {$appCssHyperlinkSimple}">
 					{additionalVersionData}
 				</div>
 			{/if}
 			<div>{divider}</div>
-			<div class="footer-item {footerItemCss} {linkStyleSimpleClassName}">
+			<div class="footer-item {footerItemCss} {$appCssHyperlinkSimple}">
 				{#if additionalVersionData || showJdgUiVersion}
 					Build: <a href={buildCodeHref} target="_blank">{buildCode}</a>
 				{:else}

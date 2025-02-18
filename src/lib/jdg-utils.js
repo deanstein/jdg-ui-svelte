@@ -529,7 +529,9 @@ export const rgbaToRgb = (rgba) => {
 		// If rgba is an object, extract the r, g, b values directly
 		({ r, g, b } = rgba);
 	} else {
-		throw new Error('Invalid color format. Please use either rgba format or an RGB object.');
+		throw new Error(
+			'Invalid color format for color ' + rgba + '. Please use either rgba format or an RGB object.'
+		);
 	}
 
 	return { r, g, b };
@@ -611,12 +613,18 @@ export const lightenColor = (color, lightenRatio, matchInputType = true) => {
 			rgbColor = rgbaToRgb(color);
 			inputFormat = 'rgba';
 		} else {
-			throw new Error('Invalid color format. Please use either rgba or hex format.');
+			throw new Error(
+				'Invalid color format for color ' + color + '. Please use either rgba or hex format.'
+			);
 		}
 	} else if (typeof color === 'object' && 'r' in color && 'g' in color && 'b' in color) {
 		rgbColor = color;
 	} else {
-		throw new Error('Invalid color format. Please use either rgba or hex format or an RGB object.');
+		throw new Error(
+			'Invalid color format for color ' +
+				color +
+				'. Please use either rgba or hex format or an RGB object.'
+		);
 	}
 
 	let ratio = 1 + lightenRatio;
@@ -652,12 +660,18 @@ export const darkenColor = (color, darkenRatio, matchInputType = true) => {
 			rgbColor = rgbaToRgb(color);
 			inputFormat = 'rgba';
 		} else {
-			throw new Error('Invalid color format. Please use either rgba or hex format.');
+			throw new Error(
+				'Invalid color format for color ' + color + '. Please use either rgba or hex format.'
+			);
 		}
 	} else if (typeof color === 'object' && 'r' in color && 'g' in color && 'b' in color) {
 		rgbColor = color;
 	} else {
-		throw new Error('Invalid color format. Please use either rgba or hex format or an RGB object.');
+		throw new Error(
+			'Invalid color format for color ' +
+				color +
+				'. Please use either rgba or hex format or an RGB object.'
+		);
 	}
 
 	let ratio = 1 - darkenRatio;

@@ -1,4 +1,6 @@
 import { css } from '@emotion/css';
+import { adjustColorForContrast, convertHexToRGBA } from './jdg-utils.js';
+import { appCssHyperlinkBar, appCssHyperlinkSimple } from './states/ui-state.js';
 
 export const jdgBreakpoints = {
 	width: [768, 1024],
@@ -280,139 +282,180 @@ export const fadeInSettleAfter = css`
 // hyperlink styles
 //
 
-export const jdgLinkStyles = {
-	animatedBar: css`
-		/* general hyperlink style setup */
-		a {
-			/* link text color defined in JDGAppContainer.svelte Emotion CSS */
-			position: relative;
-			display: inline-block;
-			text-decoration: none;
-			line-height: 1; /* don't inherit possible parent line height */
-		}
+export const jdgLinkStyleBar = css`
+	/* general hyperlink style setup */
+	a {
+		/* link text color defined in JDGAppContainer.svelte Emotion CSS */
+		position: relative;
+		display: inline-block;
+		text-decoration: none;
+		line-height: 1; /* don't inherit possible parent line height */
+	}
 
-		.jdg-highlight-container {
-			position: relative;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			width: 100%;
-			height: 100%;
-		}
+	.jdg-highlight-container {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		height: 100%;
+	}
 
-		.jdg-highlight {
-			position: relative;
-		}
+	.jdg-highlight {
+		position: relative;
+	}
 
-		@keyframes slide-right {
-			0% {
-				width: 0;
-			}
-			100% {
-				width: calc(100% + 4px);
-			}
+	@keyframes slide-right {
+		0% {
+			width: 0;
 		}
-
-		@keyframes slide-up {
-			0% {
-				height: 0;
-			}
-			100% {
-				height: 10px;
-			}
-		}
-
-		/* header logo, menu icon */
-		a.no-initial-highlight::before,
-		.jdg-highlight-container .jdg-highlight.no-initial-highlight::before {
-			content: '';
-			position: absolute;
-			z-index: -1;
-			width: calc(100% + 8px);
-			left: -4px;
-			height: 0;
-			bottom: -0.225rem;
-			/* link banner background color specified in JDGAppContainer.svelte Emotion CSS */
-			transition: all 0.3s ease-in-out;
-		}
-
-		/* navigation items highlight on hover */
-		.jdg-letter-spacing-title a.no-initial-highlight::before,
-		.jdg-letter-spacing-title .jdg-highlight-container .jdg-highlight.no-initial-highlight::before {
-			left: -6px;
-		}
-
-		/* logo highlight on hover */
-		.logo-container a.no-initial-highlight::before,
-		.logo-container .jdg-highlight-container .jdg-highlight.no-initial-highlight::before {
-			left: -6px;
-			bottom: -6px;
-		}
-
-		/* primarily for BodyCopy links */
-		a::before,
-		.jdg-highlight-container .jdg-highlight::before {
-			content: '';
-			position: absolute;
-			z-index: -1;
+		100% {
 			width: calc(100% + 4px);
-			height: 8px;
-			bottom: -0.1rem;
-			left: -2px;
-			/* background-color: this needs to be specified using emotion css */
-			transition: all 0.5s ease-in-out;
-			line-height: 1.2; /* don't inherit possible parent line height */
 		}
+	}
 
-		a:hover::before,
-		.jdg-highlight-container:hover .jdg-highlight::before {
-			animation: slide-right 0.5s forwards;
-		}
-
-		a::before:hover {
-			background-color: none;
-		}
-
-		/* certain elements like header logo and nav get a different <a> treatment */
-		a.no-initial-highlight::before,
-		.jdg-highlight.no-initial-highlight::before {
+	@keyframes slide-up {
+		0% {
 			height: 0;
 		}
-
-		a.no-initial-highlight:hover::before,
-		.jdg-highlight-container:hover .jdg-highlight.no-initial-highlight::before {
-			animation: slide-up 0.5s forwards;
+		100% {
+			height: 10px;
 		}
-	`,
+	}
 
-	simple: css`
+	/* header logo, menu icon */
+	a.no-initial-highlight::before,
+	.jdg-highlight-container .jdg-highlight.no-initial-highlight::before {
+		content: '';
+		position: absolute;
+		z-index: -1;
+		width: calc(100% + 8px);
+		left: -4px;
+		height: 0;
+		bottom: -0.225rem;
+		/* link banner background color specified in JDGAppContainer.svelte Emotion CSS */
+		transition: all 0.3s ease-in-out;
+	}
+
+	/* navigation items highlight on hover */
+	.jdg-letter-spacing-title a.no-initial-highlight::before,
+	.jdg-letter-spacing-title .jdg-highlight-container .jdg-highlight.no-initial-highlight::before {
+		left: -6px;
+	}
+
+	/* logo highlight on hover */
+	.logo-container a.no-initial-highlight::before,
+	.logo-container .jdg-highlight-container .jdg-highlight.no-initial-highlight::before {
+		left: -6px;
+		bottom: -6px;
+	}
+
+	/* primarily for BodyCopy links */
+	a::before,
+	.jdg-highlight-container .jdg-highlight::before {
+		content: '';
+		position: absolute;
+		z-index: -1;
+		width: calc(100% + 4px);
+		height: 8px;
+		bottom: -0.1rem;
+		left: -2px;
+		/* background-color: this needs to be specified using emotion css */
+		transition: all 0.5s ease-in-out;
+		line-height: 1.2; /* don't inherit possible parent line height */
+	}
+
+	a:hover::before,
+	.jdg-highlight-container:hover .jdg-highlight::before {
+		animation: slide-right 0.5s forwards;
+	}
+
+	a::before:hover {
+		background-color: none;
+	}
+
+	/* certain elements like header logo and nav get a different <a> treatment */
+	a.no-initial-highlight::before,
+	.jdg-highlight.no-initial-highlight::before {
+		height: 0;
+	}
+
+	a.no-initial-highlight:hover::before,
+	.jdg-highlight-container:hover .jdg-highlight.no-initial-highlight::before {
+		animation: slide-up 0.5s forwards;
+	}
+`;
+// sets UI state with the updated style given the desired color
+export const setUpdatedHyperlinkStyleBar = (
+	linkColor,
+	linkColorContrastAdjustment,
+	accentColors,
+	useStripedStyle,
+	stripedColorOpacity
+) => {
+	appCssHyperlinkBar.set(css`
+		${jdgLinkStyleBar}
 		a {
-			text-decoration: none;
-			display: initial;
+			color: ${jdgColors.text};
 		}
 
-		a::before,
+		a.no-initial-highlight::before,
 		.jdg-highlight-container .jdg-highlight::before {
-			content: initial;
-			position: initial;
-			z-index: auto;
-			width: auto;
-			height: auto;
-			bottom: auto;
-			left: auto;
-			transition: none;
-			line-height: normal;
+			background: ${useStripedStyle
+				? `linear-gradient(
+				to bottom,
+				${convertHexToRGBA(accentColors[0], stripedColorOpacity)} 33%,
+				${convertHexToRGBA(accentColors[1], stripedColorOpacity)} 33%,
+				${convertHexToRGBA(accentColors[1], stripedColorOpacity)} 66%,
+				${convertHexToRGBA(accentColors[2], stripedColorOpacity)} 66%
+			)`
+				: `${adjustColorForContrast(linkColor, jdgColors.text, linkColorContrastAdjustment)}`};
 		}
+		a:before {
+			background: ${adjustColorForContrast(linkColor, jdgColors.text, linkColorContrastAdjustment)};
+		}
+	`);
+};
 
-		a:hover::before,
-		.jdg-highlight-container:hover .jdg-highlight::before {
-			animation: none;
-		}
+export const jdgLinkStyleSimple = css`
+	a {
+		text-decoration: none;
+		display: initial;
+	}
 
-		a::before:hover {
-			background-color: initial;
+	a::before,
+	.jdg-highlight-container .jdg-highlight::before {
+		content: initial;
+		position: initial;
+		z-index: auto;
+		width: auto;
+		height: auto;
+		bottom: auto;
+		left: auto;
+		transition: none;
+		line-height: normal;
+	}
+
+	a:hover::before,
+	.jdg-highlight-container:hover .jdg-highlight::before {
+		animation: none;
+	}
+
+	a::before:hover {
+		background-color: initial;
+	}
+`;
+// sets UI state with the updated style given the desired color
+export const setUpdatedHyperlinkStyleSimple = (linkColor) => {
+	appCssHyperlinkSimple.set(css`
+		${jdgLinkStyleSimple}
+		a {
+			color: ${adjustColorForContrast(linkColor, jdgColors.contentBoxBackground, 3)};
 		}
-	`
+		a:hover {
+			color: ${adjustColorForContrast(linkColor, jdgColors.contentBoxBackground, 5)};
+		}
+	`);
 };
 
 //
