@@ -125,6 +125,9 @@
 	`;
 
 	onMount(async () => {
+		// call onPageResize() once for initialization
+		setTimeout(onPageResize, 0);
+
 		await tick(); // delay until layout and all children are loaded
 		isAppLoaded = true;
 
@@ -144,9 +147,6 @@
 			stripedColorOpacity
 		);
 		setUpdatedHyperlinkStyleSimple(linkColorSimple);
-
-		// call onPageResize() once at the end of onMount() for initialization
-		setTimeout(onPageResize, 0);
 
 		// set the shared url store once by fetching the json
 		// note that this must be below the setTimeout above
