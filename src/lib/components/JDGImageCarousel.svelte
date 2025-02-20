@@ -317,6 +317,7 @@
 				<JDGImage
 					imageAttributes={activeImageAttributes}
 					{maxHeight}
+					useAutoHeightOnMobile={false}
 					cropToFillContainer={false}
 					{showBlurInUnfilledSpace}
 					recordAspectRatioInState
@@ -328,6 +329,7 @@
 				<JDGImage
 					imageAttributes={activeImageAttributes}
 					{maxHeight}
+					useAutoHeightOnMobile={false}
 					cropToFillContainer={false}
 					{showBlurInUnfilledSpace}
 					recordAspectRatioInState
