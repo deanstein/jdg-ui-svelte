@@ -139,7 +139,7 @@
 				{isHovering}
 				{cropToFillContainer}
 				{objectPosition}
-				{useCompactHeightOnMobile}
+				useAutoHeightOnMobile={useCompactHeightOnMobile}
 				{showBlurInUnfilledSpace}
 				showCaption={showCaption && !(showBlurInUnfilledSpace || cropToFillContainer)}
 				showAttribution={showAttribution && !(cropToFillContainer || showBlurInUnfilledSpace)}

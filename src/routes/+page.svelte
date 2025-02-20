@@ -83,7 +83,7 @@
 				showBlurInUnfilledSpace={false}
 				showCaption
 				showAttribution
-				useCompactHeightOnMobile
+				useAutoHeightOnMobile
 			/>
 		</JDGBodyCopy>
 		<JDGBodyCopy textAlign="center">

@@ -64,7 +64,7 @@
 	{#if primaryText}
 		<JDGAnchorTag anchorTagString={primaryText} adjustPosForPadding={false} />
 	{/if}
-	<JDGImage {imageAttributes} {maxHeight} {objectPosition} alignLoadingSpinner={'end'} />
+	<JDGImage {imageAttributes} {maxHeight} useAutoHeightOnMobile={false} {objectPosition} alignLoadingSpinner={'end'} />
 	{#if showOverlay || primaryText || secondaryText || overlayImageAttributes}
 		<div
 			bind:this={overlayContainerRef}

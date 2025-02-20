@@ -45,9 +45,9 @@
 	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object for all image data
 	export let maxHeight = '350px'; // image will never exceed this height, but could be less depending on other props
 	export let maxWidth = 'auto'; // if not defined, takes available space
+	export let useAutoHeightOnMobile = true; // if true, sets height to 'auto' on smallest breakpoint for no cropping if calculatedAutoHeight is less than maxHeightPxFromProp (ignores cropToFitContainer)
 	export let cropToFillContainer = true; // if true, image may be cropped to fill its container in both directions
 	export let objectPosition = 'center'; // only applies when cropToFillContainer is true
-	export let useCompactHeightOnMobile = false; // if true, sets height to 'auto' on smallest breakpoint for no cropping if calculatedAutoHeight is less than maxHeightPxFromProp (ignores cropToFitContainer)
 	export let showBlurInUnfilledSpace = false; // if true, shows the image blurred in the unfilled space - only applies if fillContainer is false
 	export let isHovering = false; // parent can let image know of hover
 	export let showHoverEffect = false; // zoom image slightly on hover
@@ -66,7 +66,7 @@
 
 	// DEBUGGING
 
-	const showDebugMessagesInConsole = false;
+	const showDebugMessagesInConsole = true;
 	export let showDebugOverlay = false;
 	export let showDebugLoadingState = false; // force loading state
 
@@ -270,19 +270,40 @@
 		let preferredHeightFitType = fitTypeMaxHeightDefault;
 
 		if (imageRef && validContainerAspectRatio) {
-			if (showDebugMessagesInConsole) {
-				console.log('Getting preferred container height for: ' + imageAttributes.imgSrc);
-				console.log('Valid container height: ' + validContainerHeight);
-				console.log('Max height from container: ' + getMaxElementHeightPx(containerRef));
-				console.log('Max height from prop: ' + getMaxHeightPxFromProp());
-				console.log('Max width from prop: ' + getMaxWidthPxFromProp());
-				console.log('Max width from container: ' + getMaxElementWidthPx(containerRef));
-			}
-
 			// calculate the height of the image if 'auto' was set
 			// this basically assumes the image's width is the full container width
 			// and calculates the resulting height if image was fit into its container
-			const imageCalcAutoHeight = validContainerWidth / imageAspectRatio;
+			const imageCalcAutoHeight = Math.round(validContainerWidth / imageAspectRatio);
+
+			// if the image at max width on mobile would
+			// exceed the max height prop in px, don't use auto height
+			if (useAutoHeightOnMobile) {
+				useAutoHeightOnMobile = 
+				imageCalcAutoHeight < getMaxHeightPxFromProp();
+			}
+
+			if (showDebugMessagesInConsole) {
+				console.log(
+					'Getting information to determine resizing for:',
+					imageAttributes.imgSrc,
+					'\nmaxHeight string from prop:',
+					maxHeight,
+					'\nValid container height:',
+					validContainerHeight,
+					'\nMax height from container:',
+					getMaxElementHeightPx(containerRef),
+					'\nMax height from prop:',
+					getMaxHeightPxFromProp(),
+					'\nMax width from prop:',
+					getMaxWidthPxFromProp(),
+					'\nMax width from container:',
+					getMaxElementWidthPx(containerRef),
+					'\nimageCalcAutoHeight:',
+					imageCalcAutoHeight,
+					'\nUsing auto height?',
+					useAutoHeightOnMobile
+				);
+			}
 
 			// if we're cropping to fill container,
 			// or showing the blur behind, height is always maxHeight
@@ -297,7 +318,7 @@
 				!cropToFillContainer &&
 				!showBlurInUnfilledSpace &&
 				!$isMobileBreakpoint &&
-				!useCompactHeightOnMobile
+				!useAutoHeightOnMobile
 			) {
 				preferredHeight = maxHeight;
 				preferredHeightFitType = fitTypeMaxHeight;
@@ -308,7 +329,7 @@
 			// set preferred height to auto
 			if (
 				$isMobileBreakpoint &&
-				useCompactHeightOnMobile &&
+				useAutoHeightOnMobile &&
 				getMaxHeightPxFromProp() > imageCalcAutoHeight
 			) {
 				preferredHeight = 'auto';
@@ -401,7 +422,7 @@
 
 	const imageCssStatic = css`
 		width: ${stopEventPropagation ? '' : '100%'};
-		object-fit: ${cropToFillContainer || (useCompactHeightOnMobile && $isMobileBreakpoint)
+		object-fit: ${cropToFillContainer || (useAutoHeightOnMobile && $isMobileBreakpoint)
 			? 'cover'
 			: 'contain'};
 		object-position: ${cropToFillContainer ? objectPosition : ''};
