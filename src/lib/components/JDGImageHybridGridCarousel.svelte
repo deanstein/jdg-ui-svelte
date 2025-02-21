@@ -18,7 +18,7 @@
 	// carousel props
 	export let fullWidthCarouselOnMobile = true;
 	// image + grid layout props
-	export let useCompactHeightOnMobile = true;
+	export let useAutoHeightOnMobile = true;
 	export let maxColumns = 3;
 </script>
 
@@ -45,7 +45,7 @@
 					{showBlurInUnfilledSpace}
 					{showCaption}
 					{showAttribution}
-					{useCompactHeightOnMobile}
+					{useAutoHeightOnMobile}
 				/>
 			{/each}
 		</JDGGridLayout>

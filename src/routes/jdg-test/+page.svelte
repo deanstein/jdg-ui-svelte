@@ -58,7 +58,7 @@
 					labelContainerVerticalAlign="top"
 					labelJustification="center"
 					href="#architecture"
-					useCompactHeightOnMobile={false}
+					useAutoHeightOnMobile={false}
 					maxHeight={`${currentImageHeight}px`}
 				/>
 				<JDGImageTile
@@ -67,7 +67,7 @@
 					labelContainerVerticalAlign="top"
 					labelJustification="center"
 					href="#industrial-design"
-					useCompactHeightOnMobile={false}
+					useAutoHeightOnMobile={false}
 					maxHeight={`${currentImageHeight}px`}
 				/>
 				<JDGImageTile
@@ -76,7 +76,7 @@
 					labelContainerVerticalAlign="top"
 					labelJustification="center"
 					href="#software"
-					useCompactHeightOnMobile={false}
+					useAutoHeightOnMobile={false}
 					maxHeight={`${currentImageHeight}px`}
 				/>
 			</JDGGridLayout>

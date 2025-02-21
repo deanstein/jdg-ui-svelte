@@ -64,7 +64,13 @@
 	{#if primaryText}
 		<JDGAnchorTag anchorTagString={primaryText} adjustPosForPadding={false} />
 	{/if}
-	<JDGImage {imageAttributes} {maxHeight} {objectPosition} alignLoadingSpinner={'end'} />
+	<JDGImage
+		{imageAttributes}
+		{maxHeight}
+		useAutoHeightOnMobile={false}
+		{objectPosition}
+		alignLoadingSpinner={'end'}
+	/>
 	{#if showOverlay || primaryText || secondaryText || overlayImageAttributes}
 		<div
 			bind:this={overlayContainerRef}
@@ -92,9 +98,11 @@
 					class="image-overlay-wrapper {overlayContentHeaderOffsetCss}"
 				>
 					<JDGAnimateOnVisible animationCssBefore={fadeInSettleBeforeSm}>
+						<!-- overlay image -->
 						<JDGImage
 							imageAttributes={overlayImageAttributes}
 							maxHeight={overlayImageMaxHeight}
+							useAutoHeightOnMobile={false}
 							cropToFillContainer={false}
 							showPlaceholderImage={false}
 							showLoadingSpinner={false}

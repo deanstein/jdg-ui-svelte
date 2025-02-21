@@ -184,7 +184,6 @@
 				cropToFillContainer={false}
 				{maxHeight}
 				{showBlurInUnfilledSpace}
-				useCompactHeightOnMobile={true}
 			/>
 		</div>
 		<div
@@ -196,7 +195,6 @@
 				cropToFillContainer={false}
 				{maxHeight}
 				{showBlurInUnfilledSpace}
-				useCompactHeightOnMobile={true}
 			/>
 		</div>
 		<div class="slider" style="left: {$sliderPositionStore}%;"></div>
