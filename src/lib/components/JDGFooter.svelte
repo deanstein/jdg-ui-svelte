@@ -112,11 +112,11 @@
 		<!-- copyright row -->
 		{#if copyright}
 			<div class="footer-row">
-				<div class="footer-item {footerItemCss}">
+				<div class="footer-item {footerItemCss} {$appCssHyperlinkSimple}">
 					<!-- wrap copyright in href if provided -->
 					{#if copyrightHref}
 						© {copyrightYear}
-						<a href={copyrightHref} class="no-initial-highlight">
+						<a href={copyrightHref}>
 							{copyright}
 						</a>
 						<!-- otherwise just copyright, no href -->
