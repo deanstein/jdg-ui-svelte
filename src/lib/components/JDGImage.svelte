@@ -275,13 +275,6 @@
 			// and calculates the resulting height if image was fit into its container
 			const imageCalcAutoHeight = Math.round(validContainerWidth / imageAspectRatio);
 
-			// if the image at max width on mobile would
-			// exceed the max height prop in px, don't use auto height
-			if (useAutoHeightOnMobile) {
-				useAutoHeightOnMobile = 
-				imageCalcAutoHeight < getMaxHeightPxFromProp();
-			}
-
 			if (showDebugMessagesInConsole) {
 				console.log(
 					'Getting information to determine resizing for:',
