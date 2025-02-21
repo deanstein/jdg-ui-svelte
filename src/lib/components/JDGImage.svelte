@@ -540,7 +540,7 @@
 		if (isNumberValid(lastKnownContainerAspectRatio) && !isNumberValid(validContainerAspectRatio)) {
 			validContainerAspectRatio = lastKnownContainerAspectRatio;
 			if (showDebugMessagesInConsole) {
-				console.log('SETTING VALID CONTAINER ASPECT RATIO: ', validContainerAspectRatio);
+				console.log('SETTING VALID CONTAINER ASPECT RATIO: ', imageAttributes.imgSrc, validContainerAspectRatio);
 			}
 		}
 		if (isNumberValid(lastKnownContainerHeight) && !isNumberValid(validContainerHeight)) {
@@ -621,8 +621,8 @@
 							if (showDebugMessagesInConsole) {
 								console.log(
 									'Specifying width in Cloudinary URL. Adjusted Cloudinary URL:',
-									adjustedWidth,
-									adjustedImgSrc
+									adjustedImgSrc,
+									adjustedWidth
 								);
 							}
 							lastKnownCloudinaryTransformationValue = adjustedWidth;
@@ -634,8 +634,8 @@
 							if (showDebugMessagesInConsole) {
 								console.log(
 									'Specifying height in Cloudinary URL. Adjusted Cloudinary URL:',
-									adjustedHeight,
-									adjustedImgSrc
+									adjustedImgSrc,
+									adjustedHeight
 								);
 							}
 							lastKnownCloudinaryTransformationValue = adjustedHeight;
