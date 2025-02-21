@@ -29,7 +29,7 @@
 			href={item1Href}
 			imageAttributes={item1ImageAttributes}
 			labelJustification={'center'}
-			useCompactHeightOnMobile={false}
+			useAutoHeightOnMobile={false}
 			objectPosition={item1ObjectPosition}
 			maxHeight={maxImageHeight}
 		/>
@@ -38,7 +38,7 @@
 			href={item2Href}
 			imageAttributes={item2ImageAttributes}
 			labelJustification={'center'}
-			useCompactHeightOnMobile={false}
+			useAutoHeightOnMobile={false}
 			objectPosition={item2ObjectPosition}
 			maxHeight={maxImageHeight}
 		/>
@@ -47,7 +47,7 @@
 			href={item3Href}
 			imageAttributes={item3ImageAttributes}
 			labelJustification={'center'}
-			useCompactHeightOnMobile={false}
+			useAutoHeightOnMobile={false}
 			objectPosition={item3ObjectPosition}
 			maxHeight={maxImageHeight}
 		/>

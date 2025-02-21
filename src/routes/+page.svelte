@@ -386,26 +386,26 @@
 		<JDGGridLayout>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.aerial_60s70s_1}
-				useCompactHeightOnMobile={false}
+				useAutoHeightOnMobile={false}
 				label={'A LABEL WITH BODY FONT'}
 			/>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.cc_1}
-				useCompactHeightOnMobile={false}
+				useAutoHeightOnMobile={false}
 				label={'A LABEL WITH A RETRO FONT'}
 				labelFontFamily={jdgFonts.righteous}
 			/>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.architecture_1}
-				useCompactHeightOnMobile={false}
+				useAutoHeightOnMobile={false}
 			/>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
-				useCompactHeightOnMobile={false}
+				useAutoHeightOnMobile={false}
 			/>
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.rose_mall_60s70s_2}
-				useCompactHeightOnMobile={false}
+				useAutoHeightOnMobile={false}
 			/>
 		</JDGGridLayout>
 		<JDGBodyCopy paddingBottom="0" textAlign="center">
@@ -568,7 +568,7 @@
 			<JDGImageTile
 				imageAttributes={imageAttributesCollection.ccp_blue_mall_60s70s_1}
 				maxHeight={'400px'}
-				useCompactHeightOnMobile={true}
+				useAutoHeightOnMobile={true}
 			/>
 		</JDGFeatureCard>
 		<JDGFeatureCard

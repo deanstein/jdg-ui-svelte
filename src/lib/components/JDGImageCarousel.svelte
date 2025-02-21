@@ -378,7 +378,7 @@
 					imageAttributes={imageAttributesObject}
 					maxHeight="50px"
 					maxWidth="75px"
-					useCompactHeightOnMobile={false}
+					useAutoHeightOnMobile={false}
 					recordAspectRatioInState
 				/>
 			</div>
