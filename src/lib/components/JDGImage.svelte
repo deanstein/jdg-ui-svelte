@@ -533,7 +533,11 @@
 		if (isNumberValid(lastKnownContainerAspectRatio) && !isNumberValid(validContainerAspectRatio)) {
 			validContainerAspectRatio = lastKnownContainerAspectRatio;
 			if (showDebugMessagesInConsole) {
-				console.log('SETTING VALID CONTAINER ASPECT RATIO: ', imageAttributes.imgSrc, validContainerAspectRatio);
+				console.log(
+					'SETTING VALID CONTAINER ASPECT RATIO: ',
+					imageAttributes.imgSrc,
+					validContainerAspectRatio
+				);
 			}
 		}
 		if (isNumberValid(lastKnownContainerHeight) && !isNumberValid(validContainerHeight)) {
