@@ -6,7 +6,7 @@
 <JDGContentContainer overlapWithHeader={false}>
 	<JDGContentBoxFloating>
 		<JDGImageTile
-			imageAttributes={imageAttributesCollection.ecc_existing_1}
+			imageAttributes={imageAttributesCollection.ecc_existing_north}
 			showCaption={true}
 			showAttribution={true}
 			cropToFillContainer={false}

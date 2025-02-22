@@ -117,14 +117,14 @@ const imageAttributesCollection = {
 	),
 	rose_mall_60s70s_construction_1: instantiateObject(jdgImageAttributes, {
 		imgSrc:
-			'https://res.cloudinary.com/jdg-main/image/upload/f_auto/v1716962804/ccp-website/rose-mall/rose-mall-60s70s-construction-1_ketke8.jpg',
+			'https://res.cloudinary.com/jdg-main/image/upload/v1716962804/ccp-website/rose-mall/rose-mall-60s70s-construction-1_ketke8.jpg',
 		imgAlt: 'Rose Mall during construction in 1967.',
 		imgCaption: 'Rose Mall during construction in 1967.',
 		imgAttribution: 'Englewood Public Library'
 	}),
 	plan_60s70s_1: instantiateObject(jdgImageAttributes, {
 		imgSrc:
-			'https://res.cloudinary.com/jdg-main/image/upload/f_auto/v1716962803/ccp-website/plans/plan-60s70s-1_wkmpff.png',
+			'https://res.cloudinary.com/jdg-main/image/upload/v1716962803/ccp-website/plans/plan-60s70s-1_wkmpff.png',
 		imgAlt: 'Cinderella City featured 5 sub-malls: Blue, Rose, Gold, Shamrock, and Cinder Alley.',
 		imgCaption:
 			'Cinderella City featured 5 sub-malls: Blue, Rose, Gold, Shamrock, and Cinder Alley.',
@@ -756,7 +756,7 @@ const imageAttributesCollection = {
 	swe: {
 		ccp_1: instantiateObject(jdgImageAttributes, {
 			imgSrc:
-				'https://res.cloudinary.com/jdg-main/image/upload/f_auto/v1716962800/ccp-website/ccp/ccp-composite-2.jpg',
+				'https://res.cloudinary.com/jdg-main/image/upload/v1716962800/ccp-website/ccp/ccp-composite-2.jpg',
 			imgCaption:
 				'A composite image of two different time periods of a mid-century modern shopping center, powered by Unity.'
 		})
@@ -773,10 +773,10 @@ const imageAttributesCollection = {
 		imgAlt: 'Software',
 		imgCaption: 'Software'
 	}),
-	ecc_existing_1: postProcessImageAttributes(
+	ecc_existing_north: postProcessImageAttributes(
 		instantiateObject(jdgImageAttributes, {
 			imgSrc:
-				'https://res.cloudinary.com/jdg-main/image/upload/v1739673653/ccp-website/ccp/ecc-existing-1.jpg',
+				'https://res.cloudinary.com/jdg-main/image/upload/v1739673653/ccp-website/save-civic-center/ecc-existing-north.jpg',
 			imgCaption:
 				"The Englewood Civic Center's north side faces into plaza where it formerly attached to Cinderella City Mall.",
 			imgAttribution: 'Englewood Public Library'
