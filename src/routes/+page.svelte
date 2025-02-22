@@ -193,7 +193,9 @@
 		<JDGBodyCopy textAlign="center" paddingBottom="0"
 			><b>IMAGE CAROUSEL</b>
 			<br />
-			in a full-width container</JDGBodyCopy
+			in a full-width container
+			<br /><br />
+			Note that the 2nd image will not have a blur</JDGBodyCopy
 		>
 		<JDGFullWidthContainer>
 			<JDGImageCarousel
