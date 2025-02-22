@@ -721,73 +721,75 @@
 	bind:this={containerRef}
 	class="jdg-image-container {imageContainerCssDynamic}"
 >
-	<!-- need to set an on:click to ignore clicks in some cases -->
-	<!-- svelte-ignore a11y-click-events-have-key-events -->
-	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-	<img
-		bind:this={imageRef}
-		on:load={showPlaceholderImage
-			? isPlaceholderLoaded
-				? onImageLoad
-				: onPlaceholderLoad
-			: onImageLoad}
-		on:error={onImageError}
-		on:click={onImageClick}
-		class={`image ${imageCssStatic} ${imageAnimationCss}`}
-		src={showPlaceholderImage
-			? (isImageLoaded || isPlaceholderLoaded) && isVisible
-				? adjustedImgSrc
-				: imagePlaceholder
-			: adjustedImgSrc}
-		alt={imageAttributes.imgAlt}
-	/>
-	<!-- only show blurred image behind if showBlurInUnfilledSpace is true -->
-	<!-- if blurred image is shown, it'll use the initial Cloudinary transform (low-quality) -->
-	{#if showBlurInUnfilledSpace && !cropToFillContainer}
-		<div
-			class="image-blur {imageBlurCss}"
-			style={`background-image: url(${addCloudinaryUrlTransformation(
-				imageAttributes.imgSrc,
-				initialCloudinaryTransform
-			)}); opacity: ${isImageLoaded ? 1 : 0.25}; transition: opacity ${jdgDurations.fadeIn}${
-				jdgDurations.unit
-			} ease-in-out;`}
-		></div>
-		<div class="image-blur-background"></div>
-	{/if}
-	<!-- caption and attribution -->
-	{#if (showCaption && imageAttributes.imgCaption) || (showAttribution && imageAttributes.imgAttribution)}
-		<div class="caption-attribution-wrapper {captionAttributionWrapperCssDynamic}">
-			<JDGImageCaptionAttribution {imageAttributes} {showCaption} {showAttribution} />
-		</div>
-	{/if}
-	<!-- show the spinner during loading if requested -->
-	{#if !isImageLoaded && showLoadingSpinner && isVisible}
-		<div class="image-loading-spinner-container {imageLoadingSpinnerContainerCss}">
-			<JDGLoadingSpinner />
-		</div>
-	{/if}
-	<!-- show the image placeholder during loading if requested -->
-	{#if !isImageLoaded && showPlaceholderImage && isVisible}
-		<div class="image-loading-overlay {imageLoadingOverlayCss}" />
-	{/if}
-	{#if showImageError}
-		<div class="image-error-overlay">
-			{imageErrorMessage}
-		</div>
-	{/if}
-	{#if showDebugOverlay}
-		<div class="debug-overlay">
-			Calculated image width: {getMaxHeightPxFromProp() * imageAspectRatio};
-			<br />
-			Valid container width: {validContainerWidth};
-			<br />
-			Preferred container width: {lastKnownPreferredContainerWidth};
-			<br />
-			Preferred container height: {lastKnownPreferredContainerHeight};
-			<br />
-			Adjusted URL: {adjustedImgSrc}
-		</div>
+	<!-- only load the image if it's visible -->
+	{#if isVisible}
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+		<img
+			bind:this={imageRef}
+			on:load={showPlaceholderImage
+				? isPlaceholderLoaded
+					? onImageLoad
+					: onPlaceholderLoad
+				: onImageLoad}
+			on:error={onImageError}
+			on:click={onImageClick}
+			class={`image ${imageCssStatic} ${imageAnimationCss}`}
+			src={showPlaceholderImage
+				? (isImageLoaded || isPlaceholderLoaded) && isVisible
+					? adjustedImgSrc
+					: imagePlaceholder
+				: adjustedImgSrc}
+			alt={imageAttributes.imgAlt}
+		/>
+		<!-- only show blurred image behind if showBlurInUnfilledSpace is true -->
+		<!-- if blurred image is shown, it'll use the initial Cloudinary transform (low-quality) -->
+		{#if showBlurInUnfilledSpace && !cropToFillContainer}
+			<div
+				class="image-blur {imageBlurCss}"
+				style={`background-image: url(${addCloudinaryUrlTransformation(
+					imageAttributes.imgSrc,
+					initialCloudinaryTransform
+				)}); opacity: ${isImageLoaded ? 1 : 0.25}; transition: opacity ${jdgDurations.fadeIn}${
+					jdgDurations.unit
+				} ease-in-out;`}
+			></div>
+			<div class="image-blur-background"></div>
+		{/if}
+		<!-- caption and attribution -->
+		{#if (showCaption && imageAttributes.imgCaption) || (showAttribution && imageAttributes.imgAttribution)}
+			<div class="caption-attribution-wrapper {captionAttributionWrapperCssDynamic}">
+				<JDGImageCaptionAttribution {imageAttributes} {showCaption} {showAttribution} />
+			</div>
+		{/if}
+		<!-- show the spinner during loading if requested -->
+		{#if !isImageLoaded && showLoadingSpinner && isVisible}
+			<div class="image-loading-spinner-container {imageLoadingSpinnerContainerCss}">
+				<JDGLoadingSpinner />
+			</div>
+		{/if}
+		<!-- show the image placeholder during loading if requested -->
+		{#if !isImageLoaded && showPlaceholderImage && isVisible}
+			<div class="image-loading-overlay {imageLoadingOverlayCss}" />
+		{/if}
+		{#if showImageError}
+			<div class="image-error-overlay">
+				{imageErrorMessage}
+			</div>
+		{/if}
+		{#if showDebugOverlay}
+			<div class="debug-overlay">
+				Calculated image width: {getMaxHeightPxFromProp() * imageAspectRatio};
+				<br />
+				Valid container width: {validContainerWidth};
+				<br />
+				Preferred container width: {lastKnownPreferredContainerWidth};
+				<br />
+				Preferred container height: {lastKnownPreferredContainerHeight};
+				<br />
+				Adjusted URL: {adjustedImgSrc}
+			</div>
+		{/if}
 	{/if}
 </div>
 
