@@ -33,7 +33,7 @@
 	export let showCaption = false;
 	export let showAttribution = false;
 	export let recordAspectRatioInState = false;
-	export let showDebugOverlay = false;
+	export let showDebugOverlay = true;
 
 	const hrefTarget = hrefOpenInNewTab ? '_blank' : null;
 	let isHovering;

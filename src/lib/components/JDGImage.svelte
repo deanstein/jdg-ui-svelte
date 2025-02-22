@@ -67,7 +67,7 @@
 	// DEBUGGING
 
 	const showDebugMessagesInConsole = false;
-	export let showDebugOverlay = false;
+	export let showDebugOverlay = true;
 	export let showDebugLoadingState = false; // force loading state
 
 	// CONTAINER
@@ -754,6 +754,8 @@
 			Preferred container width: {lastKnownPreferredContainerWidth};
 			<br />
 			Preferred container height: {lastKnownPreferredContainerHeight};
+			<br/>
+			Adjusted URL: {adjustedImgSrc}
 		</div>
 	{/if}
 </div>
