@@ -97,9 +97,14 @@
 
 	// IMAGE
 
-	// set an initial, low-quality cloudinary transform for performance
+	// set an initial, low-quality Cloudinary transform for performance
 	// this will be replaced with a higher-quality request with a specific width or height
-	let adjustedImgSrc = addCloudinaryUrlTransformation(imageAttributes.imgSrc, 'f_auto,q_1');
+	// this will also be ignored if the imgSrc is not a Cloudinary URL
+	const initialCloudinaryTransform = 'f_auto,q_1';
+	let adjustedImgSrc = addCloudinaryUrlTransformation(
+		imageAttributes.imgSrc,
+		initialCloudinaryTransform
+	);
 	let imageAspectRatio;
 
 	// load states
@@ -580,7 +585,7 @@
 		}
 	}
 
-	// update cloudinary URLs
+	// update Cloudinary URLs
 	$: {
 		if (containerRef && isVisible) {
 			if (!lastKnownCloudinaryTransformationValue) {
@@ -611,7 +616,7 @@
 				) {
 					if (cropToFillContainer) {
 						// if the calculated image height is less than the container,
-						// specify cloudinary URL width
+						// specify Cloudinary URL width
 						if (imageAutoHeight >= parseInt(containerHeight)) {
 							const adjustedWidth = Math.ceil(parseInt(containerWidth) * devicePixelRatio);
 							adjustedImgSrc = addCloudinaryUrlWidth(imageAttributes.imgSrc, adjustedWidth);
@@ -624,7 +629,7 @@
 							}
 							lastKnownCloudinaryTransformationValue = adjustedWidth;
 						}
-						// otherwise, specify cloudinary URL height
+						// otherwise, specify Cloudinary URL height
 						else {
 							const adjustedHeight = Math.ceil(getMaxHeightPxFromProp() * devicePixelRatio);
 							adjustedImgSrc = addCloudinaryUrlHeight(imageAttributes.imgSrc, adjustedHeight);
@@ -713,12 +718,16 @@
 		alt={imageAttributes.imgAlt}
 	/>
 	<!-- only show blurred image behind if showBlurInUnfilledSpace is true -->
+	<!-- if blurred image is shown, it'll use the initial Cloudinary transform (low-quality) -->
 	{#if showBlurInUnfilledSpace && !cropToFillContainer}
 		<div
 			class="image-blur {imageBlurCss}"
-			style={`background-image: url(${adjustedImgSrc}); opacity: ${
-				isImageLoaded ? 1 : 0.25
-			}; transition: opacity ${jdgDurations.fadeIn}${jdgDurations.unit} ease-in-out;`}
+			style={`background-image: url(${addCloudinaryUrlTransformation(
+				imageAttributes.imgSrc,
+				initialCloudinaryTransform
+			)}); opacity: ${isImageLoaded ? 1 : 0.25}; transition: opacity ${jdgDurations.fadeIn}${
+				jdgDurations.unit
+			} ease-in-out;`}
 		></div>
 		<div class="image-blur-background"></div>
 	{/if}
