@@ -66,7 +66,7 @@
 
 	// DEBUGGING
 
-	const showDebugMessagesInConsole = false;
+	const showDebugMessagesInConsole = false; // also shows any image loading errors and skips any fallbacks
 	export let showDebugOverlay = false;
 	export let showDebugLoadingState = false; // force loading state
 
@@ -404,17 +404,28 @@
 	};
 
 	// runs if an image fails to load
-	const onImageError = () => {
-		// it's possible the cloudinary transform failed
-		// so fallback to the original imgSrc if so
-		if (isUrlCloudinary(imageAttributes.imgSrc) && adjustedImgSrc !== imageAttributes.imgSrc) {
-			adjustedImgSrc = imageAttributes.imgSrc;
-		}
-		showImageError = true;
-		imageErrorMessage += adjustedImgSrc;
-	};
 	let showImageError = false;
 	let imageErrorMessage = 'Error loading image: ';
+	const onImageError = () => {
+		// cloudinary transform may have failed
+		// try falling back to the original imgSrc if so
+		if (
+			isUrlCloudinary(imageAttributes.imgSrc) &&
+			adjustedImgSrc !== imageAttributes.imgSrc &&
+			!showDebugMessagesInConsole // only fall back if debug mode is off
+		) {
+			// fall back to the non-transformed (less optimized) imgSrc and post a warning
+			adjustedImgSrc = imageAttributes.imgSrc;
+			console.warn(
+				'Cloudinary transform may have failed, falling back to non-transformed URL: ' +
+					imageAttributes.imgSrc
+			);
+		} else {
+			showImageError = true;
+			imageErrorMessage += adjustedImgSrc;
+			showLoadingSpinner = false;
+		}
+	};
 
 	// runs after the placeholder image is loaded
 	const onPlaceholderLoad = () => {
@@ -843,6 +854,8 @@
 		justify-content: center;
 		background-color: red;
 		color: white;
+		box-sizing: border-box;
+		padding: 20px;
 	}
 
 	.caption-attribution-wrapper {
