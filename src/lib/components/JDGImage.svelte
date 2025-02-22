@@ -67,7 +67,7 @@
 	// DEBUGGING
 
 	const showDebugMessagesInConsole = false;
-	export let showDebugOverlay = true;
+	export let showDebugOverlay = false;
 	export let showDebugLoadingState = false; // force loading state
 
 	// CONTAINER
