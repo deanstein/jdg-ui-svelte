@@ -423,7 +423,7 @@
 		} else {
 			showImageError = true;
 			imageErrorMessage += adjustedImgSrc;
-			showLoadingSpinner = false;
+			isImageLoaded = true;
 		}
 	};
 
@@ -591,6 +591,7 @@
 
 	let imageContainerCssDynamic = css`
 		height: ${maxHeight};
+		width: ${maxWidth};
 	`;
 	$: {
 		lastKnownContainerWidth, imageAspectRatio, maxHeight;
