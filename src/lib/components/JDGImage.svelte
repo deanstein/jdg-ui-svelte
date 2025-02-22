@@ -70,10 +70,6 @@
 	export let showDebugOverlay = false;
 	export let showDebugLoadingState = false; // force loading state
 
-	// DEVICE
-
-	let devicePixelRatio;
-
 	// CONTAINER
 
 	// element references used for measurements
@@ -492,8 +488,6 @@
 	// LIFECYCLE
 
 	onMount(() => {
-		devicePixelRatio = window.devicePixelRatio || 1;
-
 		// set up event listeners
 		// we're not using Svelte directives here because the event listeners are conditional
 		if (doScaleOnScrollOrZoom) {
@@ -618,7 +612,7 @@
 						// if the calculated image height is less than the container,
 						// specify Cloudinary URL width
 						if (imageAutoHeight >= parseInt(containerHeight)) {
-							const adjustedWidth = Math.ceil(parseInt(containerWidth) * devicePixelRatio);
+							const adjustedWidth = Math.ceil(parseInt(containerWidth));
 							adjustedImgSrc = addCloudinaryUrlWidth(imageAttributes.imgSrc, adjustedWidth);
 							if (showDebugMessagesInConsole) {
 								console.log(
@@ -631,7 +625,7 @@
 						}
 						// otherwise, specify Cloudinary URL height
 						else {
-							const adjustedHeight = Math.ceil(getMaxHeightPxFromProp() * devicePixelRatio);
+							const adjustedHeight = Math.ceil(getMaxHeightPxFromProp());
 							adjustedImgSrc = addCloudinaryUrlHeight(imageAttributes.imgSrc, adjustedHeight);
 							if (showDebugMessagesInConsole) {
 								console.log(
@@ -645,7 +639,7 @@
 					}
 					// no fill container
 					else {
-						const adjustedHeight = Math.ceil(getMaxHeightPxFromProp() * devicePixelRatio);
+						const adjustedHeight = Math.ceil(getMaxHeightPxFromProp());
 						adjustedImgSrc = addCloudinaryUrlHeight(imageAttributes.imgSrc, adjustedHeight);
 						if (showDebugMessagesInConsole) {
 							console.log(
@@ -661,9 +655,8 @@
 					lastKnownPreferredContainerHeight === fitTypeCalculatedAuto ||
 					lastKnownPreferredContainerHeight === fitTypeAuto
 				) {
-					const adjustedHeight = Math.ceil(
-						(validContainerWidth / imageAspectRatio) * devicePixelRatio
-					);
+					// simply fill the container height in this case
+					const adjustedHeight = parseInt(containerHeight);
 					adjustedImgSrc = addCloudinaryUrlHeight(imageAttributes.imgSrc, adjustedHeight);
 					if (showDebugMessagesInConsole) {
 						console.log(
