@@ -86,7 +86,7 @@ const imageAttributesCollection = {
 	}),
 	rose_mall_60s70s_2: instantiateObject(jdgImageAttributes, {
 		imgSrc:
-			'https://res.cloudinary.com/jdg-main/image/upload/v1716959964/jdg-ui-svelte/history/rose-mall-60s70s-2_k2ac9c.jpg',
+			'https://res.cloudinary.com/jdg-main/image/upload/v1740202820/jdg-ui-svelte/history/rose-mall-60s70s-2.jpg',
 		imgAlt: 'Offices above Rose Mall.',
 		imgCaption: 'Offices above Rose Mall.',
 		imgAttribution: 'Denver Public Library'
