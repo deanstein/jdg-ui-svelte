@@ -97,9 +97,9 @@
 
 	// IMAGE
 
-	// for cloudinary images, imgSrc will be modified with transforms for optimization
-	// if this isn't a cloudinary image, it will remain unchanged
-	let adjustedImgSrc = addCloudinaryUrlTransformation(imageAttributes.imgSrc, 'f_auto');
+	// set an initial, low-quality cloudinary transform for performance
+	// this will be replaced with a higher-quality request with a specific width or height
+	let adjustedImgSrc = addCloudinaryUrlTransformation(imageAttributes.imgSrc, 'f_auto,q_1');
 	let imageAspectRatio;
 
 	// load states
@@ -716,7 +716,7 @@
 	{#if showBlurInUnfilledSpace && !cropToFillContainer}
 		<div
 			class="image-blur {imageBlurCss}"
-			style={`background-image: url(${imageAttributes.imgSrc}); opacity: ${
+			style={`background-image: url(${adjustedImgSrc}); opacity: ${
 				isImageLoaded ? 1 : 0.25
 			}; transition: opacity ${jdgDurations.fadeIn}${jdgDurations.unit} ease-in-out;`}
 		></div>
