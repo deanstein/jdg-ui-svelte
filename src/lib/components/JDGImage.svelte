@@ -405,6 +405,11 @@
 
 	// runs if an image fails to load
 	const onImageError = () => {
+		// it's possible the cloudinary transform failed
+		// so fallback to the original imgSrc if so
+		if (isUrlCloudinary(imageAttributes.imgSrc) && adjustedImgSrc !== imageAttributes.imgSrc) {
+			adjustedImgSrc = imageAttributes.imgSrc;
+		}
 		showImageError = true;
 		imageErrorMessage += adjustedImgSrc;
 	};
