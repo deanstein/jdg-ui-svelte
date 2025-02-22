@@ -31,6 +31,7 @@
 	export let disclaimer = undefined; // optional disclaimer, applicable to some sites
 	export let alignItems = 'left';
 	export let backgroundColorRgba = jdgColors.headerBackground;
+	export let webAppVersionLabel = 'Website';
 	export let showJdgUiVersion = true;
 	export let showDevToolsButton = false;
 
@@ -138,8 +139,9 @@
 		<div class="footer-row">
 			{#if appVersion}
 				{#if additionalVersionData || showJdgUiVersion}
+					<!-- version of this app or website -->
 					<div class="footer-item {footerItemCss} {$appCssHyperlinkSimple}">
-						App: <a href={packageJsonVersionHref} target="_blank">v{appVersion}</a>
+						{webAppVersionLabel}: <a href={packageJsonVersionHref} target="_blank">v{appVersion}</a>
 					</div>
 				{:else}
 					<div class="footer-item {footerItemCss} {$appCssHyperlinkSimple}">
@@ -147,6 +149,7 @@
 					</div>
 				{/if}
 			{/if}
+			<!-- version of jdg-ui-svelte package -->
 			{#if showJdgUiVersion}
 				<div>{divider}</div>
 				<div class="footer-item {footerItemCss} {$appCssHyperlinkSimple}">
@@ -155,6 +158,7 @@
 					>
 				</div>
 			{/if}
+			<!-- optional: additional version data -->
 			{#if additionalVersionData}
 				<div>{divider}</div>
 				<div class="footer-item {footerItemCss} {$appCssHyperlinkSimple}">
@@ -162,6 +166,7 @@
 				</div>
 			{/if}
 			<div>{divider}</div>
+			<!-- latest buid code -->
 			<div class="footer-item {footerItemCss} {$appCssHyperlinkSimple}">
 				{#if additionalVersionData || showJdgUiVersion}
 					Build: <a href={buildCodeHref} target="_blank">{buildCode}</a>
@@ -170,6 +175,7 @@
 				{/if}
 			</div>
 		</div>
+		<!-- access point for devTools -->
 		{#if showDevToolsButton}
 			<div class="footer-row {footerDevToolsCss}">
 				<JDGButton
@@ -185,6 +191,7 @@
 				/>
 			</div>
 		{/if}
+		<!-- all devTools -->
 		{#if $doShowDevTools}
 			<div class="dev-tools">
 				<JDGDevToolbar />
