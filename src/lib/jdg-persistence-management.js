@@ -5,6 +5,7 @@ export const jdgUiSvelteRepoName = 'jdg-ui-svelte';
 export const jdgWebsiteRepoName = 'jdg-website';
 export const pmx3dWebsiteRepoName = 'pmx-website';
 export const ccpWebsiteRepoName = 'ccp-website';
+export const ccpSimulationRepoName = 'CinderellaCityProject';
 export const familyTreeDataRepoName = 'family-tree-data';
 export const familyTreeDeployRepoName = 'family-tree-deploy';
 export const bioPhotoFileName = 'bio-photo';
