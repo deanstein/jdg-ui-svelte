@@ -782,6 +782,7 @@ export const addCloudinaryUrlTransformation = (url, transformation = 'f_auto') =
 		let path = parts[1];
 
 		// remove existing f_auto transformation if it exists
+		// TODO: Remove this once all imageAttributesCollection are rid of manual f_auto
 		path = path.replace(/^f_auto\/|\/f_auto\/|\/f_auto$/, '');
 
 		return `${baseUrl}/upload/${transformation}/${path}`;
