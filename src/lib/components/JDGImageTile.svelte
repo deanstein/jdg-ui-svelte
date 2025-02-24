@@ -56,6 +56,7 @@
 	`;
 
 	const imageTileLabelContainerCss = css`
+		justify-content: ${labelJustification};
 		background-color: ${labelContainerColor};
 		backdrop-filter: blur(${labelContainerBlurSize});
 		${labelContainerVerticalAlign === 'center'
