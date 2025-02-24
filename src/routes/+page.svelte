@@ -122,7 +122,7 @@
 			Inside BodyCopy
 			<br /><br />
 			<JDGImageTile
-				imageAttributes={imageAttributesCollection.aerial_60s70s_1}
+				imageAttributes={imageAttributesCollection.rose_mall_60s70s_2}
 				cropToFillContainer={false}
 				showCaption={true}
 				showAttribution={true}
@@ -136,7 +136,7 @@
 			Clicking goes to "./about"
 		</JDGBodyCopy>
 		<JDGImageTile
-			imageAttributes={imageAttributesCollection.aerial_60s70s_1}
+			imageAttributes={imageAttributesCollection.ecc_existing_north}
 			cropToFillContainer={false}
 			href="./about"
 		/>
@@ -151,6 +151,19 @@
 			href="https://www.google.com"
 			hrefOpenInNewTab={true}
 			label="THIS OPENS GOOGLE"
+		/>
+		<JDGBodyCopy textAlign="center" paddingBottom="0">
+			<b>IMAGE TILE</b>
+			<br />
+			The label on this ImageTile is centered.
+		</JDGBodyCopy>
+		<JDGImageTile
+			imageAttributes={imageAttributesCollection.rose_mall_60s70s_1}
+			cropToFillContainer={false}
+			href="https://www.google.com"
+			hrefOpenInNewTab={true}
+			label="CENTERED LABEL"
+			labelJustification="center"
 		/>
 		<JDGBodyCopy textAlign="center" paddingBottom="0">
 			<b>IMAGE TILE</b>
