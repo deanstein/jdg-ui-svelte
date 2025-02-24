@@ -610,8 +610,9 @@ const imageAttributesCollection = {
 		),
 		ranch_elsie_roof_optioneering: postProcessImageAttributes(
 			instantiateObject(jdgImageAttributes, {
-				imgSrc:
-					'https://res.cloudinary.com/jdg-main/image/upload/v1721182479/jdg-website/exp/ranch-elsie-roof-optioneering.gif',
+				imgSrc: addCloudinaryUrlTransformation(
+					'https://res.cloudinary.com/jdg-main/image/upload/v1721182479/jdg-website/exp/ranch-elsie-roof-optioneering.gif'
+				),
 				imgCaption:
 					'Quick roof optioneering studies made possible by the integration between Autodesk FormIt and Autodesk Dynamo.'
 			})

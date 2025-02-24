@@ -93,7 +93,7 @@
 			that causes an error).
 		</JDGBodyCopy>
 		<JDGImage
-			imageAttributes={imageAttributesCollection.exp.ranch_elsie_optioneering}
+			imageAttributes={imageAttributesCollection.exp.ranch_elsie_roof_optioneering}
 			maxHeight="600px"
 			cropToFillContainer={false}
 			showBlurInUnfilledSpace={false}
