@@ -6,9 +6,11 @@ export const jdgWebsiteRepoName = 'jdg-website';
 export const pmx3dWebsiteRepoName = 'pmx-website';
 export const ccpWebsiteRepoName = 'ccp-website';
 export const ccpSimulationRepoName = 'CinderellaCityProject';
+export const familyTreeRepoName = 'family-tree';
 export const familyTreeDataRepoName = 'family-tree-data';
 export const familyTreeDeployRepoName = 'family-tree-deploy';
-export const bioPhotoFileName = 'bio-photo';
+export const hashtagGeneratorRepoName = 'hashtag-generator';
+export const jsonToListRepoName = 'json-to-html';
 export const encryptedPAT =
 	'U2FsdGVkX19E4XXmu4s1Y76A+iKILjKYG1n92+pqbtzdoJpeMyl6Pit0H8Kq8G28M+ZuqmdhHEfb/ud4GEe5gw==';
 
