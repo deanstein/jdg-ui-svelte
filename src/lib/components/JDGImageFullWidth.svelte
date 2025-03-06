@@ -30,6 +30,7 @@
 	export let overlayImageMaxHeight = '18vh';
 	export let overlayImageText = undefined;
 	export let overlayImageTextFontFamily = $appFontFamily;
+	export let parallax = false; // if true, image will appear stationary as page scrolls
 
 	let overlayContainerRef;
 	let imageOverlayWrapperRef;
@@ -64,13 +65,24 @@
 	{#if primaryText}
 		<JDGAnchorTag anchorTagString={primaryText} adjustPosForPadding={false} />
 	{/if}
-	<JDGImage
-		{imageAttributes}
-		{maxHeight}
-		useAutoHeightOnMobile={false}
-		{objectPosition}
-		alignLoadingSpinner={'end'}
-	/>
+	<!-- main image -->
+	{#if parallax}
+		<div class="parallax-image-container" style="height: {maxHeight};">
+			<div
+				class="parallax-image"
+				style="background-image: url({imageAttributes.imgSrc}); background-position: {objectPosition};"
+			></div>
+		</div>
+	{:else}
+		<JDGImage
+			{imageAttributes}
+			{maxHeight}
+			useAutoHeightOnMobile={false}
+			{objectPosition}
+			alignLoadingSpinner={'end'}
+		/>
+	{/if}
+	<!-- text and image overlay -->
 	{#if showOverlay || primaryText || secondaryText || overlayImageAttributes}
 		<div
 			bind:this={overlayContainerRef}
@@ -123,6 +135,18 @@
 </JDGFullWidthContainer>
 
 <style>
+	.parallax-image-container {
+		position: relative;
+		overflow: hidden;
+	}
+
+	.parallax-image {
+		width: 100%;
+		height: 100%;
+		background-attachment: fixed;
+		background-size: cover;
+	}
+
 	.image-overlay {
 		position: absolute;
 		top: 0;
