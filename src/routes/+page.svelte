@@ -55,6 +55,7 @@
 			overlayImageText="A Secondary Text Test"
 			overlayImageTextFontFamily="Righteous"
 			overlapWithHeader={true}
+			parallax
 		/>
 		<JDGContentBoxFloating animateWhenVisible={false}>
 			<JDGBodyCopy fontSizeMultiplier={1.15}>
@@ -202,6 +203,7 @@
 			primaryText="FULL WIDTH IMAGE"
 			secondaryText="better known as a HERO image"
 			overlayColorRgba={'rgba(100, 100, 100, 0.5)'}
+			parallax
 		/>
 		<JDGBodyCopy textAlign="center" paddingBottom="0"
 			><b>IMAGE CAROUSEL</b>
