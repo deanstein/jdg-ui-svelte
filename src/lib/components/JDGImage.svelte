@@ -10,7 +10,8 @@
 		doesStringContainVh,
 		getMaxElementHeightPx,
 		getMaxElementWidthPx,
-		getPixelValueFromString,
+		getMaxHeightPxFromProp,
+		getMaxWidthPxFromProp,
 		isNumberValid
 	} from '$lib/jdg-utils.js';
 	import {
@@ -207,30 +208,6 @@
 		return Math.sqrt(dx * dx + dy * dy);
 	};
 
-	// get a pixel value from whatever is passed into the maxHeight prop
-	const getMaxHeightPxFromProp = () => {
-		let maxHeightPx;
-		// only calculate maxHeight if prop is not auto
-		if (maxHeight !== 'auto') {
-			maxHeightPx = getPixelValueFromString(maxHeight);
-		} else {
-			maxHeightPx = getMaxElementHeightPx(containerRef);
-		}
-		return maxHeightPx;
-	};
-
-	// get a pixel value from whatever is passed into the maxHeight prop
-	const getMaxWidthPxFromProp = () => {
-		let maxWidthPx;
-		// only calculate maxWidth if prop is not auto
-		if (maxWidth !== 'auto') {
-			maxWidthPx = getPixelValueFromString(maxWidth);
-		} else {
-			maxWidthPx = getMaxElementWidthPx(containerRef);
-		}
-		return maxWidthPx;
-	};
-
 	// calculate the aspect ratio of the image container and the image (if not already known)
 	const getAndRecordAspectRatio = () => {
 		if (containerRef && imageRef) {
@@ -283,7 +260,7 @@
 					'\nmaxHeight string from prop:',
 					maxHeight,
 					'\nMax height px from prop:',
-					getMaxHeightPxFromProp(),
+					getMaxHeightPxFromProp(maxHeight, containerRef),
 					'\nValid container height:',
 					validContainerHeight,
 					'\nMax height from container:',
@@ -291,7 +268,7 @@
 					'\nMax width string from prop',
 					maxWidth,
 					'\nMax width px from prop:',
-					getMaxWidthPxFromProp(),
+					getMaxWidthPxFromProp(maxWidth, containerRef),
 					'\nValid container width',
 					validContainerWidth,
 					'\nMax width from container:',
@@ -328,7 +305,7 @@
 			if (
 				$isMobileBreakpoint &&
 				useAutoHeightOnMobile &&
-				getMaxHeightPxFromProp() > imageCalcAutoHeight
+				getMaxHeightPxFromProp(maxHeight, containerRef) > imageCalcAutoHeight
 			) {
 				preferredHeight = 'auto';
 				preferredHeightFitType = fitTypeAuto;
@@ -359,7 +336,8 @@
 
 	const getPreferredContainerWidth = () => {
 		let preferredContainerWidth;
-		const imageWidthPxAtMaxHeightFromProp = getMaxHeightPxFromProp() * imageAspectRatio;
+		const imageWidthPxAtMaxHeightFromProp =
+			getMaxHeightPxFromProp(maxHeight, containerRef) * imageAspectRatio;
 
 		// if maxWidth is 'auto', we may need to choose the best width depending on the scenario
 		if (maxWidth === 'auto') {
@@ -574,7 +552,7 @@
 			if (isForImageDetailOverlay) {
 				const widthToSet = imageAttributes.allowBackgroundBlur
 					? validContainerWidth
-					: getMaxHeightPxFromProp() * imageAspectRatio;
+					: getMaxHeightPxFromProp(maxHeight, containerRef) * imageAspectRatio;
 				imageDetailWidth.set(widthToSet);
 			}
 		}
@@ -652,7 +630,8 @@
 						// otherwise, specify Cloudinary URL height
 						else {
 							const adjustedHeight = Math.ceil(
-								getMaxHeightPxFromProp() * (useDevicePixelRatio ? devicePixelRatio : 1)
+								getMaxHeightPxFromProp(maxHeight, containerRef) *
+									(useDevicePixelRatio ? devicePixelRatio : 1)
 							);
 							adjustedImgSrc = addCloudinaryUrlHeight(imageAttributes.imgSrc, adjustedHeight);
 							if (showDebugMessagesInConsole) {
@@ -668,7 +647,8 @@
 					// no fill container
 					else {
 						const adjustedHeight = Math.ceil(
-							getMaxHeightPxFromProp() * (useDevicePixelRatio ? devicePixelRatio : 1)
+							getMaxHeightPxFromProp(maxHeight, containerRef) *
+								(useDevicePixelRatio ? devicePixelRatio : 1)
 						);
 						adjustedImgSrc = addCloudinaryUrlHeight(imageAttributes.imgSrc, adjustedHeight);
 						if (showDebugMessagesInConsole) {
@@ -780,7 +760,8 @@
 		{/if}
 		{#if showDebugOverlay}
 			<div class="debug-overlay">
-				Calculated image width: {getMaxHeightPxFromProp() * imageAspectRatio};
+				Calculated image width: {getMaxHeightPxFromProp(maxHeight, containerRef) *
+					imageAspectRatio};
 				<br />
 				Valid container width: {validContainerWidth};
 				<br />

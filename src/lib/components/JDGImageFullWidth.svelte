@@ -1,7 +1,11 @@
 <script>
 	import { css } from '@emotion/css';
 	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
-	import { instantiateObject } from '$lib/jdg-utils.js';
+	import {
+		addCloudinaryUrlHeight,
+		getMaxHeightPxFromProp,
+		instantiateObject
+	} from '$lib/jdg-utils.js';
 	import {
 		JDGAccentText,
 		JDGAnchorTag,
@@ -70,7 +74,10 @@
 		<div class="parallax-image-container" style="height: {maxHeight};">
 			<div
 				class="parallax-image"
-				style="background-image: url({imageAttributes.imgSrc}); background-position: {objectPosition};"
+				style="background-image: url({addCloudinaryUrlHeight(
+					imageAttributes.imgSrc,
+					getMaxHeightPxFromProp(maxHeight)
+				)}); background-position: {objectPosition};"
 			></div>
 		</div>
 	{:else}

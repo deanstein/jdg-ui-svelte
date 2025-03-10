@@ -449,6 +449,30 @@ export const convertRemToPixels = (remValue) => {
 	);
 };
 
+// get a pixel value from whatever is passed into the maxHeight prop
+export const getMaxHeightPxFromProp = (maxheightProp, containerRef) => {
+	let maxHeightPx;
+	// only calculate maxHeight if prop is not auto
+	if (maxheightProp !== 'auto') {
+		maxHeightPx = getPixelValueFromString(maxheightProp);
+	} else {
+		maxHeightPx = getMaxElementHeightPx(containerRef);
+	}
+	return maxHeightPx;
+};
+
+// get a pixel value from whatever is passed into the maxHeight prop
+export const getMaxWidthPxFromProp = (maxWidthProp, containerRef) => {
+	let maxWidthPx;
+	// only calculate maxWidth if prop is not auto
+	if (maxWidthProp !== 'auto') {
+		maxWidthPx = getPixelValueFromString(maxWidthProp);
+	} else {
+		maxWidthPx = getMaxElementWidthPx(containerRef);
+	}
+	return maxWidthPx;
+};
+
 //
 // COLOR UTILS
 //
