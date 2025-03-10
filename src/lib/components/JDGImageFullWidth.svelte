@@ -36,6 +36,7 @@
 	export let overlayImageTextFontFamily = $appFontFamily;
 	export let parallax = false; // if true, image will appear stationary as page scrolls
 
+	let parallaxContainerRef;
 	let overlayContainerRef;
 	let imageOverlayWrapperRef;
 
@@ -71,12 +72,16 @@
 	{/if}
 	<!-- main image -->
 	{#if parallax}
-		<div class="parallax-image-container" style="height: {maxHeight};">
+		<div
+			bind:this={parallaxContainerRef}
+			class="parallax-image-container"
+			style="height: {getMaxHeightPxFromProp(maxHeight, parallaxContainerRef)}px;"
+		>
 			<div
 				class="parallax-image"
 				style="background-image: url({addCloudinaryUrlHeight(
 					imageAttributes.imgSrc,
-					getMaxHeightPxFromProp(maxHeight)
+					getMaxHeightPxFromProp(maxHeight, parallaxContainerRef)
 				)}); background-position: {objectPosition};"
 			></div>
 		</div>

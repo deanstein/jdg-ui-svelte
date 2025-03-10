@@ -458,6 +458,7 @@ export const getMaxHeightPxFromProp = (maxheightProp, containerRef) => {
 	} else {
 		maxHeightPx = getMaxElementHeightPx(containerRef);
 	}
+	console.log(maxHeightPx);
 	return maxHeightPx;
 };
 
