@@ -82,7 +82,7 @@
 				style="background-image: url({addCloudinaryUrlHeight(
 					imageAttributes.imgSrc,
 					getMaxHeightPxFromProp(maxHeight, parallaxContainerRef)
-				)}); background-position: {objectPosition};"
+				)}); height: {getMaxHeightPxFromProp(maxHeight, parallaxContainerRef)}px; background-position: {objectPosition};"
 			></div>
 		</div>
 	{:else}
