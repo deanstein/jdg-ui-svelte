@@ -159,6 +159,7 @@
 		width: 100%;
 		height: 100%;
 		background-attachment: fixed;
+		background-position: top;
 	}
 
 	.image-overlay {
