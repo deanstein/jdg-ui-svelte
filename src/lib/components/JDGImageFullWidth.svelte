@@ -82,7 +82,10 @@
 				style="background-image: url({addCloudinaryUrlHeight(
 					imageAttributes.imgSrc,
 					getMaxHeightPxFromProp(maxHeight, parallaxContainerRef)
-				)}); height: {getMaxHeightPxFromProp(maxHeight, parallaxContainerRef)}px; background-position: {objectPosition};"
+				)}); height: {getMaxHeightPxFromProp(
+					maxHeight,
+					parallaxContainerRef
+				)}px; background-position: {objectPosition};"
 			></div>
 		</div>
 	{:else}
@@ -154,7 +157,6 @@
 
 	.parallax-image {
 		width: 100%;
-		height: 100%;
 		background-attachment: fixed;
 		background-size: cover;
 	}
