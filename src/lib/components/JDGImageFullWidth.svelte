@@ -157,7 +157,7 @@
 
 	.parallax-image {
 		width: 100%;
-		background-attachment: fixed;
+		height: 100%;
 		background-size: cover;
 	}
 
