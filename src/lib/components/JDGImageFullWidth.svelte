@@ -145,6 +145,9 @@
 					{/if}
 				</div>
 			{/if}
+			<div class="debug" style="position: absolute; bottom: 0;">
+			cloudinary height: {getMaxHeightPxFromProp(maxHeight, parallaxContainerRef)}
+			</div>
 		</div>
 	{/if}
 </JDGFullWidthContainer>
