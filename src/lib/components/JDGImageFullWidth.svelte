@@ -157,9 +157,9 @@
 
 	.parallax-image {
 		width: 100%;
-		height: 100%;
 		background-attachment: fixed;
 		background-size: cover;
+		background-position: center;
 	}
 
 	.image-overlay {
