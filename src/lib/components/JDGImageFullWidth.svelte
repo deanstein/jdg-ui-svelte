@@ -16,6 +16,7 @@
 	import { fadeInSettleBeforeSm, jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { fade } from 'svelte/transition';
 	import { appFontFamily } from '$lib/states/ui-state.js';
+	import { onMount } from 'svelte';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes);
 	export let objectPosition = 'center';
@@ -36,6 +37,7 @@
 	export let overlayImageTextFontFamily = $appFontFamily;
 	export let parallax = false; // if true, image will appear stationary as page scrolls
 
+	let parallaxImageRef;
 	let parallaxContainerRef;
 	let overlayContainerRef;
 	let imageOverlayWrapperRef;
@@ -63,6 +65,46 @@
 				: '0'};
 		}
 	`;
+
+	let observer;
+	let isVisible;
+
+	const onScroll = () => {
+    if (parallaxContainerRef && parallaxImageRef) {
+        const rect = parallaxContainerRef.getBoundingClientRect(); // Get container's position in viewport
+        const containerHeight = rect.height;
+        const windowHeight = window.innerHeight;
+
+        // Check if the container is within the viewport
+        if (rect.bottom >= 0 && rect.top <= windowHeight) {
+            const scrollOffset = -rect.top; // Distance scrolled past the top of the container
+            const parallaxSpeed = 1; // Adjust this for faster/slower parallax effect
+            const translateY = scrollOffset * parallaxSpeed;
+
+            // Move the parallax image to simulate background fixed
+            parallaxImageRef.style.transform = `translateY(${translateY}px)`;
+        }
+    }
+};
+
+	onMount(() => {
+    observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            isVisible = entry.isIntersecting;
+        });
+    });
+
+    observer.observe(parallaxContainerRef);
+
+    // Add the scroll listener
+    window.addEventListener('scroll', onScroll);
+
+    // Clean up on destroy
+    return () => {
+        window.removeEventListener('scroll', onScroll);
+        observer.disconnect();
+    };
+});
 </script>
 
 <JDGFullWidthContainer>
@@ -78,6 +120,7 @@
 			style="height: {getMaxHeightPxFromProp(maxHeight, parallaxContainerRef)}px;"
 		>
 			<div
+				bind:this={parallaxImageRef}
 				class="parallax-image"
 				style="background-image: url({addCloudinaryUrlHeight(
 					imageAttributes.imgSrc,
@@ -146,7 +189,7 @@
 				</div>
 			{/if}
 			<div class="debug" style="position: absolute; bottom: 0;">
-			cloudinary height: {getMaxHeightPxFromProp(maxHeight, parallaxContainerRef)}
+				cloudinary height: {getMaxHeightPxFromProp(maxHeight, parallaxContainerRef)}
 			</div>
 		</div>
 	{/if}
@@ -159,14 +202,14 @@
 	}
 
 	.parallax-image {
+		position: absolute;
+		top: 0;
+		left: 0;
 		width: 100%;
-		height: 100%;
-		background-attachment: fixed;
+		height: 150%; /* Larger to allow room for movement */
 		background-size: cover;
 		background-position: center;
-		background-clip: border-box;
-    	background-origin: padding-box;
-
+		will-change: transform; /* Optimizes performance */
 	}
 
 	.image-overlay {
