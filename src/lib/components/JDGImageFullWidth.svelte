@@ -70,41 +70,41 @@
 	let isVisible;
 
 	const onScroll = () => {
-    if (parallaxContainerRef && parallaxImageRef) {
-        const rect = parallaxContainerRef.getBoundingClientRect(); // Get container's position in viewport
-        const containerHeight = rect.height;
-        const windowHeight = window.innerHeight;
+		if (parallaxContainerRef && parallaxImageRef) {
+			const rect = parallaxContainerRef.getBoundingClientRect(); // Get container's position in viewport
+			const containerHeight = rect.height;
+			const windowHeight = window.innerHeight;
 
-        // Check if the container is within the viewport
-        if (rect.bottom >= 0 && rect.top <= windowHeight) {
-            const scrollOffset = -rect.top; // Distance scrolled past the top of the container
-            const parallaxSpeed = 1; // Adjust this for faster/slower parallax effect
-            const translateY = scrollOffset * parallaxSpeed;
+			// Check if the container is within the viewport
+			if (rect.bottom >= 0 && rect.top <= windowHeight) {
+				const scrollOffset = -rect.top; // Distance scrolled past the top of the container
+				const parallaxSpeed = 1; // Adjust this for faster/slower parallax effect
+				const translateY = scrollOffset * parallaxSpeed;
 
-            // Move the parallax image to simulate background fixed 
-            parallaxImageRef.style.transform = `translateY(${translateY}px)`;
-        }
-    }
-};
+				// Move the parallax image to simulate background fixed
+				parallaxImageRef.style.transform = `translateY(${translateY}px)`;
+			}
+		}
+	};
 
 	onMount(() => {
-    observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            isVisible = entry.isIntersecting;
-        });
-    });
+		observer = new IntersectionObserver((entries) => {
+			entries.forEach((entry) => {
+				isVisible = entry.isIntersecting;
+			});
+		});
 
-    observer.observe(parallaxContainerRef);
+		observer.observe(parallaxContainerRef);
 
-    // Add the scroll listener
-    window.addEventListener('scroll', onScroll);
+		// Add the scroll listener
+		window.addEventListener('scroll', onScroll);
 
-    // Clean up on destroy
-    return () => {
-        window.removeEventListener('scroll', onScroll);
-        observer.disconnect();
-    };
-});
+		// Clean up on destroy
+		return () => {
+			window.removeEventListener('scroll', onScroll);
+			observer.disconnect();
+		};
+	});
 </script>
 
 <JDGFullWidthContainer>
