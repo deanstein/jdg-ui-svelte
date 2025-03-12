@@ -81,7 +81,7 @@
             const parallaxSpeed = 1; // Adjust this for faster/slower parallax effect
             const translateY = scrollOffset * parallaxSpeed;
 
-            // Move the parallax image to simulate background fixed
+            // Move the parallax image to simulate background fixed 
             parallaxImageRef.style.transform = `translateY(${translateY}px)`;
         }
     }
