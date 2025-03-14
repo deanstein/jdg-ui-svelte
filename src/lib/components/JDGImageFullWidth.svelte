@@ -15,7 +15,7 @@
 	} from '$lib/index.js';
 	import { fadeInSettleBeforeSm, jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { fade } from 'svelte/transition';
-	import { appFontFamily } from '$lib/states/ui-state.js';
+	import { appFontFamily, isMobileBreakpoint, isTabletBreakpoint } from '$lib/states/ui-state.js';
 
 	export let imageAttributes = instantiateObject(jdgImageAttributes);
 	export let objectPosition = 'center';
@@ -71,7 +71,9 @@
 		<JDGAnchorTag anchorTagString={primaryText} adjustPosForPadding={false} />
 	{/if}
 	<!-- main image -->
-	{#if parallax}
+	<!-- parallax only applies on desktop breakpoints due to optimizations on mobile/tablet -->
+	<!-- parallax also only applies if inside a ContentBoxFloating with animateWhenVisible set to false -->
+	{#if parallax && !$isMobileBreakpoint && !$isTabletBreakpoint}
 		<div
 			bind:this={parallaxContainerRef}
 			class="parallax-image-container"
