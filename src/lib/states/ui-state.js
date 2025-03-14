@@ -3,8 +3,12 @@ import { derived, writable } from 'svelte/store';
 export let activeNotificationBanners = writable([]);
 export let doShowNavSidebar = writable(false);
 export let highestZIndex = writable(1);
-export let isMobileBreakpoint = writable(false);
+
 export let jumpToNavItems = writable([]);
+
+// breakpoints
+export let isMobileBreakpoint = writable(false);
+export let isTabletBreakpoint = writable(false);
 
 // font, colors, settings
 export let appAccentColors = writable([]);

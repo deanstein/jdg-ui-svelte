@@ -21,7 +21,8 @@
 		scrollDirection,
 		windowScrollPosition,
 		windowWidth,
-		appCssHyperlinkBar
+		appCssHyperlinkBar,
+		isTabletBreakpoint
 	} from '$lib/states/ui-state.js';
 
 	import { getDistancePxToBottomOfHeader } from '$lib/jdg-ui-management.js';
@@ -83,6 +84,10 @@
 		clientWidth.set(appContainerRef?.clientWidth);
 		headerHeightPx.set(getDistancePxToBottomOfHeader($doShowHeaderStripes));
 		isMobileBreakpoint.set(appContainerRef?.clientWidth <= jdgBreakpoints.width[0]);
+		isTabletBreakpoint.set(
+			appContainerRef?.clientWidth > jdgBreakpoints.width[0] &&
+				appContainerRef?.clientWidth <= jdgBreakpoints.width[1]
+		);
 	};
 
 	// set whether page is being scrolled or not
