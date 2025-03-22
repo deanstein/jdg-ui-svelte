@@ -219,7 +219,7 @@ export const fetchLatestBuildDate = async (
 			if (data.total_count > 0) {
 				latestBuildDate = new Date(data.workflow_runs[0].created_at);
 			} else {
-				console.log('No successful builds found.');
+				console.warn('No successful builds found for ' + repoOwner + '/' + repoName);
 			}
 		})
 		.catch((error) => console.error('Failed to get latest build date. Error:', error));
