@@ -108,8 +108,8 @@
 		<JDGStripesHorizontal />
 	{/if}
 	<div class="footer-content-container {footerContentContainerCss}">
-		<!-- any extra content goes here -->
-		<slot />
+		<!-- slot for any extra content above the copyright -->
+		<slot name="footer-slot-top" />
 		<!-- copyright row -->
 		{#if copyright}
 			<div class="footer-row">
@@ -175,13 +175,15 @@
 				{/if}
 			</div>
 		</div>
+		<!-- slot for any extra content below the versions -->
+		<slot name="footer-slot-bottom" />
 		<!-- access point for devTools -->
 		{#if showDevToolsButton}
 			<div class="footer-row {footerDevToolsCss}">
 				<JDGButton
 					onClickFunction={toggleDevTools}
 					label={null}
-					tooltip={$doShowDevTools ? 'Hide Dev Tools' : 'Show Dev Tools'}
+					tooltip={$doShowDevTools ? 'Hide JDG UI Dev Tools' : 'Show JDG UI Dev Tools'}
 					isPrimary={false}
 					paddingTopBottom="5px"
 					paddingLeftRight="10px"
@@ -189,6 +191,8 @@
 					fontSize={jdgSizes.fontSizeBodyXSm}
 					doForceSquareRatio
 				/>
+				<!-- slot for any extra dev tools -->
+				<slot name="footer-slot-dev-tools" />
 			</div>
 		{/if}
 		<!-- all devTools -->
