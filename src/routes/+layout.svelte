@@ -8,13 +8,16 @@
 	import {
 		JDGAppContainer,
 		JDGBackground,
+		JDGButton,
 		JDGFooter,
 		JDGHeader,
 		JDGNotificationBanner,
 		JDGSocialMedia
 	} from '$lib/index.js';
-	import { jdgColors } from '$lib/jdg-shared-styles.js';
+	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import sharedStrings from './shared-strings.js';
+	import { doShowDevTools } from '$lib/states/ui-state.js';
+	import { toggleDevTools } from '$lib/jdg-state-management.js';
 
 	// define the nav items in the header
 	const navItemHome = instantiateObject(jdgNavItem);
@@ -105,13 +108,30 @@
 		showDevToolsButton={true}
 		alignItems="center"
 	>
-		<JDGSocialMedia
-			iconColor={'gray'}
-			instagramHref={$jdgSharedUrlsStore.ccpInstagram}
-			facebookHref={$jdgSharedUrlsStore.ccpFacebook}
-			youtubeHref={$jdgSharedUrlsStore.ccpYouTube}
-			linkedinHref={$jdgSharedUrlsStore.jdgLinkedIn}
-			githubHref={$jdgSharedUrlsStore.ccpGitHubReleases}
-		/>
+		<div slot="footer-slot-top">
+			<JDGSocialMedia
+				iconColor={'gray'}
+				instagramHref={$jdgSharedUrlsStore.ccpInstagram}
+				facebookHref={$jdgSharedUrlsStore.ccpFacebook}
+				youtubeHref={$jdgSharedUrlsStore.ccpYouTube}
+				linkedinHref={$jdgSharedUrlsStore.jdgLinkedIn}
+				githubHref={$jdgSharedUrlsStore.ccpGitHubReleases}
+			/>
+		</div>
+		<div slot="footer-slot-dev-tools" style="display: flex; align-items: center;">
+			<div style="padding-left: 0px; padding-right: 10px;">&nbsp;|</div>
+			<JDGButton
+				onClickFunction={toggleDevTools}
+				label={null}
+				tooltip={$doShowDevTools ? 'Hide Alternate Dev Tools' : 'Show Alternate Dev Tools'}
+				isPrimary={false}
+				paddingTopBottom="5px"
+				paddingLeftRight="10px"
+				faIcon={$doShowDevTools ? 'fa-eye-slash' : 'fa-screwdriver-wrench'}
+				fontSize={jdgSizes.fontSizeBodyXSm}
+				doForceSquareRatio
+			/>
+			&nbsp;
+		</div>
 	</JDGFooter>
 </JDGAppContainer>
