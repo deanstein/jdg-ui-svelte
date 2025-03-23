@@ -791,12 +791,12 @@ export const isUrlCloudinary = (url) => {
 };
 
 // ensures that imgAlt is the same as imgCaption if not provided
-export const postProcessImageAttributes = (jdgImageAttributes) => {
+export const postProcessImageMeta = (jdgImageMeta) => {
 	// imgAlt is likely the same as imgCaption, unless already specified
-	if (jdgImageAttributes.imgCaption && !jdgImageAttributes.imgAlt) {
-		jdgImageAttributes.imgAlt = jdgImageAttributes.imgCaption;
+	if (jdgImageMeta.imgCaption && !jdgImageMeta.imgAlt) {
+		jdgImageMeta.imgAlt = jdgImageMeta.imgCaption;
 	}
-	return jdgImageAttributes;
+	return jdgImageMeta;
 };
 
 export const addCloudinaryUrlTransformation = (url, transformation = 'f_auto') => {
@@ -806,7 +806,7 @@ export const addCloudinaryUrlTransformation = (url, transformation = 'f_auto') =
 		let path = parts[1];
 
 		// remove existing f_auto transformation if it exists
-		// TODO: Remove this once all imageAttributesCollection are rid of manual f_auto
+		// TODO: Remove this once all imageMetaCollection are rid of manual f_auto
 		path = path.replace(/^f_auto\/|\/f_auto\/|\/f_auto$/, '');
 
 		return `${baseUrl}/upload/${transformation}/${path}`;

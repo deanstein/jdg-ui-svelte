@@ -4,7 +4,7 @@ import {
 	activeNotificationBanners,
 	highestZIndex,
 	imageAspectRatios,
-	imageDetailAttributes,
+	imageDetailMeta,
 	jumpToNavItems,
 	doShowImageDetailOverlay,
 	doShowNavSidebar,
@@ -92,14 +92,14 @@ export const removeImageLoading = (imgSrc) => {
 // IMAGE DETAIL MODAL
 //
 
-export const showImageDetailModal = (imageAttributes) => {
+export const showImageDetailModal = (imageMeta) => {
 	doShowImageDetailOverlay.set(true);
-	imageDetailAttributes.set(imageAttributes);
+	imageDetailMeta.set(imageMeta);
 };
 
 export const hideImageDetailModal = () => {
 	doShowImageDetailOverlay.set(false);
-	imageDetailAttributes.set(undefined);
+	imageDetailMeta.set(undefined);
 };
 
 //

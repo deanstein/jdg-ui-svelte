@@ -1,6 +1,6 @@
 import imagePlaceholder from '$lib/assets/raster/jdg-image-placeholder.png';
 
-const jdgImageAttributes = {
+const jdgImageMeta = {
 	imgSrc: imagePlaceholder,
 	imgTitle: undefined,
 	imgAlt: undefined,
@@ -11,4 +11,4 @@ const jdgImageAttributes = {
 		'right' /* in some contexts, images will have a toolbar and its alignment can be set depending on the image layout */
 };
 
-export default jdgImageAttributes;
+export default jdgImageMeta;

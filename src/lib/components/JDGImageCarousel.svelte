@@ -6,7 +6,7 @@
 		appAccentColors,
 		doShowImageDetailOverlay,
 		imageAspectRatios,
-		imageDetailAttributes,
+		imageDetailMeta,
 		windowWidth
 	} from '$lib/states/ui-state.js';
 
@@ -19,7 +19,7 @@
 		getPixelValueFromString
 	} from '$lib/jdg-utils.js';
 
-	export let imageAttributeObjects; // all images shown in thumbnail collection
+	export let imageMetaSet; // all images shown in thumbnail collection
 	export let showCaption = true;
 	export let showAttribution = true;
 	export let maxHeight = '50vh';
@@ -43,7 +43,7 @@
 
 	let parentRef;
 	let carouselRef; // used for only auto-advancing when carousel is visible
-	let activeImageAttributes = imageAttributeObjects[0]; // start with the first image
+	let activeImageMeta = imageMetaSet[0]; // start with the first image
 	let kludge = true; // kludge to force a "crossfade" effect by swapping divs via flag
 	let intervalId; // identifier for the auto-advance setInterval() call
 
@@ -69,7 +69,7 @@
 		const fittedHeights = [];
 
 		// for each, record the fitted height
-		imageAttributeObjects.forEach((imageAttributeObject) => {
+		imageMetaSet.forEach((imageAttributeObject) => {
 			const aspectRatio = getImageAspectRatioRecord(imageAttributeObject.imgSrc);
 			const fittedHeight = availableWidthPx / aspectRatio;
 			fittedHeights.push(fittedHeight);
@@ -85,7 +85,7 @@
 		const fittedWidths = [];
 
 		// for each, record the fitted width
-		imageAttributeObjects.forEach((imageAttributeObject) => {
+		imageMetaSet.forEach((imageAttributeObject) => {
 			const aspectRatio = getImageAspectRatioRecord(imageAttributeObject.imgSrc);
 			const maxWidth = maxHeightPxFromProp * aspectRatio;
 			fittedWidths.push(maxWidth);
@@ -96,8 +96,8 @@
 
 	const setActiveImage = (imageAttributesObject, endAutoAdvance = false) => {
 		// only set active image if image is different
-		if (activeImageAttributes.imgSrc !== imageAttributesObject.imgSrc) {
-			activeImageAttributes = imageAttributesObject;
+		if (activeImageMeta.imgSrc !== imageAttributesObject.imgSrc) {
+			activeImageMeta = imageAttributesObject;
 			kludge = !kludge;
 		}
 		// when user clicks on a thumbnail, auto advance stops
@@ -119,16 +119,16 @@
 		touchEndX = e.changedTouches[0].clientX;
 		if (touchStartX - touchEndX > minSwipeDistance) {
 			// swipe left
-			let currentIndex = imageAttributeObjects.indexOf(activeImageAttributes);
-			currentIndex = (currentIndex + 1) % imageAttributeObjects.length;
-			setActiveImage(imageAttributeObjects[currentIndex], true);
+			let currentIndex = imageMetaSet.indexOf(activeImageMeta);
+			currentIndex = (currentIndex + 1) % imageMetaSet.length;
+			setActiveImage(imageMetaSet[currentIndex], true);
 		}
 		if (touchEndX - touchStartX > minSwipeDistance) {
 			// swipe right
-			let currentIndex = imageAttributeObjects.indexOf(activeImageAttributes);
+			let currentIndex = imageMetaSet.indexOf(activeImageMeta);
 			currentIndex =
-				(currentIndex - 1 + imageAttributeObjects.length) % imageAttributeObjects.length;
-			setActiveImage(imageAttributeObjects[currentIndex], true);
+				(currentIndex - 1 + imageMetaSet.length) % imageMetaSet.length;
+			setActiveImage(imageMetaSet[currentIndex], true);
 		}
 	};
 
@@ -146,9 +146,9 @@
 				([entry]) => {
 					if (entry.isIntersecting) {
 						intervalId = setInterval(() => {
-							let currentIndex = imageAttributeObjects.indexOf(activeImageAttributes);
-							currentIndex = (currentIndex + 1) % imageAttributeObjects.length;
-							setActiveImage(imageAttributeObjects[currentIndex]);
+							let currentIndex = imageMetaSet.indexOf(activeImageMeta);
+							currentIndex = (currentIndex + 1) % imageMetaSet.length;
+							setActiveImage(imageMetaSet[currentIndex]);
 						}, autoAdvanceInterval);
 					} else {
 						clearInterval(intervalId);
@@ -206,7 +206,7 @@
 		allFittedHeightsPx;
 		// first, get the fitted width from the aspect ratio records
 		const activeImageFittedWidthPxFromRecord =
-			getImageAspectRatioRecord(activeImageAttributes.imgSrc) * finalMaxFittedHeightPx;
+			getImageAspectRatioRecord(activeImageMeta.imgSrc) * finalMaxFittedHeightPx;
 		// if the fitted width from record is wider than the available width,
 		// set the fitted width to the available width
 		activeImageFittedWidthPx =
@@ -264,7 +264,7 @@
 					? finalMaxFittedWidthPx
 					: `${activeImageFittedWidthPx}`;
 				dynamicWidthCss = css`
-					width: ${showBlurInUnfilledSpace && activeImageAttributes.allowBackgroundBlur
+					width: ${showBlurInUnfilledSpace && activeImageMeta.allowBackgroundBlur
 						? '100%;'
 						: `${compositeCarouselWidthPx}`}px;
 				`;
@@ -287,15 +287,15 @@
 	$: {
 		dynamicExpandButtonOverlayCss = css`
 			width: ${justifyContent === 'center' ? '100%' : activeImageFittedWidthPx + 'px'};
-			justify-content: ${activeImageAttributes?.toolbarAlignment};
+			justify-content: ${activeImageMeta?.toolbarAlignment};
 			right: ${justifyContent !== 'center' ? '0' : ''};
 			padding: 10px
-				${(showBlurInUnfilledSpace && activeImageAttributes.allowBackgroundBlur) ||
+				${(showBlurInUnfilledSpace && activeImageMeta.allowBackgroundBlur) ||
 				(matchMaxImageWidth && justifyContent === 'center')
 					? Math.abs(availableWidthPx - activeImageFittedWidthPx) / 2 + 10 + 'px'
 					: '10px'}
 				10px
-				${(showBlurInUnfilledSpace && activeImageAttributes.allowBackgroundBlur) ||
+				${(showBlurInUnfilledSpace && activeImageMeta.allowBackgroundBlur) ||
 				(matchMaxImageWidth && justifyContent === 'center')
 					? Math.abs(availableWidthPx - activeImageFittedWidthPx) / 2 + 10 + 'px'
 					: '10px'};
@@ -315,7 +315,7 @@
 		{#if kludge && finalMaxFittedHeightPx}
 			<div class="carousel-crossfade-wrapper-absolute {justificationCss}">
 				<JDGImage
-					imageAttributes={activeImageAttributes}
+					imageMeta={activeImageMeta}
 					{maxHeight}
 					useAutoHeightOnMobile={false}
 					cropToFillContainer={false}
@@ -327,7 +327,7 @@
 		{:else}
 			<div class="carousel-crossfade-wrapper-absolute {justificationCss}">
 				<JDGImage
-					imageAttributes={activeImageAttributes}
+					imageMeta={activeImageMeta}
 					{maxHeight}
 					useAutoHeightOnMobile={false}
 					cropToFillContainer={false}
@@ -340,7 +340,7 @@
 			<JDGButton
 				onClickFunction={() => {
 					doShowImageDetailOverlay.set(true);
-					imageDetailAttributes.set(activeImageAttributes);
+					imageDetailMeta.set(activeImageMeta);
 				}}
 				faIcon="fa-solid fa-expand"
 				label={null}
@@ -352,11 +352,11 @@
 			/>
 		</div>
 	</div>
-	{#if (showCaption && activeImageAttributes.imgCaption) || (showAttribution && activeImageAttributes.imgAttribution)}
+	{#if (showCaption && activeImageMeta.imgCaption) || (showAttribution && activeImageMeta.imgAttribution)}
 		<div class="caption-attribution-wrapper {dynamicThumbnailContainerWidthCss}">
 			<JDGImageCaptionAttribution
-				imageAttributes={activeImageAttributes}
-				backgroundColorRgba={activeImageAttributes.allowBackgroundBlur
+				imageMeta={activeImageMeta}
+				backgroundColorRgba={activeImageMeta.allowBackgroundBlur
 					? jdgColors.imageLabelBackground
 					: 'rgba(0, 0, 0, 0)'}
 				maxTextWidthPx={activeImageFittedWidthPx}
@@ -364,10 +364,10 @@
 		</div>
 	{/if}
 	<div class="carousel-thumbnail-container {dynamicThumbnailContainerWidthCss} {justificationCss}">
-		{#each imageAttributeObjects as imageAttributesObject, i}
+		{#each imageMetaSet as imageAttributesObject, i}
 			<div
 				class="carousel-thumbnail-wrapper"
-				style={imageAttributesObject === activeImageAttributes
+				style={imageAttributesObject === activeImageMeta
 					? `outline: 5px solid ${activeThumbnailColor}`
 					: ''}
 			>
@@ -375,7 +375,7 @@
 					onClickFunction={() => {
 						setActiveImage(imageAttributesObject, true);
 					}}
-					imageAttributes={imageAttributesObject}
+					imageMeta={imageAttributesObject}
 					maxHeight="50px"
 					maxWidth="75px"
 					useAutoHeightOnMobile={false}

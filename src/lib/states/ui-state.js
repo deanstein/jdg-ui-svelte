@@ -33,7 +33,7 @@ export let imageAspectRatios = writable({}); // { imgSrc: "", aspectRatio: 0 }
 export let imagesLoading = writable([]);
 
 // image detail overlay
-export let imageDetailAttributes = writable({});
+export let imageDetailMeta = writable({});
 export let imageDetailWidth = writable(0); // width of the image for caption alignment
 export let imageDetailScale = writable(1.0);
 export let doShowImageDetailOverlay = writable(false);
@@ -70,7 +70,7 @@ const storeMap = {
 	imageAspectRatios,
 	imagesLoading,
 	doShowImageDetailOverlay,
-	imageDetailAttributes,
+	imageDetailMeta,
 	imageDetailWidth,
 	imageDetailScale,
 	clientWidth,

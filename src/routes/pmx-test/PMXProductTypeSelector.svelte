@@ -84,7 +84,7 @@
 							onClickFunction={() => {
 								setActiveProductType(productTypeIds[i]);
 							}}
-							imageAttributes={imageAttributesObject}
+							imageMeta={imageAttributesObject}
 							maxHeight="80px"
 							maxWidth="125px"
 							useAutoHeightOnMobile={false}

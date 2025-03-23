@@ -3,14 +3,14 @@
 	import { writable } from 'svelte/store';
 	import { css } from '@emotion/css';
 
-	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
+	import jdgImageMeta from '$lib/schemas/jdg-image-meta.js';
 
 	import { JDGImage, JDGImageCaptionAttribution } from '$lib/index.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
 	import { jdgSharedIdentifiers } from '$lib/jdg-shared-strings.js';
 
-	export let imageAttributes1;
-	export let imageAttributes2;
+	export let imageMeta1;
+	export let imageMeta2;
 	export let caption = undefined; // combined caption for both images
 	export let attribution = undefined; // combined attribution for both images
 	export let animateSlider = false; // when in view, slider will dance a bit to show interactivity
@@ -21,10 +21,10 @@
 	let imageCompareWrapperRef;
 	let imageCompareContainerRef;
 
-	// create a temp imageAttributes for combined caption/attribution
-	let newImageAttributes = instantiateObject(jdgImageAttributes);
-	newImageAttributes.imgCaption = caption;
-	newImageAttributes.imgAttribution = attribution;
+	// create a temp imageMeta for combined caption/attribution
+	let newImageMeta = instantiateObject(jdgImageMeta);
+	newImageMeta.imgCaption = caption;
+	newImageMeta.imgAttribution = attribution;
 
 	let isUserInteracting = false; // if user interacts, animation is canceled
 	let observer; // observe whether container is in view
@@ -180,7 +180,7 @@
 	>
 		<div class="compare-image-absolute">
 			<JDGImage
-				imageAttributes={imageAttributes2}
+				imageMeta={imageMeta2}
 				cropToFillContainer={false}
 				{maxHeight}
 				{showBlurInUnfilledSpace}
@@ -191,7 +191,7 @@
 			style="clip-path: inset(0 {100 - $sliderPositionStore}% 0 0);"
 		>
 			<JDGImage
-				imageAttributes={imageAttributes1}
+				imageMeta={imageMeta1}
 				cropToFillContainer={false}
 				{maxHeight}
 				{showBlurInUnfilledSpace}
@@ -200,7 +200,7 @@
 		<div class="slider" style="left: {$sliderPositionStore}%;"></div>
 		{#if caption}
 			<div style="width: 100%;">
-				<JDGImageCaptionAttribution imageAttributes={newImageAttributes} />
+				<JDGImageCaptionAttribution imageMeta={newImageMeta} />
 			</div>
 		{/if}
 	</div>

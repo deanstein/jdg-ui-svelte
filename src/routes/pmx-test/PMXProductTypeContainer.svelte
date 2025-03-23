@@ -1,18 +1,18 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { imageAttributesCollection } from '../image-attributes-collection.js';
+	import { imageMetaCollection } from '../image-meta-collection.js';
 	import { jdgBreakpoints } from '$lib/jdg-shared-styles.js';
 
 	import { JDGImageCarousel } from '$lib/index.js';
 	import { appAccentColors } from '$lib/states/ui-state.js';
 
 	export let productId = undefined; // optional, for use in ProductTypeSelector parent component (if multiple types)
-	export let imageAttributeObjects = [
-		imageAttributesCollection.products.CITYSCAPE_021A_1,
-		imageAttributesCollection.products.CITYSCAPE_021A_2,
-		imageAttributesCollection.products.CITYSCAPE_021A_3,
-		imageAttributesCollection.products.CITYSCAPE_021A_4
+	export let imageMetaSet = [
+		imageMetaCollection.products.CITYSCAPE_021A_1,
+		imageMetaCollection.products.CITYSCAPE_021A_2,
+		imageMetaCollection.products.CITYSCAPE_021A_3,
+		imageMetaCollection.products.CITYSCAPE_021A_4
 	];
 
 	const productTypeContainerCss = css`
@@ -34,7 +34,7 @@
 <div id={productId ?? '000X'} class="pmx-product-type-flex-container {productTypeContainerCss}">
 	<div class="flex-container-left">
 		<JDGImageCarousel
-			{imageAttributeObjects}
+			{imageMetaSet}
 			showCaption={false}
 			showAttribution={false}
 			showBlurInUnfilledSpace={false}

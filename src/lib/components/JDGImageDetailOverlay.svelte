@@ -3,7 +3,7 @@
 	import { scale } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
-	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
+	import jdgImageMeta from '$lib/schemas/jdg-image-meta.js';
 
 	import { hideImageDetailModal } from '$lib/jdg-state-management.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
@@ -12,10 +12,10 @@
 	import { jdgBreakpoints } from '$lib/jdg-shared-styles.js';
 	import { imageDetailScale, imageDetailWidth } from '$lib/states/ui-state.js';
 
-	export let imageAttributes = instantiateObject(jdgImageAttributes);
+	export let imageMeta = instantiateObject(jdgImageMeta);
 
 	const imageAndCaptionWrapperCss = css`
-		display: ${imageAttributes.allowBackgroundBlur ? 'flex' : 'grid'};
+		display: ${imageMeta.allowBackgroundBlur ? 'flex' : 'grid'};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			padding: 0px;
 		}
@@ -52,7 +52,7 @@
 		on:keypress={() => {}}
 	>
 		<JDGImage
-			{imageAttributes}
+			{imageMeta}
 			maxHeight="auto"
 			maxWidth="100%"
 			cropToFillContainer={false}
@@ -63,9 +63,9 @@
 			doScaleOnScrollOrZoom={true}
 		/>
 		<!-- only show caption/attribution if image is not scaled -->
-		{#if $imageDetailScale === 1.0 && (imageAttributes.imgCaption || imageAttributes.imgAttribution)}
+		{#if $imageDetailScale === 1.0 && (imageMeta.imgCaption || imageMeta.imgAttribution)}
 			<div class="image-caption-attribution-wrapper" style="width: {$imageDetailWidth}px">
-				<JDGImageCaptionAttribution {imageAttributes} truncateText={false} />
+				<JDGImageCaptionAttribution {imageMeta} truncateText={false} />
 			</div>
 		{/if}
 	</div>

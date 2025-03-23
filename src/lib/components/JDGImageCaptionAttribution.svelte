@@ -10,7 +10,7 @@
 	import { JDGButton } from '../index.js';
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 
-	export let imageAttributes;
+	export let imageMeta;
 	export let showCaption = true;
 	export let showAttribution = true;
 	export let truncateText = true;
@@ -110,7 +110,7 @@
 	`;
 
 	onMount(() => {
-		if (showCaption && imageAttributes.imgCaption) {
+		if (showCaption && imageMeta.imgCaption) {
 			// set up a resize observer to calculate the final available width for text
 			const observer = new ResizeObserver(() => {
 				setTimeout(() => {
@@ -202,7 +202,7 @@
 	}
 </script>
 
-{#if imageAttributes.imgCaption || imageAttributes.imageAttribution}
+{#if imageMeta.imgCaption || imageMeta.imageAttribution}
 	<div bind:this={availableWidthRef} class="jdg-caption-attribution-available-width-ref">
 		<div
 			class="jdg-caption-attribution-container {captionAttributionContainerCss} {captionAttributionContainerDynamicCss} {textWidthSizingCss}"
@@ -215,19 +215,19 @@
 			tabindex="0"
 		>
 			<div class="caption-attribution-grid-container">
-				{#if showCaption && imageAttributes.imgCaption}
+				{#if showCaption && imageMeta.imgCaption}
 					<div class="caption-attribution-flex-container {captionCss}">
 						<div bind:this={captionTextRef} class="caption-text {captionAttributionDynamicCss}">
-							{imageAttributes.imgCaption}
+							{imageMeta.imgCaption}
 						</div>
 					</div>
 				{/if}
-				{#if showAttribution && imageAttributes.imgAttribution}
+				{#if showAttribution && imageMeta.imgAttribution}
 					<div
 						class="caption-attribution-flex-container {captionAttributionDynamicCss} {attributionCss}"
 					>
 						<div class="attribution-text">
-							{attributionPrefix + imageAttributes.imgAttribution}
+							{attributionPrefix + imageMeta.imgAttribution}
 						</div>
 					</div>
 				{/if}

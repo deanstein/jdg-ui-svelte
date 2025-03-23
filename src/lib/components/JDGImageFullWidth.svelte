@@ -1,6 +1,6 @@
 <script>
 	import { css } from '@emotion/css';
-	import jdgImageAttributes from '$lib/schemas/jdg-image-attributes.js';
+	import jdgImageMeta from '$lib/schemas/jdg-image-meta.js';
 	import {
 		addCloudinaryUrlHeight,
 		getMaxHeightPxFromProp,
@@ -17,7 +17,7 @@
 	import { fade } from 'svelte/transition';
 	import { appFontFamily, isMobileBreakpoint, isTabletBreakpoint } from '$lib/states/ui-state.js';
 
-	export let imageAttributes = instantiateObject(jdgImageAttributes);
+	export let imageMeta = instantiateObject(jdgImageMeta);
 	export let objectPosition = 'center';
 	export let maxHeight = '80vh';
 	export let overlapWithHeader = false; // if true, the overlays will be moved down so they're visually centered
@@ -82,7 +82,7 @@
 			<div
 				class="parallax-image"
 				style="background-image: url({addCloudinaryUrlHeight(
-					imageAttributes.imgSrc,
+					imageMeta.imgSrc,
 					getMaxHeightPxFromProp(maxHeight, parallaxContainerRef)
 				)}); height: {getMaxHeightPxFromProp(
 					maxHeight,
@@ -92,7 +92,7 @@
 		</div>
 	{:else}
 		<JDGImage
-			{imageAttributes}
+			{imageMeta}
 			{maxHeight}
 			useAutoHeightOnMobile={false}
 			{objectPosition}
@@ -129,7 +129,7 @@
 					<JDGAnimateOnVisible animationCssBefore={fadeInSettleBeforeSm}>
 						<!-- overlay image -->
 						<JDGImage
-							imageAttributes={overlayImageAttributes}
+							imageMeta={overlayImageAttributes}
 							maxHeight={overlayImageMaxHeight}
 							useAutoHeightOnMobile={false}
 							cropToFillContainer={false}

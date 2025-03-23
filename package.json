@@ -21,7 +21,7 @@
 			"types": "./dist/index.d.ts",
 			"svelte": "./dist/index.js"
 		},
-		"./schemas/jdg-image-attributes.js": "./dist/schemas/jdg-image-attributes.js",
+		"./schemas/jdg-image-meta.js": "./dist/schemas/jdg-image-meta.js",
 		"./schemas/jdg-notification-types.js": "./dist/schemas/jdg-notification-types.js",
 		"./schemas/jdg-nav-item.js": "./dist/schemas/jdg-nav-item.js",
 		"./states/ui-state.js": "./dist/states/ui-state.js",

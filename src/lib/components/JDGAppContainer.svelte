@@ -15,7 +15,7 @@
 		doShowHeaderStripes,
 		doShowImageDetailOverlay,
 		headerHeightPx,
-		imageDetailAttributes,
+		imageDetailMeta,
 		isMobileBreakpoint,
 		isScrolling,
 		scrollDirection,
@@ -201,7 +201,7 @@
 		{loadingSpinnerColor}
 	/>
 	{#if $doShowImageDetailOverlay}
-		<JDGImageDetailOverlay imageAttributes={$imageDetailAttributes} />
+		<JDGImageDetailOverlay imageMeta={$imageDetailMeta} />
 	{/if}
 	<!-- show dev UI when requested -->
 	{#if $doShowDevOverlay}

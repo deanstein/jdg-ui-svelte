@@ -9,7 +9,7 @@
 	} from '$lib/index.js';
 
 	// shared props
-	export let imageAttributeObjects = []; // all images shown in thumbnail collection
+	export let imageMetaSet = []; // all images shown in thumbnail collection
 	export let objectPosition = 'center';
 	export let cropToFillContainer = true;
 	export let showBlurInUnfilledSpace = false;
@@ -28,18 +28,18 @@
 		<!-- carousel can be full-width or not -->
 		{#if fullWidthCarouselOnMobile}
 			<JDGFullWidthContainer>
-				<JDGImageCarousel {imageAttributeObjects} {showCaption} {showAttribution}
+				<JDGImageCarousel {imageMetaSet} {showCaption} {showAttribution}
 				></JDGImageCarousel>
 			</JDGFullWidthContainer>
 		{:else}
-			<JDGImageCarousel {imageAttributeObjects} {showCaption} {showAttribution}></JDGImageCarousel>
+			<JDGImageCarousel {imageMetaSet} {showCaption} {showAttribution}></JDGImageCarousel>
 		{/if}
 		<!-- all other breakpoints use the grid layout with image tiles -->
 	{:else}
 		<JDGGridLayout {maxColumns}>
-			{#each imageAttributeObjects as imageAttributes, i}
+			{#each imageMetaSet as imageMeta, i}
 				<JDGImageTile
-					{imageAttributes}
+					{imageMeta}
 					{objectPosition}
 					{cropToFillContainer}
 					{showBlurInUnfilledSpace}

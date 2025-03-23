@@ -1,5 +1,5 @@
 <script>
-	import { imageAttributesCollection } from '../image-attributes-collection.js';
+	import { imageMetaCollection } from '../image-meta-collection.js';
 	import { appAccentColors } from '$lib/states/ui-state.js';
 
 	import { JDGContentBoxFloating, JDGContentContainer } from '$lib/index.js';
@@ -21,16 +21,16 @@
 			activeProductId={model003F}
 			productTypeIds={[model003D, model003F]}
 			productTypeThumbnailImageAttributes={[
-				imageAttributesCollection.aerial_60s70s_1,
-				imageAttributesCollection.architecture_1
+				imageMetaCollection.aerial_60s70s_1,
+				imageMetaCollection.architecture_1
 			]}
 		>
 			<PMXProductTypeContainer
 				productId={model003D}
-				imageAttributeObjects={[
-					imageAttributesCollection.cc_1,
-					imageAttributesCollection.cc_2,
-					imageAttributesCollection.ccp_blue_mall_60s70s_1
+				imageMetaSet={[
+					imageMetaCollection.cc_1,
+					imageMetaCollection.cc_2,
+					imageMetaCollection.ccp_blue_mall_60s70s_1
 				]}
 			>
 				<PMXProductDetailsSection sectionTitle={`MODEL ${model003D}`}>
@@ -48,10 +48,10 @@
 			</PMXProductTypeContainer>
 			<PMXProductTypeContainer
 				productId={model003F}
-				imageAttributeObjects={[
-					imageAttributesCollection.ccp_blue_mall_80s90s_1,
-					imageAttributesCollection.ccp_gold_mall_60s70s_1,
-					imageAttributesCollection.ccp_gold_mall_80s90s_1
+				imageMetaSet={[
+					imageMetaCollection.ccp_blue_mall_80s90s_1,
+					imageMetaCollection.ccp_gold_mall_60s70s_1,
+					imageMetaCollection.ccp_gold_mall_80s90s_1
 				]}
 			>
 				<PMXProductDetailsSection sectionTitle={`MODEL ${model003F}`}>

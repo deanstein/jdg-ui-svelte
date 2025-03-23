@@ -27,7 +27,7 @@
 		<JDGImageTile
 			label={item1Label}
 			href={item1Href}
-			imageAttributes={item1ImageAttributes}
+			imageMeta={item1ImageAttributes}
 			labelJustification={'center'}
 			useAutoHeightOnMobile={false}
 			objectPosition={item1ObjectPosition}
@@ -36,7 +36,7 @@
 		<JDGImageTile
 			label={item2Label}
 			href={item2Href}
-			imageAttributes={item2ImageAttributes}
+			imageMeta={item2ImageAttributes}
 			labelJustification={'center'}
 			useAutoHeightOnMobile={false}
 			objectPosition={item2ObjectPosition}
@@ -45,7 +45,7 @@
 		<JDGImageTile
 			label={item3Label}
 			href={item3Href}
-			imageAttributes={item3ImageAttributes}
+			imageMeta={item3ImageAttributes}
 			labelJustification={'center'}
 			useAutoHeightOnMobile={false}
 			objectPosition={item3ObjectPosition}

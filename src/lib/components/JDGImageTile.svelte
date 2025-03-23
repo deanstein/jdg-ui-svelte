@@ -5,14 +5,14 @@
 
 	import { instantiateObject } from './../jdg-utils.js';
 
-	import jdgImageAttributes from '../schemas/jdg-image-attributes.js';
+	import jdgImageMeta from '../schemas/jdg-image-meta.js';
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGStripesHorizontal } from '../index.js';
 	import { setAlphaInRgbaString, verticalSlide } from '$lib/jdg-graphics-factory.js';
 	import { jdgColors, jdgSizes, jdgDurations, jdgBreakpoints } from '../jdg-shared-styles.js';
 	import { appFontFamily } from '$lib/states/ui-state.js';
 
-	export let imageAttributes = instantiateObject(jdgImageAttributes); // one object to hold all details
+	export let imageMeta = instantiateObject(jdgImageMeta); // one object to hold all details
 	export let maxWidth = undefined; // if not defined, takes available space
 	export let maxHeight = '350px';
 	export let cropToFillContainer = true; // if true, image may be cropped to fill container in both axes
@@ -38,8 +38,8 @@
 	const hrefTarget = hrefOpenInNewTab ? '_blank' : null;
 	let isHovering;
 
-	// if the imageAttributes specify no blur, override showBlur to false
-	if (!imageAttributes.allowBackgroundBlur) {
+	// if the imageMeta specify no blur, override showBlur to false
+	if (!imageMeta.allowBackgroundBlur) {
 		showBlurInUnfilledSpace = false;
 	}
 
@@ -103,7 +103,7 @@
 					// if href is provided, do nothing
 				} else {
 					// otherwise, the default behavior is to show image detail modal
-					showImageDetailModal(imageAttributes);
+					showImageDetailModal(imageMeta);
 				}
 				// in any case, ensure the hover goes away eventually
 				setTimeout(() => {
@@ -135,7 +135,7 @@
 			<JDGImage
 				{maxHeight}
 				{maxWidth}
-				{imageAttributes}
+				{imageMeta}
 				showHoverEffect={true}
 				{isHovering}
 				{cropToFillContainer}
@@ -152,7 +152,7 @@
 	{#if (showCaption || showAttribution) && (cropToFillContainer || showBlurInUnfilledSpace)}
 		<div class="image-caption-attribution-wrapper">
 			<JDGImageCaptionAttribution
-				{imageAttributes}
+				{imageMeta}
 				{showCaption}
 				{showAttribution}
 				backgroundColorRgba={setAlphaInRgbaString(jdgColors.imageLabelBackground, 1.0)}
