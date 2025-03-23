@@ -95,8 +95,8 @@
 		logoTitle={'JDG SVELTE UI'}
 		logoAlt="JDG SVELTE UI"
 		{navItems}
-		useMobileNav={true}
-		suppressAlphaOnScroll={false}
+		doUseMobileNav={true}
+		doSuppressAlphaOnScroll={false}
 	/>
 	<JDGBackground />
 	<!-- all content goes in this slot -->
@@ -105,7 +105,7 @@
 		{appVersion}
 		copyrightHref="https://jdeangoldstein.com/"
 		disclaimer={disclaimerMessage}
-		showDevToolsButton={true}
+		doShowDevToolsButton={true}
 		alignItems="center"
 	>
 		<div slot="footer-slot-top">
