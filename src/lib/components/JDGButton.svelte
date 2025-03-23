@@ -45,7 +45,7 @@
 	};
 
 	export let label = 'This is a button'; // set null if no label is desired
-	export let faClass = 'fa-solid';
+	export let faClass = 'fa-solid fa-fw'; // fa-fw ensures consistent width for all icons
 	export let faIcon = 'fa-circle-info'; // set null if no icon is desired
 	export let isEnabled = true;
 	export let isPrimary = true;
