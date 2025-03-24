@@ -103,6 +103,9 @@ export { JDGNotificationBanner };
 import JDGOverlay from './components/JDGOverlay.svelte';
 export { JDGOverlay };
 
+import JDGVersionPackageJson from './components/JDGVersionPackageJson.svelte';
+export { JDGVersionPackageJson };
+
 import JDGScrollToTop from './components/JDGScrollToTop.svelte';
 export { JDGScrollToTop };
 
