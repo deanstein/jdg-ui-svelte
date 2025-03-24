@@ -80,8 +80,8 @@
 	<JDGJumpTo />
 	<JDGContentBoxFloating title="VERSIONS" animateWhenVisible={false}>
 		<JDGBodyCopy paddingTop="0" textAlign="center">
-			<b>RepoPackageVersion</b>
-			<div style="font-size: 0.8rem; margin: -10px 0 10px 0;">(package.json)</div>
+			<b>VersionPackageJson</b>
+			<br />
 			Gets the version field of the package.json from a repo.
 			<br />
 			To demo, here's the version of JDG UI SVELTE and all consuming websites:
