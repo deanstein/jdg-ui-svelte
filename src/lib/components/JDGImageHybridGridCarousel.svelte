@@ -28,8 +28,7 @@
 		<!-- carousel can be full-width or not -->
 		{#if fullWidthCarouselOnMobile}
 			<JDGFullWidthContainer>
-				<JDGImageCarousel {imageMetaSet} {showCaption} {showAttribution}
-				></JDGImageCarousel>
+				<JDGImageCarousel {imageMetaSet} {showCaption} {showAttribution}></JDGImageCarousel>
 			</JDGFullWidthContainer>
 		{:else}
 			<JDGImageCarousel {imageMetaSet} {showCaption} {showAttribution}></JDGImageCarousel>

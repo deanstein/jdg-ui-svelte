@@ -13,8 +13,7 @@ const jdgImageMeta = {
 	// in some contexts, images can have a toolbar
 	// the toolbar alignment may need to change
 	// depending on the content of the image
-	toolbarAlignment:
-		'right'
+	toolbarAlignment: 'right'
 };
 
 export default jdgImageMeta;

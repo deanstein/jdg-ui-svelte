@@ -126,8 +126,7 @@
 		if (touchEndX - touchStartX > minSwipeDistance) {
 			// swipe right
 			let currentIndex = imageMetaSet.indexOf(activeImageMeta);
-			currentIndex =
-				(currentIndex - 1 + imageMetaSet.length) % imageMetaSet.length;
+			currentIndex = (currentIndex - 1 + imageMetaSet.length) % imageMetaSet.length;
 			setActiveImage(imageMetaSet[currentIndex], true);
 		}
 	};
