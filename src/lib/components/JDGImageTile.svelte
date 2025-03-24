@@ -39,7 +39,7 @@
 	let isHovering;
 
 	// if the imageMeta specify no blur, override showBlur to false
-	if (!imageMeta.allowBackgroundBlur) {
+	if (!imageMeta.doShowBackground) {
 		showBlurInUnfilledSpace = false;
 	}
 

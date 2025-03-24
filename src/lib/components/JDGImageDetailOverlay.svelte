@@ -15,7 +15,7 @@
 	export let imageMeta = instantiateObject(jdgImageMeta);
 
 	const imageAndCaptionWrapperCss = css`
-		display: ${imageMeta.allowBackgroundBlur ? 'flex' : 'grid'};
+		display: ${imageMeta.doShowBackground ? 'flex' : 'grid'};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			padding: 0px;
 		}

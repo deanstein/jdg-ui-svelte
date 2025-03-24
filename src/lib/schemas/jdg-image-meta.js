@@ -6,9 +6,15 @@ const jdgImageMeta = {
 	imgAlt: undefined,
 	imgCaption: undefined,
 	imgAttribution: undefined,
-	allowBackgroundBlur: true /* set to false for images like plans and diagrams */,
+	// an image can fill the rest of its container
+	// with a blurred copy of itself
+	// set this to false plans and diagrams
+	doShowBackground: true,
+	// in some contexts, images can have a toolbar
+	// the toolbar alignment may need to change
+	// depending on the content of the image
 	toolbarAlignment:
-		'right' /* in some contexts, images will have a toolbar and its alignment can be set depending on the image layout */
+		'right'
 };
 
 export default jdgImageMeta;

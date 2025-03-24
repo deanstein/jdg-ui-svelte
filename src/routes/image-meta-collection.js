@@ -112,7 +112,7 @@ const imageMetaCollection = {
 				'https://res.cloudinary.com/jdg-main/image/upload/v1721164767/jdg-website/exp/speer-point-after.jpg',
 			imgCaption:
 				'The alternate use scheme includes artist studios, a cafe, a restaurant, and event space.',
-			allowBackgroundBlur: false
+			doShowBackground: false
 		})
 	),
 	rose_mall_60s70s_construction_1: instantiateObject(jdgImageMeta, {
@@ -670,7 +670,7 @@ const imageMetaCollection = {
 					'https://res.cloudinary.com/jdg-main/image/upload/v1722737633/jdg-website/hst/fms-2000s-plan-additions.png',
 				imgCaption: 'The school complex became a mess of additions and renovations by the 2000s.',
 				imgAttribution: 'Josh Goldstein',
-				allowBackgroundBlur: false
+				doShowBackground: false
 			})
 		),
 		ehs_1920_broadway_northeast: postProcessImageMeta(
@@ -741,7 +741,7 @@ const imageMetaCollection = {
 					'https://res.cloudinary.com/jdg-main/image/upload/v1722737633/jdg-website/hst/ehs-1919-plan.png',
 				imgCaption: "Englewood High School's original layout in 1919.",
 				imgAttribution: 'Englewood Public Library',
-				allowBackgroundBlur: false
+				doShowBackground: false
 			})
 		)
 	},
