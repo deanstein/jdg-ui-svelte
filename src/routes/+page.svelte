@@ -22,12 +22,21 @@
 		JDGImageHybridGridCarousel,
 		JDGImageTile,
 		JDGJumpTo,
-		JDGUpNext
+		JDGUpNext,
+		JDGVersionPackageJson
 	} from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgFonts } from '$lib/jdg-shared-styles.js';
 
 	import { imageMetaCollection } from './image-meta-collection.js';
 	import { css } from '@emotion/css';
+	import {
+		ccpWebsiteRepoName,
+		familyTreeRepoName,
+		jdgRepoOwner,
+		jdgUiSvelteRepoName,
+		jdgWebsiteRepoName,
+		pmx3dWebsiteRepoName
+	} from '$lib/jdg-persistence-management.js';
 
 	let isTestButtonEnabled = true;
 
@@ -69,6 +78,66 @@
 		</JDGContentBoxFloating>
 	</div>
 	<JDGJumpTo />
+	<JDGContentBoxFloating title="VERSIONS" animateWhenVisible={false}>
+		<JDGBodyCopy paddingTop="0" textAlign="center">
+			<b>RepoPackageVersion</b>
+			<div style="font-size: 0.8rem; margin: -10px 0 10px 0;">(package.json)</div>
+			Gets the version field of the package.json from a repo.
+			<br />
+			To demo, here's the version of JDG UI SVELTE and all consuming websites:
+			<br /><br />
+			<div class="repo-package-version-group">
+				JDG UI SVELTE
+				<div class="repo-package-version">
+					<JDGVersionPackageJson
+						repoOwner={jdgRepoOwner}
+						repoName={jdgUiSvelteRepoName}
+						showIfInvalid={false}
+					/>
+				</div>
+			</div>
+			<div class="repo-package-version-group">
+				JDG WEBSITE
+				<div class="repo-package-version">
+					<JDGVersionPackageJson
+						repoOwner={jdgRepoOwner}
+						repoName={jdgWebsiteRepoName}
+						showIfInvalid={false}
+					/>
+				</div>
+			</div>
+			<div class="repo-package-version-group">
+				CCP WEBSITE
+				<div class="repo-package-version">
+					<JDGVersionPackageJson
+						repoOwner={jdgRepoOwner}
+						repoName={ccpWebsiteRepoName}
+						showIfInvalid={false}
+					/>
+				</div>
+			</div>
+			<div class="repo-package-version-group">
+				PMX3D WEBSITE
+				<div class="repo-package-version">
+					<JDGVersionPackageJson
+						repoOwner={jdgRepoOwner}
+						repoName={pmx3dWebsiteRepoName}
+						showIfInvalid={false}
+					/>
+				</div>
+			</div>
+			<div class="repo-package-version-group">
+				FAMILY TREE
+				<div class="repo-package-version">
+					<JDGVersionPackageJson
+						repoOwner={jdgRepoOwner}
+						repoName={familyTreeRepoName}
+						showIfInvalid={false}
+					/>
+				</div>
+			</div>
+		</JDGBodyCopy>
+	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="IMAGES">
 		<JDGBodyCopy textAlign="center" paddingTop="0">We've got lots of image components!</JDGBodyCopy>
 		<JDGBodyCopy textAlign="center">
@@ -471,7 +540,7 @@
 		</JDGBodyCopy>
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="ACCENT BLOCKS">
-		<JDGBodyCopy textAlign="center">
+		<JDGBodyCopy paddingTop="0" textAlign="center">
 			Accent blocks can be used with a couple of different approaches:
 		</JDGBodyCopy>
 		<hr />
@@ -654,5 +723,17 @@
 		display: flex;
 		flex-direction: column;
 		gap: 40px;
+	}
+
+	.repo-package-version-group {
+		padding: 15px 0 15px 0;
+		text-align: center;
+	}
+
+	.repo-package-version {
+		font-size: 0.8rem;
+		line-height: 0.8rem;
+		text-align: center;
+		color: gray;
 	}
 </style>
