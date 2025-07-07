@@ -106,7 +106,7 @@
 	class="jdg-button {buttonCss}"
 >
 	{#if faIcon !== null}
-		<i class="{faClass} {faIcon}" />
+		<i class="{faClass} {doForceSquareRatio ? 'fa-fw' : ''} {faIcon}" />
 	{/if}
 	{#if label !== null}
 		{label}
