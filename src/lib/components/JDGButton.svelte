@@ -62,7 +62,7 @@
 	export let borderRadius = '1.5em';
 	export let paddingTopBottom = '10px';
 	export let paddingLeftRight = '20px';
-	export let doForceSquareRatio = false;
+	export let doForceSquareAspect = false;
 	export let gap = '8px';
 	export let tooltip = undefined;
 
@@ -79,7 +79,7 @@
 						? '100%'
 						: width /* button is 100% width on smallest breakpoint */
 			};
-			border-radius: ${doForceSquareRatio ? '50%' : borderRadius};
+			border-radius: ${doForceSquareAspect ? '50%' : borderRadius};
 			padding: ${`${paddingTopBottom} ${paddingLeftRight} ${paddingTopBottom} ${paddingLeftRight}`};
 			gap: ${gap};
 			color: ${textColor};
@@ -93,7 +93,7 @@
 				background-color: ${isEnabled ? backgroundColorHover : jdgColors.disabled};
 			}
 			cursor: ${isEnabled ? 'pointer' : 'default'};
-			aspect-ratio: ${doForceSquareRatio ? '1' : ''};
+			aspect-ratio: ${doForceSquareAspect ? '1' : ''};
 		`;
 	}
 </script>
@@ -106,7 +106,7 @@
 	class="jdg-button {buttonCss}"
 >
 	{#if faIcon !== null}
-		<i class="{faClass} {doForceSquareRatio ? 'fa-fw' : ''} {faIcon}" />
+		<i class="{faClass} {doForceSquareAspect ? 'fa-fw' : ''} {faIcon}" />
 	{/if}
 	{#if label !== null}
 		{label}

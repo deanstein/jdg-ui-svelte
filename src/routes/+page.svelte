@@ -616,7 +616,7 @@
 				onClickFunction={() => {}}
 				label={null}
 				faIcon={"fa-x"}
-				doForceSquareRatio
+				doForceSquareAspect
 				isEnabled={isTestButtonEnabled}
 			/>
 		</div>
@@ -644,7 +644,7 @@
 				paddingTopBottom={'8px'}
 				backgroundColor={$appAccentColors[0]}
 				tooltip="Expand image"
-				doForceSquareRatio
+				doForceSquareAspect
 			/>
 		</div>
 	</JDGContentBoxFloating>

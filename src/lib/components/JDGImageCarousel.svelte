@@ -347,7 +347,7 @@
 				paddingTopBottom={'8px'}
 				backgroundColor={$appAccentColors[0]}
 				tooltip="Expand image"
-				doForceSquareRatio
+				doForceSquareAspect
 			/>
 		</div>
 	</div>

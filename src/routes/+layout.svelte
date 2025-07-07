@@ -129,7 +129,7 @@
 				paddingLeftRight="10px"
 				faIcon={$doShowDevTools ? 'fa-eye-slash' : 'fa-screwdriver-wrench'}
 				fontSize={jdgSizes.fontSizeBodyXSm}
-				doForceSquareRatio
+				doForceSquareAspect
 			/>
 			&nbsp;
 		</div>

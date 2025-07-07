@@ -191,7 +191,7 @@
 					paddingLeftRight="10px"
 					faIcon={$doShowDevTools ? 'fa-eye-slash' : 'fa-wrench'}
 					fontSize={jdgSizes.fontSizeBodyXSm}
-					doForceSquareRatio
+					doForceSquareAspect
 				/>
 				<!-- slot for any extra dev tools -->
 				<slot name="footer-slot-dev-tools" />

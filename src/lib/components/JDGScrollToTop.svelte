@@ -88,7 +88,7 @@
 					tooltip="Scroll to Top"
 					backgroundColor={$appAccentColors[0]}
 					borderRadius="50%"
-					doForceSquareRatio
+					doForceSquareAspect
 					paddingTopBottom={$isMobileBreakpoint ? '8px' : '12px'}
 					paddingLeftRight={$isMobileBreakpoint ? '8px' : '12px'}
 				/>
