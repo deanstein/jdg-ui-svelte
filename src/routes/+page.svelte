@@ -612,13 +612,6 @@
 				label="This button will disable when clicked"
 				isEnabled={isTestButtonEnabled}
 			/>
-			<JDGButton
-				onClickFunction={() => {}}
-				label={null}
-				faIcon={"fa-x"}
-				doForceSquareAspect
-				isEnabled={isTestButtonEnabled}
-			/>
 		</div>
 		<JDGBodyCopy textAlign="center" paddingBottom="0">Consistent width:</JDGBodyCopy>
 		<div
@@ -645,6 +638,13 @@
 				backgroundColor={$appAccentColors[0]}
 				tooltip="Expand image"
 				doForceSquareAspect
+			/>
+			<JDGButton
+				onClickFunction={() => {}}
+				label={null}
+				faIcon={'fa-x'}
+				doForceSquareAspect
+				isEnabled={isTestButtonEnabled}
 			/>
 		</div>
 	</JDGContentBoxFloating>
