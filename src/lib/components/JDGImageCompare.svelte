@@ -23,8 +23,8 @@
 
 	// create a temp imageMeta for combined caption/attribution
 	let newImageMeta = instantiateObject(jdgImageMeta);
-	newImageMeta.imgCaption = caption;
-	newImageMeta.imgAttribution = attribution;
+	newImageMeta.caption = caption;
+	newImageMeta.attribution = attribution;
 
 	let isUserInteracting = false; // if user interacts, animation is canceled
 	let observer; // observe whether container is in view

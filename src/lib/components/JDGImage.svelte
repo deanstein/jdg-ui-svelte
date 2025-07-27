@@ -96,9 +96,9 @@
 
 	// set an initial, low-quality Cloudinary transform for performance
 	// this will be replaced with a higher-quality request with a specific width or height
-	// this will also be ignored if the imgSrc is not a Cloudinary URL
+	// this will also be ignored if the src is not a Cloudinary URL
 	const initialCloudinaryTransform = 'f_auto,q_1';
-	let adjustedImgSrc = addCloudinaryUrlTransformation(imageMeta.imgSrc, initialCloudinaryTransform);
+	let adjustedImgSrc = addCloudinaryUrlTransformation(imageMeta.src, initialCloudinaryTransform);
 	let imageAspectRatio;
 
 	// load states
@@ -118,14 +118,14 @@
 
 	// SPECIAL CASES
 
-	// for the case where the imgSrc is not provided,
+	// for the case where the src is not provided,
 	// consider the image immediately loaded
-	if (imageMeta.imgSrc === imagePlaceholder && !showDebugLoadingState) {
+	if (imageMeta.src === imagePlaceholder && !showDebugLoadingState) {
 		isImageLoaded = true;
 	}
 
 	// if imageMeta specifies no blur, override showBlur to false
-	if (!imageMeta.doShowBackground) {
+	if (!imageMeta.doShowBackgroundBlur) {
 		showBlurInUnfilledSpace = false;
 	}
 
@@ -222,11 +222,11 @@
 
 			// if requested, record aspect ratio for other components to know about
 			if (recordAspectRatioInState) {
-				recordImageAspectRatio(imageMeta.imgSrc, imageRef.naturalWidth, imageRef.naturalHeight);
+				recordImageAspectRatio(imageMeta.src, imageRef.naturalWidth, imageRef.naturalHeight);
 			}
 
 			if (showDebugMessagesInConsole) {
-				console.log('Image aspect ratio for ' + imageMeta.imgSrc + ': ' + imageAspectRatio);
+				console.log('Image aspect ratio for ' + imageMeta.src + ': ' + imageAspectRatio);
 			}
 			lastKnownContainerHeight = getMaxElementHeightPx(containerRef);
 			lastKnownContainerWidth = getMaxElementWidthPx(containerRef);
@@ -249,7 +249,7 @@
 			if (showDebugMessagesInConsole) {
 				console.log(
 					'Getting information to determine resizing for:',
-					imageMeta.imgSrc,
+					imageMeta.src,
 					'\nmaxHeight string from prop:',
 					maxHeight,
 					'\nMax height px from prop:',
@@ -315,7 +315,7 @@
 					'getPreferredContainerHeight: Choosing ' +
 						preferredHeightFitType +
 						' for image: ' +
-						imageMeta.imgSrc
+						imageMeta.src
 				);
 			}
 		}
@@ -356,7 +356,7 @@
 				'getPreferredContainerWidth: Choosing ' +
 					preferredContainerWidth +
 					' for image: ' +
-					imageMeta.imgSrc
+					imageMeta.src
 			);
 		}
 
@@ -371,7 +371,7 @@
 		if (!showDebugLoadingState) {
 			isImageLoaded = true;
 		}
-		removeImageLoading(imageMeta.imgSrc);
+		removeImageLoading(imageMeta.src);
 	};
 
 	// runs if an image fails to load
@@ -379,17 +379,17 @@
 	let imageErrorMessage = 'Error loading image: ';
 	const onImageError = () => {
 		// cloudinary transform may have failed
-		// try falling back to the original imgSrc if so
+		// try falling back to the original src if so
 		if (
-			isUrlCloudinary(imageMeta.imgSrc) &&
-			adjustedImgSrc !== imageMeta.imgSrc &&
+			isUrlCloudinary(imageMeta.src) &&
+			adjustedImgSrc !== imageMeta.src &&
 			!showDebugMessagesInConsole // only fall back if debug mode is off
 		) {
-			// fall back to the non-transformed (less optimized) imgSrc and post a warning
-			adjustedImgSrc = imageMeta.imgSrc;
+			// fall back to the non-transformed (less optimized) src and post a warning
+			adjustedImgSrc = imageMeta.src;
 			console.warn(
 				'Cloudinary transform may have failed, falling back to non-transformed URL: ' +
-					imageMeta.imgSrc
+					imageMeta.src
 			);
 		} else {
 			showImageError = true;
@@ -497,8 +497,8 @@
 				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
 						isVisible = true;
-						if (!imageMeta.imgSrc.includes('placeholder')) {
-							addImageLoading(imageMeta.imgSrc);
+						if (!imageMeta.src.includes('placeholder')) {
+							addImageLoading(imageMeta.src);
 						}
 						observer.disconnect();
 					}
@@ -528,7 +528,7 @@
 			if (showDebugMessagesInConsole) {
 				console.log(
 					'SETTING VALID CONTAINER ASPECT RATIO: ',
-					imageMeta.imgSrc,
+					imageMeta.src,
 					validContainerAspectRatio
 				);
 			}
@@ -543,7 +543,7 @@
 			// need to record the width of the image so the caption/attribution width can match
 			// (required workaround for some reason)
 			if (isForImageDetailOverlay) {
-				const widthToSet = imageMeta.doShowBackground
+				const widthToSet = imageMeta.doShowBackgroundBlur
 					? validContainerWidth
 					: getMaxHeightPxFromProp(maxHeight, containerRef) * imageAspectRatio;
 				imageDetailWidth.set(widthToSet);
@@ -587,8 +587,8 @@
 			const imageAutoHeight = validContainerWidth / imageAspectRatio;
 			if (
 				isImageLoaded &&
-				isUrlCloudinary(imageMeta.imgSrc) &&
-				!imageMeta.imgSrc.includes('.gif') &&
+				isUrlCloudinary(imageMeta.src) &&
+				!imageMeta.src.includes('.gif') &&
 				!isNaN(imageAutoHeight) &&
 				!lastKnownCloudinaryTransformationValue
 			) {
@@ -610,7 +610,7 @@
 							const adjustedWidth = Math.ceil(
 								parseInt(containerWidth) * (useDevicePixelRatio ? devicePixelRatio : 1)
 							);
-							adjustedImgSrc = addCloudinaryUrlWidth(imageMeta.imgSrc, adjustedWidth);
+							adjustedImgSrc = addCloudinaryUrlWidth(imageMeta.src, adjustedWidth);
 							if (showDebugMessagesInConsole) {
 								console.log(
 									'Specifying width in Cloudinary URL. Adjusted Cloudinary URL:',
@@ -626,7 +626,7 @@
 								getMaxHeightPxFromProp(maxHeight, containerRef) *
 									(useDevicePixelRatio ? devicePixelRatio : 1)
 							);
-							adjustedImgSrc = addCloudinaryUrlHeight(imageMeta.imgSrc, adjustedHeight);
+							adjustedImgSrc = addCloudinaryUrlHeight(imageMeta.src, adjustedHeight);
 							if (showDebugMessagesInConsole) {
 								console.log(
 									'Specifying height in Cloudinary URL. Adjusted Cloudinary URL:',
@@ -643,7 +643,7 @@
 							getMaxHeightPxFromProp(maxHeight, containerRef) *
 								(useDevicePixelRatio ? devicePixelRatio : 1)
 						);
-						adjustedImgSrc = addCloudinaryUrlHeight(imageMeta.imgSrc, adjustedHeight);
+						adjustedImgSrc = addCloudinaryUrlHeight(imageMeta.src, adjustedHeight);
 						if (showDebugMessagesInConsole) {
 							console.log(
 								'Specifying height in Cloudinary URL. Adjusted Cloudinary URL:',
@@ -662,7 +662,7 @@
 					const adjustedHeight = Math.ceil(
 						parseInt(containerHeight) * (useDevicePixelRatio ? devicePixelRatio : 1)
 					);
-					adjustedImgSrc = addCloudinaryUrlHeight(imageMeta.imgSrc, adjustedHeight);
+					adjustedImgSrc = addCloudinaryUrlHeight(imageMeta.src, adjustedHeight);
 					if (showDebugMessagesInConsole) {
 						console.log(
 							'Specifying height in Cloudinary URL. Adjusted Cloudinary URL (auto):',
@@ -714,7 +714,7 @@
 					? adjustedImgSrc
 					: imagePlaceholder
 				: adjustedImgSrc}
-			alt={imageMeta.imgAlt}
+			alt={imageMeta.alt}
 		/>
 		<!-- only show blurred image behind if showBlurInUnfilledSpace is true -->
 		<!-- if blurred image is shown, it'll use the initial Cloudinary transform (low-quality) -->
@@ -722,7 +722,7 @@
 			<div
 				class="image-blur {imageBlurCss}"
 				style={`background-image: url(${addCloudinaryUrlTransformation(
-					imageMeta.imgSrc,
+					imageMeta.src,
 					initialCloudinaryTransform
 				)}); opacity: ${isImageLoaded ? 1 : 0.25}; transition: opacity ${jdgDurations.fadeIn}${
 					jdgDurations.unit
@@ -731,7 +731,7 @@
 			<div class="image-blur-background"></div>
 		{/if}
 		<!-- caption and attribution -->
-		{#if (showCaption && imageMeta.imgCaption) || (showAttribution && imageMeta.imgAttribution)}
+		{#if (showCaption && imageMeta.caption) || (showAttribution && imageMeta.attribution)}
 			<div class="caption-attribution-wrapper {captionAttributionWrapperCssDynamic}">
 				<JDGImageCaptionAttribution {imageMeta} {showCaption} {showAttribution} />
 			</div>

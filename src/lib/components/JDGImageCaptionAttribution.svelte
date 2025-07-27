@@ -110,7 +110,7 @@
 	`;
 
 	onMount(() => {
-		if (showCaption && imageMeta.imgCaption) {
+		if (showCaption && imageMeta.caption) {
 			// set up a resize observer to calculate the final available width for text
 			const observer = new ResizeObserver(() => {
 				setTimeout(() => {
@@ -202,7 +202,7 @@
 	}
 </script>
 
-{#if imageMeta.imgCaption || imageMeta.imageAttribution}
+{#if imageMeta.caption || imageMeta.imageAttribution}
 	<div bind:this={availableWidthRef} class="jdg-caption-attribution-available-width-ref">
 		<div
 			class="jdg-caption-attribution-container {captionAttributionContainerCss} {captionAttributionContainerDynamicCss} {textWidthSizingCss}"
@@ -215,19 +215,19 @@
 			tabindex="0"
 		>
 			<div class="caption-attribution-grid-container">
-				{#if showCaption && imageMeta.imgCaption}
+				{#if showCaption && imageMeta.caption}
 					<div class="caption-attribution-flex-container {captionCss}">
 						<div bind:this={captionTextRef} class="caption-text {captionAttributionDynamicCss}">
-							{imageMeta.imgCaption}
+							{imageMeta.caption}
 						</div>
 					</div>
 				{/if}
-				{#if showAttribution && imageMeta.imgAttribution}
+				{#if showAttribution && imageMeta.attribution}
 					<div
 						class="caption-attribution-flex-container {captionAttributionDynamicCss} {attributionCss}"
 					>
 						<div class="attribution-text">
-							{attributionPrefix + imageMeta.imgAttribution}
+							{attributionPrefix + imageMeta.attribution}
 						</div>
 					</div>
 				{/if}

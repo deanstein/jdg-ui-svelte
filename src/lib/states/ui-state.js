@@ -29,7 +29,7 @@ export let headerHeightPx = writable(0);
 export let doShowHeaderStripes = writable(false);
 
 // images
-export let imageAspectRatios = writable({}); // { imgSrc: "", aspectRatio: 0 }
+export let imageAspectRatios = writable({}); // { src: "", aspectRatio: 0 }
 export let imagesLoading = writable([]);
 
 // image detail overlay

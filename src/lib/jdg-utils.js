@@ -790,11 +790,11 @@ export const isUrlCloudinary = (url) => {
 	}
 };
 
-// ensures that imgAlt is the same as imgCaption if not provided
+// ensures that alt is the same as caption if not provided
 export const postProcessImageMeta = (jdgImageMeta) => {
-	// imgAlt is likely the same as imgCaption, unless already specified
-	if (jdgImageMeta.imgCaption && !jdgImageMeta.imgAlt) {
-		jdgImageMeta.imgAlt = jdgImageMeta.imgCaption;
+	// alt is likely the same as caption, unless already specified
+	if (jdgImageMeta.caption && !jdgImageMeta.alt) {
+		jdgImageMeta.alt = jdgImageMeta.caption;
 	}
 	return jdgImageMeta;
 };
