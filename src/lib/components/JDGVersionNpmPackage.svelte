@@ -37,4 +37,4 @@
 {/if}
 
 <style>
-</style> 
+</style>
