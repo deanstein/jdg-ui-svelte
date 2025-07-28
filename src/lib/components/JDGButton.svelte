@@ -3,7 +3,7 @@
 
 	import { appFontFamily, isMobileBreakpoint } from '$lib/states/ui-state.js';
 
-	import { jdgColors } from '../jdg-shared-styles.js';
+	import { jdgColors, jdgBoxShadowStandard } from '../jdg-shared-styles.js';
 	import {
 		adjustColorForContrast,
 		darkenColor,
@@ -65,6 +65,7 @@
 	export let doForceSquareAspect = false;
 	export let gap = '8px';
 	export let tooltip = undefined;
+	export let shadow = false;
 
 	let buttonCss = css``; // redeefined in the reactive block
 
@@ -103,7 +104,7 @@
 	on:click|stopPropagation={onClickFunction}
 	disabled={!isEnabled}
 	title={tooltip ?? ''}
-	class="jdg-button {buttonCss}"
+	class="jdg-button {buttonCss} {shadow ? jdgBoxShadowStandard : ''}"
 >
 	{#if faIcon !== null}
 		<i class="{faClass} {doForceSquareAspect ? 'fa-fw' : ''} {faIcon}" />

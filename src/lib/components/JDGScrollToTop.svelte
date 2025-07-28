@@ -72,10 +72,7 @@
 		style={$windowScrollPosition > 0 ? 'opacity: 1' : 'opacity: 0'}
 	>
 		<div class="scroll-to-top-relative">
-			<div
-				bind:this={buttonPlacementRef}
-				class="scroll-to-top-button-placement {scrollToTopCss} {jdgBoxShadowStandard}"
-			>
+			<div bind:this={buttonPlacementRef} class="scroll-to-top-button-placement {scrollToTopCss}">
 				<JDGButton
 					onClickFunction={() => {
 						window.scrollTo({
@@ -91,6 +88,7 @@
 					doForceSquareAspect
 					paddingTopBottom={$isMobileBreakpoint ? '8px' : '12px'}
 					paddingLeftRight={$isMobileBreakpoint ? '8px' : '12px'}
+					shadow
 				/>
 			</div>
 		</div>
