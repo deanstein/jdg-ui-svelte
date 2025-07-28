@@ -23,6 +23,7 @@
 		JDGImageTile,
 		JDGJumpTo,
 		JDGUpNext,
+		JDGVersionNpmPackage,
 		JDGVersionPackageJson
 	} from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgFonts } from '$lib/jdg-shared-styles.js';
@@ -80,22 +81,24 @@
 	<JDGJumpTo />
 	<JDGContentBoxFloating title="VERSIONS" animateWhenVisible={false}>
 		<JDGBodyCopy paddingTop="0" textAlign="center">
+			<b>VersionNpmPackage</b>
+			<br />
+			Gets the version of the given NPM package name.
+			<br />
+			<br />
+			<div class="repo-package-version-group">
+				JDG UI SVELTE
+				<div class="repo-package-version">
+					<JDGVersionNpmPackage packageName={jdgUiSvelteRepoName} />
+				</div>
+			</div>
+			<br /><br />
 			<b>VersionPackageJson</b>
 			<br />
 			Gets the version field of the package.json from a repo.
 			<br />
-			To demo, here's the version of JDG UI SVELTE and all consuming websites:
+			Here's the version.json of JDG websites and projects:
 			<br /><br />
-			<div class="repo-package-version-group">
-				JDG UI SVELTE
-				<div class="repo-package-version">
-					<JDGVersionPackageJson
-						repoOwner={jdgRepoOwner}
-						repoName={jdgUiSvelteRepoName}
-						showIfInvalid={false}
-					/>
-				</div>
-			</div>
 			<div class="repo-package-version-group">
 				JDG WEBSITE
 				<div class="repo-package-version">
