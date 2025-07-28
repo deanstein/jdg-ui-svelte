@@ -106,6 +106,9 @@ export { JDGOverlay };
 import JDGVersionPackageJson from './components/JDGVersionPackageJson.svelte';
 export { JDGVersionPackageJson };
 
+import JDGVersionNpmPackage from './components/JDGVersionNpmPackage.svelte';
+export { JDGVersionNpmPackage };
+
 import JDGScrollToTop from './components/JDGScrollToTop.svelte';
 export { JDGScrollToTop };
 
