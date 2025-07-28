@@ -615,6 +615,14 @@
 				label="This button will disable when clicked"
 				isEnabled={isTestButtonEnabled}
 			/>
+			<JDGButton
+				onClickFunction={() => {}}
+				backgroundColor={'rgba(100, 100, 100, 1)'}
+				faIcon={'fa-sun'}
+				label="This button has a shadow!"
+				isEnabled={isTestButtonEnabled}
+				shadow
+			/>
 		</div>
 		<JDGBodyCopy textAlign="center" paddingBottom="0">Consistent width:</JDGBodyCopy>
 		<div
