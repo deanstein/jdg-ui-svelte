@@ -20,7 +20,7 @@
 	import { jdgSharedStrings } from '$lib/jdg-shared-strings.js';
 	import { toggleDevTools } from '$lib/jdg-state-management.js';
 
-	import { JDGButton, JDGH3H4, JDGDevToolbar, JDGStripesHorizontal } from '../index.js';
+	import { JDGButton, JDGH3H4, JDGDevToolbar, JDGStripesHorizontal, JDGStoreView } from '../index.js';
 	import { jdgColors, jdgSizes } from '../jdg-shared-styles.js';
 
 	export let repoName = jdgUiSvelteRepoName;
@@ -201,6 +201,7 @@
 		{#if $doShowDevTools}
 			<div class="dev-tools">
 				<JDGDevToolbar />
+				<JDGStoreView store={allStateValues} />
 				<div class="state-view {stateViewCss}">
 					<br />
 					<JDGH3H4 h3String="UI STATE" paddingTop="10px" />

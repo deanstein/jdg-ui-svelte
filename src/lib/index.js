@@ -118,6 +118,9 @@ export { JDGSideNav };
 import JDGSocialMedia from './components/JDGSocialMedia.svelte';
 export { JDGSocialMedia };
 
+import JDGStoreView from './components/JDGStoreView.svelte';
+export { JDGStoreView };
+
 import JDGStripesHorizontal from './components/JDGStripesHorizontal.svelte';
 export { JDGStripesHorizontal };
 
