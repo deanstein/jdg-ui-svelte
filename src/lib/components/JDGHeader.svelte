@@ -152,7 +152,6 @@
 			background-color: ${doSuppressAlphaOnScroll
 				? setAlphaInRgbaString(backgroundColorRgba, scrollAlpha)
 				: backgroundColorRgba};
-			backdrop-filter: blur(${jdgSizes.blurSizeMedium});
 			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 				height: ${jdgSizes.headerHeightSm};
 			}
