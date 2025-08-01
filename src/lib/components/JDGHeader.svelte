@@ -109,6 +109,7 @@
 	const logoTitleLinkCss = css`
 		flex-direction: ${logoJustification === 'center' ? 'column' : 'row'};
 		align-items: ${logoJustification === 'center' ? 'center' : 'left'};
+		z-index: 2;
 	`;
 
 	const headerLogoSupertitleCss = css`
@@ -254,6 +255,7 @@
 		display: flex;
 		align-items: baseline;
 		height: 100%;
+		z-index: 3;
 	}
 
 	.logo-container a {

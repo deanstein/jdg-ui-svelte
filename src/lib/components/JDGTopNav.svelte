@@ -80,7 +80,7 @@
 			title={$doShowNavSidebar ? 'Close menu' : 'Open menu'}
 		>
 			<div class="jdg-highlight-container">
-				<span class="jdg-highlight no-initial-highlight" style="display: flex;">
+				<span class="jdg-highlight no-initial-highlight" style="display: flex; z-index: 3;">
 					<JDGMenuIcon />
 				</span>
 			</div>
