@@ -1,9 +1,20 @@
 <script>
+	import { derived } from 'svelte/store';
+
 	import { JDGH3H4 } from '$lib/index.js';
 
 	export let store;
 	export let storeName = 'Store';
 	const undefinedRepString = 'undefined';
+
+	// derived store for performance:
+	// convert all entries to stringified output once
+	const stringifiedEntries = derived(store, $store =>
+		Object.entries($store).map(([key, value]) => [
+			key,
+			JSON.stringify(value === undefined ? undefinedRepString : value, null, 2)
+		])
+	);
 </script>
 
 <div class="jdg-storeview-container">
@@ -11,9 +22,9 @@
 		<JDGH3H4 h3String={storeName.toUpperCase()} paddingTop="20px" />
 
 		<div class="jdg-storeview-output">
-			{#each Object.entries($store) as [key, value] (key)}
+			{#each $stringifiedEntries as [key, value] (key)}
 				<div class="jdg-storeview-entry">
-					<b>{key}</b>: {JSON.stringify(value === undefined ? undefinedRepString : value, null, 2)}
+					<b>{key}</b>: {value}
 				</div>
 				<br />
 			{/each}
