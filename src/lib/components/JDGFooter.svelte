@@ -20,12 +20,7 @@
 	import { jdgSharedStrings } from '$lib/jdg-shared-strings.js';
 	import { toggleDevTools } from '$lib/jdg-state-management.js';
 
-	import {
-		JDGButton,
-		JDGDevToolbar,
-		JDGStripesHorizontal,
-		JDGStoreView
-	} from '../index.js';
+	import { JDGButton, JDGDevToolbar, JDGStripesHorizontal, JDGStoreView } from '../index.js';
 	import { jdgColors, jdgSizes } from '../jdg-shared-styles.js';
 
 	export let repoName = jdgUiSvelteRepoName;

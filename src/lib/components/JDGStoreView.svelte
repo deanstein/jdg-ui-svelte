@@ -9,7 +9,7 @@
 
 	// derived store for performance:
 	// convert all entries to stringified output once
-	const stringifiedEntries = derived(store, $store =>
+	const stringifiedEntries = derived(store, ($store) =>
 		Object.entries($store).map(([key, value]) => [
 			key,
 			JSON.stringify(value === undefined ? undefinedRepString : value, null, 2)
