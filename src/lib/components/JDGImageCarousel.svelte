@@ -70,7 +70,7 @@
 
 		// for each, record the fitted height
 		imageMetaSet.forEach((imageAttributeObject) => {
-			const aspectRatio = getImageAspectRatioRecord(imageAttributeObject.imgSrc);
+			const aspectRatio = getImageAspectRatioRecord(imageAttributeObject.src);
 			const fittedHeight = availableWidthPx / aspectRatio;
 			fittedHeights.push(fittedHeight);
 		});
@@ -86,7 +86,7 @@
 
 		// for each, record the fitted width
 		imageMetaSet.forEach((imageAttributeObject) => {
-			const aspectRatio = getImageAspectRatioRecord(imageAttributeObject.imgSrc);
+			const aspectRatio = getImageAspectRatioRecord(imageAttributeObject.src);
 			const maxWidth = maxHeightPxFromProp * aspectRatio;
 			fittedWidths.push(maxWidth);
 		});
@@ -96,7 +96,7 @@
 
 	const setActiveImage = (imageAttributesObject, endAutoAdvance = false) => {
 		// only set active image if image is different
-		if (activeImageMeta.imgSrc !== imageAttributesObject.imgSrc) {
+		if (activeImageMeta.src !== imageAttributesObject.src) {
 			activeImageMeta = imageAttributesObject;
 			kludge = !kludge;
 		}
@@ -205,7 +205,7 @@
 		allFittedHeightsPx;
 		// first, get the fitted width from the aspect ratio records
 		const activeImageFittedWidthPxFromRecord =
-			getImageAspectRatioRecord(activeImageMeta.imgSrc) * finalMaxFittedHeightPx;
+			getImageAspectRatioRecord(activeImageMeta.src) * finalMaxFittedHeightPx;
 		// if the fitted width from record is wider than the available width,
 		// set the fitted width to the available width
 		activeImageFittedWidthPx =
@@ -263,7 +263,7 @@
 					? finalMaxFittedWidthPx
 					: `${activeImageFittedWidthPx}`;
 				dynamicWidthCss = css`
-					width: ${showBlurInUnfilledSpace && activeImageMeta.doShowBackground
+					width: ${showBlurInUnfilledSpace && activeImageMeta.doShowBackgroundBlur
 						? '100%;'
 						: `${compositeCarouselWidthPx}`}px;
 				`;
@@ -289,12 +289,12 @@
 			justify-content: ${activeImageMeta?.toolbarAlignment};
 			right: ${justifyContent !== 'center' ? '0' : ''};
 			padding: 10px
-				${(showBlurInUnfilledSpace && activeImageMeta.doShowBackground) ||
+				${(showBlurInUnfilledSpace && activeImageMeta.doShowBackgroundBlur) ||
 				(matchMaxImageWidth && justifyContent === 'center')
 					? Math.abs(availableWidthPx - activeImageFittedWidthPx) / 2 + 10 + 'px'
 					: '10px'}
 				10px
-				${(showBlurInUnfilledSpace && activeImageMeta.doShowBackground) ||
+				${(showBlurInUnfilledSpace && activeImageMeta.doShowBackgroundBlur) ||
 				(matchMaxImageWidth && justifyContent === 'center')
 					? Math.abs(availableWidthPx - activeImageFittedWidthPx) / 2 + 10 + 'px'
 					: '10px'};
@@ -347,15 +347,15 @@
 				paddingTopBottom={'8px'}
 				backgroundColor={$appAccentColors[0]}
 				tooltip="Expand image"
-				doForceSquareRatio
+				doForceSquareAspect
 			/>
 		</div>
 	</div>
-	{#if (showCaption && activeImageMeta.imgCaption) || (showAttribution && activeImageMeta.imgAttribution)}
+	{#if (showCaption && activeImageMeta.caption) || (showAttribution && activeImageMeta.attribution)}
 		<div class="caption-attribution-wrapper {dynamicThumbnailContainerWidthCss}">
 			<JDGImageCaptionAttribution
 				imageMeta={activeImageMeta}
-				backgroundColorRgba={activeImageMeta.doShowBackground
+				backgroundColorRgba={activeImageMeta.doShowBackgroundBlur
 					? jdgColors.imageLabelBackground
 					: 'rgba(0, 0, 0, 0)'}
 				maxTextWidthPx={activeImageFittedWidthPx}

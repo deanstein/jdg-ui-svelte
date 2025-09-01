@@ -8,9 +8,14 @@
 
 	let radius = spinnerHeightPx * 0.4; // 20 is 40% of default height (50)
 	let dashArrayRatio = spinnerHeightPx / 50; // default height is 50px
-	let dashArrayValues = `${100 * dashArrayRatio}, ${150 * dashArrayRatio}; 
-		${50 * dashArrayRatio}, ${150 * dashArrayRatio}; 
-		${100 * dashArrayRatio},${150 * dashArrayRatio};`;
+	let baseArc = 30 * dashArrayRatio; // starting segment
+	let fullCirc = 2 * Math.PI * radius; // circumference for reference
+
+	let dashArrayValues = `
+	${baseArc}, ${fullCirc}; 
+	${fullCirc * 0.85}, ${fullCirc}; 
+	${baseArc}, ${fullCirc};
+`;
 </script>
 
 <svg
@@ -25,6 +30,7 @@
 		fill="none"
 		stroke={strokeColor}
 		stroke-width={strokeWidthPx}
+		stroke-dasharray={`${baseArc}, ${fullCirc}`}
 	>
 		<animateTransform
 			attributeName="transform"

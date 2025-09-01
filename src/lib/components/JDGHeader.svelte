@@ -109,6 +109,7 @@
 	const logoTitleLinkCss = css`
 		flex-direction: ${logoJustification === 'center' ? 'column' : 'row'};
 		align-items: ${logoJustification === 'center' ? 'center' : 'left'};
+		z-index: 2;
 	`;
 
 	const headerLogoSupertitleCss = css`
@@ -152,7 +153,6 @@
 			background-color: ${doSuppressAlphaOnScroll
 				? setAlphaInRgbaString(backgroundColorRgba, scrollAlpha)
 				: backgroundColorRgba};
-			backdrop-filter: blur(${jdgSizes.blurSizeMedium});
 			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 				height: ${jdgSizes.headerHeightSm};
 			}
@@ -255,6 +255,7 @@
 		display: flex;
 		align-items: baseline;
 		height: 100%;
+		z-index: 3;
 	}
 
 	.logo-container a {

@@ -23,6 +23,7 @@
 		JDGImageTile,
 		JDGJumpTo,
 		JDGUpNext,
+		JDGVersionNpmPackage,
 		JDGVersionPackageJson
 	} from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgFonts } from '$lib/jdg-shared-styles.js';
@@ -80,22 +81,24 @@
 	<JDGJumpTo />
 	<JDGContentBoxFloating title="VERSIONS" animateWhenVisible={false}>
 		<JDGBodyCopy paddingTop="0" textAlign="center">
+			<b>VersionNpmPackage</b>
+			<br />
+			Gets the version of the given NPM package name.
+			<br />
+			<br />
+			<div class="repo-package-version-group">
+				JDG UI SVELTE
+				<div class="repo-package-version">
+					<JDGVersionNpmPackage packageName={jdgUiSvelteRepoName} />
+				</div>
+			</div>
+			<br /><br />
 			<b>VersionPackageJson</b>
 			<br />
 			Gets the version field of the package.json from a repo.
 			<br />
-			To demo, here's the version of JDG UI SVELTE and all consuming websites:
+			Here's the version.json of JDG websites and projects:
 			<br /><br />
-			<div class="repo-package-version-group">
-				JDG UI SVELTE
-				<div class="repo-package-version">
-					<JDGVersionPackageJson
-						repoOwner={jdgRepoOwner}
-						repoName={jdgUiSvelteRepoName}
-						showIfInvalid={false}
-					/>
-				</div>
-			</div>
 			<div class="repo-package-version-group">
 				JDG WEBSITE
 				<div class="repo-package-version">
@@ -612,6 +615,14 @@
 				label="This button will disable when clicked"
 				isEnabled={isTestButtonEnabled}
 			/>
+			<JDGButton
+				onClickFunction={() => {}}
+				backgroundColor={'rgba(100, 100, 100, 1)'}
+				faIcon={'fa-sun'}
+				label="This button has a shadow!"
+				isEnabled={isTestButtonEnabled}
+				shadow
+			/>
 		</div>
 		<JDGBodyCopy textAlign="center" paddingBottom="0">Consistent width:</JDGBodyCopy>
 		<div
@@ -637,7 +648,14 @@
 				paddingTopBottom={'8px'}
 				backgroundColor={$appAccentColors[0]}
 				tooltip="Expand image"
-				doForceSquareRatio
+				doForceSquareAspect
+			/>
+			<JDGButton
+				onClickFunction={() => {}}
+				label={null}
+				faIcon={'fa-x'}
+				doForceSquareAspect
+				isEnabled={isTestButtonEnabled}
 			/>
 		</div>
 	</JDGContentBoxFloating>

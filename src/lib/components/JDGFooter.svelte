@@ -20,7 +20,7 @@
 	import { jdgSharedStrings } from '$lib/jdg-shared-strings.js';
 	import { toggleDevTools } from '$lib/jdg-state-management.js';
 
-	import { JDGButton, JDGH3H4, JDGDevToolbar, JDGStripesHorizontal } from '../index.js';
+	import { JDGButton, JDGDevToolbar, JDGStripesHorizontal, JDGStoreView } from '../index.js';
 	import { jdgColors, jdgSizes } from '../jdg-shared-styles.js';
 
 	export let repoName = jdgUiSvelteRepoName;
@@ -191,7 +191,7 @@
 					paddingLeftRight="10px"
 					faIcon={$doShowDevTools ? 'fa-eye-slash' : 'fa-wrench'}
 					fontSize={jdgSizes.fontSizeBodyXSm}
-					doForceSquareRatio
+					doForceSquareAspect
 				/>
 				<!-- slot for any extra dev tools -->
 				<slot name="footer-slot-dev-tools" />
@@ -201,14 +201,7 @@
 		{#if $doShowDevTools}
 			<div class="dev-tools">
 				<JDGDevToolbar />
-				<div class="state-view {stateViewCss}">
-					<br />
-					<JDGH3H4 h3String="UI STATE" paddingTop="10px" />
-					<br />
-					{#each Object.entries($allStateValues) as [key, value]}
-						<b>{key}:</b> {JSON.stringify(value)}<br /><br />
-					{/each}
-				</div>
+				<JDGStoreView store={allStateValues} storeName="UI STATE" />
 			</div>
 		{/if}
 	</div>

@@ -82,7 +82,7 @@
 			<div
 				class="parallax-image"
 				style="background-image: url({addCloudinaryUrlHeight(
-					imageMeta.imgSrc,
+					imageMeta.src,
 					getMaxHeightPxFromProp(maxHeight, parallaxContainerRef)
 				)}); height: {getMaxHeightPxFromProp(
 					maxHeight,

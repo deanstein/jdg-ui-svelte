@@ -15,7 +15,7 @@
 	export let imageMeta = instantiateObject(jdgImageMeta);
 
 	const imageAndCaptionWrapperCss = css`
-		display: ${imageMeta.doShowBackground ? 'flex' : 'grid'};
+		display: ${imageMeta.doShowBackgroundBlur ? 'flex' : 'grid'};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			padding: 0px;
 		}
@@ -63,7 +63,7 @@
 			doScaleOnScrollOrZoom={true}
 		/>
 		<!-- only show caption/attribution if image is not scaled -->
-		{#if $imageDetailScale === 1.0 && (imageMeta.imgCaption || imageMeta.imgAttribution)}
+		{#if $imageDetailScale === 1.0 && (imageMeta.caption || imageMeta.attribution)}
 			<div class="image-caption-attribution-wrapper" style="width: {$imageDetailWidth}px">
 				<JDGImageCaptionAttribution {imageMeta} truncateText={false} />
 			</div>

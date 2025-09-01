@@ -71,16 +71,16 @@ export const getImageAspectRatioRecord = (src) => {
 // IMAGE LOADING STATE
 //
 
-export const addImageLoading = (imgSrc) => {
+export const addImageLoading = (src) => {
 	imagesLoading.update((currentValue) => {
-		currentValue.push(imgSrc);
+		currentValue.push(src);
 		return currentValue;
 	});
 };
 
-export const removeImageLoading = (imgSrc) => {
+export const removeImageLoading = (src) => {
 	imagesLoading.update((currentValue) => {
-		const index = currentValue.findIndex((item) => JSON.stringify(item) === JSON.stringify(imgSrc));
+		const index = currentValue.findIndex((item) => JSON.stringify(item) === JSON.stringify(src));
 		if (index !== -1) {
 			currentValue.splice(index, 1);
 		}

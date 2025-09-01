@@ -106,6 +106,9 @@ export { JDGOverlay };
 import JDGVersionPackageJson from './components/JDGVersionPackageJson.svelte';
 export { JDGVersionPackageJson };
 
+import JDGVersionNpmPackage from './components/JDGVersionNpmPackage.svelte';
+export { JDGVersionNpmPackage };
+
 import JDGScrollToTop from './components/JDGScrollToTop.svelte';
 export { JDGScrollToTop };
 
@@ -114,6 +117,9 @@ export { JDGSideNav };
 
 import JDGSocialMedia from './components/JDGSocialMedia.svelte';
 export { JDGSocialMedia };
+
+import JDGStoreView from './components/JDGStoreView.svelte';
+export { JDGStoreView };
 
 import JDGStripesHorizontal from './components/JDGStripesHorizontal.svelte';
 export { JDGStripesHorizontal };
