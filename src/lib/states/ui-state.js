@@ -40,7 +40,10 @@ export let doShowImageDetailOverlay = writable(false);
 
 // sizes
 export let clientWidth = writable(0); // window minus scrollbar
-export let windowWidth = writable(0); // full window width, including scrollbar issues when using actual vh
+export let windowWidth = writable(0); // full window width, including scrollbar
+
+// timeline
+export let doShowTimelineEventDetailsModal = writable(false);
 
 // dev tools
 export let doShowDevTools = writable(false); // state view and tools in footer
@@ -70,6 +73,7 @@ const storeMap = {
 	imageAspectRatios,
 	imagesLoading,
 	doShowImageDetailOverlay,
+	doShowTimelineEventDetailsModal,
 	imageDetailMeta,
 	imageDetailWidth,
 	imageDetailScale,

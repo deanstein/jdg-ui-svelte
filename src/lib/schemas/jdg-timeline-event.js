@@ -1,18 +1,18 @@
 import timelineEventContent from './timeline-event-content';
 
 const timelineEvent = {
-	eventId: '',
-	eventType: '',
-	eventDate: '',
+	id: '',
+	type: '',
+	date: '',
 	isApprxDate: false,
-	eventContent: (() => {
-		let eventContent = {};
+	content: (() => {
+		let content = {};
 		Object.keys(timelineEventContent).forEach((element) => {
-			eventContent[element] = [];
+			content[element] = [];
 		});
-		return eventContent;
+		return content;
 	})(),
-	eventVersion: ''
+	version: ''
 };
 
 export default timelineEvent;

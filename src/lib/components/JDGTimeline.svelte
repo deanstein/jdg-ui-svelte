@@ -3,29 +3,37 @@
 	import { v4 as uuidv4 } from 'uuid';
 	import { css } from '@emotion/css';
 
+	import { getMaxElementHeightPx } from '$lib/jdg-utils.js';
+
 	import timelineEventTypes from '$lib/schemas/jdg-timeline-event-types.js';
 	import timelineEvent from '$lib/schemas/jdg-timeline-event.js';
 
-	import uiState from '$lib/stores/ui-state';
+	import { isTimelineEventInEditMode, timelineEditEvent } from '$lib/stores/jdg-temp.js';
+	import { doShowTimelineEventDetailsModal } from '$lib/states/ui-state.js';
 
-	import { getMaxElementHeightPx } from 'jdg-ui-svelte/jdg-utils.js';
+	import { jdgSchemaVersion } from '$lib/schemas/jdg-schema-versions.js';
+	import { generateTimelineRowItems, updateTimelineRowItems } from '$lib/jdg-ui-management.js';
+	import { instantiateObject } from '$lib/jdg-utils.js';
 
-	import { schemaVersion } from '$lib/versions';
-	import { generateTimelineRowItems, updateTimelineRowItems } from '$lib/ui-management';
-	import { instantiateObject } from '$lib/utils';
-	import { setTimelineEditEvent, setTimelineEditEventId } from '$lib/temp-management';
-
-	import stylingConstants from '$lib/components/styling-constants';
-
-	import Button from '$lib/components/Button.svelte';
-	import Checkbox from '$lib/components/Checkbox.svelte';
-	import TimelineEvent from '$lib/components/Timeline/Event/TimelineEvent.svelte';
 	import { generateGradient } from '../graphics-factory';
 
-	export let startEvent;
-	export let mainEvents;
-	export let endEvent;
+	import Checkbox from '$lib/components/Checkbox.svelte';
+	import ComposeToolbar from '../ComposeToolbar.svelte';
+	import TimelineEvent from '$lib/components/Timeline/Event/TimelineEvent.svelte';
+	import TimelineSpine from '$lib/components/Timeline/TimelineSpine.svelte';
+	import stylingConstants from '$lib/components/styling-constants';
 
+	// all events to show
+	export let timelineEvents;
+	export let timelineEventReferences;
+	export let contextEvents;
+	// the event used to determine age
+	export let inceptionEvent = undefined;
+	// if not provided, use today's date
+	export let cessationEvent = undefined;
+
+	let timelineWrapperRef;
+	let timelineContainerRef;
 	let scrollingCanvasDivRef;
 
 	// if true, the timeline is spaced out
@@ -40,58 +48,30 @@
 	let timelineEventColors = [];
 
 	// dynamic classes using Emotion CSS
-
-	let lineCss = css`
-		width: ${stylingConstants.sizes.timelineSpineThickness};
-		background: linear-gradient(
-			to bottom,
-			rgba(255, 0, 0, 0) 0%,
-			${stylingConstants.colors.timelineSpineColor} 20px,
-			${stylingConstants.colors.timelineSpineColor} calc(100% - 20px),
-			rgba(255, 0, 0, 0) 100%
-		);
-	`;
-
-	const lineColumnCss = css`
-		margin-left: ${stylingConstants.sizes.nTimelineEventNodeSize / 2 +
-		stylingConstants.sizes.nTimelineEventGapSize * 2 +
-		stylingConstants.sizes.nTimelineEventYearWidth -
-		stylingConstants.sizes.nTimelineSpineLineThickness / 2 +
-		'vw'};
-	`;
-
 	let timelineEventGridCss;
 	const timelineEventCountCss = css`
 		font-size: ${stylingConstants.sizes.bioFieldFontSize};
 		margin-left: ${stylingConstants.sizes.timelineEventGapSize};
 	`;
 
-	// set up the birth event with its static fields
-	// note that other fields are updated dynamically in a reactive block below
-	const birthEvent = instantiateObject(timelineEvent);
-	birthEvent.eventId = uuidv4();
-	birthEvent.eventType = timelineEventTypes.birth.type;
-	birthEvent.eventVersion = schemaVersion;
-	// set up the death event with its static fields - if not deceased, this is today
-	// note that other fields are updated dynamically in a reactive block below
-	const deathEvent = instantiateObject(timelineEvent);
-	deathEvent.eventId = uuidv4();
-	deathEvent.eventVersion = schemaVersion;
-
 	const onClickAddEventButton = () => {
-		// birth date must be set first
-		// before any normal timeline event is added
-		if ($uiState.activePerson.birth.date === '') {
-			setTimelineEditEvent(birthEvent);
-			setTimelineEditEventId(birthEvent.eventId);
-			// otherwise, add an event like normal
-		} else {
+		// if the inception event is provided, but with no date
+		// then clicking add event will set it
+		// @ts-expect-error
+		if (inceptionEvent && inceptionEvent?.eventDate === '') {
+			timelineEditEvent.set(inceptionEvent);
+			showTimelineEventDetailsModal.set(true);
+			isTimelineEventInEditMode.set(true);
+		}
+		// otherwise, add an event like normal
+		else {
 			const newTimelineEvent = instantiateObject(timelineEvent);
-			newTimelineEvent.eventId = uuidv4();
-			newTimelineEvent.eventVersion = schemaVersion;
-			newTimelineEvent.eventType = timelineEventTypes.generic.type;
-			setTimelineEditEvent(newTimelineEvent);
-			setTimelineEditEventId(newTimelineEvent.eventId);
+			newTimelineEvent.id = uuidv4();
+			newTimelineEvent.version = schemaVersion;
+			newTimelineEvent.type = timelineEventTypes.generic.type;
+			timelineEditEvent.set(newTimelineEvent);
+			showTimelineEventDetailsModal.set(true);
+			isTimelineEventInEditMode.set(true);
 		}
 	};
 
@@ -118,7 +98,6 @@
 				(eventsInView.length + 1 * stylingConstants.sizes.nTimelineEventFilledRowHeight);
 			if (rowYPosPx < timelineHeightPx) {
 				eventsInView.push(rowItem.index);
-				console.log('PUSHING', rowYPosPx, timelineHeightPx);
 			}
 			if (eventsInView.length > minEventsInView) {
 				forceRelativeSpacing = true;
@@ -127,29 +106,24 @@
 		}
 	});
 
+	// keep timeline row items updated
 	$: {
-		// ensure birth event is kept updated
-		birthEvent.eventDate = $uiState.activePerson.birth.date;
-		birthEvent.eventContent.description = 'Born';
-		// ensure death event is kept updated
-		deathEvent.eventType =
-			$uiState.activePerson.death.date !== ''
-				? timelineEventTypes.death.type
-				: timelineEventTypes.today.type;
-		deathEvent.eventDate =
-			$uiState.activePerson.death.date !== ''
-				? $uiState.activePerson.death.date
-				: new Date().toLocaleDateString();
-		deathEvent.eventContent.description =
-			$uiState.activePerson.death.date !== '' ? 'Deceased' : 'Today';
-
 		// convert events to timeline row items
 		// and ensure no shared rows in the grid
-		timelineRowItems = updateTimelineRowItems(generateTimelineRowItems($uiState.activePerson));
+		timelineRowItems = updateTimelineRowItems(
+			generateTimelineRowItems(
+				timelineEvents,
+				timelineEventReferences,
+				contextEvents,
+				inceptionEvent
+			)
+		);
+	}
 
+	$: {
 		// generate a gradient of colors across all timeline events
 		timelineEventColors = generateGradient(
-			$uiState?.activePerson?.timelineEvents?.length + 2 /* account for birth and death */,
+			$activePerson?.timelineEvents?.length + 2 /* account for birth and death */,
 			stylingConstants.colors.timelineEventBackgroundColorGradient1,
 			stylingConstants.colors.timelineEventBackgroundColorGradient2,
 			stylingConstants.colors.timelineEventBackgroundColorGradient3
@@ -162,85 +136,94 @@
 				: 'auto'};
 		`;
 	}
-
-	$: {
-		lineCss = css`
-			${lineCss}
-			margin-top: ${$uiState.timelineCanvasScrollState.top
-				? $uiState.timelineFirstEventHeight / 2 + 'px'
-				: 0};
-			margin-bottom: ${$uiState.timelineCanvasScrollState.bottom
-				? $uiState.timelineLastEventHeight / 2 + 'px'
-				: 0};
-		`;
-	}
 </script>
 
-<div class="timeline-container">
-	<div class="timeline-actions-bar">
-		<div class="timeline-event-count {timelineEventCountCss}">
-			<!-- birth and death/today are always shown, so add 2 to the count -->
-			Showing {timelineRowItems.length + 2} timeline events
-		</div>
-		<Checkbox
-			isEnabled={true}
-			showLabel={true}
-			label="Relative Spacing"
-			isChecked={forceRelativeSpacing}
-			onCheckAction={onCheckRelativeSpacing}
-			onUncheckAction={onUncheckRelativeSpacing}
-		/>
-		<Button buttonText="Add Event" onClickFunction={onClickAddEventButton} />
-	</div>
-	<div class="timeline-content-container">
-		<!-- vertical line/spine of the timeline -->
-		<div class="timeline-spine">
-			<div class="timeline-spine-line-column {lineColumnCss}">
-				<div class="timeline-spine-line {lineCss}" />
+<div bind:this={timelineWrapperRef} class="timeline-wrapper">
+	<ComposeToolbar
+		parentRef={timelineWrapperRef}
+		composeButtonFaIcon={'fa-plus fa-fw'}
+		composeButtonTooltip={'Add a new event'}
+		onClickCompose={onClickAddEventButton}
+		zIndex={1}
+	/>
+	<div bind:this={timelineContainerRef} class="timeline-container">
+		<div class="timeline-actions-bar">
+			<div class="timeline-event-count {timelineEventCountCss}">
+				<!-- birth and death/today are always shown, so add 2 to the count -->
+				Showing {timelineRowItems.length + 2} timeline events
 			</div>
+			<Checkbox
+				isEnabled={true}
+				showLabel={true}
+				label="Relative Spacing"
+				isChecked={forceRelativeSpacing}
+				onCheckAction={onCheckRelativeSpacing}
+				onUncheckAction={onUncheckRelativeSpacing}
+			/>
 		</div>
-		<div class="timeline-scrolling-canvas" bind:this={scrollingCanvasDivRef}>
-			<!-- the grid containing all timeline events -->
-			<div class="timeline-event-grid {timelineEventGridCss}">
-				<!-- always present and always at the top: birth -->
-				<TimelineEvent
-					timelineEvent={birthEvent}
-					rowIndex={0}
-					backgroundColor={timelineEventColors[0]}
-				/>
-
-				<!-- all other timeline events saved to the person -->
-				{#each timelineRowItems as timelineRowItem, i}
-					<TimelineEvent
-						timelineEvent={timelineRowItem.event}
-						rowIndex={timelineRowItem.index}
-						backgroundColor={timelineEventColors[i + 1]}
-					/>
-				{/each}
-
-				<!-- always present: current date or date of death -->
-				<TimelineEvent
-					timelineEvent={deathEvent}
-					rowIndex={stylingConstants.quantities.initialTimelineRowCount}
-					backgroundColor={timelineEventColors[timelineEventColors.length - 1]}
-				/>
+		<div class="timeline-content-container">
+			<TimelineSpine />
+			<div class="timeline-scrolling-canvas" bind:this={scrollingCanvasDivRef}>
+				<!-- the grid containing all timeline events -->
+				<div class="timeline-event-grid {timelineEventGridCss}">
+					<!-- show the inception event if provided -->
+					{#if inceptionEvent}
+						<TimelineEvent
+							timelineEvent={inceptionEvent}
+							rowIndex={0}
+							backgroundColor={timelineEventColors[0]}
+						/>
+					{/if}
+					<!-- all other timeline events saved to the person -->
+					{#each timelineRowItems as timelineRowItem, i}
+						<!-- ensure the UI reacts when these values change -->
+						{#key `${$activePerson.id}-${timelineRowItem.event.eventId}-${$timelineEditEvent}`}
+							<TimelineEvent
+								timelineEvent={timelineRowItem.event}
+								rowIndex={timelineRowItem.index}
+								backgroundColor={timelineEventColors[i + 1]}
+								eventReference={timelineRowItem.eventReference}
+							/>
+						{/key}
+					{/each}
+					<!-- show the cessation event if provided -->
+					{#if cessationEvent}
+						<TimelineEvent
+							timelineEvent={cessationEvent}
+							rowIndex={stylingConstants.quantities.initialTimelineRowCount}
+							backgroundColor={timelineEventColors[timelineEventColors.length - 1]}
+						/>
+					{/if}
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
 
 <style>
+	.timeline-wrapper {
+		position: relative;
+		display: flex;
+		flex-grow: 1;
+		height: -webkit-fill-available;
+		width: -moz-available;
+		background-color: gainsboro;
+		padding: 1rem;
+		border-radius: 10px;
+	}
+
 	.timeline-container {
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		flex-grow: 1;
-		gap: 1vh;
+		gap: 1rem;
 	}
 
 	.timeline-actions-bar {
 		display: flex;
 		justify-content: right;
-		column-gap: 1vh;
+		column-gap: 1svh;
 	}
 
 	.timeline-event-count {
@@ -270,15 +253,5 @@
 		display: grid;
 		grid-template-columns: 1fr;
 		flex-grow: 1;
-	}
-
-	.timeline-spine {
-		position: absolute;
-		display: flex;
-		height: 100%;
-	}
-
-	.timeline-spine-line-column {
-		display: flex;
 	}
 </style>

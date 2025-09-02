@@ -248,6 +248,10 @@ export const jdgDurations = {
 	unit: 'ms'
 };
 
+export const jdgQuantities = {
+	initialTimelineRowCount: 1000
+};
+
 //
 // fade-in styles
 //
