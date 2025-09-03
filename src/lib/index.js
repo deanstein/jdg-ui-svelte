@@ -25,6 +25,9 @@ export { JDGBodyCopy };
 import JDGButton from './components/JDGButton.svelte';
 export { JDGButton };
 
+import JDGCheckbox from './components/JDGCheckbox.svelte';
+export { JDGCheckbox }
+
 import JDGClipFade from './components/JDGClipFade.svelte';
 export { JDGClipFade };
 
@@ -123,6 +126,12 @@ export { JDGStoreView };
 
 import JDGStripesHorizontal from './components/JDGStripesHorizontal.svelte';
 export { JDGStripesHorizontal };
+
+import JDGTimeline from './components/Timeline/JDGTimeline.svelte';
+export { JDGTimeline };
+
+import JDGTimelineEvent from './components/Timeline/JDGTimelineEvent.svelte';
+export { JDGTimeline };
 
 import JDGTopNav from './components/JDGTopNav.svelte';
 export { JDGTopNav };

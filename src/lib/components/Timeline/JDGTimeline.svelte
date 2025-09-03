@@ -17,7 +17,7 @@
 
 	import { generateGradient } from '$lib/jdg-utils.js';
 
-	import Checkbox from '$lib/components/Checkbox.svelte';
+	import Checkbox from '$lib/components/JDGCheckbox.svelte';
 	import ComposeToolbar from '../ComposeToolbar.svelte';
 	import TimelineEvent from '$lib/components/Timeline/Event/TimelineEvent.svelte';
 	import TimelineSpine from '$lib/components/Timeline/TimelineSpine.svelte';
