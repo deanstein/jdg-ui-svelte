@@ -126,7 +126,10 @@ export const areObjectsEqual = (obj1, obj2) => {
 };
 
 export const instantiateObject = (object, overrides = {}) => {
-	return { ...JSON.parse(JSON.stringify(object)), ...overrides };
+	return {
+		...JSON.parse(JSON.stringify(object)),
+		...JSON.parse(JSON.stringify(overrides))
+	};
 };
 
 export const deepMatchObjects = (dataToMatch, dataToChange, forceChangeToType = undefined) => {

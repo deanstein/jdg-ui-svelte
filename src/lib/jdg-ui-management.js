@@ -1,5 +1,8 @@
-import { instantiateObject } from '$lib/jdg-utils.js';
-import timelineRowItem from '$lib/schemas/jdg-timeline-row-item.js';
+import { getObjectByKeyValue, instantiateObject } from '$lib/jdg-utils.js';
+import jdgTimelineHost from '$lib/schemas/timeline/jdg-timeline-host.js';
+import jdgTimelineRowItem from '$lib/schemas/timeline/jdg-timeline-row-item.js';
+import jdgTimelineEventOriginTypes from '$lib/schemas/timeline/jdg-timeline-event-origin-types.js';
+
 import { jdgBreakpoints, jdgQuantities, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 export const getScreenCentroid = () => {
@@ -121,54 +124,68 @@ export const getTimelineProportionByDate = (
 	return proportion;
 };
 
+export const getTimelineEventById = (timelineHost, eventId) => {
+	let timelineEvent;
+	if (timelineHost && eventId) {
+		timelineEvent = getObjectByKeyValue(timelineHost.timelineEvents, 'id', eventId);
+	}
+
+	return timelineEvent;
+};
+
 // converts raw timeline events to timeline row items for UI
 // row items include an index to properly sort based on chronology
 export const generateTimelineRowItems = (
-	timelineEvents,
-	timelineEventReferences,
-	getEventReferenceFunction,
+	timelineHost,
 	contextualEvents,
 	inceptionEvent = undefined
 ) => {
+	// ensure timelineHost has all expected fields
+	const upgradedTimelineHost = instantiateObject(jdgTimelineHost, timelineHost);
+
 	let timelineEventRowItems = [];
 	let timelineEventReferenceRowItems = [];
 	let numberOfRows = Math.max(
-		timelineEvents.length + timelineEventReferences.length,
+		upgradedTimelineHost.timelineEvents.length +
+			upgradedTimelineHost.timelineEventReferences.length,
 		jdgQuantities.initialTimelineRowCount
 	);
 
 	// if no inception event is provided, use the earliest event
 	if (!inceptionEvent) {
-		inceptionEvent = getEarliestTimelineEvent(timelineEvents);
+		inceptionEvent = getEarliestTimelineEvent(upgradedTimelineHost.timelineEvents);
 	}
 
 	// generate the regular events
-	for (let i = 0; i < timelineEvents.length; i++) {
+	for (let i = 0; i < upgradedTimelineHost.timelineEvents.length; i++) {
 		// create a new timeline row item
-		let thisRowItem = instantiateObject(timelineRowItem);
+		let thisRowItem = instantiateObject(jdgTimelineRowItem);
 		// get the index this item belongs to
 		const rowIndex = getClosestTimelineRowByDate(
 			inceptionEvent.eventDate,
-			timelineEvents[i].eventDate,
+			upgradedTimelineHost.timelineEvents[i].eventDate,
 			numberOfRows
 		);
 		thisRowItem.index = rowIndex;
-		thisRowItem.event = timelineEvents[i];
+		thisRowItem.event = upgradedTimelineHost.timelineEvents[i];
 		if (!isNaN(rowIndex)) {
 			timelineEventRowItems.push(thisRowItem);
 		}
 	}
 	// generate the event references
-	for (let i = 0; i < timelineEventReferences.length; i++) {
+	for (let i = 0; i < upgradedTimelineHost.timelineEventReferences.length; i++) {
 		// create a new timeline row item
-		let thisRowItem = instantiateObject(timelineRowItem);
+		let thisRowItem = instantiateObject(jdgTimelineRowItem);
 		// get the event from the reference
 		// use instantiateObject to ensure it's a copy
 		const eventFromReference = instantiateObject(
-			getTimelineEventById(timelineEventReferences[i].personId, timelineEventReferences[i].eventId)
+			getTimelineEventById(
+				upgradedTimelineHost.timelineEventReferences[i].personId,
+				upgradedTimelineHost.timelineEventReferences[i].eventId
+			)
 		);
 		// mark the event as a reference origin type
-		eventFromReference.originType = timelineEventOriginTypes.reference;
+		eventFromReference.originType = jdgTimelineEventOriginTypes.reference;
 		// get the index this item belongs to
 		const rowIndex = getClosestTimelineRowByDate(
 			inceptionEvent.eventDate,
@@ -177,7 +194,7 @@ export const generateTimelineRowItems = (
 		);
 		thisRowItem.index = rowIndex;
 		thisRowItem.event = eventFromReference;
-		thisRowItem.eventReference = timelineEventReferences[i];
+		thisRowItem.eventReference = upgradedTimelineHost.timelineEventReferences[i];
 		if (!isNaN(rowIndex)) {
 			timelineEventReferenceRowItems.push(thisRowItem);
 		}
@@ -185,7 +202,7 @@ export const generateTimelineRowItems = (
 	// generate the contextual events
 	for (let i = 0; i < contextualEvents.length; i++) {
 		// create a new timeline row item
-		let thisRowItem = instantiateObject(timelineRowItem);
+		let thisRowItem = instantiateObject(jdgTimelineRowItem);
 		// get the index this item belongs to
 		const rowIndex = getClosestTimelineRowByDate(
 			inceptionEvent.eventDate,
@@ -194,7 +211,7 @@ export const generateTimelineRowItems = (
 		);
 		thisRowItem.index = rowIndex;
 		thisRowItem.event = contextualEvents[i];
-		thisRowItem.eventReference = timelineEventReferences[i];
+		thisRowItem.eventReference = upgradedTimelineHost.timelineEventReferences[i];
 		if (!isNaN(rowIndex)) {
 			timelineEventReferenceRowItems.push(thisRowItem);
 		}
