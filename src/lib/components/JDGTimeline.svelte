@@ -5,8 +5,8 @@
 
 	import { getMaxElementHeightPx } from '$lib/jdg-utils.js';
 
-	import timelineEventTypes from '$lib/schemas/jdg-timeline-event-types.js';
-	import timelineEvent from '$lib/schemas/jdg-timeline-event.js';
+	import jdgTimelineEventTypes from '$lib/schemas/timeline/jdg-timeline-event-types.js';
+	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
 
 	import { isTimelineEventInEditMode, timelineEditEvent } from '$lib/stores/jdg-temp.js';
 	import { doShowTimelineEventDetailsModal } from '$lib/states/ui-state.js';
@@ -15,7 +15,7 @@
 	import { generateTimelineRowItems, updateTimelineRowItems } from '$lib/jdg-ui-management.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
 
-	import { generateGradient } from '../graphics-factory';
+	import { generateGradient } from '$lib/jdg-utils.js';
 
 	import Checkbox from '$lib/components/Checkbox.svelte';
 	import ComposeToolbar from '../ComposeToolbar.svelte';
