@@ -131,7 +131,7 @@ import JDGTimeline from './components/Timeline/JDGTimeline.svelte';
 export { JDGTimeline };
 
 import JDGTimelineEvent from './components/Timeline/JDGTimelineEvent.svelte';
-export { JDGTimeline };
+export { JDGTimelineEvent };
 
 import JDGTopNav from './components/JDGTopNav.svelte';
 export { JDGTopNav };
