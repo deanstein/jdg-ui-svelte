@@ -5,6 +5,7 @@
 
 	import { getMaxElementHeightPx } from '$lib/jdg-utils.js';
 
+	import jdgTimelineHost from '$lib/schemas/timeline/jdg-timeline-host.js';
 	import jdgTimelineEventTypes from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
 
@@ -18,15 +19,13 @@
 	import { generateGradient } from '$lib/jdg-utils.js';
 
 	import Checkbox from '$lib/components/JDGCheckbox.svelte';
-	import ComposeToolbar from '../ComposeToolbar.svelte';
-	import TimelineEvent from '$lib/components/Timeline/Event/TimelineEvent.svelte';
-	import TimelineSpine from '$lib/components/Timeline/TimelineSpine.svelte';
-	import stylingConstants from '$lib/components/styling-constants';
+	import ComposeToolbar from '$lib/components/Compose/JDGComposeToolbar.svelte';
+	import TimelineEvent from '$lib/components/Timeline/JDGTimelineEvent.svelte';
 
-	// all events to show
-	export let timelineEvents;
-	export let timelineEventReferences;
-	export let contextEvents;
+	// timeline host contains events and event references
+	export let timelineHost;
+	// optionally include contextual events
+	export let contextEvents = undefined;
 	// the event used to determine age
 	export let inceptionEvent = undefined;
 	// if not provided, use today's date
@@ -47,6 +46,10 @@
 	// along a gradient defined here
 	let timelineEventColors = [];
 
+	let canvasScrollState = { top: true, bottom: true };
+	let firstEventHeight = 0;
+	let lastEventHeight = 0;
+
 	// dynamic classes using Emotion CSS
 	let timelineEventGridCss;
 	const timelineEventCountCss = css`
@@ -60,17 +63,17 @@
 		// @ts-expect-error
 		if (inceptionEvent && inceptionEvent?.eventDate === '') {
 			timelineEditEvent.set(inceptionEvent);
-			showTimelineEventDetailsModal.set(true);
+			doShowTimelineEventDetailsModal.set(true);
 			isTimelineEventInEditMode.set(true);
 		}
 		// otherwise, add an event like normal
 		else {
-			const newTimelineEvent = instantiateObject(timelineEvent);
+			const newTimelineEvent = instantiateObject(jdgTimelineEvent);
 			newTimelineEvent.id = uuidv4();
-			newTimelineEvent.version = schemaVersion;
-			newTimelineEvent.type = timelineEventTypes.generic.type;
+			newTimelineEvent.version = jdgSchemaVersion;
+			newTimelineEvent.type = jdgTimelineEventTypes.generic.type;
 			timelineEditEvent.set(newTimelineEvent);
-			showTimelineEventDetailsModal.set(true);
+			doShowTimelineEventDetailsModal.set(true);
 			isTimelineEventInEditMode.set(true);
 		}
 	};
@@ -87,7 +90,7 @@
 	onMount(() => {
 		// determine whether the spacing should default to relative
 		const timelineHeightPx = getMaxElementHeightPx(scrollingCanvasDivRef);
-		const emptyRowHeightPx = stylingConstants.sizes.nTimelineEventEmptyRowHeight;
+		const emptyRowHeightPx = 1;
 
 		// set relative spacing to true if at least 5 events would appear
 		const minEventsInView = 5;
@@ -123,7 +126,7 @@
 	$: {
 		// generate a gradient of colors across all timeline events
 		timelineEventColors = generateGradient(
-			$activePerson?.timelineEvents?.length + 2 /* account for birth and death */,
+			jdgTimelineHost?.timelineEvents?.length + 2 /* account for birth and death */,
 			stylingConstants.colors.timelineEventBackgroundColorGradient1,
 			stylingConstants.colors.timelineEventBackgroundColorGradient2,
 			stylingConstants.colors.timelineEventBackgroundColorGradient3
@@ -134,6 +137,34 @@
 			row-gap: ${forceRelativeSpacing
 				? stylingConstants.sizes.timelineEventEmptyRowHeight
 				: 'auto'};
+		`;
+	}
+
+	// timeline spine styling
+	let lineCss = css`
+		width: ${stylingConstants.sizes.timelineSpineThickness};
+		background: linear-gradient(
+			to bottom,
+			rgba(255, 0, 0, 0) 0%,
+			${stylingConstants.colors.timelineSpineColor} 20px,
+			${stylingConstants.colors.timelineSpineColor} calc(100% - 20px),
+			rgba(255, 0, 0, 0) 100%
+		);
+	`;
+
+	const lineColumnCss = css`
+		margin-left: ${stylingConstants.sizes.nTimelineEventNodeSize / 2 +
+		stylingConstants.sizes.nTimelineEventGapSize * 2 +
+		stylingConstants.sizes.nTimelineEventYearWidth -
+		stylingConstants.sizes.nTimelineSpineLineThickness / 2 +
+		'vw'};
+	`;
+
+	$: {
+		lineCss = css`
+			${lineCss}
+			margin-top: ${$timelineCanvasScrollState.top ? $timelineFirstEventHeight / 2 + 'px' : 0};
+			margin-bottom: ${$timelineCanvasScrollState.bottom ? $timelineLastEventHeight / 2 + 'px' : 0};
 		`;
 	}
 </script>
@@ -162,7 +193,11 @@
 			/>
 		</div>
 		<div class="timeline-content-container">
-			<TimelineSpine />
+			<div class="timeline-spine">
+				<div class="timeline-spine-line-column {lineColumnCss}">
+					<div class="timeline-spine-line {lineCss}" />
+				</div>
+			</div>
 			<div class="timeline-scrolling-canvas" bind:this={scrollingCanvasDivRef}>
 				<!-- the grid containing all timeline events -->
 				<div class="timeline-event-grid {timelineEventGridCss}">
@@ -253,5 +288,15 @@
 		display: grid;
 		grid-template-columns: 1fr;
 		flex-grow: 1;
+	}
+
+	.timeline-spine {
+		position: absolute;
+		display: flex;
+		height: 100%;
+	}
+
+	.timeline-spine-line-column {
+		display: flex;
 	}
 </style>

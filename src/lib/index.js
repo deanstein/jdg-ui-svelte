@@ -26,10 +26,16 @@ import JDGButton from './components/JDGButton.svelte';
 export { JDGButton };
 
 import JDGCheckbox from './components/JDGCheckbox.svelte';
-export { JDGCheckbox }
+export { JDGCheckbox };
 
 import JDGClipFade from './components/JDGClipFade.svelte';
 export { JDGClipFade };
+
+import JDGComposeButton from './components/Compose/JDGComposeButton.svelte';
+export { JDGComposeButton };
+
+import JDGComposeToolbar from './components/Compose/JDGComposeToolbar.svelte';
+export { JDGComposeToolbar };
 
 import JDGContentBoxFloating from './components/JDGContentBoxFloating.svelte';
 export { JDGContentBoxFloating };

@@ -21,6 +21,10 @@ export const jdgColors = {
 	accentColorsJDG: ['#E1D779', '#D98014', '#BF3A0A'],
 	accentColorsPMX: ['#C4C4C4', '#727272FF', '#2A2A2A'],
 	active: '#0B84CB' /* any element that's interactive and isn't already using an accent color */,
+	activeSubtle: '#e6f3ff',
+	compose: '#bfd0db',
+	delete: '#FF5757',
+	done: '#4dc44d',
 	disabled: '#B5B5B5',
 	backgroundFillRangeLm: [
 		'rgba(150, 150, 150, 1)',

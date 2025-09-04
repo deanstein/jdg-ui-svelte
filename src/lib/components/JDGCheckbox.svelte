@@ -5,7 +5,7 @@
 
 	export let showLabel = true;
 	export let label = 'Checkbox label';
-    export let labelFontSize = '14px';
+	export let labelFontSize = '14px';
 	export let isChecked = false;
 	export let isEnabled = true;
 	export let onCheckAction = () => {};
