@@ -241,7 +241,27 @@ export const jdgSizes = {
 		return this.nHeaderSidePadding.toString() + this.headerSidePaddingUnit;
 	},
 	/* don't update aspect ratio if change is below this threshold */
-	imageAspectRatioUpdateThreshold: 0.01
+	imageAspectRatioUpdateThreshold: 0.01,
+
+	timelineUnit: 'rem',
+	nTimelineEventYearWidth: 4,
+	get timelineEventYearWidth() {
+		return this.nTimelineEventYearWidth + this.timelineUnit;
+	},
+	nTimelineEventGapSize: 1,
+	get timelineEventGapSize() {
+		return this.nTimelineEventGapSize + this.timelineUnit;
+	},
+	nTimelineSpineWidth: 0.5,
+	get timelineSpineWidth() {
+		return this.nTimelineSpineWidth + this.timelineUnit
+	},
+	get nTimelineEventNodeSize () {
+		return this.nTimelineSpineWidth * 1.25
+	},
+	get timelineEventNodeSize() {
+		return this.nTimelineEventNodeSize + this.timelineUnit;
+	},
 };
 
 export const jdgDurations = {

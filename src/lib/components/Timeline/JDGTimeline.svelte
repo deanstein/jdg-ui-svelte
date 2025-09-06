@@ -9,7 +9,7 @@
 	import jdgTimelineEventTypes from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
 
-	import { isTimelineEventInEditMode, timelineEditEvent } from '$lib/stores/jdg-temp.js';
+	import { isTimelineEventInEditMode, timelineEditEvent } from '$lib/stores/jdg-temp-store.js';
 	import { doShowTimelineEventDetailsModal } from '$lib/states/ui-state.js';
 
 	import { jdgSchemaVersion } from '$lib/schemas/jdg-schema-versions.js';
@@ -20,7 +20,8 @@
 
 	import Checkbox from '$lib/components/JDGCheckbox.svelte';
 	import ComposeToolbar from '$lib/components/Compose/JDGComposeToolbar.svelte';
-	import TimelineEvent from '$lib/components/Timeline/JDGTimelineEvent.svelte';
+	import JDGTimelineEvent from '$lib/components/Timeline/JDGTimelineEvent.svelte';
+	import { jdgQuantities, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	// timeline host contains events and event references
 	export let timelineHost;
@@ -30,6 +31,15 @@
 	export let inceptionEvent = undefined;
 	// if not provided, use today's date
 	export let cessationEvent = undefined;
+
+	const rowHeightEmptyPx = 1;
+	const rowHeightFilledPx = 80;
+
+	// these three colors define the gradient
+	// that all timeline events will occupy from start to end
+	const timelineEventColorGradient1 = 'rgba(227, 244, 223, 1)';
+	const timelineEventColorGradient2 = 'rgba(208, 240, 242, 1)';
+	const timelineEventColorGradient3 = 'rgba(218, 228, 248, 1)';
 
 	let timelineWrapperRef;
 	let timelineContainerRef;
@@ -49,13 +59,6 @@
 	let canvasScrollState = { top: true, bottom: true };
 	let firstEventHeight = 0;
 	let lastEventHeight = 0;
-
-	// dynamic classes using Emotion CSS
-	let timelineEventGridCss;
-	const timelineEventCountCss = css`
-		font-size: ${stylingConstants.sizes.bioFieldFontSize};
-		margin-left: ${stylingConstants.sizes.timelineEventGapSize};
-	`;
 
 	const onClickAddEventButton = () => {
 		// if the inception event is provided, but with no date
@@ -98,7 +101,7 @@
 			const rowItem = timelineRowItems[i];
 			const rowYPosPx =
 				rowItem.index * emptyRowHeightPx +
-				(eventsInView.length + 1 * stylingConstants.sizes.nTimelineEventFilledRowHeight);
+				(eventsInView.length + 1 * rowHeightFilledPx);
 			if (rowYPosPx < timelineHeightPx) {
 				eventsInView.push(rowItem.index);
 			}
@@ -109,14 +112,49 @@
 		}
 	});
 
+	const timelineEventCountCss = css`
+		font-size: ${jdgSizes.fontSizeBodySm};
+		margin-left: ${jdgSizes.timelineEventGapSize};
+	`;
+
+	// timeline spine styling
+	let spineCss = css`
+		width: ${jdgSizes.timelineSpineThickness};
+	`;
+	$: {
+		spineCss = css`
+			${spineCss}
+			margin-top: ${canvasScrollState.top ? firstEventHeight / 2 + 'px' : 0};
+			margin-bottom: ${canvasScrollState.bottom ? lastEventHeight / 2 + 'px' : 0};
+		`;
+	}
+
+	const spineColumnCss = css`
+		margin-left: ${jdgSizes.nTimelineEventNodeSize / 2 +
+		jdgSizes.nTimelineEventGapSize * 2 +
+		jdgSizes.nTimelineEventYearWidth -
+		jdgSizes.nTimelineSpineWidth / 2 +
+		jdgSizes.timelineUnit};
+	`;
+
+	// keep timeline event grid updated
+	let timelineEventGridCss;
+	$: {
+		// ensure custom css is kept updated
+		timelineEventGridCss = css`
+			row-gap: ${forceRelativeSpacing
+				? rowHeightEmptyPx
+				: 'auto'};
+		`;
+	}
+
 	// keep timeline row items updated
 	$: {
 		// convert events to timeline row items
 		// and ensure no shared rows in the grid
 		timelineRowItems = updateTimelineRowItems(
 			generateTimelineRowItems(
-				timelineEvents,
-				timelineEventReferences,
+				timelineHost,
 				contextEvents,
 				inceptionEvent
 			)
@@ -126,46 +164,11 @@
 	$: {
 		// generate a gradient of colors across all timeline events
 		timelineEventColors = generateGradient(
-			jdgTimelineHost?.timelineEvents?.length + 2 /* account for birth and death */,
-			stylingConstants.colors.timelineEventBackgroundColorGradient1,
-			stylingConstants.colors.timelineEventBackgroundColorGradient2,
-			stylingConstants.colors.timelineEventBackgroundColorGradient3
+			timelineHost?.timelineEvents?.length + 2 /* account for birth and death */,
+			timelineEventColorGradient1,
+			timelineEventColorGradient2,
+			timelineEventColorGradient3
 		);
-
-		// ensure custom css is kept updated
-		timelineEventGridCss = css`
-			row-gap: ${forceRelativeSpacing
-				? stylingConstants.sizes.timelineEventEmptyRowHeight
-				: 'auto'};
-		`;
-	}
-
-	// timeline spine styling
-	let lineCss = css`
-		width: ${stylingConstants.sizes.timelineSpineThickness};
-		background: linear-gradient(
-			to bottom,
-			rgba(255, 0, 0, 0) 0%,
-			${stylingConstants.colors.timelineSpineColor} 20px,
-			${stylingConstants.colors.timelineSpineColor} calc(100% - 20px),
-			rgba(255, 0, 0, 0) 100%
-		);
-	`;
-
-	const lineColumnCss = css`
-		margin-left: ${stylingConstants.sizes.nTimelineEventNodeSize / 2 +
-		stylingConstants.sizes.nTimelineEventGapSize * 2 +
-		stylingConstants.sizes.nTimelineEventYearWidth -
-		stylingConstants.sizes.nTimelineSpineLineThickness / 2 +
-		'vw'};
-	`;
-
-	$: {
-		lineCss = css`
-			${lineCss}
-			margin-top: ${$timelineCanvasScrollState.top ? $timelineFirstEventHeight / 2 + 'px' : 0};
-			margin-bottom: ${$timelineCanvasScrollState.bottom ? $timelineLastEventHeight / 2 + 'px' : 0};
-		`;
 	}
 </script>
 
@@ -194,8 +197,8 @@
 		</div>
 		<div class="timeline-content-container">
 			<div class="timeline-spine">
-				<div class="timeline-spine-line-column {lineColumnCss}">
-					<div class="timeline-spine-line {lineCss}" />
+				<div class="timeline-spine-line-column {spineColumnCss}">
+					<div class="timeline-spine-line {spineCss}" />
 				</div>
 			</div>
 			<div class="timeline-scrolling-canvas" bind:this={scrollingCanvasDivRef}>
@@ -203,7 +206,7 @@
 				<div class="timeline-event-grid {timelineEventGridCss}">
 					<!-- show the inception event if provided -->
 					{#if inceptionEvent}
-						<TimelineEvent
+						<JDGTimelineEvent
 							timelineEvent={inceptionEvent}
 							rowIndex={0}
 							backgroundColor={timelineEventColors[0]}
@@ -212,8 +215,8 @@
 					<!-- all other timeline events saved to the person -->
 					{#each timelineRowItems as timelineRowItem, i}
 						<!-- ensure the UI reacts when these values change -->
-						{#key `${$activePerson.id}-${timelineRowItem.event.eventId}-${$timelineEditEvent}`}
-							<TimelineEvent
+						{#key `${timelineHost.id}-${timelineRowItem.event.eventId}-${$timelineEditEvent}`}
+							<JDGTimelineEvent
 								timelineEvent={timelineRowItem.event}
 								rowIndex={timelineRowItem.index}
 								backgroundColor={timelineEventColors[i + 1]}
@@ -223,9 +226,9 @@
 					{/each}
 					<!-- show the cessation event if provided -->
 					{#if cessationEvent}
-						<TimelineEvent
+						<JDGTimelineEvent
 							timelineEvent={cessationEvent}
-							rowIndex={stylingConstants.quantities.initialTimelineRowCount}
+							rowIndex={jdgQuantities.initialTimelineRowCount}
 							backgroundColor={timelineEventColors[timelineEventColors.length - 1]}
 						/>
 					{/if}
@@ -294,6 +297,13 @@
 		position: absolute;
 		display: flex;
 		height: 100%;
+		background: linear-gradient(
+			to bottom,
+			rgba(255, 0, 0, 0) 0%,
+			rgba(200, 200, 200, 0.75) 20px,
+			rgba(200, 200, 200, 0.7) calc(100% - 20px),
+			rgba(255, 0, 0, 0) 100%
+		);
 	}
 
 	.timeline-spine-line-column {
