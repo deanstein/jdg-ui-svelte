@@ -1,5 +1,6 @@
 <script>
-	import { onMount } from 'svelte';
+	import { getContext, onMount, setContext } from 'svelte';
+	import { writable } from 'svelte/store';
 	import { v4 as uuidv4 } from 'uuid';
 	import { css } from '@emotion/css';
 
@@ -22,6 +23,7 @@
 	import ComposeToolbar from '$lib/components/Compose/JDGComposeToolbar.svelte';
 	import JDGTimelineEvent from '$lib/components/Timeline/JDGTimelineEvent.svelte';
 	import { jdgQuantities, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { JDG_CONTEXT_KEYS } from '$lib/stores/jdg-context-keys.js';
 
 	// timeline host contains events and event references
 	export let timelineHost;
@@ -45,23 +47,31 @@
 	let timelineContainerRef;
 	let scrollingCanvasDivRef;
 
-	// if true, the timeline is spaced out
+	// If true, the timeline is spaced out
 	// to show relative spacing between events
 	let forceRelativeSpacing = false;
-	// row items are converted from the activePerson's raw event data
+	// Row items are converted from the activePerson's raw event data
 	// each row item is an object with the index and the event content
 	let timelineRowItems = [];
 
-	// timeline events will each have a slightly different color
+	// Timeline events will each have a slightly different color
 	// along a gradient defined here
 	let timelineEventColors = [];
 
+	// The spine changes its margin
+	// depending on whether the canvas is scrolled to the top or bottom
 	let canvasScrollState = { top: true, bottom: true };
-	let firstEventHeight = 0;
-	let lastEventHeight = 0;
+
+	// Make a local store for values
+	// that should be shared with TimelineEvents
+	const firstEventRowHeightStore = writable(0);
+	setContext(JDG_CONTEXT_KEYS.timelineFirstRowHeight, firstEventRowHeightStore);
+	const lastEventRowHeightStore = writable(0);
+	setContext(JDG_CONTEXT_KEYS.timelineLastRowHeight, lastEventRowHeightStore);
+	setContext(JDG_CONTEXT_KEYS.timelineInceptionEvent, inceptionEvent);
 
 	const onClickAddEventButton = () => {
-		// if the inception event is provided, but with no date
+		// If the inception event is provided, but with no date
 		// then clicking add event will set it
 		// @ts-expect-error
 		if (inceptionEvent && inceptionEvent?.eventDate === '') {
@@ -91,7 +101,7 @@
 
 	let eventsInView = [];
 	onMount(() => {
-		// determine whether the spacing should default to relative
+		// Determine whether the spacing should default to relative
 		const timelineHeightPx = getMaxElementHeightPx(scrollingCanvasDivRef);
 		const emptyRowHeightPx = 1;
 
@@ -117,15 +127,15 @@
 		margin-left: ${jdgSizes.timelineEventGapSize};
 	`;
 
-	// timeline spine styling
+	// Timeline spine styling
 	let spineCss = css`
 		width: ${jdgSizes.timelineSpineThickness};
 	`;
 	$: {
 		spineCss = css`
 			${spineCss}
-			margin-top: ${canvasScrollState.top ? firstEventHeight / 2 + 'px' : 0};
-			margin-bottom: ${canvasScrollState.bottom ? lastEventHeight / 2 + 'px' : 0};
+			margin-top: ${canvasScrollState.top ? getContext(JDG_CONTEXT_KEYS.timelineFirstRowHeight) / 2 + 'px' : 0};
+			margin-bottom: ${canvasScrollState.bottom ? getContext(JDG_CONTEXT_KEYS.timelineLastRowHeight) / 2 + 'px' : 0};
 		`;
 	}
 
@@ -137,10 +147,10 @@
 		jdgSizes.timelineUnit};
 	`;
 
-	// keep timeline event grid updated
+	// Keep timeline event grid updated
 	let timelineEventGridCss;
 	$: {
-		// ensure custom css is kept updated
+		// Ensure custom css is kept updated
 		timelineEventGridCss = css`
 			row-gap: ${forceRelativeSpacing
 				? rowHeightEmptyPx
@@ -148,9 +158,9 @@
 		`;
 	}
 
-	// keep timeline row items updated
+	// Keep timeline row items updated
 	$: {
-		// convert events to timeline row items
+		// Convert events to timeline row items
 		// and ensure no shared rows in the grid
 		timelineRowItems = updateTimelineRowItems(
 			generateTimelineRowItems(
@@ -162,7 +172,7 @@
 	}
 
 	$: {
-		// generate a gradient of colors across all timeline events
+		// Generate a gradient of colors across all timeline events
 		timelineEventColors = generateGradient(
 			timelineHost?.timelineEvents?.length + 2 /* account for birth and death */,
 			timelineEventColorGradient1,
@@ -183,7 +193,7 @@
 	<div bind:this={timelineContainerRef} class="timeline-container">
 		<div class="timeline-actions-bar">
 			<div class="timeline-event-count {timelineEventCountCss}">
-				<!-- birth and death/today are always shown, so add 2 to the count -->
+				<!-- Birth and death/today are always shown, so add 2 to the count -->
 				Showing {timelineRowItems.length + 2} timeline events
 			</div>
 			<Checkbox
@@ -202,9 +212,9 @@
 				</div>
 			</div>
 			<div class="timeline-scrolling-canvas" bind:this={scrollingCanvasDivRef}>
-				<!-- the grid containing all timeline events -->
+				<!-- The grid containing all timeline events -->
 				<div class="timeline-event-grid {timelineEventGridCss}">
-					<!-- show the inception event if provided -->
+					<!-- Show the inception event if provided -->
 					{#if inceptionEvent}
 						<JDGTimelineEvent
 							timelineEvent={inceptionEvent}
@@ -212,9 +222,9 @@
 							backgroundColor={timelineEventColors[0]}
 						/>
 					{/if}
-					<!-- all other timeline events saved to the person -->
+					<!-- All other timeline events saved to the person -->
 					{#each timelineRowItems as timelineRowItem, i}
-						<!-- ensure the UI reacts when these values change -->
+						<!-- Ensure the UI reacts when these values change -->
 						{#key `${timelineHost.id}-${timelineRowItem.event.eventId}-${$timelineEditEvent}`}
 							<JDGTimelineEvent
 								timelineEvent={timelineRowItem.event}
@@ -224,7 +234,7 @@
 							/>
 						{/key}
 					{/each}
-					<!-- show the cessation event if provided -->
+					<!-- Show the cessation event if provided -->
 					{#if cessationEvent}
 						<JDGTimelineEvent
 							timelineEvent={cessationEvent}

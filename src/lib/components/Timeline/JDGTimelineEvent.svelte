@@ -1,5 +1,5 @@
 <script>
-	import { onMount } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
 	import timelineEventTypes from '$lib/schemas/timeline/jdg-timeline-event-types.js';
@@ -10,31 +10,48 @@
 
 	import { getNumberOfYearsBetweenEvents, instantiateObject, upgradeTimelineEvent } from '$lib/jdg-utils.js';
 
-	import { monthNames } from '$lib/components/strings';
-
-	import { activePerson } from '$lib/states/family-tree-state';
 	import {
-		showTimelineEventDetailsModal,
-		timelineFirstEventHeight,
-		timelineLastEventHeight
-	} from '$lib/states/ui-state';
+		doShowTimelineEventDetailsModal,
+	} from '$lib/states/ui-state.js';
 
 	import JDGButton from '$lib/components/JDGButton.svelte';
-	import ImageThumbnailGroup from '$lib/components/ImageThumbnailGroup.svelte';
-	import stylingConstants from '$lib/components/styling-constants';
+	import { JDGImageThumbnailGroup } from '$lib/index.js';
+	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { JDG_CONTEXT_KEYS } from '$lib/stores/jdg-context-keys.js';
 
 	export let timelineEvent;
 	// if this is set, this event is a reference to someone else's event
 	// so it will display and interact differently
 	export let eventReference = instantiateObject(timelineEventReference);
 	export let onClickFunction = undefined;
-	export let backgroundColor = stylingConstants.colors.activeColorSubtle;
+	export let backgroundColor = jdgColors.activeColorSubtle;
 	export let rowIndex;
 
 	let upgradedEvent;
 	let eventDateCorrected;
 	let eventAge;
 	let eventRowDivRef;
+
+	const timelineFirstEventHeight = getContext(JDG_CONTEXT_KEYS.timelineFirstRowHeight);
+	const timelineLastEventHeight = getContext(JDG_CONTEXT_KEYS.timelineLastRowHeight);
+
+	const cornerRadius = '10px';
+	const dateFontSize = '0.9rem';
+	const yearFontSize = '1.5rem';
+	const monthNames = [
+		'JAN',
+		'FEB',
+		'MAR',
+		'APR',
+		'MAY',
+		'JUN',
+		'JUL',
+		'AUG',
+		'SEP',
+		'OCT',
+		'NOV',
+		'DEC'
+		];
 
 	const onClickTimelineEvent = () => {
 		// do nothing if this is the "today" event (no death date)
@@ -45,59 +62,58 @@
 		) {
 			return;
 		}
-		showTimelineEventDetailsModal.set(true);
+		doShowTimelineEventDetailsModal.set(true);
 		timelineEditEvent.set(upgradedEvent);
 	};
 
 	const eventRowCss = css`
-		gap: ${stylingConstants.sizes.timelineEventGapSize};
+		gap: ${jdgSizes.timelineEventGapSize};
 	`;
 
 	const eventDateYearCss = css`
-		margin-left: ${stylingConstants.sizes.timelineEventGapSize};
+		margin-left: ${jdgSizes.timelineEventGapSize};
 	`;
 
 	const eventDateCss = css`
-		font-size: ${stylingConstants.sizes.timelineDateFontSize};
-		width: ${stylingConstants.sizes.timelineEventYearWidth};
-		color: ${stylingConstants.colors.textColor};
-		background-color: ${stylingConstants.colors.activeColorSubtle};
+		font-size: ${dateFontSize};
+		width: ${jdgSizes.timelineEventYearWidth};
+		color: ${jdgColors.text};
+		background-color: ${jdgColors.activeSubtle};
 	`;
 
 	const eventYearCss = css`
-		font-size: ${stylingConstants.sizes.timelineYearFontSize};
-		width: ${stylingConstants.sizes.timelineEventYearWidth};
-		color: ${stylingConstants.colors.textColor};
-		background-color: ${stylingConstants.colors.activeColorSubtle};
+		font-size: ${yearFontSize};
+		width: ${jdgSizes.timelineEventYearWidth};
+		color: ${jdgColors.text};
+		background-color: ${jdgColors.activeSubtle};
 	`;
 
 	const eventNodeCss = css`
-		height: ${stylingConstants.sizes.timelineEventNodeSize};
-		background-color: ${stylingConstants.colors.textColor};
+		height: ${jdgSizes.timelineEventNodeSize};
+		background-color: ${jdgColors.text};
 	`;
 
 	const eventDetailLineCss = css`
-		background-color: ${stylingConstants.colors.textColor};
+		background-color: ${jdgColors.text};
 	`;
 
 	const eventTitleBarCss = css`
-		background-color: ${stylingConstants.colors.timelineEventTitleBarColor};
-		border-radius: ${stylingConstants.sizes.bioFieldBorderRadius}
-			${stylingConstants.sizes.bioFieldBorderRadius} 0px 0px;
+		border-radius: ${cornerRadius}
+			${cornerRadius} 0px 0px;
 	`;
 
 	const eventFaIconCss = css`
-		color: ${stylingConstants.colors.textColor};
+		color: ${jdgColors.text};
 	`;
 
 	const eventAgeCss = css`
-		color: ${stylingConstants.colors.textColor};
+		color: ${jdgColors.text};
 	`;
 
 	const eventContentCss = css`
 		background-color: ${backgroundColor};
-		border-radius: 0px 0px ${stylingConstants.sizes.bioFieldBorderRadius}
-			${stylingConstants.sizes.bioFieldBorderRadius};
+		border-radius: 0px 0px ${cornerRadius}
+			${cornerRadius};
 	`;
 
 	onMount(() => {
@@ -123,7 +139,7 @@
 		if (upgradedEvent) {
 			eventDateCorrected = new Date(upgradedEvent.eventDate);
 
-			eventAge = getNumberOfYearsBetweenEvents($activePerson.birth.date, eventDateCorrected);
+			eventAge = getNumberOfYearsBetweenEvents(getContext(JDG_CONTEXT_KEYS.timelineInceptionEvent), eventDateCorrected);
 		}
 	}
 
@@ -326,6 +342,7 @@
 		justify-content: center;
 		align-items: center;
 		border-radius: 0px 0px 5px 5px;
+		background-color: rgba(205, 205, 205, 1);
 	}
 
 	.timeline-event-date-apprx {

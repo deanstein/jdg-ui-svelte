@@ -97,6 +97,9 @@ export { JDGImageHybridGridCarousel };
 import JDGImageTile from './components/JDGImageTile.svelte';
 export { JDGImageTile };
 
+import JDGImageThumbnailGroup from './components/Image/JDGImageThumbnailGroup.svelte';
+export { JDGImageThumbnailGroup };
+
 import JDGJumpTo from './components/JDGJumpTo.svelte';
 export { JDGJumpTo };
 
