@@ -7,6 +7,10 @@ import {
 } from './jdg-persistence-management.js';
 import { getDistancePxToBottomOfHeader } from './jdg-ui-management.js';
 
+import { jdgSchemaVersion } from './schemas/jdg-schema-versions.js';
+import jdgTimelineEvent from './schemas/timeline/jdg-timeline-event.js';
+import jdgTimelineEventTypes from './schemas/timeline/jdg-timeline-event-types.js';
+
 ///
 /// WINDOW UTILS
 ///
@@ -924,4 +928,60 @@ export const scrollToAnchor = (anchorId, accountForHeader = false, additionalOff
 
 export const getIsWindowScrolledToBottom = () => {
 	return window.innerHeight + window.scrollY === document.body.offsetHeight;
+};
+
+///
+/// TIMELINE MANAGEMENT UTILS
+///
+export const upgradeTimelineEvent = (eventToUpgrade) => {
+	const isLegacyContent = typeof eventToUpgrade.eventContent === 'string';
+	const isMissingOrigin = !eventToUpgrade.originType;
+	const hasDeprecatedKeys = !!eventToUpgrade.eventContent?.associatedPeople;
+	const needsVersionUpgrade = eventToUpgrade.eventVersion !== jdgSchemaVersion;
+
+	const needsUpgrade =
+		needsVersionUpgrade || isLegacyContent || isMissingOrigin || hasDeprecatedKeys;
+
+	if (!needsUpgrade) return eventToUpgrade;
+
+	let upgraded = false;
+
+	// Deep match base structure
+	let deepMatchedEvent = deepMatchObjects(jdgTimelineEvent, eventToUpgrade, true);
+	const originalVersion = deepMatchedEvent.eventVersion;
+
+	// Set default originType if missing
+	if (!deepMatchedEvent.originType) {
+		deepMatchedEvent.originType = jdgTimelineEventTypes.self;
+		upgraded = true;
+	}
+
+	// Convert legacy string content to object with description
+	if (typeof deepMatchedEvent.eventContent === 'string') {
+		deepMatchedEvent.eventContent = {
+			description: deepMatchedEvent.eventContent,
+		};
+		upgraded = true;
+	}
+
+	// Upgrade schema version
+	if (deepMatchedEvent.eventVersion !== jdgSchemaVersion) {
+		deepMatchedEvent.eventVersion = jdgSchemaVersion;
+		upgraded = true;
+	}
+
+	// Remove deprecated keys and add new ones
+	if (deepMatchedEvent.eventContent?.associatedPeople) {
+		delete deepMatchedEvent.eventContent.associatedPeople;
+		deepMatchedEvent.eventContent.associatedPeopleIds = [];
+		upgraded = true;
+	}
+
+	if (upgraded) {
+		console.log(
+			`Timeline event upgraded: ${deepMatchedEvent.eventId} (${originalVersion}) -> (${jdgSchemaVersion}).`
+		);
+	}
+
+	return deepMatchedEvent;
 };

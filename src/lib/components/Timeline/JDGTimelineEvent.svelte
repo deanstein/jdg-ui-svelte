@@ -2,16 +2,13 @@
 	import { onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import timelineEventTypes from '$lib/schemas/timeline-event-types';
-	import timelineEventOriginTypes from '$lib/schemas/timeline-event-origin-types';
-	import timelineEventReference from '$lib/schemas/timeline-event-reference';
+	import timelineEventTypes from '$lib/schemas/timeline/jdg-timeline-event-types.js';
+	import timelineEventOriginTypes from '$lib/schemas/timeline/jdg-timeline-event-origin-types.js';
+	import timelineEventReference from '$lib/schemas/timeline/jdg-timeline-event-reference.js';
 
-	import { timelineEditEvent } from '$lib/states/temp-state';
+	import { timelineEditEvent } from '$lib/stores/jdg-temp-store.js';
 
-	import { getNumberOfYearsBetweenEvents, instantiateObject } from '$lib/utils';
-
-	import { getPersonById, setActivePerson } from '$lib/tree-management';
-	import { upgradeTimelineEvent } from '$lib/person-management';
+	import { getNumberOfYearsBetweenEvents, instantiateObject, upgradeTimelineEvent } from '$lib/jdg-utils.js';
 
 	import { monthNames } from '$lib/components/strings';
 
@@ -22,7 +19,7 @@
 		timelineLastEventHeight
 	} from '$lib/states/ui-state';
 
-	import { JDGButton } from 'jdg-ui-svelte';
+	import JDGButton from '$lib/components/JDGButton.svelte';
 	import ImageThumbnailGroup from '$lib/components/ImageThumbnailGroup.svelte';
 	import stylingConstants from '$lib/components/styling-constants';
 

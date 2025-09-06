@@ -1,6 +1,6 @@
-import timelineEventContent from './timeline-event-content';
+import timelineEventContent from '$lib/schemas/timeline/jdg-timeline-event-content.js';
 
-const timelineEvent = {
+const jdgTimelineEvent = {
 	id: '',
 	type: '',
 	date: '',
@@ -15,4 +15,4 @@ const timelineEvent = {
 	version: ''
 };
 
-export default timelineEvent;
+export default jdgTimelineEvent;
