@@ -1,18 +1,21 @@
-import timelineEventContent from '$lib/schemas/timeline/jdg-timeline-event-content.js';
+import { jdgSchemaVersion } from '$lib/schemas/jdg-schema-versions.js';
+import jdgTimelineEventTypes from './jdg-timeline-event-types.js';
+import timelineEventOriginTypes from '$lib/schemas/timeline/jdg-timeline-event-origin-types.js';
 
 const jdgTimelineEvent = {
+	// meta
 	id: '',
-	type: '',
+	type: jdgTimelineEventTypes.generic,
+	originType: timelineEventOriginTypes.self,
+	originMeta: undefined,
+	// content
 	date: '',
 	isApprxDate: false,
-	content: (() => {
-		let content = {};
-		Object.keys(timelineEventContent).forEach((element) => {
-			content[element] = [];
-		});
-		return content;
-	})(),
-	version: ''
+	description: '',
+	images: [],
+	referencedHostIds: [], // other hosts that should have an eventRef to this event and host
+	// version
+	version: jdgSchemaVersion
 };
 
 export default jdgTimelineEvent;

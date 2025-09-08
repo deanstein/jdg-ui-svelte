@@ -6,6 +6,7 @@
 	import timelineEventOriginTypes from '$lib/schemas/timeline/jdg-timeline-event-origin-types.js';
 	import timelineEventReference from '$lib/schemas/timeline/jdg-timeline-event-reference.js';
 
+	import { JDG_CONTEXT_KEYS } from '$lib/stores/jdg-context-keys.js';
 	import { timelineEditEvent } from '$lib/stores/jdg-temp-store.js';
 
 	import { getNumberOfYearsBetweenEvents, instantiateObject, upgradeTimelineEvent } from '$lib/jdg-utils.js';
@@ -14,16 +15,19 @@
 		doShowTimelineEventDetailsModal,
 	} from '$lib/states/ui-state.js';
 
-	import JDGButton from '$lib/components/JDGButton.svelte';
-	import { JDGImageThumbnailGroup } from '$lib/index.js';
+	import { JDGButton, JDGImageThumbnailGroup } from '$lib/index.js';
 	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
-	import { JDG_CONTEXT_KEYS } from '$lib/stores/jdg-context-keys.js';
 
 	export let timelineEvent;
 	// if this is set, this event is a reference to someone else's event
 	// so it will display and interact differently
 	export let eventReference = instantiateObject(timelineEventReference);
-	export let onClickFunction = undefined;
+	// when clicking on the event
+	export let onClickFunction = () => {};
+	// when clicking on the event reference rouce
+	export let onClickEventRefSourceFunction = () => {};
+	// when clicking on the associat
+	export let onClickEventAssocSourceFunction = () => {};
 	export let backgroundColor = jdgColors.activeColorSubtle;
 	export let rowIndex;
 
@@ -169,7 +173,7 @@
 					background-color: ${upgradedEvent.originType !== timelineEventOriginTypes.self ||
 					upgradedEvent.eventType === timelineEventTypes.today.type
 						? ''
-						: stylingConstants.colors.timelineEventBackgroundHoverColor};
+						: 'rgba(255, 255, 255, 0.75)'};
 				}
 			`;
 		}
@@ -220,16 +224,16 @@
 						<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event from &nbsp; </i>
 						<JDGButton
 							onClickFunction={() => {
-								setActivePerson(getPersonById(eventReference.personId));
+								onClickEventRefSourceFunction();
 							}}
 							faIcon={'fa-circle-arrow-right'}
-							backgroundColor={stylingConstants.colors.activePersonNodeColor}
+							backgroundColor={jdgColors.activeSubtle}
 							paddingLeftRight="8px"
 							paddingTopBottom="2px"
 							fontSize="12px"
 							gap="6px"
-							label={getPersonById(eventReference?.personId)?.name}
-							tooltip={'Go to ' + getPersonById(eventReference?.personId)?.name}
+							label={eventReference?.name}
+							tooltip={'Go to ' + eventReference?.name}
 						/>
 					</div>
 				</div>
@@ -242,7 +246,7 @@
 						setActivePerson(getPersonById(upgradedEvent?.eventContent?.associatedPeopleIds[0]));
 					}}
 					faIcon={'fa-circle-arrow-right'}
-					backgroundColor={stylingConstants.colors.activePersonNodeColor}
+					backgroundColor={jdgColors.active}
 					paddingLeftRight="8px"
 					paddingTopBottom="2px"
 					fontSize="12px"
