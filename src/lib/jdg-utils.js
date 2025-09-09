@@ -933,55 +933,41 @@ export const getIsWindowScrolledToBottom = () => {
 ///
 /// TIMELINE MANAGEMENT UTILS
 ///
-export const upgradeTimelineEvent = (eventToUpgrade) => {
-	const isLegacyContent = typeof eventToUpgrade.eventContent === 'string';
-	const isMissingOrigin = !eventToUpgrade.originType;
-	const hasDeprecatedKeys = !!eventToUpgrade.eventContent?.associatedPeople;
-	const needsVersionUpgrade = eventToUpgrade.eventVersion !== jdgSchemaVersion;
 
-	const needsUpgrade =
-		needsVersionUpgrade || isLegacyContent || isMissingOrigin || hasDeprecatedKeys;
+// Create a timeline event with optional customizations per type
+export function createTimelineEvent(timelineEventType) {
+	const typeDef = jdgTimelineEventTypes[timelineEventType];
 
-	if (!needsUpgrade) return eventToUpgrade;
-
-	let upgraded = false;
-
-	// Deep match base structure
-	let deepMatchedEvent = deepMatchObjects(jdgTimelineEvent, eventToUpgrade, true);
-	const originalVersion = deepMatchedEvent.eventVersion;
-
-	// Set default originType if missing
-	if (!deepMatchedEvent.originType) {
-		deepMatchedEvent.originType = jdgTimelineEventTypes.self;
-		upgraded = true;
+	if (!typeDef) {
+		throw new Error(`JDG UI: Invalid timeline event type: ${timelineEventType}`);
 	}
 
-	// Convert legacy string content to object with description
-	if (typeof deepMatchedEvent.eventContent === 'string') {
-		deepMatchedEvent.eventContent = {
-			description: deepMatchedEvent.eventContent,
-		};
-		upgraded = true;
+	return {
+		...jdgTimelineEvent,
+		type: typeDef.type,
+		additionalContent: { ...typeDef.content }
+	};
+}
+
+// Upgrades a timeline event with the latest fields
+export function upgradeTimelineEvent(event) {
+	const typeKey = event?.type;
+	const typeDef = jdgTimelineEventTypes[typeKey];
+
+	if (!typeDef) {
+		console.warn(`Unknown timeline event type: ${typeKey}`);
+		return { ...event, version: jdgSchemaVersion };
 	}
 
-	// Upgrade schema version
-	if (deepMatchedEvent.eventVersion !== jdgSchemaVersion) {
-		deepMatchedEvent.eventVersion = jdgSchemaVersion;
-		upgraded = true;
-	}
+	const defaultContent = typeDef.content || {};
+	const existingContent = event.additionalContent || {};
 
-	// Remove deprecated keys and add new ones
-	if (deepMatchedEvent.eventContent?.associatedPeople) {
-		delete deepMatchedEvent.eventContent.associatedPeople;
-		deepMatchedEvent.eventContent.associatedPeopleIds = [];
-		upgraded = true;
-	}
+	// Merge defaults with existing content, preserving user-entered values
+	const upgradedContent = { ...defaultContent, ...existingContent };
 
-	if (upgraded) {
-		console.log(
-			`Timeline event upgraded: ${deepMatchedEvent.eventId} (${originalVersion}) -> (${jdgSchemaVersion}).`
-		);
-	}
-
-	return deepMatchedEvent;
-};
+	return {
+		...event,
+		additionalContent: upgradedContent,
+		version: jdgSchemaVersion
+	};
+}

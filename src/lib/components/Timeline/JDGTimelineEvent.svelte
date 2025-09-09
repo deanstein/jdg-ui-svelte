@@ -9,11 +9,13 @@
 	import { JDG_CONTEXT_KEYS } from '$lib/stores/jdg-context-keys.js';
 	import { timelineEditEvent } from '$lib/stores/jdg-temp-store.js';
 
-	import { getNumberOfYearsBetweenEvents, instantiateObject, upgradeTimelineEvent } from '$lib/jdg-utils.js';
-
 	import {
-		doShowTimelineEventDetailsModal,
-	} from '$lib/states/ui-state.js';
+		getNumberOfYearsBetweenEvents,
+		instantiateObject,
+		upgradeTimelineEvent
+	} from '$lib/jdg-utils.js';
+
+	import { doShowTimelineEventDetailsModal } from '$lib/states/ui-state.js';
 
 	import { JDGButton, JDGImageThumbnailGroup } from '$lib/index.js';
 	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
@@ -55,7 +57,7 @@
 		'OCT',
 		'NOV',
 		'DEC'
-		];
+	];
 
 	const onClickTimelineEvent = () => {
 		// do nothing if this is the "today" event (no death date)
@@ -102,8 +104,7 @@
 	`;
 
 	const eventTitleBarCss = css`
-		border-radius: ${cornerRadius}
-			${cornerRadius} 0px 0px;
+		border-radius: ${cornerRadius} ${cornerRadius} 0px 0px;
 	`;
 
 	const eventFaIconCss = css`
@@ -116,8 +117,7 @@
 
 	const eventContentCss = css`
 		background-color: ${backgroundColor};
-		border-radius: 0px 0px ${cornerRadius}
-			${cornerRadius};
+		border-radius: 0px 0px ${cornerRadius} ${cornerRadius};
 	`;
 
 	onMount(() => {
@@ -135,15 +135,17 @@
 		}
 
 		// if onClick isn't provided, use this function
-		onClickFunction =
-			(onClickFunction ?? eventReference?.personId) ? () => {} : onClickTimelineEvent;
+		onClickFunction = onClickFunction ?? eventReference?.personId ? () => {} : onClickTimelineEvent;
 	});
 
 	$: {
 		if (upgradedEvent) {
 			eventDateCorrected = new Date(upgradedEvent.eventDate);
 
-			eventAge = getNumberOfYearsBetweenEvents(getContext(JDG_CONTEXT_KEYS.timelineInceptionEvent), eventDateCorrected);
+			eventAge = getNumberOfYearsBetweenEvents(
+				getContext(JDG_CONTEXT_KEYS.timelineInceptionEvent),
+				eventDateCorrected
+			);
 		}
 	}
 

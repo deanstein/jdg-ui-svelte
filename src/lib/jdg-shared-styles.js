@@ -254,14 +254,14 @@ export const jdgSizes = {
 	},
 	nTimelineSpineWidth: 0.5,
 	get timelineSpineWidth() {
-		return this.nTimelineSpineWidth + this.timelineUnit
+		return this.nTimelineSpineWidth + this.timelineUnit;
 	},
-	get nTimelineEventNodeSize () {
-		return this.nTimelineSpineWidth * 1.25
+	get nTimelineEventNodeSize() {
+		return this.nTimelineSpineWidth * 1.25;
 	},
 	get timelineEventNodeSize() {
 		return this.nTimelineEventNodeSize + this.timelineUnit;
-	},
+	}
 };
 
 export const jdgDurations = {

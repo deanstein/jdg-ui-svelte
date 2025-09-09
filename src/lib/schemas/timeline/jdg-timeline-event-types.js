@@ -1,99 +1,94 @@
-// the various types of timeline events and the content they can display
+// the various types of timeline events and the additionalContent they can display
 // this is used for upgrading timeline events
 // to ensure no errors when new data is supported
 const jdgTimelineEventTypes = {
+	today: {
+		icon: 'fa-sun'
+	},
+
 	birth: {
-		type: 'birth',
 		icon: 'fa-wand-magic-sparkles',
-		content: {
-			birthdate: '',
+		additionalContent: {
 			birthtime: '',
 			birthplace: '',
-			additionalContext: '',
-			media: []
+			additionalContext: ''
 		}
 	},
+
 	death: {
-		type: 'death',
 		icon: 'fa-umbrella-beach',
-		content: {
-			deathDate: '',
+		additionalContent: {
 			deathTime: '',
 			deathPlace: '',
 			deathCause: '',
-			disposition: '',
-			media: []
+			disposition: ''
 		}
 	},
-	today: {
-		type: 'today',
-		icon: 'fa-sun'
-	},
+
 	generic: {
-		type: 'generic',
 		label: 'Generic',
-		icon: 'fa-rectangle-list',
-		content: {
-			associatedPeople: [],
-			additionalContext: '',
-			media: []
-		}
+		icon: 'fa-rectangle-list'
 	},
+
 	media: {
-		type: 'media',
 		label: 'Media',
 		icon: 'fa-image'
 	},
+
 	education: {
-		type: 'education',
 		label: 'Education',
-		icon: 'fa-graduation-cap',
-		content: {}
+		icon: 'fa-graduation-cap'
 	},
+
 	residence: {
-		type: 'residence',
 		label: 'Residence',
-		icon: 'fa-house',
-		content: {}
+		icon: 'fa-house'
 	},
+
 	workplace: {
-		type: 'workplace',
 		label: 'Workplace',
-		icon: 'fa-building',
-		content: {}
+		icon: 'fa-building'
 	},
+
 	vehicle: {
-		type: 'vehicle',
 		label: 'Vehicle',
 		icon: 'fa-car',
-		content: {}
+		additionalContent: {
+			make: '',
+			model: '',
+			year: ''
+		}
 	},
+
 	relationship: {
-		type: 'relationship',
 		label: 'Relationship',
-		icon: 'fa-heart',
-		content: {}
+		icon: 'fa-heart'
 	},
-	/*** contextual types, don't show in UI ***/
+
+	/*** contextual types, don't show in type selector dropdown ***/
+	context: {
+		label: 'Contextual Event',
+		icon: 'fa-globe',
+		isContextual: true
+	},
+	reference: {
+		label: 'Event Reference',
+		icon: 'fa-asterisk',
+		isContextual: true
+	},
 	childBirth: {
-		type: 'childBirth',
 		label: 'Child Born',
 		icon: 'fa-child-reaching',
-		content: {},
 		isContextual: true
 	},
 	parentDeath: {
-		type: 'parentDeath',
 		label: 'Parent Death',
 		icon: 'fa-feather',
-		content: {},
 		isContextual: true
 	},
 	world: {
-		type: 'world',
 		label: 'World Event',
 		icon: 'fa-globe',
-		content: {},
 		isContextual: true
 	}
 };

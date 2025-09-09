@@ -110,8 +110,7 @@
 		for (let i = 0; i < timelineRowItems.length; i++) {
 			const rowItem = timelineRowItems[i];
 			const rowYPosPx =
-				rowItem.index * emptyRowHeightPx +
-				(eventsInView.length + 1 * rowHeightFilledPx);
+				rowItem.index * emptyRowHeightPx + (eventsInView.length + 1 * rowHeightFilledPx);
 			if (rowYPosPx < timelineHeightPx) {
 				eventsInView.push(rowItem.index);
 			}
@@ -134,8 +133,12 @@
 	$: {
 		spineCss = css`
 			${spineCss}
-			margin-top: ${canvasScrollState.top ? getContext(JDG_CONTEXT_KEYS.timelineFirstRowHeight) / 2 + 'px' : 0};
-			margin-bottom: ${canvasScrollState.bottom ? getContext(JDG_CONTEXT_KEYS.timelineLastRowHeight) / 2 + 'px' : 0};
+			margin-top: ${canvasScrollState.top
+				? getContext(JDG_CONTEXT_KEYS.timelineFirstRowHeight) / 2 + 'px'
+				: 0};
+			margin-bottom: ${canvasScrollState.bottom
+				? getContext(JDG_CONTEXT_KEYS.timelineLastRowHeight) / 2 + 'px'
+				: 0};
 		`;
 	}
 
@@ -152,9 +155,7 @@
 	$: {
 		// Ensure custom css is kept updated
 		timelineEventGridCss = css`
-			row-gap: ${forceRelativeSpacing
-				? rowHeightEmptyPx
-				: 'auto'};
+			row-gap: ${forceRelativeSpacing ? rowHeightEmptyPx : 'auto'};
 		`;
 	}
 
@@ -163,11 +164,7 @@
 		// Convert events to timeline row items
 		// and ensure no shared rows in the grid
 		timelineRowItems = updateTimelineRowItems(
-			generateTimelineRowItems(
-				timelineHost,
-				contextEvents,
-				inceptionEvent
-			)
+			generateTimelineRowItems(timelineHost, contextEvents, inceptionEvent)
 		);
 	}
 
