@@ -301,11 +301,7 @@
 			{#if upgradedEvent?.eventContent?.images?.length > 0}
 				<div class="timeline-event-image-preview">
 					<!-- show a few of the timeline event images, if there are any -->
-					<JDGImageThumbnailGroup
-						imageMetaSet={upgradedEvent?.eventContent?.images}
-						showGroupTitle={false}
-						showAddButton={false}
-					/>
+					<JDGImageThumbnailGroup imageMetaSet={upgradedEvent?.eventContent?.images} />
 				</div>
 			{/if}
 		</div>

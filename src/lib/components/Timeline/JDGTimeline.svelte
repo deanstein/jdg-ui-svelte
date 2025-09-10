@@ -35,8 +35,8 @@
 	export let cessationEvent = undefined;
 
 	export let onClickTimelineEvent = () => {};
-	export let onClickTimelineEventAssocHost = () => {};
-	export let onClickTimelineEventReferenceHost = () => {};
+	export let onClickEventRefHost = () => {};
+	export let onClickAssociatedHost = () => {};
 	export let getTimelineHostById = () => {}; // how does this context get hosts via id?
 
 	const rowHeightEmptyPx = 1;
@@ -222,6 +222,9 @@
 							timelineEvent={inceptionEvent}
 							rowIndex={0}
 							backgroundColor={timelineEventColors[0]}
+							{onClickTimelineEvent}
+							{onClickEventRefHost}
+							{onClickAssociatedHost}
 							{getTimelineHostById}
 						/>
 					{/if}
