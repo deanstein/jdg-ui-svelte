@@ -1,7 +1,11 @@
 import { getObjectByKeyValue, instantiateObject } from '$lib/jdg-utils.js';
+
+import { doShowTimelineEventDetailsModal } from './states/ui-state.js';
+import { timelineEditEvent } from './stores/jdg-temp-store.js';
+
 import jdgTimelineHost from '$lib/schemas/timeline/jdg-timeline-host.js';
+import jdgTimelineEventTypes from './schemas/timeline/jdg-timeline-event-types.js';
 import jdgTimelineRowItem from '$lib/schemas/timeline/jdg-timeline-row-item.js';
-import jdgTimelineEventOriginTypes from '$lib/schemas/timeline/jdg-timeline-event-origin-types.js';
 
 import { jdgBreakpoints, jdgQuantities, jdgSizes } from '$lib/jdg-shared-styles.js';
 
@@ -57,6 +61,13 @@ export const getFullTextWidth = (element) => {
 ///
 /// TIMELINE
 ///
+
+// The default action when a timeline event
+// is set "active" for viewing or editing
+export const setTimelineEventActive = (jdgTimelineEvent) => {
+	doShowTimelineEventDetailsModal.set(true);
+	timelineEditEvent.set(jdgTimelineEvent);
+};
 
 // gets the earliest timeline event from an array of events
 export const getEarliestTimelineEvent = (timelineEvents) => {
@@ -185,7 +196,7 @@ export const generateTimelineRowItems = (
 			)
 		);
 		// mark the event as a reference origin type
-		eventFromReference.originType = jdgTimelineEventOriginTypes.reference;
+		eventFromReference.type = jdgTimelineEventTypes.reference;
 		// get the index this item belongs to
 		const rowIndex = getClosestTimelineRowByDate(
 			inceptionEvent.eventDate,

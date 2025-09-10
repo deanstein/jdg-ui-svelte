@@ -3,7 +3,6 @@
 	import { css } from '@emotion/css';
 
 	import timelineEventTypes from '$lib/schemas/timeline/jdg-timeline-event-types.js';
-	import timelineEventOriginTypes from '$lib/schemas/timeline/jdg-timeline-event-origin-types.js';
 	import timelineEventReference from '$lib/schemas/timeline/jdg-timeline-event-reference.js';
 
 	import { JDG_CONTEXT_KEYS } from '$lib/stores/jdg-context-keys.js';
@@ -19,17 +18,24 @@
 
 	import { JDGButton, JDGImageThumbnailGroup } from '$lib/index.js';
 	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { setTimelineEventActive } from '$lib/jdg-ui-management.js';
+	import jdgTimelineHost from '$lib/schemas/timeline/jdg-timeline-host.js';
 
 	export let timelineEvent;
 	// if this is set, this event is a reference to someone else's event
 	// so it will display and interact differently
 	export let eventReference = instantiateObject(timelineEventReference);
-	// when clicking on the event
-	export let onClickFunction = () => {};
-	// when clicking on the event reference rouce
-	export let onClickEventRefSourceFunction = () => {};
-	// when clicking on the associat
-	export let onClickEventAssocSourceFunction = () => {};
+	// when clicking on the event - default is to set it active
+	export let onClickTimelineEvent = setTimelineEventActive;
+	// when clicking on an event reference host
+	export let onClickEventRefHost = (timelineHostId) => {};
+	// when clicking on an associated host
+	export let onClickAssociatedHost = (timelineHostId) => {};
+	// how does this context find a host from their ID?
+	export let getTimelineHostById = (timelineHostId) => {
+		return instantiateObject(jdgTimelineHost);
+	};
+
 	export let backgroundColor = jdgColors.activeColorSubtle;
 	export let rowIndex;
 
@@ -59,17 +65,12 @@
 		'DEC'
 	];
 
-	const onClickTimelineEvent = () => {
-		// do nothing if this is the "today" event (no death date)
-		// or if the event is not a self event
-		if (
-			upgradedEvent.originType !== timelineEventOriginTypes.self ||
-			upgradedEvent.eventType === timelineEventTypes.today.type
-		) {
-			return;
-		}
-		doShowTimelineEventDetailsModal.set(true);
-		timelineEditEvent.set(upgradedEvent);
+	const canClickOnTimelineEvent = () => {
+		return (
+			upgradedEvent.type !== timelineEventTypes.context &&
+			upgradedEvent.type !== timelineEventTypes.reference &&
+			upgradedEvent.type !== timelineEventTypes.today
+		);
 	};
 
 	const eventRowCss = css`
@@ -135,7 +136,8 @@
 		}
 
 		// if onClick isn't provided, use this function
-		onClickFunction = onClickFunction ?? eventReference?.personId ? () => {} : onClickTimelineEvent;
+		onClickTimelineEvent =
+			onClickTimelineEvent ?? eventReference?.personId ? () => {} : onClickTimelineEvent;
 	});
 
 	$: {
@@ -154,10 +156,7 @@
 	$: {
 		if (upgradedEvent) {
 			eventRowContainerCss = css`
-				cursor: ${upgradedEvent.originType !== timelineEventOriginTypes.self ||
-				upgradedEvent.eventType === timelineEventTypes.today.type
-					? 'default'
-					: 'pointer'};
+				cursor: ${canClickOnTimelineEvent() ? 'default' : 'pointer'};
 			`;
 		}
 	}
@@ -167,15 +166,9 @@
 		if (upgradedEvent) {
 			eventRowDynamicCss = css`
 				grid-row: ${rowIndex};
-				cursor: ${upgradedEvent.originType !== timelineEventOriginTypes.self ||
-				upgradedEvent.eventType === timelineEventTypes.today.type
-					? 'default'
-					: 'pointer'};
+				cursor: ${canClickOnTimelineEvent() ? 'default' : 'pointer'};
 				&:hover {
-					background-color: ${upgradedEvent.originType !== timelineEventOriginTypes.self ||
-					upgradedEvent.eventType === timelineEventTypes.today.type
-						? ''
-						: 'rgba(255, 255, 255, 0.75)'};
+					background-color: ${canClickOnTimelineEvent() ? '' : 'rgba(255, 255, 255, 0.75)'};
 				}
 			`;
 		}
@@ -186,8 +179,8 @@
 	class="timeline-event-row {eventRowCss} {eventRowDynamicCss}"
 	role="button"
 	tabindex="0"
-	on:click={onClickFunction}
-	on:keydown={onClickFunction}
+	on:click={onClickTimelineEvent}
+	on:keydown={onClickTimelineEvent}
 	bind:this={eventRowDivRef}
 >
 	<div class="timeline-event-date-year-container {eventDateYearCss}">
@@ -219,14 +212,14 @@
 					{eventAge?.toString() !== 'NaN' ? eventAge : ''}
 				</div>
 			{/if}
-			<!-- if this is a reference event, show who it's shared from -->
-			{#if timelineEvent.originType === timelineEventOriginTypes.reference}
+			<!-- if this is a reference event, show the timeline host it's shared from -->
+			{#if upgradedEvent.type === timelineEventTypes.reference}
 				<div>
 					<div class="timeline-event-reference-info">
 						<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event from &nbsp; </i>
 						<JDGButton
 							onClickFunction={() => {
-								onClickEventRefSourceFunction();
+								onClickEventRefHost();
 							}}
 							faIcon={'fa-circle-arrow-right'}
 							backgroundColor={jdgColors.activeSubtle}
@@ -241,11 +234,11 @@
 				</div>
 			{/if}
 			<!-- if this event has associated people, show the first -->
-			{#if upgradedEvent?.eventContent?.associatedPeopleIds?.length > 0 && upgradedEvent?.originType !== timelineEventOriginTypes.reference}
+			{#if upgradedEvent?.associatedPeopleIds?.length > 0 && upgradedEvent?.type !== timelineEventTypes.reference}
 				<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event with &nbsp; </i>
 				<JDGButton
 					onClickFunction={() => {
-						setActivePerson(getPersonById(upgradedEvent?.eventContent?.associatedPeopleIds[0]));
+						onClickAssociatedHost(upgradedEvent.associatedPeopleIds[0]);
 					}}
 					faIcon={'fa-circle-arrow-right'}
 					backgroundColor={jdgColors.active}
@@ -253,9 +246,8 @@
 					paddingTopBottom="2px"
 					fontSize="12px"
 					gap="6px"
-					label={getPersonById(upgradedEvent?.eventContent?.associatedPeopleIds[0])?.name}
-					tooltip={'Go to ' +
-						getPersonById(upgradedEvent?.eventContent?.associatedPeopleIds[0])?.name}
+					label={getTimelineHostById(upgradedEvent?.associatedHostIds[0])?.name}
+					tooltip={'Go to ' + getTimelineHostById(upgradedEvent?.associatedHostIds[0])?.name}
 				/>
 				<!-- if more than one, show a label -->
 				{#if upgradedEvent?.eventContent?.associatedPeopleIds?.length > 1}
@@ -263,22 +255,22 @@
 				{/if}
 			{/if}
 			<!-- if this is a contextual event, treat it specifically -->
-			{#if upgradedEvent?.originType === timelineEventOriginTypes.contextual}
+			{#if upgradedEvent?.originType === timelineEventTypes.context}
 				<!-- child birth -->
 				{#if upgradedEvent?.eventType === timelineEventTypes.childBirth.type}
 					<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event from &nbsp; </i>
 					<JDGButton
 						onClickFunction={() => {
-							setActivePerson(getPersonById(upgradedEvent?.originMeta?.personId));
+							onClickEventRefHost(getTimelineHostById(upgradedEvent.additionalContent.childId));
 						}}
 						faIcon={timelineEventTypes.childBirth.icon}
-						backgroundColor={stylingConstants.colors.activePersonNodeColor}
+						backgroundColor={jdgColors.activeSubtle}
 						paddingLeftRight="8px"
 						paddingTopBottom="2px"
 						fontSize="12px"
 						gap="6px"
-						label={getPersonById(upgradedEvent?.originMeta?.personId)?.name}
-						tooltip={'Go to ' + getPersonById(upgradedEvent?.originMeta?.personId)?.name}
+						label={getTimelineHostById(upgradedEvent.additionalContent.childId)?.name}
+						tooltip={getTimelineHostById(upgradedEvent.additionalContent.childId)?.name}
 					/>
 				{/if}
 				<!-- parent death -->
@@ -286,16 +278,16 @@
 					<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event from &nbsp; </i>
 					<JDGButton
 						onClickFunction={() => {
-							setActivePerson(getPersonById(upgradedEvent?.originMeta?.personId));
+							onClickEventRefHost(getTimelineHostById(upgradedEvent.additionalContent.parentId));
 						}}
 						faIcon={timelineEventTypes.parentDeath.icon}
-						backgroundColor={stylingConstants.colors.activePersonNodeColor}
+						backgroundColor={jdgColors.activeSubtle}
 						paddingLeftRight="8px"
 						paddingTopBottom="2px"
 						fontSize="12px"
 						gap="6px"
-						label={getPersonById(upgradedEvent?.originMeta?.personId)?.name}
-						tooltip={'Go to ' + getPersonById(upgradedEvent?.originMeta?.personId)?.name}
+						label={getTimelineHostById(upgradedEvent.additionalContent.parentId)?.name}
+						tooltip={getTimelineHostById(upgradedEvent.additionalContent.parentId)?.name}
 					/>
 				{/if}
 			{/if}
@@ -309,8 +301,8 @@
 			{#if upgradedEvent?.eventContent?.images?.length > 0}
 				<div class="timeline-event-image-preview">
 					<!-- show a few of the timeline event images, if there are any -->
-					<ImageThumbnailGroup
-						imageArray={upgradedEvent?.eventContent?.images}
+					<JDGImageThumbnailGroup
+						imageMetaSet={upgradedEvent?.eventContent?.images}
 						showGroupTitle={false}
 						showAddButton={false}
 					/>

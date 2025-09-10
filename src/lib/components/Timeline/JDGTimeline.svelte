@@ -34,6 +34,11 @@
 	// if not provided, use today's date
 	export let cessationEvent = undefined;
 
+	export let onClickTimelineEvent = () => {};
+	export let onClickTimelineEventAssocHost = () => {};
+	export let onClickTimelineEventReferenceHost = () => {};
+	export let getTimelineHostById = () => {}; // how does this context get hosts via id?
+
 	const rowHeightEmptyPx = 1;
 	const rowHeightFilledPx = 80;
 
@@ -217,6 +222,7 @@
 							timelineEvent={inceptionEvent}
 							rowIndex={0}
 							backgroundColor={timelineEventColors[0]}
+							{getTimelineHostById}
 						/>
 					{/if}
 					<!-- All other timeline events saved to the person -->
@@ -225,9 +231,11 @@
 						{#key `${timelineHost.id}-${timelineRowItem.event.eventId}-${$timelineEditEvent}`}
 							<JDGTimelineEvent
 								timelineEvent={timelineRowItem.event}
+								onClickAssociatedHost={timelineRowItem.event.associatedHostIds[0]}
 								rowIndex={timelineRowItem.index}
 								backgroundColor={timelineEventColors[i + 1]}
 								eventReference={timelineRowItem.eventReference}
+								{getTimelineHostById}
 							/>
 						{/key}
 					{/each}
@@ -237,6 +245,7 @@
 							timelineEvent={cessationEvent}
 							rowIndex={jdgQuantities.initialTimelineRowCount}
 							backgroundColor={timelineEventColors[timelineEventColors.length - 1]}
+							{getTimelineHostById}
 						/>
 					{/if}
 				</div>

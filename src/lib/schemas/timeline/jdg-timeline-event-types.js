@@ -79,12 +79,18 @@ const jdgTimelineEventTypes = {
 	childBirth: {
 		label: 'Child Born',
 		icon: 'fa-child-reaching',
-		isContextual: true
+		isContextual: true,
+		additionalContent: {
+			childId: ''
+		}
 	},
 	parentDeath: {
 		label: 'Parent Death',
 		icon: 'fa-feather',
-		isContextual: true
+		isContextual: true,
+		additionalContent: {
+			parentId: ''
+		}
 	},
 	world: {
 		label: 'World Event',

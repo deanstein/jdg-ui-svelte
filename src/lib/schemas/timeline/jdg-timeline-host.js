@@ -4,6 +4,7 @@
 // Hosts are expected to have at least these fields:
 const jdgTimelineHost = {
 	id: '',
+	name: '',
 	timelineEvents: [],
 	timelineEventReferences: []
 };

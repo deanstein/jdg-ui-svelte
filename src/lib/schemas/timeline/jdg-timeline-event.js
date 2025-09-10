@@ -11,7 +11,7 @@ const jdgTimelineEvent = {
 	description: '',
 	images: [],
 	referencedHostIds: [], // other timeline hosts that should have an eventRef to this event and host
-	additionalContent: {}, // optional; certain event types may have additional fields
+	additionalContent: {}, // optional; certain event types may have additional data
 	// version
 	version: jdgSchemaVersion
 };
