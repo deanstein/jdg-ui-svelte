@@ -14,6 +14,7 @@
 		doShowDevToolbarSticky,
 		doShowHeaderStripes,
 		doShowImageDetailOverlay,
+		doShowTimelineEventDetailsModal,
 		headerHeightPx,
 		imageDetailMeta,
 		isMobileBreakpoint,
@@ -209,6 +210,9 @@
 	{/if}
 	{#if $doShowDevToolbarSticky}
 		<JDGDevToolbarSticky />
+	{/if}
+	{#if $doShowTimelineEventDetailsModal}
+		<!-- not developed yet <TimelineEventDetailsModal /> -->
 	{/if}
 </div>
 
