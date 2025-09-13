@@ -13,7 +13,7 @@
 
 	let checkboxLabelCss = css`
 		font-size: ${labelFontSize};
-		color: ${jdgColors.colors.textColor};
+		color: ${jdgColors.text};
 	`;
 
 	$: {

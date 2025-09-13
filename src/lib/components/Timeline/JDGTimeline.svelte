@@ -28,11 +28,12 @@
 	// timeline host contains events and event references
 	export let timelineHost;
 	// optionally include contextual events
-	export let contextEvents = undefined;
+	export let contextEvents = timelineHost.contextualEvents;
 	// the event used to determine age
-	export let inceptionEvent = undefined;
-	// if not provided, use today's date
-	export let cessationEvent = undefined;
+	// if not provided, age won't be calculated
+	export let inceptionEvent = timelineHost.inceptionEvent;
+	// if not provided, will use today's date
+	export let cessationEvent = timelineHost.cessationEvent;
 
 	export let onClickTimelineEvent = () => {};
 	export let onClickEventRefHost = () => {};
@@ -78,7 +79,6 @@
 	const onClickAddEventButton = () => {
 		// If the inception event is provided, but with no date
 		// then clicking add event will set it
-		// @ts-expect-error
 		if (inceptionEvent && inceptionEvent?.eventDate === '') {
 			timelineEditEvent.set(inceptionEvent);
 			doShowTimelineEventDetailsModal.set(true);

@@ -1,18 +1,15 @@
 <script>
-	import {
-		JDGContentBoxFloating,
-		JDGContentContainer,
-		JDGImageTile,
-		JDGTimeline
-	} from '$lib/index.js';
-	import { doShowTimelineEventDetailsModal } from '$lib/states/ui-state.js';
-	import { timelineEditEvent } from '$lib/stores/jdg-temp-store.js';
-	import { imageMetaCollection } from '../image-meta-collection.js';
+	import { JDGContentBoxFloating, JDGContentContainer, JDGTimeline } from '$lib/index.js';
+
 	import { setTimelineEventActive } from '$lib/jdg-ui-management.js';
+	import { instantiateObject } from '$lib/jdg-utils.js';
+	import jdgTimelineHost from '$lib/schemas/timeline/jdg-timeline-host.js';
+
+	const ccmTimelineHost = instantiateObject(jdgTimelineHost);
 </script>
 
 <JDGContentContainer overlapWithHeader={false}>
 	<JDGContentBoxFloating>
-		<JDGTimeline onClickTimelineEvent={setTimelineEventActive} />
+		<JDGTimeline timelineHost={ccmTimelineHost} onClickTimelineEvent={setTimelineEventActive} />
 	</JDGContentBoxFloating>
 </JDGContentContainer>

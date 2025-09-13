@@ -6,7 +6,8 @@ const jdgTimelineHost = {
 	id: '',
 	name: '',
 	timelineEvents: [],
-	timelineEventReferences: []
+	timelineEventReferences: [],
+	contextualEvents: []
 };
 
 export default jdgTimelineHost;
