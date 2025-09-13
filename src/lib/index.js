@@ -25,8 +25,17 @@ export { JDGBodyCopy };
 import JDGButton from './components/JDGButton.svelte';
 export { JDGButton };
 
+import JDGCheckbox from './components/JDGCheckbox.svelte';
+export { JDGCheckbox };
+
 import JDGClipFade from './components/JDGClipFade.svelte';
 export { JDGClipFade };
+
+import JDGComposeButton from './components/Compose/JDGComposeButton.svelte';
+export { JDGComposeButton };
+
+import JDGComposeToolbar from './components/Compose/JDGComposeToolbar.svelte';
+export { JDGComposeToolbar };
 
 import JDGContentBoxFloating from './components/JDGContentBoxFloating.svelte';
 export { JDGContentBoxFloating };
@@ -88,6 +97,9 @@ export { JDGImageHybridGridCarousel };
 import JDGImageTile from './components/JDGImageTile.svelte';
 export { JDGImageTile };
 
+import JDGImageThumbnailGroup from './components/Image/JDGImageThumbnailGroup.svelte';
+export { JDGImageThumbnailGroup };
+
 import JDGJumpTo from './components/JDGJumpTo.svelte';
 export { JDGJumpTo };
 
@@ -123,6 +135,12 @@ export { JDGStoreView };
 
 import JDGStripesHorizontal from './components/JDGStripesHorizontal.svelte';
 export { JDGStripesHorizontal };
+
+import JDGTimeline from './components/Timeline/JDGTimeline.svelte';
+export { JDGTimeline };
+
+import JDGTimelineEvent from './components/Timeline/JDGTimelineEvent.svelte';
+export { JDGTimelineEvent };
 
 import JDGTopNav from './components/JDGTopNav.svelte';
 export { JDGTopNav };

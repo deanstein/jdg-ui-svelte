@@ -48,6 +48,10 @@
 	navItemIframe.label = 'IFRAME TEST';
 	navItemIframe.href = '/iframe-test';
 
+	const navItemTimeline = instantiateObject(jdgNavItem);
+	navItemTimeline.label = 'TIMELINE TEST';
+	navItemTimeline.href = '/timeline-test';
+
 	const navItems = [
 		navItemHome,
 		navItemSimpleTest,
@@ -55,7 +59,8 @@
 		navItemJdgTest,
 		navItemPmxTest,
 		navItemPlaceholder,
-		navItemIframe
+		navItemIframe,
+		navItemTimeline
 	];
 
 	// get the app version from package.json

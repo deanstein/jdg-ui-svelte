@@ -21,6 +21,10 @@ export const jdgColors = {
 	accentColorsJDG: ['#E1D779', '#D98014', '#BF3A0A'],
 	accentColorsPMX: ['#C4C4C4', '#727272FF', '#2A2A2A'],
 	active: '#0B84CB' /* any element that's interactive and isn't already using an accent color */,
+	activeSubtle: '#e6f3ff',
+	compose: '#bfd0db',
+	delete: '#FF5757',
+	done: '#4dc44d',
 	disabled: '#B5B5B5',
 	backgroundFillRangeLm: [
 		'rgba(150, 150, 150, 1)',
@@ -237,7 +241,27 @@ export const jdgSizes = {
 		return this.nHeaderSidePadding.toString() + this.headerSidePaddingUnit;
 	},
 	/* don't update aspect ratio if change is below this threshold */
-	imageAspectRatioUpdateThreshold: 0.01
+	imageAspectRatioUpdateThreshold: 0.01,
+
+	timelineUnit: 'rem',
+	nTimelineEventYearWidth: 4,
+	get timelineEventYearWidth() {
+		return this.nTimelineEventYearWidth + this.timelineUnit;
+	},
+	nTimelineEventGapSize: 1,
+	get timelineEventGapSize() {
+		return this.nTimelineEventGapSize + this.timelineUnit;
+	},
+	nTimelineSpineWidth: 0.5,
+	get timelineSpineWidth() {
+		return this.nTimelineSpineWidth + this.timelineUnit;
+	},
+	get nTimelineEventNodeSize() {
+		return this.nTimelineSpineWidth * 1.25;
+	},
+	get timelineEventNodeSize() {
+		return this.nTimelineEventNodeSize + this.timelineUnit;
+	}
 };
 
 export const jdgDurations = {
@@ -246,6 +270,10 @@ export const jdgDurations = {
 	scrollFadeIn: 750,
 	loadingSpinnerInterval: 1500,
 	unit: 'ms'
+};
+
+export const jdgQuantities = {
+	initialTimelineRowCount: 1000
 };
 
 //

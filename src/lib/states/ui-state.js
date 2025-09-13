@@ -1,10 +1,7 @@
 import { derived, writable } from 'svelte/store';
 
 export let activeNotificationBanners = writable([]);
-export let doShowNavSidebar = writable(false);
 export let highestZIndex = writable(1);
-
-export let jumpToNavItems = writable([]);
 
 // breakpoints
 export let isMobileBreakpoint = writable(false);
@@ -24,6 +21,10 @@ export let isScrollingToAnchorTag = writable(false);
 export let windowScrollPosition = writable(0);
 export let scrollDirection = writable('down');
 
+// nav
+export let jumpToNavItems = writable([]);
+export let doShowNavSidebar = writable(false);
+
 // header
 export let headerHeightPx = writable(0);
 export let doShowHeaderStripes = writable(false);
@@ -31,16 +32,18 @@ export let doShowHeaderStripes = writable(false);
 // images
 export let imageAspectRatios = writable({}); // { src: "", aspectRatio: 0 }
 export let imagesLoading = writable([]);
-
 // image detail overlay
 export let imageDetailMeta = writable({});
 export let imageDetailWidth = writable(0); // width of the image for caption alignment
 export let imageDetailScale = writable(1.0);
 export let doShowImageDetailOverlay = writable(false);
 
+// timeline
+export let doShowTimelineEventDetailsModal = writable(false);
+
 // sizes
 export let clientWidth = writable(0); // window minus scrollbar
-export let windowWidth = writable(0); // full window width, including scrollbar issues when using actual vh
+export let windowWidth = writable(0); // full window width, including scrollbar
 
 // dev tools
 export let doShowDevTools = writable(false); // state view and tools in footer
@@ -51,30 +54,41 @@ export let devOverlayContent = writable('No data found in $devOverlayContent sta
 
 // create a combined store to display in footer dev tools
 const storeMap = {
+	activeNotificationBanners,
+	highestZIndex,
+	// breakpoints
+	isMobileBreakpoint,
+	isTabletBreakpoint,
+	// font, colors, settings
 	appFontFamily,
 	appAccentColors,
 	appCssHyperlinkBar,
 	appCssHyperlinkSimple,
 	doAllowTextSelection,
-	activeNotificationBanners,
-	doShowNavSidebar,
-	highestZIndex,
-	isMobileBreakpoint,
-	jumpToNavItems,
+	// scrolling
 	isScrolling,
 	isScrollingToAnchorTag,
 	scrollDirection,
 	windowScrollPosition,
+	// nav
+	doShowNavSidebar,
+	jumpToNavItems,
+	// header
 	headerHeightPx,
 	doShowHeaderStripes,
+	// images
 	imageAspectRatios,
 	imagesLoading,
 	doShowImageDetailOverlay,
 	imageDetailMeta,
 	imageDetailWidth,
 	imageDetailScale,
+	// timeline
+	doShowTimelineEventDetailsModal,
+	// sizes
 	clientWidth,
 	windowWidth,
+	// dev
 	doShowDevTools,
 	doShowDevToolbarSticky,
 	devToolbarStickyContent,

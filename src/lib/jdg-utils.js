@@ -7,6 +7,10 @@ import {
 } from './jdg-persistence-management.js';
 import { getDistancePxToBottomOfHeader } from './jdg-ui-management.js';
 
+import { jdgSchemaVersion } from './schemas/jdg-schema-versions.js';
+import jdgTimelineEvent from './schemas/timeline/jdg-timeline-event.js';
+import jdgTimelineEventTypes from './schemas/timeline/jdg-timeline-event-types.js';
+
 ///
 /// WINDOW UTILS
 ///
@@ -16,6 +20,30 @@ export const removeAnchorTagFromHistory = () => {
 	const url = new URL(window.location.href);
 	const cleanUrl = url.origin + url.pathname;
 	window.history.replaceState(null, '', cleanUrl);
+};
+
+///
+/// DOM UTILS
+///
+
+// traverses the DOM upwards to find a scrolling div
+// if it doesn't find one, return the original element
+export const getNearestScrollingElement = (element) => {
+	let current = element.parentElement;
+	while (current) {
+		const style = getComputedStyle(current);
+		const overflowY = style.overflowY;
+		const hasScroll = current.scrollHeight > current.clientHeight;
+
+		if ((overflowY === 'auto' || overflowY === 'scroll') && hasScroll) {
+			return current;
+		}
+
+		current = current.parentElement;
+	}
+
+	// return the initial element if no scrolling container found
+	return element;
 };
 
 ///
@@ -126,7 +154,10 @@ export const areObjectsEqual = (obj1, obj2) => {
 };
 
 export const instantiateObject = (object, overrides = {}) => {
-	return { ...JSON.parse(JSON.stringify(object)), ...overrides };
+	return {
+		...JSON.parse(JSON.stringify(object)),
+		...JSON.parse(JSON.stringify(overrides))
+	};
 };
 
 export const deepMatchObjects = (dataToMatch, dataToChange, forceChangeToType = undefined) => {
@@ -778,6 +809,40 @@ export const setHexColorSaturation = (hexColor, saturation) => {
 		.padStart(2, '0')}`;
 };
 
+export const parseRgbaColorString = (rgbaColorString) => {
+	const match = rgbaColorString.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)/i);
+	if (match) {
+		return [parseInt(match[1]), parseInt(match[2]), parseInt(match[3]), parseFloat(match[4] || 1)];
+	}
+	return null;
+};
+
+export const generateGradient = (steps, colorString1, colorString2, colorString3) => {
+	const startColor = parseRgbaColorString(colorString1);
+	const midColor = parseRgbaColorString(colorString2);
+	const endColor = colorString3 ? parseRgbaColorString(colorString3) : midColor;
+	const colors = [];
+	const halfSteps = Math.floor(steps / 2);
+
+	for (let i = 0; i < halfSteps; i++) {
+		const r = startColor[0] + ((midColor[0] - startColor[0]) / halfSteps) * i;
+		const g = startColor[1] + ((midColor[1] - startColor[1]) / halfSteps) * i;
+		const b = startColor[2] + ((midColor[2] - startColor[2]) / halfSteps) * i;
+		const a = startColor[3] + ((midColor[3] - startColor[3]) / halfSteps) * i;
+		colors.push(`rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${a.toFixed(2)})`);
+	}
+
+	for (let i = halfSteps; i < steps; i++) {
+		const r = midColor[0] + ((endColor[0] - midColor[0]) / halfSteps) * (i - halfSteps);
+		const g = midColor[1] + ((endColor[1] - midColor[1]) / halfSteps) * (i - halfSteps);
+		const b = midColor[2] + ((endColor[2] - midColor[2]) / halfSteps) * (i - halfSteps);
+		const a = midColor[3] + ((endColor[3] - midColor[3]) / halfSteps) * (i - halfSteps);
+		colors.push(`rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${a.toFixed(2)})`);
+	}
+
+	return colors;
+};
+
 ///
 /// CLOUDINARY UTILS
 ///
@@ -864,3 +929,45 @@ export const scrollToAnchor = (anchorId, accountForHeader = false, additionalOff
 export const getIsWindowScrolledToBottom = () => {
 	return window.innerHeight + window.scrollY === document.body.offsetHeight;
 };
+
+///
+/// TIMELINE MANAGEMENT UTILS
+///
+
+// Create a timeline event with optional customizations per type
+export function createTimelineEvent(timelineEventType) {
+	const typeDef = jdgTimelineEventTypes[timelineEventType];
+
+	if (!typeDef) {
+		throw new Error(`JDG UI: Invalid timeline event type: ${timelineEventType}`);
+	}
+
+	return {
+		...jdgTimelineEvent,
+		type: typeDef.type,
+		additionalContent: { ...typeDef.content }
+	};
+}
+
+// Upgrades a timeline event with the latest fields
+export function upgradeTimelineEvent(event) {
+	const typeKey = event?.type;
+	const typeDef = jdgTimelineEventTypes[typeKey];
+
+	if (!typeDef) {
+		console.warn(`Unknown timeline event type: ${typeKey}`);
+		return { ...event, version: jdgSchemaVersion };
+	}
+
+	const defaultContent = typeDef.content || {};
+	const existingContent = event.additionalContent || {};
+
+	// Merge defaults with existing content, preserving user-entered values
+	const upgradedContent = { ...defaultContent, ...existingContent };
+
+	return {
+		...event,
+		additionalContent: upgradedContent,
+		version: jdgSchemaVersion
+	};
+}
