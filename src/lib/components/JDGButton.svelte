@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { appFontFamily, isMobileBreakpoint } from '$lib/states/ui-state.js';
+	import { appFontFamily, isMobileBreakpoint } from '$lib/stores/jdg-ui-store.js';
 
 	import { jdgColors, jdgBoxShadowStandard } from '../jdg-shared-styles.js';
 	import {

@@ -4,7 +4,7 @@
 	import { v4 as uuidv4 } from 'uuid';
 
 	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
-	import { activeNotificationBanners } from '../states/ui-state.js';
+	import { activeNotificationBanners } from '../stores/jdg-ui-store.js';
 
 	import {
 		addNotificationBanner,

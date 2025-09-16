@@ -2,7 +2,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { doShowNavSidebar } from '../states/ui-state.js';
+	import { doShowNavSidebar } from '../stores/jdg-ui-store.js';
 
 	import { getIsNavSideBarOpen } from '../jdg-state-management.js';
 	import { breakpointHandler } from '$lib/jdg-ui-management.js';

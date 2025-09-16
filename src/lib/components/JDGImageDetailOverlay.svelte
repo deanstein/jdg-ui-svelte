@@ -10,7 +10,7 @@
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGOverlay } from '$lib/index.js';
 	import { jdgBreakpoints } from '$lib/jdg-shared-styles.js';
-	import { imageDetailScale, imageDetailWidth } from '$lib/states/ui-state.js';
+	import { imageDetailScale, imageDetailWidth } from '$lib/stores/jdg-ui-store.js';
 
 	export let imageMeta = instantiateObject(jdgImageMeta);
 

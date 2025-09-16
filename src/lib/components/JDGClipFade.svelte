@@ -2,7 +2,7 @@
 	import { afterUpdate } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { appAccentColors, isMobileBreakpoint, windowWidth } from '$lib/states/ui-state.js';
+	import { appAccentColors, isMobileBreakpoint, windowWidth } from '$lib/stores/jdg-ui-store.js';
 	import { lightenColor } from '$lib/jdg-utils.js';
 	import { jdgSharedIdentifiers } from '$lib/jdg-shared-strings.js';
 	import { jdgDurations } from '$lib/jdg-shared-styles.js';

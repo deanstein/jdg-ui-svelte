@@ -1,6 +1,6 @@
 import { getObjectByKeyValue, instantiateObject } from '$lib/jdg-utils.js';
 
-import { doShowTimelineEventDetailsModal } from './states/ui-state.js';
+import { doShowTimelineEventDetailsModal } from './stores/jdg-ui-store.js';
 import { timelineEditEvent } from './stores/jdg-temp-store.js';
 
 import jdgTimelineHost from '$lib/schemas/timeline/jdg-timeline-host.js';

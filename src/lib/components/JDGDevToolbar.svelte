@@ -3,7 +3,7 @@
 		doShowDevToolbarSticky,
 		doShowDevOverlay,
 		doAllowTextSelection
-	} from '$lib/states/ui-state.js';
+	} from '$lib/stores/jdg-ui-store.js';
 	import { JDGButton, JDGH3H4 } from '$lib/index.js';
 	import { jdgSizes } from '$lib/jdg-shared-styles.js';
 

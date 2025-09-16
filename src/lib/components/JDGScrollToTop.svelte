@@ -7,7 +7,7 @@
 		appAccentColors,
 		isMobileBreakpoint,
 		windowScrollPosition
-	} from '$lib/states/ui-state.js';
+	} from '$lib/stores/jdg-ui-store.js';
 	import { JDGButton } from '$lib/index.js';
 	import {
 		jdgBoxShadowStandard,

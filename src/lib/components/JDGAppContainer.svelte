@@ -24,7 +24,7 @@
 		windowWidth,
 		appCssHyperlinkBar,
 		isTabletBreakpoint
-	} from '$lib/states/ui-state.js';
+	} from '$lib/stores/jdg-ui-store.js';
 
 	import { getDistancePxToBottomOfHeader } from '$lib/jdg-ui-management.js';
 	import {

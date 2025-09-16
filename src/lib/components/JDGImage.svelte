@@ -20,7 +20,7 @@
 		doShowHeaderStripes,
 		windowWidth,
 		imageDetailScale
-	} from '$lib/states/ui-state.js';
+	} from '$lib/stores/jdg-ui-store.js';
 	import {
 		addImageLoading,
 		recordImageAspectRatio,

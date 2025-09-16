@@ -16,7 +16,7 @@
 	} from '$lib/index.js';
 	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import sharedStrings from './shared-strings.js';
-	import { doShowDevTools } from '$lib/states/ui-state.js';
+	import { doShowDevTools } from '$lib/stores/jdg-ui-store.js';
 	import { toggleDevTools } from '$lib/jdg-state-management.js';
 
 	// define the nav items in the header

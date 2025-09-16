@@ -5,7 +5,7 @@
 	import { jdgBreakpoints } from '$lib/jdg-shared-styles.js';
 
 	import { JDGImageCarousel } from '$lib/index.js';
-	import { appAccentColors } from '$lib/states/ui-state.js';
+	import { appAccentColors } from '$lib/stores/jdg-ui-store.js';
 
 	export let productId = undefined; // optional, for use in ProductTypeSelector parent component (if multiple types)
 	export let imageMetaSet = [

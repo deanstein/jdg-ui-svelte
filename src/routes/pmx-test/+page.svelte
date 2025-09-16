@@ -1,6 +1,6 @@
 <script>
 	import { imageMetaCollection } from '../image-meta-collection.js';
-	import { appAccentColors } from '$lib/states/ui-state.js';
+	import { appAccentColors } from '$lib/stores/jdg-ui-store.js';
 
 	import { JDGContentBoxFloating, JDGContentContainer } from '$lib/index.js';
 	import PMXProductDetailsSection from './PMXProductDetailsSection.svelte';

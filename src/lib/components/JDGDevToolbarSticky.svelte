@@ -1,6 +1,6 @@
 <script>
 	import { JDGDevToolbar, JDGH3H4 } from '$lib/index.js';
-	import { devToolbarStickyContent } from '$lib/states/ui-state.js';
+	import { devToolbarStickyContent } from '$lib/stores/jdg-ui-store.js';
 </script>
 
 <div class="jdg-dev-toolbar-placement-container">

@@ -2,7 +2,7 @@
 	import { css } from '@emotion/css';
 
 	import { JDGImageTile } from '$lib/index.js';
-	import { appAccentColors } from '$lib/states/ui-state.js';
+	import { appAccentColors } from '$lib/stores/jdg-ui-store.js';
 
 	export let imageMetaSet;
 	export let activeImageMeta = undefined;

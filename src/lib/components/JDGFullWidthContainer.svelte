@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { clientWidth } from '$lib/states/ui-state.js';
+	import { clientWidth } from '$lib/stores/jdg-ui-store.js';
 
 	let fullWidthContainerDynamicCss = css``;
 

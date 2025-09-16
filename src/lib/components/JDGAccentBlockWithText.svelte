@@ -1,5 +1,5 @@
 <script>
-	import { appAccentColors, appFontFamily } from '$lib/states/ui-state.js';
+	import { appAccentColors, appFontFamily } from '$lib/stores/jdg-ui-store.js';
 	import { adjustColorForContrast } from '$lib/jdg-utils.js';
 
 	import { JDGAccentBlock, JDGAccentText, JDGAnchorTag } from '$lib/index.js';

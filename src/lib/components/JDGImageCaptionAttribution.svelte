@@ -2,7 +2,7 @@
 	import { css } from '@emotion/css';
 	import { onMount } from 'svelte';
 
-	import { clientWidth } from '$lib/states/ui-state.js';
+	import { clientWidth } from '$lib/stores/jdg-ui-store.js';
 	import { setAlphaInRgbaString } from '$lib/jdg-graphics-factory.js';
 	import { getFullTextWidth } from '$lib/jdg-ui-management.js';
 	import { getMaxElementWidthPx } from '$lib/jdg-utils.js';

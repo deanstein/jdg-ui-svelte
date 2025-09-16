@@ -8,7 +8,7 @@
 		isScrollingToAnchorTag,
 		imagesLoading,
 		isScrolling
-	} from '$lib/states/ui-state.js';
+	} from '$lib/stores/jdg-ui-store.js';
 	import {
 		convertStringToAnchorTag,
 		getIsWindowScrolledToBottom,

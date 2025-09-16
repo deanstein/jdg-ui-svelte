@@ -2,7 +2,7 @@
 	import { css } from '@emotion/css';
 	import { slide } from 'svelte/transition';
 
-	import { doShowNavSidebar } from '../states/ui-state.js';
+	import { doShowNavSidebar } from '../stores/jdg-ui-store.js';
 
 	import { setAlphaInRgbaString } from '$lib/jdg-graphics-factory.js';
 	import { jdgColors, jdgDurations, jdgSizes } from '../jdg-shared-styles.js';

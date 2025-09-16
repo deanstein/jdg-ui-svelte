@@ -10,7 +10,7 @@ import {
 	doShowNavSidebar,
 	doShowDevTools,
 	imagesLoading
-} from './states/ui-state.js';
+} from './stores/jdg-ui-store.js';
 import { jdgSizes } from './jdg-shared-styles.js';
 
 //

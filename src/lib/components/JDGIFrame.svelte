@@ -1,6 +1,6 @@
 <script>
 	import { getMaxElementWidthPx } from '$lib/jdg-utils.js';
-	import { windowWidth } from '$lib/states/ui-state.js';
+	import { windowWidth } from '$lib/stores/jdg-ui-store.js';
 
 	export let title;
 	export let src;

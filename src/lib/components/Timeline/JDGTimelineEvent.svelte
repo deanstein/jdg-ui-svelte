@@ -14,7 +14,7 @@
 		upgradeTimelineEvent
 	} from '$lib/jdg-utils.js';
 
-	import { doShowTimelineEventDetailsModal } from '$lib/states/ui-state.js';
+	import { doShowTimelineEventDetailsModal } from '$lib/stores/jdg-ui-store.js';
 
 	import { JDGButton, JDGImageThumbnailGroup } from '$lib/index.js';
 	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';

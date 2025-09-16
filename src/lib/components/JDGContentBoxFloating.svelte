@@ -5,7 +5,7 @@
 
 	import { jdgSharedIdentifiers } from '$lib/jdg-shared-strings.js';
 	import jdgNavItem from '$lib/schemas/jdg-nav-item.js';
-	import { appFontFamily } from '$lib/states/ui-state.js';
+	import { appFontFamily } from '$lib/stores/jdg-ui-store.js';
 	import { addJumpToNavItem, removeJumpToNavItem } from '$lib/jdg-state-management.js';
 	import { convertStringToAnchorTag, instantiateObject } from '$lib/jdg-utils.js';
 

@@ -8,7 +8,7 @@
 		imageAspectRatios,
 		imageDetailMeta,
 		windowWidth
-	} from '$lib/states/ui-state.js';
+	} from '$lib/stores/jdg-ui-store.js';
 
 	import { JDGButton, JDGImage, JDGImageCaptionAttribution, JDGImageTile } from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';

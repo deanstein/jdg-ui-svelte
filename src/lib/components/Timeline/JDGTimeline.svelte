@@ -11,7 +11,7 @@
 	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
 
 	import { isTimelineEventInEditMode, timelineEditEvent } from '$lib/stores/jdg-temp-store.js';
-	import { doShowTimelineEventDetailsModal } from '$lib/states/ui-state.js';
+	import { doShowTimelineEventDetailsModal } from '$lib/stores/jdg-ui-store.js';
 
 	import { jdgSchemaVersion } from '$lib/schemas/jdg-schema-versions.js';
 	import { generateTimelineRowItems, updateTimelineRowItems } from '$lib/jdg-ui-management.js';

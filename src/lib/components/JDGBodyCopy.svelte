@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { appCssHyperlinkSimple } from '$lib/states/ui-state.js';
+	import { appCssHyperlinkSimple } from '$lib/stores/jdg-ui-store.js';
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let fontSizeMultiplier = 1; // optionally make fonts larger at all breakpoints

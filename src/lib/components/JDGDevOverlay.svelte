@@ -1,5 +1,5 @@
 <script>
-	import { devOverlayContent, doShowDevOverlay } from '$lib/states/ui-state.js';
+	import { devOverlayContent, doShowDevOverlay } from '$lib/stores/jdg-ui-store.js';
 
 	import { JDGH3H4, JDGOverlay } from '$lib/index.js';
 </script>

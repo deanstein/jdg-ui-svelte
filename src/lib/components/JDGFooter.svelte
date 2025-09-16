@@ -8,7 +8,7 @@
 		clientWidth,
 		doShowDevTools,
 		doShowHeaderStripes
-	} from '$lib/states/ui-state.js';
+	} from '$lib/stores/jdg-ui-store.js';
 
 	import { getBuildCode } from '../jdg-utils.js';
 	import {

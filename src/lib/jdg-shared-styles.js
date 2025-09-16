@@ -1,6 +1,6 @@
 import { css } from '@emotion/css';
 import { adjustColorForContrast, convertHexToRGBA } from './jdg-utils.js';
-import { appCssHyperlinkBar, appCssHyperlinkSimple } from './states/ui-state.js';
+import { appCssHyperlinkBar, appCssHyperlinkSimple } from './stores/jdg-ui-store.js';
 
 export const jdgBreakpoints = {
 	width: [768, 1024],

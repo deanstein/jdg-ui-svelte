@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { appAccentColors } from '$lib/states/ui-state.js';
+	import { appAccentColors } from '$lib/stores/jdg-ui-store.js';
 
 	import { JDGAnimateOnVisible } from '$lib/index.js';
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';

@@ -1,6 +1,6 @@
 <script>
 	import { css } from '@emotion/css';
-	import { appFontFamily } from '$lib/states/ui-state.js';
+	import { appFontFamily } from '$lib/stores/jdg-ui-store.js';
 
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 

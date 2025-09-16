@@ -1,5 +1,5 @@
 <script>
-	import { appAccentColors } from '$lib/states/ui-state.js';
+	import { appAccentColors } from '$lib/stores/jdg-ui-store.js';
 	import { JDGLoadingSpinner, JDGOverlay } from '../index.js';
 
 	export let isLoading = false;

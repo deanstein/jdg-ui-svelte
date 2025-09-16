@@ -1,5 +1,5 @@
 <script>
-	import { isMobileBreakpoint } from '$lib/states/ui-state.js';
+	import { isMobileBreakpoint } from '$lib/stores/jdg-ui-store.js';
 
 	import {
 		JDGFullWidthContainer,

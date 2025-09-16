@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { jumpToNavItems } from '$lib/states/ui-state.js';
+	import { jumpToNavItems } from '$lib/stores/jdg-ui-store.js';
 
 	import { JDGContentBoxFloating, JDGNavItem } from '$lib/index.js';
 	import { jdgSizes } from '$lib/jdg-shared-styles.js';

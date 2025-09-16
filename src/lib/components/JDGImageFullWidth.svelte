@@ -15,7 +15,11 @@
 	} from '$lib/index.js';
 	import { fadeInSettleBeforeSm, jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { fade } from 'svelte/transition';
-	import { appFontFamily, isMobileBreakpoint, isTabletBreakpoint } from '$lib/states/ui-state.js';
+	import {
+		appFontFamily,
+		isMobileBreakpoint,
+		isTabletBreakpoint
+	} from '$lib/stores/jdg-ui-store.js';
 
 	export let imageMeta = instantiateObject(jdgImageMeta);
 	export let objectPosition = 'center';

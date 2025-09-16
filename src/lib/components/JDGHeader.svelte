@@ -3,7 +3,7 @@
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
-	import { doShowHeaderStripes } from '$lib/states/ui-state.js';
+	import { doShowHeaderStripes } from '$lib/stores/jdg-ui-store.js';
 
 	import {
 		jdgBoxShadowStandard,

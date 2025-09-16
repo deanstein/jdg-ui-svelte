@@ -3,7 +3,7 @@
 	import { afterUpdate } from 'svelte';
 
 	import { JDGImageTile } from '$lib/index.js';
-	import { appAccentColors } from '$lib/states/ui-state.js';
+	import { appAccentColors } from '$lib/stores/jdg-ui-store.js';
 
 	export let activeProductId = productTypeIds[0]; // optional - if not set, uses the first id
 	export let productTypeIds = []; // array of product IDs to show
