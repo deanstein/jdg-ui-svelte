@@ -88,24 +88,6 @@ export const getEarliestTimelineEvent = (timelineEvents) => {
 	});
 };
 
-export const getNumberOfYearsBetweenEvents = (startDate, endDate) => {
-	const correctedStartDate = new Date(startDate);
-	const correctedEndDate = new Date(endDate);
-
-	var years = correctedEndDate.getFullYear() - correctedStartDate.getFullYear();
-
-	// Subtract a year if the other date is earlier in the year than the birth date
-	if (
-		correctedEndDate.getMonth() < correctedStartDate.getMonth() ||
-		(correctedEndDate.getMonth() == correctedStartDate.getMonth() &&
-			correctedEndDate.getDate() < correctedStartDate.getDate())
-	) {
-		years--;
-	}
-
-	return years;
-};
-
 export const getClosestTimelineRowByDate = (inceptionDate, eventDate, totalRows) => {
 	const closestRow = Math.ceil(getTimelineProportionByDate(inceptionDate, eventDate) * totalRows);
 	return closestRow;

@@ -1,3 +1,35 @@
+/*** CORE EXPORTS ***/
+
+// 🧠 Schemas
+export * from './schemas/jdg-image-meta.js';
+export * from './schemas/jdg-notification-types.js';
+export * from './schemas/jdg-nav-item.js';
+// 🕰️ Timeline Schemas
+export * from './schemas/timeline/jdg-timeline-event.js';
+export * from './schemas/timeline/jdg-timeline-host.js';
+export * from './schemas/timeline/jdg-timeline-event-image.js';
+export * from './schemas/timeline/jdg-timeline-event-reference.js';
+export * from './schemas/timeline/jdg-timeline-event-types.js';
+export * from './schemas/timeline/jdg-timeline-row-item.js';
+
+// 🏪 Stores
+export * from './stores/jdg-ui-store.js';
+export * from './stores/jdg-shared-urls-store.js';
+
+// 🧩 Management & State
+export * from './jdg-persistence-management.js';
+export * from './jdg-state-management.js';
+export * from './jdg-ui-management.js';
+
+// 🛠️ Utilities
+export * from './jdg-utils.js';
+
+// 🧵 Shared Assets
+export * from './jdg-shared-strings.js';
+export * from './jdg-shared-styles.js';
+
+/*** SVELTE EXPORTS ***/
+
 import JDGAccentBlock from './components/JDGAccentBlock.svelte';
 export { JDGAccentBlock };
 
