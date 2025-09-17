@@ -2,9 +2,8 @@ import { derived, writable } from 'svelte/store';
 
 /*** ADMINISTRATION ***/
 export let isAdminMode = writable(false);
-
-export let activeNotificationBanners = writable([]);
-export let highestZIndex = writable(1);
+export let doShowAdminLoginModal = writable(false);
+export let postAdminLoginFunction = writable(() => {});
 
 /*** BREAKPOINTS ***/
 export let isMobileBreakpoint = writable(false);
@@ -28,6 +27,9 @@ export let scrollDirection = writable('down');
 export let jumpToNavItems = writable([]);
 export let doShowNavSidebar = writable(false);
 
+/*** NOTIFICATIONS ***/
+export let activeNotificationBanners = writable([]);
+
 /*** HEADER ***/
 export let headerHeightPx = writable(0);
 export let doShowHeaderStripes = writable(false);
@@ -43,12 +45,15 @@ export let doShowImageDetailOverlay = writable(false);
 
 /*** TIMELINE ***/
 export let doShowTimelineEventDetailsModal = writable(false);
+export let isTimelineHostDrafting = writable(false);
 export let timelineHostDraft = writable({}); // the timeline host being edited
+export let isTimelineEventDrafting = writable(false);
 export let timelineEventDraft = writable({}); // the timeline event being edited
 
-/*** SIZES ***/
+/*** QUANTITIES ***/
 export let clientWidth = writable(0); // window minus scrollbar
 export let windowWidth = writable(0); // full window width, including scrollbar
+export let highestZIndex = writable(1);
 
 /*** DEV TOOLS ***/
 export let doShowDevTools = writable(false); // state view and tools in footer
@@ -59,8 +64,8 @@ export let devOverlayContent = writable('No data found in $devOverlayContent sta
 
 // Create a combined store to display in footer dev tools
 const storeMap = {
-	activeNotificationBanners,
-	highestZIndex,
+	// administration
+	isAdminMode,
 	// breakpoints
 	isMobileBreakpoint,
 	isTabletBreakpoint,
@@ -78,6 +83,8 @@ const storeMap = {
 	// nav
 	doShowNavSidebar,
 	jumpToNavItems,
+	// notifications
+	activeNotificationBanners,
 	// header
 	headerHeightPx,
 	doShowHeaderStripes,
@@ -92,9 +99,10 @@ const storeMap = {
 	doShowTimelineEventDetailsModal,
 	timelineHostDraft,
 	timelineEventDraft,
-	// sizes
+	// quantities
 	clientWidth,
 	windowWidth,
+	highestZIndex,
 	// dev
 	doShowDevTools,
 	doShowDevToolbarSticky,

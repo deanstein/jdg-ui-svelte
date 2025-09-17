@@ -10,7 +10,7 @@
 	import jdgTimelineEventTypes from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
 
-	import { isTimelineEventInEditMode, timelineEditEvent } from '$lib/stores/jdg-temp-store.js';
+	import { isTimelineEventDrafting, timelineEventDraft } from '$lib/stores/jdg-ui-store.js';
 	import { doShowTimelineEventDetailsModal } from '$lib/stores/jdg-ui-store.js';
 
 	import { jdgSchemaVersion } from '$lib/schemas/jdg-schema-versions.js';
@@ -25,15 +25,17 @@
 	import { jdgQuantities, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { JDG_CONTEXT_KEYS } from '$lib/stores/jdg-context-keys.js';
 
-	// timeline host contains events and event references
+	// Timeline host contains events and event references
 	export let timelineHost;
-	// optionally include contextual events
+	// Optionally include contextual events
 	export let contextEvents = timelineHost.contextualEvents;
-	// the event used to determine age
+	// The event used to determine age
 	// if not provided, age won't be calculated
 	export let inceptionEvent = timelineHost.inceptionEvent;
-	// if not provided, will use today's date
+	// If not provided, will use today's date
 	export let cessationEvent = timelineHost.cessationEvent;
+	// Whether the add event button is shown
+	export let allowEditing = true;
 
 	export let onClickTimelineEvent = () => {};
 	export let onClickEventRefHost = () => {};
@@ -80,9 +82,9 @@
 		// If the inception event is provided, but with no date
 		// then clicking add event will set it
 		if (inceptionEvent && inceptionEvent?.eventDate === '') {
-			timelineEditEvent.set(inceptionEvent);
 			doShowTimelineEventDetailsModal.set(true);
-			isTimelineEventInEditMode.set(true);
+			isTimelineEventDrafting.set(true);
+			timelineEventDraft.set(inceptionEvent);
 		}
 		// otherwise, add an event like normal
 		else {
@@ -90,9 +92,9 @@
 			newTimelineEvent.id = uuidv4();
 			newTimelineEvent.version = jdgSchemaVersion;
 			newTimelineEvent.type = jdgTimelineEventTypes.generic.type;
-			timelineEditEvent.set(newTimelineEvent);
 			doShowTimelineEventDetailsModal.set(true);
-			isTimelineEventInEditMode.set(true);
+			isTimelineEventDrafting.set(true);
+			timelineEventDraft.set(newTimelineEvent);
 		}
 	};
 
@@ -185,13 +187,15 @@
 </script>
 
 <div bind:this={timelineWrapperRef} class="timeline-wrapper">
-	<ComposeToolbar
-		parentRef={timelineWrapperRef}
-		composeButtonFaIcon={'fa-plus fa-fw'}
-		composeButtonTooltip={'Add a new event'}
-		onClickCompose={onClickAddEventButton}
-		zIndex={1}
-	/>
+	{#if allowEditing}
+		<ComposeToolbar
+			parentRef={timelineWrapperRef}
+			composeButtonFaIcon={'fa-plus fa-fw'}
+			composeButtonTooltip={'Add a new event'}
+			onClickCompose={onClickAddEventButton}
+			zIndex={1}
+		/>
+	{/if}
 	<div bind:this={timelineContainerRef} class="timeline-container">
 		<div class="timeline-actions-bar">
 			<div class="timeline-event-count {timelineEventCountCss}">
@@ -231,7 +235,7 @@
 					<!-- All other timeline events saved to the person -->
 					{#each timelineRowItems as timelineRowItem, i}
 						<!-- Ensure the UI reacts when these values change -->
-						{#key `${timelineHost.id}-${timelineRowItem.event.eventId}-${$timelineEditEvent}`}
+						{#key `${timelineHost.id}-${timelineRowItem.event.eventId}`}
 							<JDGTimelineEvent
 								timelineEvent={timelineRowItem.event}
 								onClickAssociatedHost={timelineRowItem.event.associatedHostIds[0]}

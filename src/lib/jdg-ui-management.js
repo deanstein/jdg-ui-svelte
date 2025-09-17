@@ -1,7 +1,6 @@
 import { getObjectByKeyValue, instantiateObject } from '$lib/jdg-utils.js';
 
-import { doShowTimelineEventDetailsModal } from './stores/jdg-ui-store.js';
-import { timelineEditEvent } from './stores/jdg-temp-store.js';
+import { doShowTimelineEventDetailsModal, timelineEventDraft } from './stores/jdg-ui-store.js';
 
 import jdgTimelineHost from '$lib/schemas/timeline/jdg-timeline-host.js';
 import jdgTimelineEventTypes from './schemas/timeline/jdg-timeline-event-types.js';
@@ -66,7 +65,7 @@ export const getFullTextWidth = (element) => {
 // is set "active" for viewing or editing
 export const setTimelineEventActive = (jdgTimelineEvent) => {
 	doShowTimelineEventDetailsModal.set(true);
-	timelineEditEvent.set(jdgTimelineEvent);
+	timelineEventDraft.set(jdgTimelineEvent);
 };
 
 // gets the earliest timeline event from an array of events
