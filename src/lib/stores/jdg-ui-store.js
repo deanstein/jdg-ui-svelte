@@ -1,13 +1,16 @@
 import { derived, writable } from 'svelte/store';
 
+/*** ADMINISTRATION ***/
+export let isAdminMode = writable(false);
+
 export let activeNotificationBanners = writable([]);
 export let highestZIndex = writable(1);
 
-// breakpoints
+/*** BREAKPOINTS ***/
 export let isMobileBreakpoint = writable(false);
 export let isTabletBreakpoint = writable(false);
 
-// font, colors, settings
+/*** FONTS, COLORS, SETTINGS ***/
 export let appAccentColors = writable([]);
 export let appFontFamily = writable('');
 export let doAllowTextSelection = writable(false);
@@ -15,44 +18,46 @@ export let doAllowTextSelection = writable(false);
 export let appCssHyperlinkBar = writable('');
 export let appCssHyperlinkSimple = writable('');
 
-// scrolling
+/*** SCROLLING ***/
 export let isScrolling = writable(false);
 export let isScrollingToAnchorTag = writable(false);
 export let windowScrollPosition = writable(0);
 export let scrollDirection = writable('down');
 
-// nav
+/*** NAVIGATION ***/
 export let jumpToNavItems = writable([]);
 export let doShowNavSidebar = writable(false);
 
-// header
+/*** HEADER ***/
 export let headerHeightPx = writable(0);
 export let doShowHeaderStripes = writable(false);
 
-// images
+/*** IMAGES ***/
 export let imageAspectRatios = writable({}); // { src: "", aspectRatio: 0 }
 export let imagesLoading = writable([]);
-// image detail overlay
+/*** IMAGE DETAIL OVERLAY ***/
 export let imageDetailMeta = writable({});
 export let imageDetailWidth = writable(0); // width of the image for caption alignment
 export let imageDetailScale = writable(1.0);
 export let doShowImageDetailOverlay = writable(false);
 
-// timeline
+/*** TIMELINE ***/
 export let doShowTimelineEventDetailsModal = writable(false);
+export let timelineHostDraft = writable({}); // the timeline host being edited
+export let timelineEventDraft = writable({}); // the timeline event being edited
 
-// sizes
+/*** SIZES ***/
 export let clientWidth = writable(0); // window minus scrollbar
 export let windowWidth = writable(0); // full window width, including scrollbar
 
-// dev tools
+/*** DEV TOOLS ***/
 export let doShowDevTools = writable(false); // state view and tools in footer
 export let doShowDevToolbarSticky = writable(false); // sticky toolbar with specific dev output
 export let devToolbarStickyContent = writable('No data found in $devToolbarStickyContent state.');
 export let doShowDevOverlay = writable(false); // overlay with specific dev output
 export let devOverlayContent = writable('No data found in $devOverlayContent state.');
 
-// create a combined store to display in footer dev tools
+// Create a combined store to display in footer dev tools
 const storeMap = {
 	activeNotificationBanners,
 	highestZIndex,
@@ -85,6 +90,8 @@ const storeMap = {
 	imageDetailScale,
 	// timeline
 	doShowTimelineEventDetailsModal,
+	timelineHostDraft,
+	timelineEventDraft,
 	// sizes
 	clientWidth,
 	windowWidth,
