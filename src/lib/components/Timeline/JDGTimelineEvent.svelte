@@ -6,7 +6,7 @@
 	import timelineEventReference from '$lib/schemas/timeline/jdg-timeline-event-reference.js';
 
 	import { JDG_CONTEXT_KEYS } from '$lib/stores/jdg-context-keys.js';
-	import { timelineEditEvent } from '$lib/stores/jdg-temp-store.js';
+	import { timelineEventDraft } from '$lib/stores/jdg-ui-store.js';
 
 	import {
 		getNumberOfYearsBetweenEvents,
