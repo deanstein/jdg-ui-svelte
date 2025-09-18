@@ -5,18 +5,18 @@
 
 	import { doShowHeaderStripes } from '$lib/stores/jdg-ui-store.js';
 
-	import {
+	import { incrementHighestZIndex } from '$lib/jdg-state-management.js';
+	import { breakpointHandler } from '../jdg-ui-management.js';
+
+	import { getRgbaAlpha, setRgbaAlpha } from '$lib/jdg-utils.js';
+
+	import { JDGTopNav, JDGSideNav, JDGStripesHorizontal } from '../index.js';
+		import {
 		jdgBoxShadowStandard,
 		jdgBreakpoints,
 		jdgColors,
 		jdgSizes
 	} from '../jdg-shared-styles.js';
-	import { incrementHighestZIndex } from '$lib/jdg-state-management.js';
-	import { breakpointHandler } from '../jdg-ui-management.js';
-
-	import { getAlphaFromRgbaString, setAlphaInRgbaString } from '../jdg-graphics-factory.js';
-
-	import { JDGTopNav, JDGSideNav, JDGStripesHorizontal } from '../index.js';
 
 	export let showLogo = true;
 	export let logoSrc =
@@ -63,7 +63,7 @@
 		const threshold = 0.1;
 
 		// Get the original alpha value from the rgba string
-		let originalAlpha = getAlphaFromRgbaString(backgroundColorRgba);
+		let originalAlpha = getRgbaAlpha(backgroundColorRgba);
 
 		// if the original alpha was 1, force it to something lower
 		// for the requested effect to be visible
@@ -151,7 +151,7 @@
 			padding-top: ${jdgSizes.headerTopBottomPadding};
 			padding-bottom: ${jdgSizes.headerTopBottomPadding};
 			background-color: ${doSuppressAlphaOnScroll
-				? setAlphaInRgbaString(backgroundColorRgba, scrollAlpha)
+				? setRgbaAlpha(backgroundColorRgba, scrollAlpha)
 				: backgroundColorRgba};
 			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 				height: ${jdgSizes.headerHeightSm};

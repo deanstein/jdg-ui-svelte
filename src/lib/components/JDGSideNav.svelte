@@ -4,9 +4,10 @@
 
 	import { doShowNavSidebar } from '../stores/jdg-ui-store.js';
 
-	import { setAlphaInRgbaString } from '$lib/jdg-graphics-factory.js';
-	import { jdgColors, jdgDurations, jdgSizes } from '../jdg-shared-styles.js';
+	import { setRgbaAlpha } from '$lib/index.js';
+
 	import { JDGNavItem } from '$lib/index.js';
+	import { jdgColors, jdgDurations, jdgSizes } from '../jdg-shared-styles.js';
 
 	export let navItems;
 	export let sideNavWidth = '250px';
@@ -16,7 +17,7 @@
 		a:before {
 			background-color: transparent;
 		}
-		background-color: ${setAlphaInRgbaString(jdgColors.headerBackground, 0.7)};
+		background-color: ${setRgbaAlpha(jdgColors.headerBackground, 0.7)};
 	`;
 
 	const sideNavSlideWrapperCss = css`

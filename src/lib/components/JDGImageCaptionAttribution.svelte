@@ -3,9 +3,8 @@
 	import { onMount } from 'svelte';
 
 	import { clientWidth } from '$lib/stores/jdg-ui-store.js';
-	import { setAlphaInRgbaString } from '$lib/jdg-graphics-factory.js';
 	import { getFullTextWidth } from '$lib/jdg-ui-management.js';
-	import { getMaxElementWidthPx } from '$lib/jdg-utils.js';
+	import { getMaxElementWidthPx, setRgbaAlpha } from '$lib/jdg-utils.js';
 
 	import { JDGButton } from '../index.js';
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
@@ -242,7 +241,7 @@
 							toggleCaptionTruncation();
 						}}
 						textColor={jdgColors.active}
-						backgroundColor={setAlphaInRgbaString(jdgColors.headerBackground, 0.2)}
+						backgroundColor={setRgbaAlpha(jdgColors.headerBackground, 0.2)}
 						backgroundColorHover={jdgColors.active}
 						paddingLeftRight="5px"
 						paddingTopBottom="3px"
