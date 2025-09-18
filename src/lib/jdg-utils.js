@@ -508,6 +508,33 @@ export const getMaxWidthPxFromProp = (maxWidthProp, containerRef) => {
 // COLOR UTILS
 //
 
+export const getRgbaAlpha = (rgba) => {
+	let components = parseRgba(rgba);
+	if (components) {
+		return components[3] ? components[3] : 1;
+	}
+	return null;
+};
+
+export const setRgbaAlpha = (rgba, newAlpha) => {
+	let components = parseRgba(rgba);
+	if (components) {
+		// Replace the alpha component with the new value
+		components[3] = newAlpha;
+		// Construct a new rgba string
+		return `rgba(${components[0]}, ${components[1]}, ${components[2]}, ${components[3]})`;
+	}
+	return null;
+};
+
+export const parseRgba = (rgbaColorString) => {
+	const match = rgbaColorString.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)/i);
+	if (match) {
+		return [parseInt(match[1]), parseInt(match[2]), parseInt(match[3]), parseFloat(match[4] || 1)];
+	}
+	return null;
+};
+
 export const convertHexToRGBA = (hexColor, alpha = 1) => {
 	const r = parseInt(hexColor.slice(1, 3), 16);
 	const g = parseInt(hexColor.slice(3, 5), 16);

@@ -1,39 +1,12 @@
 import { cubicOut, quintOut } from 'svelte/easing';
 import { crossfade, fade, scale } from 'svelte/transition';
 
-import { getScreenCentroid } from './jdg-ui-management.js';
-
-export const getAlphaFromRgbaString = (rgba) => {
-	let components = parseRgbaString(rgba);
-	if (components) {
-		return components[3] ? components[3] : 1;
-	}
-	return null;
-};
-
-export const setAlphaInRgbaString = (rgba, newAlpha) => {
-	let components = parseRgbaString(rgba);
-	if (components) {
-		// Replace the alpha component with the new value
-		components[3] = newAlpha;
-		// Construct a new rgba string
-		return `rgba(${components[0]}, ${components[1]}, ${components[2]}, ${components[3]})`;
-	}
-	return null;
-};
-
-export const parseRgbaString = (rgbaColorString) => {
-	const match = rgbaColorString.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)/i);
-	if (match) {
-		return [parseInt(match[1]), parseInt(match[2]), parseInt(match[3]), parseFloat(match[4] || 1)];
-	}
-	return null;
-};
+import { parseRgba } from './jdg-utils.js';
 
 export const generateGradient = (steps, colorString1, colorString2, colorString3) => {
-	const startColor = parseRgbaString(colorString1);
-	const midColor = parseRgbaString(colorString2);
-	const endColor = colorString3 ? parseRgbaString(colorString3) : midColor;
+	const startColor = parseRgba(colorString1);
+	const midColor = parseRgba(colorString2);
+	const endColor = colorString3 ? parseRgba(colorString3) : midColor;
 	const colors = [];
 	const halfSteps = Math.floor(steps / 2);
 
@@ -54,20 +27,6 @@ export const generateGradient = (steps, colorString1, colorString2, colorString3
 	}
 
 	return colors;
-};
-
-export const drawNodeConnectionLine = (context2d, position, thickness, color) => {
-	if (!context2d || !position || !color) {
-		return;
-	}
-
-	// Draw lines from each node to the center of the canvas
-	context2d.beginPath();
-	context2d.moveTo(getScreenCentroid().x, getScreenCentroid().y);
-	context2d.lineTo(position.x, position.y);
-	context2d.lineWidth = thickness;
-	context2d.strokeStyle = color; // color may include transparency (rgba)
-	context2d.stroke();
 };
 
 export const drawCrossfade = (duration) => {
