@@ -1,16 +1,16 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { showImageDetailModal } from '$lib/jdg-state-management.js';
-
-	import { instantiateObject } from './../jdg-utils.js';
-
 	import jdgImageMeta from '../schemas/jdg-image-meta.js';
+	import { appFontFamily } from '$lib/stores/jdg-ui-store.js';
+
+	import { showImageDetailModal } from '$lib/jdg-state-management.js';
+	import { instantiateObject, setRgbaAlpha } from '$lib/jdg-utils.js';
+
+	import { verticalSlide } from '$lib/jdg-graphics-factory.js';
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGStripesHorizontal } from '../index.js';
-	import { setAlphaInRgbaString, verticalSlide } from '$lib/jdg-graphics-factory.js';
 	import { jdgColors, jdgSizes, jdgDurations, jdgBreakpoints } from '../jdg-shared-styles.js';
-	import { appFontFamily } from '$lib/stores/jdg-ui-store.js';
 
 	export let imageMeta = instantiateObject(jdgImageMeta); // one object to hold all details
 	export let maxWidth = undefined; // if not defined, takes available space
@@ -155,7 +155,7 @@
 				{imageMeta}
 				{showCaption}
 				{showAttribution}
-				backgroundColorRgba={setAlphaInRgbaString(jdgColors.imageLabelBackground, 1.0)}
+				backgroundColorRgba={setRgbaAlpha(jdgColors.imageLabelBackground, 1.0)}
 			/>
 		</div>
 	{/if}
