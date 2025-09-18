@@ -11,7 +11,7 @@
 	import { getRgbaAlpha, setRgbaAlpha } from '$lib/jdg-utils.js';
 
 	import { JDGTopNav, JDGSideNav, JDGStripesHorizontal } from '../index.js';
-		import {
+	import {
 		jdgBoxShadowStandard,
 		jdgBreakpoints,
 		jdgColors,

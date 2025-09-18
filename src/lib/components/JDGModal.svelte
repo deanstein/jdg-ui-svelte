@@ -1,13 +1,13 @@
 <script>
 	import { css } from '@emotion/css';
 
-    import { isMobileBreakpoint } from '$lib/stores/jdg-ui-store.js';
-    import { setRgbaAlpha } from '$lib/jdg-utils.js';
+	import { isMobileBreakpoint } from '$lib/stores/jdg-ui-store.js';
+	import { setRgbaAlpha } from '$lib/jdg-utils.js';
 
-    import { JDGButton, jdgColors, jdgSizes } from '$lib/index.js';
-    import { JDGOverlay } from '$lib/index.js';
-    import { jdgDurations } from '$lib/index.js';
-    import { drawCrossfade } from '$lib/jdg-graphics-factory.js';
+	import { JDGButton, jdgColors, jdgSizes } from '$lib/index.js';
+	import { JDGOverlay } from '$lib/index.js';
+	import { jdgDurations } from '$lib/index.js';
+	import { drawCrossfade } from '$lib/jdg-graphics-factory.js';
 
 	export let showModal = true;
 	export let onClickCloseButton = undefined;
@@ -60,42 +60,48 @@
 </script>
 
 <JDGOverlay>
-<div
-    in:receive={{ key: showModal }}
-    out:send={{ key: showModal }}
-    class="modal-outer-container {modalOuterContainerCss}"
->
-    <div class="modal-content-container {modalContentContainerCss}">
-        {#if title || onClickCloseButton}
-            <div class="modal-title-bar-container {modalTitleBarContainerCss}">
-                <div class="modal-title-container">
-                    <div class="modal-title {modalTitleCss}">
-                        {title}
-                    </div>
-                    <div class="modal-title-bar-actions-container">
-                        {#if onClickCloseButton}
-                            <JDGButton onClickFunction={onClickCloseButton ?? (() => {})} faIcon={'fa-xmark'} textColor={jdgColors.active} backgroundColor={'transparent'} doForceSquareAspect/>
-                        {/if}
-                    </div>
-                </div>
-                {#if subtitle}
-                    <div class="modal-subtitle-container">
-                        <div class="modal-subtitle {modalSubtitleCss}">
-                            {subtitle}
-                        </div>
-                    </div>
-                {/if}
-            </div>
-        {/if}
-        <div class="modal-content-slot {modalContentSlotCss}">
-            <slot name="modal-content-slot" />
-        </div>
-        <div class="modal-toolbar-slot">
-            <slot name="modal-toolbar-slot" />
-        </div>
-    </div>
-</div>
-</JDGOverlay>   
+	<div
+		in:receive={{ key: showModal }}
+		out:send={{ key: showModal }}
+		class="modal-outer-container {modalOuterContainerCss}"
+	>
+		<div class="modal-content-container {modalContentContainerCss}">
+			{#if title || onClickCloseButton}
+				<div class="modal-title-bar-container {modalTitleBarContainerCss}">
+					<div class="modal-title-container">
+						<div class="modal-title {modalTitleCss}">
+							{title}
+						</div>
+						<div class="modal-title-bar-actions-container">
+							{#if onClickCloseButton}
+								<JDGButton
+									onClickFunction={onClickCloseButton ?? (() => {})}
+									faIcon={'fa-xmark'}
+									textColor={jdgColors.active}
+									backgroundColor={'transparent'}
+									doForceSquareAspect
+								/>
+							{/if}
+						</div>
+					</div>
+					{#if subtitle}
+						<div class="modal-subtitle-container">
+							<div class="modal-subtitle {modalSubtitleCss}">
+								{subtitle}
+							</div>
+						</div>
+					{/if}
+				</div>
+			{/if}
+			<div class="modal-content-slot {modalContentSlotCss}">
+				<slot name="modal-content-slot" />
+			</div>
+			<div class="modal-toolbar-slot">
+				<slot name="modal-toolbar-slot" />
+			</div>
+		</div>
+	</div>
+</JDGOverlay>
 
 <style>
 	.modal-outer-container {
