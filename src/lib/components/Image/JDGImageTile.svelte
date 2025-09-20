@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import jdgImageMeta from '../schemas/jdg-image-meta.js';
+	import jdgImageMeta from '$lib/schemas/jdg-image-meta.js';
 	import { appFontFamily } from '$lib/stores/jdg-ui-store.js';
 
 	import { showImageDetailModal } from '$lib/jdg-state-management.js';
@@ -9,8 +9,8 @@
 
 	import { verticalSlide } from '$lib/jdg-graphics-factory.js';
 
-	import { JDGImage, JDGImageCaptionAttribution, JDGStripesHorizontal } from '../index.js';
-	import { jdgColors, jdgSizes, jdgDurations, jdgBreakpoints } from '../jdg-shared-styles.js';
+	import { JDGImage, JDGImageCaptionAttribution, JDGStripesHorizontal } from '$lib/index.js';
+	import { jdgColors, jdgSizes, jdgDurations, jdgBreakpoints } from '$lib/jdg-shared-styles.js';
 
 	export let imageMeta = instantiateObject(jdgImageMeta); // one object to hold all details
 	export let maxWidth = undefined; // if not defined, takes available space

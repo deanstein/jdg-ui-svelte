@@ -19,7 +19,7 @@
 
 	import { generateGradient } from '$lib/jdg-utils.js';
 
-	import Checkbox from '$lib/components/JDGCheckbox.svelte';
+	import Checkbox from '$lib/components/Input/JDGCheckbox.svelte';
 	import ComposeToolbar from '$lib/components/Compose/JDGComposeToolbar.svelte';
 	import JDGTimelineEvent from '$lib/components/Timeline/JDGTimelineEvent.svelte';
 	import { jdgQuantities, jdgSizes } from '$lib/jdg-shared-styles.js';

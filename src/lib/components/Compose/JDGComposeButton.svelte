@@ -2,7 +2,7 @@
 	import { css } from '@emotion/css';
 	import composeButtonTypes from '$lib/schemas/jdg-compose-button-types.js';
 
-	import JDGButton from '$lib/components/JDGButton.svelte';
+	import JDGButton from '$lib/components/Input/JDGButton.svelte';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
 
 	export let onClickFunction;

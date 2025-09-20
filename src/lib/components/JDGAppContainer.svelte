@@ -49,7 +49,7 @@
 		jdgFonts,
 		setUpdatedHyperlinkStyleBar
 	} from '$lib/jdg-shared-styles.js';
-	import JdgAdminLoginModal from './JDGAdminLoginModal.svelte';
+	import JdgAdminLoginModal from './DevTools/JDGAdminLoginModal.svelte';
 
 	export let fontFamily = jdgFonts.body;
 	export let appLoadingIconSrc =

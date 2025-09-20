@@ -6,7 +6,7 @@
 	import { getFullTextWidth } from '$lib/jdg-ui-management.js';
 	import { getMaxElementWidthPx, setRgbaAlpha } from '$lib/jdg-utils.js';
 
-	import { JDGButton } from '../index.js';
+	import { JDGButton } from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let imageMeta;

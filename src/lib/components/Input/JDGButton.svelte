@@ -3,7 +3,7 @@
 
 	import { appFontFamily, isMobileBreakpoint } from '$lib/stores/jdg-ui-store.js';
 
-	import { jdgColors, jdgBoxShadowStandard } from '../jdg-shared-styles.js';
+	import { jdgColors, jdgBoxShadowStandard } from '$lib/jdg-shared-styles.js';
 	import {
 		adjustColorForContrast,
 		darkenColor,
