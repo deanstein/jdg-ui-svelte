@@ -1,19 +1,36 @@
 <script>
+	import { css } from '@emotion/css';
+
 	import {
 		doShowDevToolbarSticky,
 		doShowDevOverlay,
 		doAllowTextSelection,
 		doShowAdminLoginModal
 	} from '$lib/stores/jdg-ui-store.js';
+
 	import { JDGButton, JDGH3H4 } from '$lib/index.js';
-	import { jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	const buttonColor = 'rgba(150, 150, 150, 1)';
+
+	const flexContainerCss = css`
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			flex-direction: column;
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			flex-direction: column;
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			flex-direction: row;
+		}
+	`;
 </script>
 
 <div class="jdg-dev-toolbar-container">
 	<JDGH3H4 h3String="DEV TOOLBAR" />
-	<div class="toolbar-button-flex-container">
+	<div class="toolbar-button-flex-container {flexContainerCss}">
 		<JDGButton
 			onClickFunction={() => {
 				doShowAdminLoginModal.set(!$doShowAdminLoginModal);

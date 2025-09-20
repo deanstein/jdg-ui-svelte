@@ -25,8 +25,6 @@
 	let modalContentContainerCss = css``;
 	$: {
 		modalContentContainerCss = css`
-			width: ${$isMobileBreakpoint && maximizeOnMobile ? '90vw' : width};
-			height: ${$isMobileBreakpoint && maximizeOnMobile ? '90svh' : height};
 			overflow: ${overflow};
 			background-color: ${transparency
 				? setRgbaAlpha(jdgColors.contentBoxBackground, transparency)
@@ -96,6 +94,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		justify-content: center;
 		border-radius: 10px;
 	}
 
@@ -145,11 +144,6 @@
 		flex-direction: column;
 		align-items: center;
 		gap: 1vh;
-		flex-grow: 1;
-		width: -webkit-fill-available;
-		width: -moz-available;
-		height: -webkit-fill-available;
-		height: -moz-available;
 		min-height: 0;
 	}
 
