@@ -76,6 +76,13 @@
 					backgroundColor={jdgColors.active}
 					textColor="white"
 				/>
+				<JDGButton
+					onClickFunction={onClickCloseButton}
+					label={'Cancel'}
+					faIcon={null}
+					backgroundColor={jdgColors.activeSecondary}
+					textColor="white"
+				/>
 			{/if}
 			<!-- show status messaging -->
 			<div class="status-message">
