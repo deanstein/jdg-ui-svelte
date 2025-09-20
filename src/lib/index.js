@@ -39,9 +39,6 @@ export { JDGAccentBlockWithText };
 import JDGAccentText from './components/JDGAccentText.svelte';
 export { JDGAccentText };
 
-import JDGAdminLoginForm from './components/JDGAdminLoginForm.svelte';
-export { JDGAdminLoginForm };
-
 import JDGAdminLoginModal from './components/JDGAdminLoginModal.svelte';
 export { JDGAdminLoginModal };
 

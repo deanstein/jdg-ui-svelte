@@ -21,11 +21,27 @@ export const encryptedPAT =
 	'U2FsdGVkX19E4XXmu4s1Y76A+iKILjKYG1n92+pqbtzdoJpeMyl6Pit0H8Kq8G28M+ZuqmdhHEfb/ud4GEe5gw==';
 
 // determines if the given name is an admin
-export async function fetchIsAdmin(firstName, lastName) {
-	const encodedName = encodeURIComponent(firstName + ' ' + lastName);
-	const response = await fetch(cfWorkerUrlFamilyTree + cfRouteCheckAdmin + '?name=' + encodedName);
-	const responseJson = await response.json();
-	return responseJson.success ? responseJson : null;
+// determines if the given passphrase grants admin access
+export async function fetchIsAdmin(passphrase) {
+	try {
+		const encodedPass = encodeURIComponent(passphrase);
+		const response = await fetch(
+			cfWorkerUrlAdmin + cfRouteCheckAdmin + '?passphrase=' + encodedPass
+		);
+		const contentType = response.headers.get('Content-Type');
+
+		if (contentType?.includes('application/json')) {
+			const responseJson = await response.json();
+			return responseJson.success ? responseJson : null;
+		} else {
+			const text = await response.text();
+			console.error('Unexpected response format:', text);
+			return null;
+		}
+	} catch (err) {
+		console.error('Error checking admin passphrase:', err);
+		return null;
+	}
 }
 
 const getAuthHeaders = (password) => ({

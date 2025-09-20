@@ -19,13 +19,8 @@
 	export let padding = '10px';
 	export let overflow = ''; // default is not set but can be set per instance
 	export let transparency = undefined; // default is in default bg color
-	export let zIndex = undefined;
 
 	const [send, receive] = drawCrossfade(jdgDurations.fadeIn);
-
-	const modalOuterContainerCss = css`
-		z-index: ${zIndex ?? ''};
-	`;
 
 	let modalContentContainerCss = css``;
 	$: {
@@ -33,7 +28,6 @@
 			width: ${$isMobileBreakpoint && maximizeOnMobile ? '90vw' : width};
 			height: ${$isMobileBreakpoint && maximizeOnMobile ? '90svh' : height};
 			overflow: ${overflow};
-			z-index: ${zIndex ?? ''};
 			background-color: ${transparency
 				? setRgbaAlpha(jdgColors.contentBoxBackground, transparency)
 				: jdgColors.contentBoxBackground};
@@ -59,29 +53,14 @@
 	`;
 </script>
 
-<JDGOverlay>
-	<div
-		in:receive={{ key: showModal }}
-		out:send={{ key: showModal }}
-		class="modal-outer-container {modalOuterContainerCss}"
-	>
+<JDGOverlay onCloseFunction={onClickCloseButton} closeOnOverlayClick>
+	<div in:receive={{ key: showModal }} out:send={{ key: showModal }} class="modal-outer-container">
 		<div class="modal-content-container {modalContentContainerCss}">
 			{#if title || onClickCloseButton}
 				<div class="modal-title-bar-container {modalTitleBarContainerCss}">
 					<div class="modal-title-container">
 						<div class="modal-title {modalTitleCss}">
 							{title}
-						</div>
-						<div class="modal-title-bar-actions-container">
-							{#if onClickCloseButton}
-								<JDGButton
-									onClickFunction={onClickCloseButton ?? (() => {})}
-									faIcon={'fa-xmark'}
-									textColor={jdgColors.active}
-									backgroundColor={'transparent'}
-									doForceSquareAspect
-								/>
-							{/if}
 						</div>
 					</div>
 					{#if subtitle}
@@ -109,9 +88,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		height: 100svh;
 		width: 100%;
-		/* backdrop-filter: blur(5px); */
 	}
 
 	.modal-content-container {
