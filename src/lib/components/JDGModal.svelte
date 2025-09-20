@@ -4,7 +4,7 @@
 	import { isMobileBreakpoint } from '$lib/stores/jdg-ui-store.js';
 	import { setRgbaAlpha } from '$lib/jdg-utils.js';
 
-	import { JDGButton, jdgColors, jdgSizes } from '$lib/index.js';
+	import { jdgColors, jdgSizes } from '$lib/index.js';
 	import { JDGOverlay } from '$lib/index.js';
 	import { jdgDurations } from '$lib/index.js';
 	import { drawCrossfade } from '$lib/jdg-graphics-factory.js';
@@ -15,7 +15,7 @@
 	export let subtitle = 'This is a modal subtitle';
 	export let width = 'auto';
 	export let height = 'auto';
-	export let maximizeOnMobile = true; // maximize size on mobile
+	export let maximizeOnMobile = false; // maximize size on mobile
 	export let padding = '10px';
 	export let overflow = ''; // default is not set but can be set per instance
 	export let transparency = undefined; // default is in default bg color
@@ -25,6 +25,8 @@
 	let modalContentContainerCss = css``;
 	$: {
 		modalContentContainerCss = css`
+			width: ${$isMobileBreakpoint && maximizeOnMobile ? '90vw' : width};
+			height: ${$isMobileBreakpoint && maximizeOnMobile ? '90svh' : height};
 			overflow: ${overflow};
 			background-color: ${transparency
 				? setRgbaAlpha(jdgColors.contentBoxBackground, transparency)
