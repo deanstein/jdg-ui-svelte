@@ -3,8 +3,8 @@
 	import * as d3 from 'd3';
 	import { Delaunay } from 'd3-delaunay';
 
-	import { jdgColors } from '../../jdg-shared-styles.js';
-	import { generateGradient } from '../../jdg-graphics-factory.js';
+	import { jdgColors } from '$lib/jdg-shared-styles.js';
+	import { generateGradient } from '$lib/jdg-graphics-factory.js';
 	import { getAccentColors } from '$lib/jdg-state-management.js';
 
 	export let numberOfPoints = 8;

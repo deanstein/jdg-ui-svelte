@@ -6,17 +6,17 @@
 	import { doShowHeaderStripes } from '$lib/stores/jdg-ui-store.js';
 
 	import { incrementHighestZIndex } from '$lib/jdg-state-management.js';
-	import { breakpointHandler } from '../jdg-ui-management.js';
+	import { breakpointHandler } from '$lib/jdg-ui-management.js';
 
 	import { getRgbaAlpha, setRgbaAlpha } from '$lib/jdg-utils.js';
 
-	import { JDGTopNav, JDGSideNav, JDGStripesHorizontal } from '../index.js';
+	import { JDGTopNav, JDGSideNav, JDGStripesHorizontal } from '$lib/index.js';
 	import {
 		jdgBoxShadowStandard,
 		jdgBreakpoints,
 		jdgColors,
 		jdgSizes
-	} from '../jdg-shared-styles.js';
+	} from '$lib/jdg-shared-styles.js';
 
 	export let showLogo = true;
 	export let logoSrc =

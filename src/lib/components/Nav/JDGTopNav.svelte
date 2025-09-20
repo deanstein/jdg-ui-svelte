@@ -2,13 +2,13 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { doShowNavSidebar } from '../../stores/jdg-ui-store.js';
+	import { doShowNavSidebar } from '$lib/stores/jdg-ui-store.js';
 
-	import { getIsNavSideBarOpen } from '../../jdg-state-management.js';
+	import { getIsNavSideBarOpen } from '$lib/jdg-state-management.js';
 	import { breakpointHandler } from '$lib/jdg-ui-management.js';
 
-	import { JDGMenuIcon, JDGNavItem } from '../../index.js';
-	import { jdgColors, jdgSizes } from '../../jdg-shared-styles.js';
+	import { JDGMenuIcon, JDGNavItem } from '$lib/index.js';
+	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	// nav items are an array of objects
 	export let navItems = [];

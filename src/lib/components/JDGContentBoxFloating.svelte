@@ -17,7 +17,7 @@
 		jdgDurations,
 		jdgSizes,
 		jdgBoxShadowStandard
-	} from '../jdg-shared-styles.js';
+	} from '$lib/jdg-shared-styles.js';
 	import { JDGAnchorTag } from '$lib/index.js';
 
 	export let title = undefined;

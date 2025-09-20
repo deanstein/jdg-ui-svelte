@@ -2,12 +2,12 @@
 	import { css } from '@emotion/css';
 	import { slide } from 'svelte/transition';
 
-	import { doShowNavSidebar } from '../../stores/jdg-ui-store.js';
+	import { doShowNavSidebar } from '$lib/stores/jdg-ui-store.js';
 
 	import { setRgbaAlpha } from '$lib/index.js';
 
 	import { JDGNavItem } from '$lib/index.js';
-	import { jdgColors, jdgDurations, jdgSizes } from '../../jdg-shared-styles.js';
+	import { jdgColors, jdgDurations, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let navItems;
 	export let sideNavWidth = '250px';

@@ -3,10 +3,10 @@
 
 	import { fade } from 'svelte/transition';
 
-	import { getHighestZIndex } from '../jdg-state-management.js';
+	import { getHighestZIndex } from '$lib/jdg-state-management.js';
 
 	import { JDGCloseIcon } from '$lib/index.js';
-	import { jdgBreakpoints, jdgColors, jdgDurations, jdgSizes } from '../jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgColors, jdgDurations, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let colorRgba = 'rgba(255, 255, 255, 1.0)';
 	export let showTitleBar = true;

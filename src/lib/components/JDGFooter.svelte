@@ -10,18 +10,18 @@
 		doShowHeaderStripes
 	} from '$lib/stores/jdg-ui-store.js';
 
-	import { getBuildCode } from '../jdg-utils.js';
+	import { getBuildCode } from '$lib/jdg-utils.js';
 	import {
 		fetchLatestCommitUrl,
 		getCommitHistoryUrl,
 		jdgRepoOwner,
 		jdgUiSvelteRepoName
-	} from '../jdg-persistence-management.js';
+	} from '$lib/jdg-persistence-management.js';
 	import { jdgSharedStrings } from '$lib/jdg-shared-strings.js';
 	import { toggleDevTools } from '$lib/jdg-state-management.js';
 
-	import { JDGButton, JDGDevToolbar, JDGStripesHorizontal, JDGStoreView } from '../index.js';
-	import { jdgColors, jdgSizes } from '../jdg-shared-styles.js';
+	import { JDGButton, JDGDevToolbar, JDGStripesHorizontal, JDGStoreView } from '$lib/index.js';
+	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let repoName = jdgUiSvelteRepoName;
 	export let appVersion = undefined;

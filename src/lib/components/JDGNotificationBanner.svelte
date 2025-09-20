@@ -4,16 +4,16 @@
 	import { v4 as uuidv4 } from 'uuid';
 
 	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
-	import { activeNotificationBanners } from '../stores/jdg-ui-store.js';
+	import { activeNotificationBanners } from '$lib/stores/jdg-ui-store.js';
 
 	import {
 		addNotificationBanner,
 		removeNotificationBanner,
 		incrementHighestZIndex
-	} from '../jdg-state-management.js';
-	import { jdgColors, jdgSizes } from '../jdg-shared-styles.js';
-	import { darkenColor, getIsValueInArray } from '../jdg-utils.js';
-	import { JDGButton } from '../index.js';
+	} from '$lib/jdg-state-management.js';
+	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { darkenColor, getIsValueInArray } from '$lib/jdg-utils.js';
+	import { JDGButton } from '$lib/index.js';
 
 	// possible notification types
 

@@ -1,6 +1,6 @@
 <script>
 	import { onDestroy, onMount } from 'svelte';
-	import { JDGRandomDelaunay } from '../index.js';
+	import { JDGRandomDelaunay } from '$lib/index.js';
 
 	export let isParallax = false; // parallax could affect performance, use with caution
 

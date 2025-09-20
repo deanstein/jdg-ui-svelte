@@ -2,7 +2,7 @@
 	import { afterUpdate } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { jdgBreakpoints, jdgSizes } from '../jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { jdgSharedIdentifiers } from '$lib/jdg-shared-strings.js';
 
 	export let maxColumns = 3;
