@@ -4,9 +4,14 @@
 
 	export let label = 'Some Fact or Field Name';
 	export let grow = false;
+	export let justification = 'left';
 
 	const labelAndInputContainerCss = css`
 		flex-grow: ${grow ? 1 : 'auto'};
+	`;
+
+	const labelContainercss = css`
+		justify-content: ${justification};
 	`;
 
 	const labelCss = css`
@@ -16,7 +21,7 @@
 
 <div class="label-and-input-container {labelAndInputContainerCss}">
 	<div class="input-content">
-		<div class="label-container">
+		<div class="label-container {labelContainercss}">
 			<div class={labelCss}>
 				{label}
 			</div>

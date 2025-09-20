@@ -65,7 +65,7 @@
 		<form on:submit|preventDefault={onClickSubmitButton} class="form {formCss}">
 			<!-- only show form and button if not already in admin mode -->
 			{#if !$isAdminMode}
-				<JDGInputContainer label="Admin Passphrase">
+				<JDGInputContainer label="Passphrase:" justification={'center'}>
 					<JDGTextInput onInputFunction={onPassphraseInput} />
 				</JDGInputContainer>
 
