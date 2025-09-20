@@ -23,12 +23,6 @@
 	let showErrorMessage = false;
 	let showLoadingMessage = false;
 
-	// form props
-	let buttonText = 'Log in as Admin';
-	let buttonFaIcon = 'fa-pencil';
-	let loadingMessage = 'Checking your passphrase...';
-	let errorMessage = "Sorry, you're not an admin!";
-
 	const onClickCloseButton = () => {
 		doShowAdminLoginModal.set(false);
 	};
@@ -66,32 +60,41 @@
 	`;
 </script>
 
-<JDGModal title={'Admin Only'} subtitle={'This action requires admin access.'} {onClickCloseButton}>
+<JDGModal title={'Admin Login'} subtitle={'Access admin-only features'} {onClickCloseButton}>
 	<div class="authenticate-tree-modal-content" slot="modal-content-slot">
 		<form on:submit|preventDefault={onClickSubmitButton} class="form {formCss}">
-			<JDGInputContainer label="Admin Passphrase">
-				<JDGTextInput onInputFunction={onPassphraseInput} placeholder="Enter your passphrase" />
-			</JDGInputContainer>
+			<!-- only show form and button if not already in admin mode -->
+			{#if !$isAdminMode}
+				<JDGInputContainer label="Admin Passphrase">
+					<JDGTextInput onInputFunction={onPassphraseInput} />
+				</JDGInputContainer>
 
-			<JDGButton
-				onClickFunction={onClickSubmitButton}
-				label={buttonText}
-				faIcon={buttonFaIcon}
-				backgroundColor={jdgColors.active}
-				textColor="white"
-			/>
-
-			{#if showLoadingMessage}
-				<div class="status-message loading">
-					{loadingMessage}
-				</div>
+				<JDGButton
+					onClickFunction={onClickSubmitButton}
+					label={'Log in as Admin'}
+					faIcon={'fa-lock'}
+					backgroundColor={jdgColors.active}
+					textColor="white"
+				/>
 			{/if}
-
-			{#if showErrorMessage}
-				<div class="status-message error">
-					{errorMessage}
-				</div>
-			{/if}
+			<!-- show status messaging -->
+			<div class="status-message">
+				{#if $isAdminMode}
+					<div class="status-message logged-in">
+						<i class="fa-solid fa-circle-check">&nbsp;</i>{"You're logged in as an admin!"}
+					</div>
+				{/if}
+				{#if showLoadingMessage}
+					<div class="status-message loading">
+						<i class="fa-solid fa-circle-dot">&nbsp;</i>{'Checking your passphrase...'}
+					</div>
+				{/if}
+				{#if showErrorMessage}
+					<div class="status-message error">
+						<i class="fa-solid fa-circle-xmark">&nbsp;</i>{'That passphrase is incorrect!'}
+					</div>
+				{/if}
+			</div>
 		</form>
 	</div>
 </JDGModal>
@@ -111,6 +114,11 @@
 		text-align: center;
 		text-wrap: balance;
 		font-size: 0.8rem;
+		min-height: 1rem;
+	}
+
+	.logged-in {
+		color: green;
 	}
 
 	.error {

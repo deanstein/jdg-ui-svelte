@@ -18,9 +18,12 @@
 		color: ${fontColorOverride ? fontColorOverride : jdgColors.text};
 		font-size: ${fontSizeOverride ? fontSizeOverride : '1rem'};
 		text-align: ${textAlignOverride ? textAlignOverride : 'left'};
-		border: 2px solid ${jdgColors.active};
+		border: 2px solid ${jdgColors.activeSubtle};
 		:hover {
-			border: 2px solid ${jdgColors.activeSubtle};
+			border: 2px solid ${jdgColors.active};
+		}
+		:focus {
+			border: 2px solid ${jdgColors.active};
 		}
 	`;
 </script>
