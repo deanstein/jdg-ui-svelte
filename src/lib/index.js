@@ -192,7 +192,7 @@ export { JDGTopNav };
 import JDGUpNext from './components/Nav/JDGUpNext.svelte';
 export { JDGUpNext };
 
-// SVG components
+/*** SVG COMPONENTS ***/
 import JDGCloseIcon from './assets/svg/JDGCloseIcon.svelte';
 export { JDGCloseIcon };
 
