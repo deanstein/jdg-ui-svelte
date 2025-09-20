@@ -2,6 +2,7 @@ import { derived, writable } from 'svelte/store';
 
 /*** ADMINISTRATION ***/
 export let isAdminMode = writable(false);
+export let adminFormPassphrase = writable(undefined);
 export let doShowAdminLoginModal = writable(false);
 export let postAdminLoginFunction = writable(() => {});
 
@@ -66,6 +67,7 @@ export let devOverlayContent = writable('No data found in $devOverlayContent sta
 const storeMap = {
 	// administration
 	isAdminMode,
+	adminFormPassphrase,
 	// breakpoints
 	isMobileBreakpoint,
 	isTabletBreakpoint,

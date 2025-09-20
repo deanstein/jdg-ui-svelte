@@ -2,7 +2,8 @@
 	import {
 		doShowDevToolbarSticky,
 		doShowDevOverlay,
-		doAllowTextSelection
+		doAllowTextSelection,
+		doShowAdminLoginModal
 	} from '$lib/stores/jdg-ui-store.js';
 	import { JDGButton, JDGH3H4 } from '$lib/index.js';
 	import { jdgSizes } from '$lib/jdg-shared-styles.js';
@@ -13,6 +14,17 @@
 <div class="jdg-dev-toolbar-container">
 	<JDGH3H4 h3String="DEV TOOLBAR" />
 	<div class="toolbar-button-flex-container">
+		<JDGButton
+			onClickFunction={() => {
+				doShowAdminLoginModal.set(!$doShowAdminLoginModal);
+			}}
+			label={$doShowAdminLoginModal ? 'Hide Admin Modal' : 'Show Admin Modal'}
+			backgroundColor={buttonColor}
+			paddingTopBottom="5px"
+			paddingLeftRight="10px"
+			faIcon={$doShowDevToolbarSticky ? 'fa-eye-slash' : 'fa-eye'}
+			fontSize={jdgSizes.fontSizeBodyXSm}
+		/>
 		<JDGButton
 			onClickFunction={() => {
 				doShowDevToolbarSticky.set(!$doShowDevToolbarSticky);

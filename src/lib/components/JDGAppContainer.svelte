@@ -10,6 +10,7 @@
 		appFontFamily,
 		clientWidth,
 		doAllowTextSelection,
+		doShowAdminLoginModal,
 		doShowDevOverlay,
 		doShowDevToolbarSticky,
 		doShowHeaderStripes,
@@ -34,6 +35,7 @@
 	} from '$lib/jdg-persistence-management.js';
 
 	import {
+		JDGAdminLoginModal,
 		JDGDevOverlay,
 		JDGDevToolbarSticky,
 		JDGImageDetailOverlay,
@@ -47,6 +49,7 @@
 		jdgFonts,
 		setUpdatedHyperlinkStyleBar
 	} from '$lib/jdg-shared-styles.js';
+	import JdgAdminLoginModal from './JDGAdminLoginModal.svelte';
 
 	export let fontFamily = jdgFonts.body;
 	export let appLoadingIconSrc =
@@ -196,6 +199,9 @@
 		<JDGScrollToTop />
 	{/if}
 	<!-- show overlays when requested -->
+	{#if $doShowAdminLoginModal}
+		<JDGAdminLoginModal />
+	{/if}
 	<JDGLoadingOverlay
 		isLoading={!isAppLoaded}
 		loadingIconSrc={appLoadingIconSrc}

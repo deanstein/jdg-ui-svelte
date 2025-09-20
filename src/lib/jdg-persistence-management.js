@@ -1,5 +1,11 @@
 import { decrypt } from './jdg-utils.js';
 
+// Cloudflare workers and GitHub App paths
+export const cfWorkerUrlFamilyTree = 'https://family-tree-data.jdeangoldstein.workers.dev';
+export const cfWorkerUrlAdmin = 'https://jdg-admin.jdeangoldstein.workers.dev';
+export const cfRouteCheckAdmin = '/check-admin';
+export const cfRouteGetToken = '/get-github-app-token';
+
 export const jdgRepoOwner = 'deanstein';
 export const jdgUiSvelteRepoName = 'jdg-ui-svelte';
 export const jdgWebsiteRepoName = 'jdg-website';
@@ -13,6 +19,14 @@ export const hashtagGeneratorRepoName = 'hashtag-generator';
 export const jsonToListRepoName = 'json-to-html';
 export const encryptedPAT =
 	'U2FsdGVkX19E4XXmu4s1Y76A+iKILjKYG1n92+pqbtzdoJpeMyl6Pit0H8Kq8G28M+ZuqmdhHEfb/ud4GEe5gw==';
+
+// determines if the given name is an admin
+export async function fetchIsAdmin(firstName, lastName) {
+	const encodedName = encodeURIComponent(firstName + ' ' + lastName);
+	const response = await fetch(cfWorkerUrlFamilyTree + cfRouteCheckAdmin + '?name=' + encodedName);
+	const responseJson = await response.json();
+	return responseJson.success ? responseJson : null;
+}
 
 const getAuthHeaders = (password) => ({
 	Authorization: `Bearer ${decrypt(encryptedPAT, password)}`,

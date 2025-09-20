@@ -39,6 +39,12 @@ export { JDGAccentBlockWithText };
 import JDGAccentText from './components/JDGAccentText.svelte';
 export { JDGAccentText };
 
+import JDGAdminLoginForm from './components/JDGAdminLoginForm.svelte';
+export { JDGAdminLoginForm };
+
+import JDGAdminLoginModal from './components/JDGAdminLoginModal.svelte';
+export { JDGAdminLoginModal };
+
 import JDGAnimateOnVisible from './components/JDGAnimateOnVisible.svelte';
 export { JDGAnimateOnVisible };
 
@@ -132,11 +138,17 @@ export { JDGImageTile };
 import JDGImageThumbnailGroup from './components/Image/JDGImageThumbnailGroup.svelte';
 export { JDGImageThumbnailGroup };
 
+import JDGInputContainer from './components/JDGInputContainer.svelte';
+export { JDGInputContainer };
+
 import JDGJumpTo from './components/JDGJumpTo.svelte';
 export { JDGJumpTo };
 
 import JDGLoadingOverlay from './components/JDGLoadingOverlay.svelte';
 export { JDGLoadingOverlay };
+
+import JDGModal from './components/JDGModal.svelte';
+export { JDGModal };
 
 import JDGNavItem from './components/JDGNavItem.svelte';
 export { JDGNavItem };
@@ -167,6 +179,9 @@ export { JDGStoreView };
 
 import JDGStripesHorizontal from './components/JDGStripesHorizontal.svelte';
 export { JDGStripesHorizontal };
+
+import JDGTextInput from './components/JDGTextInput.svelte';
+export { JDGTextInput };
 
 import JDGTimeline from './components/Timeline/JDGTimeline.svelte';
 export { JDGTimeline };
