@@ -93,7 +93,7 @@ const jdgTimelineEventTypes = {
 	vehicle: {
 		label: 'Vehicle',
 		icon: 'fa-car',
-		additionaladditionalContent: {
+		additionalContent: {
 			year: {
 				default: '',
 				label: 'Year',
