@@ -1,28 +1,13 @@
+import { JDG_INPUT_TYPES } from './jdg-input-types.js';
+
 // the various types of timeline events and the additionalContent they can display
 // this is used for upgrading timeline events
 // to ensure no errors when new data is supported
-
-export const JDG_INPUT_TYPES = {
-	TEXT: 'text',
-	TEXTAREA: 'textarea',
-	TIME: 'time',
-	DATE: 'date',
-	NUMBER: 'number',
-	SELECT: 'select',
-	MULTISELECT: 'multiSelect',
-	CHECKBOX: 'checkbox',
-	IMAGE_LIST: 'imageList',
-	OBJECT: 'object'
-};
 
 export const timelineEventStrings = {
 	birthEventModalTitle: 'Birth Event Details',
 	deathEventModalTitle: 'Death Event Details',
 	deceased: 'Deceased',
-	deathDate: 'Date of Death',
-	deathPlace: 'Place of Death',
-	deathTime: 'Time of Death',
-	deathCause: 'Cause of Death',
 	childEventModalTitle: 'Child Event Details',
 	residenceEventModalTitle: 'Residence Event Details',
 	vehicleEventModalTitle: 'Vehicle Event Details',
@@ -36,13 +21,12 @@ const jdgTimelineEventTypes = {
 	},
 
 	birth: {
-		id: 'birth',
-		label: 'Birth Event',
+		label: 'Birth',
 		icon: 'fa-wand-magic-sparkles',
 		additionalContent: {
-			birthdate: {
+			birthplace: {
 				default: '',
-				label: 'Date of Birth',
+				label: 'Place of Birth',
 				inputType: JDG_INPUT_TYPES.TEXT
 			},
 			birthtime: {
@@ -50,22 +34,34 @@ const jdgTimelineEventTypes = {
 				label: 'Time of Birth',
 				inputType: JDG_INPUT_TYPES.TEXT
 			},
-			birthplace: {
-				default: '',
-				label: 'Place of Birth',
-				inputType: JDG_INPUT_TYPES.TEXT
-			},
 			additionalContext: ''
 		}
 	},
 
 	death: {
+		label: 'Death',
 		icon: 'fa-umbrella-beach',
 		additionalContent: {
-			deathTime: '',
-			deathPlace: '',
-			deathCause: '',
-			disposition: ''
+			deathPlace: {
+				default: '',
+				label: 'Place of Death',
+				inputType: JDG_INPUT_TYPES.TEXT
+			},
+			deathTime: {
+				default: '',
+				label: 'Time of Death',
+				inputType: JDG_INPUT_TYPES.TEXT
+			},
+			deathCause: {
+				default: '',
+				label: 'Cause of Death',
+				inputType: JDG_INPUT_TYPES.TEXT
+			},
+			disposition: {
+				default: '',
+				label: 'Disposition Details',
+				inputType: JDG_INPUT_TYPES.TEXT
+			}
 		}
 	},
 
@@ -98,9 +94,21 @@ const jdgTimelineEventTypes = {
 		label: 'Vehicle',
 		icon: 'fa-car',
 		additionaladditionalContent: {
-			make: '',
-			model: '',
-			year: ''
+			year: {
+				default: '',
+				label: 'Year',
+				inputType: JDG_INPUT_TYPES.TEXT
+			},
+			make: {
+				default: '',
+				label: 'Manufacturer',
+				inputType: JDG_INPUT_TYPES.TEXT
+			},
+			model: {
+				default: '',
+				label: 'Model',
+				inputType: JDG_INPUT_TYPES.TEXT
+			}
 		}
 	},
 

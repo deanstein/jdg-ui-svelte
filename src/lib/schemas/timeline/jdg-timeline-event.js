@@ -1,5 +1,6 @@
 import { jdgSchemaVersion } from '$lib/schemas/jdg-schema-versions.js';
-import jdgTimelineEventTypes, { JDG_INPUT_TYPES } from './jdg-timeline-event-types.js';
+import { JDG_INPUT_TYPES } from './jdg-input-types.js';
+import jdgTimelineEventTypes from './jdg-timeline-event-types.js';
 
 const jdgTimelineEvent = {
 	// meta
