@@ -10,8 +10,8 @@
 	import jdgTimelineEventTypes from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
 
-	import { isTimelineEventDrafting, timelineEventDraft } from '$lib/stores/jdg-ui-store.js';
 	import { doShowTimelineEventDetailsModal } from '$lib/stores/jdg-ui-store.js';
+	import { isTimelineEventDrafting, timelineEventDraft } from '$lib/stores/jdg-temp-store.js';
 
 	import { jdgSchemaVersion } from '$lib/schemas/jdg-schema-versions.js';
 	import { generateTimelineRowItems, updateTimelineRowItems } from '$lib/jdg-ui-management.js';

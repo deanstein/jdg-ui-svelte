@@ -4,37 +4,26 @@
 	import { css } from '@emotion/css';
 	import { v4 as uuidv4 } from 'uuid';
 
-	import timelineEventTypes from '$lib/schemas/timeline-event-types';
-	import timelineEventImage from '$lib/schemas/timeline-event-image';
+	import jdgTimelineEventTypes from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 
-	import { activePerson, hasUnsavedChanges } from '$lib/states/family-tree-state';
 	import {
-		imageEditContent,
-		isNewImage,
-		isNodeEditActive,
-		isTimelineEventInEditMode,
-		timelineEditEvent
-	} from '$lib/states/temp-state';
-	import {
+		doShowDeleteModal,
 		customDeleteMessage,
-		postDeleteFunction,
-		showDeleteModal,
-		showTimelineEventDetailsModal,
-		showTimelineEventImageDetailModal
-	} from '$lib/states/ui-state';
+		postDeleteFunction
+	} from '$lib/stores/jdg-ui-store.js';
 
 	import {
 		addOrReplaceTimelineEvent,
 		deleteTimelineEvent,
 		getTimelineEventById
-	} from '$lib/person-management';
+	} from '$lib/jdg-timeline-management.js';
 	import {
-		getObjectByKeyValueInArray,
+		getObjectByKeyValue,
 		instantiateObject,
 		getIsDateValid,
-		areObjectsEqual,
-		requireAdminMode
-	} from '$lib/utils';
+		areObjectsEqual
+	} from '$lib/jdg-utils.js';
+	import { requireAdminMode } from '$lib/jdg-ui-management.js';
 
 	import { timelineEventStrings } from '$lib/components/strings';
 	import stylingConstants from '$lib/components/styling-constants';
@@ -105,7 +94,7 @@
 	const saveAllInputs = () => {
 		switch (eventType) {
 			// write the inputs for the active person's birth event
-			case timelineEventTypes.birth.type:
+			case jdgTimelineEventTypes.birth.type:
 				activePerson.update((currentValue) => {
 					return {
 						...currentValue,
@@ -119,7 +108,7 @@
 					};
 				});
 			// write the inputs for the active person's death event
-			case timelineEventTypes.death.type:
+			case jdgTimelineEventTypes.death.type:
 				activePerson.update((currentValue) => {
 					return {
 						...currentValue,
@@ -133,7 +122,7 @@
 						}
 					};
 				});
-			case timelineEventTypes.generic.type:
+			case jdgTimelineEventTypes.generic.type:
 			default:
 				const newEventFromInputs = instantiateObject(get(timelineEditEvent));
 				newEventFromInputs.eventId = get(timelineEditEvent).eventId;
@@ -148,13 +137,13 @@
 	// synchronizes available inputs back to UI state values
 	const syncAllInputs = () => {
 		switch (eventType) {
-			case timelineEventTypes.birth.type:
+			case jdgTimelineEventTypes.birth.type:
 				birthdateInputValue = get(activePerson)?.birth?.date;
 				birthdateApprxInputValue = get(activePerson)?.birth?.apprxDate;
 				birthtimeInputValue = get(activePerson)?.birth?.time;
 				birthplaceInputValue = get(activePerson)?.birth?.place;
 				break;
-			case timelineEventTypes.death.type:
+			case jdgTimelineEventTypes.death.type:
 				deathDateInputValue = get(activePerson)?.death?.date;
 				deathDateApprxInputValue = get(activePerson)?.death?.apprxDate;
 				deathPlaceInputValue = get(activePerson)?.death?.place;
@@ -261,11 +250,11 @@
 
 	const getModalTitleByEventType = (eventType) => {
 		switch (eventType) {
-			case timelineEventTypes.birth.type:
+			case jdgTimelineEventTypes.birth.type:
 				return isNewEvent
 					? 'New ' + timelineEventStrings.birthEventModalTitle
 					: timelineEventStrings.birthEventModalTitle;
-			case timelineEventTypes.death.type:
+			case jdgTimelineEventTypes.death.type:
 				return timelineEventStrings.deathEventModalTitle;
 			default:
 				return isNewEvent
@@ -274,7 +263,9 @@
 		}
 	};
 
-	const filteredEventTypes = Object.values(timelineEventTypes).filter((type) => !type.isContextual);
+	const filteredEventTypes = Object.values(jdgTimelineEventTypes).filter(
+		(type) => !type.isContextual
+	);
 
 	const timelineEventOptions = {
 		label: 'Event types:',
@@ -285,7 +276,8 @@
 		isValidDate = getIsDateValid(eventDateInputValue);
 		modalTitle = getModalTitleByEventType(eventType);
 		isBirthOrDeathEvent =
-			eventType === timelineEventTypes.birth.type || eventType === timelineEventTypes.death.type;
+			eventType === jdgTimelineEventTypes.birth.type ||
+			eventType === jdgTimelineEventTypes.death.type;
 		isNewEvent = !getObjectByKeyValueInArray(
 			get(activePerson)?.timelineEvents,
 			'eventId',
@@ -317,7 +309,7 @@
 		<!-- modal content will depend on the event type -->
 
 		<!-- birth -->
-		{#if eventType === timelineEventTypes.birth.type}
+		{#if eventType === jdgTimelineEventTypes.birth.type}
 			<SideBySideContainer>
 				<InputContainer label={timelineEventStrings.birthdate}>
 					<DatePicker
@@ -342,7 +334,7 @@
 			</InputContainer>
 
 			<!-- death -->
-		{:else if eventType === timelineEventTypes.death.type}
+		{:else if eventType === jdgTimelineEventTypes.death.type}
 			<SideBySideContainer>
 				<InputContainer label={timelineEventStrings.deathDate}>
 					<DatePicker

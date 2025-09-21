@@ -20,6 +20,11 @@ export const jsonToListRepoName = 'json-to-html';
 export const encryptedPAT =
 	'U2FsdGVkX19E4XXmu4s1Y76A+iKILjKYG1n92+pqbtzdoJpeMyl6Pit0H8Kq8G28M+ZuqmdhHEfb/ud4GEe5gw==';
 
+const getAuthHeaders = (password) => ({
+	Authorization: `Bearer ${decrypt(encryptedPAT, password)}`,
+	Accept: 'application/vnd.github.v3.raw'
+});
+
 // determines if the given name is an admin
 // determines if the given passphrase grants admin access
 export async function fetchIsAdmin(passphrase) {
@@ -43,11 +48,6 @@ export async function fetchIsAdmin(passphrase) {
 		return null;
 	}
 }
-
-const getAuthHeaders = (password) => ({
-	Authorization: `Bearer ${decrypt(encryptedPAT, password)}`,
-	Accept: 'application/vnd.github.v3.raw'
-});
 
 export const fetchFileFromRepo = async (
 	repoOwner,

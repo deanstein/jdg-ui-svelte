@@ -1,12 +1,40 @@
-import { getObjectByKeyValue, instantiateObject } from '$lib/jdg-utils.js';
+import { get } from 'svelte/store';
 
-import { doShowTimelineEventDetailsModal, timelineEventDraft } from './stores/jdg-ui-store.js';
+import {
+	doShowAdminLoginModal,
+	doShowTimelineEventDetailsModal,
+	isAdminMode,
+	postAdminLoginFunction
+} from './stores/jdg-ui-store.js';
+import { timelineEventDraft } from './stores/jdg-temp-store.js';
 
 import jdgTimelineHost from '$lib/schemas/timeline/jdg-timeline-host.js';
 import jdgTimelineEventTypes from './schemas/timeline/jdg-timeline-event-types.js';
 import jdgTimelineRowItem from '$lib/schemas/timeline/jdg-timeline-row-item.js';
 
+import { instantiateObject } from '$lib/jdg-utils.js';
+
 import { jdgBreakpoints, jdgQuantities, jdgSizes } from '$lib/jdg-shared-styles.js';
+import { getTimelineEventById } from './jdg-timeline-management.js';
+
+//
+// ADMIN MODE
+//
+
+// wrapper for functions that require
+// adminMode to be checked or authenticated first
+export const requireAdminMode = (fn) => {
+	if (get(isAdminMode)) {
+		fn();
+	} else {
+		doShowAdminLoginModal.set(true);
+		postAdminLoginFunction.set(fn);
+	}
+};
+
+//
+// SCREEN
+//
 
 export const getScreenCentroid = () => {
 	return {
@@ -114,15 +142,6 @@ export const getTimelineProportionByDate = (
 	let proportion = eventDurationMs / lifespanMs;
 
 	return proportion;
-};
-
-export const getTimelineEventById = (timelineHost, eventId) => {
-	let timelineEvent;
-	if (timelineHost && eventId) {
-		timelineEvent = getObjectByKeyValue(timelineHost.timelineEvents, 'id', eventId);
-	}
-
-	return timelineEvent;
 };
 
 // converts raw timeline events to timeline row items for UI

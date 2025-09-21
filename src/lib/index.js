@@ -165,6 +165,9 @@ export { JDGVersionNpmPackage };
 import JDGScrollToTop from './components/JDGScrollToTop.svelte';
 export { JDGScrollToTop };
 
+import JDGSelect from './components/Input/JDGSelect.svelte';
+export { JDGSelect };
+
 import JDGSideNav from './components/Nav/JDGSideNav.svelte';
 export { JDGSideNav };
 

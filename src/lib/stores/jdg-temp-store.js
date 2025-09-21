@@ -1,0 +1,29 @@
+import { instantiateObject } from '$lib/jdg-utils.js';
+import jdgTimelineHost from '$lib/schemas/timeline/jdg-timeline-host.js';
+import { derived, writable } from 'svelte/store';
+
+/*** ADMINISTRATION ***/
+export let adminFormPassphrase = writable(undefined);
+
+/*** TIMELINE ***/
+export let isTimelineHostDrafting = writable(false);
+export let timelineHostDraft = writable(undefined); // the timeline host being edited
+export let isTimelineEventDrafting = writable(false);
+export let timelineEventDraft = writable({}); // the timeline event being edited
+
+// Create a combined store to display in footer dev tools
+const storeMap = {
+	// administration
+	adminFormPassphrase,
+	// timeline
+	isTimelineHostDrafting,
+	timelineHostDraft,
+	isTimelineEventDrafting,
+	timelineEventDraft
+};
+const tempStoreEntries = Object.entries(storeMap);
+// derived store containing all ui state values
+export let allTempStoreValues = derived(
+	tempStoreEntries.map(([key, store]) => store),
+	($stores) => Object.fromEntries(tempStoreEntries.map(([key], index) => [key, $stores[index]]))
+);

@@ -4,10 +4,10 @@
 
 	import {
 		isAdminMode,
-		adminFormPassphrase,
 		doShowAdminLoginModal,
 		postAdminLoginFunction
 	} from '$lib/stores/jdg-ui-store.js';
+	import { adminFormPassphrase } from '$lib/stores/jdg-temp-store.js';
 	import { fetchIsAdmin } from '$lib/jdg-persistence-management.js';
 
 	import {

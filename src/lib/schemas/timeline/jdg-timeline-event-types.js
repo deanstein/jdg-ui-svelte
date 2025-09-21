@@ -1,16 +1,60 @@
 // the various types of timeline events and the additionalContent they can display
 // this is used for upgrading timeline events
 // to ensure no errors when new data is supported
+
+export const JDG_INPUT_TYPES = {
+	TEXT: 'text',
+	TEXTAREA: 'textarea',
+	TIME: 'time',
+	DATE: 'date',
+	NUMBER: 'number',
+	SELECT: 'select',
+	MULTISELECT: 'multiSelect',
+	CHECKBOX: 'checkbox',
+	IMAGE_LIST: 'imageList',
+	OBJECT: 'object'
+};
+
+export const timelineEventStrings = {
+	birthEventModalTitle: 'Birth Event Details',
+	deathEventModalTitle: 'Death Event Details',
+	deceased: 'Deceased',
+	deathDate: 'Date of Death',
+	deathPlace: 'Place of Death',
+	deathTime: 'Time of Death',
+	deathCause: 'Cause of Death',
+	childEventModalTitle: 'Child Event Details',
+	residenceEventModalTitle: 'Residence Event Details',
+	vehicleEventModalTitle: 'Vehicle Event Details',
+	textEventModalTitle: 'Event Details',
+	additionalContext: 'Additional Context'
+};
+
 const jdgTimelineEventTypes = {
 	today: {
 		icon: 'fa-sun'
 	},
 
 	birth: {
+		id: 'birth',
+		label: 'Birth Event',
 		icon: 'fa-wand-magic-sparkles',
 		additionalContent: {
-			birthtime: '',
-			birthplace: '',
+			birthdate: {
+				default: '',
+				label: 'Date of Birth',
+				inputType: JDG_INPUT_TYPES.TEXT
+			},
+			birthtime: {
+				default: '',
+				label: 'Time of Birth',
+				inputType: JDG_INPUT_TYPES.TEXT
+			},
+			birthplace: {
+				default: '',
+				label: 'Place of Birth',
+				inputType: JDG_INPUT_TYPES.TEXT
+			},
 			additionalContext: ''
 		}
 	},
@@ -53,7 +97,7 @@ const jdgTimelineEventTypes = {
 	vehicle: {
 		label: 'Vehicle',
 		icon: 'fa-car',
-		additionalContent: {
+		additionaladditionalContent: {
 			make: '',
 			model: '',
 			year: ''
@@ -98,5 +142,10 @@ const jdgTimelineEventTypes = {
 		isContextual: true
 	}
 };
+
+// All top-level keys from the schema above
+export const JDGTimelineEventKeys = Object.fromEntries(
+	Object.keys(jdgTimelineEventTypes).map((key) => [key, key])
+);
 
 export default jdgTimelineEventTypes;

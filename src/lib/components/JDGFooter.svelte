@@ -3,7 +3,7 @@
 	import { css } from '@emotion/css';
 
 	import {
-		allStateValues,
+		allUiStoreValues,
 		appCssHyperlinkSimple,
 		clientWidth,
 		doShowDevTools,
@@ -22,6 +22,7 @@
 
 	import { JDGButton, JDGDevToolbar, JDGStripesHorizontal, JDGStoreView } from '$lib/index.js';
 	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { allTempStoreValues } from '$lib/stores/jdg-temp-store.js';
 
 	export let repoName = jdgUiSvelteRepoName;
 	export let appVersion = undefined;
@@ -201,7 +202,8 @@
 		{#if $doShowDevTools}
 			<div class="dev-tools">
 				<JDGDevToolbar />
-				<JDGStoreView store={allStateValues} storeName="UI STATE" />
+				<JDGStoreView store={allUiStoreValues} storeName="UI STORE" />
+				<JDGStoreView store={allTempStoreValues} storeName="TEMP STORE" />
 			</div>
 		{/if}
 	</div>

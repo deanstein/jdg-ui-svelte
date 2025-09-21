@@ -160,6 +160,18 @@ export const instantiateObject = (object, overrides = {}) => {
 	};
 };
 
+// specifically for schemas that also include UI defs
+export const extractDefaultsFromSchema = (schemaObject = {}) => {
+	const result = {};
+
+	for (const [key, field] of Object.entries(schemaObject)) {
+		result[key] =
+			typeof field === 'object' && field !== null && 'default' in field ? field.default : field; // fallback for legacy fields or primitives
+	}
+
+	return result;
+};
+
 export const deepMatchObjects = (dataToMatch, dataToChange, forceChangeToType = undefined) => {
 	if (forceChangeToType && typeof dataToChange !== 'object') {
 		dataToChange = forceChangeToType;
@@ -207,15 +219,15 @@ export const getObjectByKeyValue = (arr, key, value) => {
 };
 
 // replaces an object in an array of objects
-export const replaceObjectByKeyValue = (arr, key, value, replacementObject) => {
+export const addOrReplaceObjectByKeyValue = (arr, key, value, replacementObject) => {
 	for (let i = 0; i < arr.length; i++) {
 		if (arr[i][key] === value) {
 			arr[i] = replacementObject;
-			return true; // indicate that object was replaced
+			return true; // replaced
 		}
 	}
-	console.log('Failed to find and replace object.');
-	return false; // indicate that object was not found
+	arr.push(replacementObject); // added
+	return false; // no replacement, but added
 };
 
 // deletes an object in an array of objects

@@ -1,8 +1,7 @@
 import { derived, writable } from 'svelte/store';
 
 /*** ADMINISTRATION ***/
-export let isAdminMode = writable(false);
-export let adminFormPassphrase = writable(undefined);
+export let isAdminMode = writable(true);
 export let doShowAdminLoginModal = writable(false);
 export let postAdminLoginFunction = writable(() => {});
 
@@ -46,15 +45,16 @@ export let doShowImageDetailOverlay = writable(false);
 
 /*** TIMELINE ***/
 export let doShowTimelineEventDetailsModal = writable(false);
-export let isTimelineHostDrafting = writable(false);
-export let timelineHostDraft = writable({}); // the timeline host being edited
-export let isTimelineEventDrafting = writable(false);
-export let timelineEventDraft = writable({}); // the timeline event being edited
 
 /*** QUANTITIES ***/
 export let clientWidth = writable(0); // window minus scrollbar
 export let windowWidth = writable(0); // full window width, including scrollbar
 export let highestZIndex = writable(1);
+
+/*** DELETION ***/
+export let doShowDeleteModal = writable(false);
+export let customDeleteMessage = writable(undefined);
+export let postDeleteFunction = writable(() => {});
 
 /*** DEV TOOLS ***/
 export let doShowDevTools = writable(false); // state view and tools in footer
@@ -67,7 +67,6 @@ export let devOverlayContent = writable('No data found in $devOverlayContent sta
 const storeMap = {
 	// administration
 	isAdminMode,
-	adminFormPassphrase,
 	// breakpoints
 	isMobileBreakpoint,
 	isTabletBreakpoint,
@@ -99,12 +98,14 @@ const storeMap = {
 	imageDetailScale,
 	// timeline
 	doShowTimelineEventDetailsModal,
-	timelineHostDraft,
-	timelineEventDraft,
 	// quantities
 	clientWidth,
 	windowWidth,
 	highestZIndex,
+	// deletion
+	doShowDeleteModal,
+	customDeleteMessage,
+	postDeleteFunction,
 	// dev
 	doShowDevTools,
 	doShowDevToolbarSticky,
@@ -112,9 +113,9 @@ const storeMap = {
 	doShowDevOverlay,
 	devOverlayContent
 };
-const storeEntries = Object.entries(storeMap);
+const uiStoreEntries = Object.entries(storeMap);
 // derived store containing all ui state values
-export let allStateValues = derived(
-	storeEntries.map(([key, store]) => store),
-	($stores) => Object.fromEntries(storeEntries.map(([key], index) => [key, $stores[index]]))
+export let allUiStoreValues = derived(
+	uiStoreEntries.map(([key, store]) => store),
+	($stores) => Object.fromEntries(uiStoreEntries.map(([key], index) => [key, $stores[index]]))
 );
