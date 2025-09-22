@@ -93,6 +93,9 @@ export { JDGDevOverlay };
 import JDGFeatureCard from './components/JDGFeatureCard.svelte';
 export { JDGFeatureCard };
 
+import JDGFieldRenderer from './components/Input/JDGFieldRenderer.svelte';
+export { JDGFieldRenderer };
+
 import JDGFooter from './components/JDGFooter.svelte';
 export { JDGFooter };
 
@@ -197,6 +200,9 @@ export { JDGTimeline };
 
 import JDGTimelineEvent from './components/Timeline/JDGTimelineEvent.svelte';
 export { JDGTimelineEvent };
+
+import JDGTimelineEventForm from './components/Timeline/JDGTimelineEventForm.svelte';
+export { JDGTimelineEventForm };
 
 import JDGTopNav from './components/Nav/JDGTopNav.svelte';
 export { JDGTopNav };

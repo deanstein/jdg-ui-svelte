@@ -3,10 +3,7 @@ export const JDG_INPUT_TYPES = {
 	TEXTAREA: 'textarea',
 	TIME: 'time',
 	DATE: 'date',
-	NUMBER: 'number',
 	SELECT: 'select',
-	MULTISELECT: 'multiSelect',
 	CHECKBOX: 'checkbox',
-	IMAGE_LIST: 'imageList',
-	OBJECT: 'object'
+	IMAGE_LIST: 'imageList'
 };

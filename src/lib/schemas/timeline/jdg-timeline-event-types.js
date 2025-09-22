@@ -11,8 +11,7 @@ export const timelineEventStrings = {
 	childEventModalTitle: 'Child Event Details',
 	residenceEventModalTitle: 'Residence Event Details',
 	vehicleEventModalTitle: 'Vehicle Event Details',
-	textEventModalTitle: 'Event Details',
-	additionalContext: 'Additional Context'
+	textEventModalTitle: 'Event Details'
 };
 
 const jdgTimelineEventTypes = {
@@ -34,7 +33,11 @@ const jdgTimelineEventTypes = {
 				label: 'Time of Birth',
 				inputType: JDG_INPUT_TYPES.TEXT
 			},
-			additionalContext: ''
+			additionalContext: {
+				default: '',
+				label: 'Additional Context',
+				inputType: JDG_INPUT_TYPES.TEXTAREA
+			}
 		}
 	},
 

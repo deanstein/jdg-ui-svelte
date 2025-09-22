@@ -13,9 +13,11 @@
 		JDGContentBoxFloating,
 		JDGContentContainer,
 		JDGSelect,
-		JDGTimeline
+		JDGTimeline,
+		JDGTimelineEventForm
 	} from '$lib/index.js';
 	import { instantiateTimelineEvent } from '$lib/jdg-timeline-management.js';
+	import { timelineEventDraft } from '$lib/stores/jdg-temp-store.js';
 
 	// all event types for previewing
 	const instantiatedEventSchemas = Object.entries(jdgTimelineEventTypes)
@@ -35,6 +37,10 @@
 	};
 	let selectedEventTypeKey = JDGTimelineEventKeys.birth;
 	$: selectedEventType = instantiateTimelineEvent(selectedEventTypeKey);
+	$: {
+		$timelineEventDraft = selectedEventType;
+		console.log($timelineEventDraft);
+	}
 
 	const ccmTimelineHost = instantiateObject(jdgTimelineHost);
 </script>
@@ -46,6 +52,12 @@
 			<JDGSelect optionsGroup={eventSchemaOptionsGroup} bind:inputValue={selectedEventTypeKey} />
 			<div class="timeline-event-schema-preview">
 				<pre>{JSON.stringify(selectedEventType, null, 2)}</pre>
+			</div>
+		</JDGBodyCopy>
+		<JDGBodyCopy>
+			<h3>Timeline Event Form</h3>
+			<div class="timeline-event-form-preview">
+				<JDGTimelineEventForm />
 			</div>
 		</JDGBodyCopy>
 		<JDGTimeline
