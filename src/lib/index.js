@@ -78,6 +78,9 @@ export { JDGContentBoxFloating };
 import JDGContentContainer from './components/JDGContentContainer.svelte';
 export { JDGContentContainer };
 
+import JDGDatePicker from './components/Input/JDGDatePicker.svelte';
+export { JDGDatePicker };
+
 import JDGDevToolbar from './components/DevTools/JDGDevToolbar.svelte';
 export { JDGDevToolbar };
 
@@ -147,6 +150,9 @@ export { JDGLoadingOverlay };
 import JDGModal from './components/JDGModal.svelte';
 export { JDGModal };
 
+import JDGModalActionsBar from './components/JDGModalActionsBar.svelte';
+export { JDGModalActionsBar };
+
 import JDGNavItem from './components/Nav/JDGNavItem.svelte';
 export { JDGNavItem };
 
@@ -179,6 +185,9 @@ export { JDGStoreView };
 
 import JDGStripesHorizontal from './components/JDGStripesHorizontal.svelte';
 export { JDGStripesHorizontal };
+
+import JDGTextArea from './components/Input/JDGTextArea.svelte';
+export { JDGTextArea };
 
 import JDGTextInput from './components/Input/JDGTextInput.svelte';
 export { JDGTextInput };

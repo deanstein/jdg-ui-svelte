@@ -25,37 +25,23 @@
 	} from '$lib/jdg-utils.js';
 	import { requireAdminMode } from '$lib/jdg-ui-management.js';
 
-	import { timelineEventStrings } from '$lib/components/strings';
-	import stylingConstants from '$lib/components/styling-constants';
-
-	import AssociatedPersonNodeGroup from '$lib/components/Timeline/EventDetails/AssociatedPersonNodeGroup.svelte';
-	import Button from '$lib/components/Button.svelte';
-	import DatePicker from '$lib/components/DatePicker.svelte';
-	import ImageThumbnailGroup from '$lib/components/ImageThumbnailGroup.svelte';
-	import InputContainer from '$lib/components/InputContainer.svelte';
-	import Modal from '$lib/components/Modals/Modal.svelte';
-	import ModalActionsBar from '$lib/components/Modals/ModalActionsBar.svelte';
-	import Select from '$lib/components/Select.svelte';
-	import SideBySideContainer from '$lib/components/SideBySideContainer.svelte';
-	import TextArea from '$lib/components/TextArea.svelte';
-	import TextInput from '$lib/components/TextInput.svelte';
-	import Checkbox from '$lib/components/Checkbox.svelte';
-
-	const jdgFieldTypeMap = {
-		birthtime: 'time',
-		birthPlace: 'text',
-		additionalContext: 'textarea',
-		deathTime: 'time',
-		deathPlace: 'text',
-		deathCause: 'textarea',
-		disposition: 'select',
-		year: 'number',
-		childId: 'select',
-		parentId: 'select'
-	};
+	import {
+		JDGButton,
+		JDGCheckbox,
+		JDGDatePicker,
+		JDGGridLayout,
+		JDGImageThumbnailGroup,
+		JDGInputContainer,
+		JDGModal,
+		JDGModalActionsBar,
+		JDGSelect,
+		JDGTextArea,
+		JDGTextInput
+	} from '$lib/index.js';
+	import { timelineEventDraft } from '$lib/stores/jdg-temp-store.js';
 
 	// get the event data
-	let eventType = get(timelineEditEvent).eventType;
+	let eventType = get(timelineEventDraft).type;
 
 	let isNewEvent = false; // if true, this event was not found in this person's events
 	let isValidDate = false; // if true, the current date in the field is valid
@@ -86,7 +72,7 @@
 	let originalEventContent;
 
 	onMount(() => {
-		originalEventContent = get(timelineEditEvent);
+		originalEventContent = get(timelineEventDraft);
 		syncAllInputs();
 	});
 
@@ -296,7 +282,7 @@
 	}
 </script>
 
-<Modal
+<JDGModal
 	showModal={$showTimelineEventDetailsModal}
 	title={modalTitle}
 	height={stylingConstants.sizes.modalFormHeight}
@@ -310,90 +296,105 @@
 
 		<!-- birth -->
 		{#if eventType === jdgTimelineEventTypes.birth.type}
-			<SideBySideContainer>
-				<InputContainer label={timelineEventStrings.birthdate}>
-					<DatePicker
+			<JDGGridLayout>
+				<JDGInputContainer label={timelineEventStrings.birthdate}>
+					<JDGDatePicker
 						bind:inputValue={birthdateInputValue}
 						isEnabled={$isTimelineEventInEditMode}
 						onInputFunction={getIsDateInputValid}
 					/>
-				</InputContainer>
-				<InputContainer label={timelineEventStrings.birthtime}>
-					<TextInput bind:inputValue={birthtimeInputValue} isEnabled={$isTimelineEventInEditMode} />
-				</InputContainer>
-			</SideBySideContainer>
+				</JDGInputContainer>
+				<JDGInputContainer label={timelineEventStrings.birthtime}>
+					<JDGTextInput
+						bind:inputValue={birthtimeInputValue}
+						isEnabled={$isTimelineEventInEditMode}
+					/>
+				</JDGInputContainer>
+			</JDGGridLayout>
 			<div class="approximate-date-row">
-				<Checkbox
+				<JDGCheckbox
 					label={timelineEventStrings.eventDateApprx}
 					isEnabled={$isTimelineEventInEditMode}
 					bind:isChecked={birthdateApprxInputValue}
 				/>
 			</div>
-			<InputContainer label={timelineEventStrings.birthplace}>
-				<TextInput bind:inputValue={birthplaceInputValue} isEnabled={$isTimelineEventInEditMode} />
-			</InputContainer>
+			<JDGInputContainer label={timelineEventStrings.birthplace}>
+				<JDGTextInput
+					bind:inputValue={birthplaceInputValue}
+					isEnabled={$isTimelineEventInEditMode}
+				/>
+			</JDGInputContainer>
 
 			<!-- death -->
 		{:else if eventType === jdgTimelineEventTypes.death.type}
-			<SideBySideContainer>
-				<InputContainer label={timelineEventStrings.deathDate}>
-					<DatePicker
+			<JDGGridLayout>
+				<JDGInputContainer label={timelineEventStrings.deathDate}>
+					<JDGDatePicker
 						bind:inputValue={deathDateInputValue}
 						isEnabled={$isTimelineEventInEditMode}
 					/>
-				</InputContainer>
-				<InputContainer label={timelineEventStrings.deathTime}>
-					<TextInput bind:inputValue={deathTimeInputValue} isEnabled={$isTimelineEventInEditMode} />
-				</InputContainer>
-			</SideBySideContainer>
+				</JDGInputContainer>
+				<JDGInputContainer label={timelineEventStrings.deathTime}>
+					<JDGTextInput
+						bind:inputValue={deathTimeInputValue}
+						isEnabled={$isTimelineEventInEditMode}
+					/>
+				</JDGInputContainer>
+			</JDGGridLayout>
 			<div class="approximate-date-row">
-				<Checkbox
+				<JDGCheckbox
 					label={timelineEventStrings.eventDateApprx}
 					isEnabled={$isTimelineEventInEditMode}
 					bind:isChecked={deathDateApprxInputValue}
 				/>
 			</div>
-			<InputContainer label={timelineEventStrings.deathPlace}>
-				<TextInput bind:inputValue={deathPlaceInputValue} isEnabled={$isTimelineEventInEditMode} />
-			</InputContainer>
-			<InputContainer label={timelineEventStrings.deathCause}>
-				<TextInput bind:inputValue={deathCauseInputValue} isEnabled={$isTimelineEventInEditMode} />
-			</InputContainer>
+			<JDGInputContainer label={timelineEventStrings.deathPlace}>
+				<JDGTextInput
+					bind:inputValue={deathPlaceInputValue}
+					isEnabled={$isTimelineEventInEditMode}
+				/>
+			</JDGInputContainer>
+			<JDGInputContainer label={timelineEventStrings.deathCause}>
+				<JDGTextInput
+					bind:inputValue={deathCauseInputValue}
+					isEnabled={$isTimelineEventInEditMode}
+				/>
+			</JDGInputContainer>
 			<!-- standard content box if no event type or generic type -->
 		{:else}
-			<SideBySideContainer>
-				<InputContainer label="Date">
-					<DatePicker
+			<JDGGridLayout>
+				<JDGInputContainer label="Date">
+					<JDGDatePicker
 						isEnabled={$isTimelineEventInEditMode}
 						bind:inputValue={eventDateInputValue}
 					/>
-				</InputContainer>
-				<InputContainer label="Type">
-					<Select
+				</JDGInputContainer>
+				<JDGInputContainer label="Type">
+					<JDGSelect
 						isEnabled={$isTimelineEventInEditMode}
 						bind:inputValue={eventTypeInputValue}
-						optionsGroupObject={timelineEventOptions}
+						optionsGroup={timelineEventOptions}
 						optionValueKey="type"
 						optionLabelKey="label"
 					/>
-				</InputContainer>
-			</SideBySideContainer>
+				</JDGInputContainer>
+			</JDGGridLayout>
 			<div class="approximate-date-row">
-				<Checkbox
+				<JDGCheckbox
 					label={timelineEventStrings.eventDateApprx}
 					isEnabled={$isTimelineEventInEditMode}
 					bind:isChecked={eventDateApprxValue}
 				/>
 			</div>
-			<InputContainer label="Description">
-				<TextArea
+			<JDGInputContainer label="Description">
+				<JDGTextArea
 					isEnabled={$isTimelineEventInEditMode}
 					bind:inputValue={eventDescriptionInputValue}
 				/>
-			</InputContainer>
-			<InputContainer label="Images">
+			</JDGInputContainer>
+			<JDGInputContainer label="Images">
 				<div class="media-content-container {mediaContentContainerCss}">
-					<ImageThumbnailGroup
+					<JDGImageThumbnailGroup
 						allowEdit={$isTimelineEventInEditMode}
 						imageArray={$timelineEditEvent?.eventContent?.images ?? []}
 						showGroupTitle={false}
@@ -401,8 +402,8 @@
 						onClickAddButton={onClickAddImageButton}
 					/>
 				</div>
-			</InputContainer>
-			<InputContainer label="With" grow={true}>
+			</JDGInputContainer>
+			<JDGInputContainer label="With" grow={true}>
 				<div class="media-content-container {mediaContentContainerCss}">
 					<AssociatedPersonNodeGroup
 						showGroupTitle={false}
@@ -411,25 +412,25 @@
 						associatedPeopleIds={$timelineEditEvent?.eventContent?.associatedPeopleIds}
 					/>
 				</div>
-			</InputContainer>
+			</JDGInputContainer>
 		{/if}
 	</div>
 	<div slot="modal-toolbar-slot">
-		<ModalActionsBar>
+		<JDGModalActionsBar>
 			{#if !$isTimelineEventInEditMode}
-				<Button
+				<JDGButton
 					buttonText={'Edit'}
 					onClickFunction={onClickEditButton}
 					overrideBackgroundColor={stylingConstants.colors.buttonColorPrimary}
 				/>
-				<Button
+				<JDGButton
 					buttonText={'Close'}
 					onClickFunction={onClickCloseButton}
 					overrideBackgroundColor={stylingConstants.colors.buttonColorSecondary}
 				/>
 			{:else}
 				{#if !isNewEvent && !isBirthOrDeathEvent}
-					<Button
+					<JDGButton
 						buttonText="Delete"
 						onClickFunction={onClickDeleteButton}
 						overrideColor={stylingConstants.colors.buttonColorDelete}
@@ -437,23 +438,23 @@
 						overrideBackgroundColorHover="{stylingConstants.colors.buttonColorDelete};"
 					/>
 				{/if}
-				<Button
+				<JDGButton
 					buttonText={'Cancel'}
 					onClickFunction={isNewEvent && !isBirthOrDeathEvent
 						? onClickCancelNewEventButton
 						: onClickCancelEditButton}
 					overrideBackgroundColor={stylingConstants.colors.buttonColorSecondary}
 				/>
-				<Button
+				<JDGButton
 					buttonText="Done"
 					isEnabled={isValidDate}
 					onClickFunction={onClickDoneButton}
 					overrideBackgroundColor={stylingConstants.colors.buttonColorDone}
 				/>
 			{/if}
-		</ModalActionsBar>
+		</JDGModalActionsBar>
 	</div>
-</Modal>
+</JDGModal>
 
 <style>
 	.edit-timeline-event-modal-content {
