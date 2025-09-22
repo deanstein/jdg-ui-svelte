@@ -1,10 +1,12 @@
 <script>
+	// @ts-nocheck
 	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
 	import jdgTimelineEventTypes from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 	import { JDGFieldRenderer } from '$lib/index.js';
 	import { timelineEventDraft } from '$lib/stores/jdg-temp-store.js';
+	import { instantiateTimelineEvent } from '$lib/jdg-timeline-management.js';
 
-	let event;
+	let event = instantiateTimelineEvent(jdgTimelineEventTypes.generic);
 	$: event = $timelineEventDraft;
 
 	// Extract base schema fields (excluding meta and additionalContent)

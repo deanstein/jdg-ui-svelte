@@ -12,6 +12,7 @@
 		JDGBodyCopy,
 		JDGContentBoxFloating,
 		JDGContentContainer,
+		JDGH3H4,
 		JDGSelect,
 		JDGTimeline,
 		JDGTimelineEventForm
@@ -46,20 +47,23 @@
 </script>
 
 <JDGContentContainer overlapWithHeader={false}>
-	<JDGContentBoxFloating>
+	<JDGContentBoxFloating
+		title={'TIMELINE TESTING'}
+		subtitle={'Testing the centralized JDGTimeline component'}
+	>
 		<JDGBodyCopy>
-			<h3>Timeline Event Schema Preview</h3>
+			<JDGH3H4 h3String="Timeline Event Schema Preview" paddingBottom="15px" />
 			<JDGSelect optionsGroup={eventSchemaOptionsGroup} bind:inputValue={selectedEventTypeKey} />
 			<div class="timeline-event-schema-preview">
 				<pre>{JSON.stringify(selectedEventType, null, 2)}</pre>
 			</div>
-		</JDGBodyCopy>
-		<JDGBodyCopy>
-			<h3>Timeline Event Form</h3>
+			<br /><br />
+			<JDGH3H4 h3String="Timeline Event Form" paddingBottom="15px" />
 			<div class="timeline-event-form-preview">
 				<JDGTimelineEventForm />
 			</div>
 		</JDGBodyCopy>
+		<JDGH3H4 h3String="Timeline" paddingBottom="15px" />
 		<JDGTimeline
 			timelineHost={ccmTimelineHost}
 			allowEditing={$isAdminMode}
@@ -67,3 +71,9 @@
 		/>
 	</JDGContentBoxFloating>
 </JDGContentContainer>
+
+<style>
+	.timeline-event-schema-preview {
+		font-size: 0.9rem;
+	}
+</style>
