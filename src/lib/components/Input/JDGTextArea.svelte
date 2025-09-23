@@ -21,7 +21,9 @@
 	`;
 
 	const autoGrow = (textArea) => {
-		textArea.style.height = textArea.scrollHeight + 'px';
+		if (!textArea) return;
+		textArea.style.height = 'auto'; // Reset height
+		textArea.style.height = textArea.scrollHeight + 'px'; // Set to scrollHeight
 	};
 
 	onMount(() => {
@@ -37,6 +39,7 @@
 		class={textInputCss}
 		disabled={!isEnabled}
 		on:blur={() => autoGrow(textArea)}
+		on:input={() => autoGrow(textArea)}
 	/>
 </div>
 
