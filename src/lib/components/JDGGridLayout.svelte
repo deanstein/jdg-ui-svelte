@@ -7,6 +7,7 @@
 
 	export let maxColumns = 3;
 	export let forceMaxColumns = false; // if true, max columns even on smallest breakpoints
+	export let gap = undefined; // if not defined, uses breakpoint definitions below
 
 	// used for determining number of children passed into slot
 	let gridLayoutContainer;
@@ -22,7 +23,7 @@
 			> * {
 				flex: 0 1 ${forceMaxColumns ? `calc(100% / ${maxColumns})` : '100%'};
 			}
-			gap: ${jdgSizes.nContentBoxPaddingSm.toString() + jdgSizes.contentBoxPaddingUnit};
+			gap: ${gap ?? jdgSizes.nContentBoxPaddingSm.toString() + jdgSizes.contentBoxPaddingUnit};
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
@@ -34,7 +35,7 @@
 							${jdgSizes.nContentBoxPaddingMd.toString() + jdgSizes.contentBoxPaddingUnit}
 					);
 			}
-			gap: ${jdgSizes.nContentBoxPaddingMd.toString() + jdgSizes.contentBoxPaddingUnit};
+			gap: ${gap ?? jdgSizes.nContentBoxPaddingMd.toString() + jdgSizes.contentBoxPaddingUnit};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 			> * {
@@ -44,7 +45,8 @@
 							${(jdgSizes.nContentBoxPaddingLg / 2).toString() + jdgSizes.contentBoxPaddingUnit}
 					);
 			}
-			gap: ${(jdgSizes.nContentBoxPaddingLg / 2).toString() + jdgSizes.contentBoxPaddingUnit};
+			gap: ${gap ??
+			(jdgSizes.nContentBoxPaddingLg / 2).toString() + jdgSizes.contentBoxPaddingUnit};
 		}
 	`;
 

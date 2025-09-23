@@ -12,7 +12,9 @@
 		JDGBodyCopy,
 		JDGContentBoxFloating,
 		JDGContentContainer,
+		JDGGridLayout,
 		JDGH3H4,
+		JDGInputContainer,
 		JDGSelect,
 		JDGTimeline,
 		JDGTimelineEventForm
@@ -51,18 +53,27 @@
 		title={'TIMELINE TESTING'}
 		subtitle={'Testing the centralized JDGTimeline component'}
 	>
-		<JDGBodyCopy>
-			<JDGH3H4 h3String="Timeline Event Schema Preview" paddingBottom="15px" />
-			<JDGSelect optionsGroup={eventSchemaOptionsGroup} bind:inputValue={selectedEventTypeKey} />
-			<div class="timeline-event-schema-preview">
-				<pre>{JSON.stringify(selectedEventType, null, 2)}</pre>
+		<JDGGridLayout maxColumns={2} gap="30px">
+			<div>
+				<JDGH3H4 h3String="Timeline Event Schema Preview" paddingBottom="15px" />
+				<JDGInputContainer label="Choose event type schema:">
+					<JDGSelect
+						optionsGroup={eventSchemaOptionsGroup}
+						bind:inputValue={selectedEventTypeKey}
+					/>
+				</JDGInputContainer>
+				<div class="timeline-event-schema-preview">
+					<pre>{JSON.stringify(selectedEventType, null, 2)}</pre>
+				</div>
 			</div>
-			<br /><br />
-			<JDGH3H4 h3String="Timeline Event Form" paddingBottom="15px" />
-			<div class="timeline-event-form-preview">
-				<JDGTimelineEventForm />
+			<div>
+				<JDGH3H4 h3String="Timeline Event Form Preview" paddingBottom="15px" />
+				<div class="timeline-event-form-preview">
+					<JDGTimelineEventForm />
+				</div>
 			</div>
-		</JDGBodyCopy>
+		</JDGGridLayout>
+
 		<JDGH3H4 h3String="Timeline" paddingBottom="15px" />
 		<JDGTimeline
 			timelineHost={ccmTimelineHost}

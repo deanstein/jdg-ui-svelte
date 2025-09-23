@@ -18,6 +18,13 @@
 		border: 2px solid ${jdgColors.active};
 		resize: ${resizable};
 		min-height: ${minHeight};
+		border: 2px solid ${jdgColors.activeSecondary};
+		:hover {
+			border: 2px solid ${jdgColors.active};
+		}
+		:focus {
+			border: 2px solid ${jdgColors.active};
+		}
 	`;
 
 	const autoGrow = (textArea) => {
