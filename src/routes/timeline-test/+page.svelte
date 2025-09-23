@@ -56,7 +56,7 @@
 		<JDGGridLayout maxColumns={2} gap="30px">
 			<div>
 				<JDGH3H4 h3String="Timeline Event Schema Preview" paddingBottom="15px" />
-				<JDGInputContainer label="Choose event type schema:">
+				<JDGInputContainer label="Choose schema">
 					<JDGSelect
 						optionsGroup={eventSchemaOptionsGroup}
 						bind:inputValue={selectedEventTypeKey}
