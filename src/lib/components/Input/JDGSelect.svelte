@@ -14,7 +14,13 @@
 	const selectCss = css`
 		font-size: ${jdgSizes.fontSizeBodySm};
 		text-align: ${textAlignOverride ? textAlignOverride : 'left'};
-		border: 2px solid ${jdgColors.active};
+		border: 2px solid ${jdgColors.activeSecondary};
+		:hover {
+			border: 2px solid ${jdgColors.active};
+		}
+		:focus {
+			border: 2px solid ${jdgColors.active};
+		}
 	`;
 </script>
 

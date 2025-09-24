@@ -93,9 +93,6 @@ export { JDGDevOverlay };
 import JDGFeatureCard from './components/JDGFeatureCard.svelte';
 export { JDGFeatureCard };
 
-import JDGFieldRenderer from './components/Input/JDGFieldRenderer.svelte';
-export { JDGFieldRenderer };
-
 import JDGFooter from './components/JDGFooter.svelte';
 export { JDGFooter };
 

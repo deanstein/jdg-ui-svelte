@@ -15,8 +15,10 @@ export const instantiateTimelineEvent = (typeKey) => {
 	const baseSchema = JSON.parse(JSON.stringify(jdgTimelineEvent));
 	const typeDef = jdgTimelineEventTypes[typeKey];
 
+	console.log(typeDef);
+
 	if (!typeDef || typeof typeDef !== 'object') {
-		console.warn(`No schema found for type "${typeKey}"`);
+		console.error(`No schema found for type "${typeKey}"`);
 		return extractDefaultsFromSchema(baseSchema);
 	}
 

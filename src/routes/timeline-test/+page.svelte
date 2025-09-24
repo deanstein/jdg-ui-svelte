@@ -8,6 +8,7 @@
 	import { instantiateObject } from '$lib/jdg-utils.js';
 
 	import {
+		doShowTimelineEventDetailsModal,
 		isAdminMode,
 		JDGBodyCopy,
 		JDGContentBoxFloating,
@@ -21,6 +22,7 @@
 	} from '$lib/index.js';
 	import { instantiateTimelineEvent } from '$lib/jdg-timeline-management.js';
 	import { timelineEventDraft } from '$lib/stores/jdg-temp-store.js';
+	import { writable } from 'svelte/store';
 
 	// all event types for previewing
 	const instantiatedEventSchemas = Object.entries(jdgTimelineEventTypes)
@@ -40,10 +42,6 @@
 	};
 	let selectedEventTypeKey = JDGTimelineEventKeys.birth;
 	$: selectedEventType = instantiateTimelineEvent(selectedEventTypeKey);
-	$: {
-		$timelineEventDraft = selectedEventType;
-		console.log($timelineEventDraft);
-	}
 
 	const ccmTimelineHost = instantiateObject(jdgTimelineHost);
 </script>
@@ -69,7 +67,7 @@
 			<div>
 				<JDGH3H4 h3String="Timeline Event Form Preview" paddingBottom="15px" />
 				<div class="timeline-event-form-preview">
-					<JDGTimelineEventForm />
+					<JDGTimelineEventForm eventStore={writable(selectedEventType)} />
 				</div>
 			</div>
 		</JDGGridLayout>
@@ -79,6 +77,10 @@
 			timelineHost={ccmTimelineHost}
 			allowEditing={$isAdminMode}
 			onClickTimelineEvent={setTimelineEventActive}
+			onClickAddEventButton={() => {
+				doShowTimelineEventDetailsModal.set(true);
+				timelineEventDraft.set(instantiateTimelineEvent(jdgTimelineEventTypes.generic));
+			}}
 		/>
 	</JDGContentBoxFloating>
 </JDGContentContainer>

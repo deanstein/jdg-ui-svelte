@@ -78,31 +78,13 @@
 	setContext(JDG_CONTEXT_KEYS.timelineLastRowHeight, lastEventRowHeightStore);
 	setContext(JDG_CONTEXT_KEYS.timelineInceptionEvent, inceptionEvent);
 
-	const onClickAddEventButton = () => {
-		// If the inception event is provided, but with no date
-		// then clicking add event will set it
-		if (inceptionEvent && inceptionEvent?.eventDate === '') {
-			doShowTimelineEventDetailsModal.set(true);
-			isTimelineEventDrafting.set(true);
-			timelineEventDraft.set(inceptionEvent);
-		}
-		// otherwise, add an event like normal
-		else {
-			const newTimelineEvent = instantiateObject(jdgTimelineEvent);
-			newTimelineEvent.id = uuidv4();
-			newTimelineEvent.version = jdgSchemaVersion;
-			newTimelineEvent.type = jdgTimelineEventTypes.generic.type;
-			doShowTimelineEventDetailsModal.set(true);
-			isTimelineEventDrafting.set(true);
-			timelineEventDraft.set(newTimelineEvent);
-		}
-	};
+	export let onClickAddEventButton = () => {};
 
-	export const onCheckRelativeSpacing = () => {
+	const onCheckRelativeSpacing = () => {
 		forceRelativeSpacing = true;
 	};
 
-	export const onUncheckRelativeSpacing = () => {
+	const onUncheckRelativeSpacing = () => {
 		forceRelativeSpacing = false;
 	};
 

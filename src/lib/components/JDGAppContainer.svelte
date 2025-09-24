@@ -40,7 +40,9 @@
 		JDGDevToolbarSticky,
 		JDGImageDetailOverlay,
 		JDGLoadingOverlay,
-		JDGScrollToTop
+		JDGModal,
+		JDGScrollToTop,
+		JDGTimelineEventForm
 	} from '$lib/index.js';
 	import {
 		setUpdatedHyperlinkStyleSimple,
@@ -50,6 +52,8 @@
 		setUpdatedHyperlinkStyleBar
 	} from '$lib/jdg-shared-styles.js';
 	import JdgAdminLoginModal from './DevTools/JDGAdminLoginModal.svelte';
+	import { timelineEventDraft } from '$lib/stores/jdg-temp-store.js';
+	import { writable } from 'svelte/store';
 
 	export let fontFamily = jdgFonts.body;
 	export let appLoadingIconSrc =
@@ -218,6 +222,13 @@
 		<JDGDevToolbarSticky />
 	{/if}
 	{#if $doShowTimelineEventDetailsModal}
+		<JDGModal
+			onClickCloseButton={() => {
+				$doShowTimelineEventDetailsModal = false;
+			}}
+		>
+			<JDGTimelineEventForm eventStore={timelineEventDraft} />
+		</JDGModal>
 		<!-- not developed yet <TimelineEventDetailsModal /> -->
 	{/if}
 </div>

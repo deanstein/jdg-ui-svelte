@@ -1,11 +1,11 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { jdgColors } from '$lib/jdg-shared-styles.js';
+	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let showLabel = true;
 	export let label = 'Checkbox label';
-	export let labelFontSize = '14px';
+	export let labelFontSize = jdgSizes.fontSizeBodySm;
 	export let isChecked = false;
 	export let isEnabled = true;
 	export let onCheckAction = () => {};
