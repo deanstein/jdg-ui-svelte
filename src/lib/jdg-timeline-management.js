@@ -5,7 +5,8 @@ import {
 	addOrReplaceObjectByKeyValue,
 	deleteObjectByKeyValue,
 	extractDefaultsFromSchema as extractDataFromHybridSchema,
-	getObjectByKeyValue
+	getObjectByKeyValue,
+	instantiateObject
 } from './jdg-utils.js';
 import jdgTimelineEventTypes from './schemas/timeline/jdg-timeline-event-types.js';
 import jdgTimelineEvent from './schemas/timeline/jdg-timeline-event.js';
@@ -30,6 +31,22 @@ export const instantiateTimelineEvent = (typeKey) => {
 
 	return base;
 };
+
+// Timeline events contain both UI and data in their schema.
+// This one gets the data:
+export const extractDataSchemaFields = (schemaObj = {}) =>
+	Object.fromEntries(
+		Object.entries(schemaObj).filter(
+			([_, def]) => typeof def !== 'object' || def === null || !('inputType' in def)
+		)
+	);
+// This one gets the UI fields:
+export const extractUiFromDataSchema = (schemaObj = {}) =>
+	Object.fromEntries(
+		Object.entries(schemaObj).filter(
+			([_, def]) => typeof def === 'object' && def !== null && 'inputType' in def
+		)
+	);
 
 export const getTimelineEventById = (timelineHostStore, eventId) => {
 	if (!timelineHostStore || !eventId) return;

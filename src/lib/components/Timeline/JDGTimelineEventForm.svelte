@@ -1,11 +1,12 @@
 <script>
+// @ts-nocheck
+
 	import { get, writable } from 'svelte/store';
 
 	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
 	import jdgTimelineEventTypes from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 	import { JDG_INPUT_TYPES } from '$lib/schemas/timeline/jdg-input-types.js';
-
-	import { extractUISchemaFields } from '$lib/jdg-timeline-management.js';
+  import { extractUiFromDataSchema } from '$lib/jdg-timeline-management.js';
 
 	import { JDGCheckbox, JDGDatePicker, JDGTextArea, JDGTextInput } from '$lib/index.js';
 
@@ -24,7 +25,7 @@
 	}
 
 	// Schema prep
-	const baseFieldSchema = extractUISchemaFields(jdgTimelineEvent);
+	const baseFieldSchema = extractUiFromDataSchema(jdgTimelineEvent);
 
 	$: typeSchema = jdgTimelineEventTypes[$eventStore.type];
 	$: contentSchema = typeSchema?.additionalContent ?? {};
