@@ -1,69 +1,72 @@
 <script>
-	import { writable } from 'svelte/store';
-	// @ts-nocheck
 	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
 	import jdgTimelineEventTypes from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 	import { JDGCheckbox, JDGDatePicker, JDGTextArea, JDGTextInput } from '$lib/index.js';
 	import { JDG_INPUT_TYPES } from '$lib/schemas/timeline/jdg-input-types.js';
-	import { timelineEventDraft } from '$lib/stores/jdg-temp-store.js';
-	import { instantiateTimelineEvent } from '$lib/jdg-timeline-management.js';
+	import { get, writable } from 'svelte/store';
 
+	// Read from and write to this store
 	export let eventStore;
-	$: event = $eventStore;
 
-	// Extract base schema fields
+	let localEvent = {};
+	let localAdditional = {};
+
+	// Local writable stores for editing
+	let localEventStore = writable({});
+	let localAdditionalStore = writable({});
+
+	// Sync when parent store changes
+	$: {
+		const snapshot = get(eventStore);
+		localEventStore.set({ ...snapshot });
+		localAdditionalStore.set({ ...snapshot.additionalContent });
+	}
+
+	// Schema prep
 	const baseFieldSchema = Object.fromEntries(
 		Object.entries(jdgTimelineEvent).filter(
 			([key, def]) => typeof def === 'object' && def !== null && 'inputType' in def
 		)
 	);
 
-	// Reactive schema merging
-	$: typeSchema = jdgTimelineEventTypes[event.type];
+	$: typeSchema = jdgTimelineEventTypes[$eventStore.type];
 	$: contentSchema = typeSchema?.additionalContent ?? {};
 	$: mergedSchema = { ...baseFieldSchema, ...contentSchema };
 
-	// Build renderable field list
 	$: renderFields = Object.entries(mergedSchema)
-		.filter(([key]) => key !== 'isApprxDate') // exclude from default rendering
+		.filter(([key]) => key !== 'isApprxDate')
 		.map(([key, def]) => {
 			const isAdditional = key in contentSchema;
-			const value = isAdditional ? event.additionalContent[key] : event[key];
-			return { key, def, value, isAdditional };
+			const target = isAdditional ? localAdditional : localEvent;
+			return { key, def, target };
 		});
 
-	function handleChange(e, key, isAdditional) {
-		const val = e.target?.value ?? e.detail;
-		timelineEventDraft.update((ev) => {
-			if (isAdditional) {
-				//@ts-expect-error
-				ev.additionalContent[key] = val;
-			} else {
-				ev[key] = val;
-			}
-			return { ...ev };
+	function saveToStore() {
+		eventStore.set({
+			...localEvent,
+			additionalContent: { ...localAdditional }
 		});
 	}
 </script>
 
 <div class="jdg-timeline-form">
-	{#each renderFields as { key, def, value, isAdditional } (key)}
+	{#each renderFields as { key, def, target } (key)}
 		<div class="form-group">
 			<label for={key}>{def.label}</label>
 
 			{#if def.inputType === JDG_INPUT_TYPES.DATE}
 				<div class="date-with-checkbox">
-					<JDGDatePicker bind:inputValue={value} />
-					<JDGCheckbox label="Is approximate?" bind:isChecked={value} />
+					<JDGDatePicker bind:inputValue={target[key]} />
+					<JDGCheckbox label="Is approximate?" bind:isChecked={localEvent.isApprxDate} />
 				</div>
 			{:else if def.inputType === JDG_INPUT_TYPES.TEXT}
-				<JDGTextInput bind:inputValue={value} />
+				<JDGTextInput bind:inputValue={$localAdditionalStore[key]} />
 			{:else if def.inputType === JDG_INPUT_TYPES.TEXTAREA}
-				<JDGTextArea bind:inputValue={value} />
+				<JDGTextArea bind:inputValue={$localAdditionalStore[key]} />
 			{:else if def.inputType === JDG_INPUT_TYPES.CHECKBOX}
-				<JDGCheckbox bind:isChecked={value} />
+				<JDGCheckbox bind:isChecked={$localAdditionalStore[key]} />
 			{:else if def.inputType === JDG_INPUT_TYPES.SELECT}
-				<select id={key} bind:value>
+				<select id={key} bind:value={$localAdditionalStore[key]}>
 					{#each def.options as opt}
 						<option value={opt.value}>{opt.label}</option>
 					{/each}
@@ -71,10 +74,12 @@
 			{:else if def.inputType === JDG_INPUT_TYPES.IMAGE_LIST}
 				<div>[...]</div>
 			{:else}
-				<JDGTextInput bind:inputValue={value} />
+				<JDGTextInput bind:inputValue={target[key]} />
 			{/if}
 		</div>
 	{/each}
+
+	<button on:click={saveToStore}>Save</button>
 </div>
 
 <style>

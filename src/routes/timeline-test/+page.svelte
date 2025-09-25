@@ -40,8 +40,15 @@
 			)
 		}
 	};
+
+	// The selected event type
 	let selectedEventTypeKey = JDGTimelineEventKeys.birth;
 	$: selectedEventType = instantiateTimelineEvent(selectedEventTypeKey);
+	// Use a temporary store for the form preview to read and write
+	const formPreviewEventStore = writable();
+	$: {
+		formPreviewEventStore.set(instantiateTimelineEvent(selectedEventTypeKey));
+	}
 
 	const ccmTimelineHost = instantiateObject(jdgTimelineHost);
 </script>
@@ -67,7 +74,7 @@
 			<div>
 				<JDGH3H4 h3String="Timeline Event Form Preview" paddingBottom="15px" />
 				<div class="timeline-event-form-preview">
-					<JDGTimelineEventForm eventStore={writable(selectedEventType)} />
+					<JDGTimelineEventForm eventStore={formPreviewEventStore} />
 				</div>
 			</div>
 		</JDGGridLayout>
