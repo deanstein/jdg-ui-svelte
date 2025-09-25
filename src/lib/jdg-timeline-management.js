@@ -4,27 +4,29 @@ import jdgTimelineHost from './schemas/timeline/jdg-timeline-host.js';
 import {
 	addOrReplaceObjectByKeyValue,
 	deleteObjectByKeyValue,
-	extractDefaultsFromSchema,
-	getObjectByKeyValue,
-	instantiateObject
+	extractDefaultsFromSchema as extractDataFromHybridSchema,
+	getObjectByKeyValue
 } from './jdg-utils.js';
 import jdgTimelineEventTypes from './schemas/timeline/jdg-timeline-event-types.js';
 import jdgTimelineEvent from './schemas/timeline/jdg-timeline-event.js';
 
+// Creates a data-only TimelineEvent schema
+// from TimelineEvent which is a HYBRID schema
 export const instantiateTimelineEvent = (typeKey) => {
+	// NOTE: TimelineEvent is a HYBRID schema - it has both UI and data
 	const baseSchema = JSON.parse(JSON.stringify(jdgTimelineEvent));
 	const typeDef = jdgTimelineEventTypes[typeKey];
 
 	if (!typeDef || typeof typeDef !== 'object') {
 		console.error(`No schema found for type "${typeKey}"`);
-		return extractDefaultsFromSchema(baseSchema);
+		return extractDataFromHybridSchema(baseSchema);
 	}
 
-	const base = extractDefaultsFromSchema(baseSchema);
+	const base = extractDataFromHybridSchema(baseSchema);
 	base.type = typeKey;
 
-	const contentSchema = typeDef.additionalContent || {};
-	base.additionalContent = extractDefaultsFromSchema(contentSchema);
+	const addlContentSchema = typeDef.additionalContent || {};
+	base.additionalContent = extractDataFromHybridSchema(addlContentSchema);
 
 	return base;
 };

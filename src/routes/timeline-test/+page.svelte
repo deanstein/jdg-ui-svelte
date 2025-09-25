@@ -86,7 +86,7 @@
 			onClickTimelineEvent={setTimelineEventActive}
 			onClickAddEventButton={() => {
 				doShowTimelineEventDetailsModal.set(true);
-				timelineEventDraft.set(instantiateTimelineEvent(jdgTimelineEventTypes.generic));
+				timelineEventDraft.set(instantiateTimelineEvent(JDGTimelineEventKeys.generic));
 			}}
 		/>
 	</JDGContentBoxFloating>

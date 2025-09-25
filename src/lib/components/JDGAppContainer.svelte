@@ -227,9 +227,10 @@
 				$doShowTimelineEventDetailsModal = false;
 			}}
 		>
-			<JDGTimelineEventForm eventStore={timelineEventDraft} />
+			<div slot="modal-content-slot">
+				<JDGTimelineEventForm eventStore={timelineEventDraft} />
+			</div>
 		</JDGModal>
-		<!-- not developed yet <TimelineEventDetailsModal /> -->
 	{/if}
 </div>
 

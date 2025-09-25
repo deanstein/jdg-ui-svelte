@@ -20,7 +20,13 @@
 	import { jdgSharedStrings } from '$lib/jdg-shared-strings.js';
 	import { toggleDevTools } from '$lib/jdg-state-management.js';
 
-	import { JDGButton, JDGDevToolbar, JDGStripesHorizontal, JDGStoreView } from '$lib/index.js';
+	import {
+		JDGButton,
+		JDGDevToolbar,
+		JDGStripesHorizontal,
+		JDGStoreView,
+		JDGGridLayout
+	} from '$lib/index.js';
 	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { allTempStoreValues } from '$lib/stores/jdg-temp-store.js';
 
@@ -202,8 +208,10 @@
 		{#if $doShowDevTools}
 			<div class="dev-tools">
 				<JDGDevToolbar />
-				<JDGStoreView store={allUiStoreValues} storeName="UI STORE" />
-				<JDGStoreView store={allTempStoreValues} storeName="TEMP STORE" />
+				<JDGGridLayout>
+					<JDGStoreView store={allUiStoreValues} storeName="UI STORE" />
+					<JDGStoreView store={allTempStoreValues} storeName="TEMP STORE" />
+				</JDGGridLayout>
 			</div>
 		{/if}
 	</div>

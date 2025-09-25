@@ -1,15 +1,16 @@
 <script>
+	import { get, writable } from 'svelte/store';
+
 	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
 	import jdgTimelineEventTypes from '$lib/schemas/timeline/jdg-timeline-event-types.js';
-	import { JDGCheckbox, JDGDatePicker, JDGTextArea, JDGTextInput } from '$lib/index.js';
 	import { JDG_INPUT_TYPES } from '$lib/schemas/timeline/jdg-input-types.js';
-	import { get, writable } from 'svelte/store';
+
+	import { extractUISchemaFields } from '$lib/jdg-timeline-management.js';
+
+	import { JDGCheckbox, JDGDatePicker, JDGTextArea, JDGTextInput } from '$lib/index.js';
 
 	// Read from and write to this store
 	export let eventStore;
-
-	let localEvent = {};
-	let localAdditional = {};
 
 	// Local writable stores for editing
 	let localEventStore = writable({});
@@ -23,11 +24,7 @@
 	}
 
 	// Schema prep
-	const baseFieldSchema = Object.fromEntries(
-		Object.entries(jdgTimelineEvent).filter(
-			([key, def]) => typeof def === 'object' && def !== null && 'inputType' in def
-		)
-	);
+	const baseFieldSchema = extractUISchemaFields(jdgTimelineEvent);
 
 	$: typeSchema = jdgTimelineEventTypes[$eventStore.type];
 	$: contentSchema = typeSchema?.additionalContent ?? {};
@@ -37,14 +34,14 @@
 		.filter(([key]) => key !== 'isApprxDate')
 		.map(([key, def]) => {
 			const isAdditional = key in contentSchema;
-			const target = isAdditional ? localAdditional : localEvent;
+			const target = isAdditional ? localAdditionalStore : localEventStore;
 			return { key, def, target };
 		});
 
 	function saveToStore() {
 		eventStore.set({
-			...localEvent,
-			additionalContent: { ...localAdditional }
+			...localEventStore,
+			additionalContent: { ...localAdditionalStore }
 		});
 	}
 </script>
@@ -57,7 +54,7 @@
 			{#if def.inputType === JDG_INPUT_TYPES.DATE}
 				<div class="date-with-checkbox">
 					<JDGDatePicker bind:inputValue={target[key]} />
-					<JDGCheckbox label="Is approximate?" bind:isChecked={localEvent.isApprxDate} />
+					<JDGCheckbox label="Is approximate?" bind:isChecked={localEventStore.isApprxDate} />
 				</div>
 			{:else if def.inputType === JDG_INPUT_TYPES.TEXT}
 				<JDGTextInput bind:inputValue={$localAdditionalStore[key]} />

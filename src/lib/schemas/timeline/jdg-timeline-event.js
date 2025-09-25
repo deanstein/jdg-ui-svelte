@@ -2,6 +2,7 @@ import { jdgSchemaVersion } from '$lib/schemas/jdg-schema-versions.js';
 import { JDG_INPUT_TYPES } from './jdg-input-types.js';
 import jdgTimelineEventTypes from './jdg-timeline-event-types.js';
 
+// NOTE: This is a HYBRID SCHEMA - it has both data and UI
 const jdgTimelineEvent = {
 	// meta
 	id: '',
