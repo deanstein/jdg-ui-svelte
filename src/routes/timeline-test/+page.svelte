@@ -1,7 +1,7 @@
 <script>
 	import jdgTimelineHost from '$lib/schemas/timeline/jdg-timeline-host.js';
 	import jdgTimelineEventTypes, {
-		JDGTimelineEventKeys
+		jdgTimelineEventKeys
 	} from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 
 	import { setTimelineEventActive } from '$lib/jdg-ui-management.js';
@@ -42,7 +42,7 @@
 	};
 
 	// The selected event type
-	let selectedEventTypeKey = JDGTimelineEventKeys.birth;
+	let selectedEventTypeKey = jdgTimelineEventKeys.birth;
 	$: selectedEventType = instantiateTimelineEvent(selectedEventTypeKey);
 	// Use a temporary store for the form preview to read and write
 	const formPreviewEventStore = writable();
@@ -86,7 +86,7 @@
 			onClickTimelineEvent={setTimelineEventActive}
 			onClickAddEventButton={() => {
 				doShowTimelineEventDetailsModal.set(true);
-				timelineEventDraft.set(instantiateTimelineEvent(JDGTimelineEventKeys.generic));
+				timelineEventDraft.set(instantiateTimelineEvent(jdgTimelineEventKeys.generic));
 			}}
 		/>
 	</JDGContentBoxFloating>

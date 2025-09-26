@@ -1,17 +1,32 @@
 <script>
-// @ts-nocheck
+	// @ts-nocheck
 
 	import { get, writable } from 'svelte/store';
 
 	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
-	import jdgTimelineEventTypes from '$lib/schemas/timeline/jdg-timeline-event-types.js';
+	import jdgTimelineEventTypes, {
+		jdgTimelineEventKeys
+	} from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 	import { JDG_INPUT_TYPES } from '$lib/schemas/timeline/jdg-input-types.js';
-  import { extractUiFromDataSchema } from '$lib/jdg-timeline-management.js';
+	import {
+		extractDataSchemaFields,
+		extractUiFromDataSchema
+	} from '$lib/jdg-timeline-management.js';
 
-	import { JDGCheckbox, JDGDatePicker, JDGTextArea, JDGTextInput } from '$lib/index.js';
+	import {
+		instantiateObject,
+		JDGCheckbox,
+		JDGDatePicker,
+		JDGTextArea,
+		JDGTextInput
+	} from '$lib/index.js';
+	import JDGSelect from '../Input/JDGSelect.svelte';
 
 	// Read from and write to this store
-	export let eventStore;
+	export let eventStore = writable(instantiateObject(jdgTimelineEvent));
+	// The types of events to show
+	export let eventTypeKeys = jdgTimelineEventKeys;
+	export let doShowLocalStore = true;
 
 	// Local writable stores for editing
 	let localEventStore = writable({});
@@ -27,7 +42,7 @@
 	// Schema prep
 	const baseFieldSchema = extractUiFromDataSchema(jdgTimelineEvent);
 
-	$: typeSchema = jdgTimelineEventTypes[$eventStore.type];
+	$: typeSchema = jdgTimelineEventTypes[$localEventStore.type];
 	$: contentSchema = typeSchema?.additionalContent ?? {};
 	$: mergedSchema = { ...baseFieldSchema, ...contentSchema };
 
@@ -35,8 +50,7 @@
 		.filter(([key]) => key !== 'isApprxDate')
 		.map(([key, def]) => {
 			const isAdditional = key in contentSchema;
-			const target = isAdditional ? localAdditionalStore : localEventStore;
-			return { key, def, target };
+			return { key, def, isAdditional };
 		});
 
 	function saveToStore() {
@@ -45,45 +59,112 @@
 			additionalContent: { ...localAdditionalStore }
 		});
 	}
+
+	const timelineEventOptionsGroup = (eventTypeKeys) => {
+		return {
+			timelineTypes: Object.fromEntries(
+				Object.entries(jdgTimelineEventTypes)
+					.filter(([key, value]) => eventTypeKeys[key] && !value.isContextual)
+					.map(([key, value]) => [
+						key,
+						{
+							value: key,
+							label: value.label ?? key
+						}
+					])
+			),
+			includedKeys: Object.keys(eventTypeKeys).filter(
+				(key) => !jdgTimelineEventTypes[key]?.isContextual
+			)
+		};
+	};
+
+	$: if ($localEventStore.type) {
+		const newAddlContent = jdgTimelineEventTypes[$localEventStore.type]?.additionalContent ?? {};
+		const freshAdditionalContent = extractDataSchemaFields(newAddlContent);
+		localAdditionalStore.set(freshAdditionalContent);
+	}
 </script>
 
 <div class="jdg-timeline-form">
-	{#each renderFields as { key, def, target } (key)}
+	<JDGSelect
+		optionsGroup={timelineEventOptionsGroup(eventTypeKeys)}
+		bind:inputValue={$localEventStore.type}
+	/>
+	{#each renderFields as { key, def, isAdditional } (key)}
 		<div class="form-group">
 			<label for={key}>{def.label}</label>
 
 			{#if def.inputType === JDG_INPUT_TYPES.DATE}
 				<div class="date-with-checkbox">
-					<JDGDatePicker bind:inputValue={target[key]} />
-					<JDGCheckbox label="Is approximate?" bind:isChecked={localEventStore.isApprxDate} />
+					{#if isAdditional}
+						<JDGDatePicker bind:inputValue={$localAdditionalStore[key]} />
+					{:else}
+						<JDGDatePicker bind:inputValue={$localEventStore[key]} />
+					{/if}
+					<JDGCheckbox label="Is approximate?" bind:isChecked={$localEventStore.isApprxDate} />
 				</div>
 			{:else if def.inputType === JDG_INPUT_TYPES.TEXT}
-				<JDGTextInput bind:inputValue={$localAdditionalStore[key]} />
+				{#if isAdditional}
+					<JDGTextInput bind:inputValue={$localAdditionalStore[key]} />
+				{:else}
+					<JDGTextInput bind:inputValue={$localEventStore[key]} />
+				{/if}
 			{:else if def.inputType === JDG_INPUT_TYPES.TEXTAREA}
-				<JDGTextArea bind:inputValue={$localAdditionalStore[key]} />
+				{#if isAdditional}
+					<JDGTextArea bind:inputValue={$localAdditionalStore[key]} />
+				{:else}
+					<JDGTextArea bind:inputValue={$localEventStore[key]} />
+				{/if}
 			{:else if def.inputType === JDG_INPUT_TYPES.CHECKBOX}
-				<JDGCheckbox bind:isChecked={$localAdditionalStore[key]} />
+				{#if isAdditional}
+					<JDGCheckbox bind:isChecked={$localAdditionalStore[key]} />
+				{:else}
+					<JDGCheckbox bind:isChecked={$localEventStore[key]} />
+				{/if}
 			{:else if def.inputType === JDG_INPUT_TYPES.SELECT}
-				<select id={key} bind:value={$localAdditionalStore[key]}>
-					{#each def.options as opt}
-						<option value={opt.value}>{opt.label}</option>
-					{/each}
-				</select>
+				{#if isAdditional}
+					<select id={key} bind:value={$localAdditionalStore[key]}>
+						{#each def.options as opt}
+							<option value={opt.value}>{opt.label}</option>
+						{/each}
+					</select>
+				{:else}
+					<select id={key} bind:value={$localEventStore[key]}>
+						{#each def.options as opt}
+							<option value={opt.value}>{opt.label}</option>
+						{/each}
+					</select>
+				{/if}
 			{:else if def.inputType === JDG_INPUT_TYPES.IMAGE_LIST}
 				<div>[...]</div>
+			{:else if isAdditional}
+				<JDGTextInput bind:inputValue={$localAdditionalStore[key]} />
 			{:else}
-				<JDGTextInput bind:inputValue={target[key]} />
+				<JDGTextInput bind:inputValue={$localEventStore[key]} />
 			{/if}
 		</div>
 	{/each}
 
 	<button on:click={saveToStore}>Save</button>
 </div>
+{#if doShowLocalStore}
+	<div class="form-store-preview">
+		TEMPORARY FORM STORE:
+		<pre>
+		{JSON.stringify({ ...$localEventStore, additionalContent: { ...$localAdditionalStore } }, null, 2)}
+	</pre>
+	</div>
+{/if}
 
 <style>
 	.jdg-timeline-form {
 		display: flex;
 		flex-direction: column;
 		gap: 20px;
+	}
+
+	.form-store-preview {
+		margin-top: 20px;
 	}
 </style>

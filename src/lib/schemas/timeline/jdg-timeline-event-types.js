@@ -15,10 +15,6 @@ export const timelineEventStrings = {
 };
 
 const jdgTimelineEventTypes = {
-	today: {
-		icon: 'fa-sun'
-	},
-
 	birth: {
 		label: 'Birth',
 		icon: 'fa-wand-magic-sparkles',
@@ -151,11 +147,15 @@ const jdgTimelineEventTypes = {
 		label: 'World Event',
 		icon: 'fa-globe',
 		isContextual: true
+	},
+	today: {
+		icon: 'fa-sun',
+		isContextual: true
 	}
 };
 
 // All top-level keys from the schema above
-export const JDGTimelineEventKeys = Object.fromEntries(
+export const jdgTimelineEventKeys = Object.fromEntries(
 	Object.keys(jdgTimelineEventTypes).map((key) => [key, key])
 );
 

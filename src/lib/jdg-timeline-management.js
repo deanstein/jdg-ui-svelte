@@ -36,9 +36,9 @@ export const instantiateTimelineEvent = (typeKey) => {
 // This one gets the data:
 export const extractDataSchemaFields = (schemaObj = {}) =>
 	Object.fromEntries(
-		Object.entries(schemaObj).filter(
-			([_, def]) => typeof def !== 'object' || def === null || !('inputType' in def)
-		)
+		Object.entries(schemaObj)
+			.filter(([_, def]) => typeof def === 'object' && def !== null && 'default' in def)
+			.map(([key, def]) => [key, def.default])
 	);
 // This one gets the UI fields:
 export const extractUiFromDataSchema = (schemaObj = {}) =>
