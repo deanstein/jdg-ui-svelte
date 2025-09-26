@@ -55,8 +55,8 @@
 
 	function saveToStore() {
 		eventStore.set({
-			...localEventStore,
-			additionalContent: { ...localAdditionalStore }
+			...$localEventStore,
+			additionalContent: { ...$localAdditionalStore }
 		});
 	}
 

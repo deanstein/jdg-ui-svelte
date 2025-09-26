@@ -68,7 +68,7 @@
 					/>
 				</JDGInputContainer>
 				<div class="timeline-event-schema-preview">
-					<pre>{JSON.stringify(selectedEventType, null, 2)}</pre>
+					<pre>{JSON.stringify($formPreviewEventStore, null, 2)}</pre>
 				</div>
 			</div>
 			<div>
