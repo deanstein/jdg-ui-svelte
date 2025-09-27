@@ -93,7 +93,10 @@
 </JDGContentContainer>
 
 <style>
-	.timeline-event-schema-preview {
+	pre {
 		font-size: 0.9rem;
+		white-space: pre-wrap;
+		word-break: break-word;
+		overflow-wrap: anywhere;
 	}
 </style>

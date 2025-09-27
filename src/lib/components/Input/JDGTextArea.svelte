@@ -61,6 +61,12 @@
 		width: 100%;
 		outline: none;
 		padding: 4px;
+		max-width: 100%;
+		width: 100%;
+		max-width: 100%;
+		box-sizing: border-box;
+		overflow-x: hidden;
+		white-space: nowrap;
 	}
 
 	textarea:disabled {
