@@ -22,6 +22,7 @@
 	} from '$lib/index.js';
 	import JDGSelect from '../Input/JDGSelect.svelte';
 	import JDGComposeToolbar from '../Compose/JDGComposeToolbar.svelte';
+	import JDGInputContainer from '../Input/JDGInputContainer.svelte';
 
 	// Read from and write to this store
 	export let eventStore = writable(instantiateObject(jdgTimelineEvent));
@@ -94,11 +95,13 @@
 </script>
 
 <div bind:this={parentRef} class="jdg-timeline-form">
-	<JDGSelect
-		optionsGroup={timelineEventOptionsGroup(eventTypeKeys)}
-		bind:inputValue={$localEventStore.type}
-		isEnabled={isEditing}
-	/>
+	<JDGInputContainer label="Type">
+		<JDGSelect
+			optionsGroup={timelineEventOptionsGroup(eventTypeKeys)}
+			bind:inputValue={$localEventStore.type}
+			isEnabled={isEditing}
+		/>
+	</JDGInputContainer>
 	{#each renderFields as { key, def, isAdditional } (key)}
 		<div class="form-group">
 			<label for={key}>{def.label}</label>
@@ -161,6 +164,7 @@
 		<JDGComposeToolbar
 			{parentRef}
 			isEditActive={isEditing}
+			composeButtonTooltip="Edit"
 			onClickCompose={() => {
 				isEditing = true;
 			}}
@@ -170,13 +174,20 @@
 			}}
 			onClickCancel={() => {
 				isEditing = false;
+				// reset the stores
+				localEventStore.set($eventStore);
+				localAdditionalStore.set($eventStore.additionalContent);
+				localEventStore.update((current) => ({
+					...current,
+					type: $eventStore.type // replace with the desired value
+				}));
 			}}
 		/>
 	{/if}
 </div>
 {#if doShowLocalStore}
 	<div class="form-store-preview">
-		TEMPORARY FORM STORE:
+		FORM STORE:
 		<pre>
 		{JSON.stringify({ ...$localEventStore, additionalContent: { ...$localAdditionalStore } }, null, 2)}
 	</pre>

@@ -5,7 +5,6 @@
 	import { getNearestScrollingElement } from '$lib/jdg-utils.js';
 
 	import ComposeButton from '$lib/components/Compose/JDGComposeButton.svelte';
-	import { afterUpdate } from 'svelte';
 
 	export let parentRef; // required to determine where to show the compose button
 	export let isEditActive = false; // when active, show done/cancel
