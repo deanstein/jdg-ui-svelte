@@ -8,13 +8,19 @@
 		jdgTimelineEventKeys
 	} from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 	import {
+		buildingDataCollectionKey,
+		familyTreeDataCollectionKey,
 		fetchJsonFileList,
 		jdgBuildingDataRepoName,
 		jdgRepoOwner,
 		readJsonFileFromRepo
 	} from '$lib/jdg-persistence-management.js';
 	import { instantiateTimelineEvent } from '$lib/jdg-timeline-management.js';
-	import { timelineEventDraft, timelineHostDraft } from '$lib/stores/jdg-temp-store.js';
+	import {
+		timelineCollectionFileDraft,
+		timelineEventDraft,
+		timelineHostDraft
+	} from '$lib/stores/jdg-temp-store.js';
 	import {
 		doAllowTextSelection,
 		doShowTimelineEventDetailsModal,
@@ -28,14 +34,17 @@
 
 	import {
 		JDGBodyCopy,
+		jdgColors,
 		JDGContentBoxFloating,
 		JDGContentContainer,
 		JDGH3H4,
 		JDGInputContainer,
+		JDGModalActionsBar,
 		JDGSelect,
 		JDGTimeline,
 		JDGTimelineEventForm
 	} from '$lib/index.js';
+	import JDGButton from '$lib/components/Input/JDGButton.svelte';
 
 	// Ensure this page allows text selection
 	doAllowTextSelection.set(true);
@@ -47,7 +56,9 @@
 	// The selected Building Data file
 	let selectedBuildingDataFile;
 	// The content of the file from the server
-	let selectedBuildingDataContents;
+	let selectedBuildingData;
+	// The key for accessing a timeline host collection
+	let selectedHostCollectionKey;
 
 	// The default Timeline Host
 	const exampleTimelineHost = instantiateObject(jdgTimelineHost);
@@ -57,7 +68,7 @@
 		// Get the available Building Data files from the repo
 		// and update the JDGSelect
 		buildingDataFiles = await fetchJsonFileList(jdgRepoOwner, jdgBuildingDataRepoName);
-		// Set the initial default ([1] seems to be the test)
+		// Set the initial default. [1] is the test file
 		selectedBuildingDataFile = buildingDataFiles[1];
 	});
 	// Update the Select with available files
@@ -76,7 +87,7 @@
 	// Update the output of the selected file
 	$: if (selectedBuildingDataFile) {
 		(async () => {
-			selectedBuildingDataContents = await readJsonFileFromRepo(
+			selectedBuildingData = await readJsonFileFromRepo(
 				jdgRepoOwner,
 				jdgBuildingDataRepoName,
 				selectedBuildingDataFile
@@ -112,17 +123,59 @@
 </script>
 
 <JDGContentContainer overlapWithHeader={false}>
-	<JDGContentBoxFloating title={'CLOUD DATA'} subtitle={'TimelineHost collections from GitHub'}>
+	<JDGContentBoxFloating
+		title={'CLOUD COLLECTIONS'}
+		subtitle={'TimelineHost collections from GitHub'}
+	>
 		<JDGBodyCopy>
-			<JDGH3H4 h3String="Choose Data Source" paddingBottom="20px" />
-			<JDGInputContainer label="Timeline host collection">
+			<JDGH3H4 h3String="Choose Timeline Host Collection" paddingBottom="20px" />
+			<JDGInputContainer label="JSON file">
 				<JDGSelect
 					optionsGroup={buildingDataOptionsGroup}
 					bind:inputValue={selectedBuildingDataFile}
 					isEnabled={true}
 				/>
 			</JDGInputContainer>
-			<pre>{JSON.stringify(selectedBuildingDataContents, null, 2)}</pre>
+			<JDGInputContainer label="Collection key">
+				<JDGSelect
+					optionsGroup={{
+						default: {
+							building: { value: buildingDataCollectionKey, label: buildingDataCollectionKey },
+							family: { value: familyTreeDataCollectionKey, label: familyTreeDataCollectionKey }
+						}
+					}}
+					bind:inputValue={selectedHostCollectionKey}
+					isEnabled={true}
+				/>
+			</JDGInputContainer>
+			<JDGInputContainer label="Timeline Host Collection from Repo">
+				<pre>{JSON.stringify(selectedBuildingData, null, 2)}</pre>
+			</JDGInputContainer>
+			<JDGModalActionsBar>
+				<JDGButton
+					label="Pull from Repo"
+					faIcon="fa-arrow-circle-down"
+					onClickFunction={async () => {
+						selectedBuildingData = await readJsonFileFromRepo(
+							jdgRepoOwner,
+							jdgBuildingDataRepoName,
+							selectedBuildingDataFile
+						);
+					}}
+				/>
+				<JDGButton
+					label={$timelineCollectionFileDraft ? 'Save to Repo' : 'Set to Editing Store'}
+					faIcon={$timelineCollectionFileDraft ? 'fa-floppy-disk' : 'fa-pen-to-square'}
+					backgroundColor={$timelineCollectionFileDraft ? jdgColors.done : jdgColors.active}
+					onClickFunction={$timelineCollectionFileDraft === undefined
+						? () => {
+								timelineCollectionFileDraft.set(selectedBuildingData);
+							}
+						: () => {
+								timelineCollectionFileDraft.set(undefined);
+							}}
+				/>
+			</JDGModalActionsBar>
 		</JDGBodyCopy>
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title={'TIMELINE HOST'} subtitle={'For people and buildings'}>
@@ -130,6 +183,13 @@
 			<JDGH3H4 h3String="Timeline Host Schema" paddingBottom="15px" />
 			<pre>{JSON.stringify(exampleTimelineHost, null, 2)}</pre>
 		</div>
+		<JDGButton
+			label="Set to Editing Store"
+			faIcon="fa-pen-to-square"
+			onClickFunction={() => {
+				timelineEventDraft.set(exampleTimelineHost);
+			}}
+		/>
 
 		<JDGH3H4 h3String="Timeline" paddingBottom="15px" />
 		<JDGTimeline

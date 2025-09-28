@@ -15,6 +15,11 @@ export const cfRouteSetProdBuildingData = '/set-building-data-prod';
 export const cfWorkerUrlFamilyTreeData = 'https://family-tree-data.jdeangoldstein.workers.dev';
 export const cfRouteGetToken = '/get-github-app-token';
 
+// Family Tree Data and Building Data use different keys
+// for identifying the collection of TimelineHosts
+export const buildingDataCollectionKey = 'allBuildings';
+export const familyTreeDataCollectionKey = 'allPeople';
+
 export const jdgRepoOwner = 'deanstein';
 export const jdgUiSvelteRepoName = 'jdg-ui-svelte';
 export const jdgWebsiteRepoName = 'jdg-website';
@@ -106,6 +111,39 @@ export async function readJsonFileFromRepo(repoOwner, repoName, filePath) {
 		}
 	} catch (err) {
 		console.error('Error reading JSON file from repo:', err);
+		return null;
+	}
+}
+
+export async function writeJsonFileToRepo(repoOwner, repoName, filePath, jsonContent) {
+	try {
+		const encodedOwner = encodeURIComponent(repoOwner);
+		const encodedName = encodeURIComponent(repoName);
+		const encodedPath = encodeURIComponent(filePath);
+
+		const response = await fetch(
+			`${cfWorkerUrlAdmin}/write-json-file?repoOwner=${encodedOwner}&repoName=${encodedName}&filePath=${encodedPath}`,
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(jsonContent)
+			}
+		);
+
+		const contentType = response.headers.get('Content-Type');
+
+		if (contentType?.includes('application/json')) {
+			const result = await response.json();
+			return result.success ? result : null;
+		} else {
+			const text = await response.text();
+			console.error('Unexpected response format:', text);
+			return null;
+		}
+	} catch (err) {
+		console.error('Error writing JSON file to repo:', err);
 		return null;
 	}
 }

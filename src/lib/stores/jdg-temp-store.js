@@ -6,6 +6,7 @@ import { derived, writable } from 'svelte/store';
 export let adminFormPassphrase = writable(undefined);
 
 /*** TIMELINE ***/
+export let timelineCollectionFileDraft = writable(undefined);
 export let isTimelineHostDrafting = writable(false);
 export let timelineHostDraft = writable(undefined); // the timeline host being edited
 export let isTimelineEventDrafting = writable(false);
@@ -16,6 +17,7 @@ const storeMap = {
 	// administration
 	adminFormPassphrase,
 	// timeline
+	timelineCollectionFileDraft,
 	isTimelineHostDrafting,
 	timelineHostDraft,
 	isTimelineEventDrafting,
