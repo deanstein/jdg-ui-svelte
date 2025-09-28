@@ -26,23 +26,25 @@
 
 <div class="select-container">
 	<select class={selectCss} bind:value={inputValue} on:click|stopPropagation disabled={!isEnabled}>
-		{#each Object.entries(optionsGroup) as [category, items]}
-			{#if items.hasOwnProperty(optionLabelKey)}
-				<optgroup label={items[optionLabelKey]}>
+		{#if optionsGroup}
+			{#each Object.entries(optionsGroup) as [category, items]}
+				{#if items.hasOwnProperty(optionLabelKey)}
+					<optgroup label={items[optionLabelKey]}>
+						{#each Object.entries(items) as [itemKey, itemValue]}
+							{#if itemKey !== optionLabelKey && itemValue.hasOwnProperty(optionLabelKey)}
+								<option value={itemValue[optionValueKey]}>{itemValue[optionLabelKey]}</option>
+							{/if}
+						{/each}
+					</optgroup>
+				{:else}
 					{#each Object.entries(items) as [itemKey, itemValue]}
 						{#if itemKey !== optionLabelKey && itemValue.hasOwnProperty(optionLabelKey)}
 							<option value={itemValue[optionValueKey]}>{itemValue[optionLabelKey]}</option>
 						{/if}
 					{/each}
-				</optgroup>
-			{:else}
-				{#each Object.entries(items) as [itemKey, itemValue]}
-					{#if itemKey !== optionLabelKey && itemValue.hasOwnProperty(optionLabelKey)}
-						<option value={itemValue[optionValueKey]}>{itemValue[optionLabelKey]}</option>
-					{/if}
-				{/each}
-			{/if}
-		{/each}
+				{/if}
+			{/each}
+		{/if}
 	</select>
 </div>
 

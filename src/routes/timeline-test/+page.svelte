@@ -1,14 +1,22 @@
 <script>
+	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
-	import { v4 as uuidv4 } from 'uuid';
+	import { v4 as uuid } from 'uuid';
 
 	import jdgTimelineHost from '$lib/schemas/timeline/jdg-timeline-host.js';
 	import jdgTimelineEventTypes, {
 		jdgTimelineEventKeys
 	} from '$lib/schemas/timeline/jdg-timeline-event-types.js';
+	import {
+		fetchJsonFileList,
+		jdgBuildingDataRepoName,
+		jdgRepoOwner,
+		readJsonFileFromRepo
+	} from '$lib/jdg-persistence-management.js';
 	import { instantiateTimelineEvent } from '$lib/jdg-timeline-management.js';
 	import { timelineEventDraft, timelineHostDraft } from '$lib/stores/jdg-temp-store.js';
 	import {
+		doAllowTextSelection,
 		doShowTimelineEventDetailsModal,
 		isAdminMode,
 		isMobileBreakpoint,
@@ -19,6 +27,7 @@
 	import { instantiateObject } from '$lib/jdg-utils.js';
 
 	import {
+		JDGBodyCopy,
 		JDGContentBoxFloating,
 		JDGContentContainer,
 		JDGH3H4,
@@ -28,7 +37,54 @@
 		JDGTimelineEventForm
 	} from '$lib/index.js';
 
-	// all event types for previewing
+	// Ensure this page allows text selection
+	doAllowTextSelection.set(true);
+
+	// Get the available Building Data files from the repo
+	let buildingDataFiles;
+	// Formatted for the JDGSelect
+	let buildingDataOptionsGroup;
+	// The selected Building Data file
+	let selectedBuildingDataFile;
+	// The content of the file from the server
+	let selectedBuildingDataContents;
+
+	// The default Timeline Host
+	const exampleTimelineHost = instantiateObject(jdgTimelineHost);
+	exampleTimelineHost.id = uuid();
+
+	onMount(async () => {
+		// Get the available Building Data files from the repo
+		// and update the JDGSelect
+		buildingDataFiles = await fetchJsonFileList(jdgRepoOwner, jdgBuildingDataRepoName);
+		// Set the initial default ([1] seems to be the test)
+		selectedBuildingDataFile = buildingDataFiles[1];
+	});
+	// Update the Select with available files
+	$: {
+		if (buildingDataFiles && Array.isArray(buildingDataFiles)) {
+			buildingDataOptionsGroup = {
+				default: Object.fromEntries(
+					buildingDataFiles.map((filename) => [
+						filename, // key
+						{ value: filename, label: filename } // value
+					])
+				)
+			};
+		}
+	}
+	// Update the output of the selected file
+	$: if (selectedBuildingDataFile) {
+		(async () => {
+			selectedBuildingDataContents = await readJsonFileFromRepo(
+				jdgRepoOwner,
+				jdgBuildingDataRepoName,
+				selectedBuildingDataFile
+			);
+		})();
+	}
+
+	// All event types to show
 	const instantiatedEventSchemas = Object.entries(jdgTimelineEventTypes)
 		.filter(([key, def]) => !def.isContextual) // optional: skip contextual types
 		.map(([key, def]) => ({
@@ -48,29 +104,36 @@
 	// The selected event type
 	let selectedEventTypeKey = jdgTimelineEventKeys.birth;
 	// Use a temporary store for the form preview to read and write
-	const localTimelineEventStore = writable();
-	const tempId = uuidv4();
+	const exampleTimelineEventStore = writable();
 	$: {
 		const instantiatedEvent = instantiateTimelineEvent(selectedEventTypeKey);
-		instantiatedEvent.id = tempId;
-		localTimelineEventStore.set(instantiatedEvent);
+		exampleTimelineEventStore.set(instantiatedEvent);
 	}
-
-	const ccmTimelineHost = instantiateObject(jdgTimelineHost);
 </script>
 
 <JDGContentContainer overlapWithHeader={false}>
+	<JDGContentBoxFloating title={'CLOUD DATA'} subtitle={'TimelineHost collections from GitHub'}>
+		<JDGBodyCopy>
+			<JDGH3H4 h3String="Choose Data Source" paddingBottom="20px" />
+			<JDGInputContainer label="Timeline host collection">
+				<JDGSelect
+					optionsGroup={buildingDataOptionsGroup}
+					bind:inputValue={selectedBuildingDataFile}
+					isEnabled={true}
+				/>
+			</JDGInputContainer>
+			<pre>{JSON.stringify(selectedBuildingDataContents, null, 2)}</pre>
+		</JDGBodyCopy>
+	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title={'TIMELINE HOST'} subtitle={'For people and buildings'}>
 		<div>
-			<JDGH3H4 h3String="Timeline Schema" paddingBottom="15px" />
-			<pre>
-					{$timelineHostDraft}
-				</pre>
+			<JDGH3H4 h3String="Timeline Host Schema" paddingBottom="15px" />
+			<pre>{JSON.stringify(exampleTimelineHost, null, 2)}</pre>
 		</div>
 
 		<JDGH3H4 h3String="Timeline" paddingBottom="15px" />
 		<JDGTimeline
-			timelineHost={ccmTimelineHost}
+			timelineHost={exampleTimelineHost}
 			allowEditing={$isAdminMode}
 			onClickTimelineEvent={setTimelineEventActive}
 			onClickAddEventButton={() => {
@@ -93,7 +156,7 @@
 					/>
 				</JDGInputContainer>
 				<div class="timeline-event-schema-preview">
-					<pre>{JSON.stringify($localTimelineEventStore, null, 2)}</pre>
+					<pre>{JSON.stringify($exampleTimelineEventStore, null, 2)}</pre>
 				</div>
 			</div>
 			<div class="tri-column-demo-center">
@@ -110,7 +173,7 @@
 					paddingBottom="15px"
 				/>
 				<div class="timeline-event-form-preview">
-					<JDGTimelineEventForm eventStore={localTimelineEventStore} />
+					<JDGTimelineEventForm eventStore={exampleTimelineEventStore} />
 				</div>
 			</div>
 		</div>

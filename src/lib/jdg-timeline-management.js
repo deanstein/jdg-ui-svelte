@@ -1,4 +1,5 @@
 import { get } from 'svelte/store';
+import { v4 as uuidv4 } from 'uuid';
 
 import jdgTimelineHost from './schemas/timeline/jdg-timeline-host.js';
 import {
@@ -14,20 +15,23 @@ import jdgTimelineEvent from './schemas/timeline/jdg-timeline-event.js';
 // Creates a data-only TimelineEvent schema
 // from TimelineEvent which is a HYBRID schema
 export const instantiateTimelineEvent = (typeKey) => {
-	// NOTE: TimelineEvent is a HYBRID schema - it has both UI and data
 	const baseSchema = JSON.parse(JSON.stringify(jdgTimelineEvent));
 	const typeDef = jdgTimelineEventTypes[typeKey];
 
 	if (!typeDef || typeof typeDef !== 'object') {
 		console.error(`No schema found for type "${typeKey}"`);
+		// HYBRID schema has both UI and data
 		return extractDataFromHybridSchema(baseSchema);
 	}
 
+	// HYBRID schema has both UI and data
 	const base = extractDataFromHybridSchema(baseSchema);
 	base.type = typeKey;
 
 	const addlContentSchema = typeDef.additionalContent || {};
 	base.additionalContent = extractDataFromHybridSchema(addlContentSchema);
+	// Set a random id
+	base.id = uuidv4();
 
 	return base;
 };

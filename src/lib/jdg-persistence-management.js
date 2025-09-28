@@ -1,14 +1,24 @@
 import { decrypt } from './jdg-utils.js';
 
-// Cloudflare workers and GitHub App paths
-export const cfWorkerUrlFamilyTree = 'https://family-tree-data.jdeangoldstein.workers.dev';
+// Admin Cloudflare worker
 export const cfWorkerUrlAdmin = 'https://jdg-admin.jdeangoldstein.workers.dev';
 export const cfRouteCheckAdmin = '/check-admin';
+export const cfRouteListJsonFiles = '/list-json-files';
+export const cfRouteFetchFile = '/fetch-file';
+// Building Data Cloudflare worker
+export const cfWorkerUrlBuildingData = 'https://family-tree-data.jdeangoldstein.workers.dev';
+export const cfRouteGetTestBuildingData = '/get-building-data-test';
+export const cfRouteSetTestBuildingData = '/set-building-data-test';
+export const cfRouteGetProdBuildingData = '/get-building-data-prod';
+export const cfRouteSetProdBuildingData = '/set-building-data-prod';
+// Family Tree Cloudflare worker
+export const cfWorkerUrlFamilyTreeData = 'https://family-tree-data.jdeangoldstein.workers.dev';
 export const cfRouteGetToken = '/get-github-app-token';
 
 export const jdgRepoOwner = 'deanstein';
 export const jdgUiSvelteRepoName = 'jdg-ui-svelte';
 export const jdgWebsiteRepoName = 'jdg-website';
+export const jdgBuildingDataRepoName = 'building-data';
 export const pmx3dWebsiteRepoName = 'pmx-website';
 export const ccpWebsiteRepoName = 'ccp-website';
 export const ccpSimulationRepoName = 'CinderellaCityProject';
@@ -25,8 +35,11 @@ const getAuthHeaders = (password) => ({
 	Accept: 'application/vnd.github.v3.raw'
 });
 
-// determines if the given name is an admin
-// determines if the given passphrase grants admin access
+//
+// CLOUDFLARE-BASED FUNCTIONS
+//
+
+// Determines if the given passphrase grants admin access
 export async function fetchIsAdmin(passphrase) {
 	try {
 		const encodedPass = encodeURIComponent(passphrase);
@@ -49,6 +62,57 @@ export async function fetchIsAdmin(passphrase) {
 	}
 }
 
+export async function fetchJsonFileList(repoOwner, repoName) {
+	try {
+		const encodedOwner = encodeURIComponent(repoOwner);
+		const encodedName = encodeURIComponent(repoName);
+		const response = await fetch(
+			`${cfWorkerUrlAdmin}${cfRouteListJsonFiles}?repoOwner=${encodedOwner}&repoName=${encodedName}`
+		);
+		const contentType = response.headers.get('Content-Type');
+
+		if (contentType?.includes('application/json')) {
+			const responseJson = await response.json();
+			return responseJson.jsonFiles || null;
+		} else {
+			const text = await response.text();
+			console.error('Unexpected response format:', text);
+			return null;
+		}
+	} catch (err) {
+		console.error('Error fetching JSON file list:', err);
+		return null;
+	}
+}
+
+export async function readJsonFileFromRepo(repoOwner, repoName, filePath) {
+	try {
+		const encodedOwner = encodeURIComponent(repoOwner);
+		const encodedName = encodeURIComponent(repoName);
+		const encodedPath = encodeURIComponent(filePath);
+
+		const response = await fetch(
+			`${cfWorkerUrlAdmin}${cfRouteFetchFile}?repoOwner=${encodedOwner}&repoName=${encodedName}&filePath=${encodedPath}`
+		);
+
+		const contentType = response.headers.get('Content-Type');
+
+		if (contentType?.includes('application/json')) {
+			return await response.json();
+		} else {
+			const text = await response.text();
+			console.error('Unexpected response format:', text);
+			return null;
+		}
+	} catch (err) {
+		console.error('Error reading JSON file from repo:', err);
+		return null;
+	}
+}
+
+//
+// LEGACY FUNCTIONS (to be removed)
+//
 export const fetchFileFromRepo = async (
 	repoOwner,
 	repoName,
