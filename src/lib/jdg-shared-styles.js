@@ -27,6 +27,7 @@ export const jdgColors = {
 	delete: '#FF5757',
 	done: '#4dc44d',
 	disabled: '#B5B5B5',
+	cancel: '#8B989DFF',
 	backgroundFillRangeLm: [
 		'rgba(150, 150, 150, 1)',
 		'rgba(175, 175, 175, 1)',

@@ -45,10 +45,12 @@
 		JDGTimelineEventForm
 	} from '$lib/index.js';
 	import JDGButton from '$lib/components/Input/JDGButton.svelte';
+	import JDGTextInput from '$lib/components/Input/JDGTextInput.svelte';
 
 	// Ensure this page allows text selection
 	doAllowTextSelection.set(true);
 
+	/*** TIMELINE HOST COLLECTION ***/
 	// Get the available Building Data files from the repo
 	let buildingDataFiles;
 	// Formatted for the JDGSelect
@@ -59,18 +61,6 @@
 	let selectedBuildingData;
 	// The key for accessing a timeline host collection
 	let selectedHostCollectionKey;
-
-	// The default Timeline Host
-	const exampleTimelineHost = instantiateObject(jdgTimelineHost);
-	exampleTimelineHost.id = uuid();
-
-	onMount(async () => {
-		// Get the available Building Data files from the repo
-		// and update the JDGSelect
-		buildingDataFiles = await fetchJsonFileList(jdgRepoOwner, jdgBuildingDataRepoName);
-		// Set the initial default. [1] is the test file
-		selectedBuildingDataFile = buildingDataFiles[1];
-	});
 	// Update the Select with available files
 	$: {
 		if (buildingDataFiles && Array.isArray(buildingDataFiles)) {
@@ -95,6 +85,32 @@
 		})();
 	}
 
+	/*** TIMELINE HOST ***/
+	const newTimelineHost = instantiateObject(jdgTimelineHost);
+	newTimelineHost.id = uuid();
+	const localTimelineHostStore = writable();
+	let selectedTimelineHost;
+	let timelineHostOptionsGroup;
+	const createTimelineHostOptions = (items) => {
+		const allItems = [{ id: 'new', name: '➕ New' }, ...items];
+
+		const group = {};
+		allItems.forEach((item, index) => {
+			group[`opt${index}`] = {
+				value: item.id,
+				label: item.name
+			};
+		});
+
+		return { default: group };
+	};
+	$: {
+		timelineHostOptionsGroup = createTimelineHostOptions(
+			$localTimelineHostStore?.[buildingDataCollectionKey] ?? []
+		);
+	}
+
+	/*** TIMELINE EVENT ***/
 	// All event types to show
 	const instantiatedEventSchemas = Object.entries(jdgTimelineEventTypes)
 		.filter(([key, def]) => !def.isContextual) // optional: skip contextual types
@@ -111,18 +127,27 @@
 			)
 		}
 	};
-
 	// The selected event type
 	let selectedEventTypeKey = jdgTimelineEventKeys.birth;
 	// Use a temporary store for the form preview to read and write
-	const exampleTimelineEventStore = writable();
+	const localTimelineEventStore = writable();
 	$: {
 		const instantiatedEvent = instantiateTimelineEvent(selectedEventTypeKey);
-		exampleTimelineEventStore.set(instantiatedEvent);
+		localTimelineEventStore.set(instantiatedEvent);
 	}
+
+	onMount(async () => {
+		/*** TIMELINE HOST COLLECTION ***/
+		// Get the available Building Data files from the repo
+		// and update the JDGSelect
+		buildingDataFiles = await fetchJsonFileList(jdgRepoOwner, jdgBuildingDataRepoName);
+		// Set the initial default. [1] is the test file
+		selectedBuildingDataFile = buildingDataFiles[1];
+	});
 </script>
 
 <JDGContentContainer overlapWithHeader={false}>
+	<!-- CLOUD COLLECTION -->
 	<JDGContentBoxFloating
 		title={'CLOUD COLLECTIONS'}
 		subtitle={'TimelineHost collections from GitHub'}
@@ -152,17 +177,29 @@
 				<pre>{JSON.stringify(selectedBuildingData, null, 2)}</pre>
 			</JDGInputContainer>
 			<JDGModalActionsBar>
-				<JDGButton
-					label="Pull from Repo"
-					faIcon="fa-arrow-circle-down"
-					onClickFunction={async () => {
-						selectedBuildingData = await readJsonFileFromRepo(
-							jdgRepoOwner,
-							jdgBuildingDataRepoName,
-							selectedBuildingDataFile
-						);
-					}}
-				/>
+				{#if $timelineCollectionFileDraft === undefined}
+					<JDGButton
+						label="Pull from Repo"
+						faIcon="fa-arrow-circle-down"
+						onClickFunction={async () => {
+							selectedBuildingData = await readJsonFileFromRepo(
+								jdgRepoOwner,
+								jdgBuildingDataRepoName,
+								selectedBuildingDataFile
+							);
+						}}
+						isEnabled={$timelineCollectionFileDraft === undefined}
+					/>
+				{:else}
+					<JDGButton
+						label={'Cancel'}
+						faIcon={'fa-circle-xmark'}
+						backgroundColor={jdgColors.cancel}
+						onClickFunction={() => {
+							timelineCollectionFileDraft.set(undefined);
+						}}
+					/>
+				{/if}
 				<JDGButton
 					label={$timelineCollectionFileDraft ? 'Save to Repo' : 'Set to Editing Store'}
 					faIcon={$timelineCollectionFileDraft ? 'fa-floppy-disk' : 'fa-pen-to-square'}
@@ -178,22 +215,70 @@
 			</JDGModalActionsBar>
 		</JDGBodyCopy>
 	</JDGContentBoxFloating>
+
+	<!-- TIMELINE HOST -->
 	<JDGContentBoxFloating title={'TIMELINE HOST'} subtitle={'For people and buildings'}>
-		<div>
-			<JDGH3H4 h3String="Timeline Host Schema" paddingBottom="15px" />
-			<pre>{JSON.stringify(exampleTimelineHost, null, 2)}</pre>
+		<JDGBodyCopy>
+			<JDGInputContainer label="Choose timeline host">
+				<JDGSelect bind:inputValue={selectedTimelineHost} optionsGroup={timelineHostOptionsGroup} />
+			</JDGInputContainer>
+		</JDGBodyCopy>
+		<div
+			class:is-mobile={$isMobileBreakpoint || $isTabletBreakpoint}
+			class="tri-column-demo-container"
+		>
+			<div class="tri-column-demo-left-right">
+				<div>
+					<JDGH3H4 h3String="Timeline Host Schema" h4String="As local store" paddingBottom="15px" />
+					<pre>{JSON.stringify(newTimelineHost, null, 2)}</pre>
+				</div>
+			</div>
+			<div class="tri-column-demo-center">
+				<i class={$isMobileBreakpoint ? 'fa-solid fa-arrow-down' : 'fa-solid fa-arrow-right'} />
+				Store instantiates form
+				<br /><br />
+				<i class={$isMobileBreakpoint ? 'fa-solid fa-arrow-up' : 'fa-solid fa-arrow-left'} />
+				Form writes back to store
+			</div>
+			<div class="tri-column-demo-left-right">
+				<JDGH3H4 h3String="Timeline Host Form" h4String="Reads and writes local store" />
+				<div class="timeline-host-form">
+					<JDGInputContainer label="Name">
+						<JDGTextInput />
+					</JDGInputContainer>
+				</div>
+			</div>
 		</div>
-		<JDGButton
-			label="Set to Editing Store"
-			faIcon="fa-pen-to-square"
-			onClickFunction={() => {
-				timelineEventDraft.set(exampleTimelineHost);
-			}}
-		/>
+		<JDGBodyCopy>
+			<JDGModalActionsBar>
+				{#if $timelineHostDraft}
+					<JDGButton
+						label={'Cancel'}
+						faIcon={'fa-circle-xmark'}
+						backgroundColor={jdgColors.cancel}
+						onClickFunction={() => {
+							timelineHostDraft.set(undefined);
+						}}
+					/>
+				{/if}
+				<JDGButton
+					label={$timelineHostDraft ? 'Update in Host Collection' : 'Set to Editing Store'}
+					faIcon={$timelineHostDraft ? 'fa-floppy-disk' : 'fa-pen-to-square'}
+					backgroundColor={$timelineHostDraft ? jdgColors.done : jdgColors.active}
+					onClickFunction={$timelineHostDraft === undefined
+						? () => {
+								timelineHostDraft.set(newTimelineHost);
+							}
+						: () => {
+								timelineHostDraft.set(undefined);
+							}}
+				/>
+			</JDGModalActionsBar>
+		</JDGBodyCopy>
 
 		<JDGH3H4 h3String="Timeline" paddingBottom="15px" />
 		<JDGTimeline
-			timelineHost={exampleTimelineHost}
+			timelineHost={newTimelineHost}
 			allowEditing={$isAdminMode}
 			onClickTimelineEvent={setTimelineEventActive}
 			onClickAddEventButton={() => {
@@ -202,6 +287,8 @@
 			}}
 		/>
 	</JDGContentBoxFloating>
+
+	<!-- TIMELINE EVENT -->
 	<JDGContentBoxFloating title={'TIMELINE EVENT'} subtitle={'For events and images in a Host'}>
 		<div
 			class:is-mobile={$isMobileBreakpoint || $isTabletBreakpoint}
@@ -216,7 +303,7 @@
 					/>
 				</JDGInputContainer>
 				<div class="timeline-event-schema-preview">
-					<pre>{JSON.stringify($exampleTimelineEventStore, null, 2)}</pre>
+					<pre>{JSON.stringify($localTimelineEventStore, null, 2)}</pre>
 				</div>
 			</div>
 			<div class="tri-column-demo-center">
@@ -233,7 +320,7 @@
 					paddingBottom="15px"
 				/>
 				<div class="timeline-event-form-preview">
-					<JDGTimelineEventForm eventStore={exampleTimelineEventStore} />
+					<JDGTimelineEventForm eventStore={localTimelineEventStore} />
 				</div>
 			</div>
 		</div>
@@ -267,5 +354,9 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+	}
+
+	.timeline-host-form {
+		padding: 20px;
 	}
 </style>
