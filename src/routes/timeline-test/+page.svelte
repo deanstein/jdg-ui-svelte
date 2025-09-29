@@ -88,9 +88,11 @@
 	/*** TIMELINE HOST ***/
 	const newTimelineHost = instantiateObject(jdgTimelineHost);
 	newTimelineHost.id = uuid();
-	const localTimelineHostStore = writable();
+	const localTimelineHostStore = writable(newTimelineHost);
 	let selectedTimelineHost;
 	let timelineHostOptionsGroup;
+	let timelineHostNameInputValue;
+	let timelineHostAvatarInputValue;
 	const createTimelineHostOptions = (items) => {
 		const allItems = [{ id: 'new', name: '➕ New' }, ...items];
 
@@ -230,7 +232,7 @@
 			<div class="tri-column-demo-left-right">
 				<div>
 					<JDGH3H4 h3String="Timeline Host Schema" h4String="As local store" paddingBottom="15px" />
-					<pre>{JSON.stringify(newTimelineHost, null, 2)}</pre>
+					<pre>{JSON.stringify($localTimelineHostStore, null, 2)}</pre>
 				</div>
 			</div>
 			<div class="tri-column-demo-center">
@@ -244,7 +246,7 @@
 				<JDGH3H4 h3String="Timeline Host Form" h4String="Reads and writes local store" />
 				<div class="timeline-host-form">
 					<JDGInputContainer label="Name">
-						<JDGTextInput />
+						<JDGTextInput bind:inputValue={$localTimelineHostStore.name}/>
 					</JDGInputContainer>
 				</div>
 			</div>
