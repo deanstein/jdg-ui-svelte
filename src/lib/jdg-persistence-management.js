@@ -5,6 +5,7 @@ export const cfWorkerUrlAdmin = 'https://jdg-admin.jdeangoldstein.workers.dev';
 export const cfRouteCheckAdmin = '/check-admin';
 export const cfRouteListJsonFiles = '/list-json-files';
 export const cfRouteFetchFile = '/fetch-file';
+export const cfRouteWriteJsonFile = '/write-json-file';
 // Building Data Cloudflare worker
 export const cfWorkerUrlBuildingData = 'https://family-tree-data.jdeangoldstein.workers.dev';
 export const cfRouteGetTestBuildingData = '/get-building-data-test';
@@ -116,36 +117,21 @@ export async function readJsonFileFromRepo(repoOwner, repoName, filePath) {
 }
 
 export async function writeJsonFileToRepo(repoOwner, repoName, filePath, jsonContent) {
-	try {
-		const encodedOwner = encodeURIComponent(repoOwner);
-		const encodedName = encodeURIComponent(repoName);
-		const encodedPath = encodeURIComponent(filePath);
+	const encodedOwner = encodeURIComponent(repoOwner);
+	const encodedName = encodeURIComponent(repoName);
+	const encodedPath = encodeURIComponent(filePath);
 
-		const response = await fetch(
-			`${cfWorkerUrlAdmin}/write-json-file?repoOwner=${encodedOwner}&repoName=${encodedName}&filePath=${encodedPath}`,
-			{
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(jsonContent)
-			}
-		);
-
-		const contentType = response.headers.get('Content-Type');
-
-		if (contentType?.includes('application/json')) {
-			const result = await response.json();
-			return result.success ? result : null;
-		} else {
-			const text = await response.text();
-			console.error('Unexpected response format:', text);
-			return null;
+	const response = await fetch(
+		`${cfWorkerUrlAdmin}${cfRouteWriteJsonFile}?repoOwner=${encodedOwner}&repoName=${encodedName}&filePath=${encodedPath}`,
+		{
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(jsonContent)
 		}
-	} catch (err) {
-		console.error('Error writing JSON file to repo:', err);
-		return null;
-	}
+	);
+
+	const result = await response.json();
+	return result.success ? result : null;
 }
 
 //

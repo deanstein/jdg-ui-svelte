@@ -13,7 +13,8 @@
 		fetchJsonFileList,
 		jdgBuildingDataRepoName,
 		jdgRepoOwner,
-		readJsonFileFromRepo
+		readJsonFileFromRepo,
+		writeJsonFileToRepo
 	} from '$lib/jdg-persistence-management.js';
 	import { instantiateTimelineEvent } from '$lib/jdg-timeline-management.js';
 	import {
@@ -30,7 +31,10 @@
 	} from '$lib/stores/jdg-ui-store.js';
 
 	import { setTimelineEventActive } from '$lib/jdg-ui-management.js';
-	import { instantiateObject } from '$lib/jdg-utils.js';
+	import {
+		addOrReplaceObjectByKeyValue,
+		instantiateObject
+	} from '$lib/jdg-utils.js';
 
 	import {
 		JDGBodyCopy,
@@ -56,7 +60,7 @@
 	// Formatted for the JDGSelect
 	let buildingDataOptionsGroup;
 	// The selected Building Data file
-	let selectedBuildingDataFile;
+	let selectedBuildingDataFileName;
 	// The content of the file from the server
 	let selectedBuildingData;
 	// The key for accessing a timeline host collection
@@ -75,12 +79,12 @@
 		}
 	}
 	// Update the output of the selected file
-	$: if (selectedBuildingDataFile) {
+	$: if (selectedBuildingDataFileName) {
 		(async () => {
 			selectedBuildingData = await readJsonFileFromRepo(
 				jdgRepoOwner,
 				jdgBuildingDataRepoName,
-				selectedBuildingDataFile
+				selectedBuildingDataFileName
 			);
 		})();
 	}
@@ -144,7 +148,7 @@
 		// and update the JDGSelect
 		buildingDataFiles = await fetchJsonFileList(jdgRepoOwner, jdgBuildingDataRepoName);
 		// Set the initial default. [1] is the test file
-		selectedBuildingDataFile = buildingDataFiles[1];
+		selectedBuildingDataFileName = buildingDataFiles[1];
 	});
 </script>
 
@@ -159,7 +163,7 @@
 			<JDGInputContainer label="JSON file">
 				<JDGSelect
 					optionsGroup={buildingDataOptionsGroup}
-					bind:inputValue={selectedBuildingDataFile}
+					bind:inputValue={selectedBuildingDataFileName}
 					isEnabled={true}
 				/>
 			</JDGInputContainer>
@@ -187,7 +191,7 @@
 							selectedBuildingData = await readJsonFileFromRepo(
 								jdgRepoOwner,
 								jdgBuildingDataRepoName,
-								selectedBuildingDataFile
+								selectedBuildingDataFileName
 							);
 						}}
 						isEnabled={$timelineCollectionFileDraft === undefined}
@@ -210,7 +214,13 @@
 						? () => {
 								timelineCollectionFileDraft.set(selectedBuildingData);
 							}
-						: () => {
+						: async () => {
+								await writeJsonFileToRepo(
+									jdgRepoOwner,
+									jdgBuildingDataRepoName,
+									selectedBuildingDataFileName,
+									$timelineCollectionFileDraft
+								);
 								timelineCollectionFileDraft.set(undefined);
 							}}
 				/>
@@ -246,7 +256,7 @@
 				<JDGH3H4 h3String="Timeline Host Form" h4String="Reads and writes local store" />
 				<div class="timeline-host-form">
 					<JDGInputContainer label="Name">
-						<JDGTextInput bind:inputValue={$localTimelineHostStore.name}/>
+						<JDGTextInput bind:inputValue={$localTimelineHostStore.name} />
 					</JDGInputContainer>
 				</div>
 			</div>
@@ -269,7 +279,23 @@
 					backgroundColor={$timelineHostDraft ? jdgColors.done : jdgColors.active}
 					onClickFunction={$timelineHostDraft === undefined
 						? () => {
+								// set the file draft
+								timelineCollectionFileDraft.set(selectedBuildingData);
+								// set the host draft
 								timelineHostDraft.set(newTimelineHost);
+								timelineCollectionFileDraft.update((current) => {
+									const arr = current[selectedHostCollectionKey] ?? [];
+									addOrReplaceObjectByKeyValue(
+										arr,
+										'id',
+										$timelineHostDraft.id,
+										$timelineHostDraft
+									);
+									return {
+										...current,
+										[selectedHostCollectionKey]: arr
+									};
+								});
 							}
 						: () => {
 								timelineHostDraft.set(undefined);
