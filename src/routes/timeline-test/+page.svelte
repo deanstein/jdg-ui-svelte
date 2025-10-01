@@ -31,10 +31,7 @@
 	} from '$lib/stores/jdg-ui-store.js';
 
 	import { setTimelineEventActive } from '$lib/jdg-ui-management.js';
-	import {
-		addOrReplaceObjectByKeyValue,
-		instantiateObject
-	} from '$lib/jdg-utils.js';
+	import { addOrReplaceObjectByKeyValue, instantiateObject } from '$lib/jdg-utils.js';
 
 	import {
 		JDGBodyCopy,
@@ -56,21 +53,21 @@
 
 	/*** TIMELINE HOST COLLECTION ***/
 	// Get the available Building Data files from the repo
-	let buildingDataFiles;
+	let timelineHostFiles;
 	// Formatted for the JDGSelect
-	let buildingDataOptionsGroup;
+	let timelineHostCollectionOptionsGroup;
 	// The selected Building Data file
-	let selectedBuildingDataFileName;
+	let selectedHostFileName;
 	// The content of the file from the server
-	let selectedBuildingData;
+	let selectedHostCollectionFromRepo;
 	// The key for accessing a timeline host collection
 	let selectedHostCollectionKey;
 	// Update the Select with available files
 	$: {
-		if (buildingDataFiles && Array.isArray(buildingDataFiles)) {
-			buildingDataOptionsGroup = {
+		if (timelineHostFiles && Array.isArray(timelineHostFiles)) {
+			timelineHostCollectionOptionsGroup = {
 				default: Object.fromEntries(
-					buildingDataFiles.map((filename) => [
+					timelineHostFiles.map((filename) => [
 						filename, // key
 						{ value: filename, label: filename } // value
 					])
@@ -79,12 +76,12 @@
 		}
 	}
 	// Update the output of the selected file
-	$: if (selectedBuildingDataFileName) {
+	$: if (selectedHostFileName) {
 		(async () => {
-			selectedBuildingData = await readJsonFileFromRepo(
+			selectedHostCollectionFromRepo = await readJsonFileFromRepo(
 				jdgRepoOwner,
 				jdgBuildingDataRepoName,
-				selectedBuildingDataFileName
+				selectedHostFileName
 			);
 		})();
 	}
@@ -92,18 +89,20 @@
 	/*** TIMELINE HOST ***/
 	const newTimelineHost = instantiateObject(jdgTimelineHost);
 	newTimelineHost.id = uuid();
+	newTimelineHost.name = 'New Timeline Host';
 	const localTimelineHostStore = writable(newTimelineHost);
 	let selectedTimelineHost;
+	let selectedTimelineHostStore = writable();
 	let timelineHostOptionsGroup;
 	let timelineHostNameInputValue;
 	let timelineHostAvatarInputValue;
 	const createTimelineHostOptions = (items) => {
-		const allItems = [{ id: 'new', name: '➕ New' }, ...items];
+		const allItems = [newTimelineHost, ...items];
 
 		const group = {};
 		allItems.forEach((item, index) => {
 			group[`opt${index}`] = {
-				value: item.id,
+				value: item, // full object
 				label: item.name
 			};
 		});
@@ -112,8 +111,17 @@
 	};
 	$: {
 		timelineHostOptionsGroup = createTimelineHostOptions(
-			$localTimelineHostStore?.[buildingDataCollectionKey] ?? []
+			selectedHostCollectionFromRepo?.[buildingDataCollectionKey] ?? []
 		);
+		console.log($selectedTimelineHostStore, selectedHostCollectionFromRepo);
+		if (selectedTimelineHost) {
+			selectedTimelineHostStore.set(
+				selectedHostCollectionFromRepo[buildingDataCollectionKey].find(
+					//@ts-ignore
+					(obj) => obj.id === selectedTimelineHost?.id
+				)
+			);
+		}
 	}
 
 	/*** TIMELINE EVENT ***/
@@ -146,9 +154,9 @@
 		/*** TIMELINE HOST COLLECTION ***/
 		// Get the available Building Data files from the repo
 		// and update the JDGSelect
-		buildingDataFiles = await fetchJsonFileList(jdgRepoOwner, jdgBuildingDataRepoName);
+		timelineHostFiles = await fetchJsonFileList(jdgRepoOwner, jdgBuildingDataRepoName);
 		// Set the initial default. [1] is the test file
-		selectedBuildingDataFileName = buildingDataFiles[1];
+		selectedHostFileName = timelineHostFiles[1];
 	});
 </script>
 
@@ -162,8 +170,8 @@
 			<JDGH3H4 h3String="Choose Timeline Host Collection" paddingBottom="20px" />
 			<JDGInputContainer label="JSON file">
 				<JDGSelect
-					optionsGroup={buildingDataOptionsGroup}
-					bind:inputValue={selectedBuildingDataFileName}
+					optionsGroup={timelineHostCollectionOptionsGroup}
+					bind:inputValue={selectedHostFileName}
 					isEnabled={true}
 				/>
 			</JDGInputContainer>
@@ -180,7 +188,7 @@
 				/>
 			</JDGInputContainer>
 			<JDGInputContainer label="Timeline Host Collection from Repo">
-				<pre>{JSON.stringify(selectedBuildingData, null, 2)}</pre>
+				<pre>{JSON.stringify(selectedHostCollectionFromRepo, null, 2)}</pre>
 			</JDGInputContainer>
 			<JDGModalActionsBar>
 				{#if $timelineCollectionFileDraft === undefined}
@@ -188,10 +196,10 @@
 						label="Pull from Repo"
 						faIcon="fa-arrow-circle-down"
 						onClickFunction={async () => {
-							selectedBuildingData = await readJsonFileFromRepo(
+							selectedHostCollectionFromRepo = await readJsonFileFromRepo(
 								jdgRepoOwner,
 								jdgBuildingDataRepoName,
-								selectedBuildingDataFileName
+								selectedHostFileName
 							);
 						}}
 						isEnabled={$timelineCollectionFileDraft === undefined}
@@ -212,13 +220,13 @@
 					backgroundColor={$timelineCollectionFileDraft ? jdgColors.done : jdgColors.active}
 					onClickFunction={$timelineCollectionFileDraft === undefined
 						? () => {
-								timelineCollectionFileDraft.set(selectedBuildingData);
+								timelineCollectionFileDraft.set(selectedHostCollectionFromRepo);
 							}
 						: async () => {
 								await writeJsonFileToRepo(
 									jdgRepoOwner,
 									jdgBuildingDataRepoName,
-									selectedBuildingDataFileName,
+									selectedHostFileName,
 									$timelineCollectionFileDraft
 								);
 								timelineCollectionFileDraft.set(undefined);
@@ -232,7 +240,10 @@
 	<JDGContentBoxFloating title={'TIMELINE HOST'} subtitle={'For people and buildings'}>
 		<JDGBodyCopy>
 			<JDGInputContainer label="Choose timeline host">
-				<JDGSelect bind:inputValue={selectedTimelineHost} optionsGroup={timelineHostOptionsGroup} />
+				<JDGSelect
+					bind:inputValue={$selectedTimelineHostStore}
+					optionsGroup={timelineHostOptionsGroup}
+				/>
 			</JDGInputContainer>
 		</JDGBodyCopy>
 		<div
@@ -242,7 +253,7 @@
 			<div class="tri-column-demo-left-right">
 				<div>
 					<JDGH3H4 h3String="Timeline Host Schema" h4String="As local store" paddingBottom="15px" />
-					<pre>{JSON.stringify($localTimelineHostStore, null, 2)}</pre>
+					<pre>{JSON.stringify($selectedTimelineHostStore, null, 2)}</pre>
 				</div>
 			</div>
 			<div class="tri-column-demo-center">
@@ -280,7 +291,7 @@
 					onClickFunction={$timelineHostDraft === undefined
 						? () => {
 								// set the file draft
-								timelineCollectionFileDraft.set(selectedBuildingData);
+								timelineCollectionFileDraft.set(selectedHostCollectionFromRepo);
 								// set the host draft
 								timelineHostDraft.set(newTimelineHost);
 								timelineCollectionFileDraft.update((current) => {
