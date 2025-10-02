@@ -59,7 +59,7 @@
 	// The selected Building Data file
 	let selectedHostFileName;
 	// The content of the file from the server
-	let selectedHostCollectionFromRepo;
+	let selectedHostCollection;
 	// The key for accessing a timeline host collection
 	let selectedHostCollectionKey;
 	// Update the Select with available files
@@ -78,7 +78,7 @@
 	// Update the output of the selected file
 	$: if (selectedHostFileName) {
 		(async () => {
-			selectedHostCollectionFromRepo = await readJsonFileFromRepo(
+			selectedHostCollection = await readJsonFileFromRepo(
 				jdgRepoOwner,
 				jdgBuildingDataRepoName,
 				selectedHostFileName
@@ -93,9 +93,8 @@
 	const localTimelineHostStore = writable(newTimelineHost);
 	let selectedTimelineHost;
 	let selectedTimelineHostStore = writable();
+	let selectedTimelineHostName;
 	let timelineHostOptionsGroup;
-	let timelineHostNameInputValue;
-	let timelineHostAvatarInputValue;
 	const createTimelineHostOptions = (items) => {
 		const allItems = [newTimelineHost, ...items];
 
@@ -111,16 +110,22 @@
 	};
 	$: {
 		timelineHostOptionsGroup = createTimelineHostOptions(
-			selectedHostCollectionFromRepo?.[buildingDataCollectionKey] ?? []
+			selectedHostCollection?.[buildingDataCollectionKey] ?? []
 		);
-		console.log($selectedTimelineHostStore, selectedHostCollectionFromRepo);
+		console.log($selectedTimelineHostStore, selectedHostCollection);
 		if (selectedTimelineHost) {
 			selectedTimelineHostStore.set(
-				selectedHostCollectionFromRepo[buildingDataCollectionKey].find(
+				selectedHostCollection[buildingDataCollectionKey].find(
 					//@ts-ignore
 					(obj) => obj.id === selectedTimelineHost?.id
 				)
 			);
+		}
+	}
+	// update the form fields for timeline host when the selected host store changes
+	$: {
+		if ($selectedTimelineHostStore) {
+			selectedTimelineHostName = $selectedTimelineHostStore.name;
 		}
 	}
 
@@ -188,7 +193,7 @@
 				/>
 			</JDGInputContainer>
 			<JDGInputContainer label="Timeline Host Collection from Repo">
-				<pre>{JSON.stringify(selectedHostCollectionFromRepo, null, 2)}</pre>
+				<pre>{JSON.stringify(selectedHostCollection, null, 2)}</pre>
 			</JDGInputContainer>
 			<JDGModalActionsBar>
 				{#if $timelineCollectionFileDraft === undefined}
@@ -196,7 +201,7 @@
 						label="Pull from Repo"
 						faIcon="fa-arrow-circle-down"
 						onClickFunction={async () => {
-							selectedHostCollectionFromRepo = await readJsonFileFromRepo(
+							selectedHostCollection = await readJsonFileFromRepo(
 								jdgRepoOwner,
 								jdgBuildingDataRepoName,
 								selectedHostFileName
@@ -220,7 +225,7 @@
 					backgroundColor={$timelineCollectionFileDraft ? jdgColors.done : jdgColors.active}
 					onClickFunction={$timelineCollectionFileDraft === undefined
 						? () => {
-								timelineCollectionFileDraft.set(selectedHostCollectionFromRepo);
+								timelineCollectionFileDraft.set(selectedHostCollection);
 							}
 						: async () => {
 								await writeJsonFileToRepo(
@@ -239,7 +244,7 @@
 	<!-- TIMELINE HOST -->
 	<JDGContentBoxFloating title={'TIMELINE HOST'} subtitle={'For people and buildings'}>
 		<JDGBodyCopy>
-			<JDGInputContainer label="Choose timeline host">
+			<JDGInputContainer label="Choose timeline host from collection">
 				<JDGSelect
 					bind:inputValue={$selectedTimelineHostStore}
 					optionsGroup={timelineHostOptionsGroup}
@@ -267,7 +272,7 @@
 				<JDGH3H4 h3String="Timeline Host Form" h4String="Reads and writes local store" />
 				<div class="timeline-host-form">
 					<JDGInputContainer label="Name">
-						<JDGTextInput bind:inputValue={$localTimelineHostStore.name} />
+						<JDGTextInput bind:inputValue={selectedTimelineHostName} />
 					</JDGInputContainer>
 				</div>
 			</div>
@@ -291,7 +296,7 @@
 					onClickFunction={$timelineHostDraft === undefined
 						? () => {
 								// set the file draft
-								timelineCollectionFileDraft.set(selectedHostCollectionFromRepo);
+								timelineCollectionFileDraft.set(selectedHostCollection);
 								// set the host draft
 								timelineHostDraft.set(newTimelineHost);
 								timelineCollectionFileDraft.update((current) => {
