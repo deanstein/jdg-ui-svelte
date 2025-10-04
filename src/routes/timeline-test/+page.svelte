@@ -90,10 +90,9 @@
 	const newTimelineHost = instantiateObject(jdgTimelineHost);
 	newTimelineHost.id = uuid();
 	newTimelineHost.name = 'New Timeline Host';
-	const localTimelineHostStore = writable(newTimelineHost);
-	let selectedTimelineHost;
-	let selectedTimelineHostStore = writable();
-	let selectedTimelineHostName;
+	let localTimelineHost;
+	let localTimelineHostStore = writable();
+	let draftTimelineHostNameStore = writable();
 	let timelineHostOptionsGroup;
 	const createTimelineHostOptions = (items) => {
 		const allItems = [newTimelineHost, ...items];
@@ -112,20 +111,23 @@
 		timelineHostOptionsGroup = createTimelineHostOptions(
 			selectedHostCollection?.[buildingDataCollectionKey] ?? []
 		);
-		console.log($selectedTimelineHostStore, selectedHostCollection);
-		if (selectedTimelineHost) {
-			selectedTimelineHostStore.set(
+		if (localTimelineHost) {
+			localTimelineHostStore.set(
 				selectedHostCollection[buildingDataCollectionKey].find(
 					//@ts-ignore
-					(obj) => obj.id === selectedTimelineHost?.id
+					(obj) => obj.id === localTimelineHost?.id
 				)
 			);
 		}
 	}
-	// update the form fields for timeline host when the selected host store changes
+
+	// FORM FIELDS
+	// draft timeline name is bound to the localStore,
+	// unless there's a draft active, in which case
+	// it's bound to the draft var
 	$: {
-		if ($selectedTimelineHostStore) {
-			selectedTimelineHostName = $selectedTimelineHostStore.name;
+		if ($localTimelineHostStore !== undefined && $timelineHostDraft === undefined) {
+			draftTimelineHostNameStore.set($localTimelineHostStore.name);
 		}
 	}
 
@@ -246,7 +248,7 @@
 		<JDGBodyCopy>
 			<JDGInputContainer label="Choose timeline host from collection">
 				<JDGSelect
-					bind:inputValue={$selectedTimelineHostStore}
+					bind:inputValue={$localTimelineHostStore}
 					optionsGroup={timelineHostOptionsGroup}
 				/>
 			</JDGInputContainer>
@@ -258,7 +260,7 @@
 			<div class="tri-column-demo-left-right">
 				<div>
 					<JDGH3H4 h3String="Timeline Host Schema" h4String="As local store" paddingBottom="15px" />
-					<pre>{JSON.stringify($selectedTimelineHostStore, null, 2)}</pre>
+					<pre>{JSON.stringify($localTimelineHostStore, null, 2)}</pre>
 				</div>
 			</div>
 			<div class="tri-column-demo-center">
@@ -272,7 +274,10 @@
 				<JDGH3H4 h3String="Timeline Host Form" h4String="Reads and writes local store" />
 				<div class="timeline-host-form">
 					<JDGInputContainer label="Name">
-						<JDGTextInput bind:inputValue={selectedTimelineHostName} />
+						<JDGTextInput
+							bind:inputValue={$draftTimelineHostNameStore}
+							isEnabled={$timelineHostDraft !== undefined}
+						/>
 					</JDGInputContainer>
 				</div>
 			</div>
@@ -295,10 +300,10 @@
 					backgroundColor={$timelineHostDraft ? jdgColors.done : jdgColors.active}
 					onClickFunction={$timelineHostDraft === undefined
 						? () => {
-								// set the file draft
+								// Start editing a collection draft
 								timelineCollectionFileDraft.set(selectedHostCollection);
-								// set the host draft
-								timelineHostDraft.set(newTimelineHost);
+								// Start editing a host draft
+								timelineHostDraft.set($localTimelineHostStore);
 								timelineCollectionFileDraft.update((current) => {
 									const arr = current[selectedHostCollectionKey] ?? [];
 									addOrReplaceObjectByKeyValue(
@@ -314,6 +319,11 @@
 								});
 							}
 						: () => {
+								// Set the current draft to the local store
+								localTimelineHostStore.update((currentValue) => {
+									currentValue.name = $draftTimelineHostNameStore;
+									return currentValue;
+								});
 								timelineHostDraft.set(undefined);
 							}}
 				/>
