@@ -38,6 +38,7 @@
 		jdgColors,
 		JDGContentBoxFloating,
 		JDGContentContainer,
+		JDGGridLayout,
 		JDGH3H4,
 		JDGInputContainer,
 		JDGJumpTo,
@@ -96,7 +97,7 @@
 	let localTimelineHostStore = writable();
 	// Draft input value stores
 	let draftTimelineHostNameStore = writable();
-	// Create Select options, 
+	// Create Select options,
 	// including the new host and hosts from the selected collection
 	let timelineHostOptionsGroup;
 	$: {
@@ -158,7 +159,7 @@
 
 <JDGContentContainer overlapWithHeader={false}>
 	<JDGJumpTo />
-	<!-- CLOUD COLLECTION -->
+	<!-- CLOUD COLLECTIONS -->
 	<JDGContentBoxFloating
 		title={'CLOUD COLLECTIONS'}
 		subtitle={'TimelineHost collections from GitHub'}
@@ -184,9 +185,18 @@
 					isEnabled={true}
 				/>
 			</JDGInputContainer>
+		</JDGBodyCopy>
+
+		<JDGGridLayout>
 			<JDGInputContainer label="Timeline Host Collection from Repo">
 				<pre>{JSON.stringify(selectedHostCollection, null, 2)}</pre>
 			</JDGInputContainer>
+			<JDGInputContainer label="Timeline Host Collection Draft">
+				<pre>{JSON.stringify($timelineCollectionFileDraft, null, 2)}</pre>
+			</JDGInputContainer>
+		</JDGGridLayout>
+
+		<JDGBodyCopy>
 			<JDGModalActionsBar>
 				{#if $timelineCollectionFileDraft === undefined}
 					<JDGButton
@@ -309,6 +319,16 @@
 								});
 							}
 						: () => {
+								// Add the current draft to the host collection
+								timelineCollectionFileDraft.update((currentValue) => {
+									addOrReplaceObjectByKeyValue(
+										currentValue[selectedHostCollectionKey],
+										'id',
+										$localTimelineHostStore.id,
+										$localTimelineHostStore
+									);
+									return currentValue;
+								});
 								// Set the current draft to the local store
 								localTimelineHostStore.update((currentValue) => {
 									currentValue.name = $draftTimelineHostNameStore;
