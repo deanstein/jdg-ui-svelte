@@ -40,6 +40,7 @@
 		JDGContentContainer,
 		JDGH3H4,
 		JDGInputContainer,
+		JDGJumpTo,
 		JDGModalActionsBar,
 		JDGSelect,
 		JDGTimeline,
@@ -87,44 +88,32 @@
 	}
 
 	/*** TIMELINE HOST ***/
+	// Create a new host as an option
 	const newTimelineHost = instantiateObject(jdgTimelineHost);
 	newTimelineHost.id = uuid();
 	newTimelineHost.name = 'New Timeline Host';
-	let localTimelineHost;
+	// This is the store we have locally, not a draft
 	let localTimelineHostStore = writable();
+	// Draft input value stores
 	let draftTimelineHostNameStore = writable();
+	// Create Select options, 
+	// including the new host and hosts from the selected collection
 	let timelineHostOptionsGroup;
-	const createTimelineHostOptions = (items) => {
-		const allItems = [newTimelineHost, ...items];
-
-		const group = {};
-		allItems.forEach((item, index) => {
-			group[`opt${index}`] = {
-				value: item, // full object
-				label: item.name
-			};
-		});
-
-		return { default: group };
-	};
 	$: {
-		timelineHostOptionsGroup = createTimelineHostOptions(
-			selectedHostCollection?.[buildingDataCollectionKey] ?? []
-		);
-		if (localTimelineHost) {
-			localTimelineHostStore.set(
-				selectedHostCollection[buildingDataCollectionKey].find(
-					//@ts-ignore
-					(obj) => obj.id === localTimelineHost?.id
-				)
-			);
-		}
+		timelineHostOptionsGroup = {
+			default: [
+				newTimelineHost,
+				...(selectedHostCollection?.[buildingDataCollectionKey] ?? [])
+			].reduce((group, item, index) => {
+				group[`opt${index}`] = {
+					value: item,
+					label: item.name
+				};
+				return group;
+			}, {})
+		};
 	}
-
-	// FORM FIELDS
-	// draft timeline name is bound to the localStore,
-	// unless there's a draft active, in which case
-	// it's bound to the draft var
+	// Manage draft fields
 	$: {
 		if ($localTimelineHostStore !== undefined && $timelineHostDraft === undefined) {
 			draftTimelineHostNameStore.set($localTimelineHostStore.name);
@@ -168,6 +157,7 @@
 </script>
 
 <JDGContentContainer overlapWithHeader={false}>
+	<JDGJumpTo />
 	<!-- CLOUD COLLECTION -->
 	<JDGContentBoxFloating
 		title={'CLOUD COLLECTIONS'}
