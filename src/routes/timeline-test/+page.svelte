@@ -35,7 +35,7 @@
 
 	import {
 		JDGBodyCopy,
-		jdgColors,
+		JDGButton,
 		JDGContentBoxFloating,
 		JDGContentContainer,
 		JDGGridLayout,
@@ -44,11 +44,11 @@
 		JDGJumpTo,
 		JDGModalActionsBar,
 		JDGSelect,
+		JDGTextInput,
 		JDGTimeline,
 		JDGTimelineEventForm
 	} from '$lib/index.js';
-	import JDGButton from '$lib/components/Input/JDGButton.svelte';
-	import JDGTextInput from '$lib/components/Input/JDGTextInput.svelte';
+	import { jdgColors } from '$lib/jdg-shared-styles.js';
 
 	// Ensure this page allows text selection
 	doAllowTextSelection.set(true);
@@ -78,7 +78,7 @@
 		}
 	}
 	// Update the output of the selected file
-	$: if (selectedHostFileName) {
+	$: if (selectedHostFileName && selectedHostCollectionKey) {
 		(async () => {
 			selectedHostCollection = await readJsonFileFromRepo(
 				jdgRepoOwner,
@@ -104,7 +104,7 @@
 		timelineHostOptionsGroup = {
 			default: [
 				newTimelineHost,
-				...(selectedHostCollection?.[buildingDataCollectionKey] ?? [])
+				...(selectedHostCollection?.[selectedHostCollectionKey] ?? [])
 			].reduce((group, item, index) => {
 				group[`opt${index}`] = {
 					value: item,
@@ -189,7 +189,9 @@
 
 		<JDGGridLayout>
 			<JDGInputContainer label="Timeline Host Collection from Repo">
-				<pre>{JSON.stringify(selectedHostCollection, null, 2)}</pre>
+				{#if selectedHostCollection && selectedHostCollectionKey}
+					<pre>{JSON.stringify(selectedHostCollection[selectedHostCollectionKey], null, 2)}</pre>
+				{/if}
 			</JDGInputContainer>
 			<JDGInputContainer label="Timeline Host Collection Draft">
 				<pre>{JSON.stringify($timelineCollectionFileDraft, null, 2)}</pre>
