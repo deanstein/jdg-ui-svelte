@@ -198,11 +198,15 @@
 				{/if}
 			</JDGInputContainer>
 			<JDGInputContainer label="Timeline Host Collection Draft">
-				<pre>{JSON.stringify(
-						$timelineCollectionFileDraft[selectedHostCollectionKey],
-						null,
-						2
-					)}</pre>
+				{#if $timelineCollectionFileDraft}
+					<pre>{JSON.stringify(
+							$timelineCollectionFileDraft[selectedHostCollectionKey],
+							null,
+							2
+						)}</pre>
+				{:else}
+					<pre>Start editing to see the draft!</pre>
+				{/if}
 			</JDGInputContainer>
 		</JDGGridLayout>
 
