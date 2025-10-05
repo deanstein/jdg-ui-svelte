@@ -213,7 +213,7 @@
 				</div>
 			{/if}
 			<!-- if this is a reference event, show the timeline host it's shared from -->
-			{#if upgradedEvent.type === timelineEventTypes.reference}
+			{#if upgradedEvent?.type === timelineEventTypes.reference}
 				<div>
 					<div class="timeline-event-reference-info">
 						<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event from &nbsp; </i>

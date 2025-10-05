@@ -51,13 +51,11 @@
 		jdgFonts,
 		setUpdatedHyperlinkStyleBar
 	} from '$lib/jdg-shared-styles.js';
-	import JdgAdminLoginModal from './DevTools/JDGAdminLoginModal.svelte';
 	import { timelineEventDraft } from '$lib/stores/jdg-temp-store.js';
-	import { writable } from 'svelte/store';
+	import { imageMetaCollection } from '../../routes/image-meta-collection.js';
 
 	export let fontFamily = jdgFonts.body;
-	export let appLoadingIconSrc =
-		'https://res.cloudinary.com/jdg-main/image/upload/v1718070772/jdg-ui-svelte/jdg-ui-logo_cs4ji5.jpg';
+	export let appLoadingIconSrc = imageMetaCollection.jdg_logo_ui.src;
 	export let accentColors = jdgColors.accentColorsJDG;
 	export let linkColorDefault = accentColors[0]; // color for the "banner" hyperlink style
 	export let linkColorSimple = accentColors[0]; // color for the simple hyperlink style

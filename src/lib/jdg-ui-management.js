@@ -15,7 +15,7 @@ import jdgTimelineRowItem from '$lib/schemas/timeline/jdg-timeline-row-item.js';
 import { instantiateObject } from '$lib/jdg-utils.js';
 
 import { jdgBreakpoints, jdgQuantities, jdgSizes } from '$lib/jdg-shared-styles.js';
-import { getTimelineEventById } from './jdg-timeline-management.js';
+import { getTimelineEventById, instantiateTimelineEvent } from './jdg-timeline-management.js';
 
 //
 // ADMIN MODE
@@ -165,6 +165,10 @@ export const generateTimelineRowItems = (
 	// if no inception event is provided, use the earliest event
 	if (!inceptionEvent) {
 		inceptionEvent = getEarliestTimelineEvent(upgradedTimelineHost.timelineEvents);
+		// if there's still no inception event, generate one
+		if (!inceptionEvent) {
+			inceptionEvent = instantiateTimelineEvent(jdgTimelineEventTypes.generic);
+		}
 	}
 
 	// generate the regular events
@@ -173,8 +177,8 @@ export const generateTimelineRowItems = (
 		let thisRowItem = instantiateObject(jdgTimelineRowItem);
 		// get the index this item belongs to
 		const rowIndex = getClosestTimelineRowByDate(
-			inceptionEvent.eventDate,
-			upgradedTimelineHost.timelineEvents[i].eventDate,
+			inceptionEvent.date,
+			upgradedTimelineHost.timelineEvents[i].date,
 			numberOfRows
 		);
 		thisRowItem.index = rowIndex;

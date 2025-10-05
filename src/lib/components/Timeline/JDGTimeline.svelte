@@ -24,6 +24,7 @@
 	import JDGTimelineEvent from '$lib/components/Timeline/JDGTimelineEvent.svelte';
 	import { jdgQuantities, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { JDG_CONTEXT_KEYS } from '$lib/stores/jdg-context-keys.js';
+	import { instantiateTimelineEvent } from '$lib/jdg-timeline-management.js';
 
 	// Timeline host contains events and event references
 	export let timelineHost;
@@ -40,7 +41,7 @@
 	export let onClickTimelineEvent = () => {};
 	export let onClickEventRefHost = () => {};
 	export let onClickAssociatedHost = () => {};
-	export let getTimelineHostById = () => {}; // how does this context get hosts via id?
+	export let getTimelineHostById = () => {};
 
 	const rowHeightEmptyPx = 1;
 	const rowHeightFilledPx = 80;
@@ -139,6 +140,16 @@
 		jdgSizes.timelineUnit};
 	`;
 
+	// If there are no events, force add
+	// an inception and today event to contextual events
+	$: {
+		if (timelineHost?.timelineEvents.length === 0) {
+			const tempInceptionEvent = instantiateTimelineEvent(jdgTimelineEventTypes.generic);
+			const todayEvent = instantiateTimelineEvent(jdgTimelineEventTypes.today);
+			timelineHost.timelineEvents = [tempInceptionEvent, todayEvent];
+		}
+	}
+
 	// Keep timeline event grid updated
 	let timelineEventGridCss;
 	$: {
@@ -220,7 +231,9 @@
 						{#key `${timelineHost.id}-${timelineRowItem.event.eventId}`}
 							<JDGTimelineEvent
 								timelineEvent={timelineRowItem.event}
-								onClickAssociatedHost={timelineRowItem.event.associatedHostIds[0]}
+								onClickAssociatedHost={() => {
+									//timelineRowItem.event.associatedHostIds[0]
+								}}
 								rowIndex={timelineRowItem.index}
 								backgroundColor={timelineEventColors[i + 1]}
 								eventReference={timelineRowItem.eventReference}
