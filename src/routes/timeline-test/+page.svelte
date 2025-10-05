@@ -31,7 +31,11 @@
 	} from '$lib/stores/jdg-ui-store.js';
 
 	import { setTimelineEventActive } from '$lib/jdg-ui-management.js';
-	import { addOrReplaceObjectByKeyValue, instantiateObject } from '$lib/jdg-utils.js';
+	import {
+		addOrReplaceObjectByKeyValue,
+		deleteObjectByKeyValue,
+		instantiateObject
+	} from '$lib/jdg-utils.js';
 
 	import {
 		JDGBodyCopy,
@@ -159,10 +163,10 @@
 
 <JDGContentContainer overlapWithHeader={false}>
 	<JDGJumpTo />
-	<!-- CLOUD COLLECTIONS -->
+	<!-- HOST COLLECTIONS -->
 	<JDGContentBoxFloating
-		title={'CLOUD COLLECTIONS'}
-		subtitle={'TimelineHost collections from GitHub'}
+		title={'TIMELINE HOST COLLECTIONS'}
+		subtitle={'Cloud collections from GitHub'}
 	>
 		<JDGBodyCopy>
 			<JDGH3H4 h3String="Choose Timeline Host Collection" paddingBottom="20px" />
@@ -194,7 +198,11 @@
 				{/if}
 			</JDGInputContainer>
 			<JDGInputContainer label="Timeline Host Collection Draft">
-				<pre>{JSON.stringify($timelineCollectionFileDraft, null, 2)}</pre>
+				<pre>{JSON.stringify(
+						$timelineCollectionFileDraft[selectedHostCollectionKey],
+						null,
+						2
+					)}</pre>
 			</JDGInputContainer>
 		</JDGGridLayout>
 
@@ -232,6 +240,7 @@
 								timelineCollectionFileDraft.set(selectedHostCollection);
 							}
 						: async () => {
+								// Write the collection file draft to the repo
 								await writeJsonFileToRepo(
 									jdgRepoOwner,
 									jdgBuildingDataRepoName,
@@ -239,6 +248,12 @@
 									$timelineCollectionFileDraft
 								);
 								timelineCollectionFileDraft.set(undefined);
+								// Pull the latest collection from the repo
+								selectedHostCollection = await readJsonFileFromRepo(
+									jdgRepoOwner,
+									jdgBuildingDataRepoName,
+									selectedHostFileName
+								);
 							}}
 				/>
 			</JDGModalActionsBar>
@@ -292,6 +307,24 @@
 						faIcon={'fa-circle-xmark'}
 						backgroundColor={jdgColors.cancel}
 						onClickFunction={() => {
+							timelineHostDraft.set(undefined);
+						}}
+					/>
+					<JDGButton
+						label={'Delete Timeline Host'}
+						faIcon={'fa-trash'}
+						backgroundColor={jdgColors.delete}
+						onClickFunction={() => {
+							// Delete this host from the collection draft
+							timelineCollectionFileDraft.update((currentValue) => {
+								deleteObjectByKeyValue(
+									currentValue[selectedHostCollectionKey],
+									'id',
+									$localTimelineHostStore.id
+								);
+								return currentValue;
+							});
+							// Eliminate the editing host draft
 							timelineHostDraft.set(undefined);
 						}}
 					/>
