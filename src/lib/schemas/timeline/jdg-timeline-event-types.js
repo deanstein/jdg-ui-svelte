@@ -150,7 +150,10 @@ const jdgTimelineEventTypes = {
 	},
 	today: {
 		icon: 'fa-sun',
-		isContextual: true
+		isContextual: true,
+		additionalContent: {
+			description: 'Today'
+		}
 	}
 };
 

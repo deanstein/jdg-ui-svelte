@@ -264,7 +264,7 @@
 					tooltip={'Go to ' + getTimelineHostById(upgradedEvent?.associatedHostIds[0])?.name}
 				/>
 				<!-- if more than one, show a label -->
-				{#if upgradedEvent?.eventContent?.associatedPeopleIds?.length > 1}
+				{#if upgradedEvent?.additionalContent?.associatedPeopleIds?.length > 1}
 					&nbsp;and others
 				{/if}
 			{/if}
@@ -308,14 +308,14 @@
 		</div>
 		<div class="timeline-event-content {eventContentCss}">
 			<div class="timeline-event-description">
-				{upgradedEvent?.eventContent?.description
-					? upgradedEvent?.eventContent?.description
+				{upgradedEvent?.additionalContent?.description
+					? upgradedEvent?.additionalContent?.description
 					: 'Event description'}
 			</div>
-			{#if upgradedEvent?.eventContent?.images?.length > 0}
+			{#if upgradedEvent?.additionalContent?.images?.length > 0}
 				<div class="timeline-event-image-preview">
 					<!-- show a few of the timeline event images, if there are any -->
-					<JDGImageThumbnailGroup imageMetaSet={upgradedEvent?.eventContent?.images} />
+					<JDGImageThumbnailGroup imageMetaSet={upgradedEvent?.additionalContent?.images} />
 				</div>
 			{/if}
 		</div>
