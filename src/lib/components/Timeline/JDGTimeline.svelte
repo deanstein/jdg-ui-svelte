@@ -37,6 +37,9 @@
 	export let cessationEvent = timelineHost.cessationEvent;
 	// Whether the add event button is shown
 	export let allowEditing = true;
+	// Width and height for timeline interface
+	export let width = '100%';
+	export let minHeight = '50svh';
 
 	export let onClickTimelineEvent = () => {};
 	export let onClickEventRefHost = () => {};
@@ -111,33 +114,36 @@
 		}
 	});
 
+	// DYNAMIC STYLES
+
+	const timelineWrapperCss = css`
+		width: ${width};
+		min-height: ${minHeight};
+	`;
+
 	const timelineEventCountCss = css`
 		font-size: ${jdgSizes.fontSizeBodySm};
 		margin-left: ${jdgSizes.timelineEventGapSize};
 	`;
 
 	// Timeline spine styling
-	let spineCss = css`
-		width: ${jdgSizes.timelineSpineThickness};
-	`;
-	$: {
-		spineCss = css`
-			${spineCss}
-			margin-top: ${canvasScrollState.top
-				? getContext(JDG_CONTEXT_KEYS.timelineFirstRowHeight) / 2 + 'px'
-				: 0};
-			margin-bottom: ${canvasScrollState.bottom
-				? getContext(JDG_CONTEXT_KEYS.timelineLastRowHeight) / 2 + 'px'
-				: 0};
-		`;
-	}
-
-	const spineColumnCss = css`
+	let spineContainerCss = css`
 		margin-left: ${jdgSizes.nTimelineEventNodeSize / 2 +
 		jdgSizes.nTimelineEventGapSize * 2 +
 		jdgSizes.nTimelineEventYearWidth -
 		jdgSizes.nTimelineSpineWidth / 2 +
 		jdgSizes.timelineUnit};
+	`;
+	$: {
+		spineContainerCss = css`
+			${spineContainerCss}
+			margin-top: ${canvasScrollState.top ? $firstEventRowHeightStore / 2 + 'px' : 0};
+			margin-bottom: ${canvasScrollState.bottom ? $lastEventRowHeightStore / 2 + 'px' : 0};
+		`;
+	}
+
+	let spineColumnCss = css`
+		width: ${jdgSizes.timelineSpineWidth};
 	`;
 
 	// If there are no events, force add
@@ -179,7 +185,7 @@
 	}
 </script>
 
-<div bind:this={timelineWrapperRef} class="timeline-wrapper">
+<div bind:this={timelineWrapperRef} class="timeline-wrapper {timelineWrapperCss}">
 	{#if allowEditing}
 		<ComposeToolbar
 			parentRef={timelineWrapperRef}
@@ -205,9 +211,9 @@
 			/>
 		</div>
 		<div class="timeline-content-container">
-			<div class="timeline-spine">
+			<div class="timeline-spine {spineContainerCss}">
 				<div class="timeline-spine-line-column {spineColumnCss}">
-					<div class="timeline-spine-line {spineCss}" />
+					<div class="timeline-spine-line" />
 				</div>
 			</div>
 			<div class="timeline-scrolling-canvas" bind:this={scrollingCanvasDivRef}>
@@ -314,7 +320,7 @@
 	.timeline-spine {
 		position: absolute;
 		display: flex;
-		height: 100%;
+		height: inherit;
 		background: linear-gradient(
 			to bottom,
 			rgba(255, 0, 0, 0) 0%,

@@ -121,18 +121,29 @@
 		border-radius: 0px 0px ${cornerRadius} ${cornerRadius};
 	`;
 
+	const firstRowContext = getContext(JDG_CONTEXT_KEYS.timelineFirstRowHeight);
+	const lastRowContext = getContext(JDG_CONTEXT_KEYS.timelineLastRowHeight);
+
 	onMount(() => {
 		// upgrade the timeline event so it has the right fields for downstream operations
 		upgradedEvent = upgradeTimelineEvent(timelineEvent);
 
 		// birth and death events report their row height for the spine to align to
-		if (upgradedEvent.eventType === timelineEventTypes.birth.type && eventRowDivRef) {
+		if (
+			(upgradedEvent.eventType === timelineEventTypes.birth.type ||
+				upgradedEvent.eventType === timelineEventTypes.birth.type) &&
+			eventRowDivRef
+		) {
 			const eventRowHeight = eventRowDivRef.getBoundingClientRect().height;
-			timelineFirstEventHeight.set(eventRowHeight);
+			firstRowContext.set(eventRowHeight);
 		}
-		if (upgradedEvent.eventType === timelineEventTypes.death.type && eventRowDivRef) {
+		if (
+			(upgradedEvent.eventType === timelineEventTypes.death.type ||
+				upgradedEvent.eventType === timelineEventTypes.death) &&
+			eventRowDivRef
+		) {
 			const eventRowHeight = eventRowDivRef.getBoundingClientRect().height;
-			timelineLastEventHeight.set(eventRowHeight);
+			lastRowContext.set(eventRowHeight);
 		}
 
 		// if onClick isn't provided, use this function
