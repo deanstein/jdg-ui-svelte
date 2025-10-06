@@ -9,7 +9,7 @@ import {
 import { timelineEventDraft } from './stores/jdg-temp-store.js';
 
 import jdgTimelineHost from '$lib/schemas/timeline/jdg-timeline-host.js';
-import jdgTimelineEventTypes from './schemas/timeline/jdg-timeline-event-types.js';
+import jdgTimelineEventTypes, { jdgTimelineEventKeys } from './schemas/timeline/jdg-timeline-event-types.js';
 import jdgTimelineRowItem from '$lib/schemas/timeline/jdg-timeline-row-item.js';
 
 import { instantiateObject } from '$lib/jdg-utils.js';
@@ -167,7 +167,7 @@ export const generateTimelineRowItems = (
 		inceptionEvent = getEarliestTimelineEvent(upgradedTimelineHost.timelineEvents);
 		// if there's still no inception event, generate one
 		if (!inceptionEvent) {
-			inceptionEvent = instantiateTimelineEvent(jdgTimelineEventTypes.generic);
+			inceptionEvent = instantiateTimelineEvent(jdgTimelineEventKeys.generic);
 		}
 	}
 

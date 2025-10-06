@@ -6,8 +6,8 @@
 
 	import { getMaxElementHeightPx } from '$lib/jdg-utils.js';
 
-	import jdgTimelineHost from '$lib/schemas/timeline/jdg-timeline-host.js';
-	import jdgTimelineEventTypes from '$lib/schemas/timeline/jdg-timeline-event-types.js';
+
+	import { jdgTimelineEventKeys } from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
 
 	import { doShowTimelineEventDetailsModal } from '$lib/stores/jdg-ui-store.js';
@@ -150,8 +150,8 @@
 	// an inception and today event to contextual events
 	$: {
 		if (timelineHost?.timelineEvents.length === 0) {
-			const tempInceptionEvent = instantiateTimelineEvent(jdgTimelineEventTypes.generic);
-			const todayEvent = instantiateTimelineEvent(jdgTimelineEventTypes.today);
+			const tempInceptionEvent = instantiateTimelineEvent(jdgTimelineEventKeys.generic);
+			const todayEvent = instantiateTimelineEvent(jdgTimelineEventKeys.today);
 			timelineHost.timelineEvents = [tempInceptionEvent, todayEvent];
 		}
 	}

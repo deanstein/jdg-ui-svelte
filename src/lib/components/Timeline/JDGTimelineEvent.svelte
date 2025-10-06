@@ -153,7 +153,7 @@
 
 	$: {
 		if (upgradedEvent) {
-			eventDateCorrected = new Date(upgradedEvent.eventDate);
+			eventDateCorrected = new Date(upgradedEvent.date);
 
 			eventAge = getNumberOfYearsBetweenEvents(
 				getContext(JDG_CONTEXT_KEYS.timelineInceptionEvent),
