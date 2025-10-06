@@ -9,7 +9,7 @@ import jdgImageMeta from '$lib/schemas/jdg-image-meta.js';
 // new images with a caption must be added here
 const imageMetaCollection = {
 	jdg_logo_ui: instantiateObject(jdgImageMeta, {
-		src: 'https://res.cloudinary.com/jdg-main/image/upload/v1759703052/jdg-ui-svelte/jdg-logo-ui.png',
+		src: 'https://res.cloudinary.com/jdg-main/image/upload/v1759708726/jdg-ui-svelte/jdg-logo-ui.png',
 		alt: 'JDG UI SVELTE'
 	}),
 	aerial_60s70s_1: instantiateObject(jdgImageMeta, {
