@@ -116,15 +116,18 @@ const jdgTimelineEventTypes = {
 		icon: 'fa-heart'
 	},
 
-	/*** contextual types, don't show in type selector dropdown ***/
+	// This is only used when
+	// no inception event is set, and there are no other events
 	inception: {
 		label: 'Inception',
 		icon: 'fa-wand-magic-sparkles',
-		isContextual: true,
 		additionalContent: {
 			description: 'Inception'
 		}
 	},
+
+	// Contextual types:
+	// Not selectable in drop-down selectors or clickable in Timelines
 	context: {
 		label: 'Contextual Event',
 		icon: 'fa-globe',

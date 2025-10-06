@@ -2,7 +2,9 @@
 	import { getContext, onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import timelineEventTypes from '$lib/schemas/timeline/jdg-timeline-event-types.js';
+	import timelineEventTypes, {
+		jdgTimelineEventKeys
+	} from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 	import timelineEventReference from '$lib/schemas/timeline/jdg-timeline-event-reference.js';
 
 	import { JDG_CONTEXT_KEYS } from '$lib/stores/jdg-context-keys.js';
@@ -63,11 +65,15 @@
 	];
 
 	const canClickOnTimelineEvent = () => {
-		return (
-			upgradedEvent.type !== timelineEventTypes.context &&
-			upgradedEvent.type !== timelineEventTypes.reference &&
-			upgradedEvent.type !== timelineEventTypes.today
-		);
+		// Default: Clickable
+		let canClick = true;
+		if (upgradedEvent) {
+			canClick =
+				upgradedEvent.type !== jdgTimelineEventKeys.context &&
+				upgradedEvent.type !== jdgTimelineEventKeys.reference &&
+				upgradedEvent.type !== jdgTimelineEventKeys.today;
+		}
+		return canClick;
 	};
 
 	const eventRowCss = css`
@@ -170,7 +176,7 @@
 	$: {
 		if (upgradedEvent) {
 			eventRowContainerCss = css`
-				cursor: ${canClickOnTimelineEvent() ? 'default' : 'pointer'};
+				cursor: ${canClickOnTimelineEvent() ? 'pointer' : 'default'};
 			`;
 		}
 	}
@@ -180,9 +186,9 @@
 		if (upgradedEvent) {
 			eventRowDynamicCss = css`
 				grid-row: ${rowIndex};
-				cursor: ${canClickOnTimelineEvent() ? 'default' : 'pointer'};
+				cursor: ${canClickOnTimelineEvent() ? 'pointer' : 'default'};
 				&:hover {
-					background-color: ${canClickOnTimelineEvent() ? '' : 'rgba(255, 255, 255, 0.75)'};
+					background-color: ${canClickOnTimelineEvent() ? 'rgba(255, 255, 255, 0.75)' : ''};
 				}
 			`;
 		}

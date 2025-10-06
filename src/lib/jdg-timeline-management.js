@@ -32,7 +32,6 @@ export const instantiateTimelineEvent = (typeKey) => {
 
 	const addlContentSchema = typeDef.additionalContent || {};
 	base.additionalContent = extractDataFromHybridSchema(addlContentSchema);
-	console.log(base.additionalContent);
 	// Set a random id
 	base.id = uuidv4();
 	// If this is a Today event, use today's date
