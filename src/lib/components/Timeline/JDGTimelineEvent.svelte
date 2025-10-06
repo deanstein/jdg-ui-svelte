@@ -102,6 +102,7 @@
 	`;
 
 	const eventTitleBarCss = css`
+		background-color: rgb(205, 205, 205);
 		border-radius: ${cornerRadius} ${cornerRadius} 0px 0px;
 	`;
 
@@ -217,9 +218,9 @@
 	<div class="timeline-event-content-outer-container {eventRowContainerCss}">
 		<div class="timeline-event-title-bar {eventTitleBarCss}">
 			<!-- event icon -->
-			<i class="fa-solid {timelineEventTypes[upgradedEvent?.eventType]?.icon} {eventFaIconCss}" />
+			<i class="fa-solid {timelineEventTypes[upgradedEvent?.type]?.icon} {eventFaIconCss}" />
 			<!-- hide age if this is the birth event -->
-			{#if upgradedEvent?.eventType !== timelineEventTypes.birth.type}
+			{#if upgradedEvent?.type !== timelineEventTypes.birth.type}
 				<div class="timeline-event-age {eventAgeCss}">
 					{eventAge?.toString() !== 'NaN' ? 'Age: ' : ''}
 					{eventAge?.toString() !== 'NaN' ? eventAge : ''}
@@ -270,7 +271,7 @@
 			<!-- if this is a contextual event, treat it specifically -->
 			{#if upgradedEvent?.originType === timelineEventTypes.context}
 				<!-- child birth -->
-				{#if upgradedEvent?.eventType === timelineEventTypes.childBirth.type}
+				{#if upgradedEvent?.type === timelineEventTypes.childBirth.type}
 					<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event from &nbsp; </i>
 					<JDGButton
 						onClickFunction={() => {
@@ -287,7 +288,7 @@
 					/>
 				{/if}
 				<!-- parent death -->
-				{#if upgradedEvent?.eventType === timelineEventTypes.parentDeath.type}
+				{#if upgradedEvent?.type === timelineEventTypes.parentDeath.type}
 					<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event from &nbsp; </i>
 					<JDGButton
 						onClickFunction={() => {
