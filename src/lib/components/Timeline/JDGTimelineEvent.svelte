@@ -44,9 +44,6 @@
 	let eventAge;
 	let eventRowDivRef;
 
-	const timelineFirstEventHeight = getContext(JDG_CONTEXT_KEYS.timelineFirstRowHeight);
-	const timelineLastEventHeight = getContext(JDG_CONTEXT_KEYS.timelineLastRowHeight);
-
 	const cornerRadius = '10px';
 	const dateFontSize = '0.9rem';
 	const yearFontSize = '1.5rem';
@@ -128,24 +125,6 @@
 		// upgrade the timeline event so it has the right fields for downstream operations
 		upgradedEvent = upgradeTimelineEvent(timelineEvent);
 
-		// birth and death events report their row height for the spine to align to
-		if (
-			(upgradedEvent.eventType === timelineEventTypes.birth.type ||
-				upgradedEvent.eventType === timelineEventTypes.birth.type) &&
-			eventRowDivRef
-		) {
-			const eventRowHeight = eventRowDivRef.getBoundingClientRect().height;
-			firstRowContext.set(eventRowHeight);
-		}
-		if (
-			(upgradedEvent.eventType === timelineEventTypes.death.type ||
-				upgradedEvent.eventType === timelineEventTypes.death) &&
-			eventRowDivRef
-		) {
-			const eventRowHeight = eventRowDivRef.getBoundingClientRect().height;
-			lastRowContext.set(eventRowHeight);
-		}
-
 		// if onClick isn't provided, use this function
 		onClickTimelineEvent =
 			onClickTimelineEvent ?? eventReference?.personId ? () => {} : onClickTimelineEvent;
@@ -159,6 +138,29 @@
 				getContext(JDG_CONTEXT_KEYS.timelineInceptionEvent),
 				eventDateCorrected
 			);
+		}
+	}
+
+	// Update row heights
+	$: {
+		if (upgradedEvent) {
+			// birth and death events report their row height for the spine to align to
+			if (
+				(upgradedEvent.type === timelineEventTypes.birth.type ||
+					upgradedEvent.type === timelineEventTypes.birth.type) &&
+				eventRowDivRef
+			) {
+				const eventRowHeight = eventRowDivRef.getBoundingClientRect().height;
+				firstRowContext.set(eventRowHeight);
+			}
+			if (
+				(upgradedEvent.type === timelineEventTypes.death.type ||
+					upgradedEvent.type === timelineEventTypes.death) &&
+				eventRowDivRef
+			) {
+				const eventRowHeight = eventRowDivRef.getBoundingClientRect().height;
+				lastRowContext.set(eventRowHeight);
+			}
 		}
 	}
 
@@ -347,7 +349,6 @@
 		justify-content: center;
 		align-items: center;
 		border-radius: 0px 0px 5px 5px;
-		background-color: rgba(205, 205, 205, 1);
 	}
 
 	.timeline-event-date-apprx {

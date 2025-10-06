@@ -9,7 +9,9 @@ import {
 import { timelineEventDraft } from './stores/jdg-temp-store.js';
 
 import jdgTimelineHost from '$lib/schemas/timeline/jdg-timeline-host.js';
-import jdgTimelineEventTypes, { jdgTimelineEventKeys } from './schemas/timeline/jdg-timeline-event-types.js';
+import jdgTimelineEventTypes, {
+	jdgTimelineEventKeys
+} from './schemas/timeline/jdg-timeline-event-types.js';
 import jdgTimelineRowItem from '$lib/schemas/timeline/jdg-timeline-row-item.js';
 
 import { instantiateObject } from '$lib/jdg-utils.js';
@@ -125,9 +127,17 @@ export const getTimelineProportionByDate = (
 	eventDate,
 	cessationDate = undefined
 ) => {
-	// this covers the case where the birthday is unknown, so force the div to the top (0 proportion)
-	if (eventDate === '') {
+	/*** HANDLE NO INCEPTION DATE CASES */
+	// If both the eventDate and inceptionDate are unknown,
+	// this must be the un-set inceptionDate, so
+	// force the div to the top (0 proportion)
+	if (eventDate === '' && inceptionDate === '') {
 		return 0;
+	}
+	// If there is no inceptionDate,
+	// this is probably the Today event, so put it at the bottom
+	if (inceptionDate === '') {
+		return 1;
 	}
 
 	const startDate = new Date(inceptionDate);

@@ -9,7 +9,9 @@ import {
 	getObjectByKeyValue,
 	instantiateObject
 } from './jdg-utils.js';
-import jdgTimelineEventTypes from './schemas/timeline/jdg-timeline-event-types.js';
+import jdgTimelineEventTypes, {
+	jdgTimelineEventKeys
+} from './schemas/timeline/jdg-timeline-event-types.js';
 import jdgTimelineEvent from './schemas/timeline/jdg-timeline-event.js';
 
 // Creates a data-only TimelineEvent schema
@@ -32,6 +34,10 @@ export const instantiateTimelineEvent = (typeKey) => {
 	base.additionalContent = extractDataFromHybridSchema(addlContentSchema);
 	// Set a random id
 	base.id = uuidv4();
+	// If this is a Today event, use today's date
+	if (typeKey === jdgTimelineEventKeys.today) {
+		base.date = new Date().toLocaleDateString();
+	}
 
 	return base;
 };

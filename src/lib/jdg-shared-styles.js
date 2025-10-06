@@ -246,7 +246,7 @@ export const jdgSizes = {
 	imageAspectRatioUpdateThreshold: 0.01,
 
 	timelineUnit: 'rem',
-	nTimelineEventYearWidth: 4,
+	nTimelineEventYearWidth: 5,
 	get timelineEventYearWidth() {
 		return this.nTimelineEventYearWidth + this.timelineUnit;
 	},

@@ -6,7 +6,6 @@
 
 	import { getMaxElementHeightPx } from '$lib/jdg-utils.js';
 
-
 	import { jdgTimelineEventKeys } from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
 
