@@ -117,6 +117,14 @@ const jdgTimelineEventTypes = {
 	},
 
 	/*** contextual types, don't show in type selector dropdown ***/
+	inception: {
+		label: 'Inception',
+		icon: 'fa-wand-magic-sparkles',
+		isContextual: true,
+		additionalContent: {
+			description: 'Inception'
+		}
+	},
 	context: {
 		label: 'Contextual Event',
 		icon: 'fa-globe',

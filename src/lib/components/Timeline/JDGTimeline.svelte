@@ -149,9 +149,9 @@
 	// an inception and today event to contextual events
 	$: {
 		if (timelineHost?.timelineEvents.length === 0) {
-			const tempInceptionEvent = instantiateTimelineEvent(jdgTimelineEventKeys.generic);
+			const inceptionEvent = instantiateTimelineEvent(jdgTimelineEventKeys.inception);
 			const todayEvent = instantiateTimelineEvent(jdgTimelineEventKeys.today);
-			timelineHost.timelineEvents = [tempInceptionEvent, todayEvent];
+			timelineHost.timelineEvents = [inceptionEvent, todayEvent];
 		}
 	}
 
