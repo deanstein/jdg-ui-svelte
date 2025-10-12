@@ -156,11 +156,7 @@ export const getTimelineProportionByDate = (
 
 // converts raw timeline events to timeline row items for UI
 // row items include an index to properly sort based on chronology
-export const generateTimelineRowItems = (
-	timelineHost,
-	contextualEvents,
-	inceptionEvent = undefined
-) => {
+export const generateTimelineRowItems = (timelineHost, contextualEvents, inceptionDate) => {
 	// ensure timelineHost has all expected fields
 	const upgradedTimelineHost = instantiateObject(jdgTimelineHost, timelineHost);
 
@@ -172,22 +168,13 @@ export const generateTimelineRowItems = (
 		jdgQuantities.initialTimelineRowCount
 	);
 
-	// if no inception event is provided, use the earliest event
-	if (!inceptionEvent) {
-		inceptionEvent = getEarliestTimelineEvent(upgradedTimelineHost.timelineEvents);
-		// if there's still no inception event, generate one
-		if (!inceptionEvent) {
-			inceptionEvent = instantiateTimelineEvent(jdgTimelineEventKeys.generic);
-		}
-	}
-
 	// generate the regular events
 	for (let i = 0; i < upgradedTimelineHost.timelineEvents.length; i++) {
 		// create a new timeline row item
 		let thisRowItem = instantiateObject(jdgTimelineRowItem);
 		// get the index this item belongs to
 		const rowIndex = getClosestTimelineRowByDate(
-			inceptionEvent.date,
+			inceptionDate,
 			upgradedTimelineHost.timelineEvents[i].date,
 			numberOfRows
 		);
@@ -213,7 +200,7 @@ export const generateTimelineRowItems = (
 		eventFromReference.type = jdgTimelineEventTypes.reference;
 		// get the index this item belongs to
 		const rowIndex = getClosestTimelineRowByDate(
-			inceptionEvent.eventDate,
+			inceptionDate,
 			eventFromReference.eventDate,
 			numberOfRows
 		);
@@ -230,7 +217,7 @@ export const generateTimelineRowItems = (
 		let thisRowItem = instantiateObject(jdgTimelineRowItem);
 		// get the index this item belongs to
 		const rowIndex = getClosestTimelineRowByDate(
-			inceptionEvent.eventDate,
+			inceptionDate,
 			contextualEvents[i].eventDate,
 			numberOfRows
 		);

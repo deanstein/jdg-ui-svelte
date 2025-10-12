@@ -29,24 +29,25 @@
 	export let timelineHost;
 	// Optionally include contextual events
 	export let contextEvents = timelineHost.contextualEvents;
-	// The event used to determine age
-	// if not provided, age won't be calculated
-	export let inceptionEvent = timelineHost.inceptionEvent;
-	// If not provided, will use today's date
-	export let cessationEvent = timelineHost.cessationEvent;
 	// Whether the add event button is shown
 	export let allowEditing = true;
 	// Width and height for timeline interface
 	export let width = '100%';
 	export let minHeight = '50svh';
 
+	export let onClickInceptionEvent = () => {};
 	export let onClickTimelineEvent = () => {};
 	export let onClickEventRefHost = () => {};
 	export let onClickAssociatedHost = () => {};
+	export let addClickAddEvent = () => {};
 	export let getTimelineHostById = () => {};
 
 	const rowHeightEmptyPx = 1;
 	const rowHeightFilledPx = 80;
+
+	// set up the inception and cessation events
+	let emptyStateEvent;
+	let todayEvent;
 
 	// these three colors define the gradient
 	// that all timeline events will occupy from start to end
@@ -79,9 +80,6 @@
 	setContext(JDG_CONTEXT_KEYS.timelineFirstRowHeight, firstEventRowHeightStore);
 	const lastEventRowHeightStore = writable(0);
 	setContext(JDG_CONTEXT_KEYS.timelineLastRowHeight, lastEventRowHeightStore);
-	setContext(JDG_CONTEXT_KEYS.timelineInceptionEvent, inceptionEvent);
-
-	export let onClickAddEventButton = () => {};
 
 	const onCheckRelativeSpacing = () => {
 		forceRelativeSpacing = true;
@@ -93,6 +91,18 @@
 
 	let eventsInView = [];
 	onMount(() => {
+		// If there are no timeline events, show an inception event
+		// that creates an initial event when clicked
+		if (timelineHost.timelineEvents.length === 0) {
+			emptyStateEvent = instantiateTimelineEvent(jdgTimelineEventKeys.inception);
+			emptyStateEvent.date = timelineHost.inceptionDate;
+		}
+		// If there's no cessation date, show a Today event
+		if (!timelineHost.cessationDate) {
+			todayEvent = instantiateTimelineEvent(jdgTimelineEventKeys.today);
+			todayEvent.type = jdgTimelineEventKeys.today;
+		}
+
 		// Determine whether the spacing should default to relative
 		const timelineHeightPx = getMaxElementHeightPx(scrollingCanvasDivRef);
 		const emptyRowHeightPx = 1;
@@ -149,9 +159,6 @@
 	// an inception and today event to contextual events
 	$: {
 		if (timelineHost?.timelineEvents.length === 0) {
-			const inceptionEvent = instantiateTimelineEvent(jdgTimelineEventKeys.inception);
-			const todayEvent = instantiateTimelineEvent(jdgTimelineEventKeys.today);
-			timelineHost.timelineEvents = [inceptionEvent, todayEvent];
 		}
 	}
 
@@ -169,7 +176,7 @@
 		// Convert events to timeline row items
 		// and ensure no shared rows in the grid
 		timelineRowItems = updateTimelineRowItems(
-			generateTimelineRowItems(timelineHost, contextEvents, inceptionEvent)
+			generateTimelineRowItems(timelineHost, contextEvents, timelineHost.inceptionDate)
 		);
 	}
 
@@ -190,15 +197,15 @@
 			parentRef={timelineWrapperRef}
 			composeButtonFaIcon={'fa-plus fa-fw'}
 			composeButtonTooltip={'Add a new event'}
-			onClickCompose={onClickAddEventButton}
+			onClickCompose={addClickAddEvent}
 			zIndex={1}
 		/>
 	{/if}
 	<div bind:this={timelineContainerRef} class="timeline-container">
 		<div class="timeline-actions-bar">
 			<div class="timeline-event-count {timelineEventCountCss}">
-				<!-- Birth and death/today are always shown, so add 2 to the count -->
-				Showing {timelineRowItems.length + 2} timeline events
+				Showing {timelineRowItems.length + (emptyStateEvent ? 1 : 0) + (todayEvent ? 1 : 0)} timeline
+				events
 			</div>
 			<Checkbox
 				isEnabled={true}
@@ -218,19 +225,17 @@
 			<div class="timeline-scrolling-canvas" bind:this={scrollingCanvasDivRef}>
 				<!-- The grid containing all timeline events -->
 				<div class="timeline-event-grid {timelineEventGridCss}">
-					<!-- Show the inception event if provided -->
-					{#if inceptionEvent}
+					<!-- If there are no events, make the first event an inception event-->
+					{#if emptyStateEvent}
 						<JDGTimelineEvent
-							timelineEvent={inceptionEvent}
+							timelineEvent={emptyStateEvent}
+							onClickTimelineEvent={onClickInceptionEvent}
 							rowIndex={0}
 							backgroundColor={timelineEventColors[0]}
-							{onClickTimelineEvent}
-							{onClickEventRefHost}
-							{onClickAssociatedHost}
 							{getTimelineHostById}
 						/>
 					{/if}
-					<!-- All other timeline events saved to the person -->
+					<!-- All timeline events saved to the host -->
 					{#each timelineRowItems as timelineRowItem, i}
 						<!-- Ensure the UI reacts when these values change -->
 						{#key `${timelineHost.id}-${timelineRowItem.event.eventId}`}
@@ -246,10 +251,10 @@
 							/>
 						{/key}
 					{/each}
-					<!-- Show the cessation event if provided -->
-					{#if cessationEvent}
+					<!-- Show the today event if no cessation date -->
+					{#if todayEvent}
 						<JDGTimelineEvent
-							timelineEvent={cessationEvent}
+							timelineEvent={todayEvent}
 							rowIndex={jdgQuantities.initialTimelineRowCount}
 							backgroundColor={timelineEventColors[timelineEventColors.length - 1]}
 							{getTimelineHostById}

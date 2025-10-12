@@ -8,6 +8,8 @@ const jdgTimelineHost = {
 	id: '',
 	name: '',
 	avatar: '',
+	inceptionDate: '', // birth date, construction date, etc.
+	cessationDate: '', // death date, demolition date, etc.
 	timelineEvents: [],
 	timelineEventReferences: [],
 	contextualEvents: [],

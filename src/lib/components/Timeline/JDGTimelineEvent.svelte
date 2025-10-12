@@ -24,12 +24,14 @@
 	import jdgTimelineHost from '$lib/schemas/timeline/jdg-timeline-host.js';
 
 	export let timelineEvent;
-	// if this is set, this event is a reference to someone else's event
+	// If true, this event is a reference to someone else's actual event
 	// so it will display and interact differently
 	export let eventReference = instantiateObject(timelineEventReference);
-	// when clicking on the event - default is to set it active
+	// Is this event interactive?
+	export let canClick = true;
+	// When clicking on the event - default is to set it active
 	export let onClickTimelineEvent = setTimelineEventActive;
-	// when clicking on an event reference host
+	// When clicking on an event reference host
 	export let onClickEventRefHost = (timelineHostId) => {};
 	// when clicking on an associated host
 	export let onClickAssociatedHost = (timelineHostId) => {};
@@ -65,8 +67,9 @@
 	];
 
 	const canClickOnTimelineEvent = () => {
-		// Default: Clickable
-		let canClick = true;
+		if (!canClick) {
+			return false;
+		}
 		if (upgradedEvent) {
 			canClick =
 				upgradedEvent.type !== jdgTimelineEventKeys.context &&
@@ -75,6 +78,13 @@
 		}
 		return canClick;
 	};
+	$: {
+		// Re-check if clickable when isClickable changes
+		if (!canClickOnTimelineEvent()) {
+			console.log('Can click?');
+			onClickTimelineEvent = () => {};
+		}
+	}
 
 	const eventRowCss = css`
 		gap: ${jdgSizes.timelineEventGapSize};
@@ -129,12 +139,14 @@
 	const lastRowContext = getContext(JDG_CONTEXT_KEYS.timelineLastRowHeight);
 
 	onMount(() => {
-		// upgrade the timeline event so it has the right fields for downstream operations
+		// Upgrade the timeline event so it has the right fields for downstream operations
 		upgradedEvent = upgradeTimelineEvent(timelineEvent);
 
-		// if onClick isn't provided, use this function
-		onClickTimelineEvent =
-			onClickTimelineEvent ?? eventReference?.personId ? () => {} : onClickTimelineEvent;
+		// If this is an eventReference, or the type is today
+		// don't do anything on click
+		if (eventReference?.personId || timelineEvent.type === jdgTimelineEventKeys.today) {
+			onClickTimelineEvent = () => {};
+		}
 	});
 
 	$: {
