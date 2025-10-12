@@ -33,6 +33,7 @@
 	import { setTimelineEventActive } from '$lib/jdg-ui-management.js';
 	import {
 		addOrReplaceObjectByKeyValue,
+		deepMatchObjects,
 		deleteObjectByKeyValue,
 		instantiateObject
 	} from '$lib/jdg-utils.js';
@@ -122,6 +123,15 @@
 	$: {
 		if ($localTimelineHostStore !== undefined && $timelineHostDraft === undefined) {
 			draftTimelineHostNameStore.set($localTimelineHostStore.name);
+		}
+	}
+
+	// When there's a timeline host being drafted, make sure it's upgraded
+	$: {
+		// Upgrade the timelineHost
+		if ($timelineHostDraft !== undefined) {
+			const upgradedHost = deepMatchObjects(jdgTimelineHost, $localTimelineHostStore);
+			timelineHostDraft.set(upgradedHost);
 		}
 	}
 
@@ -303,6 +313,14 @@
 				</div>
 			</div>
 		</div>
+		{#if $timelineHostDraft !== undefined}
+			<JDGH3H4 h3String={'Draft Timeline Host Store'} />
+			<JDGBodyCopy>
+				<pre>
+				{JSON.stringify($timelineHostDraft, null, 2)}
+			</pre>
+			</JDGBodyCopy>
+		{/if}
 		<JDGBodyCopy>
 			<JDGModalActionsBar>
 				{#if $timelineHostDraft}

@@ -225,11 +225,12 @@
 			<div class="timeline-scrolling-canvas" bind:this={scrollingCanvasDivRef}>
 				<!-- The grid containing all timeline events -->
 				<div class="timeline-event-grid {timelineEventGridCss}">
-					<!-- If there are no events, make the first event an inception event-->
+					<!-- If there are no events, make an empty state event at the top -->
 					{#if emptyStateEvent}
 						<JDGTimelineEvent
 							timelineEvent={emptyStateEvent}
-							onClickTimelineEvent={onClickInceptionEvent}
+							onClickTimelineEvent={allowEditing ? onClickInceptionEvent : () => {}}
+							isInteractive={allowEditing ? true : false}
 							rowIndex={0}
 							backgroundColor={timelineEventColors[0]}
 							{getTimelineHostById}

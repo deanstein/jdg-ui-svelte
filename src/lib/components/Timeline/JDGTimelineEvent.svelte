@@ -28,7 +28,7 @@
 	// so it will display and interact differently
 	export let eventReference = instantiateObject(timelineEventReference);
 	// Is this event interactive?
-	export let canClick = true;
+	export let isInteractive = true;
 	// When clicking on the event - default is to set it active
 	export let onClickTimelineEvent = setTimelineEventActive;
 	// When clicking on an event reference host
@@ -42,6 +42,13 @@
 
 	export let backgroundColor = jdgColors.activeColorSubtle;
 	export let rowIndex;
+
+	// canClick may need to be overridden
+	let canClickCalculated;
+	$: {
+		isInteractive;
+		canClickCalculated = canClickOnTimelineEvent();
+	}
 
 	let upgradedEvent;
 	let eventDateCorrected;
@@ -67,24 +74,19 @@
 	];
 
 	const canClickOnTimelineEvent = () => {
-		if (!canClick) {
+		// If the prop is set to false, don't click
+		if (!isInteractive) {
 			return false;
 		}
+		// Otherwise, we still don't want to do anything on click in some cases
 		if (upgradedEvent) {
-			canClick =
+			return (
 				upgradedEvent.type !== jdgTimelineEventKeys.context &&
 				upgradedEvent.type !== jdgTimelineEventKeys.reference &&
-				upgradedEvent.type !== jdgTimelineEventKeys.today;
+				upgradedEvent.type !== jdgTimelineEventKeys.today
+			);
 		}
-		return canClick;
 	};
-	$: {
-		// Re-check if clickable when isClickable changes
-		if (!canClickOnTimelineEvent()) {
-			console.log('Can click?');
-			onClickTimelineEvent = () => {};
-		}
-	}
 
 	const eventRowCss = css`
 		gap: ${jdgSizes.timelineEventGapSize};
@@ -188,7 +190,7 @@
 	$: {
 		if (upgradedEvent) {
 			eventRowContainerCss = css`
-				cursor: ${canClickOnTimelineEvent() ? 'pointer' : 'default'};
+				cursor: ${canClickCalculated ? 'pointer' : 'default'};
 			`;
 		}
 	}
@@ -198,9 +200,9 @@
 		if (upgradedEvent) {
 			eventRowDynamicCss = css`
 				grid-row: ${rowIndex};
-				cursor: ${canClickOnTimelineEvent() ? 'pointer' : 'default'};
+				cursor: ${canClickCalculated ? 'pointer' : 'default'};
 				&:hover {
-					background-color: ${canClickOnTimelineEvent() ? 'rgba(255, 255, 255, 0.75)' : ''};
+					background-color: ${canClickCalculated ? 'rgba(255, 255, 255, 0.75)' : ''};
 				}
 			`;
 		}
