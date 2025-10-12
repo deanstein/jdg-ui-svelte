@@ -1,20 +1,14 @@
 <script>
-	import { getContext, onMount, setContext } from 'svelte';
+	import { onMount, setContext } from 'svelte';
 	import { writable } from 'svelte/store';
-	import { v4 as uuidv4 } from 'uuid';
 	import { css } from '@emotion/css';
 
 	import { getMaxElementHeightPx } from '$lib/jdg-utils.js';
 
 	import { jdgTimelineEventKeys } from '$lib/schemas/timeline/jdg-timeline-event-types.js';
-	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
 
-	import { doShowTimelineEventDetailsModal } from '$lib/stores/jdg-ui-store.js';
-	import { isTimelineEventDrafting, timelineEventDraft } from '$lib/stores/jdg-temp-store.js';
 
-	import { jdgSchemaVersion } from '$lib/schemas/jdg-schema-versions.js';
 	import { generateTimelineRowItems, updateTimelineRowItems } from '$lib/jdg-ui-management.js';
-	import { instantiateObject } from '$lib/jdg-utils.js';
 
 	import { generateGradient } from '$lib/jdg-utils.js';
 
@@ -238,7 +232,7 @@
 					{/if}
 					<!-- All timeline events saved to the host -->
 					{#each timelineRowItems as timelineRowItem, i}
-						<!-- Ensure the UI reacts when these values change -->
+						<!-- Use a key to ensure the UI reacts when these values change -->
 						{#key `${timelineHost.id}-${timelineRowItem.event.eventId}`}
 							<JDGTimelineEvent
 								timelineEvent={timelineRowItem.event}
