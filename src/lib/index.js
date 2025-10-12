@@ -201,6 +201,9 @@ export { JDGTimelineEvent };
 import JDGTimelineEventForm from './components/Timeline/JDGTimelineEventForm.svelte';
 export { JDGTimelineEventForm };
 
+import JDGTimelineEventModal from './components/Timeline/JDGTimelineEventModal.svelte';
+export { JDGTimelineEventModal };
+
 import JDGTopNav from './components/Nav/JDGTopNav.svelte';
 export { JDGTopNav };
 

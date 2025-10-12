@@ -1,46 +1,96 @@
 import { get } from 'svelte/store';
 import { v4 as uuidv4 } from 'uuid';
 
-import jdgTimelineHost from './schemas/timeline/jdg-timeline-host.js';
+import { jdgSchemaVersion } from '$lib/schemas/jdg-schema-versions.js';
+import jdgTimelineHost from '$lib/schemas/timeline/jdg-timeline-host.js';
 import {
 	addOrReplaceObjectByKeyValue,
+	deepMatchObjects,
 	deleteObjectByKeyValue,
 	extractDefaultsFromSchema as extractDataFromHybridSchema,
 	getObjectByKeyValue,
 	instantiateObject
-} from './jdg-utils.js';
+} from '$lib/jdg-utils.js';
 import jdgTimelineEventTypes, {
 	jdgTimelineEventKeys
-} from './schemas/timeline/jdg-timeline-event-types.js';
-import jdgTimelineEvent from './schemas/timeline/jdg-timeline-event.js';
+} from '$lib/schemas/timeline/jdg-timeline-event-types.js';
+import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
+
+//
+// TIMELINE HOST
+//
+
+// Ensure all new timelineHost fields are added to the given host
+export function upgradeTimelineHost(timelineHost) {
+	// Initial upgrade
+	const upgradedHost = deepMatchObjects(jdgTimelineHost, timelineHost);
+
+	// Update the version to the schema version
+	upgradedHost.version = jdgSchemaVersion;
+
+	// Ensure the version is updated
+	return upgradedHost;
+}
+
+//
+// TIMELINE EVENT
+//
 
 // Creates a data-only TimelineEvent schema
 // from TimelineEvent which is a HYBRID schema
 export const instantiateTimelineEvent = (typeKey) => {
-	const baseSchema = JSON.parse(JSON.stringify(jdgTimelineEvent));
+	const initialTimelineEvent = instantiateObject(jdgTimelineEvent);
 	const typeDef = jdgTimelineEventTypes[typeKey];
 
 	if (!typeDef || typeof typeDef !== 'object') {
 		console.error(`No schema found for type "${typeKey}"`);
 		// HYBRID schema has both UI and data
-		return extractDataFromHybridSchema(baseSchema);
+		return extractDataFromHybridSchema(initialTimelineEvent);
 	}
 
 	// HYBRID schema has both UI and data
-	const base = extractDataFromHybridSchema(baseSchema);
-	base.type = typeKey;
+	const extractedBaseEvent = extractDataFromHybridSchema(initialTimelineEvent);
+	extractedBaseEvent.type = typeKey;
 
-	const addlContentSchema = typeDef.additionalContent || {};
-	base.additionalContent = extractDataFromHybridSchema(addlContentSchema);
+	const extractedAddlContent = typeDef.additionalContent || {};
+	extractedBaseEvent.additionalContent = extractDataFromHybridSchema(extractedAddlContent);
+
 	// Set a random id
-	base.id = uuidv4();
+	extractedBaseEvent.id = uuidv4();
+
 	// If this is a Today event, use today's date
 	if (typeKey === jdgTimelineEventKeys.today) {
-		base.date = new Date().toLocaleDateString();
+		extractedBaseEvent.date = new Date().toLocaleDateString();
 	}
 
-	return base;
+	// Update the version to the schema version
+	extractedBaseEvent.version = jdgSchemaVersion;
+
+	return extractedBaseEvent;
 };
+
+// Upgrades a timeline event with the latest fields
+export function upgradeTimelineEvent(event) {
+	const typeKey = event?.type;
+	const typeDef = jdgTimelineEventTypes[typeKey];
+
+	if (!typeDef) {
+		console.warn(`Unknown timeline event type: ${typeKey}`);
+		return { ...event, version: jdgSchemaVersion };
+	}
+
+	const defaultContent = typeDef.content || {};
+	const existingContent = event.additionalContent || {};
+
+	// Merge defaults with existing content, preserving user-entered values
+	const upgradedContent = { ...defaultContent, ...existingContent };
+
+	return {
+		...event,
+		additionalContent: upgradedContent,
+		version: jdgSchemaVersion
+	};
+}
 
 // Timeline events contain both UI and data in their schema.
 // This one gets the data:

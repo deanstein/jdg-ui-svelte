@@ -15,7 +15,7 @@
 		doShowDevToolbarSticky,
 		doShowHeaderStripes,
 		doShowImageDetailOverlay,
-		doShowTimelineEventDetailsModal,
+		doShowTimelineEventModal,
 		headerHeightPx,
 		imageDetailMeta,
 		isMobileBreakpoint,
@@ -53,6 +53,7 @@
 	} from '$lib/jdg-shared-styles.js';
 	import { timelineEventDraft } from '$lib/stores/jdg-temp-store.js';
 	import { imageMetaCollection } from '../../routes/image-meta-collection.js';
+	import JDGTimelineEventModal from './Timeline/JDGTimelineEventModal.svelte';
 
 	export let fontFamily = jdgFonts.body;
 	export let appLoadingIconSrc = imageMetaCollection.jdg_logo_ui.src;
@@ -219,16 +220,8 @@
 	{#if $doShowDevToolbarSticky}
 		<JDGDevToolbarSticky />
 	{/if}
-	{#if $doShowTimelineEventDetailsModal}
-		<JDGModal
-			onClickCloseButton={() => {
-				$doShowTimelineEventDetailsModal = false;
-			}}
-		>
-			<div slot="modal-content-slot">
-				<JDGTimelineEventForm eventStore={timelineEventDraft} />
-			</div>
-		</JDGModal>
+	{#if $doShowTimelineEventModal}
+		<JDGTimelineEventModal />
 	{/if}
 </div>
 

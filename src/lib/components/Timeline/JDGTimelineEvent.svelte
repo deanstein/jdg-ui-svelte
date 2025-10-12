@@ -8,19 +8,14 @@
 	import timelineEventReference from '$lib/schemas/timeline/jdg-timeline-event-reference.js';
 
 	import { JDG_CONTEXT_KEYS } from '$lib/stores/jdg-context-keys.js';
-	import { timelineEventDraft } from '$lib/stores/jdg-temp-store.js';
 
-	import {
-		getNumberOfYearsBetweenEvents,
-		instantiateObject,
-		upgradeTimelineEvent
-	} from '$lib/jdg-utils.js';
+	import { getNumberOfYearsBetweenEvents, instantiateObject } from '$lib/jdg-utils.js';
 
-	import { doShowTimelineEventDetailsModal } from '$lib/stores/jdg-ui-store.js';
+	import { setTimelineEventActive } from '$lib/jdg-ui-management.js';
+	import { upgradeTimelineEvent } from '$lib/jdg-timeline-management.js';
 
 	import { JDGButton, JDGImageThumbnailGroup } from '$lib/index.js';
 	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
-	import { setTimelineEventActive } from '$lib/jdg-ui-management.js';
 	import jdgTimelineHost from '$lib/schemas/timeline/jdg-timeline-host.js';
 
 	export let timelineEvent;

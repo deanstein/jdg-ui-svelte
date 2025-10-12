@@ -7,10 +7,6 @@ import {
 } from './jdg-persistence-management.js';
 import { getDistancePxToBottomOfHeader } from './jdg-ui-management.js';
 
-import { jdgSchemaVersion } from './schemas/jdg-schema-versions.js';
-import jdgTimelineEvent from './schemas/timeline/jdg-timeline-event.js';
-import jdgTimelineEventTypes from './schemas/timeline/jdg-timeline-event-types.js';
-
 ///
 /// WINDOW UTILS
 ///
@@ -968,45 +964,3 @@ export const scrollToAnchor = (anchorId, accountForHeader = false, additionalOff
 export const getIsWindowScrolledToBottom = () => {
 	return window.innerHeight + window.scrollY === document.body.offsetHeight;
 };
-
-///
-/// TIMELINE MANAGEMENT UTILS
-///
-
-// Create a timeline event with optional customizations per type
-export function createTimelineEvent(timelineEventType) {
-	const typeDef = jdgTimelineEventTypes[timelineEventType];
-
-	if (!typeDef) {
-		throw new Error(`JDG UI: Invalid timeline event type: ${timelineEventType}`);
-	}
-
-	return {
-		...jdgTimelineEvent,
-		type: typeDef.type,
-		additionalContent: { ...typeDef.content }
-	};
-}
-
-// Upgrades a timeline event with the latest fields
-export function upgradeTimelineEvent(event) {
-	const typeKey = event?.type;
-	const typeDef = jdgTimelineEventTypes[typeKey];
-
-	if (!typeDef) {
-		console.warn(`Unknown timeline event type: ${typeKey}`);
-		return { ...event, version: jdgSchemaVersion };
-	}
-
-	const defaultContent = typeDef.content || {};
-	const existingContent = event.additionalContent || {};
-
-	// Merge defaults with existing content, preserving user-entered values
-	const upgradedContent = { ...defaultContent, ...existingContent };
-
-	return {
-		...event,
-		additionalContent: upgradedContent,
-		version: jdgSchemaVersion
-	};
-}

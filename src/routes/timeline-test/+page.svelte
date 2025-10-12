@@ -16,7 +16,7 @@
 		readJsonFileFromRepo,
 		writeJsonFileToRepo
 	} from '$lib/jdg-persistence-management.js';
-	import { instantiateTimelineEvent } from '$lib/jdg-timeline-management.js';
+	import { instantiateTimelineEvent, upgradeTimelineHost } from '$lib/jdg-timeline-management.js';
 	import {
 		timelineCollectionFileDraft,
 		timelineEventDraft,
@@ -24,7 +24,7 @@
 	} from '$lib/stores/jdg-temp-store.js';
 	import {
 		doAllowTextSelection,
-		doShowTimelineEventDetailsModal,
+		doShowTimelineEventModal,
 		isAdminMode,
 		isMobileBreakpoint,
 		isTabletBreakpoint
@@ -130,7 +130,7 @@
 	$: {
 		// Upgrade the timelineHost
 		if ($timelineHostDraft !== undefined) {
-			const upgradedHost = deepMatchObjects(jdgTimelineHost, $localTimelineHostStore);
+			const upgradedHost = upgradeTimelineHost($localTimelineHostStore);
 			timelineHostDraft.set(upgradedHost);
 		}
 	}
@@ -402,12 +402,12 @@
 			timelineHost={newTimelineHost}
 			allowEditing={$timelineHostDraft !== undefined}
 			onClickInceptionEvent={() => {
-				doShowTimelineEventDetailsModal.set(true);
+				doShowTimelineEventModal.set(true);
 				timelineEventDraft.set(instantiateTimelineEvent(jdgTimelineEventKeys.generic));
 			}}
 			onClickTimelineEvent={setTimelineEventActive}
 			addClickAddEvent={() => {
-				doShowTimelineEventDetailsModal.set(true);
+				doShowTimelineEventModal.set(true);
 				timelineEventDraft.set(instantiateTimelineEvent(jdgTimelineEventKeys.generic));
 			}}
 		/>

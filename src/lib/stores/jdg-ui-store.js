@@ -44,7 +44,7 @@ export let imageDetailScale = writable(1.0);
 export let doShowImageDetailOverlay = writable(false);
 
 /*** TIMELINE ***/
-export let doShowTimelineEventDetailsModal = writable(false);
+export let doShowTimelineEventModal = writable(false);
 
 /*** QUANTITIES ***/
 export let clientWidth = writable(0); // window minus scrollbar
@@ -97,7 +97,7 @@ const storeMap = {
 	imageDetailWidth,
 	imageDetailScale,
 	// timeline
-	doShowTimelineEventDetailsModal,
+	doShowTimelineEventModal,
 	// quantities
 	clientWidth,
 	windowWidth,
