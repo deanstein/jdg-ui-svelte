@@ -3,6 +3,7 @@
 
 	import { get, writable } from 'svelte/store';
 
+	import { timelineEventDraft, timelineHostDraft } from '$lib/stores/jdg-temp-store.js';
 	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
 	import jdgTimelineEventTypes, {
 		jdgTimelineEventKeys
@@ -12,6 +13,7 @@
 		extractDataSchemaFields,
 		extractUiFromDataSchema
 	} from '$lib/jdg-timeline-management.js';
+	import { getIsObjectInArray } from '$lib/jdg-utils.js';
 
 	import {
 		instantiateObject,
@@ -36,6 +38,8 @@
 
 	let parentRef; // for positioning the compose toolbar
 
+	let isNewEvent; // If true, this event wasn't found in the draft timeline host
+
 	// Local writable stores for editing
 	let localEventStore = writable({});
 	let localAdditionalStore = writable({});
@@ -45,6 +49,15 @@
 		const snapshot = get(eventStore);
 		localEventStore.set({ ...snapshot });
 		localAdditionalStore.set({ ...snapshot.additionalContent });
+	}
+
+	// Consider this a new event if it's not present in the
+	// editing timelineHost's events array
+	$: {
+		// If not already in the timeline host, this is a new event
+		if (!getIsObjectInArray(timelineHostDraft.timelineEvents, $timelineEventDraft)) {
+			isNewEvent = true;
+		}
 	}
 
 	// Schema prep

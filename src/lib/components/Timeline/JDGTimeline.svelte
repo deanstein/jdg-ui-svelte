@@ -7,7 +7,6 @@
 
 	import { jdgTimelineEventKeys } from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 
-
 	import { generateTimelineRowItems, updateTimelineRowItems } from '$lib/jdg-ui-management.js';
 
 	import { generateGradient } from '$lib/jdg-utils.js';

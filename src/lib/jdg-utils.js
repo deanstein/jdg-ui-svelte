@@ -58,6 +58,11 @@ export const getIsValueInArray = (array, value) => {
 	return index > -1 ? true : false;
 };
 
+export const getIsObjectInArray = (array, obj) => {
+	if (!obj || !array || typeof obj.id === 'undefined') return false;
+	return array.some((item) => item.id === obj.id);
+};
+
 export const removeValueFromArray = (array, value) => {
 	const index = array.indexOf(value);
 	if (index > -1) {
