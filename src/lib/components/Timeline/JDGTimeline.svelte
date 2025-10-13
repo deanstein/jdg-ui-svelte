@@ -88,18 +88,6 @@
 
 	let eventsInView = [];
 	onMount(() => {
-		// If there are no timeline events, show an inception event
-		// that creates an initial event when clicked
-		if (timelineHost?.timelineEvents?.length === 0) {
-			emptyStateEvent = instantiateTimelineEvent(jdgTimelineEventKeys.inception);
-			emptyStateEvent.date = timelineHost.inceptionDate;
-		}
-		// If there's no cessation date, show a Today event
-		if (!timelineHost?.cessationDate) {
-			todayEvent = instantiateTimelineEvent(jdgTimelineEventKeys.today);
-			todayEvent.type = jdgTimelineEventKeys.today;
-		}
-
 		// Determine whether the spacing should default to relative
 		const timelineHeightPx = getMaxElementHeightPx(scrollingCanvasDivRef);
 		const emptyRowHeightPx = 1;
@@ -161,12 +149,29 @@
 		`;
 	}
 
+	// Keep emptyState and today events updated
+	$: {
+		// If there are no timeline events, show an inception event
+		// that creates an initial event when clicked
+		if (timelineHost?.timelineEvents?.length === 0) {
+			emptyStateEvent = instantiateTimelineEvent(jdgTimelineEventKeys.inception);
+			emptyStateEvent.date = timelineHost.inceptionDate;
+		}
+		// If there's no cessation date, show a Today event
+		if (timelineHost?.cessationDate === '' || !timelineHost?.cessationDate) {
+			todayEvent = instantiateTimelineEvent(jdgTimelineEventKeys.today);
+			todayEvent.type = jdgTimelineEventKeys.today;
+		}
+	}
+
 	// Keep timeline row items updated
 	$: {
 		// If there's no inception date, use the earliest date
 		const earliestEvent = getEarliestTimelineEvent(timelineHost.timelineEvents);
 		let earliestOrInceptionDate =
-			timelineHost.inceptionDate !== '' ? timelineHost.inceptionDate : earliestEvent?.date;
+			timelineHost?.inceptionDate === undefined || timelineHost.inceptionDate !== ''
+				? timelineHost.inceptionDate
+				: earliestEvent?.date;
 		// Eliminate the emptyState event if there are timelineEvents present
 		if (timelineHost.timelineEvents.length > 0) {
 			emptyStateEvent = undefined;
@@ -182,7 +187,9 @@
 	$: {
 		// Generate a gradient of colors across all timeline events
 		timelineEventColors = generateGradient(
-			timelineHost?.timelineEvents?.length + 2 /* account for birth and death */,
+			timelineHost?.timelineEvents?.length +
+				(emptyStateEvent ? 1 : 0) +
+				(todayEvent ? 1 : 0) /* account for birth and death */,
 			timelineEventColorGradient1,
 			timelineEventColorGradient2,
 			timelineEventColorGradient3
@@ -245,14 +252,14 @@
 									//timelineRowItem.event.associatedHostIds[0]
 								}}
 								rowIndex={timelineRowItem.index}
-								backgroundColor={timelineEventColors[i + 1]}
+								backgroundColor={timelineEventColors[i]}
 								eventReference={timelineRowItem.eventReference}
 								{getTimelineHostById}
 							/>
 						{/key}
 					{/each}
 					<!-- Show the today event if there's no cessation date provided -->
-					{#if timelineHost.cessationDate === '' && todayEvent}
+					{#if timelineHost.cessationDate === '' || (!timelineHost?.cessationDate && todayEvent)}
 						<JDGTimelineEvent
 							timelineEvent={todayEvent}
 							rowIndex={jdgQuantities.initialTimelineRowCount + 1}
