@@ -167,7 +167,11 @@
 		const earliestEvent = getEarliestTimelineEvent(timelineHost.timelineEvents);
 		let earliestOrInceptionDate =
 			timelineHost.inceptionDate !== '' ? timelineHost.inceptionDate : earliestEvent?.date;
-			
+		// Eliminate the emptyState event if there are timelineEvents present
+		if (timelineHost.timelineEvents.length > 0) {
+			emptyStateEvent = undefined;
+		}
+
 		// Convert events to timeline row items
 		// and ensure no shared rows in the grid
 		timelineRowItems = updateTimelineRowItems(
