@@ -13,9 +13,10 @@
 		extractDataSchemaFields,
 		extractUiFromDataSchema
 	} from '$lib/jdg-timeline-management.js';
-	import { getIsObjectInArray } from '$lib/jdg-utils.js';
+	import { addOrReplaceObjectByKeyValue, getIsObjectInArray } from '$lib/jdg-utils.js';
 
 	import {
+		doShowTimelineEventModal,
 		instantiateObject,
 		JDGCheckbox,
 		JDGDatePicker,
@@ -78,6 +79,17 @@
 		eventStore.set({
 			...$localEventStore,
 			additionalContent: { ...$localAdditionalStore }
+		});
+
+		// Update the timeline host draft
+		timelineHostDraft.update((currentValue) => {
+			addOrReplaceObjectByKeyValue(
+				currentValue.timelineEvents,
+				'id',
+				get(localEventStore).id,
+				get(eventStore)
+			);
+			return currentValue;
 		});
 	}
 
@@ -186,14 +198,18 @@
 				isEditing = false;
 			}}
 			onClickCancel={() => {
-				isEditing = false;
-				// reset the stores
-				localEventStore.set($eventStore);
-				localAdditionalStore.set($eventStore.additionalContent);
-				localEventStore.update((current) => ({
-					...current,
-					type: $eventStore.type // replace with the desired value
-				}));
+				if (isNewEvent) {
+					doShowTimelineEventModal.set(false);
+				} else {
+					isEditing = false;
+					// Reset the stores
+					localEventStore.set($eventStore);
+					localAdditionalStore.set($eventStore.additionalContent);
+					localEventStore.update((current) => ({
+						...current,
+						type: $eventStore.type
+					}));
+				}
 			}}
 		/>
 	{/if}

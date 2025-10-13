@@ -104,15 +104,15 @@ export const getEarliestTimelineEvent = (timelineEvents) => {
 
 	// Filter out invalid or empty dates
 	const validEvents = timelineEvents.filter(
-		(event) => event.eventDate && !isNaN(Date.parse(event.eventDate))
+		(event) => event.date && !isNaN(Date.parse(event.date))
 	);
 
 	if (validEvents.length === 0) return null;
 
 	// Find the event with the earliest date
 	return validEvents.reduce((earliest, current) => {
-		const earliestDate = new Date(earliest.eventDate);
-		const currentDate = new Date(current.eventDate);
+		const earliestDate = new Date(earliest.date);
+		const currentDate = new Date(current.date);
 		return currentDate < earliestDate ? current : earliest;
 	});
 };
@@ -212,7 +212,7 @@ export const generateTimelineRowItems = (timelineHost, contextualEvents, incepti
 		}
 	}
 	// generate the contextual events
-	for (let i = 0; i < contextualEvents.length; i++) {
+	for (let i = 0; i < contextualEvents?.length; i++) {
 		// create a new timeline row item
 		let thisRowItem = instantiateObject(jdgTimelineRowItem);
 		// get the index this item belongs to

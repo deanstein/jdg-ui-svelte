@@ -399,7 +399,7 @@
 
 		<JDGH3H4 h3String="Timeline" paddingBottom="15px" />
 		<JDGTimeline
-			timelineHost={newTimelineHost}
+			timelineHost={$timelineHostDraft ?? newTimelineHost}
 			allowEditing={$timelineHostDraft !== undefined}
 			onClickInceptionEvent={() => {
 				doShowTimelineEventModal.set(true);

@@ -7,7 +7,11 @@
 
 	import { jdgTimelineEventKeys } from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 
-	import { generateTimelineRowItems, updateTimelineRowItems } from '$lib/jdg-ui-management.js';
+	import {
+		generateTimelineRowItems,
+		getEarliestTimelineEvent,
+		updateTimelineRowItems
+	} from '$lib/jdg-ui-management.js';
 
 	import { generateGradient } from '$lib/jdg-utils.js';
 
@@ -86,12 +90,12 @@
 	onMount(() => {
 		// If there are no timeline events, show an inception event
 		// that creates an initial event when clicked
-		if (timelineHost.timelineEvents.length === 0) {
+		if (timelineHost?.timelineEvents?.length === 0) {
 			emptyStateEvent = instantiateTimelineEvent(jdgTimelineEventKeys.inception);
 			emptyStateEvent.date = timelineHost.inceptionDate;
 		}
 		// If there's no cessation date, show a Today event
-		if (!timelineHost.cessationDate) {
+		if (!timelineHost?.cessationDate) {
 			todayEvent = instantiateTimelineEvent(jdgTimelineEventKeys.today);
 			todayEvent.type = jdgTimelineEventKeys.today;
 		}
@@ -148,13 +152,6 @@
 		width: ${jdgSizes.timelineSpineWidth};
 	`;
 
-	// If there are no events, force add
-	// an inception and today event to contextual events
-	$: {
-		if (timelineHost?.timelineEvents.length === 0) {
-		}
-	}
-
 	// Keep timeline event grid updated
 	let timelineEventGridCss;
 	$: {
@@ -166,10 +163,15 @@
 
 	// Keep timeline row items updated
 	$: {
+		// If there's no inception date, use the earliest date
+		const earliestEvent = getEarliestTimelineEvent(timelineHost.timelineEvents);
+		let earliestOrInceptionDate =
+			timelineHost.inceptionDate !== '' ? timelineHost.inceptionDate : earliestEvent?.date;
+			
 		// Convert events to timeline row items
 		// and ensure no shared rows in the grid
 		timelineRowItems = updateTimelineRowItems(
-			generateTimelineRowItems(timelineHost, contextEvents, timelineHost.inceptionDate)
+			generateTimelineRowItems(timelineHost, contextEvents, earliestOrInceptionDate)
 		);
 	}
 
@@ -219,7 +221,7 @@
 				<!-- The grid containing all timeline events -->
 				<div class="timeline-event-grid {timelineEventGridCss}">
 					<!-- If there are no events, make an empty state event at the top -->
-					{#if emptyStateEvent}
+					{#if timelineHost.timelineEvents.length === 0 && emptyStateEvent}
 						<JDGTimelineEvent
 							timelineEvent={emptyStateEvent}
 							onClickTimelineEvent={allowEditing ? onClickInceptionEvent : () => {}}
@@ -245,11 +247,11 @@
 							/>
 						{/key}
 					{/each}
-					<!-- Show the today event if no cessation date -->
-					{#if todayEvent}
+					<!-- Show the today event if there's no cessation date provided -->
+					{#if timelineHost.cessationDate === '' && todayEvent}
 						<JDGTimelineEvent
 							timelineEvent={todayEvent}
-							rowIndex={jdgQuantities.initialTimelineRowCount}
+							rowIndex={jdgQuantities.initialTimelineRowCount + 1}
 							backgroundColor={timelineEventColors[timelineEventColors.length - 1]}
 							{getTimelineHostById}
 						/>

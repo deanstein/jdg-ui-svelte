@@ -59,8 +59,8 @@ export const getIsValueInArray = (array, value) => {
 };
 
 export const getIsObjectInArray = (array, obj) => {
-	if (!obj || !array || typeof obj.id === 'undefined') return false;
-	return array.some((item) => item.id === obj.id);
+	if (!obj || !array || typeof obj?.id === 'undefined') return false;
+	return array.some((item) => item?.id === obj?.id);
 };
 
 export const removeValueFromArray = (array, value) => {
