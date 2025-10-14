@@ -25,9 +25,9 @@
 	import {
 		doAllowTextSelection,
 		doShowTimelineEventModal,
-		isAdminMode,
 		isMobileBreakpoint,
-		isTabletBreakpoint
+		isTabletBreakpoint,
+		isTimelineEventModalEditable
 	} from '$lib/stores/jdg-ui-store.js';
 
 	import { setTimelineEventActive } from '$lib/jdg-ui-management.js';
@@ -403,6 +403,7 @@
 			allowEditing={$timelineHostDraft !== undefined}
 			onClickInceptionEvent={() => {
 				doShowTimelineEventModal.set(true);
+				isTimelineEventModalEditable.set(true);
 				timelineEventDraft.set(instantiateTimelineEvent(jdgTimelineEventKeys.generic));
 			}}
 			onClickTimelineEvent={setTimelineEventActive}
