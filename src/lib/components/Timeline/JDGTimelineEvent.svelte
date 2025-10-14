@@ -323,14 +323,12 @@
 		</div>
 		<div class="timeline-event-content {eventContentCss}">
 			<div class="timeline-event-description">
-				{upgradedEvent?.additionalContent?.description
-					? upgradedEvent?.additionalContent?.description
-					: 'Event description'}
+				{upgradedEvent?.description ? upgradedEvent?.description : 'Event description'}
 			</div>
-			{#if upgradedEvent?.additionalContent?.images?.length > 0}
+			{#if upgradedEvent?.images?.length > 0}
 				<div class="timeline-event-image-preview">
 					<!-- show a few of the timeline event images, if there are any -->
-					<JDGImageThumbnailGroup imageMetaSet={upgradedEvent?.additionalContent?.images} />
+					<JDGImageThumbnailGroup imageMetaSet={upgradedEvent?.images} />
 				</div>
 			{/if}
 		</div>

@@ -52,6 +52,9 @@ export const instantiateTimelineEvent = (typeKey) => {
 	const extractedBaseEvent = extractDataFromHybridSchema(initialTimelineEvent);
 	extractedBaseEvent.type = typeKey;
 
+	// Apply the default description if it's defined
+	extractedBaseEvent.description = typeDef.description;
+
 	const extractedAddlContent = typeDef.additionalContent || {};
 	extractedBaseEvent.additionalContent = extractDataFromHybridSchema(extractedAddlContent);
 

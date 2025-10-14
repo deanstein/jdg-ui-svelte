@@ -121,9 +121,7 @@ const jdgTimelineEventTypes = {
 	inception: {
 		label: 'Inception',
 		icon: 'fa-wand-magic-sparkles',
-		additionalContent: {
-			description: 'Inception'
-		}
+		description: 'Inception'
 	},
 
 	// Contextual types:
@@ -162,9 +160,7 @@ const jdgTimelineEventTypes = {
 	today: {
 		icon: 'fa-sun',
 		isContextual: true,
-		additionalContent: {
-			description: 'Today'
-		}
+		description: 'Today'
 	}
 };
 
