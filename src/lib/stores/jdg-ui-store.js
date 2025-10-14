@@ -45,6 +45,7 @@ export let doShowImageDetailOverlay = writable(false);
 
 /*** TIMELINE ***/
 export let doShowTimelineEventModal = writable(false);
+export let isTimelineEventModalEditable = writable(false);
 
 /*** QUANTITIES ***/
 export let clientWidth = writable(0); // window minus scrollbar

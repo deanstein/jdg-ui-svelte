@@ -25,7 +25,7 @@
 	// Is this event interactive?
 	export let isInteractive = true;
 	// When clicking on the event - default is to set it active
-	export let onClickTimelineEvent = setTimelineEventActive;
+	export let onClickTimelineEvent = (timelineEventId) => {};
 	// When clicking on an event reference host
 	export let onClickEventRefHost = (timelineHostId) => {};
 	// when clicking on an associated host
@@ -42,6 +42,7 @@
 	let canClickCalculated;
 	$: {
 		isInteractive;
+		upgradedEvent;
 		canClickCalculated = canClickOnTimelineEvent();
 	}
 
@@ -138,12 +139,6 @@
 	onMount(() => {
 		// Upgrade the timeline event so it has the right fields for downstream operations
 		upgradedEvent = upgradeTimelineEvent(timelineEvent);
-
-		// If this is an eventReference, or the type is today
-		// don't do anything on click
-		if (eventReference?.personId || timelineEvent.type === jdgTimelineEventKeys.today) {
-			onClickTimelineEvent = () => {};
-		}
 	});
 
 	$: {

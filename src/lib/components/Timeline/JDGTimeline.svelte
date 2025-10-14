@@ -21,6 +21,11 @@
 	import { jdgQuantities, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { JDG_CONTEXT_KEYS } from '$lib/stores/jdg-context-keys.js';
 	import { instantiateTimelineEvent } from '$lib/jdg-timeline-management.js';
+	import { timelineEventDraft } from '$lib/stores/jdg-temp-store.js';
+	import {
+		doShowTimelineEventModal,
+		isTimelineEventModalEditable
+	} from '$lib/stores/jdg-ui-store.js';
 
 	// Timeline host contains events and event references
 	export let timelineHost;
@@ -248,6 +253,11 @@
 						{#key `${timelineHost.id}-${timelineRowItem.event.eventId}`}
 							<JDGTimelineEvent
 								timelineEvent={timelineRowItem.event}
+								onClickTimelineEvent={() => {
+									timelineEventDraft.set(timelineRowItem.event);
+									doShowTimelineEventModal.set(true);
+									isTimelineEventModalEditable.set(allowEditing);
+								}}
 								onClickAssociatedHost={() => {
 									//timelineRowItem.event.associatedHostIds[0]
 								}}
