@@ -196,6 +196,10 @@
 			onClickDone={() => {
 				saveToStore();
 				isEditing = false;
+				// If this was a new event, dismiss the form
+				if (isNewEvent) {
+					doShowTimelineEventModal.set(false);
+				}
 			}}
 			onClickCancel={() => {
 				if (isNewEvent) {
