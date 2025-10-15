@@ -34,6 +34,7 @@
 	onClickCloseButton={() => {
 		$doShowTimelineEventModal = false;
 	}}
+	backgroundColor={'rgba(235, 235, 235, 1)'}
 >
 	<div slot="modal-content-slot">
 		<JDGTimelineEventForm

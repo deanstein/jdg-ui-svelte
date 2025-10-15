@@ -18,6 +18,7 @@
 	export let maximizeOnMobile = false; // maximize size on mobile
 	export let padding = '10px';
 	export let overflow = ''; // default is not set but can be set per instance
+	export let backgroundColor = jdgColors.contentBoxBackground;
 	export let transparency = undefined; // default is in default bg color
 
 	const [send, receive] = drawCrossfade(jdgDurations.fadeIn);
@@ -29,8 +30,8 @@
 			height: ${$isMobileBreakpoint && maximizeOnMobile ? '90svh' : height};
 			overflow: ${overflow};
 			background-color: ${transparency
-				? setRgbaAlpha(jdgColors.contentBoxBackground, transparency)
-				: jdgColors.contentBoxBackground};
+				? setRgbaAlpha(backgroundColor, transparency)
+				: backgroundColor};
 		`;
 	}
 
