@@ -55,8 +55,13 @@
 	// Consider this a new event if it's not present in the
 	// editing timelineHost's events array
 	$: {
-		// If not already in the timeline host, this is a new event
-		if (!getIsObjectInArray(timelineHostDraft.timelineEvents, $timelineEventDraft)) {
+		// Determine if this is a new event or not
+		// If there's no timelineHostDraft, this can't be a new event (nowhere to save)
+		if (!$timelineHostDraft) {
+			isNewEvent = false;
+		}
+		// Otherwise, if there is a host draft and this isn't present in its events, it's new
+		else if (!getIsObjectInArray($timelineHostDraft?.timelineEvents, $timelineEventDraft)) {
 			isNewEvent = true;
 		}
 	}
@@ -120,13 +125,16 @@
 </script>
 
 <div bind:this={parentRef} class="jdg-timeline-form">
-	<JDGInputContainer label="Type">
-		<JDGSelect
-			optionsGroup={timelineEventOptionsGroup(eventTypeKeys)}
-			bind:inputValue={$localEventStore.type}
-			isEnabled={isEditing}
-		/>
-	</JDGInputContainer>
+	<!-- Only show Type dropdown for new events -->
+	{#if isNewEvent}
+		<JDGInputContainer label="Type">
+			<JDGSelect
+				optionsGroup={timelineEventOptionsGroup(eventTypeKeys)}
+				bind:inputValue={$localEventStore.type}
+				isEnabled={isEditing}
+			/>
+		</JDGInputContainer>
+	{/if}
 	{#each renderFields as { key, def, isAdditional } (key)}
 		<div class="form-group">
 			<label for={key}>{def.label}</label>
