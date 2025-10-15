@@ -221,7 +221,7 @@
 		<JDGDevToolbarSticky />
 	{/if}
 	{#if $doShowTimelineEventModal}
-		<JDGTimelineEventModal isEditing={$timelineEventDraft !== undefined} />
+		<JDGTimelineEventModal />
 	{/if}
 </div>
 
