@@ -85,7 +85,9 @@
 	};
 
 	const eventRowCss = css`
-		gap: ${jdgSizes.timelineEventGapSize};
+	> :nth-child(1) {
+		margin-right: ${jdgSizes.timelineEventGapSize};
+	}
 	`;
 
 	const eventDateYearCss = css`
@@ -108,11 +110,12 @@
 
 	const eventNodeCss = css`
 		height: ${jdgSizes.timelineEventNodeSize};
-		background-color: ${jdgColors.text};
+		background-color: ${jdgColors.textLight};
 	`;
 
-	const eventDetailLineCss = css`
-		background-color: ${jdgColors.text};
+	const eventLineCss = css`
+		height: ${(jdgSizes.nTimelineEventNodeSize / 3) + jdgSizes.timelineUnit};
+		background-color: ${jdgColors.textLight};
 	`;
 
 	const eventTitleBarCss = css`
@@ -223,7 +226,7 @@
 		{/if}
 	</div>
 	<div class="timeline-event-node {eventNodeCss}" />
-	<div class="timeline-event-line {eventDetailLineCss}" />
+	<div class="timeline-event-line {eventLineCss}" />
 	<div class="timeline-event-content-outer-container {eventRowContainerCss}">
 		<div class="timeline-event-title-bar {eventTitleBarCss}">
 			<!-- event icon -->
@@ -369,15 +372,14 @@
 	}
 
 	.timeline-event-node {
-		border-radius: 1vw;
+		border-radius: 1rem;
 		aspect-ratio: 1;
 	}
 
 	.timeline-event-line {
 		display: flex;
 		flex-shrink: 0;
-		height: 0.5svh;
-		width: 2vw;
+		width: 4rem;
 	}
 
 	.timeline-event-title-bar {
