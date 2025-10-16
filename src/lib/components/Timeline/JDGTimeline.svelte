@@ -194,7 +194,7 @@
 		timelineEventColors = generateGradient(
 			timelineHost?.timelineEvents?.length +
 				(emptyStateEvent ? 1 : 0) +
-				(todayEvent ? 1 : 0) /* account for birth and death */,
+				(todayEvent ? 2 : 0) /* account for birth and death */,
 			timelineEventColorGradient1,
 			timelineEventColorGradient2,
 			timelineEventColorGradient3
