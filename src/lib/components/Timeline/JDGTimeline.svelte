@@ -18,7 +18,7 @@
 	import Checkbox from '$lib/components/Input/JDGCheckbox.svelte';
 	import ComposeToolbar from '$lib/components/Compose/JDGComposeToolbar.svelte';
 	import JDGTimelineEvent from '$lib/components/Timeline/JDGTimelineEvent.svelte';
-	import { jdgQuantities, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgQuantities, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { JDG_CONTEXT_KEYS } from '$lib/stores/jdg-context-keys.js';
 	import { instantiateTimelineEvent } from '$lib/jdg-timeline-management.js';
 	import { timelineEventDraft } from '$lib/stores/jdg-temp-store.js';
@@ -130,11 +130,29 @@
 
 	// Timeline spine styling
 	let spineContainerCss = css`
-		margin-left: ${jdgSizes.nTimelineEventNodeSize / 2 +
-		jdgSizes.nTimelineEventGapSize * 2 +
-		jdgSizes.nTimelineEventYearWidth -
-		jdgSizes.nTimelineSpineWidth / 2 +
-		jdgSizes.timelineUnit};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			margin-left: ${jdgSizes.nTimelineEventNodeSize / 2 +
+			jdgSizes.nTimelineEventGapSize / 2 +
+			jdgSizes.ntimelineEventYearWidthSm -
+			jdgSizes.nTimelineSpineWidth / 2 +
+			jdgSizes.timelineUnit};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			margin-left: ${jdgSizes.nTimelineEventNodeSize / 2 +
+			jdgSizes.nTimelineEventGapSize / 2 +
+			jdgSizes.ntimelineEventYearWidthMd -
+			jdgSizes.nTimelineSpineWidth / 2 +
+			jdgSizes.timelineUnit};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			margin-left: ${jdgSizes.nTimelineEventNodeSize / 2 +
+			jdgSizes.nTimelineEventGapSize * 2 +
+			jdgSizes.ntimelineEventYearWidthLg -
+			jdgSizes.nTimelineSpineWidth / 2 +
+			jdgSizes.timelineUnit};
+		}
 	`;
 	$: {
 		spineContainerCss = css`
@@ -294,6 +312,7 @@
 		position: relative;
 		display: flex;
 		flex-grow: 1;
+		box-sizing: border-box;
 		height: -webkit-fill-available;
 		width: -moz-available;
 		background-color: gainsboro;

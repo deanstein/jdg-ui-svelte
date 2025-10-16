@@ -14,8 +14,13 @@
 	import { setTimelineEventActive } from '$lib/jdg-ui-management.js';
 	import { upgradeTimelineEvent } from '$lib/jdg-timeline-management.js';
 
-	import { JDGButton, JDGImageThumbnailGroup } from '$lib/index.js';
-	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import {
+		isMobileBreakpoint,
+		isTabletBreakpoint,
+		JDGButton,
+		JDGImageThumbnailGroup
+	} from '$lib/index.js';
+	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import jdgTimelineHost from '$lib/schemas/timeline/jdg-timeline-host.js';
 
 	export let timelineEvent;
@@ -52,8 +57,6 @@
 	let eventRowDivRef;
 
 	const cornerRadius = '10px';
-	const dateFontSize = '0.9rem';
-	const yearFontSize = '1.5rem';
 	const monthNames = [
 		'JAN',
 		'FEB',
@@ -85,27 +88,91 @@
 	};
 
 	const eventRowCss = css`
-	> :nth-child(1) {
-		margin-right: ${jdgSizes.timelineEventGapSize};
-	}
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			gap: ${jdgSizes.nTimelineEventGapSize / 4 + jdgSizes.timelineUnit};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			gap: ${jdgSizes.nTimelineEventGapSize / 4 + jdgSizes.timelineUnit};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			> :nth-child(1) {
+				margin-right: ${jdgSizes.timelineEventGapSize};
+			}
+		}
 	`;
 
 	const eventDateYearCss = css`
-		margin-left: ${jdgSizes.timelineEventGapSize};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			> :nth-child(1) {
+				margin-right: ${jdgSizes.nTimelineEventGapSize / 4 + jdgSizes.timelineUnit};
+			}
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			> :nth-child(1) {
+				margin-right: ${jdgSizes.nTimelineEventGapSize / 4 + jdgSizes.timelineUnit};
+			}
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			> :nth-child(1) {
+				margin-right: ${jdgSizes.timelineEventGapSize};
+			}
+		}
 	`;
 
 	const eventDateCss = css`
-		font-size: ${dateFontSize};
-		width: ${jdgSizes.timelineEventYearWidth};
 		color: ${jdgColors.text};
 		background-color: ${jdgColors.activeSubtle};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			font-size: 0.6rem;
+			width: ${jdgSizes.timelineEventYearWidthSm};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			font-size: 0.7rem;
+			width: ${jdgSizes.timelineEventYearWidthMd};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			font-size: 0.9rem;
+			width: ${jdgSizes.timelineEventYearWidthLg};
+		}
 	`;
 
 	const eventYearCss = css`
-		font-size: ${yearFontSize};
-		width: ${jdgSizes.timelineEventYearWidth};
 		color: ${jdgColors.text};
 		background-color: ${jdgColors.activeSubtle};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			font-size: 0.9rem;
+			width: ${jdgSizes.timelineEventYearWidthSm};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			font-size: 1.1rem;
+			width: ${jdgSizes.timelineEventYearWidthMd};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			font-size: 1.5rem;
+			width: ${jdgSizes.timelineEventYearWidthLg};
+		}
+	`;
+
+	const eventDescriptionCss = css`
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			font-size: 0.7rem;
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			font-size: 0.8rem;
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			font-size: 0.9rem;
+		}
 	`;
 
 	const eventNodeCss = css`
@@ -114,7 +181,7 @@
 	`;
 
 	const eventLineCss = css`
-		height: ${(jdgSizes.nTimelineEventNodeSize / 3) + jdgSizes.timelineUnit};
+		height: ${jdgSizes.nTimelineEventNodeSize / 3 + jdgSizes.timelineUnit};
 		background-color: ${jdgColors.textLight};
 	`;
 
@@ -125,6 +192,17 @@
 
 	const eventFaIconCss = css`
 		color: ${jdgColors.text};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			font-size: 0.8rem;
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			font-size: 0.9rem;
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			font-size: 1rem;
+		}
 	`;
 
 	const eventAgeCss = css`
@@ -226,7 +304,10 @@
 		{/if}
 	</div>
 	<div class="timeline-event-node {eventNodeCss}" />
-	<div class="timeline-event-line {eventLineCss}" />
+	<!-- Only show the line on desktop -->
+	{#if !$isMobileBreakpoint && !$isTabletBreakpoint}
+		<div class="timeline-event-line {eventLineCss}" />
+	{/if}
 	<div class="timeline-event-content-outer-container {eventRowContainerCss}">
 		<div class="timeline-event-title-bar {eventTitleBarCss}">
 			<!-- event icon -->
@@ -319,7 +400,7 @@
 			{/if}
 		</div>
 		<div class="timeline-event-content {eventContentCss}">
-			<div class="timeline-event-description">
+			<div class="timeline-event-description {eventDescriptionCss}">
 				{upgradedEvent?.description ? upgradedEvent?.description : 'Event description'}
 			</div>
 			{#if upgradedEvent?.images?.length > 0}
@@ -394,7 +475,6 @@
 	.fa-solid {
 		display: flex;
 		align-items: center;
-		font-size: 20px;
 	}
 
 	.timeline-event-age {

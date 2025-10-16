@@ -246,9 +246,17 @@ export const jdgSizes = {
 	imageAspectRatioUpdateThreshold: 0.01,
 
 	timelineUnit: 'rem',
-	nTimelineEventYearWidth: 5,
-	get timelineEventYearWidth() {
-		return this.nTimelineEventYearWidth + this.timelineUnit;
+	ntimelineEventYearWidthLg: 5,
+	get timelineEventYearWidthLg() {
+		return this.ntimelineEventYearWidthLg + this.timelineUnit;
+	},
+	ntimelineEventYearWidthMd: 4.5,
+	get timelineEventYearWidthMd() {
+		return this.ntimelineEventYearWidthMd + this.timelineUnit;
+	},
+	ntimelineEventYearWidthSm: 4,
+	get timelineEventYearWidthSm() {
+		return this.ntimelineEventYearWidthSm + this.timelineUnit;
 	},
 	nTimelineEventGapSize: 1,
 	get timelineEventGapSize() {
