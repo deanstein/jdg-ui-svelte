@@ -24,6 +24,7 @@
 	import { timelineEventDraft } from '$lib/stores/jdg-temp-store.js';
 	import {
 		doShowTimelineEventModal,
+		isAdminMode,
 		isTimelineEventModalEditable
 	} from '$lib/stores/jdg-ui-store.js';
 
@@ -31,8 +32,10 @@
 	export let timelineHost;
 	// Optionally include contextual events
 	export let contextEvents = timelineHost.contextualEvents;
-	// Whether the add event button is shown
+	// Whether the ComposeToolbar is shown
 	export let allowEditing = true;
+	// If true, users can click TimelineEvents to see more detail
+	export let isInteractive = true;
 	// Width and height for timeline interface
 	export let width = '100%';
 	export let minHeight = '50svh';
@@ -240,8 +243,10 @@
 					{#if timelineHost.timelineEvents.length === 0 && emptyStateEvent}
 						<JDGTimelineEvent
 							timelineEvent={emptyStateEvent}
-							onClickTimelineEvent={allowEditing ? onClickInceptionEvent : () => {}}
-							isInteractive={allowEditing ? true : false}
+							onClickTimelineEvent={isInteractive && allowEditing
+								? onClickInceptionEvent
+								: () => {}}
+							isInteractive={(isInteractive && allowEditing) || $isAdminMode ? true : false}
 							rowIndex={0}
 							backgroundColor={timelineEventColors[0]}
 							{getTimelineHostById}
@@ -265,6 +270,7 @@
 								backgroundColor={timelineEventColors[i]}
 								eventReference={timelineRowItem.eventReference}
 								{getTimelineHostById}
+								isInteractive={isInteractive || $isAdminMode}
 							/>
 						{/key}
 					{/each}

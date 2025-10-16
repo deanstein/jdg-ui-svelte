@@ -39,8 +39,8 @@
 	<div slot="modal-content-slot">
 		<JDGTimelineEventForm
 			eventStore={timelineEventDraft}
-			isEditable={$isTimelineEventModalEditable}
-			isEditing={$isTimelineEventModalEditable}
+			isEditable={$isTimelineEventModalEditable || isNewEvent}
+			isEditing={$isTimelineEventModalEditable || isNewEvent}
 		/>
 	</div>
 </JDGModal>
