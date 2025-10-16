@@ -35,7 +35,7 @@
 	export let isEditable = true; // show compose toolbar if true
 	export let isEditing = false; // fields are in edit state if true
 	// For debugging
-	export let doShowLocalStore = true;
+	export let doShowLocalStore = false;
 
 	let parentRef; // for positioning the compose toolbar
 
@@ -203,11 +203,7 @@
 			}}
 			onClickDone={() => {
 				saveToStore();
-				isEditing = false;
-				// If this was a new event, dismiss the form
-				if (isNewEvent) {
-					doShowTimelineEventModal.set(false);
-				}
+				doShowTimelineEventModal.set(false);
 			}}
 			onClickCancel={() => {
 				if (isNewEvent) {
