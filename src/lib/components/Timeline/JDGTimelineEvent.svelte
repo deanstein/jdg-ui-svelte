@@ -136,12 +136,11 @@
 	const firstRowContext = getContext(JDG_CONTEXT_KEYS.timelineFirstRowHeight);
 	const lastRowContext = getContext(JDG_CONTEXT_KEYS.timelineLastRowHeight);
 
-	onMount(() => {
-		// Upgrade the timeline event so it has the right fields for downstream operations
-		upgradedEvent = upgradeTimelineEvent(timelineEvent);
-	});
-
 	$: {
+		// Ensure the event is upgraded and updated if the input changes
+		upgradedEvent = upgradeTimelineEvent(timelineEvent);
+
+		// Update the age of the event
 		if (upgradedEvent) {
 			eventDateCorrected = new Date(upgradedEvent.date);
 
