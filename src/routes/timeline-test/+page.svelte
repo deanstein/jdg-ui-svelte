@@ -138,7 +138,7 @@
 	/*** TIMELINE EVENT ***/
 	// All event types to show
 	const instantiatedEventSchemas = Object.entries(jdgTimelineEventTypes)
-		.filter(([key, def]) => !def.isContextual) // optional: skip contextual types
+		.filter(([key, def]) => !def.isContextual) // skip contextual types
 		.map(([key, def]) => ({
 			key,
 			label: key,

@@ -121,7 +121,8 @@ const jdgTimelineEventTypes = {
 	inception: {
 		label: 'Inception',
 		icon: 'fa-wand-magic-sparkles',
-		description: 'Inception'
+		description: 'Inception',
+		isContextual: true
 	},
 
 	// Contextual types:
