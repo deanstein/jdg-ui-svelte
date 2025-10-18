@@ -89,17 +89,17 @@
 
 	const eventRowCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			padding-left: ${jdgSizes.nTimelineEventGapSize / 4 + jdgSizes.timelineUnit};
 			gap: ${jdgSizes.nTimelineEventGapSize / 4 + jdgSizes.timelineUnit};
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
+			padding-left: ${jdgSizes.nTimelineEventGapSize / 4 + jdgSizes.timelineUnit};
 			gap: ${jdgSizes.nTimelineEventGapSize / 4 + jdgSizes.timelineUnit};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			> :nth-child(1) {
-				margin-right: ${jdgSizes.timelineEventGapSize};
-			}
+			padding-left: ${jdgSizes.nTimelineEventGapSize / 2 + jdgSizes.timelineUnit};
 		}
 	`;
 
@@ -460,7 +460,7 @@
 	.timeline-event-line {
 		display: flex;
 		flex-shrink: 0;
-		width: 4rem;
+		width: 2rem;
 	}
 
 	.timeline-event-title-bar {

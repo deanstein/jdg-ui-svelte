@@ -121,36 +121,58 @@
 	const timelineWrapperCss = css`
 		width: ${width};
 		min-height: ${minHeight};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			padding: ${jdgSizes.nTimelineEventGapSize / 2 + jdgSizes.timelineUnit};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			padding: ${jdgSizes.nTimelineEventGapSize / 2 + jdgSizes.timelineUnit};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			padding: ${jdgSizes.nTimelineEventGapSize / 2 + jdgSizes.timelineUnit};
+		}
 	`;
 
 	const timelineEventCountCss = css`
-		font-size: ${jdgSizes.fontSizeBodySm};
-		margin-left: ${jdgSizes.timelineEventGapSize};
+		margin-left: ${jdgSizes.nTimelineEventGapSize / 2 + jdgSizes.timelineUnit};
+	`;
+
+	// font sizing for number of events, timeline options
+	const timelineSupportingTextCss = css`
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.fontSizeBodyXSm};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.fontSizeBodySm};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.fontSizeBodySm};
+		}
 	`;
 
 	// Timeline spine styling
 	let spineContainerCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			margin-left: ${jdgSizes.nTimelineEventNodeSize / 2 +
-			jdgSizes.nTimelineEventGapSize / 2 +
-			jdgSizes.ntimelineEventYearWidthSm -
-			jdgSizes.nTimelineSpineWidth / 2 +
+			margin-left: ${jdgSizes.nTimelineEventGapSize / 4 +
+			jdgSizes.ntimelineEventYearWidthSm +
+			jdgSizes.nTimelineSpineWidth +
 			jdgSizes.timelineUnit};
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-			margin-left: ${jdgSizes.nTimelineEventNodeSize / 2 +
-			jdgSizes.nTimelineEventGapSize / 2 +
-			jdgSizes.ntimelineEventYearWidthMd -
-			jdgSizes.nTimelineSpineWidth / 2 +
+			margin-left: ${jdgSizes.nTimelineEventGapSize / 4 +
+			jdgSizes.ntimelineEventYearWidthMd +
+			jdgSizes.nTimelineSpineWidth +
 			jdgSizes.timelineUnit};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			margin-left: ${jdgSizes.nTimelineEventNodeSize / 2 +
-			jdgSizes.nTimelineEventGapSize * 2 +
-			jdgSizes.ntimelineEventYearWidthLg -
-			jdgSizes.nTimelineSpineWidth / 2 +
+			margin-left: ${jdgSizes.nTimelineEventGapSize / 2 +
+			jdgSizes.ntimelineEventYearWidthLg +
+			jdgSizes.nTimelineSpineWidth * 2 +
 			jdgSizes.timelineUnit};
 		}
 	`;
@@ -234,7 +256,7 @@
 		/>
 	{/if}
 	<div bind:this={timelineContainerRef} class="timeline-container">
-		<div class="timeline-actions-bar">
+		<div class="timeline-actions-bar {timelineSupportingTextCss}">
 			<div class="timeline-event-count {timelineEventCountCss}">
 				Showing {timelineRowItems.length + (emptyStateEvent ? 1 : 0) + (todayEvent ? 1 : 0)} timeline
 				events
@@ -246,6 +268,7 @@
 				isChecked={forceRelativeSpacing}
 				onCheckAction={onCheckRelativeSpacing}
 				onUncheckAction={onUncheckRelativeSpacing}
+				labelFontSize={''}
 			/>
 		</div>
 		<div class="timeline-content-container">
@@ -316,7 +339,6 @@
 		height: -webkit-fill-available;
 		width: -moz-available;
 		background-color: gainsboro;
-		padding: 1rem;
 		border-radius: 10px;
 	}
 
