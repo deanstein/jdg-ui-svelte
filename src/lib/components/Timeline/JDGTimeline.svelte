@@ -41,6 +41,7 @@
 	// Width and height for timeline interface
 	export let width = '100%';
 	export let minHeight = '50svh';
+	export let maxHeight = '50svh';
 
 	export let onClickInceptionEvent = () => {};
 	export let onClickTimelineEvent = () => {};
@@ -125,8 +126,8 @@
 	const timelineContainerCss = css`
 		width: ${width};
 		min-height: ${minHeight};
+		max-height: ${maxHeight};
 		background-color: ${timelineBackgroundColor};
-		border-radius: ${showTitleBar ? '0 0 10px 10px' : '10px'};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			padding: ${jdgSizes.nTimelineEventGapSize / 2 + jdgSizes.timelineUnit};
 		}
@@ -256,11 +257,13 @@
 </script>
 
 <div bind:this={timelineWrapperRef} class="timeline-wrapper">
+	{#if showTitleBar}
 	<div class="timeline-title-bar {timelineTitleBarCss}">
 		<div class="timeline-title">
 			{timelineHost.name}
 		</div>
 	</div>
+	{/if}
 	{#if allowEditing}
 		<ComposeToolbar
 			parentRef={timelineWrapperRef}
@@ -366,6 +369,7 @@
 		flex-grow: 1;
 		gap: 1rem;
 		box-sizing: border-box;
+		border-radius: 10px;
 	}
 
 	.timeline-actions-bar {
