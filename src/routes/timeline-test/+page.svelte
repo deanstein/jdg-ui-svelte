@@ -33,7 +33,6 @@
 	import { setTimelineEventActive } from '$lib/jdg-ui-management.js';
 	import {
 		addOrReplaceObjectByKeyValue,
-		deepMatchObjects,
 		deleteObjectByKeyValue,
 		instantiateObject
 	} from '$lib/jdg-utils.js';
@@ -48,6 +47,7 @@
 		JDGInputContainer,
 		JDGJumpTo,
 		JDGModalActionsBar,
+		JDGScrollBox,
 		JDGSelect,
 		JDGTextInput,
 		JDGTimeline,
@@ -203,17 +203,21 @@
 
 		<JDGGridLayout>
 			<JDGInputContainer label="Timeline Host Collection from Repo">
-				{#if selectedHostCollection && selectedHostCollectionKey}
-					<pre>{JSON.stringify(selectedHostCollection[selectedHostCollectionKey], null, 2)}</pre>
-				{/if}
+				<JDGScrollBox>
+					{#if selectedHostCollection && selectedHostCollectionKey}
+						<pre>{JSON.stringify(selectedHostCollection[selectedHostCollectionKey], null, 2)}</pre>
+					{/if}
+				</JDGScrollBox>
 			</JDGInputContainer>
 			<JDGInputContainer label="Timeline Host Collection Draft">
 				{#if $timelineCollectionFileDraft}
-					<pre>{JSON.stringify(
-							$timelineCollectionFileDraft[selectedHostCollectionKey],
-							null,
-							2
-						)}</pre>
+					<JDGScrollBox>
+						<pre>{JSON.stringify(
+								$timelineCollectionFileDraft[selectedHostCollectionKey],
+								null,
+								2
+							)}</pre>
+					</JDGScrollBox>
 				{:else}
 					<pre>Start editing to see the draft!</pre>
 				{/if}
@@ -291,7 +295,9 @@
 			<div class="tri-column-demo-left-right">
 				<div>
 					<JDGH3H4 h3String="Timeline Host Schema" h4String="As local store" paddingBottom="15px" />
-					<pre>{JSON.stringify($localTimelineHostStore, null, 2)}</pre>
+					<JDGScrollBox>
+						<pre>{JSON.stringify($localTimelineHostStore, null, 2)}</pre>
+					</JDGScrollBox>
 				</div>
 			</div>
 			<div class="tri-column-demo-center">
@@ -316,9 +322,11 @@
 		{#if $timelineHostDraft !== undefined}
 			<JDGH3H4 h3String={'Draft Timeline Host Store'} />
 			<JDGBodyCopy>
-				<pre>
+				<JDGScrollBox>
+					<pre>
 				{JSON.stringify($timelineHostDraft, null, 2)}
 			</pre>
+				</JDGScrollBox>
 			</JDGBodyCopy>
 		{/if}
 		<JDGBodyCopy>
@@ -429,7 +437,9 @@
 					/>
 				</JDGInputContainer>
 				<div class="timeline-event-schema-preview">
-					<pre>{JSON.stringify($localTimelineEventStore, null, 2)}</pre>
+					<JDGScrollBox>
+						<pre>{JSON.stringify($localTimelineEventStore, null, 2)}</pre>
+					</JDGScrollBox>
 				</div>
 			</div>
 			<div class="tri-column-demo-center">
