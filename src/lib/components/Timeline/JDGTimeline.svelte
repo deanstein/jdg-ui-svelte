@@ -3,7 +3,7 @@
 	import { writable } from 'svelte/store';
 	import { css } from '@emotion/css';
 
-	import { getMaxElementHeightPx } from '$lib/jdg-utils.js';
+	import { getMaxElementHeightPx, lightenColor } from '$lib/jdg-utils.js';
 
 	import { jdgTimelineEventKeys } from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 
@@ -32,6 +32,8 @@
 	export let timelineHost;
 	// Optionally include contextual events
 	export let contextEvents = timelineHost.contextualEvents;
+	// Whether to show the name of the timeline host at the top
+	export let showTitleBar = true;
 	// Whether the ComposeToolbar is shown
 	export let allowEditing = true;
 	// If true, users can click TimelineEvents to see more detail
@@ -49,6 +51,8 @@
 
 	const rowHeightEmptyPx = 1;
 	const rowHeightFilledPx = 80;
+
+	const timelineBackgroundColor = "rgba(225, 225, 225, 1)";
 
 	// set up the inception and cessation events
 	let emptyStateEvent;
@@ -118,9 +122,11 @@
 
 	// DYNAMIC STYLES
 
-	const timelineWrapperCss = css`
+	const timelineContainerCss = css`
 		width: ${width};
 		min-height: ${minHeight};
+		background-color: ${timelineBackgroundColor};
+		border-radius: ${showTitleBar ? '0 0 10px 10px' : '10px'};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			padding: ${jdgSizes.nTimelineEventGapSize / 2 + jdgSizes.timelineUnit};
 		}
@@ -133,6 +139,9 @@
 			padding: ${jdgSizes.nTimelineEventGapSize / 2 + jdgSizes.timelineUnit};
 		}
 	`;
+
+	const timelineTitleBarCss = css`
+		background-color: ${lightenColor(timelineBackgroundColor, 0.03)};`
 
 	const timelineEventCountCss = css`
 		margin-left: ${jdgSizes.nTimelineEventGapSize / 2 + jdgSizes.timelineUnit};
@@ -245,7 +254,12 @@
 	}
 </script>
 
-<div bind:this={timelineWrapperRef} class="timeline-wrapper {timelineWrapperCss}">
+<div bind:this={timelineWrapperRef} class="timeline-wrapper">
+	<div class="timeline-title-bar {timelineTitleBarCss}">
+		<div class="timeline-title">
+			{timelineHost.name}
+	</div>
+		</div>
 	{#if allowEditing}
 		<ComposeToolbar
 			parentRef={timelineWrapperRef}
@@ -255,7 +269,7 @@
 			zIndex={1}
 		/>
 	{/if}
-	<div bind:this={timelineContainerRef} class="timeline-container">
+	<div bind:this={timelineContainerRef} class="timeline-container {timelineContainerCss}">
 		<div class="timeline-actions-bar {timelineSupportingTextCss}">
 			<div class="timeline-event-count {timelineEventCountCss}">
 				Showing {timelineRowItems.length + (emptyStateEvent ? 1 : 0) + (todayEvent ? 1 : 0)} timeline
@@ -332,14 +346,16 @@
 
 <style>
 	.timeline-wrapper {
-		position: relative;
-		display: flex;
-		flex-grow: 1;
-		box-sizing: border-box;
 		height: -webkit-fill-available;
+		width: -webkit-fill-available;
 		width: -moz-available;
-		background-color: gainsboro;
-		border-radius: 10px;
+	}
+
+	.timeline-title-bar {
+		padding: 10px;
+    	display: flex;
+    	justify-content: center;
+		border-radius: 10px 10px 0 0;
 	}
 
 	.timeline-container {
@@ -348,6 +364,7 @@
 		flex-direction: column;
 		flex-grow: 1;
 		gap: 1rem;
+		box-sizing: border-box;
 	}
 
 	.timeline-actions-bar {
