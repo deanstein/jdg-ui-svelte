@@ -258,11 +258,11 @@
 
 <div bind:this={timelineWrapperRef} class="timeline-wrapper">
 	{#if showTitleBar}
-	<div class="timeline-title-bar {timelineTitleBarCss}">
-		<div class="timeline-title">
-			{timelineHost.name}
+		<div class="timeline-title-bar {timelineTitleBarCss}">
+			<div class="timeline-title">
+				{timelineHost.name}
+			</div>
 		</div>
-	</div>
 	{/if}
 	{#if allowEditing}
 		<ComposeToolbar
@@ -356,10 +356,11 @@
 	}
 
 	.timeline-title-bar {
-		padding: 10px;
+		padding: 10px 10px 20px 10px;
 		display: flex;
 		justify-content: center;
 		border-radius: 10px 10px 0 0;
+		margin-bottom: -10px;
 	}
 
 	.timeline-container {
