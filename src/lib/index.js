@@ -168,6 +168,9 @@ export { JDGVersionPackageJson };
 import JDGVersionNpmPackage from './components/Version/JDGVersionNpmPackage.svelte';
 export { JDGVersionNpmPackage };
 
+import JDGScrollBox from './components/JDGScrollBox.svelte';
+export { JDGScrollBox };
+
 import JDGScrollToTop from './components/JDGScrollToTop.svelte';
 export { JDGScrollToTop };
 
