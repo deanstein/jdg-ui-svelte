@@ -52,7 +52,7 @@
 	const rowHeightEmptyPx = 1;
 	const rowHeightFilledPx = 80;
 
-	const timelineBackgroundColor = "rgba(225, 225, 225, 1)";
+	const timelineBackgroundColor = 'rgba(225, 225, 225, 1)';
 
 	// set up the inception and cessation events
 	let emptyStateEvent;
@@ -141,7 +141,8 @@
 	`;
 
 	const timelineTitleBarCss = css`
-		background-color: ${lightenColor(timelineBackgroundColor, 0.03)};`
+		background-color: ${lightenColor(timelineBackgroundColor, 0.03)};
+	`;
 
 	const timelineEventCountCss = css`
 		margin-left: ${jdgSizes.nTimelineEventGapSize / 2 + jdgSizes.timelineUnit};
@@ -202,7 +203,7 @@
 	$: {
 		// Ensure custom css is kept updated
 		timelineEventGridCss = css`
-			row-gap: ${forceRelativeSpacing ? rowHeightEmptyPx : 'auto'};
+			row-gap: ${forceRelativeSpacing ? rowHeightEmptyPx + 'px' : '0'};
 		`;
 	}
 
@@ -258,8 +259,8 @@
 	<div class="timeline-title-bar {timelineTitleBarCss}">
 		<div class="timeline-title">
 			{timelineHost.name}
-	</div>
 		</div>
+	</div>
 	{#if allowEditing}
 		<ComposeToolbar
 			parentRef={timelineWrapperRef}
@@ -278,7 +279,7 @@
 			<Checkbox
 				isEnabled={true}
 				showLabel={true}
-				label="Relative Spacing"
+				label="Relative spacing"
 				isChecked={forceRelativeSpacing}
 				onCheckAction={onCheckRelativeSpacing}
 				onUncheckAction={onUncheckRelativeSpacing}
@@ -353,8 +354,8 @@
 
 	.timeline-title-bar {
 		padding: 10px;
-    	display: flex;
-    	justify-content: center;
+		display: flex;
+		justify-content: center;
 		border-radius: 10px 10px 0 0;
 	}
 
