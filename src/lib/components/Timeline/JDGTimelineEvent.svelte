@@ -1,5 +1,5 @@
 <script>
-	import { getContext, onMount } from 'svelte';
+	import { getContext } from 'svelte';
 	import { css } from '@emotion/css';
 
 	import timelineEventTypes, {
@@ -9,9 +9,8 @@
 
 	import { JDG_CONTEXT_KEYS } from '$lib/stores/jdg-context-keys.js';
 
-	import { getNumberOfYearsBetweenEvents, instantiateObject } from '$lib/jdg-utils.js';
+	import { getNumYearsBetweenDates, instantiateObject } from '$lib/jdg-utils.js';
 
-	import { setTimelineEventActive } from '$lib/jdg-ui-management.js';
 	import { upgradeTimelineEvent } from '$lib/jdg-timeline-management.js';
 
 	import {
@@ -21,8 +20,8 @@
 		JDGImageThumbnailGroup
 	} from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
-	import jdgTimelineHost from '$lib/schemas/timeline/jdg-timeline-host.js';
 
+	export let timelineHost;
 	export let timelineEvent;
 	// If true, this event is a reference to someone else's actual event
 	// so it will display and interact differently
@@ -35,10 +34,6 @@
 	export let onClickEventRefHost = (timelineHostId) => {};
 	// when clicking on an associated host
 	export let onClickAssociatedHost = (timelineHostId) => {};
-	// how does this context find a host from their ID?
-	export let getTimelineHostById = (timelineHostId) => {
-		return instantiateObject(jdgTimelineHost);
-	};
 
 	export let backgroundColor = jdgColors.activeColorSubtle;
 	export let rowIndex;
@@ -225,10 +220,7 @@
 		if (upgradedEvent) {
 			eventDateCorrected = new Date(upgradedEvent.date);
 
-			eventAge = getNumberOfYearsBetweenEvents(
-				getContext(JDG_CONTEXT_KEYS.timelineInceptionEvent),
-				eventDateCorrected
-			);
+			eventAge = getNumYearsBetweenDates(timelineHost.inceptionDate, eventDateCorrected);
 		}
 	}
 
@@ -255,7 +247,7 @@
 		}
 	}
 
-	// dynamic CSS
+	// Dynamic CSS
 	let eventRowContainerCss = css``;
 	$: {
 		if (upgradedEvent) {
@@ -353,8 +345,8 @@
 					paddingTopBottom="2px"
 					fontSize="12px"
 					gap="6px"
-					label={getTimelineHostById(upgradedEvent?.associatedHostIds[0])?.name}
-					tooltip={'Go to ' + getTimelineHostById(upgradedEvent?.associatedHostIds[0])?.name}
+					label={timelineHost.name}
+					tooltip={'Go to ' + timelineHost.name}
 				/>
 				<!-- if more than one, show a label -->
 				{#if upgradedEvent?.additionalContent?.associatedPeopleIds?.length > 1}
@@ -368,7 +360,7 @@
 					<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event from &nbsp; </i>
 					<JDGButton
 						onClickFunction={() => {
-							onClickEventRefHost(getTimelineHostById(upgradedEvent.additionalContent.childId));
+							onClickEventRefHost(timelineHost.id);
 						}}
 						faIcon={timelineEventTypes.childBirth.icon}
 						backgroundColor={jdgColors.activeSubtle}
@@ -376,8 +368,8 @@
 						paddingTopBottom="2px"
 						fontSize="12px"
 						gap="6px"
-						label={getTimelineHostById(upgradedEvent.additionalContent.childId)?.name}
-						tooltip={getTimelineHostById(upgradedEvent.additionalContent.childId)?.name}
+						label={timelineHost.name}
+						tooltip={timelineHost.name}
 					/>
 				{/if}
 				<!-- parent death -->
@@ -385,7 +377,7 @@
 					<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event from &nbsp; </i>
 					<JDGButton
 						onClickFunction={() => {
-							onClickEventRefHost(getTimelineHostById(upgradedEvent.additionalContent.parentId));
+							onClickEventRefHost(timelineHost.id);
 						}}
 						faIcon={timelineEventTypes.parentDeath.icon}
 						backgroundColor={jdgColors.activeSubtle}
@@ -393,8 +385,8 @@
 						paddingTopBottom="2px"
 						fontSize="12px"
 						gap="6px"
-						label={getTimelineHostById(upgradedEvent.additionalContent.parentId)?.name}
-						tooltip={getTimelineHostById(upgradedEvent.additionalContent.parentId)?.name}
+						label={timelineHost.name}
+						tooltip={timelineHost.name}
 					/>
 				{/if}
 			{/if}

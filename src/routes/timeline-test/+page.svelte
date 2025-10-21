@@ -54,6 +54,7 @@
 		JDGTimelineEventForm
 	} from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
+	import JDGDatePicker from '$lib/components/Input/JDGDatePicker.svelte';
 
 	// Ensure this page allows text selection
 	doAllowTextSelection.set(true);
@@ -100,8 +101,12 @@
 	newTimelineHost.name = 'New Timeline Host';
 	// This is the store we have locally, not a draft
 	let localTimelineHostStore = writable();
+	let localTimelineHostInceptionDateStore = writable();
+	let localTimelineHostCessationDateStore = writable();
 	// Draft input value stores
 	let draftTimelineHostNameStore = writable();
+	let draftTimelineHostInceptionDateStore = writable();
+	let draftTimelineHostCessationDateStore = writable();
 	// Create Select options,
 	// including the new host and hosts from the selected collection
 	let timelineHostOptionsGroup;
@@ -123,6 +128,8 @@
 	$: {
 		if ($localTimelineHostStore !== undefined && $timelineHostDraft === undefined) {
 			draftTimelineHostNameStore.set($localTimelineHostStore.name);
+			draftTimelineHostInceptionDateStore.set($localTimelineHostStore.inceptionDate);
+			draftTimelineHostCessationDateStore.set($localTimelineHostStore.cessationDate);
 		}
 	}
 
@@ -316,6 +323,18 @@
 							isEnabled={$timelineHostDraft !== undefined}
 						/>
 					</JDGInputContainer>
+					<JDGInputContainer label="Inception Date">
+						<JDGDatePicker
+							bind:inputValue={$draftTimelineHostInceptionDateStore}
+							isEnabled={$timelineHostDraft !== undefined}
+						/>
+					</JDGInputContainer>
+					<JDGInputContainer label="Cessation Date">
+						<JDGDatePicker
+							bind:inputValue={$draftTimelineHostCessationDateStore}
+							isEnabled={$timelineHostDraft !== undefined}
+						/>
+					</JDGInputContainer>
 				</div>
 			</div>
 		</div>
@@ -397,6 +416,8 @@
 								// Set the current draft to the local store
 								localTimelineHostStore.update((currentValue) => {
 									currentValue.name = $draftTimelineHostNameStore;
+									currentValue.inceptionDate = $draftTimelineHostInceptionDateStore;
+									currentValue.cessationDate = $draftTimelineHostCessationDateStore;
 									return currentValue;
 								});
 								timelineHostDraft.set(undefined);

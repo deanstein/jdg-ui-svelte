@@ -264,7 +264,7 @@ export const convertDateToUTC = (date) => {
 	);
 };
 
-export const getNumberOfYearsBetweenEvents = (startDate, endDate) => {
+export const getNumYearsBetweenDates = (startDate, endDate) => {
 	const correctedStartDate = new Date(startDate);
 	const correctedEndDate = new Date(endDate);
 
