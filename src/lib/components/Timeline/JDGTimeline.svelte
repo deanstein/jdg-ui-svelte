@@ -3,7 +3,7 @@
 	import { writable } from 'svelte/store';
 	import { css } from '@emotion/css';
 
-	import { getMaxElementHeightPx, lightenColor } from '$lib/jdg-utils.js';
+	import { getMaxElementHeightPx, getNumDaysBetweenDates, lightenColor } from '$lib/jdg-utils.js';
 
 	import { jdgTimelineEventKeys } from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 
@@ -210,30 +210,32 @@
 
 	// Keep emptyState and today events updated
 	$: {
-		// If there are no timeline events, show an inception event
-		// that creates an initial event when clicked
-		if (timelineHost?.timelineEvents?.length === 0) {
-			emptyStateEvent = instantiateTimelineEvent(jdgTimelineEventKeys.inception);
-			emptyStateEvent.date = timelineHost.inceptionDate;
-		}
-		// If there's no cessation date, show a Today event
-		if (timelineHost?.cessationDate === '' || !timelineHost?.cessationDate) {
-			todayEvent = instantiateTimelineEvent(jdgTimelineEventKeys.today);
-			todayEvent.type = jdgTimelineEventKeys.today;
-		}
-	}
-
-	// Keep timeline row items updated
-	$: {
-		// If there's no inception date, use the earliest date
+		// If there is no inception date, use the earliest date
 		const earliestEvent = getEarliestTimelineEvent(timelineHost.timelineEvents);
 		let earliestOrInceptionDate =
 			timelineHost?.inceptionDate === undefined || timelineHost.inceptionDate !== ''
 				? timelineHost.inceptionDate
 				: earliestEvent?.date;
-		// Eliminate the emptyState event if there are timelineEvents present
-		if (timelineHost.timelineEvents.length > 0) {
+
+		// If there are no timeline events,
+		// or if there's no event on the inception date,
+		// show an inception event
+		if (
+			timelineHost.timelineEvents.length === 0 ||
+			getNumDaysBetweenDates(timelineHost.inceptionDate, earliestEvent.date) > 0
+		) {
+			emptyStateEvent = instantiateTimelineEvent(jdgTimelineEventKeys.inception);
+			emptyStateEvent.date = timelineHost.inceptionDate;
+		} else {
 			emptyStateEvent = undefined;
+		}
+
+		// If there's no cessation date, show a Today event
+		if (timelineHost?.cessationDate === '' || !timelineHost?.cessationDate) {
+			todayEvent = instantiateTimelineEvent(jdgTimelineEventKeys.today);
+			todayEvent.type = jdgTimelineEventKeys.today;
+		} else {
+			todayEvent = undefined;
 		}
 
 		// Convert events to timeline row items
@@ -241,6 +243,10 @@
 		timelineRowItems = updateTimelineRowItems(
 			generateTimelineRowItems(timelineHost, contextEvents, earliestOrInceptionDate)
 		);
+	}
+
+	// Keep timeline row items updated
+	$: {
 	}
 
 	$: {
@@ -299,7 +305,7 @@
 				<!-- The grid containing all timeline events -->
 				<div class="timeline-event-grid {timelineEventGridCss}">
 					<!-- If there are no events, make an empty state event at the top -->
-					{#if timelineHost.timelineEvents.length === 0 && emptyStateEvent}
+					{#if emptyStateEvent}
 						<JDGTimelineEvent
 							{timelineHost}
 							timelineEvent={emptyStateEvent}

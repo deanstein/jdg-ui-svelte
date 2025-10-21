@@ -264,6 +264,16 @@ export const convertDateToUTC = (date) => {
 	);
 };
 
+export const getNumDaysBetweenDates = (startDate, endDate) => {
+	const correctedStartDate = new Date(startDate);
+	const correctedEndDate = new Date(endDate);
+
+	const diffInMs = correctedEndDate.getTime() - correctedStartDate.getTime();
+	const days = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+	return days;
+};
+
 export const getNumYearsBetweenDates = (startDate, endDate) => {
 	const correctedStartDate = new Date(startDate);
 	const correctedEndDate = new Date(endDate);
