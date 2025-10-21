@@ -202,6 +202,17 @@
 
 	const eventAgeCss = css`
 		color: ${jdgColors.text};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			font-size: 0.7rem;
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			font-size: 0.8rem;
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			font-size: 0.9rem;
+		}
 	`;
 
 	const eventContentCss = css`
