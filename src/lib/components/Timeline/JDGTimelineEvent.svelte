@@ -318,8 +318,7 @@
 			<!-- hide age if this is the birth event -->
 			{#if upgradedEvent?.type !== timelineEventTypes.birth.type}
 				<div class="timeline-event-age {eventAgeCss}">
-					{eventAge?.toString() !== 'NaN' ? 'Age: ' : ''}
-					{eventAge?.toString() !== 'NaN' ? eventAge : ''}
+					{eventAge?.toString() !== 'NaN' && eventAge !== 0 ? 'Age: ' + eventAge : ''}
 				</div>
 			{/if}
 			<!-- if this is a reference event, show the timeline host it's shared from -->
