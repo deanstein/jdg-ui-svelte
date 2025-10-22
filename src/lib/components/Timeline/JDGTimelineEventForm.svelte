@@ -125,8 +125,8 @@
 </script>
 
 <div bind:this={parentRef} class="jdg-timeline-form">
-	<!-- Only show Type dropdown for new events -->
-	{#if isNewEvent}
+	<!-- Only show Type dropdown when editing -->
+	{#if isEditing}
 		<JDGInputContainer label="Type">
 			<JDGSelect
 				optionsGroup={timelineEventOptionsGroup(eventTypeKeys)}
