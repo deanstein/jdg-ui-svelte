@@ -3,10 +3,19 @@
 	import { writable } from 'svelte/store';
 	import { css } from '@emotion/css';
 
+	import { JDG_CONTEXT_KEYS } from '$lib/stores/jdg-context-keys.js';
 	import { getMaxElementHeightPx, getNumDaysBetweenDates, lightenColor } from '$lib/jdg-utils.js';
+
+	import { timelineEventDraft } from '$lib/stores/jdg-temp-store.js';
+	import {
+		doShowTimelineEventModal,
+		isAdminMode,
+		isTimelineEventModalEditable
+	} from '$lib/stores/jdg-ui-store.js';
 
 	import { jdgTimelineEventKeys } from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 
+	import { instantiateTimelineEvent } from '$lib/jdg-timeline-management.js';
 	import {
 		generateTimelineRowItems,
 		getEarliestTimelineEvent,
@@ -15,18 +24,8 @@
 
 	import { generateGradient } from '$lib/jdg-utils.js';
 
-	import Checkbox from '$lib/components/Input/JDGCheckbox.svelte';
-	import ComposeToolbar from '$lib/components/Compose/JDGComposeToolbar.svelte';
-	import JDGTimelineEvent from '$lib/components/Timeline/JDGTimelineEvent.svelte';
+	import { JDGCheckbox, JDGComposeToolbar, JDGTimelineEvent } from '$lib/index.js';
 	import { jdgBreakpoints, jdgQuantities, jdgSizes } from '$lib/jdg-shared-styles.js';
-	import { JDG_CONTEXT_KEYS } from '$lib/stores/jdg-context-keys.js';
-	import { instantiateTimelineEvent } from '$lib/jdg-timeline-management.js';
-	import { timelineEventDraft } from '$lib/stores/jdg-temp-store.js';
-	import {
-		doShowTimelineEventModal,
-		isAdminMode,
-		isTimelineEventModalEditable
-	} from '$lib/stores/jdg-ui-store.js';
 
 	// Timeline host contains events and event references
 	export let timelineHost;
@@ -270,22 +269,22 @@
 			</div>
 		</div>
 	{/if}
-	{#if allowEditing}
-		<ComposeToolbar
-			parentRef={timelineWrapperRef}
-			composeButtonFaIcon={'fa-plus fa-fw'}
-			composeButtonTooltip={'Add a new event'}
-			onClickCompose={addClickAddEvent}
-			zIndex={1}
-		/>
-	{/if}
 	<div bind:this={timelineContainerRef} class="timeline-container {timelineContainerCss}">
+		{#if allowEditing}
+			<JDGComposeToolbar
+				parentRef={timelineWrapperRef}
+				composeButtonFaIcon={'fa-plus fa-fw'}
+				composeButtonTooltip={'Add a new event'}
+				onClickCompose={addClickAddEvent}
+				zIndex={1}
+			/>
+		{/if}
 		<div class="timeline-actions-bar {timelineSupportingTextCss}">
 			<div class="timeline-event-count {timelineEventCountCss}">
 				Showing {timelineRowItems.length + (emptyStateEvent ? 1 : 0) + (todayEvent ? 1 : 0)} timeline
 				events
 			</div>
-			<Checkbox
+			<JDGCheckbox
 				isEnabled={true}
 				showLabel={true}
 				label="Relative spacing"
