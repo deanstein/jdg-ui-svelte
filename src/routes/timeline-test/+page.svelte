@@ -291,6 +291,7 @@
 				<JDGSelect
 					bind:inputValue={$localTimelineHostStore}
 					optionsGroup={timelineHostOptionsGroup}
+					isEnabled={$timelineHostDraft === undefined}
 				/>
 			</JDGInputContainer>
 		</JDGBodyCopy>
