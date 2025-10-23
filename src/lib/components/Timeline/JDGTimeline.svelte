@@ -341,7 +341,7 @@
 							onClickTimelineEvent={isInteractive && allowEditing
 								? onClickInceptionEvent
 								: () => {}}
-							isInteractive={(isInteractive && allowEditing) || $isAdminMode ? true : false}
+							isInteractive={isInteractive && allowEditing && $isAdminMode}
 							rowIndex={0}
 							backgroundColor={timelineEventColors[0]}
 						/>
