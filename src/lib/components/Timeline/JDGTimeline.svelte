@@ -25,12 +25,7 @@
 
 	import { generateGradient } from '$lib/jdg-utils.js';
 
-	import {
-		JDGCheckbox,
-		JDGComposeToolbar,
-		JDGImage,
-		JDGTimelineEvent
-	} from '$lib/index.js';
+	import { JDGCheckbox, JDGComposeToolbar, JDGImage, JDGTimelineEvent } from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgQuantities, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { imageMetaCollection } from '../../../routes/image-meta-collection.js';
 
