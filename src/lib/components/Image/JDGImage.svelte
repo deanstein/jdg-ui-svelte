@@ -38,7 +38,6 @@
 	import { JDGImageCaptionAttribution, JDGLoadingSpinner } from '$lib/index.js';
 
 	// show a local image while image is loading
-	// @ts-expect-error
 	import imagePlaceholder from '$lib/assets/raster/jdg-image-placeholder.png';
 
 	// EXPORTS
