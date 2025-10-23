@@ -42,6 +42,8 @@ export let imageDetailMeta = writable({});
 export let imageDetailWidth = writable(0); // width of the image for caption alignment
 export let imageDetailScale = writable(1.0);
 export let doShowImageDetailOverlay = writable(false);
+/*** IMAGE META MODAL ***/
+export let doShowImageMetaModal = writable(false);
 
 /*** TIMELINE ***/
 export let doShowTimelineEventModal = writable(false);

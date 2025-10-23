@@ -132,6 +132,9 @@ export { JDGImageFullWidth };
 import JDGImageHybridGridCarousel from './components/Image/JDGImageHybridGridCarousel.svelte';
 export { JDGImageHybridGridCarousel };
 
+import JDGImageMetaModal from './components/Image/JDGImageMetaModal.svelte';
+export { JDGImageMetaModal };
+
 import JDGImageTile from './components/Image/JDGImageTile.svelte';
 export { JDGImageTile };
 

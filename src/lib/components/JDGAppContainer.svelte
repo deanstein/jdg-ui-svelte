@@ -24,7 +24,8 @@
 		windowScrollPosition,
 		windowWidth,
 		appCssHyperlinkBar,
-		isTabletBreakpoint
+		isTabletBreakpoint,
+		doShowImageMetaModal
 	} from '$lib/stores/jdg-ui-store.js';
 
 	import { getDistancePxToBottomOfHeader } from '$lib/jdg-ui-management.js';
@@ -39,6 +40,7 @@
 		JDGDevOverlay,
 		JDGDevToolbarSticky,
 		JDGImageDetailOverlay,
+		JDGImageMetaModal,
 		JDGLoadingOverlay,
 		JDGModal,
 		JDGScrollToTop,
@@ -201,27 +203,35 @@
 	{#if showScrollToTopButton}
 		<JDGScrollToTop />
 	{/if}
-	<!-- show overlays when requested -->
+
+	<!-- OVERLAYS -->
+	<!-- Admin -->
 	{#if $doShowAdminLoginModal}
 		<JDGAdminLoginModal />
 	{/if}
+	<!-- Loading -->
 	<JDGLoadingOverlay
 		isLoading={!isAppLoaded}
 		loadingIconSrc={appLoadingIconSrc}
 		{loadingSpinnerColor}
 	/>
+	<!-- Image -->
 	{#if $doShowImageDetailOverlay}
 		<JDGImageDetailOverlay imageMeta={$imageDetailMeta} />
 	{/if}
-	<!-- show dev UI when requested -->
+	<!-- Timeline -->
+	{#if $doShowTimelineEventModal}
+		<JDGTimelineEventModal />
+	{/if}
+	{#if $doShowImageMetaModal}
+		<JDGImageMetaModal />
+	{/if}
+	<!-- Dev -->
 	{#if $doShowDevOverlay}
 		<JDGDevOverlay />
 	{/if}
 	{#if $doShowDevToolbarSticky}
 		<JDGDevToolbarSticky />
-	{/if}
-	{#if $doShowTimelineEventModal}
-		<JDGTimelineEventModal />
 	{/if}
 </div>
 
