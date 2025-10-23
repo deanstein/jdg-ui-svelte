@@ -8,6 +8,7 @@
 
 	import { timelineEventDraft } from '$lib/stores/jdg-temp-store.js';
 	import {
+		doShowImageMetaModal,
 		doShowTimelineEventModal,
 		isAdminMode,
 		isTimelineEventModalEditable
@@ -24,8 +25,14 @@
 
 	import { generateGradient } from '$lib/jdg-utils.js';
 
-	import { JDGCheckbox, JDGComposeToolbar, JDGTimelineEvent } from '$lib/index.js';
-	import { jdgBreakpoints, jdgQuantities, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import {
+		JDGCheckbox,
+		JDGComposeToolbar,
+		JDGImage,
+		JDGTimelineEvent
+	} from '$lib/index.js';
+	import { jdgBreakpoints, jdgColors, jdgQuantities, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { imageMetaCollection } from '../../../routes/image-meta-collection.js';
 
 	// Timeline host contains events and event references
 	export let timelineHost;
@@ -43,11 +50,11 @@
 	export let maxHeight = '50svh';
 
 	export let onClickInceptionEvent = () => {};
-	export let onClickTimelineEvent = () => {};
-	export let onClickEventRefHost = () => {};
-	export let onClickAssociatedHost = () => {};
 	export let addClickAddEvent = () => {};
-	export let getTimelineHostById = () => {};
+
+	/*** Eventually needed, but not developed yet ***/
+	// export let onClickEventRefHost = () => {};
+	// export let onClickAssociatedHost = () => {};
 
 	const rowHeightEmptyPx = 1;
 	const rowHeightFilledPx = 80;
@@ -57,6 +64,8 @@
 	// set up the inception and cessation events
 	let emptyStateEvent;
 	let todayEvent;
+
+	const avatarHeight = '30px';
 
 	// these three colors define the gradient
 	// that all timeline events will occupy from start to end
@@ -142,6 +151,14 @@
 
 	const timelineTitleBarCss = css`
 		background-color: ${lightenColor(timelineBackgroundColor, 0.03)};
+	`;
+
+	const timelineAvatarCss = css`
+		height: ${avatarHeight};
+		border: 2px solid transparent;
+		:hover {
+			border: 2px solid ${jdgColors.accentColorsJDG[1]};
+		}
 	`;
 
 	const timelineEventCountCss = css`
@@ -264,6 +281,24 @@
 <div bind:this={timelineWrapperRef} class="timeline-wrapper">
 	{#if showTitleBar}
 		<div class="timeline-title-bar {timelineTitleBarCss}">
+			<div
+				class="timeline-avatar {timelineAvatarCss}"
+				role="button"
+				tabindex="0"
+				on:click={() => {
+					doShowImageMetaModal.set(true);
+				}}
+				on:keydown={() => {
+					doShowImageMetaModal.set(true);
+				}}
+			>
+				<JDGImage
+					imageMeta={imageMetaCollection.aerial_60s70s_1}
+					maxHeight={avatarHeight}
+					maxWidth={avatarHeight}
+					cropToFillContainer={true}
+				/>
+			</div>
 			<div class="timeline-title">
 				{timelineHost.name}
 			</div>
@@ -328,9 +363,6 @@
 									doShowTimelineEventModal.set(true);
 									isTimelineEventModalEditable.set(allowEditing);
 								}}
-								onClickAssociatedHost={() => {
-									//timelineRowItem.event.associatedHostIds[0]
-								}}
 								rowIndex={timelineRowItem.index}
 								backgroundColor={timelineEventColors[i]}
 								eventReference={timelineRowItem.eventReference}
@@ -364,8 +396,20 @@
 		padding: 10px 10px 20px 10px;
 		display: flex;
 		justify-content: center;
+		align-items: center;
 		border-radius: 10px 10px 0 0;
 		margin-bottom: -10px;
+		gap: 10px;
+	}
+
+	.timeline-avatar {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		aspect-ratio: 1;
+		overflow: hidden;
+		border-radius: 50%;
+		cursor: pointer;
 	}
 
 	.timeline-container {

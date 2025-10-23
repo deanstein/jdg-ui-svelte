@@ -30,7 +30,6 @@
 		isTimelineEventModalEditable
 	} from '$lib/stores/jdg-ui-store.js';
 
-	import { setTimelineEventActive } from '$lib/jdg-ui-management.js';
 	import {
 		addOrReplaceObjectByKeyValue,
 		deleteObjectByKeyValue,
@@ -435,7 +434,6 @@
 				isTimelineEventModalEditable.set(true);
 				timelineEventDraft.set(instantiateTimelineEvent(jdgTimelineEventKeys.generic));
 			}}
-			onClickTimelineEvent={setTimelineEventActive}
 			addClickAddEvent={() => {
 				doShowTimelineEventModal.set(true);
 				timelineEventDraft.set(instantiateTimelineEvent(jdgTimelineEventKeys.generic));
