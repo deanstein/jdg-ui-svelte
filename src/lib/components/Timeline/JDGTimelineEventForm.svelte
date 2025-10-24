@@ -35,7 +35,7 @@
 	export let isEditable = true; // show compose toolbar if true
 	export let isEditing = false; // fields are in edit state if true
 	// For debugging
-	export let doShowLocalStore = false;
+	export let showLocalStore = false;
 
 	let parentRef; // for positioning the compose toolbar
 
@@ -222,7 +222,7 @@
 		/>
 	{/if}
 </div>
-{#if doShowLocalStore}
+{#if showLocalStore}
 	<div class="form-store-preview">
 		FORM STORE:
 		<pre>

@@ -25,13 +25,13 @@
 	export let logoSupertitle = undefined; // text above title
 	export let logoTitle = undefined; // title next to logo
 	export let logoJustification = 'left';
-	export let doShowNav = true;
-	export let doUseMobileNav = false; // force use mobile nav at all breakpoints
+	export let showNav = true;
+	export let useMobileNav = false; // force use mobile nav at all breakpoints
 	export let navItems = [];
 	export let textColor = jdgColors.text;
 	export let backgroundColorRgba = jdgColors.headerBackground;
-	export let doShowShadow = true;
-	export let doSuppressAlphaOnScroll = false; // disable alpha past some scroll threshold
+	export let showShadow = true;
+	export let suppressAlphaOnScroll = false; // disable alpha past some scroll threshold
 
 	let forceHideTitleAtBreakpoint = true; // forces no title below certain breakpoints
 	let forceMobileNavOnCenteredTitle = false; // forces mobile nav when title is centered
@@ -126,7 +126,7 @@
 
 	onMount(() => {
 		window.addEventListener('resize', headerBreakpointHandler);
-		if (doSuppressAlphaOnScroll) {
+		if (suppressAlphaOnScroll) {
 			setHeaderBackgroundColorAlphaAtPos();
 			window.addEventListener('scroll', setHeaderBackgroundColorAlphaAtPos);
 		}
@@ -137,7 +137,7 @@
 	onDestroy(() => {
 		if (typeof window !== 'undefined') {
 			window.removeEventListener('resize', headerBreakpointHandler);
-			if (doSuppressAlphaOnScroll) {
+			if (suppressAlphaOnScroll) {
 				window.removeEventListener('scroll', setHeaderBackgroundColorAlphaAtPos);
 			}
 		}
@@ -150,7 +150,7 @@
 		headerContainerInnerCss = css`
 			padding-top: ${jdgSizes.headerTopBottomPadding};
 			padding-bottom: ${jdgSizes.headerTopBottomPadding};
-			background-color: ${doSuppressAlphaOnScroll
+			background-color: ${suppressAlphaOnScroll
 				? setRgbaAlpha(backgroundColorRgba, scrollAlpha)
 				: backgroundColorRgba};
 			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
@@ -169,7 +169,7 @@
 </script>
 
 <header
-	class="jdg-header-outer-container {headerContainerOuterCss} {doShowShadow
+	class="jdg-header-outer-container {headerContainerOuterCss} {showShadow
 		? jdgBoxShadowStandard
 		: ''}"
 	transition:fade
@@ -200,12 +200,12 @@
 			</div>
 		{/if}
 		<!-- navigation: in header -->
-		{#if doShowNav && navItems.length > 0}
-			<JDGTopNav {navItems} useMobileNav={doUseMobileNav || forceMobileNavOnCenteredTitle} />
+		{#if showNav && navItems.length > 0}
+			<JDGTopNav {navItems} useMobileNav={useMobileNav || forceMobileNavOnCenteredTitle} />
 		{/if}
 	</div>
 	<!-- navigation: sidebar -->
-	{#if doShowNav && navItems.length > 0}
+	{#if showNav && navItems.length > 0}
 		<JDGSideNav {navItems} />
 	{/if}
 	<!-- stripes at bottom of header -->

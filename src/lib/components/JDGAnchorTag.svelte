@@ -12,7 +12,7 @@
 	import {
 		convertStringToAnchorTag,
 		getIsWindowScrolledToBottom,
-		removeAnchorTagFromHistory,
+		removeAnchorTagFromHistory as removeAnchorTagFromHistoryFn,
 		scrollToAnchor
 	} from '$lib/jdg-utils.js';
 
@@ -20,8 +20,8 @@
 	export let isForFloatingContentContainer = false; // adjusts pos for header based on ContentContainer gap
 	export let adjustPosForHeader = true; // ensure content starts below header
 	export let adjustPosForPadding = true && !isForFloatingContentContainer; // additional padding below the top edge for visual buffer
-	export let doRemoveAnchorTagFromHistory = false; // removes anchor tag from URL bar
-	export let doShowDebugMessagesInConsole = false;
+	export let removeAnchorTagFromHistory = false; // removes anchor tag from URL bar
+	export let showDebugMessagesInConsole = false;
 
 	let anchorTagRef;
 	let lastKnownAnchorTagYPos = 0;
@@ -45,7 +45,7 @@
 				Math.abs(lastKnownAnchorTagYPos - window.scrollY) < 10) ||
 			getIsWindowScrolledToBottom()
 		) {
-			if (doShowDebugMessagesInConsole) {
+			if (showDebugMessagesInConsole) {
 				console.log('Reached destination!', anchorTagString);
 			}
 			return true;
@@ -61,7 +61,7 @@
 			// set the flag so we can keep trying to scroll to this anchor tag
 			isScrollingToAnchorTag.set(true);
 
-			if (doShowDebugMessagesInConsole) {
+			if (showDebugMessagesInConsole) {
 				console.log(
 					'Hash changed, checking for arrival and re-scrolling for anchor tag: ' + anchorTagString
 				);
@@ -106,7 +106,7 @@
 				const currentYPos = getCurrentAnchorTagYPos();
 				// anchor tag position changed since last time
 				if (lastKnownAnchorTagYPos !== currentYPos) {
-					if (doShowDebugMessagesInConsole) {
+					if (showDebugMessagesInConsole) {
 						console.log('Anchor tag moved, attempting to scroll to anchor again!', anchorTagString);
 					}
 					lastKnownAnchorTagYPos = currentYPos;
@@ -124,10 +124,10 @@
 		if (getIsAnchorTagInURL() && !$isScrolling && $imagesLoading.length === 0) {
 			if (getHasArrived()) {
 				isScrollingToAnchorTag.set(false);
-				if (doRemoveAnchorTagFromHistory) {
-					removeAnchorTagFromHistory();
+				if (removeAnchorTagFromHistory) {
+					removeAnchorTagFromHistoryFn();
 				}
-				if (doShowDebugMessagesInConsole) {
+				if (showDebugMessagesInConsole) {
 					console.log('Arrived, no longer checking for arrival.', anchorTagString);
 				}
 			}

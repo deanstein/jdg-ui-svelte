@@ -39,9 +39,9 @@
 	export let alignItems = 'left';
 	export let backgroundColorRgba = jdgColors.headerBackground;
 	export let webAppVersionLabel = 'Website';
-	export let doShowShadow = true; // subtle shadow to give the illusion of depth
-	export let doShowJdgUiVersion = true;
-	export let doShowDevToolsButton = false;
+	export let showShadow = true; // subtle shadow to give the illusion of depth
+	export let showJdgUiVersion = true;
+	export let showDevToolsButton = false;
 
 	const divider = '|';
 
@@ -77,7 +77,7 @@
 		font-size: ${jdgSizes.fontSizeBodyXSm};
 		padding: ${jdgSizes.headerTopBottomPadding} ${jdgSizes.headerSidePadding}
 			${jdgSizes.headerTopBottomPadding} ${jdgSizes.headerSidePadding};
-		box-shadow: ${doShowShadow ? '-3px -3px 5px rgba(0, 0, 0, 0.3)' : ''};
+		box-shadow: ${showShadow ? '-3px -3px 5px rgba(0, 0, 0, 0.3)' : ''};
 	`;
 
 	const footerDisclaimerCss = css`
@@ -147,7 +147,7 @@
 		<!-- versions row -->
 		<div class="footer-row">
 			{#if appVersion}
-				{#if additionalVersionData || doShowJdgUiVersion}
+				{#if additionalVersionData || showJdgUiVersion}
 					<!-- version of this app or website -->
 					<div class="footer-item {footerItemCss} {$appCssHyperlinkSimple}">
 						{webAppVersionLabel}: <a href={packageJsonVersionHref} target="_blank">v{appVersion}</a>
@@ -159,7 +159,7 @@
 				{/if}
 			{/if}
 			<!-- version of jdg-ui-svelte package -->
-			{#if doShowJdgUiVersion}
+			{#if showJdgUiVersion}
 				<div>{divider}</div>
 				<div class="footer-item {footerItemCss} {$appCssHyperlinkSimple}">
 					JDG UI: <a href={jdgUiSvelteVersionHref} target="_blank"
@@ -177,7 +177,7 @@
 			<div>{divider}</div>
 			<!-- latest buid code -->
 			<div class="footer-item {footerItemCss} {$appCssHyperlinkSimple}">
-				{#if additionalVersionData || doShowJdgUiVersion}
+				{#if additionalVersionData || showJdgUiVersion}
 					Build: <a href={buildCodeHref} target="_blank">{buildCode}</a>
 				{:else}
 					<a href={buildCodeHref} target="_blank">{buildCode}</a>
@@ -187,7 +187,7 @@
 		<!-- slot for any extra content below the versions -->
 		<slot name="footer-slot-bottom" />
 		<!-- access point for devTools -->
-		{#if doShowDevToolsButton}
+		{#if showDevToolsButton}
 			<div class="footer-row {footerDevToolsCss}">
 				<JDGButton
 					onClickFunction={toggleDevTools}
