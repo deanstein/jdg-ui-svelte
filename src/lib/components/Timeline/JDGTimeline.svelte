@@ -65,9 +65,9 @@
 	const avatarHeight = '30px';
 	const onClickAvatar = () => {
 		if (allowEditing) {
-			imageViewerMeta.set(imageMetaCollection.aerial_60s70s_1);
 			showImageMetaModal.set(true);
 		} else {
+			imageViewerMeta.set(imageMetaCollection.aerial_60s70s_1);
 			showImageViewerModal.set(true);
 		}
 	};
