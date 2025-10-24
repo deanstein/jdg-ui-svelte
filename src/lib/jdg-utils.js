@@ -898,7 +898,7 @@ export const generateGradient = (steps, colorString1, colorString2, colorString3
 ///
 
 export const isUrlCloudinary = (url) => {
-	if (url.includes('cloudinary.com')) {
+	if (url?.includes('cloudinary.com')) {
 		return true;
 	} else {
 		return false;
