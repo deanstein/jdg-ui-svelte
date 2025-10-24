@@ -11,7 +11,9 @@
 		showImageMetaModal,
 		showTimelineEventModal,
 		isAdminMode,
-		isTimelineEventModalEditable
+		isTimelineEventModalEditable,
+		showImageViewerModal,
+		imageViewerMeta
 	} from '$lib/stores/jdg-ui-store.js';
 
 	import { jdgTimelineEventKeys } from '$lib/schemas/timeline/jdg-timeline-event-types.js';
@@ -61,6 +63,14 @@
 	let todayEvent;
 
 	const avatarHeight = '30px';
+	const onClickAvatar = () => {
+		if (allowEditing) {
+			imageViewerMeta.set(imageMetaCollection.aerial_60s70s_1);
+			showImageMetaModal.set(true);
+		} else {
+			showImageViewerModal.set(true);
+		}
+	};
 
 	// these three colors define the gradient
 	// that all timeline events will occupy from start to end
@@ -282,12 +292,8 @@
 				class="timeline-avatar {timelineAvatarCss}"
 				role="button"
 				tabindex="0"
-				on:click={() => {
-					showImageMetaModal.set(true);
-				}}
-				on:keydown={() => {
-					showImageMetaModal.set(true);
-				}}
+				on:click={onClickAvatar}
+				on:keydown={onClickAvatar}
 			>
 				<JDGImage
 					imageMeta={imageMetaCollection.aerial_60s70s_1}
