@@ -2,7 +2,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { doShowNavSidebar } from '$lib/stores/jdg-ui-store.js';
+	import { showNavSidebar } from '$lib/stores/jdg-ui-store.js';
 
 	import { getIsNavSideBarOpen } from '$lib/jdg-state-management.js';
 	import { breakpointHandler } from '$lib/jdg-ui-management.js';
@@ -36,7 +36,7 @@
 
 	const onClickMobileNavButton = () => {
 		const isOpen = getIsNavSideBarOpen();
-		doShowNavSidebar.set(!isOpen);
+		showNavSidebar.set(!isOpen);
 	};
 
 	let useMobileNavResult;
@@ -77,7 +77,7 @@
 			class="mobile-nav-button {mobileNavButtonCss}"
 			on:click={onClickMobileNavButton}
 			on:keypress={() => {}}
-			title={$doShowNavSidebar ? 'Close menu' : 'Open menu'}
+			title={$showNavSidebar ? 'Close menu' : 'Open menu'}
 		>
 			<div class="jdg-highlight-container">
 				<span class="jdg-highlight no-initial-highlight" style="display: flex; z-index: 3;">

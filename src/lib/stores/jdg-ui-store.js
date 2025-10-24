@@ -25,7 +25,7 @@ export let scrollDirection = writable('down');
 
 /*** NAVIGATION ***/
 export let jumpToNavItems = writable([]);
-export let doShowNavSidebar = writable(false);
+export let showNavSidebar = writable(false);
 
 /*** NOTIFICATIONS ***/
 export let activeNotificationBanners = writable([]);
@@ -85,7 +85,7 @@ const storeMap = {
 	scrollDirection,
 	windowScrollPosition,
 	// nav
-	doShowNavSidebar,
+	showNavSidebar,
 	jumpToNavItems,
 	// notifications
 	activeNotificationBanners,

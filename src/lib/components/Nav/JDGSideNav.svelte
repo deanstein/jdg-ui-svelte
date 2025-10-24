@@ -2,7 +2,7 @@
 	import { css } from '@emotion/css';
 	import { slide } from 'svelte/transition';
 
-	import { doShowNavSidebar } from '$lib/stores/jdg-ui-store.js';
+	import { showNavSidebar } from '$lib/stores/jdg-ui-store.js';
 
 	import { setRgbaAlpha } from '$lib/index.js';
 
@@ -32,7 +32,7 @@
 	let blurCss;
 
 	// only apply the blur after the animation is complete
-	$: if ($doShowNavSidebar) {
+	$: if ($showNavSidebar) {
 		setTimeout(() => {
 			blurCss = css`
 				backdrop-filter: blur(${jdgSizes.blurSizeSmall});
@@ -43,13 +43,13 @@
 	}
 </script>
 
-{#if $doShowNavSidebar}
+{#if $showNavSidebar}
 	<div class="jdg-nav-sidebar-layout">
 		<div class="jdg-nav-sidebar-alignment-container">
 			<div
 				class="jdg-nav-sidebar-click-overlay"
 				on:click={() => {
-					doShowNavSidebar.set(false);
+					showNavSidebar.set(false);
 				}}
 				on:keypress={() => {
 					() => {};
@@ -68,7 +68,7 @@
 								<JDGNavItem
 									{navItem}
 									onClickFunction={() => {
-										doShowNavSidebar.set(!$doShowNavSidebar);
+										showNavSidebar.set(!$showNavSidebar);
 									}}
 								/>
 							</div>

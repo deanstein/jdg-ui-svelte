@@ -7,7 +7,7 @@ import {
 	imageViewerMeta,
 	jumpToNavItems,
 	showImageViewerModal,
-	doShowNavSidebar,
+	showNavSidebar,
 	showDevTools,
 	imagesLoading
 } from './stores/jdg-ui-store.js';
@@ -138,7 +138,7 @@ export const removeJumpToNavItem = (navItem) => {
 
 export const getIsNavSideBarOpen = () => {
 	let isOpen;
-	doShowNavSidebar.subscribe((currentValue) => {
+	showNavSidebar.subscribe((currentValue) => {
 		isOpen = currentValue;
 	});
 
