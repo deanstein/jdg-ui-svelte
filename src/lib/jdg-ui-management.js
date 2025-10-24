@@ -6,7 +6,7 @@ import {
 	isAdminMode,
 	postAdminLoginFunction
 } from './stores/jdg-ui-store.js';
-import { timelineEventDraft } from './stores/jdg-temp-store.js';
+import { draftTimelineEvent } from './stores/jdg-temp-store.js';
 
 import jdgTimelineHost from '$lib/schemas/timeline/jdg-timeline-host.js';
 import jdgTimelineEventTypes, {
@@ -95,7 +95,7 @@ export const getFullTextWidth = (element) => {
 // is set "active" for viewing or editing
 export const setTimelineEventActive = (jdgTimelineEvent) => {
 	showTimelineEventModal.set(true);
-	timelineEventDraft.set(jdgTimelineEvent);
+	draftTimelineEvent.set(jdgTimelineEvent);
 };
 
 // gets the earliest timeline event from an array of events

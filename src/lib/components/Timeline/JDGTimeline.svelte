@@ -6,7 +6,7 @@
 	import { JDG_CONTEXT_KEYS } from '$lib/stores/jdg-context-keys.js';
 	import { getMaxElementHeightPx, getNumDaysBetweenDates, lightenColor } from '$lib/jdg-utils.js';
 
-	import { timelineEventDraft } from '$lib/stores/jdg-temp-store.js';
+	import { draftTimelineEvent } from '$lib/stores/jdg-temp-store.js';
 	import {
 		showImageMetaModal,
 		showTimelineEventModal,
@@ -366,7 +366,7 @@
 								{timelineHost}
 								timelineEvent={timelineRowItem.event}
 								onClickTimelineEvent={() => {
-									timelineEventDraft.set(timelineRowItem.event);
+									draftTimelineEvent.set(timelineRowItem.event);
 									showTimelineEventModal.set(true);
 									isTimelineEventModalEditable.set(allowEditing);
 								}}

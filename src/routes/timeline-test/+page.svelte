@@ -18,9 +18,9 @@
 	} from '$lib/jdg-persistence-management.js';
 	import { instantiateTimelineEvent, upgradeTimelineHost } from '$lib/jdg-timeline-management.js';
 	import {
-		timelineCollectionFileDraft,
-		timelineEventDraft,
-		timelineHostDraft
+		draftTimelineHostCollection,
+		draftTimelineEvent,
+		draftTimelineHost
 	} from '$lib/stores/jdg-temp-store.js';
 	import {
 		allowTextSelection,
@@ -125,7 +125,7 @@
 	}
 	// Manage draft fields
 	$: {
-		if ($localTimelineHostStore !== undefined && $timelineHostDraft === undefined) {
+		if ($localTimelineHostStore !== undefined && $draftTimelineHost === undefined) {
 			draftTimelineHostNameStore.set($localTimelineHostStore.name);
 			draftTimelineHostInceptionDateStore.set($localTimelineHostStore.inceptionDate);
 			draftTimelineHostCessationDateStore.set($localTimelineHostStore.cessationDate);
@@ -135,9 +135,9 @@
 	// When there's a timeline host being drafted, make sure it's upgraded
 	$: {
 		// Upgrade the timelineHost
-		if ($timelineHostDraft !== undefined) {
+		if ($draftTimelineHost !== undefined) {
 			const upgradedHost = upgradeTimelineHost($localTimelineHostStore);
-			timelineHostDraft.set(upgradedHost);
+			draftTimelineHost.set(upgradedHost);
 		}
 	}
 
@@ -216,10 +216,10 @@
 				</JDGScrollBox>
 			</JDGInputContainer>
 			<JDGInputContainer label="Timeline Host Collection Draft">
-				{#if $timelineCollectionFileDraft}
+				{#if $draftTimelineHostCollection}
 					<JDGScrollBox>
 						<pre>{JSON.stringify(
-								$timelineCollectionFileDraft[selectedHostCollectionKey],
+								$draftTimelineHostCollection[selectedHostCollectionKey],
 								null,
 								2
 							)}</pre>
@@ -232,7 +232,7 @@
 
 		<JDGBodyCopy>
 			<JDGModalActionsBar>
-				{#if $timelineCollectionFileDraft === undefined}
+				{#if $draftTimelineHostCollection === undefined}
 					<JDGButton
 						label="Pull from Repo"
 						faIcon="fa-arrow-circle-down"
@@ -243,7 +243,7 @@
 								selectedHostFileName
 							);
 						}}
-						isEnabled={$timelineCollectionFileDraft === undefined}
+						isEnabled={$draftTimelineHostCollection === undefined}
 					/>
 				{:else}
 					<JDGButton
@@ -251,17 +251,17 @@
 						faIcon={'fa-circle-xmark'}
 						backgroundColor={jdgColors.cancel}
 						onClickFunction={() => {
-							timelineCollectionFileDraft.set(undefined);
+							draftTimelineHostCollection.set(undefined);
 						}}
 					/>
 				{/if}
 				<JDGButton
-					label={$timelineCollectionFileDraft ? 'Save to Repo' : 'Set to Editing Store'}
-					faIcon={$timelineCollectionFileDraft ? 'fa-floppy-disk' : 'fa-pen-to-square'}
-					backgroundColor={$timelineCollectionFileDraft ? jdgColors.done : jdgColors.active}
-					onClickFunction={$timelineCollectionFileDraft === undefined
+					label={$draftTimelineHostCollection ? 'Save to Repo' : 'Set to Editing Store'}
+					faIcon={$draftTimelineHostCollection ? 'fa-floppy-disk' : 'fa-pen-to-square'}
+					backgroundColor={$draftTimelineHostCollection ? jdgColors.done : jdgColors.active}
+					onClickFunction={$draftTimelineHostCollection === undefined
 						? () => {
-								timelineCollectionFileDraft.set(selectedHostCollection);
+								draftTimelineHostCollection.set(selectedHostCollection);
 							}
 						: async () => {
 								// Write the collection file draft to the repo
@@ -269,9 +269,9 @@
 									jdgRepoOwner,
 									jdgBuildingDataRepoName,
 									selectedHostFileName,
-									$timelineCollectionFileDraft
+									$draftTimelineHostCollection
 								);
-								timelineCollectionFileDraft.set(undefined);
+								draftTimelineHostCollection.set(undefined);
 								// Pull the latest collection from the repo
 								selectedHostCollection = await readJsonFileFromRepo(
 									jdgRepoOwner,
@@ -291,7 +291,7 @@
 				<JDGSelect
 					bind:inputValue={$localTimelineHostStore}
 					optionsGroup={timelineHostOptionsGroup}
-					isEnabled={$timelineHostDraft === undefined}
+					isEnabled={$draftTimelineHost === undefined}
 				/>
 			</JDGInputContainer>
 		</JDGBodyCopy>
@@ -320,43 +320,43 @@
 					<JDGInputContainer label="Name">
 						<JDGTextInput
 							bind:inputValue={$draftTimelineHostNameStore}
-							isEnabled={$timelineHostDraft !== undefined}
+							isEnabled={$draftTimelineHost !== undefined}
 						/>
 					</JDGInputContainer>
 					<JDGInputContainer label="Inception Date">
 						<JDGDatePicker
 							bind:inputValue={$draftTimelineHostInceptionDateStore}
-							isEnabled={$timelineHostDraft !== undefined}
+							isEnabled={$draftTimelineHost !== undefined}
 						/>
 					</JDGInputContainer>
 					<JDGInputContainer label="Cessation Date">
 						<JDGDatePicker
 							bind:inputValue={$draftTimelineHostCessationDateStore}
-							isEnabled={$timelineHostDraft !== undefined}
+							isEnabled={$draftTimelineHost !== undefined}
 						/>
 					</JDGInputContainer>
 				</div>
 			</div>
 		</div>
-		{#if $timelineHostDraft !== undefined}
+		{#if $draftTimelineHost !== undefined}
 			<JDGH3H4 h3String={'Draft Timeline Host Store'} />
 			<JDGBodyCopy>
 				<JDGScrollBox>
 					<pre>
-				{JSON.stringify($timelineHostDraft, null, 2)}
+				{JSON.stringify($draftTimelineHost, null, 2)}
 			</pre>
 				</JDGScrollBox>
 			</JDGBodyCopy>
 		{/if}
 		<JDGBodyCopy>
 			<JDGModalActionsBar>
-				{#if $timelineHostDraft}
+				{#if $draftTimelineHost}
 					<JDGButton
 						label={'Cancel'}
 						faIcon={'fa-circle-xmark'}
 						backgroundColor={jdgColors.cancel}
 						onClickFunction={() => {
-							timelineHostDraft.set(undefined);
+							draftTimelineHost.set(undefined);
 						}}
 					/>
 					<JDGButton
@@ -365,7 +365,7 @@
 						backgroundColor={jdgColors.delete}
 						onClickFunction={() => {
 							// Delete this host from the collection draft
-							timelineCollectionFileDraft.update((currentValue) => {
+							draftTimelineHostCollection.update((currentValue) => {
 								deleteObjectByKeyValue(
 									currentValue[selectedHostCollectionKey],
 									'id',
@@ -374,27 +374,27 @@
 								return currentValue;
 							});
 							// Eliminate the editing host draft
-							timelineHostDraft.set(undefined);
+							draftTimelineHost.set(undefined);
 						}}
 					/>
 				{/if}
 				<JDGButton
-					label={$timelineHostDraft ? 'Update in Host Collection' : 'Set to Editing Store'}
-					faIcon={$timelineHostDraft ? 'fa-floppy-disk' : 'fa-pen-to-square'}
-					backgroundColor={$timelineHostDraft ? jdgColors.done : jdgColors.active}
-					onClickFunction={$timelineHostDraft === undefined
+					label={$draftTimelineHost ? 'Update in Host Collection' : 'Set to Editing Store'}
+					faIcon={$draftTimelineHost ? 'fa-floppy-disk' : 'fa-pen-to-square'}
+					backgroundColor={$draftTimelineHost ? jdgColors.done : jdgColors.active}
+					onClickFunction={$draftTimelineHost === undefined
 						? () => {
 								// Start editing a collection draft
-								timelineCollectionFileDraft.set(selectedHostCollection);
+								draftTimelineHostCollection.set(selectedHostCollection);
 								// Start editing a host draft
-								timelineHostDraft.set($localTimelineHostStore);
-								timelineCollectionFileDraft.update((current) => {
+								draftTimelineHost.set($localTimelineHostStore);
+								draftTimelineHostCollection.update((current) => {
 									const arr = current[selectedHostCollectionKey] ?? [];
 									addOrReplaceObjectByKeyValue(
 										arr,
 										'id',
-										$timelineHostDraft.id,
-										$timelineHostDraft
+										$draftTimelineHost.id,
+										$draftTimelineHost
 									);
 									return {
 										...current,
@@ -404,7 +404,7 @@
 							}
 						: () => {
 								// Add the current draft to the host collection
-								timelineCollectionFileDraft.update((currentValue) => {
+								draftTimelineHostCollection.update((currentValue) => {
 									addOrReplaceObjectByKeyValue(
 										currentValue[selectedHostCollectionKey],
 										'id',
@@ -420,7 +420,7 @@
 									currentValue.cessationDate = $draftTimelineHostCessationDateStore;
 									return currentValue;
 								});
-								timelineHostDraft.set(undefined);
+								draftTimelineHost.set(undefined);
 							}}
 				/>
 			</JDGModalActionsBar>
@@ -428,16 +428,16 @@
 
 		<JDGH3H4 h3String="Timeline" paddingBottom="15px" />
 		<JDGTimeline
-			timelineHost={$timelineHostDraft ?? $localTimelineHostStore ?? newTimelineHost}
-			allowEditing={$timelineHostDraft !== undefined}
+			timelineHost={$draftTimelineHost ?? $localTimelineHostStore ?? newTimelineHost}
+			allowEditing={$draftTimelineHost !== undefined}
 			onClickInceptionEvent={() => {
 				showTimelineEventModal.set(true);
 				isTimelineEventModalEditable.set(true);
-				timelineEventDraft.set(instantiateTimelineEvent(jdgTimelineEventKeys.generic));
+				draftTimelineEvent.set(instantiateTimelineEvent(jdgTimelineEventKeys.generic));
 			}}
 			addClickAddEvent={() => {
 				showTimelineEventModal.set(true);
-				timelineEventDraft.set(instantiateTimelineEvent(jdgTimelineEventKeys.generic));
+				draftTimelineEvent.set(instantiateTimelineEvent(jdgTimelineEventKeys.generic));
 			}}
 		/>
 	</JDGContentBoxFloating>

@@ -3,7 +3,7 @@
 
 	import { get, writable } from 'svelte/store';
 
-	import { timelineEventDraft, timelineHostDraft } from '$lib/stores/jdg-temp-store.js';
+	import { draftTimelineEvent, draftTimelineHost } from '$lib/stores/jdg-temp-store.js';
 	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
 	import jdgTimelineEventTypes, {
 		jdgTimelineEventKeys
@@ -56,12 +56,12 @@
 	// editing timelineHost's events array
 	$: {
 		// Determine if this is a new event or not
-		// If there's no timelineHostDraft, this can't be a new event (nowhere to save)
-		if (!$timelineHostDraft) {
+		// If there's no draftTimelineHost, this can't be a new event (nowhere to save)
+		if (!$draftTimelineHost) {
 			isNewEvent = false;
 		}
 		// Otherwise, if there is a host draft and this isn't present in its events, it's new
-		else if (!getIsObjectInArray($timelineHostDraft?.timelineEvents, $timelineEventDraft)) {
+		else if (!getIsObjectInArray($draftTimelineHost?.timelineEvents, $draftTimelineEvent)) {
 			isNewEvent = true;
 		}
 	}
@@ -87,7 +87,7 @@
 		});
 
 		// Update the timeline host draft
-		timelineHostDraft.update((currentValue) => {
+		draftTimelineHost.update((currentValue) => {
 			addOrReplaceObjectByKeyValue(
 				currentValue.timelineEvents,
 				'id',

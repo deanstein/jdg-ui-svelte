@@ -1,27 +1,30 @@
-import { instantiateObject } from '$lib/jdg-utils.js';
-import jdgTimelineHost from '$lib/schemas/timeline/jdg-timeline-host.js';
 import { derived, writable } from 'svelte/store';
 
 /*** ADMINISTRATION ***/
 export let adminFormPassphrase = writable(undefined);
 
+/*** IMAGE ***/
+export let draftImageMeta = writable({});
+
 /*** TIMELINE ***/
-export let timelineCollectionFileDraft = writable(undefined);
+export let draftTimelineHostCollection = writable(undefined);
 export let isTimelineHostDrafting = writable(false);
-export let timelineHostDraft = writable(undefined); // the timeline host being edited
+export let draftTimelineHost = writable(undefined); // the timeline host being edited
 export let isTimelineEventDrafting = writable(false);
-export let timelineEventDraft = writable({}); // the timeline event being edited
+export let draftTimelineEvent = writable({}); // the timeline event being edited
 
 // Create a combined store to display in footer dev tools
 const storeMap = {
 	// administration
 	adminFormPassphrase,
+	// image
+	draftImageMeta,
 	// timeline
-	timelineCollectionFileDraft,
+	draftTimelineHostCollection,
 	isTimelineHostDrafting,
-	timelineHostDraft,
+	draftTimelineHost,
 	isTimelineEventDrafting,
-	timelineEventDraft
+	draftTimelineEvent
 };
 const tempStoreEntries = Object.entries(storeMap);
 // derived store containing all ui state values
