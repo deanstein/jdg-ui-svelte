@@ -274,8 +274,10 @@
 </script>
 
 <div bind:this={timelineWrapperRef} class="timeline-wrapper">
+	<!-- Title Bar-->
 	{#if showTitleBar}
 		<div class="timeline-title-bar {timelineTitleBarCss}">
+			<!-- Avatar -->
 			<div
 				class="timeline-avatar {timelineAvatarCss}"
 				role="button"
@@ -300,6 +302,7 @@
 		</div>
 	{/if}
 	<div bind:this={timelineContainerRef} class="timeline-container {timelineContainerCss}">
+		<!-- ComposeToolbar if editing is allowed -->
 		{#if allowEditing}
 			<JDGComposeToolbar
 				parentRef={timelineWrapperRef}
@@ -309,11 +312,13 @@
 				zIndex={1}
 			/>
 		{/if}
+		<!-- Actions Bar -->
 		<div class="timeline-actions-bar {timelineSupportingTextCss}">
 			<div class="timeline-event-count {timelineEventCountCss}">
 				Showing {timelineRowItems.length + (emptyStateEvent ? 1 : 0) + (todayEvent ? 1 : 0)} timeline
 				events
 			</div>
+			<!-- Relative Spacing: Space out events out based on how much time passed -->
 			<JDGCheckbox
 				isEnabled={true}
 				showLabel={true}
@@ -324,6 +329,7 @@
 				labelFontSize={''}
 			/>
 		</div>
+		<!-- Timeline: A collection of TimelineEvents shown chronologically -->
 		<div class="timeline-content-container">
 			<div class="timeline-spine {spineContainerCss}">
 				<div class="timeline-spine-line-column {spineColumnCss}">
