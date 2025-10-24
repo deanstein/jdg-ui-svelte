@@ -496,7 +496,7 @@
 				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
 						isVisible = true;
-						if (!imageMeta.src.includes('placeholder')) {
+						if (!imageMeta?.src?.includes('placeholder')) {
 							addImageLoading(imageMeta.src);
 						}
 						observer.disconnect();
