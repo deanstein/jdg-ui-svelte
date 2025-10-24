@@ -4,7 +4,7 @@
 
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import {
-		doShowHeaderStripes,
+		showHeaderStripes,
 		isScrollingToAnchorTag,
 		imagesLoading,
 		isScrolling
@@ -84,15 +84,15 @@
 
 	const floatingBoxAnchorTagCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			top: -${(adjustPosForHeader ? jdgSizes.nHeaderHeightSm : 0) + (isForFloatingContentContainer ? jdgSizes.nContentContainerGapSm : 0) + (adjustPosForPadding ? 10 : 0) + ($doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightSm : 0)}px;
+			top: -${(adjustPosForHeader ? jdgSizes.nHeaderHeightSm : 0) + (isForFloatingContentContainer ? jdgSizes.nContentContainerGapSm : 0) + (adjustPosForPadding ? 10 : 0) + ($showHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightSm : 0)}px;
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-			top: -${(adjustPosForHeader ? jdgSizes.nHeaderHeightMd : 0) + (isForFloatingContentContainer ? jdgSizes.nContentContainerGapMd : 0) + (adjustPosForPadding ? 15 : 0) + ($doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightMd : 0)}px;
+			top: -${(adjustPosForHeader ? jdgSizes.nHeaderHeightMd : 0) + (isForFloatingContentContainer ? jdgSizes.nContentContainerGapMd : 0) + (adjustPosForPadding ? 15 : 0) + ($showHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightMd : 0)}px;
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			top: -${(adjustPosForHeader ? jdgSizes.nHeaderHeightLg : 0) + (isForFloatingContentContainer ? jdgSizes.nContentContainerGapLg : 0) + (adjustPosForPadding ? 20 : 0) + ($doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightLg : 0)}px;
+			top: -${(adjustPosForHeader ? jdgSizes.nHeaderHeightLg : 0) + (isForFloatingContentContainer ? jdgSizes.nContentContainerGapLg : 0) + (adjustPosForPadding ? 20 : 0) + ($showHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightLg : 0)}px;
 		}
 	`;
 

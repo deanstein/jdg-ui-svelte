@@ -1,7 +1,7 @@
 <script>
 	import { timelineEventDraft, timelineHostDraft } from '$lib/stores/jdg-temp-store.js';
 	import {
-		doShowTimelineEventModal,
+		showTimelineEventModal,
 		isTimelineEventModalEditable
 	} from '$lib/stores/jdg-ui-store.js';
 
@@ -32,7 +32,7 @@
 			: 'Timeline Event'}
 	subtitle={null}
 	onClickCloseButton={() => {
-		$doShowTimelineEventModal = false;
+		$showTimelineEventModal = false;
 	}}
 	backgroundColor={'rgba(235, 235, 235, 1)'}
 >

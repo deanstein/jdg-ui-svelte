@@ -2,7 +2,7 @@ import { derived, writable } from 'svelte/store';
 
 /*** ADMINISTRATION ***/
 export let isAdminMode = writable(true);
-export let doShowAdminLoginModal = writable(false);
+export let showAdminLoginModal = writable(false);
 export let postAdminLoginFunction = writable(() => {});
 
 /*** BREAKPOINTS ***/
@@ -12,7 +12,7 @@ export let isTabletBreakpoint = writable(false);
 /*** FONTS, COLORS, SETTINGS ***/
 export let appAccentColors = writable([]);
 export let appFontFamily = writable('');
-export let doAllowTextSelection = writable(false);
+export let allowTextSelection = writable(false);
 // shared dynamic emotion css styles
 export let appCssHyperlinkBar = writable('');
 export let appCssHyperlinkSimple = writable('');
@@ -32,21 +32,21 @@ export let activeNotificationBanners = writable([]);
 
 /*** HEADER ***/
 export let headerHeightPx = writable(0);
-export let doShowHeaderStripes = writable(false);
+export let showHeaderStripes = writable(false);
 
 /*** IMAGES ***/
 export let imageAspectRatios = writable({}); // { src: "", aspectRatio: 0 }
 export let imagesLoading = writable([]);
-/*** IMAGE DETAIL OVERLAY ***/
-export let imageDetailMeta = writable({});
-export let imageDetailWidth = writable(0); // width of the image for caption alignment
-export let imageDetailScale = writable(1.0);
-export let doShowImageDetailOverlay = writable(false);
+/*** IMAGE VIEWER MODAL ***/
+export let imageViewerMeta = writable({});
+export let imageViewerWidth = writable(0); // width of the image for caption alignment
+export let imageViewerScale = writable(1.0);
+export let showImageViewerModal = writable(false);
 /*** IMAGE META MODAL ***/
-export let doShowImageMetaModal = writable(false);
+export let showImageMetaModal = writable(false);
 
 /*** TIMELINE ***/
-export let doShowTimelineEventModal = writable(false);
+export let showTimelineEventModal = writable(false);
 export let isTimelineEventModalEditable = writable(false);
 
 /*** QUANTITIES ***/
@@ -55,16 +55,16 @@ export let windowWidth = writable(0); // full window width, including scrollbar
 export let highestZIndex = writable(1);
 
 /*** DELETION ***/
-export let doShowDeleteModal = writable(false);
+export let showDeleteModal = writable(false);
 export let customDeleteMessage = writable(undefined);
 export let postDeleteFunction = writable(() => {});
 
 /*** DEV TOOLS ***/
-export let doShowDevTools = writable(false); // state view and tools in footer
-export let doShowDevToolbarSticky = writable(false); // sticky toolbar with specific dev output
+export let showDevTools = writable(false); // state view and tools in footer
+export let showDevToolbarSticky = writable(false); // sticky toolbar with specific dev output
 export let devToolbarStickyContent = writable('No data found in $devToolbarStickyContent state.');
-export let doShowDevOverlay = writable(false); // overlay with specific dev output
-export let devOverlayContent = writable('No data found in $devOverlayContent state.');
+export let showDevModal = writable(false); // overlay with specific dev output
+export let devModalContent = writable('No data found in $devModalContent state.');
 
 // Create a combined store to display in footer dev tools
 const storeMap = {
@@ -78,7 +78,7 @@ const storeMap = {
 	appAccentColors,
 	appCssHyperlinkBar,
 	appCssHyperlinkSimple,
-	doAllowTextSelection,
+	allowTextSelection,
 	// scrolling
 	isScrolling,
 	isScrollingToAnchorTag,
@@ -91,30 +91,30 @@ const storeMap = {
 	activeNotificationBanners,
 	// header
 	headerHeightPx,
-	doShowHeaderStripes,
+	showHeaderStripes,
 	// images
 	imageAspectRatios,
 	imagesLoading,
-	doShowImageDetailOverlay,
-	imageDetailMeta,
-	imageDetailWidth,
-	imageDetailScale,
+	showImageViewerModal,
+	imageViewerMeta,
+	imageViewerWidth,
+	imageViewerScale,
 	// timeline
-	doShowTimelineEventModal,
+	showTimelineEventModal,
 	// quantities
 	clientWidth,
 	windowWidth,
 	highestZIndex,
 	// deletion
-	doShowDeleteModal,
+	showDeleteModal,
 	customDeleteMessage,
 	postDeleteFunction,
 	// dev
-	doShowDevTools,
-	doShowDevToolbarSticky,
+	showDevTools,
+	showDevToolbarSticky,
 	devToolbarStickyContent,
-	doShowDevOverlay,
-	devOverlayContent
+	showDevModal,
+	devModalContent
 };
 const uiStoreEntries = Object.entries(storeMap);
 // derived store containing all ui state values

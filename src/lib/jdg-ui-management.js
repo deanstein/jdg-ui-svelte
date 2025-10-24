@@ -1,8 +1,8 @@
 import { get } from 'svelte/store';
 
 import {
-	doShowAdminLoginModal,
-	doShowTimelineEventModal,
+	showAdminLoginModal,
+	showTimelineEventModal,
 	isAdminMode,
 	postAdminLoginFunction
 } from './stores/jdg-ui-store.js';
@@ -29,7 +29,7 @@ export const requireAdminMode = (fn) => {
 	if (get(isAdminMode)) {
 		fn();
 	} else {
-		doShowAdminLoginModal.set(true);
+		showAdminLoginModal.set(true);
 		postAdminLoginFunction.set(fn);
 	}
 };
@@ -94,7 +94,7 @@ export const getFullTextWidth = (element) => {
 // The default action when a timeline event
 // is set "active" for viewing or editing
 export const setTimelineEventActive = (jdgTimelineEvent) => {
-	doShowTimelineEventModal.set(true);
+	showTimelineEventModal.set(true);
 	timelineEventDraft.set(jdgTimelineEvent);
 };
 

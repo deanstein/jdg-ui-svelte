@@ -123,9 +123,6 @@ export { JDGImageCarousel };
 import JDGImageCompare from './components/Image/JDGImageCompare.svelte';
 export { JDGImageCompare };
 
-import JDGImageDetailOverlay from './components/Image/JDGImageDetailOverlay.svelte';
-export { JDGImageDetailOverlay };
-
 import JDGImageFullWidth from './components/Image/JDGImageFullWidth.svelte';
 export { JDGImageFullWidth };
 
@@ -140,6 +137,9 @@ export { JDGImageTile };
 
 import JDGImageThumbnailGroup from './components/Image/JDGImageThumbnailGroup.svelte';
 export { JDGImageThumbnailGroup };
+
+import JDGImageViewerModal from './components/Image/JDGImageViewerModal.svelte';
+export { JDGImageViewerModal };
 
 import JDGInputContainer from './components/Input/JDGInputContainer.svelte';
 export { JDGInputContainer };

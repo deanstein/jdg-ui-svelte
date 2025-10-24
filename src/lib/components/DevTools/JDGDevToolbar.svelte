@@ -2,10 +2,10 @@
 	import { css } from '@emotion/css';
 
 	import {
-		doShowDevToolbarSticky,
-		doShowDevOverlay,
-		doAllowTextSelection,
-		doShowAdminLoginModal
+		showDevToolbarSticky,
+		showDevModal,
+		allowTextSelection,
+		showAdminLoginModal
 	} from '$lib/stores/jdg-ui-store.js';
 
 	import { JDGButton, JDGH3H4 } from '$lib/index.js';
@@ -33,46 +33,46 @@
 	<div class="toolbar-button-flex-container {flexContainerCss}">
 		<JDGButton
 			onClickFunction={() => {
-				doShowAdminLoginModal.set(!$doShowAdminLoginModal);
+				showAdminLoginModal.set(!$showAdminLoginModal);
 			}}
-			label={$doShowAdminLoginModal ? 'Hide Admin Modal' : 'Show Admin Modal'}
+			label={$showAdminLoginModal ? 'Hide Admin Modal' : 'Show Admin Modal'}
 			backgroundColor={buttonColor}
 			paddingTopBottom="5px"
 			paddingLeftRight="10px"
-			faIcon={$doShowDevToolbarSticky ? 'fa-eye-slash' : 'fa-eye'}
+			faIcon={$showDevToolbarSticky ? 'fa-eye-slash' : 'fa-eye'}
 			fontSize={jdgSizes.fontSizeBodyXSm}
 		/>
 		<JDGButton
 			onClickFunction={() => {
-				doShowDevToolbarSticky.set(!$doShowDevToolbarSticky);
+				showDevToolbarSticky.set(!$showDevToolbarSticky);
 			}}
-			label={$doShowDevToolbarSticky ? 'Hide Sticky Dev Toolbar' : 'Show Sticky Dev Toolbar'}
+			label={$showDevToolbarSticky ? 'Hide Sticky Dev Toolbar' : 'Show Sticky Dev Toolbar'}
 			backgroundColor={buttonColor}
 			paddingTopBottom="5px"
 			paddingLeftRight="10px"
-			faIcon={$doShowDevToolbarSticky ? 'fa-eye-slash' : 'fa-eye'}
+			faIcon={$showDevToolbarSticky ? 'fa-eye-slash' : 'fa-eye'}
 			fontSize={jdgSizes.fontSizeBodyXSm}
 		/>
 		<JDGButton
 			onClickFunction={() => {
-				doShowDevOverlay.set(!$doShowDevOverlay);
+				showDevModal.set(!$showDevModal);
 			}}
-			label={$doShowDevOverlay ? 'Hide Dev Overlay' : 'Show Dev Overlay'}
+			label={$showDevModal ? 'Hide Dev Overlay' : 'Show Dev Overlay'}
 			backgroundColor={buttonColor}
 			paddingTopBottom="5px"
 			paddingLeftRight="10px"
-			faIcon={$doShowDevOverlay ? 'fa-eye-slash' : 'fa-eye'}
+			faIcon={$showDevModal ? 'fa-eye-slash' : 'fa-eye'}
 			fontSize={jdgSizes.fontSizeBodyXSm}
 		/>
 		<JDGButton
 			onClickFunction={() => {
-				doAllowTextSelection.set(!$doAllowTextSelection);
+				allowTextSelection.set(!$allowTextSelection);
 			}}
-			label={$doAllowTextSelection ? 'Disallow Text Selection' : 'Allow Text Selection'}
+			label={$allowTextSelection ? 'Disallow Text Selection' : 'Allow Text Selection'}
 			backgroundColor={buttonColor}
 			paddingTopBottom="5px"
 			paddingLeftRight="10px"
-			faIcon={$doAllowTextSelection ? 'fa-text-slash' : 'fa-arrow-pointer'}
+			faIcon={$allowTextSelection ? 'fa-text-slash' : 'fa-arrow-pointer'}
 			fontSize={jdgSizes.fontSizeBodyXSm}
 		/>
 	</div>

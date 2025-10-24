@@ -9,15 +9,15 @@
 		appAccentColors,
 		appFontFamily,
 		clientWidth,
-		doAllowTextSelection,
-		doShowAdminLoginModal,
-		doShowDevOverlay,
-		doShowDevToolbarSticky,
-		doShowHeaderStripes,
-		doShowImageDetailOverlay,
-		doShowTimelineEventModal,
+		allowTextSelection as allowTextSelectionStore,
+		showAdminLoginModal,
+		showDevModal,
+		showDevToolbarSticky,
+		showHeaderStripes as showHeaderStripesStore,
+		showImageViewerModal,
+		showTimelineEventModal,
 		headerHeightPx,
-		imageDetailMeta,
+		imageViewerMeta,
 		isMobileBreakpoint,
 		isScrolling,
 		scrollDirection,
@@ -25,7 +25,7 @@
 		windowWidth,
 		appCssHyperlinkBar,
 		isTabletBreakpoint,
-		doShowImageMetaModal
+		showImageMetaModal
 	} from '$lib/stores/jdg-ui-store.js';
 
 	import { getDistancePxToBottomOfHeader } from '$lib/jdg-ui-management.js';
@@ -39,12 +39,10 @@
 		JDGAdminLoginModal,
 		JDGDevOverlay,
 		JDGDevToolbarSticky,
-		JDGImageDetailOverlay,
+		JDGImageViewerModal,
 		JDGImageMetaModal,
 		JDGLoadingOverlay,
-		JDGModal,
-		JDGScrollToTop,
-		JDGTimelineEventForm
+		JDGScrollToTop
 	} from '$lib/index.js';
 	import {
 		setUpdatedHyperlinkStyleSimple,
@@ -91,7 +89,7 @@
 	const onPageResize = () => {
 		windowWidth.set(window.innerWidth);
 		clientWidth.set(appContainerRef?.clientWidth);
-		headerHeightPx.set(getDistancePxToBottomOfHeader($doShowHeaderStripes));
+		headerHeightPx.set(getDistancePxToBottomOfHeader($showHeaderStripesStore));
 		isMobileBreakpoint.set(appContainerRef?.clientWidth <= jdgBreakpoints.width[0]);
 		isTabletBreakpoint.set(
 			appContainerRef?.clientWidth > jdgBreakpoints.width[0] &&
@@ -146,12 +144,12 @@
 		isAppLoaded = true;
 
 		// use the text selection prop to set the state initially
-		doAllowTextSelection.set(allowTextSelection);
+		allowTextSelectionStore.set(allowTextSelection);
 
 		// set UI state based on props
 		appFontFamily.set(fontFamily);
 		appAccentColors.set(accentColors);
-		doShowHeaderStripes.set(showHeaderStripes);
+		showHeaderStripesStore.set(showHeaderStripes);
 		// update shared style states
 		setUpdatedHyperlinkStyleBar(
 			linkColorDefault,
@@ -178,7 +176,7 @@
 	let appContainerCssDynamic = css``;
 	$: {
 		appContainerCssDynamic = css`
-			${!$doAllowTextSelection &&
+			${!$allowTextSelectionStore &&
 			`
 				-webkit-user-select: none; /* Safari */
 				-moz-user-select: none;    /* Firefox */
@@ -206,7 +204,7 @@
 
 	<!-- OVERLAYS -->
 	<!-- Admin -->
-	{#if $doShowAdminLoginModal}
+	{#if $showAdminLoginModal}
 		<JDGAdminLoginModal />
 	{/if}
 	<!-- Loading -->
@@ -216,21 +214,21 @@
 		{loadingSpinnerColor}
 	/>
 	<!-- Image -->
-	{#if $doShowImageDetailOverlay}
-		<JDGImageDetailOverlay imageMeta={$imageDetailMeta} />
+	{#if $showImageViewerModal}
+		<JDGImageViewerModal imageMeta={$imageViewerMeta} />
 	{/if}
 	<!-- Timeline -->
-	{#if $doShowTimelineEventModal}
+	{#if $showTimelineEventModal}
 		<JDGTimelineEventModal />
 	{/if}
-	{#if $doShowImageMetaModal}
+	{#if $showImageMetaModal}
 		<JDGImageMetaModal />
 	{/if}
 	<!-- Dev -->
-	{#if $doShowDevOverlay}
+	{#if $showDevModal}
 		<JDGDevOverlay />
 	{/if}
-	{#if $doShowDevToolbarSticky}
+	{#if $showDevToolbarSticky}
 		<JDGDevToolbarSticky />
 	{/if}
 </div>

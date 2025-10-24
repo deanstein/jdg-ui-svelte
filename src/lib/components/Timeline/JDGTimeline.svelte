@@ -8,8 +8,8 @@
 
 	import { timelineEventDraft } from '$lib/stores/jdg-temp-store.js';
 	import {
-		doShowImageMetaModal,
-		doShowTimelineEventModal,
+		showImageMetaModal,
+		showTimelineEventModal,
 		isAdminMode,
 		isTimelineEventModalEditable
 	} from '$lib/stores/jdg-ui-store.js';
@@ -281,10 +281,10 @@
 				role="button"
 				tabindex="0"
 				on:click={() => {
-					doShowImageMetaModal.set(true);
+					showImageMetaModal.set(true);
 				}}
 				on:keydown={() => {
-					doShowImageMetaModal.set(true);
+					showImageMetaModal.set(true);
 				}}
 			>
 				<JDGImage
@@ -355,7 +355,7 @@
 								timelineEvent={timelineRowItem.event}
 								onClickTimelineEvent={() => {
 									timelineEventDraft.set(timelineRowItem.event);
-									doShowTimelineEventModal.set(true);
+									showTimelineEventModal.set(true);
 									isTimelineEventModalEditable.set(allowEditing);
 								}}
 								rowIndex={timelineRowItem.index}

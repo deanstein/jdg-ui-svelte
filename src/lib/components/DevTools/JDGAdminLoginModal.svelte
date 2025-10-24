@@ -4,7 +4,7 @@
 
 	import {
 		isAdminMode,
-		doShowAdminLoginModal,
+		showAdminLoginModal,
 		postAdminLoginFunction
 	} from '$lib/stores/jdg-ui-store.js';
 	import { adminFormPassphrase } from '$lib/stores/jdg-temp-store.js';
@@ -24,7 +24,7 @@
 	let showLoadingMessage = false;
 
 	const onClickCloseButton = () => {
-		doShowAdminLoginModal.set(false);
+		showAdminLoginModal.set(false);
 	};
 
 	const onClickSubmitButton = async () => {
@@ -35,7 +35,7 @@
 			// set admin mode to true
 			// so no further logins are required
 			isAdminMode.set(true);
-			doShowAdminLoginModal.set(false);
+			showAdminLoginModal.set(false);
 			showLoadingMessage = false;
 
 			// execute whatever action was invoked before this dialog was shown

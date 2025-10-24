@@ -4,9 +4,9 @@
 
 	import {
 		appAccentColors,
-		doShowImageDetailOverlay,
+		showImageViewerModal,
 		imageAspectRatios,
-		imageDetailMeta,
+		imageViewerMeta,
 		windowWidth
 	} from '$lib/stores/jdg-ui-store.js';
 
@@ -338,8 +338,8 @@
 		<div class="carousel-button-overlay {dynamicExpandButtonOverlayCss}">
 			<JDGButton
 				onClickFunction={() => {
-					doShowImageDetailOverlay.set(true);
-					imageDetailMeta.set(activeImageMeta);
+					showImageViewerModal.set(true);
+					imageViewerMeta.set(activeImageMeta);
 				}}
 				faIcon="fa-solid fa-expand"
 				label={null}

@@ -10,7 +10,7 @@
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGOverlay } from '$lib/index.js';
 	import { jdgBreakpoints } from '$lib/jdg-shared-styles.js';
-	import { imageDetailScale, imageDetailWidth } from '$lib/stores/jdg-ui-store.js';
+	import { imageViewerScale, imageViewerWidth } from '$lib/stores/jdg-ui-store.js';
 
 	export let imageMeta = instantiateObject(jdgImageMeta);
 
@@ -31,7 +31,7 @@
 
 	// when the overlay is closed, reset the scale so we show caption/attribution next time
 	onDestroy(() => {
-		imageDetailScale.set(1.0);
+		imageViewerScale.set(1.0);
 	});
 </script>
 
@@ -63,8 +63,8 @@
 			doScaleOnScrollOrZoom={true}
 		/>
 		<!-- only show caption/attribution if image is not scaled -->
-		{#if $imageDetailScale === 1.0 && (imageMeta.caption || imageMeta.attribution)}
-			<div class="image-caption-attribution-wrapper" style="width: {$imageDetailWidth}px">
+		{#if $imageViewerScale === 1.0 && (imageMeta.caption || imageMeta.attribution)}
+			<div class="image-caption-attribution-wrapper" style="width: {$imageViewerWidth}px">
 				<JDGImageCaptionAttribution {imageMeta} truncateText={false} />
 			</div>
 		{/if}

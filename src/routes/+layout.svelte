@@ -16,7 +16,7 @@
 	} from '$lib/index.js';
 	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import sharedStrings from './shared-strings.js';
-	import { doShowDevTools } from '$lib/stores/jdg-ui-store.js';
+	import { showDevTools } from '$lib/stores/jdg-ui-store.js';
 	import { toggleDevTools } from '$lib/jdg-state-management.js';
 
 	// define the nav items in the header
@@ -128,11 +128,11 @@
 			<JDGButton
 				onClickFunction={toggleDevTools}
 				label={null}
-				tooltip={$doShowDevTools ? 'Hide Alternate Dev Tools' : 'Show Alternate Dev Tools'}
+				tooltip={$showDevTools ? 'Hide Alternate Dev Tools' : 'Show Alternate Dev Tools'}
 				isPrimary={false}
 				paddingTopBottom="5px"
 				paddingLeftRight="10px"
-				faIcon={$doShowDevTools ? 'fa-eye-slash' : 'fa-screwdriver-wrench'}
+				faIcon={$showDevTools ? 'fa-eye-slash' : 'fa-screwdriver-wrench'}
 				fontSize={jdgSizes.fontSizeBodyXSm}
 				doForceSquareAspect
 			/>

@@ -23,8 +23,8 @@
 		timelineHostDraft
 	} from '$lib/stores/jdg-temp-store.js';
 	import {
-		doAllowTextSelection,
-		doShowTimelineEventModal,
+		allowTextSelection,
+		showTimelineEventModal,
 		isMobileBreakpoint,
 		isTabletBreakpoint,
 		isTimelineEventModalEditable
@@ -56,7 +56,7 @@
 	import JDGDatePicker from '$lib/components/Input/JDGDatePicker.svelte';
 
 	// Ensure this page allows text selection
-	doAllowTextSelection.set(true);
+	allowTextSelection.set(true);
 
 	/*** TIMELINE HOST COLLECTION ***/
 	// Get the available Building Data files from the repo
@@ -431,12 +431,12 @@
 			timelineHost={$timelineHostDraft ?? $localTimelineHostStore ?? newTimelineHost}
 			allowEditing={$timelineHostDraft !== undefined}
 			onClickInceptionEvent={() => {
-				doShowTimelineEventModal.set(true);
+				showTimelineEventModal.set(true);
 				isTimelineEventModalEditable.set(true);
 				timelineEventDraft.set(instantiateTimelineEvent(jdgTimelineEventKeys.generic));
 			}}
 			addClickAddEvent={() => {
-				doShowTimelineEventModal.set(true);
+				showTimelineEventModal.set(true);
 				timelineEventDraft.set(instantiateTimelineEvent(jdgTimelineEventKeys.generic));
 			}}
 		/>

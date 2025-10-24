@@ -16,7 +16,7 @@
 	import { addOrReplaceObjectByKeyValue, getIsObjectInArray } from '$lib/jdg-utils.js';
 
 	import {
-		doShowTimelineEventModal,
+		showTimelineEventModal,
 		instantiateObject,
 		JDGCheckbox,
 		JDGDatePicker,
@@ -203,11 +203,11 @@
 			}}
 			onClickDone={() => {
 				saveToStore();
-				doShowTimelineEventModal.set(false);
+				showTimelineEventModal.set(false);
 			}}
 			onClickCancel={() => {
 				if (isNewEvent) {
-					doShowTimelineEventModal.set(false);
+					showTimelineEventModal.set(false);
 				} else {
 					isEditing = false;
 					// Reset the stores

@@ -1,12 +1,12 @@
 <script>
-	import { devOverlayContent, doShowDevOverlay } from '$lib/stores/jdg-ui-store.js';
+	import { devModalContent, showDevModal } from '$lib/stores/jdg-ui-store.js';
 
 	import { JDGH3H4, JDGOverlay } from '$lib/index.js';
 </script>
 
 <JDGOverlay
 	onCloseFunction={() => {
-		doShowDevOverlay.set(false);
+		showDevModal.set(false);
 	}}
 	colorRgba="rgba(255, 255, 255, 0.6)"
 >
@@ -14,7 +14,7 @@
 	<JDGH3H4 h3String="DEV OVERLAY" />
 	<JDGH3H4 h4String="OVERLAY CONTENT STATE" />
 	<div class="state-output">
-		{$devOverlayContent}
+		{$devModalContent}
 		<!-- consumers can also insert their own content -->
 		<slot />
 	</div>

@@ -4,11 +4,11 @@ import {
 	activeNotificationBanners,
 	highestZIndex,
 	imageAspectRatios,
-	imageDetailMeta,
+	imageViewerMeta,
 	jumpToNavItems,
-	doShowImageDetailOverlay,
+	showImageViewerModal,
 	doShowNavSidebar,
-	doShowDevTools,
+	showDevTools,
 	imagesLoading
 } from './stores/jdg-ui-store.js';
 import { jdgSizes } from './jdg-shared-styles.js';
@@ -93,13 +93,13 @@ export const removeImageLoading = (src) => {
 //
 
 export const showImageDetailModal = (imageMeta) => {
-	doShowImageDetailOverlay.set(true);
-	imageDetailMeta.set(imageMeta);
+	showImageViewerModal.set(true);
+	imageViewerMeta.set(imageMeta);
 };
 
 export const hideImageDetailModal = () => {
-	doShowImageDetailOverlay.set(false);
-	imageDetailMeta.set(undefined);
+	showImageViewerModal.set(false);
+	imageViewerMeta.set(undefined);
 };
 
 //
@@ -192,7 +192,7 @@ export const getHighestZIndex = () => {
 //
 
 export const toggleDevTools = () => {
-	doShowDevTools.update((currentValue) => {
+	showDevTools.update((currentValue) => {
 		currentValue = !currentValue;
 		return currentValue;
 	});

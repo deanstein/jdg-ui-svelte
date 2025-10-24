@@ -3,7 +3,7 @@
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
-	import { doShowHeaderStripes } from '$lib/stores/jdg-ui-store.js';
+	import { showHeaderStripes } from '$lib/stores/jdg-ui-store.js';
 
 	import { incrementHighestZIndex } from '$lib/jdg-state-management.js';
 	import { breakpointHandler } from '$lib/jdg-ui-management.js';
@@ -209,7 +209,7 @@
 		<JDGSideNav {navItems} />
 	{/if}
 	<!-- stripes at bottom of header -->
-	{#if $doShowHeaderStripes}
+	{#if $showHeaderStripes}
 		<JDGStripesHorizontal reverseColors={true} animationDirection="horizontal" />
 	{/if}
 </header>

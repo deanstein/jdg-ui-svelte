@@ -15,11 +15,11 @@
 		isNumberValid
 	} from '$lib/jdg-utils.js';
 	import {
-		imageDetailWidth,
+		imageViewerWidth,
 		isMobileBreakpoint,
-		doShowHeaderStripes,
+		showHeaderStripes,
 		windowWidth,
-		imageDetailScale
+		imageViewerScale
 	} from '$lib/stores/jdg-ui-store.js';
 	import {
 		addImageLoading,
@@ -164,7 +164,7 @@
 
 			targetElement.style.transform = `scale(${scale})`;
 			// update the scale state for other components to use
-			imageDetailScale.set(scale);
+			imageViewerScale.set(scale);
 		}
 	};
 
@@ -193,7 +193,7 @@
 				targetElement.style.transformOrigin = `${originX}% ${originY}%`;
 				targetElement.style.transform = `scale(${scale})`;
 				// update the scale state for other components to use
-				imageDetailScale.set(scale);
+				imageViewerScale.set(scale);
 			}
 		}
 	};
@@ -416,7 +416,7 @@
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			max-height: ${maxHeight === 'auto'
 				? `calc(100vh - ${jdgSizes.headerHeightSm} - ${
-						$doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightSm : 0
+						$showHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightSm : 0
 					}px)`
 				: ''};
 		}
@@ -425,14 +425,14 @@
 			jdgBreakpoints.unit}) {
 			max-height: ${maxHeight === 'auto'
 				? `calc(100vh - ${jdgSizes.headerHeightMd}  - ${
-						$doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightMd : 0
+						$showHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightMd : 0
 					}px)`
 				: ''};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 			max-height: ${maxHeight === 'auto'
 				? `calc(100vh - ${jdgSizes.headerHeightLg} - ${
-						$doShowHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightLg : 0
+						$showHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightLg : 0
 					}px)`
 				: ''};
 		}
@@ -545,7 +545,7 @@
 				const widthToSet = imageMeta.doShowBackgroundBlur
 					? validContainerWidth
 					: getMaxHeightPxFromProp(maxHeight, containerRef) * imageAspectRatio;
-				imageDetailWidth.set(widthToSet);
+				imageViewerWidth.set(widthToSet);
 			}
 		}
 	}

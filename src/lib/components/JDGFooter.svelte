@@ -6,8 +6,8 @@
 		allUiStoreValues,
 		appCssHyperlinkSimple,
 		clientWidth,
-		doShowDevTools,
-		doShowHeaderStripes
+		showDevTools,
+		showHeaderStripes
 	} from '$lib/stores/jdg-ui-store.js';
 
 	import { getBuildCode } from '$lib/jdg-utils.js';
@@ -113,7 +113,7 @@
 
 <footer class="jdg-footer-outer-container {footerOuterContainerCss}">
 	<!-- horizontal stripes at top of footer -->
-	{#if $doShowHeaderStripes}
+	{#if $showHeaderStripes}
 		<JDGStripesHorizontal />
 	{/if}
 	<div class="footer-content-container {footerContentContainerCss}">
@@ -192,11 +192,11 @@
 				<JDGButton
 					onClickFunction={toggleDevTools}
 					label={null}
-					tooltip={$doShowDevTools ? 'Hide JDG UI Dev Tools' : 'Show JDG UI Dev Tools'}
+					tooltip={$showDevTools ? 'Hide JDG UI Dev Tools' : 'Show JDG UI Dev Tools'}
 					isPrimary={false}
 					paddingTopBottom="5px"
 					paddingLeftRight="10px"
-					faIcon={$doShowDevTools ? 'fa-eye-slash' : 'fa-wrench'}
+					faIcon={$showDevTools ? 'fa-eye-slash' : 'fa-wrench'}
 					fontSize={jdgSizes.fontSizeBodyXSm}
 					doForceSquareAspect
 				/>
@@ -205,7 +205,7 @@
 			</div>
 		{/if}
 		<!-- all devTools -->
-		{#if $doShowDevTools}
+		{#if $showDevTools}
 			<div class="dev-tools">
 				<JDGDevToolbar />
 				<JDGGridLayout>
