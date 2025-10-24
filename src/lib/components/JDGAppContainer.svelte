@@ -51,7 +51,6 @@
 		jdgFonts,
 		setUpdatedHyperlinkStyleBar
 	} from '$lib/jdg-shared-styles.js';
-	import { timelineEventDraft, timelineHostDraft } from '$lib/stores/jdg-temp-store.js';
 	import { imageMetaCollection } from '../../routes/image-meta-collection.js';
 	import JDGTimelineEventModal from './Timeline/JDGTimelineEventModal.svelte';
 

@@ -124,7 +124,7 @@
 	}
 
 	// if imageMeta specifies no blur, override showBlur to false
-	if (!imageMeta.doShowBackgroundBlur) {
+	if (!imageMeta.showBackgroundBlur) {
 		showBlurInUnfilledSpace = false;
 	}
 
@@ -542,7 +542,7 @@
 			// need to record the width of the image so the caption/attribution width can match
 			// (required workaround for some reason)
 			if (isForImageDetailOverlay) {
-				const widthToSet = imageMeta.doShowBackgroundBlur
+				const widthToSet = imageMeta.showBackgroundBlur
 					? validContainerWidth
 					: getMaxHeightPxFromProp(maxHeight, containerRef) * imageAspectRatio;
 				imageViewerWidth.set(widthToSet);

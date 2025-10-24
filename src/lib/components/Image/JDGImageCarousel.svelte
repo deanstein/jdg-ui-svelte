@@ -263,7 +263,7 @@
 					? finalMaxFittedWidthPx
 					: `${activeImageFittedWidthPx}`;
 				dynamicWidthCss = css`
-					width: ${showBlurInUnfilledSpace && activeImageMeta.doShowBackgroundBlur
+					width: ${showBlurInUnfilledSpace && activeImageMeta.showBackgroundBlur
 						? '100%;'
 						: `${compositeCarouselWidthPx}`}px;
 				`;
@@ -289,12 +289,12 @@
 			justify-content: ${activeImageMeta?.toolbarAlignment};
 			right: ${justifyContent !== 'center' ? '0' : ''};
 			padding: 10px
-				${(showBlurInUnfilledSpace && activeImageMeta.doShowBackgroundBlur) ||
+				${(showBlurInUnfilledSpace && activeImageMeta.showBackgroundBlur) ||
 				(matchMaxImageWidth && justifyContent === 'center')
 					? Math.abs(availableWidthPx - activeImageFittedWidthPx) / 2 + 10 + 'px'
 					: '10px'}
 				10px
-				${(showBlurInUnfilledSpace && activeImageMeta.doShowBackgroundBlur) ||
+				${(showBlurInUnfilledSpace && activeImageMeta.showBackgroundBlur) ||
 				(matchMaxImageWidth && justifyContent === 'center')
 					? Math.abs(availableWidthPx - activeImageFittedWidthPx) / 2 + 10 + 'px'
 					: '10px'};
@@ -355,7 +355,7 @@
 		<div class="caption-attribution-wrapper {dynamicThumbnailContainerWidthCss}">
 			<JDGImageCaptionAttribution
 				imageMeta={activeImageMeta}
-				backgroundColorRgba={activeImageMeta.doShowBackgroundBlur
+				backgroundColorRgba={activeImageMeta.showBackgroundBlur
 					? jdgColors.imageLabelBackground
 					: 'rgba(0, 0, 0, 0)'}
 				maxTextWidthPx={activeImageFittedWidthPx}

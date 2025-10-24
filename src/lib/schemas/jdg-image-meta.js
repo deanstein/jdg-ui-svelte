@@ -10,7 +10,7 @@ const jdgImageMeta = {
 	// An image can fill the rest of its container
 	// with a blurred copy of itself
 	// Set this to false plans and diagrams
-	doShowBackgroundBlur: true,
+	showBackgroundBlur: true,
 	// In some contexts, images can have a toolbar
 	// the toolbar alignment may need to change
 	// depending on the content of the image
