@@ -8,16 +8,13 @@ import {
 } from './stores/jdg-ui-store.js';
 import { draftTimelineEvent } from './stores/jdg-temp-store.js';
 
-import jdgTimelineHost from '$lib/schemas/timeline/jdg-timeline-host.js';
-import jdgTimelineEventTypes, {
-	jdgTimelineEventKeys
-} from './schemas/timeline/jdg-timeline-event-types.js';
+import jdgTimelineEventTypes from './schemas/timeline/jdg-timeline-event-types.js';
 import jdgTimelineRowItem from '$lib/schemas/timeline/jdg-timeline-row-item.js';
 
 import { instantiateObject } from '$lib/jdg-utils.js';
 
 import { jdgBreakpoints, jdgQuantities, jdgSizes } from '$lib/jdg-shared-styles.js';
-import { getTimelineEventById, instantiateTimelineEvent } from './jdg-timeline-management.js';
+import { getTimelineEventById, upgradeTimelineHost } from './jdg-timeline-management.js';
 
 //
 // ADMIN MODE
@@ -158,7 +155,7 @@ export const getTimelineProportionByDate = (
 // row items include an index to properly sort based on chronology
 export const generateTimelineRowItems = (timelineHost, contextualEvents, inceptionDate) => {
 	// ensure timelineHost has all expected fields
-	const upgradedTimelineHost = instantiateObject(jdgTimelineHost, timelineHost);
+	const upgradedTimelineHost = upgradeTimelineHost(timelineHost);
 
 	let timelineEventRowItems = [];
 	let timelineEventReferenceRowItems = [];

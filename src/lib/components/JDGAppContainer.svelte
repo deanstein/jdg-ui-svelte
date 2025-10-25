@@ -52,10 +52,10 @@
 		jdgFonts,
 		setUpdatedHyperlinkStyleBar
 	} from '$lib/jdg-shared-styles.js';
-	import jdgImageMetaCollection from '$lib/jdg-image-meta-collection.js';
+	import getJdgImageMetaCollection from '$lib/jdg-image-meta-collection.js';
 
 	export let fontFamily = jdgFonts.body;
-	export let appLoadingIconSrc = jdgImageMetaCollection.jdg_logo_ui.src;
+	export let appLoadingIconSrc = getJdgImageMetaCollection().jdg_logo_ui.src;
 	export let accentColors = jdgColors.accentColorsJDG;
 	export let linkColorDefault = accentColors[0]; // color for the "banner" hyperlink style
 	export let linkColorSimple = accentColors[0]; // color for the simple hyperlink style

@@ -2,6 +2,7 @@ import { get } from 'svelte/store';
 import { v4 as uuidv4 } from 'uuid';
 
 import { jdgSchemaVersion } from '$lib/schemas/jdg-schema-versions.js';
+import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
 import jdgTimelineHost from '$lib/schemas/timeline/jdg-timeline-host.js';
 import {
 	addOrReplaceObjectByKeyValue,
@@ -14,21 +15,28 @@ import {
 import jdgTimelineEventTypes, {
 	jdgTimelineEventKeys
 } from '$lib/schemas/timeline/jdg-timeline-event-types.js';
-import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
+import getJdgImageMetaCollection from '$lib/jdg-image-meta-collection.js';
 
 //
 // TIMELINE HOST
 //
 
+export const instantiateTimelineHost = () => {
+	// Initial host
+	const newHost = instantiateObject(jdgTimelineHost);
+	// Set a default avatar imageMeta
+	newHost.avatarImageMeta = getJdgImageMetaCollection().jdg_avatar_placeholder;
+	return newHost;
+};
+
 // Ensure all new timelineHost fields are added to the given host
 export function upgradeTimelineHost(timelineHost) {
-	// Initial upgrade
-	const upgradedHost = deepMatchObjects(jdgTimelineHost, timelineHost);
-
+	// Initial host
+	const newHost = instantiateTimelineHost();
+	// Upgrade
+	const upgradedHost = deepMatchObjects(newHost, timelineHost);
 	// Update the version to the schema version
 	upgradedHost.version = jdgSchemaVersion;
-
-	// Ensure the version is updated
 	return upgradedHost;
 }
 

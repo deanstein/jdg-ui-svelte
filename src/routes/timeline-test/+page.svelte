@@ -3,7 +3,6 @@
 	import { writable } from 'svelte/store';
 	import { v4 as uuid } from 'uuid';
 
-	import jdgTimelineHost from '$lib/schemas/timeline/jdg-timeline-host.js';
 	import jdgTimelineEventTypes, {
 		jdgTimelineEventKeys
 	} from '$lib/schemas/timeline/jdg-timeline-event-types.js';
@@ -16,7 +15,11 @@
 		readJsonFileFromRepo,
 		writeJsonFileToRepo
 	} from '$lib/jdg-persistence-management.js';
-	import { instantiateTimelineEvent, upgradeTimelineHost } from '$lib/jdg-timeline-management.js';
+	import {
+		instantiateTimelineEvent,
+		instantiateTimelineHost,
+		upgradeTimelineHost
+	} from '$lib/jdg-timeline-management.js';
 	import {
 		draftTimelineHostCollection,
 		draftTimelineEvent,
@@ -95,7 +98,7 @@
 
 	/*** TIMELINE HOST ***/
 	// Create a new host as an option
-	const newTimelineHost = instantiateObject(jdgTimelineHost);
+	const newTimelineHost = instantiateTimelineHost();
 	newTimelineHost.id = uuid();
 	newTimelineHost.name = 'New Timeline Host';
 	// This is the store we have locally, not a draft
