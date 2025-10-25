@@ -8,10 +8,6 @@ import jdgImageMeta from '$lib/schemas/jdg-image-meta.js';
 // all available images and their metadata
 // new images with a caption must be added here
 const imageMetaCollection = {
-	jdg_logo_ui: instantiateObject(jdgImageMeta, {
-		src: 'https://res.cloudinary.com/jdg-main/image/upload/v1759708726/jdg-ui-svelte/jdg-logo-ui.png',
-		alt: 'JDG UI SVELTE'
-	}),
 	aerial_60s70s_1: instantiateObject(jdgImageMeta, {
 		src: 'https://res.cloudinary.com/jdg-main/image/upload/v1716959961/jdg-ui-svelte/history/aerial-60s70s-1_e4hg6b.jpg',
 		alt: 'Cinderella City as it appeared in 1968. And a bunch of other words to test long captions!',

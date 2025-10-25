@@ -17,10 +17,10 @@
 		jdgColors,
 		jdgSizes
 	} from '$lib/jdg-shared-styles.js';
-	import { imageMetaCollection } from '../../routes/image-meta-collection.js';
+	import jdgImageMetaCollection from '$lib/jdg-image-meta-collection.js';
 
 	export let showLogo = true;
-	export let logoSrc = imageMetaCollection.jdg_logo_ui.src; // default if not passed in from host app
+	export let logoSrc = jdgImageMetaCollection.jdg_logo_ui.src; // default if not passed in from host app
 	export let logoAlt = 'Logo'; // alt text for logo image
 	export let logoSupertitle = undefined; // text above title
 	export let logoTitle = undefined; // title next to logo

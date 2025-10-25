@@ -42,7 +42,8 @@
 		JDGImageViewerModal,
 		JDGImageMetaModal,
 		JDGLoadingOverlay,
-		JDGScrollToTop
+		JDGScrollToTop,
+		JDGTimelineEventModal
 	} from '$lib/index.js';
 	import {
 		setUpdatedHyperlinkStyleSimple,
@@ -51,11 +52,10 @@
 		jdgFonts,
 		setUpdatedHyperlinkStyleBar
 	} from '$lib/jdg-shared-styles.js';
-	import { imageMetaCollection } from '../../routes/image-meta-collection.js';
-	import JDGTimelineEventModal from './Timeline/JDGTimelineEventModal.svelte';
+	import jdgImageMetaCollection from '$lib/jdg-image-meta-collection.js';
 
 	export let fontFamily = jdgFonts.body;
-	export let appLoadingIconSrc = imageMetaCollection.jdg_logo_ui.src;
+	export let appLoadingIconSrc = jdgImageMetaCollection.jdg_logo_ui.src;
 	export let accentColors = jdgColors.accentColorsJDG;
 	export let linkColorDefault = accentColors[0]; // color for the "banner" hyperlink style
 	export let linkColorSimple = accentColors[0]; // color for the simple hyperlink style
