@@ -94,7 +94,7 @@ export function upgradeTimelineEvent(event) {
 	const existingContent = event.additionalContent || {};
 
 	// Merge defaults with existing content, preserving user-entered values
-	const upgradedContent = { ...defaultContent, ...existingContent };
+	const upgradedContent = deepMatchObjects(defaultContent, { ...existingContent });
 
 	return {
 		...event,
