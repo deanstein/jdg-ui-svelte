@@ -210,6 +210,7 @@
 					showTimelineEventModal.set(false);
 				} else {
 					isEditing = false;
+					showTimelineEventModal.set(false);
 					// Reset the stores
 					localEventStore.set($eventStore);
 					localAdditionalStore.set($eventStore.additionalContent);
