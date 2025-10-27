@@ -172,6 +172,9 @@ export { JDGVersionPackageJson };
 import JDGVersionNpmPackage from './components/Version/JDGVersionNpmPackage.svelte';
 export { JDGVersionNpmPackage };
 
+import JDGSaveStateBanner from './components/JDGSaveStateBanner.svelte';
+export { JDGSaveStateBanner };
+
 import JDGScrollBox from './components/JDGScrollBox.svelte';
 export { JDGScrollBox };
 

@@ -3,6 +3,9 @@ import { derived, writable } from 'svelte/store';
 /*** ADMINISTRATION ***/
 export let adminFormPassphrase = writable(undefined);
 
+/*** SAVE STATUS ***/
+export let saveStatus = writable(null);
+
 /*** IMAGE ***/
 export let draftImageMeta = writable({});
 
@@ -17,6 +20,8 @@ export let draftTimelineEvent = writable({}); // the timeline event being edited
 const storeMap = {
 	// administration
 	adminFormPassphrase,
+	// save status
+	saveStatus,
 	// image
 	draftImageMeta,
 	// timeline

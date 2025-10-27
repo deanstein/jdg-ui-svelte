@@ -6,7 +6,7 @@
 	import { JDG_CONTEXT_KEYS } from '$lib/stores/jdg-context-keys.js';
 	import { getMaxElementHeightPx, getNumDaysBetweenDates, lightenColor } from '$lib/jdg-utils.js';
 
-	import { draftTimelineEvent } from '$lib/stores/jdg-temp-store.js';
+	import { draftImageMeta, draftTimelineEvent } from '$lib/stores/jdg-temp-store.js';
 	import {
 		showImageMetaModal,
 		showTimelineEventModal,
@@ -27,7 +27,13 @@
 
 	import { generateGradient } from '$lib/jdg-utils.js';
 
-	import { JDGCheckbox, JDGComposeToolbar, JDGImage, JDGTimelineEvent } from '$lib/index.js';
+	import {
+		JDGCheckbox,
+		JDGComposeToolbar,
+		JDGImage,
+		JDGSaveStateBanner,
+		JDGTimelineEvent
+	} from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgQuantities, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { imageMetaCollection } from '../../../routes/image-meta-collection.js';
 
@@ -65,6 +71,7 @@
 	const avatarHeight = '30px';
 	const onClickAvatar = () => {
 		if (allowEditing) {
+			draftImageMeta.set(imageMetaCollection.aerial_60s70s_1);
 			showImageMetaModal.set(true);
 		} else {
 			imageViewerMeta.set(imageMetaCollection.aerial_60s70s_1);
@@ -284,6 +291,7 @@
 </script>
 
 <div bind:this={timelineWrapperRef} class="timeline-wrapper">
+	<JDGSaveStateBanner />
 	<!-- Title Bar-->
 	{#if showTitleBar}
 		<div class="timeline-title-bar {timelineTitleBarCss}">

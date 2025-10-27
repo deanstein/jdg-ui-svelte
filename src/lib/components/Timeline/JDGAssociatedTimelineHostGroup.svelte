@@ -16,6 +16,7 @@
 	import PersonNodeForEdit from '$lib/components/NodeView/PersonNode/PersonNodeForEdit.svelte';
 	import EmptyMediaSquare from '$lib/components/EmptyMediaSquare.svelte';
 	import stylingConstants from '$lib/components/styling-constants';
+	import { saveStatus } from '$lib/stores/jdg-temp-store.js';
 
 	export let enabled;
 	export let associatedPeopleIds = [];
@@ -30,7 +31,7 @@
 	const removeAssociatedPersonFromActiveEvent = (associatedPersonId) => {
 		removeAssociatedPersonFromActiveTimelineEvent(associatedPersonId);
 		removeTimelineEventReference(associatedPersonId, get(timelineEditEvent).eventId);
-		hasUnsavedChanges.set(true);
+		saveStatus.set(null);
 	};
 </script>
 

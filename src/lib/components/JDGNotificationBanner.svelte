@@ -1,5 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
+	import { slide } from 'svelte/transition';
 	import { css } from '@emotion/css';
 	import { v4 as uuidv4 } from 'uuid';
 
@@ -56,7 +57,7 @@
 </script>
 
 {#if showBanner}
-	<div class="notification-banner-outer-container {notificationContainerCss}">
+	<div class="notification-banner-outer-container {notificationContainerCss}" transition:slide>
 		<div class="notification-banner-message-container {notificationMessageContainerCss}">
 			{message}
 		</div>
@@ -97,6 +98,7 @@
 	}
 
 	.notification-button-container {
+		display: flex;
 		right: 15px;
 	}
 </style>

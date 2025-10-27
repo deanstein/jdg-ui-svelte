@@ -23,7 +23,8 @@
 	import {
 		draftTimelineHostCollection,
 		draftTimelineEvent,
-		draftTimelineHost
+		draftTimelineHost,
+		saveStatus
 	} from '$lib/stores/jdg-temp-store.js';
 	import {
 		allowTextSelection,
@@ -57,6 +58,7 @@
 	} from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
 	import JDGDatePicker from '$lib/components/Input/JDGDatePicker.svelte';
+	import jdgSaveStatus from '$lib/schemas/jdg-save-status.js';
 
 	// Ensure this page allows text selection
 	allowTextSelection.set(true);
@@ -404,6 +406,8 @@
 										[selectedHostCollectionKey]: arr
 									};
 								});
+								// Show the unsaved changes banner
+								saveStatus.set(jdgSaveStatus.unsavedChanges);
 							}
 						: () => {
 								// Add the current draft to the host collection
