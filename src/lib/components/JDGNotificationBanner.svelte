@@ -83,6 +83,7 @@
 
 <style>
 	.notification-banner-outer-container {
+		position: relative;
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -90,7 +91,7 @@
 		width: 100%;
 		width: -moz-available;
 		width: -webkit-fill-available;
-		padding: 5px;
+		padding: 10px;
 	}
 
 	.notification-banner-message-container {
@@ -98,7 +99,8 @@
 	}
 
 	.notification-button-container {
+		position: absolute;
 		display: flex;
-		right: 15px;
+		right: 10px;
 	}
 </style>
