@@ -24,7 +24,8 @@
 		draftTimelineHostCollection,
 		draftTimelineEvent,
 		draftTimelineHost,
-		saveStatus
+		saveStatus,
+		saveFunction
 	} from '$lib/stores/jdg-temp-store.js';
 	import {
 		allowTextSelection,
@@ -62,6 +63,24 @@
 
 	// Ensure this page allows text selection
 	allowTextSelection.set(true);
+
+	// Define the saving function
+	const saveToRepo = async () => {
+		// Write the collection file draft to the repo
+		await writeJsonFileToRepo(
+			jdgRepoOwner,
+			jdgBuildingDataRepoName,
+			selectedHostFileName,
+			$draftTimelineHostCollection
+		);
+		draftTimelineHostCollection.set(undefined);
+		// Pull the latest collection from the repo
+		selectedHostCollection = await readJsonFileFromRepo(
+			jdgRepoOwner,
+			jdgBuildingDataRepoName,
+			selectedHostFileName
+		);
+	};
 
 	/*** TIMELINE HOST COLLECTION ***/
 	// Get the available Building Data files from the repo
@@ -179,6 +198,9 @@
 		timelineHostFiles = await fetchJsonFileList(jdgRepoOwner, jdgBuildingDataRepoName);
 		// Set the initial default. [1] is the test file
 		selectedHostFileName = timelineHostFiles[1];
+
+		// Set the desired save function so other components can call it
+		saveFunction.set(saveToRepo);
 	});
 </script>
 
@@ -269,20 +291,7 @@
 								draftTimelineHostCollection.set(selectedHostCollection);
 							}
 						: async () => {
-								// Write the collection file draft to the repo
-								await writeJsonFileToRepo(
-									jdgRepoOwner,
-									jdgBuildingDataRepoName,
-									selectedHostFileName,
-									$draftTimelineHostCollection
-								);
-								draftTimelineHostCollection.set(undefined);
-								// Pull the latest collection from the repo
-								selectedHostCollection = await readJsonFileFromRepo(
-									jdgRepoOwner,
-									jdgBuildingDataRepoName,
-									selectedHostFileName
-								);
+								saveToRepo();
 							}}
 				/>
 			</JDGModalActionsBar>

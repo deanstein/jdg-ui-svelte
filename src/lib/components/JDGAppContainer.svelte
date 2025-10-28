@@ -43,7 +43,8 @@
 		JDGImageMetaModal,
 		JDGLoadingOverlay,
 		JDGScrollToTop,
-		JDGTimelineEventModal
+		JDGTimelineEventModal,
+		JDGSaveStateBanner
 	} from '$lib/index.js';
 	import {
 		setUpdatedHyperlinkStyleSimple,
@@ -195,6 +196,8 @@
 >
 	<!-- all content goes here after the app is loaded -->
 	{#if isAppLoaded}
+		<!-- Save state banner will show when required -->
+		<JDGSaveStateBanner />
 		<slot />
 	{/if}
 	{#if showScrollToTopButton}

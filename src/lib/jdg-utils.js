@@ -43,6 +43,21 @@ export const getNearestScrollingElement = (element) => {
 };
 
 ///
+/// FUNCTION UTILS
+///
+
+// Runs a function that's potentially sync or async
+// and chooses the right path
+export const runFnSyncOrAsync = async (fn, ...args) => {
+	if (typeof fn !== 'function') return;
+
+	const result = fn(...args);
+	if (result instanceof Promise) {
+		await result;
+	}
+};
+
+///
 /// ARRAY UTILS
 ///
 

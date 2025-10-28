@@ -5,6 +5,7 @@ export let adminFormPassphrase = writable(undefined);
 
 /*** SAVE STATUS ***/
 export let saveStatus = writable(null);
+export let saveFunction = writable(async () => {}); // what Save button should do
 
 /*** IMAGE ***/
 export let draftImageMeta = writable({});

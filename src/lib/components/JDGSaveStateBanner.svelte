@@ -1,10 +1,8 @@
 <script>
-	import { saveStatus } from '$lib/stores/jdg-temp-store.js';
+	import { saveFunction, saveStatus } from '$lib/stores/jdg-temp-store.js';
 
-	import { JDGButton, JDGNotificationBanner } from '$lib/index.js';
+	import { JDGButton, JDGNotificationBanner, runFnSyncOrAsync } from '$lib/index.js';
 	import jdgSaveStatus from '$lib/schemas/jdg-save-status.js';
-
-	export let onClickSave = () => {};
 
 	let showBanner;
 
@@ -36,7 +34,9 @@
 			<JDGButton
 				label={'Save'}
 				faIcon={'fa-floppy-disk'}
-				onClickFunction={onClickSave}
+				onClickFunction={() => {
+					runFnSyncOrAsync($saveFunction);
+				}}
 				fontSize={'1.35svh'}
 				paddingTopBottom={'3px'}
 				paddingLeftRight={'10px'}
