@@ -16,11 +16,9 @@
 	import { darkenColor, getIsValueInArray } from '$lib/jdg-utils.js';
 	import { JDGButton } from '$lib/index.js';
 
-	// possible notification types
-
-	export let notificationType = 'information'; // default type
-	export let message = jdgNotificationTypes[notificationType].message;
-	export let backgroundColor = undefined; // type color can be overridden
+	export let notificationType = jdgNotificationTypes.information; // Defines color and icon
+	export let message = jdgNotificationTypes.information.message;
+	export let backgroundColor = undefined;
 	export let standalone = true; // set to false if included in a header already in a fixed position
 	export let forceOnTop = false; // if true, will use z-index store to ensure always on top
 	export let showCloseButton = true;
@@ -32,10 +30,9 @@
 		removeNotificationBanner(bannerId);
 	};
 
-	const notificationContainerCss = css`
+	let notificationContainerCss = css`
 		font-size: ${jdgSizes.fontSizeBodyXSm};
 		z-index: ${forceOnTop ? incrementHighestZIndex() : 1};
-		background-color: ${backgroundColor ?? jdgNotificationTypes[notificationType].color};
 		color: ${jdgColors.text};
 	`;
 
@@ -53,6 +50,14 @@
 
 	$: {
 		showBanner = getIsValueInArray($activeNotificationBanners, bannerId);
+	}
+
+	// Dynamic styles
+	$: {
+		notificationContainerCss = css`
+			${notificationContainerCss};
+			background-color: ${backgroundColor ?? notificationType.color};
+		`;
 	}
 </script>
 
@@ -72,8 +77,8 @@
 					paddingTopBottom="6px"
 					paddingLeftRight="6px"
 					tooltip="Dismiss"
-					textColor={darkenColor(jdgNotificationTypes[notificationType].color, 0.4).toString()}
-					textColorHover={darkenColor(jdgNotificationTypes[notificationType].color, 0.8).toString()}
+					textColor={darkenColor(notificationType.color, 0.4).toString()}
+					textColorHover={darkenColor(notificationType.color, 0.8).toString()}
 					backgroundColorHover="transparent"
 				/>
 			{/if}

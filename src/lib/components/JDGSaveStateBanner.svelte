@@ -8,7 +8,7 @@
 
 	// Show the banner when there's a valid save status
 	$: {
-		if ($saveStatus !== null) {
+		if ($saveStatus !== null && $saveStatus !== undefined) {
 			showBanner = true;
 		} else {
 			showBanner = false;
@@ -17,7 +17,7 @@
 		// success messages get a delay before dismissing
 		if ($saveStatus === jdgSaveStatus.loadSucccess || $saveStatus === jdgSaveStatus.saveSuccess) {
 			setTimeout(() => {
-				saveStatus.set(undefined);
+				saveStatus.set(null);
 			}, 2000);
 		}
 	}
@@ -26,7 +26,7 @@
 {#if showBanner}
 	<JDGNotificationBanner
 		message={$saveStatus.label}
-		backgroundColor={$saveStatus.color}
+		notificationType={$saveStatus.notificationType}
 		standalone={true}
 		showCloseButton={false}
 	>
