@@ -16,7 +16,8 @@
 	import { darkenColor, getIsValueInArray } from '$lib/jdg-utils.js';
 	import { JDGButton } from '$lib/index.js';
 
-	export let notificationType = jdgNotificationTypes.information; // Defines color and icon
+	export let notificationType = jdgNotificationTypes.information; // Inits color and icon
+	export let faIcon = 'fa-solid ' + notificationType.faIcon;
 	export let message = jdgNotificationTypes.information.message;
 	export let backgroundColor = undefined;
 	export let standalone = true; // set to false if included in a header already in a fixed position
@@ -52,6 +53,11 @@
 		showBanner = getIsValueInArray($activeNotificationBanners, bannerId);
 	}
 
+	// Ensure the icon updates if the notification type updates
+	$: {
+		faIcon = 'fa-solid ' + notificationType.faIcon;
+	}
+
 	// Dynamic styles
 	$: {
 		notificationContainerCss = css`
@@ -63,7 +69,9 @@
 
 {#if showBanner}
 	<div class="notification-banner-outer-container {notificationContainerCss}" transition:slide>
+		<!-- Icon and message -->
 		<div class="notification-banner-message-container {notificationMessageContainerCss}">
+			<i class={'fa-solid ' + faIcon} />
 			{message}
 		</div>
 		<div class="notification-button-container">
@@ -100,7 +108,11 @@
 	}
 
 	.notification-banner-message-container {
+		display: flex;
 		flex-grow: 1;
+		justify-content: center;
+		align-items: center;
+		gap: 7px;
 	}
 
 	.notification-button-container {
