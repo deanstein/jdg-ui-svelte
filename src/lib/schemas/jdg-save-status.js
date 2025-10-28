@@ -1,31 +1,29 @@
-const workingColor = '#fff176';
-const successColor = '#c8e6c9';
-const failedColor = '#ffcdd2';
+import jdgNotificationTypes from './jdg-notification-types.js';
 
 const jdgSaveStatus = {
 	unsavedChanges: {
-		color: '#fff9c4',
-		label: 'You have unsaved changes.'
+		label: 'You have unsaved changes.',
+		notificationType: jdgNotificationTypes.warning // color, icon
 	},
 	loading: {
-		color: workingColor,
-		label: 'Loading...'
+		label: 'Loading...',
+		notificationType: jdgNotificationTypes.inProgress // color, icon
 	},
 	loadSucccess: {
-		color: successColor,
-		label: 'Loaded!'
+		label: 'Loaded!',
+		notificationType: jdgNotificationTypes.success // color, icon
 	},
 	saving: {
-		color: workingColor,
-		label: 'Saving...'
+		label: 'Saving...',
+		notificationType: jdgNotificationTypes.inProgress // color, icon
 	},
 	saveFailed: {
-		color: failedColor,
-		label: 'Save failed :('
+		label: 'Save failed :(',
+		notificationType: jdgNotificationTypes.error // color, icon
 	},
 	saveSuccess: {
-		color: successColor,
-		label: 'Saved!'
+		label: 'Saved!',
+		notificationType: jdgNotificationTypes.success // color, icon
 	}
 };
 

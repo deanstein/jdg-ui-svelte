@@ -66,20 +66,30 @@
 
 	// Define the saving function
 	const saveToRepo = async () => {
+		// Set the status to saving
+		saveStatus.set(jdgSaveStatus.saving);
+
 		// Write the collection file draft to the repo
-		await writeJsonFileToRepo(
+		const writeResult = await writeJsonFileToRepo(
 			jdgRepoOwner,
 			jdgBuildingDataRepoName,
 			selectedHostFileName,
 			$draftTimelineHostCollection
 		);
-		draftTimelineHostCollection.set(undefined);
-		// Pull the latest collection from the repo
-		selectedHostCollection = await readJsonFileFromRepo(
-			jdgRepoOwner,
-			jdgBuildingDataRepoName,
-			selectedHostFileName
-		);
+
+		if (writeResult) {
+			// Success: clear the draft and pull latest
+			saveStatus.set(jdgSaveStatus.saveSuccess);
+			draftTimelineHostCollection.set(undefined);
+			selectedHostCollection = await readJsonFileFromRepo(
+				jdgRepoOwner,
+				jdgBuildingDataRepoName,
+				selectedHostFileName
+			);
+		} else {
+			// Failure: keep draft and set failure status
+			saveStatus.set(jdgSaveStatus.failure);
+		}
 	};
 
 	/*** TIMELINE HOST COLLECTION ***/
