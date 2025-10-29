@@ -1,7 +1,5 @@
-import { addUniqueValueToArray, removeValueFromArray } from './jdg-utils.js';
 import {
 	appAccentColors,
-	activeNotificationBanners,
 	highestZIndex,
 	imageAspectRatios,
 	imageViewerMeta,
@@ -143,26 +141,6 @@ export const getIsNavSideBarOpen = () => {
 	});
 
 	return isOpen;
-};
-
-//
-// NOTIFICATION BANNERS
-//
-
-export const addNotificationBanner = (bannerId) => {
-	activeNotificationBanners.update((currentValue) => {
-		const updatedArray = addUniqueValueToArray(currentValue, bannerId);
-		currentValue = updatedArray;
-		return currentValue;
-	});
-};
-
-export const removeNotificationBanner = (bannerId) => {
-	activeNotificationBanners.update((currentValue) => {
-		const updatedArray = removeValueFromArray(currentValue, bannerId);
-		currentValue = updatedArray;
-		return currentValue;
-	});
 };
 
 //

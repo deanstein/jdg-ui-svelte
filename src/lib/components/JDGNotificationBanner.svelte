@@ -5,17 +5,13 @@
 	import { v4 as uuidv4 } from 'uuid';
 
 	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
-	import { activeNotificationBanners } from '$lib/stores/jdg-ui-store.js';
 
-	import {
-		addNotificationBanner,
-		removeNotificationBanner,
-		incrementHighestZIndex
-	} from '$lib/jdg-state-management.js';
+	import { incrementHighestZIndex } from '$lib/jdg-state-management.js';
 	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { darkenColor, getIsValueInArray } from '$lib/jdg-utils.js';
 	import { JDGButton } from '$lib/index.js';
 
+	export let showBanner = true;
 	export let notificationType = jdgNotificationTypes.information; // Inits color and icon
 	export let faIcon = 'fa-solid ' + notificationType.faIcon;
 	export let message = jdgNotificationTypes.information.message;
@@ -25,10 +21,9 @@
 	export let showCloseButton = true;
 
 	let bannerId;
-	let showBanner;
 
 	const onClickCloseButton = () => {
-		removeNotificationBanner(bannerId);
+		showBanner = false;
 	};
 
 	let notificationContainerCss = css`
@@ -45,13 +40,8 @@
 		if (standalone) {
 			// give this banner a unique id
 			bannerId = uuidv4();
-			addNotificationBanner(bannerId);
 		}
 	});
-
-	$: {
-		showBanner = getIsValueInArray($activeNotificationBanners, bannerId);
-	}
 
 	// Ensure the icon updates if the notification type updates
 	$: {
