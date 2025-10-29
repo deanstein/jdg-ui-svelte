@@ -27,9 +27,6 @@ export let scrollDirection = writable('down');
 export let jumpToNavItems = writable([]);
 export let showNavSidebar = writable(false);
 
-/*** NOTIFICATIONS ***/
-export let activeNotificationBanners = writable([]);
-
 /*** HEADER ***/
 export let headerHeightPx = writable(0);
 export let showHeaderStripes = writable(false);
@@ -87,8 +84,6 @@ const storeMap = {
 	// nav
 	showNavSidebar,
 	jumpToNavItems,
-	// notifications
-	activeNotificationBanners,
 	// header
 	headerHeightPx,
 	showHeaderStripes,
