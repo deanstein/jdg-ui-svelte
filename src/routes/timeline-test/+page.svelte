@@ -37,6 +37,7 @@
 
 	import {
 		addOrReplaceObjectByKeyValue,
+		areObjectsEqual,
 		deleteObjectByKeyValue,
 		instantiateObject
 	} from '$lib/jdg-utils.js';
@@ -64,7 +65,7 @@
 	// Ensure this page allows text selection
 	allowTextSelection.set(true);
 
-	// Define the saving function
+	// Save the current draft timeline host collection to the GitHub repo
 	const saveToRepo = async () => {
 		// Set the status to saving
 		saveStatus.set(jdgSaveStatus.saving);
@@ -91,6 +92,24 @@
 			saveStatus.set(jdgSaveStatus.failure);
 		}
 	};
+
+	// Check whether the draft timeline host collection is any different
+	// than what's in the repo
+	let hasUnsavedChanges;
+	$: {
+		hasUnsavedChanges =
+			selectedHostCollection !== undefined &&
+			$draftTimelineHostCollection !== undefined &&
+			(!areObjectsEqual(selectedHostCollection, $draftTimelineHostCollection) ||
+				!areObjectsEqual($localTimelineHostStore, $draftTimelineHost));
+		console.log($localTimelineHostStore, $draftTimelineHost);
+		// Set the saveStatus if unsaved changes are detected
+		if (hasUnsavedChanges) {
+			saveStatus.set(jdgSaveStatus.unsavedChanges);
+		} else {
+			saveStatus.set(null);
+		}
+	}
 
 	/*** TIMELINE HOST COLLECTION ***/
 	// Get the available Building Data files from the repo
@@ -171,7 +190,8 @@
 		// Upgrade the timelineHost
 		if ($draftTimelineHost !== undefined) {
 			const upgradedHost = upgradeTimelineHost($localTimelineHostStore);
-			draftTimelineHost.set(upgradedHost);
+			// Use instantiateObject to prevent linking of the two stores
+			draftTimelineHost.set(instantiateObject(upgradedHost));
 		}
 	}
 
@@ -411,7 +431,8 @@
 								// Start editing a collection draft
 								draftTimelineHostCollection.set(selectedHostCollection);
 								// Start editing a host draft
-								draftTimelineHost.set($localTimelineHostStore);
+								// Use instantiateObject to prevent linking of the two stores
+								draftTimelineHost.set(instantiateObject($localTimelineHostStore));
 								draftTimelineHostCollection.update((current) => {
 									const arr = current[selectedHostCollectionKey] ?? [];
 									addOrReplaceObjectByKeyValue(
@@ -425,8 +446,6 @@
 										[selectedHostCollectionKey]: arr
 									};
 								});
-								// Show the unsaved changes banner
-								saveStatus.set(jdgSaveStatus.unsavedChanges);
 							}
 						: () => {
 								// Add the current draft to the host collection
