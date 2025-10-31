@@ -185,16 +185,6 @@
 		}
 	}
 
-	// When there's a timeline host being drafted, make sure it's upgraded
-	$: {
-		// Upgrade the timelineHost
-		if ($draftTimelineHost !== undefined) {
-			const upgradedHost = upgradeTimelineHost($localTimelineHostStore);
-			// Use instantiateObject to prevent linking of the two stores
-			draftTimelineHost.set(instantiateObject(upgradedHost));
-		}
-	}
-
 	/*** TIMELINE EVENT ***/
 	// All event types to show
 	const instantiatedEventSchemas = Object.entries(jdgTimelineEventTypes)
@@ -431,8 +421,11 @@
 								// Start editing a collection draft
 								draftTimelineHostCollection.set(selectedHostCollection);
 								// Start editing a host draft
+								// Upgrade the host first
+								const upgradedHost = upgradeTimelineHost($localTimelineHostStore);
 								// Use instantiateObject to prevent linking of the two stores
-								draftTimelineHost.set(instantiateObject($localTimelineHostStore));
+								draftTimelineHost.set(instantiateObject(upgradedHost));
+								// Update the host in the collection
 								draftTimelineHostCollection.update((current) => {
 									const arr = current[selectedHostCollectionKey] ?? [];
 									addOrReplaceObjectByKeyValue(
