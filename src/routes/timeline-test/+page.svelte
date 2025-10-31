@@ -102,7 +102,6 @@
 			$draftTimelineHostCollection !== undefined &&
 			(!areObjectsEqual(selectedHostCollection, $draftTimelineHostCollection) ||
 				!areObjectsEqual($localTimelineHostStore, $draftTimelineHost));
-		console.log($localTimelineHostStore, $draftTimelineHost);
 		// Set the saveStatus if unsaved changes are detected
 		if (hasUnsavedChanges) {
 			saveStatus.set(jdgSaveStatus.unsavedChanges);

@@ -13,7 +13,11 @@
 		extractDataSchemaFields,
 		extractUiFromDataSchema
 	} from '$lib/jdg-timeline-management.js';
-	import { addOrReplaceObjectByKeyValue, getIsObjectInArray } from '$lib/jdg-utils.js';
+	import {
+		addOrReplaceObjectByKeyValue,
+		deleteObjectByKeyValue,
+		getIsObjectInArray
+	} from '$lib/jdg-utils.js';
 
 	import {
 		showTimelineEventModal,
@@ -214,12 +218,23 @@
 					// Reset the stores
 					localEventStore.set($eventStore);
 					localAdditionalStore.set($eventStore.additionalContent);
-					localEventStore.update((current) => ({
-						...current,
+					localEventStore.update((currentValue) => ({
+						...currentValue,
 						type: $eventStore.type
 					}));
 				}
 			}}
+			onClickDelete={isNewEvent
+				? undefined
+				: () => {
+						// Delete this event from the draft host
+						draftTimelineHost.update((currentValue) => {
+							deleteObjectByKeyValue(currentValue.timelineEvents, 'id', $localEventStore.id);
+							return currentValue;
+						});
+						isEditing = false;
+						showTimelineEventModal.set(false);
+					}}
 		/>
 	{/if}
 </div>
