@@ -1,4 +1,5 @@
 import CryptoJS from 'crypto-js';
+import { v4 as uuidv4 } from 'uuid';
 import {
 	jdgRepoOwner,
 	fetchLatestBuildDate,
@@ -6,6 +7,8 @@ import {
 	fetchLatestCommitDate
 } from './jdg-persistence-management.js';
 import { getDistancePxToBottomOfHeader } from './jdg-ui-management.js';
+import jdgImageMeta from './schemas/jdg-image-meta.js';
+import { jdgSchemaVersion } from './schemas/jdg-schema-versions.js';
 
 ///
 /// WINDOW UTILS
@@ -132,6 +135,13 @@ export const decrypt = (encrypted, password) => {
 /// OBJECT UTILS
 ///
 
+export const instantiateObject = (object, overrides = {}) => {
+	return {
+		...JSON.parse(JSON.stringify(object)),
+		...JSON.parse(JSON.stringify(overrides))
+	};
+};
+
 export const areObjectsEqual = (obj1, obj2) => {
 	const logReasons = false;
 
@@ -169,11 +179,27 @@ export const areObjectsEqual = (obj1, obj2) => {
 	return obj1 === obj2;
 };
 
-export const instantiateObject = (object, overrides = {}) => {
-	return {
-		...JSON.parse(JSON.stringify(object)),
-		...JSON.parse(JSON.stringify(overrides))
-	};
+// Returns true if the keys in guideObject aren't present in testObject
+export const doesObjectNeedUpgrade = (guideObject, testObject) => {
+	for (const key in guideObject) {
+		if (!(key in testObject)) return true;
+
+		const schemaVal = guideObject[key];
+		const objVal = testObject[key];
+
+		if (
+			schemaVal &&
+			typeof schemaVal === 'object' &&
+			!Array.isArray(schemaVal) &&
+			schemaVal !== null
+		) {
+			if (!objVal || typeof objVal !== 'object' || doesObjectNeedUpgrade(schemaVal, objVal)) {
+				return true;
+			}
+		}
+	}
+
+	return false;
 };
 
 // specifically for schemas that also include UI defs
@@ -448,6 +474,22 @@ export const getMaxElementHeightPx = (elementRef) => {
 ///
 /// IMAGE AND PIXEL UTILS
 ///
+
+export const upgradeImageMeta = (imageMeta) => {
+	let upgradedImageMeta = imageMeta;
+	// Only upgrade if the ID field is undefined or if the version is mismatched
+	if (!imageMeta?.id || imageMeta.version !== jdgSchemaVersion) {
+		const newImageMeta = instantiateObject(jdgImageMeta);
+		upgradedImageMeta = deepMatchObjects(newImageMeta, imageMeta);
+		// If there's not already an ID, give it one
+		if (!upgradedImageMeta.id) {
+			upgradedImageMeta.id = uuidv4();
+		}
+        // Ensure the version is up to date
+		upgradedImageMeta.version = jdgSchemaVersion;
+	}
+	return upgradedImageMeta;
+};
 
 export const getMIMEType = (binaryData) => {
 	if (!binaryData) {

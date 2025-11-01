@@ -1,8 +1,17 @@
 <script>
+	import { onMount } from 'svelte';
+	import { get } from 'svelte/store';
+
 	import { showImageMetaModal } from '$lib/stores/jdg-ui-store.js';
 	import { draftImageMeta } from '$lib/stores/jdg-temp-store.js';
+	import { upgradeImageMeta } from '$lib/jdg-utils.js';
 
 	import { JDGInputContainer, JDGModal } from '$lib/index.js';
+
+	onMount(() => {
+		// Upgrade the image meta
+		draftImageMeta.set(upgradeImageMeta(get(draftImageMeta)));
+	});
 </script>
 
 <JDGModal

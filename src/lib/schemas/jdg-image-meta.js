@@ -1,3 +1,4 @@
+import { jdgSchemaVersion } from './jdg-schema-versions.js';
 import imagePlaceholder from '$lib/assets/raster/jdg-image-placeholder.png';
 
 const jdgImageMeta = {
@@ -14,7 +15,8 @@ const jdgImageMeta = {
 	// In some contexts, images can have a toolbar
 	// the toolbar alignment may need to change
 	// depending on the content of the image
-	toolbarAlignment: 'right'
+	toolbarAlignment: 'right',
+	version: jdgSchemaVersion
 };
 
 export default jdgImageMeta;

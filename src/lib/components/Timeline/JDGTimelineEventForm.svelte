@@ -121,10 +121,11 @@
 		};
 	};
 
+	// If this event has a type, ensure the additionalData is upgraded
 	$: if ($localEventStore.type) {
 		const newAddlContent = jdgTimelineEventTypes[$localEventStore.type]?.additionalContent ?? {};
-		const freshAdditionalContent = extractDataSchemaFields(newAddlContent);
-		localAdditionalStore.set(freshAdditionalContent);
+		const dataOnlyAddlContent = extractDataSchemaFields(newAddlContent);
+		localAdditionalStore.set(dataOnlyAddlContent);
 	}
 </script>
 
