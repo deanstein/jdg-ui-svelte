@@ -6,7 +6,13 @@
 	import { draftImageMeta } from '$lib/stores/jdg-temp-store.js';
 	import { upgradeImageMeta } from '$lib/jdg-utils.js';
 
-	import { JDGButton, JDGInputContainer, JDGModal, JDGTextInput } from '$lib/index.js';
+	import {
+		JDGButton,
+		JDGImageTile,
+		JDGInputContainer,
+		JDGModal,
+		JDGTextInput
+	} from '$lib/index.js';
 
 	// Bind the hidden fileInput to a custom button for file picking
 	let fileInput;
@@ -28,6 +34,7 @@
 	}}
 >
 	<div slot="modal-content-slot">
+		<JDGImageTile imageMeta={$draftImageMeta} maxHeight="20svh" />
 		<!-- Read-only values -->
 		<JDGInputContainer label="ID">
 			{$draftImageMeta.id}

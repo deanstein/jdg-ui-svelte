@@ -485,7 +485,7 @@ export const upgradeImageMeta = (imageMeta) => {
 		if (!upgradedImageMeta.id) {
 			upgradedImageMeta.id = uuidv4();
 		}
-        // Ensure the version is up to date
+		// Ensure the version is up to date
 		upgradedImageMeta.version = jdgSchemaVersion;
 	}
 	return upgradedImageMeta;
