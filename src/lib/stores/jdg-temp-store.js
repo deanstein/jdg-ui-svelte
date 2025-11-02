@@ -8,14 +8,14 @@ export let saveStatus = writable(null);
 export let saveFunction = writable(async () => {}); // what Save button should do
 
 /*** IMAGE ***/
-export let draftImageMeta = writable({});
+export let draftImageMeta = writable(undefined);
 
 /*** TIMELINE ***/
 export let draftTimelineHostCollection = writable(undefined);
 export let isTimelineHostDrafting = writable(false);
 export let draftTimelineHost = writable(undefined); // the timeline host being edited
 export let isTimelineEventDrafting = writable(false);
-export let draftTimelineEvent = writable({}); // the timeline event being edited
+export let draftTimelineEvent = writable(); // the timeline event being edited
 
 // Create a combined store to display in footer dev tools
 const storeMap = {
