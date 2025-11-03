@@ -3,7 +3,7 @@
 	import { get } from 'svelte/store';
 
 	import { showImageMetaModal } from '$lib/stores/jdg-ui-store.js';
-	import { draftImageMeta } from '$lib/stores/jdg-temp-store.js';
+	import { draftImageMeta, draftImageMetaFolder } from '$lib/stores/jdg-temp-store.js';
 	import { upgradeImageMeta } from '$lib/jdg-utils.js';
 
 	import {
@@ -11,18 +11,72 @@
 		JDGImageTile,
 		JDGInputContainer,
 		JDGModal,
+		JDGTextArea,
 		JDGTextInput
 	} from '$lib/index.js';
 
 	// Bind the hidden fileInput to a custom button for file picking
 	let fileInput;
 
-	const onClickFileUpload = () => {};
+	const onClickFileUpload = async () => {
+		// Trigger file picker if no file is selected yet
+		if (!fileInput?.files?.length) {
+			fileInput.click();
+			return;
+		}
+
+		const file = fileInput.files[0];
+		if (!file) {
+			console.warn('No file selected.');
+			return;
+		}
+
+		const folder = get(draftImageMetaFolder);
+		const fileName = get(draftImageMeta)?.id;
+
+		if (!folder || !fileName) {
+			console.error('Missing folder or fileName for upload.');
+			return;
+		}
+
+		console.log(`📤 Uploading "${file.name}" to "${folder}/${fileName}"...`);
+
+		try {
+			const res = await fetch(
+				`https://jdg-cloudinary.jdeangoldstein.workers.dev/upload-image?folder=${encodeURIComponent(
+					folder
+				)}&fileName=${encodeURIComponent(fileName)}`,
+				{
+					method: 'POST',
+					headers: {
+						'Content-Type': file.type
+					},
+					body: file
+				}
+			);
+
+			const data = await res.json();
+			if (!res.ok || !data.success) {
+				throw new Error(data.error || 'Upload failed');
+			}
+
+			console.log('✅ Upload complete:', data.url);
+
+			// Update image src in draft meta
+			draftImageMeta.update((meta) => ({ ...meta, src: data.url }));
+		} catch (err) {
+			console.error('❌ Upload error:', err.message);
+		} finally {
+			// Clear file input so it can be reused
+			fileInput.value = '';
+		}
+	};
 
 	onMount(() => {
 		// Upgrade the image meta
 		draftImageMeta.set(upgradeImageMeta(get(draftImageMeta)));
-		console.log($draftImageMeta);
+		// Set a folder destination to write to
+		draftImageMetaFolder.set('jdg-ui-svelte');
 	});
 </script>
 
@@ -33,7 +87,8 @@
 		showImageMetaModal.set(false);
 	}}
 >
-	<div slot="modal-content-slot">
+	<div slot="modal-content-slot" class="image-meta-modal-scrollable">
+		<!-- Image preview -->
 		<JDGImageTile imageMeta={$draftImageMeta} maxHeight="20svh" />
 		<!-- Read-only values -->
 		<JDGInputContainer label="ID">
@@ -44,7 +99,7 @@
 		</JDGInputContainer>
 		<!-- Editable values -->
 		<JDGInputContainer label="Source">
-			<JDGTextInput inputValue={$draftImageMeta.src} />
+			<JDGTextArea inputValue={$draftImageMeta.src} />
 			<JDGButton
 				label="Upload..."
 				faIcon="fa-upload"
@@ -87,3 +142,9 @@
 		</JDGInputContainer>
 	</div>
 </JDGModal>
+
+<style>
+	.image-meta-modal-scrollable {
+		overflow-y: auto;
+	}
+</style>

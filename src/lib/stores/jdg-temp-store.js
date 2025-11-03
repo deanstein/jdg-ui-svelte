@@ -9,6 +9,7 @@ export let saveFunction = writable(async () => {}); // what Save button should d
 
 /*** IMAGE ***/
 export let draftImageMeta = writable(undefined);
+export let draftImageMetaFolder = writable(undefined); // cloud folder containing this image
 
 /*** TIMELINE ***/
 export let draftTimelineHostCollection = writable(undefined);
