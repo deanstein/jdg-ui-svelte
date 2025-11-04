@@ -346,22 +346,29 @@ export const isNumberValid = (number) => {
 ///
 
 // get a pixel value from a string
-export const getPixelValueFromString = (string) => {
-	let stringValue;
-	let stringUnit;
-	let pixelValueFinal;
-	// only try if prop is not auto
-	if (string !== 'auto') {
-		[stringValue, stringUnit] = string.match(/^(\d*\.?\d+)(\D+)$/).slice(1);
-		const maxHeightParsed = parseFloat(stringValue);
+export const getPixelValueFromString = (input) => {
+	if (input === 'auto') return undefined;
 
-		if (stringUnit === 'vh') {
-			pixelValueFinal = Math.ceil(convertVhToPixels(maxHeightParsed));
-		} else if (stringUnit === 'px') {
-			pixelValueFinal = Math.ceil(maxHeightParsed);
-		}
-	}
-	return pixelValueFinal;
+	const match = input.match(/^(\d*\.?\d+)(\D+)$/);
+	if (!match) return undefined;
+
+	const [_, valueStr, unit] = match;
+	const value = parseFloat(valueStr);
+
+	const converters = {
+		px: (v) => v,
+		vh: (v) => (v / 100) * window.innerHeight,
+		vw: (v) => (v / 100) * window.innerWidth,
+		svh: (v) => (v / 100) * Math.min(window.innerHeight, document.documentElement.clientHeight),
+		lvh: (v) => (v / 100) * Math.max(window.innerHeight, document.documentElement.clientHeight),
+		dvh: (v) => (v / 100) * document.documentElement.clientHeight,
+		rem: (v) => v * parseFloat(getComputedStyle(document.documentElement).fontSize),
+		em: (v) => v * parseFloat(getComputedStyle(document.body).fontSize)
+		// Add more units as needed
+	};
+
+	const converter = converters[unit];
+	return converter ? Math.ceil(converter(value)) : undefined;
 };
 
 // replaces spaces with hyphens, and converts to lowercase
@@ -959,6 +966,54 @@ export const isUrlCloudinary = (url) => {
 		return true;
 	} else {
 		return false;
+	}
+};
+
+export const getCloudinaryAssetPath = (url) => {
+	try {
+		const parts = new URL(url).pathname.split('/');
+		const uploadIndex = parts.indexOf('upload');
+		if (uploadIndex === -1 || uploadIndex + 2 >= parts.length) return null;
+
+		const maybeVersion = parts[uploadIndex + 1];
+		const isVersion = /^v\d+$/.test(maybeVersion);
+		const folderStart = uploadIndex + (isVersion ? 2 : 1);
+		const fileName = parts[parts.length - 1];
+		const folderParts = parts.slice(folderStart, parts.length - 1);
+
+		const folder = folderParts.join('/');
+		return folder ? `${folder}/${fileName}` : fileName;
+	} catch {
+		return null;
+	}
+};
+
+export const replaceCloudinaryAssetPath = (url, newPath) => {
+	try {
+		const u = new URL(url);
+		const parts = u.pathname.split('/');
+		const uploadIndex = parts.indexOf('upload');
+		if (uploadIndex === -1) return null;
+
+		const maybeVersion = parts[uploadIndex + 1];
+		const isVersion = /^v\d+$/.test(maybeVersion);
+		const versionPart = isVersion ? [maybeVersion] : [];
+
+		const newParts = newPath.split('/');
+		const newFileName = newParts.pop();
+		const newFolderParts = newParts;
+
+		const newPathSegments = [
+			...parts.slice(0, uploadIndex + 1),
+			...versionPart,
+			...newFolderParts,
+			newFileName
+		];
+
+		u.pathname = newPathSegments.join('/');
+		return u.toString();
+	} catch {
+		return null;
 	}
 };
 

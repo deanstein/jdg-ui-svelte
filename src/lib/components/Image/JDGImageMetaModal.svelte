@@ -4,7 +4,7 @@
 
 	import { showImageMetaModal } from '$lib/stores/jdg-ui-store.js';
 	import { draftImageMeta, draftImageMetaFolder } from '$lib/stores/jdg-temp-store.js';
-	import { upgradeImageMeta } from '$lib/jdg-utils.js';
+	import { getCloudinaryAssetPath, upgradeImageMeta } from '$lib/jdg-utils.js';
 
 	import {
 		JDGButton,
@@ -86,10 +86,13 @@
 	onClickCloseButton={() => {
 		showImageMetaModal.set(false);
 	}}
+	closeOnOverlayClick={false}
 >
 	<div slot="modal-content-slot" class="image-meta-modal-scrollable">
 		<!-- Image preview -->
-		<JDGImageTile imageMeta={$draftImageMeta} maxHeight="20svh" />
+		<div class="image-preview-wrapper">
+			<JDGImageTile imageMeta={$draftImageMeta} maxHeight="20svh" cropToFillContainer={false} />
+		</div>
 		<!-- Read-only values -->
 		<JDGInputContainer label="ID">
 			{$draftImageMeta.id}
@@ -97,9 +100,16 @@
 		<JDGInputContainer label="Version">
 			{$draftImageMeta.version}
 		</JDGInputContainer>
-		<!-- Editable values -->
 		<JDGInputContainer label="Source">
-			<JDGTextArea inputValue={$draftImageMeta.src} />
+			<div class="image-src-string">
+				${$draftImageMeta.src}
+			</div>
+		</JDGInputContainer>
+		<!-- Editable values -->
+		<JDGInputContainer label="Path">
+			<JDGTextInput inputValue={getCloudinaryAssetPath($draftImageMeta.src)} />
+		</JDGInputContainer>
+		<div class="upload-button-container">
 			<JDGButton
 				label="Upload..."
 				faIcon="fa-upload"
@@ -114,15 +124,15 @@
 				on:change={onClickFileUpload}
 				bind:this={fileInput}
 			/>
-		</JDGInputContainer>
+		</div>
 		<JDGInputContainer label="Title">
 			<JDGTextInput inputValue={$draftImageMeta.title} />
 		</JDGInputContainer>
-		<JDGInputContainer label="Alt">
-			<JDGTextInput inputValue={$draftImageMeta.alt} />
-		</JDGInputContainer>
 		<JDGInputContainer label="Caption">
 			<JDGTextInput inputValue={$draftImageMeta.caption} />
+		</JDGInputContainer>
+		<JDGInputContainer label="Alt">
+			<JDGTextInput inputValue={$draftImageMeta.alt} />
 		</JDGInputContainer>
 		<JDGInputContainer label="Attribution">
 			<JDGTextInput inputValue={$draftImageMeta.attribution} />
@@ -146,5 +156,21 @@
 <style>
 	.image-meta-modal-scrollable {
 		overflow-y: auto;
+	}
+
+	.image-preview-wrapper {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+	}
+
+	.image-src-string {
+		max-width: 500px;
+		word-break: break-word;
+		overflow-wrap: anywhere;
+	}
+
+	.upload-button-container {
+		margin-bottom: 20px;
 	}
 </style>
