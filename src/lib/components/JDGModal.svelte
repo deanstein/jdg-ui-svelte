@@ -11,6 +11,7 @@
 
 	export let showModal = true;
 	export let onClickCloseButton = undefined;
+	export let closeOnOverlayClick = true;
 	export let title = 'This is a modal title';
 	export let subtitle = 'This is a modal subtitle';
 	export let width = 'auto';
@@ -54,7 +55,7 @@
 	`;
 </script>
 
-<JDGOverlay onCloseFunction={onClickCloseButton} closeOnOverlayClick>
+<JDGOverlay onCloseFunction={onClickCloseButton} {closeOnOverlayClick}>
 	<div in:receive={{ key: showModal }} out:send={{ key: showModal }} class="modal-outer-container">
 		<div class="modal-content-container {modalContentContainerCss}">
 			{#if title || onClickCloseButton}
