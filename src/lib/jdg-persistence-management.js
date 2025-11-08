@@ -7,11 +7,18 @@ export const cfRouteListJsonFiles = '/list-json-files';
 export const cfRouteFetchFile = '/fetch-file';
 export const cfRouteWriteJsonFile = '/write-json-file';
 
+// JDG-GITHUB Cloudflare worker
+export const cfWorkerUrlJdgGithub = 'https://jdg-github.jdeangoldstein.workers.dev';
+export const cfRouteDebugCors = '/debug-cors';
+export const cfRouteFetchPublicFile = '/fetch-public-file';
+export const cfRouteWritePublicJsFile = '/write-public-js-file';
+
 // Family Tree Data and Building Data use different keys
 // for identifying the collection of TimelineHosts
 export const buildingDataCollectionKey = 'allBuildings';
 export const familyTreeDataCollectionKey = 'allPeople';
 
+// Repo names
 export const jdgRepoOwner = 'deanstein';
 export const jdgUiSvelteRepoName = 'jdg-ui-svelte';
 export const jdgWebsiteRepoName = 'jdg-website';
@@ -28,7 +35,9 @@ export const encryptedPAT =
 	'U2FsdGVkX19E4XXmu4s1Y76A+iKILjKYG1n92+pqbtzdoJpeMyl6Pit0H8Kq8G28M+ZuqmdhHEfb/ud4GEe5gw==';
 
 // Location of image metadata collection for all websites
-export const imageMetaCollectionPath = "src/routes/image-meta-collection.js";
+export const imageMetaCollectionPath = 'src/routes/image-meta-collection.js';
+// Typical imageMetaCollection variable name, for finding within the .js file
+export const imageMetaCollectionVarName = 'imageMetaCollection';
 
 // TODO: Remove, this won't be needed once we switch entirely to Cloudflare workers
 const getAuthHeaders = (password) => ({
@@ -39,6 +48,31 @@ const getAuthHeaders = (password) => ({
 //
 // CLOUDFLARE-BASED FUNCTIONS
 //
+
+export const debugCorsWorker = async () => {
+	const debugUrl = cfWorkerUrlJdgGithub + cfRouteDebugCors; // Replace with your actual Worker URL
+
+	try {
+		const response = await fetch(debugUrl, {
+			method: 'GET',
+			headers: {
+				// Optional: include headers to test
+				'Content-Type': 'application/json'
+			}
+		});
+
+		if (!response.ok) {
+			throw new Error(`Worker responded with status ${response.status}`);
+		}
+
+		const data = await response.json();
+		console.log('🔍 Headers received by Worker:', data.headers);
+		return data.headers;
+	} catch (err) {
+		console.error('❌ Error calling debug-cors route:', err);
+		return null;
+	}
+};
 
 // Determines if the given passphrase grants admin access
 export async function fetchIsAdmin(passphrase) {
@@ -128,6 +162,22 @@ export async function writeJsonFileToRepo(repoOwner, repoName, filePath, jsonCon
 	const result = await response.json();
 	return result.success ? result : null;
 }
+
+export const fetchImageMetaCollection = async (repoName) => {
+	const url = new URL(cfRouteFetchPublicFile, cfWorkerUrlJdgGithub);
+	url.searchParams.set('repoOwner', jdgRepoOwner);
+	url.searchParams.set('repoName', repoName);
+	url.searchParams.set('filePath', imageMetaCollectionPath);
+
+	const response = await fetch(url.toString()); // No headers needed for GET
+
+	if (!response.ok) {
+		throw new Error(`Failed to fetch file: ${response.status}`);
+	}
+
+	const jsFileString = await response.text();
+	return jsFileString;
+};
 
 //
 // LEGACY FUNCTIONS (to be removed)

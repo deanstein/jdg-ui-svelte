@@ -202,7 +202,7 @@ export const doesObjectNeedUpgrade = (guideObject, testObject) => {
 	return false;
 };
 
-// specifically for schemas that also include UI defs
+// Extract data from schemas that also include UI defs
 export const extractDefaultsFromSchema = (schemaObject = {}) => {
 	const result = {};
 
@@ -212,6 +212,37 @@ export const extractDefaultsFromSchema = (schemaObject = {}) => {
 	}
 
 	return result;
+};
+
+// Extract an object from a file
+// Useful for getting the imageMetaCollection from an imageMetaCollection.js file
+/*
+ * @param {string} source - The full JS file content as a string.
+ * @param {string} variableName - The name of the object variable to extract.
+ */
+export let extractObjectLiteral = (jsFileString, variableName) => {
+	const pattern = new RegExp(`const\\s+${variableName}\\s*=\\s*{([\\s\\S]*?)};?\\s*$`, 'm');
+	const match = jsFileString.match(pattern);
+	return match ? match[1].trim() : null;
+};
+
+// Replace an object literal in a file
+// Useful for updating the imageMetaCollection inside an imageMetaCollection.js file
+/*
+ * @param {string} jsFileString - The full JS file content as a string.
+ * @param {string} variableName - The name of the object variable to replace.
+ * @param {string} newObjectBody - The new object body as a string (everything inside the braces).
+ * @returns {string} - The updated JS file content with the object replaced.
+ */
+export let replaceObjectLiteral = (jsFileString, variableName, newObjectBody) => {
+	const pattern = new RegExp(`(const\\s+${variableName}\\s*=\\s*{)([\\s\\S]*?)(};?)`, 'm');
+
+	const match = jsFileString.match(pattern);
+	if (!match) {
+		throw new Error(`Could not find object literal for variable "${variableName}"`);
+	}
+
+	return jsFileString.replace(pattern, `$1\n${newObjectBody}\n$3`);
 };
 
 export const deepMatchObjects = (dataToMatch, dataToChange, forceChangeToType = undefined) => {

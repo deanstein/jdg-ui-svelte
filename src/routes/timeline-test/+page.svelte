@@ -9,9 +9,11 @@
 	import {
 		buildingDataCollectionKey,
 		familyTreeDataCollectionKey,
+		fetchImageMetaCollection,
 		fetchJsonFileList,
 		jdgBuildingDataRepoName,
 		jdgRepoOwner,
+		jdgUiSvelteRepoName,
 		readJsonFileFromRepo,
 		writeJsonFileToRepo
 	} from '$lib/jdg-persistence-management.js';
@@ -475,6 +477,14 @@
 			addClickAddEvent={() => {
 				showTimelineEventModal.set(true);
 				draftTimelineEvent.set(instantiateTimelineEvent(jdgTimelineEventKeys.generic));
+			}}
+		/>
+		<JDGButton
+			label="Write image-meta-collection.js"
+			onClickFunction={async () => {
+				//await debugCorsWorker();
+				const jsContent = await fetchImageMetaCollection(jdgUiSvelteRepoName);
+				console.log('JS CONTENT', jsContent);
 			}}
 		/>
 	</JDGContentBoxFloating>
