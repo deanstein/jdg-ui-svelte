@@ -6,15 +6,6 @@ export const cfRouteCheckAdmin = '/check-admin';
 export const cfRouteListJsonFiles = '/list-json-files';
 export const cfRouteFetchFile = '/fetch-file';
 export const cfRouteWriteJsonFile = '/write-json-file';
-// Building Data Cloudflare worker
-export const cfWorkerUrlBuildingData = 'https://family-tree-data.jdeangoldstein.workers.dev';
-export const cfRouteGetTestBuildingData = '/get-building-data-test';
-export const cfRouteSetTestBuildingData = '/set-building-data-test';
-export const cfRouteGetProdBuildingData = '/get-building-data-prod';
-export const cfRouteSetProdBuildingData = '/set-building-data-prod';
-// Family Tree Cloudflare worker
-export const cfWorkerUrlFamilyTreeData = 'https://family-tree-data.jdeangoldstein.workers.dev';
-export const cfRouteGetToken = '/get-github-app-token';
 
 // Family Tree Data and Building Data use different keys
 // for identifying the collection of TimelineHosts
@@ -36,6 +27,10 @@ export const jsonToListRepoName = 'json-to-html';
 export const encryptedPAT =
 	'U2FsdGVkX19E4XXmu4s1Y76A+iKILjKYG1n92+pqbtzdoJpeMyl6Pit0H8Kq8G28M+ZuqmdhHEfb/ud4GEe5gw==';
 
+// Location of image metadata collection for all websites
+export const imageMetaCollectionPath = "src/routes/image-meta-collection.js";
+
+// TODO: Remove, this won't be needed once we switch entirely to Cloudflare workers
 const getAuthHeaders = (password) => ({
 	Authorization: `Bearer ${decrypt(encryptedPAT, password)}`,
 	Accept: 'application/vnd.github.v3.raw'
@@ -186,45 +181,6 @@ export const fetchJsonFromRepo = async (
 	}
 };
 
-// for binary large objects (blobs)
-export const fetchBlobFromRepo = async (repoOwner, repoName, password, filePath) => {
-	// First, get the file's SHA
-	const url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`;
-	let sha;
-	try {
-		const response = await fetch(url, {
-			headers: getAuthHeaders(password)
-		});
-
-		if (response.ok) {
-			const data = await response.json();
-			sha = data.sha; // Get the file's SHA
-		} else {
-			console.log('Bad response: ' + response);
-		}
-	} catch (error) {
-		console.error(error);
-	}
-
-	// Then, use the SHA to get the blob
-	const blobUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/git/blobs/${sha}`;
-	try {
-		const response = await fetch(blobUrl, {
-			headers: getAuthHeaders(password)
-		});
-
-		if (response.ok) {
-			const data = await response.json();
-			const fileContent = atob(data.content); // Decode file content from Base64
-			return fileContent;
-		} else {
-			console.log('Bad response: ' + response);
-		}
-	} catch (error) {
-		console.error(error);
-	}
-};
-
 export const fetchLatestCommitDate = async (
 	repoOwner,
 	repoName,
@@ -368,58 +324,4 @@ export const fetchTotalCommitsQty = async (
 		.catch((error) => console.error('Error:', error));
 
 	return totalCommits;
-};
-
-export const uploadFileToRepo = async (
-	repoOwner,
-	repoName,
-	password,
-	filePath,
-	fileContent,
-	commitMessage
-) => {
-	const url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`;
-
-	const response = await fetch(url, {
-		method: 'GET',
-		headers: getAuthHeaders(password)
-	});
-
-	if (response.ok) {
-		const existingFileData = await response.json();
-		const data = {
-			message: commitMessage,
-			content: fileContent,
-			sha: existingFileData.sha
-		};
-
-		const updateResponse = await fetch(url, {
-			method: 'PUT',
-			headers: getAuthHeaders(password),
-			body: JSON.stringify(data)
-		});
-
-		const updatedData = await updateResponse.json();
-		const updatedUrl = updatedData.content.url;
-
-		return updatedUrl;
-	} else {
-		console.log("^ The above error is expected. This photo wasn't already present.");
-
-		const data = {
-			message: commitMessage,
-			content: fileContent
-		};
-
-		const uploadResponse = await fetch(url, {
-			method: 'PUT',
-			headers: getAuthHeaders(password),
-			body: JSON.stringify(data)
-		});
-
-		const uploadedData = await uploadResponse.json();
-		const uploadedUrl = uploadedData.content.url;
-
-		return uploadedUrl;
-	}
 };
