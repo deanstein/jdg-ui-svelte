@@ -28,7 +28,7 @@
 	} from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgFonts } from '$lib/jdg-shared-styles.js';
 
-	import { imageMetaCollection } from './image-meta-collection.js';
+	import { imageMetaRegistry } from './image-meta-registry.js';
 	import { css } from '@emotion/css';
 	import {
 		ccpWebsiteRepoName,
@@ -59,9 +59,9 @@
 <JDGContentContainer overlapWithHeader={true}>
 	<div style="display: flex; flex-direction: column;">
 		<JDGImageFullWidth
-			imageMeta={imageMetaCollection.cc_1}
+			imageMeta={imageMetaRegistry.cc_1}
 			showOverlay={true}
-			overlayImageAttributes={imageMetaCollection.ccp_ouatacc_white}
+			overlayImageAttributes={imageMetaRegistry.ccp_ouatacc_white}
 			overlayImageText="A Secondary Text Test"
 			overlayImageTextFontFamily="Righteous"
 			overlapWithHeader={true}
@@ -151,7 +151,7 @@
 			Inside BodyCopy
 			<br /><br />
 			<JDGImage
-				imageMeta={imageMetaCollection.lakeside_1}
+				imageMeta={imageMetaRegistry.lakeside_1}
 				cropToFillContainer={false}
 				showBlurInUnfilledSpace={false}
 				showCaption
@@ -166,7 +166,7 @@
 			that causes an error).
 		</JDGBodyCopy>
 		<JDGImage
-			imageMeta={imageMetaCollection.exp.ranch_elsie_roof_optioneering}
+			imageMeta={imageMetaRegistry.exp.ranch_elsie_roof_optioneering}
 			maxHeight="600px"
 			cropToFillContainer={false}
 			showBlurInUnfilledSpace={false}
@@ -180,7 +180,7 @@
 			Inside BodyCopy
 			<br /><br />
 			<JDGImageTile
-				imageMeta={imageMetaCollection.lakeside_1}
+				imageMeta={imageMetaRegistry.lakeside_1}
 				cropToFillContainer={false}
 				showBlurInUnfilledSpace={true}
 				showCaption={true}
@@ -195,7 +195,7 @@
 			Inside BodyCopy
 			<br /><br />
 			<JDGImageTile
-				imageMeta={imageMetaCollection.rose_mall_60s70s_2}
+				imageMeta={imageMetaRegistry.rose_mall_60s70s_2}
 				cropToFillContainer={false}
 				showCaption={true}
 				showAttribution={true}
@@ -209,7 +209,7 @@
 			Clicking goes to "./about"
 		</JDGBodyCopy>
 		<JDGImageTile
-			imageMeta={imageMetaCollection.ecc_existing_north}
+			imageMeta={imageMetaRegistry.ecc_existing_north}
 			cropToFillContainer={false}
 			href="./about"
 		/>
@@ -219,7 +219,7 @@
 			Clicking goes to Google but in a new tab. It also shows a label.
 		</JDGBodyCopy>
 		<JDGImageTile
-			imageMeta={imageMetaCollection.aerial_60s70s_1}
+			imageMeta={imageMetaRegistry.aerial_60s70s_1}
 			cropToFillContainer={false}
 			href="https://www.google.com"
 			hrefOpenInNewTab={true}
@@ -231,7 +231,7 @@
 			The label on this ImageTile is centered.
 		</JDGBodyCopy>
 		<JDGImageTile
-			imageMeta={imageMetaCollection.rose_mall_60s70s_1}
+			imageMeta={imageMetaRegistry.rose_mall_60s70s_1}
 			cropToFillContainer={false}
 			href="https://www.google.com"
 			hrefOpenInNewTab={true}
@@ -244,7 +244,7 @@
 			With label and custom label background color. Also has a custom "pre-label."
 		</JDGBodyCopy>
 		<JDGImageTile
-			imageMeta={imageMetaCollection.cc_1}
+			imageMeta={imageMetaRegistry.cc_1}
 			cropToFillContainer={false}
 			label="THIS IS A LABEL"
 			labelColor="rgba(255, 255, 255, 1)"
@@ -263,14 +263,14 @@
 			No blur allowed in imageMeta
 		</JDGBodyCopy>
 		<JDGImageTile
-			imageMeta={imageMetaCollection.hst.fms_2000s_plan_additions}
+			imageMeta={imageMetaRegistry.hst.fms_2000s_plan_additions}
 			cropToFillContainer={false}
 			showCaption={true}
 			showAttribution={true}
 		/>
 		<JDGBodyCopy textAlign="center" paddingBottom="0"><b>IMAGE FULL WIDTH</b></JDGBodyCopy>
 		<JDGImageFullWidth
-			imageMeta={imageMetaCollection.aerial_60s70s_1}
+			imageMeta={imageMetaRegistry.aerial_60s70s_1}
 			superText="This is a"
 			primaryText="FULL WIDTH IMAGE"
 			secondaryText="better known as a HERO image"
@@ -286,10 +286,7 @@
 		>
 		<JDGFullWidthContainer>
 			<JDGImageCarousel
-				imageMetaSet={[
-					imageMetaCollection.fairgrounds_aerial,
-					imageMetaCollection.speer_point_after
-				]}
+				imageMetaSet={[imageMetaRegistry.fairgrounds_aerial, imageMetaRegistry.speer_point_after]}
 			/>
 			<JDGBodyCopy textAlign="center" paddingBottom="0"
 				><b>IMAGE CAROUSEL</b>
@@ -301,11 +298,11 @@
 			<div class="flex-container-left">
 				<JDGImageCarousel
 					imageMetaSet={[
-						imageMetaCollection.aerial_60s70s_1,
-						imageMetaCollection.architecture_1,
-						imageMetaCollection.cc_2,
-						imageMetaCollection.ccp_blue_mall_60s70s_1,
-						imageMetaCollection.fairgrounds_aerial
+						imageMetaRegistry.aerial_60s70s_1,
+						imageMetaRegistry.architecture_1,
+						imageMetaRegistry.cc_2,
+						imageMetaRegistry.ccp_blue_mall_60s70s_1,
+						imageMetaRegistry.fairgrounds_aerial
 					]}
 					showCaption={false}
 					showAttribution={false}
@@ -332,8 +329,8 @@
 		>
 		<JDGFullWidthContainer>
 			<JDGImageCompare
-				imageMeta1={imageMetaCollection.ccp_gold_mall_60s70s_1}
-				imageMeta2={imageMetaCollection.ccp_gold_mall_80s90s_1}
+				imageMeta1={imageMetaRegistry.ccp_gold_mall_60s70s_1}
+				imageMeta2={imageMetaRegistry.ccp_gold_mall_80s90s_1}
 				animateSlider={false}
 				useFullWidthAnimation={false}
 				caption="Gold Mall simulated in 1968-1978 and 1987-1997. And this is an even longer caption to test a possible failure case."
@@ -349,38 +346,38 @@
 		</JDGBodyCopy>
 		<JDGGridLayout>
 			<JDGImageTile
-				imageMeta={imageMetaCollection.hst.ehs_1920_broadway_northeast}
+				imageMeta={imageMetaRegistry.hst.ehs_1920_broadway_northeast}
 				showCaption={true}
 			/>
 			<JDGImageTile
-				imageMeta={imageMetaCollection.hst.fms_2013_broadway_northeast}
+				imageMeta={imageMetaRegistry.hst.fms_2013_broadway_northeast}
 				showCaption={true}
 			/>
 		</JDGGridLayout>
 		<JDGGridLayout>
 			<JDGImageCompare
-				imageMeta1={imageMetaCollection.ccp_blue_mall_60s70s_1}
-				imageMeta2={imageMetaCollection.ccp_blue_mall_80s90s_1}
+				imageMeta1={imageMetaRegistry.ccp_blue_mall_60s70s_1}
+				imageMeta2={imageMetaRegistry.ccp_blue_mall_80s90s_1}
 				maxHeight="400px"
 				showBlurInUnfilledSpace={false}
 			/>
 			<JDGImageTile
-				imageMeta={imageMetaCollection.rose_mall_60s70s_1}
+				imageMeta={imageMetaRegistry.rose_mall_60s70s_1}
 				cropToFillContainer={false}
 				maxHeight="400px"
 			/>
 		</JDGGridLayout>
 		<JDGGridLayout>
 			<JDGImageTile
-				imageMeta={imageMetaCollection.cc_2}
+				imageMeta={imageMetaRegistry.cc_2}
 				cropToFillContainer={false}
 				showCaption={true}
 				showAttribution={false}
 				maxHeight="400px"
 			/>
 			<JDGImageCompare
-				imageMeta1={imageMetaCollection.ccp_gold_mall_60s70s_1}
-				imageMeta2={imageMetaCollection.ccp_gold_mall_80s90s_1}
+				imageMeta1={imageMetaRegistry.ccp_gold_mall_60s70s_1}
+				imageMeta2={imageMetaRegistry.ccp_gold_mall_80s90s_1}
 				animateSlider={false}
 				useFullWidthAnimation={true}
 				maxHeight="400px"
@@ -389,15 +386,15 @@
 		</JDGGridLayout>
 		<JDGGridLayout>
 			<JDGImageCompare
-				imageMeta1={imageMetaCollection.ccp_gold_mall_60s70s_1}
-				imageMeta2={imageMetaCollection.ccp_gold_mall_80s90s_1}
+				imageMeta1={imageMetaRegistry.ccp_gold_mall_60s70s_1}
+				imageMeta2={imageMetaRegistry.ccp_gold_mall_80s90s_1}
 				animateSlider={false}
 				useFullWidthAnimation={true}
 				maxHeight="400px"
 				showBlurInUnfilledSpace={false}
 			/>
 			<JDGImageTile
-				imageMeta={imageMetaCollection.cc_1}
+				imageMeta={imageMetaRegistry.cc_1}
 				cropToFillContainer={false}
 				showCaption={true}
 				showAttribution={false}
@@ -406,8 +403,8 @@
 		</JDGGridLayout>
 		<JDGImageHybridGridCarousel
 			imageMetaSet={[
-				imageMetaCollection.hst.ehs_1919_plan,
-				imageMetaCollection.hst.fms_2000s_plan_additions
+				imageMetaRegistry.hst.ehs_1919_plan,
+				imageMetaRegistry.hst.fms_2000s_plan_additions
 			]}
 			cropToFillContainer={false}
 		/>
@@ -420,51 +417,51 @@
 		<JDGClipFade>
 			<JDGGridLayout>
 				<JDGImageTile
-					imageMeta={imageMetaCollection.aerial_60s70s_1}
+					imageMeta={imageMetaRegistry.aerial_60s70s_1}
 					showCaption={true}
 					showAttribution={true}
 				/>
 				<JDGImageTile
-					imageMeta={imageMetaCollection.cc_1}
+					imageMeta={imageMetaRegistry.cc_1}
 					showCaption={true}
 					showAttribution={true}
 				/>
 				<JDGImageTile
-					imageMeta={imageMetaCollection.architecture_1}
+					imageMeta={imageMetaRegistry.architecture_1}
 					showCaption={true}
 					showAttribution={true}
 				/>
 				<JDGImageTile
-					imageMeta={imageMetaCollection.rose_mall_60s70s_1}
+					imageMeta={imageMetaRegistry.rose_mall_60s70s_1}
 					showCaption={true}
 					showAttribution={true}
 				/>
 				<JDGImageTile
-					imageMeta={imageMetaCollection.rose_mall_60s70s_2}
+					imageMeta={imageMetaRegistry.rose_mall_60s70s_2}
 					showCaption={true}
 					showAttribution={true}
 				/>
 				<JDGImageTile
-					imageMeta={imageMetaCollection.aerial_60s70s_1}
+					imageMeta={imageMetaRegistry.aerial_60s70s_1}
 					showCaption={true}
 					showAttribution={true}
 				/>
 				<JDGImageTile
-					imageMeta={imageMetaCollection.cc_1}
+					imageMeta={imageMetaRegistry.cc_1}
 					showCaption={true}
 					showAttribution={true}
 				/>
 				<JDGImageTile
-					imageMeta={imageMetaCollection.architecture_1}
+					imageMeta={imageMetaRegistry.architecture_1}
 					showCaption={true}
 					showAttribution={true}
 				/>
 				<JDGImageTile
-					imageMeta={imageMetaCollection.rose_mall_60s70s_1}
+					imageMeta={imageMetaRegistry.rose_mall_60s70s_1}
 					showCaption={true}
 					showAttribution={true}
 				/>
-				<JDGImageTile imageMeta={imageMetaCollection.rose_mall_60s70s_2} />
+				<JDGImageTile imageMeta={imageMetaRegistry.rose_mall_60s70s_2} />
 			</JDGGridLayout>
 		</JDGClipFade>
 		<JDGBodyCopy paddingBottom="0" textAlign="center">
@@ -474,23 +471,23 @@
 		>
 		<JDGGridLayout>
 			<JDGImageTile
-				imageMeta={imageMetaCollection.aerial_60s70s_1}
+				imageMeta={imageMetaRegistry.aerial_60s70s_1}
 				useAutoHeightOnMobile={false}
 				label={'A LABEL WITH BODY FONT'}
 			/>
 			<JDGImageTile
-				imageMeta={imageMetaCollection.cc_1}
+				imageMeta={imageMetaRegistry.cc_1}
 				useAutoHeightOnMobile={false}
 				label={'A LABEL WITH A RETRO FONT'}
 				labelFontFamily={jdgFonts.righteous}
 			/>
-			<JDGImageTile imageMeta={imageMetaCollection.architecture_1} useAutoHeightOnMobile={false} />
+			<JDGImageTile imageMeta={imageMetaRegistry.architecture_1} useAutoHeightOnMobile={false} />
 			<JDGImageTile
-				imageMeta={imageMetaCollection.rose_mall_60s70s_1}
+				imageMeta={imageMetaRegistry.rose_mall_60s70s_1}
 				useAutoHeightOnMobile={false}
 			/>
 			<JDGImageTile
-				imageMeta={imageMetaCollection.rose_mall_60s70s_2}
+				imageMeta={imageMetaRegistry.rose_mall_60s70s_2}
 				useAutoHeightOnMobile={false}
 			/>
 		</JDGGridLayout>
@@ -503,11 +500,11 @@
 		</JDGBodyCopy>
 		<JDGImageHybridGridCarousel
 			imageMetaSet={[
-				imageMetaCollection.aerial_60s70s_1,
-				imageMetaCollection.cc_1,
-				imageMetaCollection.architecture_1,
-				imageMetaCollection.rose_mall_60s70s_1,
-				imageMetaCollection.rose_mall_60s70s_2
+				imageMetaRegistry.aerial_60s70s_1,
+				imageMetaRegistry.cc_1,
+				imageMetaRegistry.architecture_1,
+				imageMetaRegistry.rose_mall_60s70s_1,
+				imageMetaRegistry.rose_mall_60s70s_2
 			]}
 		/>
 	</JDGContentBoxFloating>
@@ -667,7 +664,7 @@
 			imageAlign="left"
 		>
 			<JDGImageTile
-				imageMeta={imageMetaCollection.ccp_blue_mall_60s70s_1}
+				imageMeta={imageMetaRegistry.ccp_blue_mall_60s70s_1}
 				maxHeight={'400px'}
 				useAutoHeightOnMobile={true}
 			/>
@@ -679,8 +676,8 @@
 			backgroundColor={jdgColors.accentColorsJDG[1]}
 		>
 			<JDGImageCompare
-				imageMeta1={imageMetaCollection.ccp_gold_mall_60s70s_1}
-				imageMeta2={imageMetaCollection.ccp_gold_mall_80s90s_1}
+				imageMeta1={imageMetaRegistry.ccp_gold_mall_60s70s_1}
+				imageMeta2={imageMetaRegistry.ccp_gold_mall_80s90s_1}
 				animateSlider={false}
 				useFullWidthAnimation={true}
 				maxHeight="400px"
@@ -710,13 +707,13 @@
 	<JDGUpNext
 		item1Label={'LEARN MORE ABOUT THE PROJECT'}
 		item1Href={'./about'}
-		item1ImageAttributes={imageMetaCollection.cc_1}
+		item1ImageAttributes={imageMetaRegistry.cc_1}
 		item2Label={'READ THE FULL HISTORY'}
 		item2Href="./history"
-		item2ImageAttributes={imageMetaCollection.rose_mall_60s70s_1}
+		item2ImageAttributes={imageMetaRegistry.rose_mall_60s70s_1}
 		item3Label="EXPERIENCE THE SIMULATION"
 		item3Href="./simulation"
-		item3ImageAttributes={imageMetaCollection.ccp_blue_mall_80s90s_1}
+		item3ImageAttributes={imageMetaRegistry.ccp_blue_mall_80s90s_1}
 	/>
 </JDGContentContainer>
 

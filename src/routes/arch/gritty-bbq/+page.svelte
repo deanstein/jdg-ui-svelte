@@ -1,5 +1,5 @@
 <script>
-	import { imageMetaCollection } from '../../image-meta-collection.js';
+	import { imageMetaRegistry } from '../../image-meta-registry.js';
 	import { JDGContentBoxFloating, JDGContentContainer, JDGImageCarousel } from '$lib/index.js';
 </script>
 
@@ -10,9 +10,9 @@
 	>
 		<JDGImageCarousel
 			imageMetaSet={[
-				imageMetaCollection.arch.gritty_bbq_option_2,
-				imageMetaCollection.arch.gritty_bbq_option_3,
-				imageMetaCollection.arch.gritty_bbq_option_5
+				imageMetaRegistry.arch.gritty_bbq_option_2,
+				imageMetaRegistry.arch.gritty_bbq_option_3,
+				imageMetaRegistry.arch.gritty_bbq_option_5
 			]}
 			maxHeight="600px"
 		/>

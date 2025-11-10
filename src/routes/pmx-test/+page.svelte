@@ -1,5 +1,5 @@
 <script>
-	import { imageMetaCollection } from '../image-meta-collection.js';
+	import { imageMetaRegistry } from '../image-meta-registry.js';
 	import { appAccentColors } from '$lib/stores/jdg-ui-store.js';
 
 	import { JDGContentBoxFloating, JDGContentContainer } from '$lib/index.js';
@@ -21,16 +21,16 @@
 			activeProductId={model003F}
 			productTypeIds={[model003D, model003F]}
 			productTypeThumbnailImageAttributes={[
-				imageMetaCollection.aerial_60s70s_1,
-				imageMetaCollection.architecture_1
+				imageMetaRegistry.aerial_60s70s_1,
+				imageMetaRegistry.architecture_1
 			]}
 		>
 			<PMXProductTypeContainer
 				productId={model003D}
 				imageMetaSet={[
-					imageMetaCollection.cc_1,
-					imageMetaCollection.cc_2,
-					imageMetaCollection.ccp_blue_mall_60s70s_1
+					imageMetaRegistry.cc_1,
+					imageMetaRegistry.cc_2,
+					imageMetaRegistry.ccp_blue_mall_60s70s_1
 				]}
 			>
 				<PMXProductDetailsSection sectionTitle={`MODEL ${model003D}`}>
@@ -49,9 +49,9 @@
 			<PMXProductTypeContainer
 				productId={model003F}
 				imageMetaSet={[
-					imageMetaCollection.ccp_blue_mall_80s90s_1,
-					imageMetaCollection.ccp_gold_mall_60s70s_1,
-					imageMetaCollection.ccp_gold_mall_80s90s_1
+					imageMetaRegistry.ccp_blue_mall_80s90s_1,
+					imageMetaRegistry.ccp_gold_mall_60s70s_1,
+					imageMetaRegistry.ccp_gold_mall_80s90s_1
 				]}
 			>
 				<PMXProductDetailsSection sectionTitle={`MODEL ${model003F}`}>

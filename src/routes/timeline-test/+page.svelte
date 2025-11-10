@@ -63,7 +63,7 @@
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
 	import JDGDatePicker from '$lib/components/Input/JDGDatePicker.svelte';
 	import jdgSaveStatus from '$lib/schemas/jdg-save-status.js';
-	import { imageMetaCollection } from '../image-meta-collection.js';
+	import { imageMetaRegistry } from '../image-meta-registry.js';
 
 	// Ensure this page allows text selection
 	allowTextSelection.set(true);
@@ -481,10 +481,10 @@
 			}}
 		/>
 		<JDGButton
-			label="Write image-meta-collection.js"
+			label="Write image-meta-registry.js"
 			onClickFunction={async () => {
 				const imageMetaRegistry = await fetchImageMetaRegistry(jdgUiSvelteRepoName);
-				console.log(imageMetaCollection);
+				console.log(imageMetaRegistry);
 			}}
 		/>
 	</JDGContentBoxFloating>

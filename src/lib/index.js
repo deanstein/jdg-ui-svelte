@@ -27,7 +27,7 @@ export * from './jdg-utils.js';
 // 🧵 Shared Assets
 export * from './jdg-shared-strings.js';
 export * from './jdg-shared-styles.js';
-export * from './jdg-image-meta-collection.js';
+export * from './jdg-image-meta-registry.js';
 
 /*** SVELTE EXPORTS ***/
 

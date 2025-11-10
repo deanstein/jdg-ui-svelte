@@ -215,7 +215,7 @@ export const extractDefaultsFromSchema = (schemaObject = {}) => {
 };
 
 // Extract an object from a file
-// Useful for getting the imageMetaCollection from an imageMetaCollection.js file
+// Useful for getting the imageMetaRegistry from an imageMetaRegistry.js file
 /*
  * @param {string} source - The full JS file content as a string.
  * @param {string} variableName - The name of the object variable to extract.
@@ -227,7 +227,7 @@ export let extractObjectLiteral = (jsFileString, variableName) => {
 };
 
 // Replace an object literal in a file
-// Useful for updating the imageMetaCollection inside an imageMetaCollection.js file
+// Useful for updating the imageMetaRegistry inside an imageMetaRegistry.js file
 /*
  * @param {string} jsFileString - The full JS file content as a string.
  * @param {string} variableName - The name of the object variable to replace.
@@ -1084,7 +1084,7 @@ export const addCloudinaryUrlTransformation = (url, transformation = 'f_auto') =
 		let path = parts[1];
 
 		// remove existing f_auto transformation if it exists
-		// TODO: Remove this once all imageMetaCollection are rid of manual f_auto
+		// TODO: Remove this once all imageMetaRegistry are rid of manual f_auto
 		path = path.replace(/^f_auto\/|\/f_auto\/|\/f_auto$/, '');
 
 		return `${baseUrl}/upload/${transformation}/${path}`;

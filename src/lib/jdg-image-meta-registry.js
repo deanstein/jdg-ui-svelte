@@ -1,11 +1,11 @@
 // These are for shared images used across the UI package
-// For page-specific images, see image-meta-collection in /routes
+// For page-specific images, see image-meta-registry in /routes
 
 import { instantiateObject } from '$lib/jdg-utils.js';
 import jdgImageMeta from '$lib/schemas/jdg-image-meta.js';
 
 // This needs to be a getter function to prevent SSR errors on build with a raw object
-const getJdgImageMetaCollection = () => {
+const getJdgimageMetaRegistry = () => {
 	return {
 		jdg_avatar_placeholder: instantiateObject(jdgImageMeta, {
 			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1761358399/jdg-ui-svelte/jdg-avatar-placeholder.jpg',
@@ -22,4 +22,4 @@ const getJdgImageMetaCollection = () => {
 	};
 };
 
-export default getJdgImageMetaCollection;
+export default getJdgimageMetaRegistry;

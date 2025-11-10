@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { imageMetaCollection } from '../image-meta-collection.js';
+	import { imageMetaRegistry } from '../image-meta-registry.js';
 	import { jdgBreakpoints } from '$lib/jdg-shared-styles.js';
 
 	import { JDGImageCarousel } from '$lib/index.js';
@@ -9,10 +9,10 @@
 
 	export let productId = undefined; // optional, for use in ProductTypeSelector parent component (if multiple types)
 	export let imageMetaSet = [
-		imageMetaCollection.products.CITYSCAPE_021A_1,
-		imageMetaCollection.products.CITYSCAPE_021A_2,
-		imageMetaCollection.products.CITYSCAPE_021A_3,
-		imageMetaCollection.products.CITYSCAPE_021A_4
+		imageMetaRegistry.products.CITYSCAPE_021A_1,
+		imageMetaRegistry.products.CITYSCAPE_021A_2,
+		imageMetaRegistry.products.CITYSCAPE_021A_3,
+		imageMetaRegistry.products.CITYSCAPE_021A_4
 	];
 
 	const productTypeContainerCss = css`

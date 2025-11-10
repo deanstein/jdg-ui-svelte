@@ -2,7 +2,7 @@ import { addCloudinaryUrlTransformation, upgradeImageMetaRegistry } from '$lib/j
 
 // all available images and their metadata
 // new images with a caption must be added here
-const imageMetaCollection = {
+const imageMetaRegistry = {
 	aerial_60s70s_1: {
 		src: 'https://res.cloudinary.com/jdg-main/image/upload/v1716959961/jdg-ui-svelte/history/aerial-60s70s-1_e4hg6b.jpg',
 		alt: 'Cinderella City as it appeared in 1968. And a bunch of other words to test long captions!',
@@ -451,40 +451,41 @@ const imageMetaCollection = {
 			caption: "Englewood High School's original layout in 1919.",
 			attribution: 'Englewood Public Library',
 			showBackgroundBlur: false
-		},
-		ind: {
-			planter_003F_1: {
-				src: 'https://res.cloudinary.com/jdg-main/image/upload/v1726422539/pmx-website/products/003F-1.jpg',
-				caption: 'Advanced Planter'
-			}
-		},
-		swe: {
-			ccp_1: {
-				src: 'https://res.cloudinary.com/jdg-main/image/upload/v1716962800/ccp-website/ccp/ccp-composite-2.jpg',
-				caption:
-					'A composite image of two different time periods of a mid-century modern shopping center, powered by Unity.'
-			}
-		},
-		products_0: {
-			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1720834651/jdg-website/products/products-0.jpg',
-			alt: 'Products',
-			caption: 'Products'
-		},
-		software_0: {
-			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1720834658/jdg-website/software/software-0.jpg',
-			alt: 'Software',
-			caption: 'Software'
-		},
-		ecc_existing_north: {
-			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1739673653/ccp-website/save-civic-center/ecc-existing-north.jpg',
-			caption:
-				"The Englewood Civic Center's north side faces into plaza where it formerly attached to Cinderella City Mall.",
-			attribution: 'Englewood Public Library'
 		}
+	},
+	ind: {
+		planter_003F_1: {
+			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1726422539/pmx-website/products/003F-1.jpg',
+			caption: 'Advanced Planter'
+		}
+	},
+	swe: {
+		ccp_1: {
+			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1716962800/ccp-website/ccp/ccp-composite-2.jpg',
+			caption:
+				'A composite image of two different time periods of a mid-century modern shopping center, powered by Unity.'
+		}
+	},
+	products_0: {
+		src: 'https://res.cloudinary.com/jdg-main/image/upload/v1720834651/jdg-website/products/products-0.jpg',
+		alt: 'Products',
+		caption: 'Products'
+	},
+	software_0: {
+		src: 'https://res.cloudinary.com/jdg-main/image/upload/v1720834658/jdg-website/software/software-0.jpg',
+		alt: 'Software',
+		caption: 'Software'
+	},
+	ecc_existing_north: {
+		src: 'https://res.cloudinary.com/jdg-main/image/upload/v1739673653/ccp-website/save-civic-center/ecc-existing-north.jpg',
+		caption:
+			"The Englewood Civic Center's north side faces into plaza where it formerly attached to Cinderella City Mall.",
+		attribution: 'Englewood Public Library'
 	}
 };
 
 // Upgrade the registry - this upgrades and post-processes each imageMeta
-const upgradedImageMetaCollection = upgradeImageMetaRegistry(imageMetaCollection);
+const upgradedimageMetaRegistry = upgradeImageMetaRegistry(imageMetaRegistry);
+console.log(upgradedimageMetaRegistry);
 
-export { upgradedImageMetaCollection as imageMetaCollection };
+export { upgradedimageMetaRegistry as imageMetaRegistry };

@@ -8,7 +8,7 @@
 		JDGImageHybridGridCarousel,
 		JDGImageTile
 	} from '$lib/index.js';
-	import { imageMetaCollection } from '../image-meta-collection.js';
+	import { imageMetaRegistry } from '../image-meta-registry.js';
 </script>
 
 <JDGContentContainer>
@@ -17,40 +17,34 @@
 
 		{#if false}
 			<JDGImageFullWidth
-				imageMeta={imageMetaCollection.cc_1}
+				imageMeta={imageMetaRegistry.cc_1}
 				showOverlay={true}
-				overlayImageAttributes={imageMetaCollection.ccp_ouatacc_white}
+				overlayImageAttributes={imageMetaRegistry.ccp_ouatacc_white}
 				overlayImageText="A Secondary Text Test"
 				overlayImageTextFontFamily="Righteous"
 				overlapWithHeader={true}
 			/>
-			<JDGImageTile
-				imageMeta={imageMetaCollection.fairgrounds_aerial}
-				cropToFillContainer={false}
-			/>
+			<JDGImageTile imageMeta={imageMetaRegistry.fairgrounds_aerial} cropToFillContainer={false} />
 		{/if}
 		{#if true}
 			<JDGImageHybridGridCarousel
 				imageMetaSet={[
-					imageMetaCollection.aerial_60s70s_1,
-					imageMetaCollection.cc_1,
-					imageMetaCollection.architecture_1
+					imageMetaRegistry.aerial_60s70s_1,
+					imageMetaRegistry.cc_1,
+					imageMetaRegistry.architecture_1
 				]}
 			/>
 			<JDGImageCarousel
 				imageMetaSet={[
-					imageMetaCollection.mindful_multifamily,
-					imageMetaCollection.mindful_multifamily_close,
-					imageMetaCollection.mindful_multifamily_highway
+					imageMetaRegistry.mindful_multifamily,
+					imageMetaRegistry.mindful_multifamily_close,
+					imageMetaRegistry.mindful_multifamily_highway
 				]}
 			/>
 		{/if}
 		{#if false}
 			<JDGImageCarousel
-				imageMetaSet={[
-					imageMetaCollection.fairgrounds_aerial,
-					imageMetaCollection.rose_mall_60s70s_2
-				]}
+				imageMetaSet={[imageMetaRegistry.fairgrounds_aerial, imageMetaRegistry.rose_mall_60s70s_2]}
 			/>
 		{/if}
 	</JDGContentBoxFloating>

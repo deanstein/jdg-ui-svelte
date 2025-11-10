@@ -35,7 +35,7 @@
 		JDGTimelineEvent
 	} from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgQuantities, jdgSizes } from '$lib/jdg-shared-styles.js';
-	import { imageMetaCollection } from '../../../routes/image-meta-collection.js';
+	import { imageMetaRegistry } from '../../../routes/image-meta-registry.js';
 
 	// Timeline host contains events and event references
 	export let timelineHost;
@@ -71,10 +71,10 @@
 	const avatarHeight = '30px';
 	const onClickAvatar = () => {
 		if (allowEditing) {
-			draftImageMeta.set(imageMetaCollection.aerial_60s70s_1);
+			draftImageMeta.set(imageMetaRegistry.aerial_60s70s_1);
 			showImageMetaModal.set(true);
 		} else {
-			imageViewerMeta.set(imageMetaCollection.aerial_60s70s_1);
+			imageViewerMeta.set(imageMetaRegistry.aerial_60s70s_1);
 			showImageViewerModal.set(true);
 		}
 	};
@@ -304,7 +304,7 @@
 				on:keydown={onClickAvatar}
 			>
 				<JDGImage
-					imageMeta={imageMetaCollection.aerial_60s70s_1}
+					imageMeta={imageMetaRegistry.aerial_60s70s_1}
 					maxHeight={avatarHeight}
 					maxWidth={avatarHeight}
 					cropToFillContainer={true}

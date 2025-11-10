@@ -15,7 +15,7 @@ import {
 import jdgTimelineEventTypes, {
 	jdgTimelineEventKeys
 } from '$lib/schemas/timeline/jdg-timeline-event-types.js';
-import getJdgImageMetaCollection from '$lib/jdg-image-meta-collection.js';
+import getJdgimageMetaRegistry from '$lib/jdg-image-meta-registry.js';
 
 //
 // TIMELINE HOST
@@ -25,7 +25,7 @@ export const instantiateTimelineHost = () => {
 	// Initial host
 	const newHost = instantiateObject(jdgTimelineHost);
 	// Set a default avatar imageMeta
-	newHost.avatarImageMeta = getJdgImageMetaCollection().jdg_avatar_placeholder;
+	newHost.avatarImageMeta = getJdgimageMetaRegistry().jdg_avatar_placeholder;
 	return newHost;
 };
 

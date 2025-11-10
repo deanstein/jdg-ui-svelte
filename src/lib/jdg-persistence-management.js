@@ -35,9 +35,9 @@ export const encryptedPAT =
 	'U2FsdGVkX19E4XXmu4s1Y76A+iKILjKYG1n92+pqbtzdoJpeMyl6Pit0H8Kq8G28M+ZuqmdhHEfb/ud4GEe5gw==';
 
 // Location of image metadata collection for all websites
-export const imageMetaCollectionPath = 'src/routes/image-meta-collection.js';
-// Typical imageMetaCollection variable name, for finding within the .js file
-export const imageMetaCollectionVarName = 'imageMetaCollection';
+export const imageMetaRegistryPath = 'src/routes/image-meta-registry.js';
+// Typical imageMetaRegistry variable name, for finding within the .js file
+export const imageMetaRegistryVarName = 'imageMetaRegistry';
 
 // TODO: Remove, this won't be needed once we switch entirely to Cloudflare workers
 const getAuthHeaders = (password) => ({
@@ -168,7 +168,7 @@ export const fetchImageMetaRegistry = async (repoName) => {
 	const url = new URL(cfRouteFetchPublicFile, cfWorkerUrlJdgGithub);
 	url.searchParams.set('repoOwner', jdgRepoOwner);
 	url.searchParams.set('repoName', repoName);
-	url.searchParams.set('filePath', imageMetaCollectionPath);
+	url.searchParams.set('filePath', imageMetaRegistryPath);
 
 	const response = await fetch(url.toString());
 
@@ -178,7 +178,7 @@ export const fetchImageMetaRegistry = async (repoName) => {
 
 	const jsFileString = await response.text();
 	// Extract the imageMetaRegistry object from the JS file string
-	const imageMetaRegistry = extractObjectLiteral(jsFileString, 'imageMetaCollection');
+	const imageMetaRegistry = extractObjectLiteral(jsFileString, 'imageMetaRegistry');
 
 	return imageMetaRegistry;
 };
