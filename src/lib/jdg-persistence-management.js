@@ -1,4 +1,4 @@
-import { decrypt } from './jdg-utils.js';
+import { decrypt, extractObjectLiteral } from './jdg-utils.js';
 
 // Admin Cloudflare worker
 export const cfWorkerUrlAdmin = 'https://jdg-admin.jdeangoldstein.workers.dev';
@@ -163,20 +163,24 @@ export async function writeJsonFileToRepo(repoOwner, repoName, filePath, jsonCon
 	return result.success ? result : null;
 }
 
-export const fetchImageMetaCollection = async (repoName) => {
+// Fetch the imageMetaRegistry object from a given repo
+export const fetchImageMetaRegistry = async (repoName) => {
 	const url = new URL(cfRouteFetchPublicFile, cfWorkerUrlJdgGithub);
 	url.searchParams.set('repoOwner', jdgRepoOwner);
 	url.searchParams.set('repoName', repoName);
 	url.searchParams.set('filePath', imageMetaCollectionPath);
 
-	const response = await fetch(url.toString()); // No headers needed for GET
+	const response = await fetch(url.toString());
 
 	if (!response.ok) {
 		throw new Error(`Failed to fetch file: ${response.status}`);
 	}
 
 	const jsFileString = await response.text();
-	return jsFileString;
+	// Extract the imageMetaRegistry object from the JS file string
+	const imageMetaRegistry = extractObjectLiteral(jsFileString, 'imageMetaCollection');
+
+	return imageMetaRegistry;
 };
 
 //

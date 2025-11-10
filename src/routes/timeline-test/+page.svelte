@@ -9,7 +9,7 @@
 	import {
 		buildingDataCollectionKey,
 		familyTreeDataCollectionKey,
-		fetchImageMetaCollection,
+		fetchImageMetaRegistry,
 		fetchJsonFileList,
 		jdgBuildingDataRepoName,
 		jdgRepoOwner,
@@ -63,6 +63,7 @@
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
 	import JDGDatePicker from '$lib/components/Input/JDGDatePicker.svelte';
 	import jdgSaveStatus from '$lib/schemas/jdg-save-status.js';
+	import { imageMetaCollection } from '../image-meta-collection.js';
 
 	// Ensure this page allows text selection
 	allowTextSelection.set(true);
@@ -482,9 +483,8 @@
 		<JDGButton
 			label="Write image-meta-collection.js"
 			onClickFunction={async () => {
-				//await debugCorsWorker();
-				const jsContent = await fetchImageMetaCollection(jdgUiSvelteRepoName);
-				console.log('JS CONTENT', jsContent);
+				const imageMetaRegistry = await fetchImageMetaRegistry(jdgUiSvelteRepoName);
+				console.log(imageMetaCollection);
 			}}
 		/>
 	</JDGContentBoxFloating>

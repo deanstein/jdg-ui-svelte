@@ -515,18 +515,47 @@ export const getMaxElementHeightPx = (elementRef) => {
 
 export const upgradeImageMeta = (imageMeta) => {
 	let upgradedImageMeta = imageMeta;
-	// Only upgrade if the ID field is undefined or if the version is mismatched
+
+	// Instantiate and deepmatch if the version isn't matching
 	if (!imageMeta?.id || imageMeta.version !== jdgSchemaVersion) {
 		const newImageMeta = instantiateObject(jdgImageMeta);
 		upgradedImageMeta = deepMatchObjects(newImageMeta, imageMeta);
-		// If there's not already an ID, give it one
-		if (!upgradedImageMeta.id) {
-			upgradedImageMeta.id = uuidv4();
-		}
+
 		// Ensure the version is up to date
 		upgradedImageMeta.version = jdgSchemaVersion;
 	}
+
+	/*** FILL IN MISSING FIELDS ***/
+
+	// Add random ID if there's no ID
+	if (!upgradedImageMeta.id) {
+		upgradedImageMeta.id = uuidv4();
+	}
+	// Set the alt to the caption if the alt isn't defined
+	if (upgradedImageMeta.caption && !upgradedImageMeta.alt) {
+		upgradedImageMeta.alt = upgradedImageMeta.caption;
+	}
+
 	return upgradedImageMeta;
+};
+
+// Upgrade all entries of an imageMetaRegistry
+export const upgradeImageMetaRegistry = (registry) => {
+	const upgradeEntry = (entry) => {
+		if (entry && typeof entry === 'object' && !Array.isArray(entry)) {
+			// If it's an imageMeta object (has src or caption), upgrade it
+			if ('src' in entry || 'caption' in entry || 'alt' in entry) {
+				return upgradeImageMeta(entry);
+			}
+			// Otherwise, recurse into nested object
+			return Object.fromEntries(
+				Object.entries(entry).map(([key, value]) => [key, upgradeEntry(value)])
+			);
+		}
+		return entry; // Return as-is if not an object
+	};
+
+	return upgradeEntry(registry);
 };
 
 export const getMIMEType = (binaryData) => {
@@ -1046,15 +1075,6 @@ export const replaceCloudinaryAssetPath = (url, newPath) => {
 	} catch {
 		return null;
 	}
-};
-
-// ensures that alt is the same as caption if not provided
-export const postProcessImageMeta = (jdgImageMeta) => {
-	// alt is likely the same as caption, unless already specified
-	if (jdgImageMeta.caption && !jdgImageMeta.alt) {
-		jdgImageMeta.alt = jdgImageMeta.caption;
-	}
-	return jdgImageMeta;
 };
 
 export const addCloudinaryUrlTransformation = (url, transformation = 'f_auto') => {
