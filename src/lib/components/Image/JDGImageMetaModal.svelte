@@ -85,71 +85,74 @@
 	subtitle={null}
 	onClickCloseButton={() => {
 		showImageMetaModal.set(false);
+		draftImageMeta.set(undefined);
 	}}
 	closeOnOverlayClick={false}
 >
 	<div slot="modal-content-slot" class="image-meta-modal-scrollable">
-		<!-- Image preview -->
-		<div class="image-preview-wrapper">
-			<JDGImageTile imageMeta={$draftImageMeta} maxHeight="20svh" cropToFillContainer={false} />
-		</div>
-		<!-- Read-only values -->
-		<JDGInputContainer label="ID">
-			{$draftImageMeta.id}
-		</JDGInputContainer>
-		<JDGInputContainer label="Version">
-			{$draftImageMeta.version}
-		</JDGInputContainer>
-		<JDGInputContainer label="Source">
-			<div class="image-src-string">
-				${$draftImageMeta.src}
+		{#if $draftImageMeta}
+			<!-- Image preview -->
+			<div class="image-preview-wrapper">
+				<JDGImageTile imageMeta={$draftImageMeta} maxHeight="20svh" cropToFillContainer={false} />
 			</div>
-		</JDGInputContainer>
-		<!-- Editable values -->
-		<JDGInputContainer label="Path">
-			<JDGTextInput inputValue={getCloudinaryAssetPath($draftImageMeta.src)} />
-		</JDGInputContainer>
-		<div class="upload-button-container">
-			<JDGButton
-				label="Upload..."
-				faIcon="fa-upload"
-				onClickFunction={onClickFileUpload}
-				paddingLeftRight="10px"
-				paddingTopBottom="5px"
-			/>
-			<!-- Hidden file input for button to trigger upload -->
-			<input
-				type="file"
-				style="display: none;"
-				on:change={onClickFileUpload}
-				bind:this={fileInput}
-			/>
-		</div>
-		<JDGInputContainer label="Title">
-			<JDGTextInput inputValue={$draftImageMeta.title} />
-		</JDGInputContainer>
-		<JDGInputContainer label="Caption">
-			<JDGTextInput inputValue={$draftImageMeta.caption} />
-		</JDGInputContainer>
-		<JDGInputContainer label="Alt">
-			<JDGTextInput inputValue={$draftImageMeta.alt} />
-		</JDGInputContainer>
-		<JDGInputContainer label="Attribution">
-			<JDGTextInput inputValue={$draftImageMeta.attribution} />
-		</JDGInputContainer>
-		<JDGInputContainer label="Show background blur?">
-			<label>
-				<input type="radio" bind:group={$draftImageMeta.showBackgroundBlur} value={true} />
-				Yes
-			</label>
-			<label>
-				<input type="radio" bind:group={$draftImageMeta.showBackgroundBlur} value={false} />
-				No
-			</label>
-		</JDGInputContainer>
-		<JDGInputContainer label="Toolbar alignment">
-			<JDGTextInput inputValue={$draftImageMeta.toolbarAlignment} />
-		</JDGInputContainer>
+			<!-- Read-only values -->
+			<JDGInputContainer label="ID">
+				{$draftImageMeta.id}
+			</JDGInputContainer>
+			<JDGInputContainer label="Version">
+				{$draftImageMeta.version}
+			</JDGInputContainer>
+			<JDGInputContainer label="Source">
+				<div class="image-src-string">
+					${$draftImageMeta.src}
+				</div>
+			</JDGInputContainer>
+			<!-- Editable values -->
+			<JDGInputContainer label="Path">
+				<JDGTextInput inputValue={getCloudinaryAssetPath($draftImageMeta.src)} />
+			</JDGInputContainer>
+			<div class="upload-button-container">
+				<JDGButton
+					label="Upload..."
+					faIcon="fa-upload"
+					onClickFunction={onClickFileUpload}
+					paddingLeftRight="10px"
+					paddingTopBottom="5px"
+				/>
+				<!-- Hidden file input for button to trigger upload -->
+				<input
+					type="file"
+					style="display: none;"
+					on:change={onClickFileUpload}
+					bind:this={fileInput}
+				/>
+			</div>
+			<JDGInputContainer label="Title">
+				<JDGTextInput inputValue={$draftImageMeta.title} />
+			</JDGInputContainer>
+			<JDGInputContainer label="Caption">
+				<JDGTextInput inputValue={$draftImageMeta.caption} />
+			</JDGInputContainer>
+			<JDGInputContainer label="Alt">
+				<JDGTextInput inputValue={$draftImageMeta.alt} />
+			</JDGInputContainer>
+			<JDGInputContainer label="Attribution">
+				<JDGTextInput inputValue={$draftImageMeta.attribution} />
+			</JDGInputContainer>
+			<JDGInputContainer label="Show background blur?">
+				<label>
+					<input type="radio" bind:group={$draftImageMeta.showBackgroundBlur} value={true} />
+					Yes
+				</label>
+				<label>
+					<input type="radio" bind:group={$draftImageMeta.showBackgroundBlur} value={false} />
+					No
+				</label>
+			</JDGInputContainer>
+			<JDGInputContainer label="Toolbar alignment">
+				<JDGTextInput inputValue={$draftImageMeta.toolbarAlignment} />
+			</JDGInputContainer>
+		{/if}
 	</div>
 </JDGModal>
 
