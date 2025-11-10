@@ -486,6 +486,5 @@ const imageMetaRegistry = {
 
 // Upgrade the registry - this upgrades and post-processes each imageMeta
 const upgradedimageMetaRegistry = upgradeImageMetaRegistry(imageMetaRegistry);
-console.log(upgradedimageMetaRegistry);
 
 export { upgradedimageMetaRegistry as imageMetaRegistry };
