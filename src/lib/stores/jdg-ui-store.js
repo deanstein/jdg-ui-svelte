@@ -1,7 +1,7 @@
 import { derived, writable } from 'svelte/store';
 
 /*** ADMINISTRATION ***/
-export let isAdminMode = writable(true);
+export let isAdminMode = writable(false);
 export let showAdminLoginModal = writable(false);
 export let postAdminLoginFunction = writable(() => {});
 

@@ -81,6 +81,11 @@ export const getIsObjectInArray = (array, obj) => {
 	return array.some((item) => item?.id === obj?.id);
 };
 
+export const getIsObjectInObject = (objToSearch, key, value) => {
+	if (!objToSearch || !key || typeof value === 'undefined') return false;
+	return Object.values(objToSearch).some((nested) => nested?.[key] === value);
+};
+
 export const removeValueFromArray = (array, value) => {
 	const index = array.indexOf(value);
 	if (index > -1) {

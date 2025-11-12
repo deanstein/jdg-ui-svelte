@@ -1,5 +1,6 @@
 <script>
 	import { MetaTags } from 'svelte-meta-tags';
+
 	import jdgNavItem from '$lib/schemas/jdg-nav-item.js';
 	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
@@ -18,6 +19,7 @@
 	import sharedStrings from './shared-strings.js';
 	import { showDevTools } from '$lib/stores/jdg-ui-store.js';
 	import { toggleDevTools } from '$lib/jdg-state-management.js';
+	import { imageMetaRegistry } from './image-meta-registry.js';
 
 	// define the nav items in the header
 	const navItemHome = instantiateObject(jdgNavItem);
@@ -88,6 +90,7 @@
 	}}
 />
 <JDGAppContainer
+	{imageMetaRegistry}
 	accentColors={jdgColors.accentColorsJDG}
 	linkColorContrastAdjustment={6}
 	{showHeaderStripes}

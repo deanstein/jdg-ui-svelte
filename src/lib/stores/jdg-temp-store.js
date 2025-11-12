@@ -4,12 +4,19 @@ import { derived, writable } from 'svelte/store';
 export let adminFormPassphrase = writable(undefined);
 
 /*** SAVE STATUS ***/
+// Is the app saving, loading, uploading...?
 export let saveStatus = writable(null);
-export let saveFunction = writable(async () => {}); // what Save button should do
+// When an image is saved, also do this
+export let saveFunction = writable(async () => {});
 
 /*** IMAGE ***/
+// Read and write source when editing an imageMeta
 export let draftImageMeta = writable(undefined);
-export let draftImageMetaFolder = writable(undefined); // cloud folder containing this image
+ // Cloudinary folder containing this image
+export let draftImageMetaFolder = writable(undefined);
+// In adminMode, the static imageMetaRegistry in each website is 
+// duplicated to this store for editing
+export let draftImageMetaRegistry = writable({});
 
 /*** TIMELINE ***/
 export let draftTimelineHostCollection = writable(undefined);
@@ -24,8 +31,10 @@ const storeMap = {
 	adminFormPassphrase,
 	// save status
 	saveStatus,
-	// image
+	// image meta editing
 	draftImageMeta,
+	draftImageMetaFolder,
+	draftImageMetaRegistry,
 	// timeline
 	draftTimelineHostCollection,
 	isTimelineHostDrafting,

@@ -14,6 +14,7 @@
 		showDevModal,
 		showDevToolbarSticky,
 		showHeaderStripes as showHeaderStripesStore,
+		showImageMetaModal,
 		showImageViewerModal,
 		showTimelineEventModal,
 		headerHeightPx,
@@ -25,7 +26,7 @@
 		windowWidth,
 		appCssHyperlinkBar,
 		isTabletBreakpoint,
-		showImageMetaModal
+		isAdminMode,
 	} from '$lib/stores/jdg-ui-store.js';
 
 	import { getDistancePxToBottomOfHeader } from '$lib/jdg-ui-management.js';
@@ -54,13 +55,22 @@
 		setUpdatedHyperlinkStyleBar
 	} from '$lib/jdg-shared-styles.js';
 	import getJdgimageMetaRegistry from '$lib/jdg-image-meta-registry.js';
+	import { draftImageMetaRegistry } from '$lib/stores/jdg-temp-store.js';
 
+	// IMAGE META REGISTRY
+	// Consuming websites *must* provide an image meta regisry
+	export let imageMetaRegistry;
+
+	// STYLING OPTIONS
 	export let fontFamily = jdgFonts.body;
 	export let appLoadingIconSrc = getJdgimageMetaRegistry().jdg_logo_ui.src;
 	export let accentColors = jdgColors.accentColorsJDG;
-	export let linkColorDefault = accentColors[0]; // color for the "banner" hyperlink style
-	export let linkColorSimple = accentColors[0]; // color for the simple hyperlink style
-	export let linkColorContrastAdjustment = 10; // how much the link color will be adjusted for contrast with text
+	// "Banner under text" hyperlink style
+	export let linkColorDefault = accentColors[0];
+	// "Simple" hyperlink style
+	export let linkColorSimple = accentColors[0];
+	// How much the link color will be adjusted for contrast with text
+	export let linkColorContrastAdjustment = 10; 
 	export let loadingSpinnerColor = accentColors[0];
 	export let showHeaderStripes = true;
 	export let showScrollToTopButton = true;
@@ -137,20 +147,21 @@
 	`;
 
 	onMount(async () => {
-		// call onPageResize() once for initialization
+		// Call onPageResize() once for initialization
 		setTimeout(onPageResize, 0);
 
-		await tick(); // delay until layout and all children are loaded
+		await tick(); // Delay until layout and all children are loaded
 		isAppLoaded = true;
 
-		// use the text selection prop to set the state initially
+		// Use the text selection prop to set the state initially
 		allowTextSelectionStore.set(allowTextSelection);
 
-		// set UI state based on props
+		// Set UI state based on props
 		appFontFamily.set(fontFamily);
 		appAccentColors.set(accentColors);
 		showHeaderStripesStore.set(showHeaderStripes);
-		// update shared style states
+
+		// Update shared style states
 		setUpdatedHyperlinkStyleBar(
 			linkColorDefault,
 			linkColorContrastAdjustment,
@@ -160,18 +171,32 @@
 		);
 		setUpdatedHyperlinkStyleSimple(linkColorSimple);
 
-		// set the shared url store once by fetching the json
-		// note that this must be below the setTimeout above
+		// Set the shared url store once by fetching the json
+		// Note: This must be below the setTimeout above
 		const updatedSharedUrlsJson = await fetchJsonFromRepo(
 			jdgRepoOwner,
 			jdgUiSvelteRepoName,
 			jdgSharedUrls.jdgSharedUrlsStoreFileName
 		);
 		if (updatedSharedUrlsJson) {
-			// ensure the existing store structure is merged with the new json
+			// Ensure the existing store structure is merged with the new json
 			jdgSharedUrlsStore.set({ ...jdgSharedUrlsStore, ...updatedSharedUrlsJson });
 		}
+
+		// If the app is running locally, 
+		// set isAdminMode to true by default
+		if (window.location.hostname === 'localhost') {
+			isAdminMode.set(true);
+		};
 	});
+
+	// If isAdminMode changes to true,
+	// hydrate the imageMetaAdminRegistry store for editing
+	$: {
+		if ($isAdminMode) {
+			draftImageMetaRegistry.set(imageMetaRegistry);
+		}
+	}
 
 	let appContainerCssDynamic = css``;
 	$: {

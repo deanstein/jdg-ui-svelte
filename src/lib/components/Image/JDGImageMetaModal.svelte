@@ -3,11 +3,12 @@
 	import { get } from 'svelte/store';
 
 	import { showImageMetaModal } from '$lib/stores/jdg-ui-store.js';
-	import { draftImageMeta, draftImageMetaFolder } from '$lib/stores/jdg-temp-store.js';
-	import { getCloudinaryAssetPath, upgradeImageMeta } from '$lib/jdg-utils.js';
+	import { draftImageMeta, draftImageMetaFolder, draftImageMetaRegistry } from '$lib/stores/jdg-temp-store.js';
+	import { getCloudinaryAssetPath, getIsObjectInObject, upgradeImageMeta } from '$lib/jdg-utils.js';
 
 	import {
 		JDGButton,
+		JDGComposeToolbar,
 		JDGImageTile,
 		JDGInputContainer,
 		JDGModal,
@@ -17,6 +18,11 @@
 
 	// Bind the hidden fileInput to a custom button for file picking
 	let fileInput;
+	// Container for ComposeToolbar
+	let modalContainerRef;
+
+	// If true, show the banner and ensure the ComposeToolbar is shown
+	let hasUnsavedChanges = false;
 
 	const onClickFileUpload = async () => {
 		// Trigger file picker if no file is selected yet
@@ -81,7 +87,7 @@
 </script>
 
 <JDGModal
-	title={'Image Meta'}
+	title={getIsObjectInObject($draftImageMetaRegistry, 'id', $draftImageMeta?.id) ? 'Edit Image Meta' : 'New Image Meta'}
 	subtitle={null}
 	onClickCloseButton={() => {
 		showImageMetaModal.set(false);
@@ -89,7 +95,7 @@
 	}}
 	closeOnOverlayClick={false}
 >
-	<div slot="modal-content-slot" class="image-meta-modal-scrollable">
+	<div bind:this={modalContainerRef} slot="modal-content-slot" class="image-meta-modal-scrollable">
 		{#if $draftImageMeta}
 			<!-- Image preview -->
 			<div class="image-preview-wrapper">
@@ -153,6 +159,7 @@
 				<JDGTextInput inputValue={$draftImageMeta.toolbarAlignment} />
 			</JDGInputContainer>
 		{/if}
+		<JDGComposeToolbar parentRef={modalContainerRef} onClickCompose={() => {}} isEditActive />
 	</div>
 </JDGModal>
 
