@@ -12,9 +12,9 @@ export let saveFunction = writable(async () => {});
 /*** IMAGE ***/
 // Read and write source when editing an imageMeta
 export let draftImageMeta = writable(undefined);
- // Cloudinary folder containing this image
-export let draftImageMetaFolder = writable(undefined);
-// In adminMode, the static imageMetaRegistry in each website is 
+// Cloudinary folder containing this image
+export let draftImageMetaCloudinaryFolder = writable(undefined);
+// In adminMode, the static imageMetaRegistry in each website is
 // duplicated to this store for editing
 export let draftImageMetaRegistry = writable({});
 
@@ -33,7 +33,7 @@ const storeMap = {
 	saveStatus,
 	// image meta editing
 	draftImageMeta,
-	draftImageMetaFolder,
+	draftImageMetaFolder: draftImageMetaCloudinaryFolder,
 	draftImageMetaRegistry,
 	// timeline
 	draftTimelineHostCollection,

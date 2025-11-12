@@ -19,7 +19,10 @@
 		isMobileBreakpoint,
 		showHeaderStripes,
 		windowWidth,
-		imageViewerScale
+		imageViewerScale,
+		isAdminMode,
+		showImageMetaModal,
+		appAccentColors
 	} from '$lib/stores/jdg-ui-store.js';
 	import {
 		addImageLoading,
@@ -35,10 +38,16 @@
 	} from '$lib/jdg-utils.js';
 
 	import { jdgBreakpoints, jdgDurations, jdgSizes } from '$lib/jdg-shared-styles.js';
-	import { JDGImageCaptionAttribution, JDGLoadingSpinner } from '$lib/index.js';
+	import {
+		JDGButton,
+		JDGImageCaptionAttribution,
+		JDGImageToolbar,
+		JDGLoadingSpinner
+	} from '$lib/index.js';
 
 	// show a local image while image is loading
 	import imagePlaceholder from '$lib/assets/raster/jdg-image-placeholder.png';
+	import { draftImageMeta } from '$lib/stores/jdg-temp-store.js';
 
 	// EXPORTS
 
@@ -694,8 +703,26 @@
 	bind:this={containerRef}
 	class="jdg-image-container {imageContainerCssDynamic}"
 >
-	<!-- only load the image if it's visible -->
+	<!-- Only load the image if it's visible -->
 	{#if isVisible}
+		<!-- Show the toolbar if in adminMode -->
+		{#if $isAdminMode}
+			<JDGImageToolbar {imageMeta}>
+				<JDGButton
+					onClickFunction={() => {
+						draftImageMeta.set(imageMeta);
+						showImageMetaModal.set(true);
+					}}
+					faIcon="fa-solid fa-pencil"
+					label={null}
+					paddingLeftRight={'8px'}
+					paddingTopBottom={'8px'}
+					backgroundColor={$appAccentColors[0]}
+					tooltip="Expand image"
+					doForceSquareAspect
+				/>
+			</JDGImageToolbar>
+		{/if}
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 		<img

@@ -3,7 +3,11 @@
 	import { get } from 'svelte/store';
 
 	import { showImageMetaModal } from '$lib/stores/jdg-ui-store.js';
-	import { draftImageMeta, draftImageMetaFolder, draftImageMetaRegistry } from '$lib/stores/jdg-temp-store.js';
+	import {
+		draftImageMeta,
+		draftImageMetaCloudinaryFolder,
+		draftImageMetaRegistry
+	} from '$lib/stores/jdg-temp-store.js';
 	import { getCloudinaryAssetPath, getIsObjectInObject, upgradeImageMeta } from '$lib/jdg-utils.js';
 
 	import {
@@ -12,6 +16,7 @@
 		JDGImageTile,
 		JDGInputContainer,
 		JDGModal,
+		JDGSaveStateBanner,
 		JDGTextArea,
 		JDGTextInput
 	} from '$lib/index.js';
@@ -37,7 +42,7 @@
 			return;
 		}
 
-		const folder = get(draftImageMetaFolder);
+		const folder = get(draftImageMetaCloudinaryFolder);
 		const fileName = get(draftImageMeta)?.id;
 
 		if (!folder || !fileName) {
@@ -82,12 +87,14 @@
 		// Upgrade the image meta
 		draftImageMeta.set(upgradeImageMeta(get(draftImageMeta)));
 		// Set a folder destination to write to
-		draftImageMetaFolder.set('jdg-ui-svelte');
+		draftImageMetaCloudinaryFolder.set('jdg-ui-svelte');
 	});
 </script>
 
 <JDGModal
-	title={getIsObjectInObject($draftImageMetaRegistry, 'id', $draftImageMeta?.id) ? 'Edit Image Meta' : 'New Image Meta'}
+	title={getIsObjectInObject($draftImageMetaRegistry, 'id', $draftImageMeta?.id)
+		? 'Edit Image Meta'
+		: 'New Image Meta'}
 	subtitle={null}
 	onClickCloseButton={() => {
 		showImageMetaModal.set(false);
@@ -96,6 +103,7 @@
 	closeOnOverlayClick={false}
 >
 	<div bind:this={modalContainerRef} slot="modal-content-slot" class="image-meta-modal-scrollable">
+		<JDGSaveStateBanner />
 		{#if $draftImageMeta}
 			<!-- Image preview -->
 			<div class="image-preview-wrapper">
@@ -114,7 +122,7 @@
 				</div>
 			</JDGInputContainer>
 			<!-- Editable values -->
-			<JDGInputContainer label="Path">
+			<JDGInputContainer label="Asset Path">
 				<JDGTextInput inputValue={getCloudinaryAssetPath($draftImageMeta.src)} />
 			</JDGInputContainer>
 			<div class="upload-button-container">
@@ -165,6 +173,7 @@
 
 <style>
 	.image-meta-modal-scrollable {
+		position: relative;
 		overflow-y: auto;
 	}
 

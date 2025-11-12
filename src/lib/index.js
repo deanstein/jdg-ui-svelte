@@ -139,6 +139,9 @@ export { JDGImageTile };
 import JDGImageThumbnailGroup from './components/Image/JDGImageThumbnailGroup.svelte';
 export { JDGImageThumbnailGroup };
 
+import JDGImageToolbar from './components/Image/JDGImageToolbar.svelte';
+export { JDGImageToolbar };
+
 import JDGImageViewerModal from './components/Image/JDGImageViewerModal.svelte';
 export { JDGImageViewerModal };
 

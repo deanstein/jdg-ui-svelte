@@ -26,7 +26,7 @@
 		windowWidth,
 		appCssHyperlinkBar,
 		isTabletBreakpoint,
-		isAdminMode,
+		isAdminMode
 	} from '$lib/stores/jdg-ui-store.js';
 
 	import { getDistancePxToBottomOfHeader } from '$lib/jdg-ui-management.js';
@@ -70,7 +70,7 @@
 	// "Simple" hyperlink style
 	export let linkColorSimple = accentColors[0];
 	// How much the link color will be adjusted for contrast with text
-	export let linkColorContrastAdjustment = 10; 
+	export let linkColorContrastAdjustment = 10;
 	export let loadingSpinnerColor = accentColors[0];
 	export let showHeaderStripes = true;
 	export let showScrollToTopButton = true;
@@ -183,11 +183,11 @@
 			jdgSharedUrlsStore.set({ ...jdgSharedUrlsStore, ...updatedSharedUrlsJson });
 		}
 
-		// If the app is running locally, 
+		// If the app is running locally,
 		// set isAdminMode to true by default
 		if (window.location.hostname === 'localhost') {
 			isAdminMode.set(true);
-		};
+		}
 	});
 
 	// If isAdminMode changes to true,
