@@ -38,8 +38,8 @@
 				draftImageMeta.set(newImageMeta);
 				showImageMetaModal.set(true);
 			}}
-			faIcon={'fa-upload'}
-			label={'Upload Image'}
+			faIcon={'fa-square-plus'}
+			label={'Add New Image'}
 			backgroundColor={jdgColors.buttonColor}
 			paddingTopBottom="5px"
 			paddingLeftRight="10px"
