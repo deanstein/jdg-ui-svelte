@@ -25,6 +25,7 @@
 
 	const onClickCloseButton = () => {
 		showAdminLoginModal.set(false);
+		postAdminLoginFunction.set(undefined);
 	};
 
 	const onClickSubmitButton = async () => {
