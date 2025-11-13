@@ -1,3 +1,4 @@
+import { requireAdminMode } from './jdg-ui-management.js';
 import {
 	appAccentColors,
 	highestZIndex,
@@ -170,8 +171,10 @@ export const getHighestZIndex = () => {
 //
 
 export const toggleDevTools = () => {
-	showDevTools.update((currentValue) => {
-		currentValue = !currentValue;
-		return currentValue;
+	requireAdminMode(() => {
+		showDevTools.update((currentValue) => {
+			currentValue = !currentValue;
+			return currentValue;
+		});
 	});
 };
