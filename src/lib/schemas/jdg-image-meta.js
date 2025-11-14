@@ -15,7 +15,7 @@ const jdgImageMeta = {
 	// In some contexts, images can have a toolbar
 	// the toolbar alignment may need to change
 	// depending on the content of the image
-	toolbarAlignment: 'right',
+	toolbarJustification: 'right',
 	version: jdgSchemaVersion
 };
 

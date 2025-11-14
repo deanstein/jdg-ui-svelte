@@ -286,7 +286,7 @@
 	$: {
 		dynamicExpandButtonOverlayCss = css`
 			width: ${justifyContent === 'center' ? '100%' : activeImageFittedWidthPx + 'px'};
-			justify-content: ${activeImageMeta?.toolbarAlignment};
+			justify-content: ${activeImageMeta?.toolbarJustification};
 			right: ${justifyContent !== 'center' ? '0' : ''};
 			padding: 10px
 				${(showBlurInUnfilledSpace && activeImageMeta.showBackgroundBlur) ||

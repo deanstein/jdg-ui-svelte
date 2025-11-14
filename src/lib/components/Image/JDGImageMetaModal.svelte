@@ -164,7 +164,7 @@
 				</label>
 			</JDGInputContainer>
 			<JDGInputContainer label="Toolbar alignment">
-				<JDGTextInput inputValue={$draftImageMeta.toolbarAlignment} />
+				<JDGTextInput inputValue={$draftImageMeta.toolbarJustification} />
 			</JDGInputContainer>
 		{/if}
 		<JDGComposeToolbar parentRef={modalContainerRef} onClickCompose={() => {}} isEditActive />
