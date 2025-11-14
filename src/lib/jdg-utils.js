@@ -250,28 +250,25 @@ export let replaceObjectLiteral = (jsFileString, variableName, newObjectBody) =>
 	return jsFileString.replace(pattern, `$1\n${newObjectBody}\n$3`);
 };
 
-export const deepMatchObjects = (dataToMatch, dataToChange, forceChangeToType = undefined) => {
-	if (forceChangeToType && typeof dataToChange !== 'object') {
-		dataToChange = forceChangeToType;
-	}
-
-	for (var key in dataToMatch) {
+export const deepMatchObjects = (dataToMatch, dataToChange) => {
+	for (const key in dataToMatch) {
 		if (!dataToChange.hasOwnProperty(key)) {
-			if (Array.isArray(dataToMatch[key])) {
-				dataToChange[key] = [];
-			} else if (typeof dataToMatch[key] === 'string') {
-				dataToChange[key] = '';
-			} else if (typeof dataToMatch[key] === 'boolean') {
-				dataToChange[key] = false;
-			} else if (typeof dataToMatch[key] === 'object') {
-				dataToChange[key] = {};
-				deepMatchObjects(dataToMatch[key], dataToChange[key], forceChangeToType);
-			}
-		} else if (typeof dataToMatch[key] === 'object') {
-			deepMatchObjects(dataToMatch[key], dataToChange[key], forceChangeToType);
+			// Directly copy the value from dataToMatch
+			dataToChange[key] = Array.isArray(dataToMatch[key])
+				? []
+				: typeof dataToMatch[key] === 'object' && dataToMatch[key] !== null
+					? deepMatchObjects(dataToMatch[key], {})
+					: dataToMatch[key];
+		} else if (
+			typeof dataToMatch[key] === 'object' &&
+			dataToMatch[key] !== null &&
+			typeof dataToChange[key] === 'object' &&
+			dataToChange[key] !== null
+		) {
+			// Recurse into nested objects
+			deepMatchObjects(dataToMatch[key], dataToChange[key]);
 		}
 	}
-
 	return dataToChange;
 };
 
