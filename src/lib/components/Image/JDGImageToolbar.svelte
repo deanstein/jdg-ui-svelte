@@ -2,13 +2,13 @@
 	import { css } from '@emotion/css';
 
 	export let imageMeta;
+	export let toolbarAligment = "bottom";
 
 	let imageToolbarOverlayCss = css``;
 	$: {
 		imageToolbarOverlayCss = css`
-			width: 100%;
-			justify-content: ${imageMeta?.toolbarAlignment};
-			padding: 10px;
+			justify-content: ${imageMeta?.toolbarJustification};
+			align-items: ${toolbarAligment};
 		`;
 	}
 </script>
@@ -23,9 +23,12 @@
 	.image-toolbar-overlay {
 		position: absolute;
 		display: flex;
+		height: 100%;
+		width: 100%;
 		box-sizing: border-box;
 		right: 0;
 		bottom: 0;
+		padding: 10px;
 	}
 
 	.image-toolbar-container {

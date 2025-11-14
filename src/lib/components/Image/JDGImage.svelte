@@ -21,8 +21,7 @@
 		windowWidth,
 		imageViewerScale,
 		isAdminMode,
-		showImageMetaModal,
-		appAccentColors
+		showImageMetaModal
 	} from '$lib/stores/jdg-ui-store.js';
 	import {
 		addImageLoading,
@@ -37,7 +36,7 @@
 		instantiateObject
 	} from '$lib/jdg-utils.js';
 
-	import { jdgBreakpoints, jdgDurations, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgColors, jdgDurations, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import {
 		JDGButton,
 		JDGImageCaptionAttribution,
@@ -707,7 +706,7 @@
 	{#if isVisible}
 		<!-- Show the toolbar if in adminMode -->
 		{#if $isAdminMode}
-			<JDGImageToolbar {imageMeta}>
+			<JDGImageToolbar {imageMeta} toolbarAligment="top">
 				<JDGButton
 					onClickFunction={() => {
 						draftImageMeta.set(imageMeta);
@@ -717,7 +716,7 @@
 					label={null}
 					paddingLeftRight={'8px'}
 					paddingTopBottom={'8px'}
-					backgroundColor={$appAccentColors[0]}
+					backgroundColor={jdgColors.activeSecondary}
 					tooltip="Expand image"
 					doForceSquareAspect
 				/>
