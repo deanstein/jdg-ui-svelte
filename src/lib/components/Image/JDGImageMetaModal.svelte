@@ -167,7 +167,17 @@
 				<JDGTextInput inputValue={$draftImageMeta.toolbarJustification} />
 			</JDGInputContainer>
 		{/if}
-		<JDGComposeToolbar parentRef={modalContainerRef} onClickCompose={() => {}} isEditActive />
+		<JDGComposeToolbar
+			parentRef={modalContainerRef}
+			onClickCompose={() => {}}
+			onClickDone={() => {
+				showImageMetaModal.set(false);
+			}}
+			onClickCancel={() => {
+				showImageMetaModal.set(false);
+			}}
+			isEditActive
+		/>
 	</div>
 </JDGModal>
 
