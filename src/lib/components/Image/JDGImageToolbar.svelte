@@ -28,6 +28,7 @@
 		right: 0;
 		bottom: 0;
 		padding: 10px;
+		z-index: 1;
 	}
 
 	.image-toolbar-container {
