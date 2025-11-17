@@ -24,6 +24,13 @@
 
 	const [send, receive] = drawCrossfade(jdgDurations.fadeIn);
 
+	// Modal content should be able to scroll,
+	// despite JDGOverlay not scrolling by design
+	const allowScroll = (e) => {
+		// Stop the event from bubbling up to overlay
+		e.stopPropagation();
+	};
+
 	let modalContentContainerCss = css``;
 	$: {
 		modalContentContainerCss = css`
@@ -74,7 +81,11 @@
 					{/if}
 				</div>
 			{/if}
-			<div class="modal-content-slot {modalContentSlotCss}">
+			<div
+				class="modal-content-slot {modalContentSlotCss}"
+				on:wheel={allowScroll}
+				on:touchmove={allowScroll}
+			>
 				<slot name="modal-content-slot" />
 			</div>
 			<div class="modal-toolbar-slot">
@@ -149,6 +160,8 @@
 		align-items: center;
 		gap: 1vh;
 		min-height: 0;
+		overflow-y: auto;
+		height: 80vh;
 	}
 
 	.modal-toolbar-slot {

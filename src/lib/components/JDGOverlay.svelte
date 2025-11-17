@@ -14,9 +14,11 @@
 	export let closeOnOverlayClick = true;
 
 	let overlayRef;
-	const preventScroll = function (event) {
-		event.preventDefault();
-	};
+
+	// Generally, the content in an overlay shouldn't scroll the page
+	function preventScroll(e) {
+		e.preventDefault();
+	}
 
 	const overlayCss = css`
 		z-index: ${getHighestZIndex()};
