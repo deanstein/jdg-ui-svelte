@@ -1,5 +1,11 @@
 <script>
-	import { JDGContentBoxFloating, JDGContentContainer, JDGFullWidthContainer, JDGImageCompare, JDGImageTile } from '$lib/index.js';
+	import {
+		JDGContentBoxFloating,
+		JDGContentContainer,
+		JDGFullWidthContainer,
+		JDGImageCompare,
+		JDGImageTile
+	} from '$lib/index.js';
 	import { imageMetaRegistry } from '../image-meta-registry.js';
 </script>
 

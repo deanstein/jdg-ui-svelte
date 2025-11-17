@@ -2,7 +2,7 @@
 	import { css } from '@emotion/css';
 
 	export let imageMeta;
-	export let toolbarAligment = "bottom";
+	export let toolbarAligment = 'bottom';
 
 	let imageToolbarOverlayCss = css``;
 	$: {
