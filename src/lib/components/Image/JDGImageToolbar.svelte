@@ -24,7 +24,6 @@
 		position: absolute;
 		display: flex;
 		height: 100%;
-		width: 100%;
 		box-sizing: border-box;
 		right: 0;
 		bottom: 0;
