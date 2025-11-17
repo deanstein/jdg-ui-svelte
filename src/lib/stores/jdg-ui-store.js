@@ -9,6 +9,10 @@ export let postAdminLoginFunction = writable(() => {});
 export let isMobileBreakpoint = writable(false);
 export let isTabletBreakpoint = writable(false);
 
+/*** SIZES ***/
+export let clientWidth = writable(0); // window minus scrollbar
+export let windowWidth = writable(0); // full window width, including scrollbar
+
 /*** FONTS, COLORS, SETTINGS ***/
 export let appAccentColors = writable([]);
 export let appFontFamily = writable('');
@@ -16,6 +20,8 @@ export let allowTextSelection = writable(false);
 // shared dynamic emotion css styles
 export let appCssHyperlinkBar = writable('');
 export let appCssHyperlinkSimple = writable('');
+// components can use this to ensure they're always on top
+export let highestZIndex = writable(1);
 
 /*** SCROLLING ***/
 export let isScrolling = writable(false);
@@ -45,11 +51,6 @@ export let showImageMetaModal = writable(false);
 /*** TIMELINE ***/
 export let showTimelineEventModal = writable(false);
 export let isTimelineEventModalEditable = writable(false);
-
-/*** QUANTITIES ***/
-export let clientWidth = writable(0); // window minus scrollbar
-export let windowWidth = writable(0); // full window width, including scrollbar
-export let highestZIndex = writable(1);
 
 /*** DELETION ***/
 export let showDeleteModal = writable(false);
