@@ -3,12 +3,12 @@
 	import { get } from 'svelte/store';
 
 	import { showImageMetaModal } from '$lib/stores/jdg-ui-store.js';
+	import { draftImageMeta, draftImageMetaRegistry } from '$lib/stores/jdg-temp-store.js';
 	import {
-		draftImageMeta,
-		draftImageMetaCloudinaryFolder,
-		draftImageMetaRegistry
-	} from '$lib/stores/jdg-temp-store.js';
-	import { getCloudinaryAssetPath, getIsObjectInObject, upgradeImageMeta } from '$lib/jdg-utils.js';
+		extractCloudinaryAssetpath,
+		getIsObjectInObject,
+		upgradeImageMeta
+	} from '$lib/jdg-utils.js';
 
 	import {
 		JDGButton,
@@ -17,7 +17,6 @@
 		JDGInputContainer,
 		JDGModal,
 		JDGSaveStateBanner,
-		JDGTextArea,
 		JDGTextInput
 	} from '$lib/index.js';
 
@@ -42,20 +41,20 @@
 			return;
 		}
 
-		const folder = get(draftImageMetaCloudinaryFolder);
+		const assetPath = extractCloudinaryAssetpath($draftImageMeta.src);
 		const fileName = get(draftImageMeta)?.id;
 
-		if (!folder || !fileName) {
+		if (!assetPath || !fileName) {
 			console.error('Missing folder or fileName for upload.');
 			return;
 		}
 
-		console.log(`📤 Uploading "${file.name}" to "${folder}/${fileName}"...`);
+		console.log(`📤 Uploading "${file.name}" to "${assetPath}/${fileName}"...`);
 
 		try {
 			const res = await fetch(
 				`https://jdg-cloudinary.jdeangoldstein.workers.dev/upload-image?folder=${encodeURIComponent(
-					folder
+					assetPath
 				)}&fileName=${encodeURIComponent(fileName)}`,
 				{
 					method: 'POST',
@@ -86,8 +85,6 @@
 	onMount(() => {
 		// Upgrade the image meta
 		draftImageMeta.set(upgradeImageMeta(get(draftImageMeta)));
-		// Set a folder destination to write to
-		draftImageMetaCloudinaryFolder.set('jdg-ui-svelte');
 	});
 </script>
 
@@ -123,7 +120,7 @@
 			</JDGInputContainer>
 			<!-- Editable values -->
 			<JDGInputContainer label="Asset Path">
-				<JDGTextInput inputValue={getCloudinaryAssetPath($draftImageMeta.src)} />
+				<JDGTextInput inputValue={extractCloudinaryAssetpath($draftImageMeta.src)} />
 			</JDGInputContainer>
 			<div class="upload-button-container">
 				<JDGButton

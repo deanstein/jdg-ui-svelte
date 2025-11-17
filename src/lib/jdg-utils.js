@@ -1031,7 +1031,8 @@ export const isUrlCloudinary = (url) => {
 	}
 };
 
-export const getCloudinaryAssetPath = (url) => {
+// Extract an asset path from a Cloudinary URL
+export const extractCloudinaryAssetpath = (url) => {
 	try {
 		const parts = new URL(url).pathname.split('/');
 		const uploadIndex = parts.indexOf('upload');
