@@ -7,6 +7,7 @@
 	import {
 		extractCloudinaryAssetpath,
 		getIsObjectInObject,
+		replaceCloudinaryAssetPath,
 		upgradeImageMeta
 	} from '$lib/jdg-utils.js';
 
@@ -27,6 +28,17 @@
 
 	// If true, show the banner and ensure the ComposeToolbar is shown
 	let hasUnsavedChanges = false;
+
+	// The asset path is extracted from the image src
+	// so create a reactive derived variable:
+	$: assetPath = extractCloudinaryAssetpath($draftImageMeta?.src);
+	const onAssetPathChange = (e) => {
+		const newPath = e.target.value;
+		draftImageMeta.update((meta) => ({
+			...meta,
+			src: replaceCloudinaryAssetPath(meta.src, newPath)
+		}));
+	};
 
 	const onClickFileUpload = async () => {
 		// Trigger file picker if no file is selected yet
@@ -106,6 +118,7 @@
 			<div class="image-preview-wrapper">
 				<JDGImageTile imageMeta={$draftImageMeta} maxHeight="20svh" cropToFillContainer={false} />
 			</div>
+
 			<!-- Read-only values -->
 			<JDGInputContainer label="ID">
 				{$draftImageMeta.id}
@@ -118,9 +131,10 @@
 					${$draftImageMeta.src}
 				</div>
 			</JDGInputContainer>
+
 			<!-- Editable values -->
 			<JDGInputContainer label="Asset Path">
-				<JDGTextInput inputValue={extractCloudinaryAssetpath($draftImageMeta.src)} />
+				<JDGTextInput inputValue={assetPath} onInputFunction={onAssetPathChange} />
 			</JDGInputContainer>
 			<div class="upload-button-container">
 				<JDGButton
@@ -142,13 +156,13 @@
 				<JDGTextInput inputValue={$draftImageMeta.title} />
 			</JDGInputContainer>
 			<JDGInputContainer label="Caption">
-				<JDGTextInput inputValue={$draftImageMeta.caption} />
+				<JDGTextInput bind:inputValue={$draftImageMeta.caption} />
 			</JDGInputContainer>
 			<JDGInputContainer label="Alt">
-				<JDGTextInput inputValue={$draftImageMeta.alt} />
+				<JDGTextInput bind:inputValue={$draftImageMeta.alt} />
 			</JDGInputContainer>
 			<JDGInputContainer label="Attribution">
-				<JDGTextInput inputValue={$draftImageMeta.attribution} />
+				<JDGTextInput bind:inputValue={$draftImageMeta.attribution} />
 			</JDGInputContainer>
 			<JDGInputContainer label="Show background blur?">
 				<label>
@@ -161,7 +175,7 @@
 				</label>
 			</JDGInputContainer>
 			<JDGInputContainer label="Toolbar alignment">
-				<JDGTextInput inputValue={$draftImageMeta.toolbarJustification} />
+				<JDGTextInput bind:inputValue={$draftImageMeta.toolbarJustification} />
 			</JDGInputContainer>
 		{/if}
 		<JDGComposeToolbar
