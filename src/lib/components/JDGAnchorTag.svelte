@@ -1,4 +1,5 @@
 <script>
+	import { browser } from '$app/environment';
 	import { onDestroy, onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
@@ -28,6 +29,7 @@
 
 	// is this anchor tag in the URL bar?
 	const getIsAnchorTagInURL = () => {
+		if (!browser) return false; // or null, depending on your needs
 		const hash = window.location.hash;
 		return hash && hash.substring(1) === anchorTagString;
 	};
@@ -79,7 +81,9 @@
 	});
 
 	onDestroy(() => {
-		window.removeEventListener('hashchange', onHashChange);
+		if (browser) {
+			window.removeEventListener('hashchange', onHashChange);
+		}
 	});
 
 	const floatingBoxAnchorTagCss = css`
