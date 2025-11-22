@@ -198,6 +198,12 @@
 		}
 	}
 
+	// OPTIONAL DEBUG: Set sticky dev toolbar overlay content and show it
+	// $: {
+	// 	$devToolbarStickyContent = JSON.stringify($draftImageMeta);
+	// 	$showDevToolbarSticky = true;
+	// }
+
 	let appContainerCssDynamic = css``;
 	$: {
 		appContainerCssDynamic = css`
