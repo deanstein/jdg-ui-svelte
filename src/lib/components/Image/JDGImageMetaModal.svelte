@@ -25,7 +25,6 @@
 		JDGInputContainer,
 		JDGModal,
 		JDGNotificationBanner,
-		JDGSaveStateBanner,
 		JDGTextInput
 	} from '$lib/index.js';
 	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
@@ -48,12 +47,6 @@
 	// If there are unsaved changes,
 	// show a banner and show the cancel/done buttons
 	$: hasUnsavedChanges = !areObjectsEqual($draftImageMeta, originalDraftMeta);
-	$: {
-		if (hasUnsavedChanges) {
-			saveStatus.set(jdgSaveStatus.unsavedChanges);
-			saveFunction.set(async () => {});
-		}
-	}
 
 	// When the asset path changes, update the cloudinary URL
 	const onAssetPathChange = (e) => {
@@ -139,8 +132,12 @@
 	closeOnOverlayClick={false}
 >
 	<div bind:this={modalContainerRef} slot="modal-content-slot" class="image-meta-modal-scrollable">
-		<JDGSaveStateBanner showBanner={hasUnsavedChanges} />
 		{#if $draftImageMeta}
+			<JDGNotificationBanner
+				showBanner={hasUnsavedChanges}
+				notificationType={jdgNotificationTypes.warning}
+				message={'Changes detected. Next, click Done or Cancel below.'}
+			/>
 			<!-- Image preview -->
 			<div class="image-preview-wrapper">
 				<JDGImageTile imageMeta={$draftImageMeta} maxHeight="20svh" cropToFillContainer={false} />
