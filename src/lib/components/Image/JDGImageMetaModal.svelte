@@ -3,11 +3,18 @@
 	import { get } from 'svelte/store';
 
 	import { showImageMetaModal } from '$lib/stores/jdg-ui-store.js';
-	import { draftImageMeta, draftImageMetaRegistry } from '$lib/stores/jdg-temp-store.js';
 	import {
+		draftImageMeta,
+		draftImageMetaRegistry,
+		saveFunction,
+		saveStatus
+	} from '$lib/stores/jdg-temp-store.js';
+	import {
+		areObjectsEqual,
 		extractCloudinaryAssetpath,
 		getIsObjectInObject,
-		replaceCloudinaryAssetPath,
+		instantiateObject,
+		replaceCloudinaryAssetPath as replaceCloudinaryAssetPathInUrl,
 		upgradeImageMeta
 	} from '$lib/jdg-utils.js';
 
@@ -17,26 +24,43 @@
 		JDGImageTile,
 		JDGInputContainer,
 		JDGModal,
+		JDGNotificationBanner,
 		JDGSaveStateBanner,
 		JDGTextInput
 	} from '$lib/index.js';
+	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
+	import jdgSaveStatus from '$lib/schemas/jdg-save-status.js';
 
 	// Bind the hidden fileInput to a custom button for file picking
 	let fileInput;
 	// Container for ComposeToolbar
 	let modalContainerRef;
 
-	// If true, show the banner and ensure the ComposeToolbar is shown
-	let hasUnsavedChanges = false;
+	// Keep track of the original metal for comparison purposes
+	let originalDraftMeta;
 
 	// The asset path is extracted from the image src
 	// so create a reactive derived variable:
 	$: assetPath = extractCloudinaryAssetpath($draftImageMeta?.src);
+	// When the asset path is modified,
+	// show a banner that the image must be deleted and reuploaded
+	$: hasAssetPathChanged = $draftImageMeta?.src !== originalDraftMeta?.src;
+	// If there are unsaved changes,
+	// show a banner and show the cancel/done buttons
+	$: hasUnsavedChanges = !areObjectsEqual($draftImageMeta, originalDraftMeta);
+	$: {
+		if (hasUnsavedChanges) {
+			saveStatus.set(jdgSaveStatus.unsavedChanges);
+			saveFunction.set(async () => {});
+		}
+	}
+
+	// When the asset path changes, update the cloudinary URL
 	const onAssetPathChange = (e) => {
 		const newPath = e.target.value;
 		draftImageMeta.update((meta) => ({
 			...meta,
-			src: replaceCloudinaryAssetPath(meta.src, newPath)
+			src: replaceCloudinaryAssetPathInUrl(meta.src, newPath)
 		}));
 	};
 
@@ -97,6 +121,9 @@
 	onMount(() => {
 		// Upgrade the image meta
 		draftImageMeta.set(upgradeImageMeta(get(draftImageMeta)));
+
+		// Store the image meta to compare before any changes
+		originalDraftMeta = instantiateObject($draftImageMeta);
 	});
 </script>
 
@@ -112,7 +139,7 @@
 	closeOnOverlayClick={false}
 >
 	<div bind:this={modalContainerRef} slot="modal-content-slot" class="image-meta-modal-scrollable">
-		<JDGSaveStateBanner />
+		<JDGSaveStateBanner showBanner={hasUnsavedChanges} />
 		{#if $draftImageMeta}
 			<!-- Image preview -->
 			<div class="image-preview-wrapper">
@@ -133,6 +160,11 @@
 			</JDGInputContainer>
 
 			<!-- Editable values -->
+			<JDGNotificationBanner
+				showBanner={hasAssetPathChanged}
+				notificationType={jdgNotificationTypes.warning}
+				message={'The asset path or name has changed. This will require deletion and reupload.'}
+			/>
 			<JDGInputContainer label="Asset Path">
 				<JDGTextInput inputValue={assetPath} onInputFunction={onAssetPathChange} />
 			</JDGInputContainer>

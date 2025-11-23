@@ -4,7 +4,7 @@
 	import { JDGButton, JDGNotificationBanner, runFnSyncOrAsync } from '$lib/index.js';
 	import jdgSaveStatus from '$lib/schemas/jdg-save-status.js';
 
-	let showBanner;
+	export let showBanner = false;
 
 	// Show the banner when there's a valid save status
 	$: {
