@@ -8,7 +8,7 @@
 
 	import { incrementHighestZIndex } from '$lib/jdg-state-management.js';
 	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
-	import { darkenColor, getIsValueInArray } from '$lib/jdg-utils.js';
+	import { darkenColor } from '$lib/jdg-utils.js';
 	import { JDGButton } from '$lib/index.js';
 
 	export let showBanner = true;
