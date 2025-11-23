@@ -18,8 +18,9 @@ export const cfRouteWritePublicJsFile = '/write-public-js-file';
 export const buildingDataCollectionKey = 'allBuildings';
 export const familyTreeDataCollectionKey = 'allPeople';
 
-// Repo names
+// Repos are all owned by this username
 export const jdgRepoOwner = 'deanstein';
+// All repo names
 export const jdgUiSvelteRepoName = 'jdg-ui-svelte';
 export const jdgWebsiteRepoName = 'jdg-website';
 export const jdgBuildingDataRepoName = 'building-data';
@@ -38,6 +39,14 @@ export const encryptedPAT =
 export const imageMetaRegistryPath = 'src/routes/image-meta-registry.js';
 // Typical imageMetaRegistry variable name, for finding within the .js file
 export const imageMetaRegistryVarName = 'imageMetaRegistry';
+// All repos containing an imageMetaRegistry
+// that may require checking before changing a Cloudinary asset path
+const allImageMetaRegistryRepoNames = [
+	jdgUiSvelteRepoName,
+	jdgWebsiteRepoName,
+	pmx3dWebsiteRepoName,
+	ccpWebsiteRepoName
+];
 
 // TODO: Remove, this won't be needed once we switch entirely to Cloudflare workers
 const getAuthHeaders = (password) => ({

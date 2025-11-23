@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
 
-	import { showImageMetaModal } from '$lib/stores/jdg-ui-store.js';
+	import { repoName, showImageMetaModal } from '$lib/stores/jdg-ui-store.js';
 	import {
 		draftImageMeta,
 		draftImageMetaRegistry,
@@ -157,10 +157,17 @@
 			</JDGInputContainer>
 
 			<!-- Editable values -->
+			<!-- Show a banner when the asset path has changed -->
 			<JDGNotificationBanner
 				showBanner={hasAssetPathChanged}
 				notificationType={jdgNotificationTypes.warning}
 				message={'The asset path or name has changed. This will require deletion and reupload.'}
+			/>
+			<!-- Show a banner when we can't determine other repo impacts due to asset path change -->
+			<JDGNotificationBanner
+				showBanner={hasAssetPathChanged && $repoName === undefined}
+				notificationType={jdgNotificationTypes.error}
+				message={'No repo name set. \nImages in other repos may break as a result of this change.'}
 			/>
 			<JDGInputContainer label="Asset Path">
 				<JDGTextInput inputValue={assetPath} onInputFunction={onAssetPathChange} />

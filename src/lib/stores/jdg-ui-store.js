@@ -4,6 +4,9 @@ import { derived, writable } from 'svelte/store';
 export let isAdminMode = writable(false);
 export let showAdminLoginModal = writable(false);
 export let postAdminLoginFunction = writable(() => {});
+// Consuming websites must set this to search other website repos
+// when modifying shared Cloudinary asset paths
+export let repoName = writable(undefined);
 
 /*** BREAKPOINTS ***/
 export let isMobileBreakpoint = writable(false);
@@ -68,6 +71,9 @@ export let devModalContent = writable('No data found in $devModalContent state.'
 const storeMap = {
 	// administration
 	isAdminMode,
+	showAdminLoginModal,
+	postAdminLoginFunction,
+	repoName,
 	// breakpoints
 	isMobileBreakpoint,
 	isTabletBreakpoint,
