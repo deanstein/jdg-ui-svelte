@@ -12,6 +12,8 @@
 	export let showTitleBar = true;
 	export let onCloseFunction = () => {};
 	export let closeOnOverlayClick = true;
+	// Blur may degrade performance
+	export let useBlur = true;
 
 	let overlayRef;
 
@@ -23,7 +25,7 @@
 	const overlayCss = css`
 		z-index: ${getHighestZIndex()};
 		background-color: ${colorRgba};
-		backdrop-filter: blur(${jdgSizes.blurSizeMedium});
+		backdrop-filter: ${useBlur ? 'blur(${jdgSizes.blurSizeMedium})' : ''};
 	`;
 
 	const closeButtonCss = css`
