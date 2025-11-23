@@ -23,24 +23,23 @@
 	}
 </script>
 
-{#if showBanner}
-	<JDGNotificationBanner
-		message={$saveStatus.label}
-		notificationType={$saveStatus.notificationType}
-		standalone={true}
-		showCloseButton={false}
-	>
-		{#if $saveStatus === jdgSaveStatus.unsavedChanges}
-			<JDGButton
-				label={'Save'}
-				faIcon={'fa-floppy-disk'}
-				onClickFunction={() => {
-					runFnSyncOrAsync($saveFunction);
-				}}
-				fontSize={'1.35svh'}
-				paddingTopBottom={'3px'}
-				paddingLeftRight={'10px'}
-			/>
-		{/if}
-	</JDGNotificationBanner>
-{/if}
+<JDGNotificationBanner
+	{showBanner}
+	message={$saveStatus?.label}
+	notificationType={$saveStatus?.notificationType}
+	standalone={true}
+	showCloseButton={false}
+>
+	{#if $saveStatus === jdgSaveStatus.unsavedChanges}
+		<JDGButton
+			label={'Save'}
+			faIcon={'fa-floppy-disk'}
+			onClickFunction={() => {
+				runFnSyncOrAsync($saveFunction);
+			}}
+			fontSize={'1.35svh'}
+			paddingTopBottom={'3px'}
+			paddingLeftRight={'10px'}
+		/>
+	{/if}
+</JDGNotificationBanner>
