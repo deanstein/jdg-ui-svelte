@@ -2,7 +2,7 @@
 	import { css } from '@emotion/css';
 
 	import { fade } from 'svelte/transition';
-
+	import { topLevelBannerCumulativeHeightPx } from '$lib/stores/jdg-ui-store.js';
 	import { getHighestZIndex } from '$lib/jdg-state-management.js';
 
 	import { JDGCloseIcon } from '$lib/index.js';
@@ -64,15 +64,15 @@
 
 	const overlayContentCss = css`
 	@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			max-height: calc(100vh - ${jdgSizes.headerHeightSm});
+			max-height: calc(100vh - ${jdgSizes.headerHeightSm} - ${$topLevelBannerCumulativeHeightPx}px);
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) and (max-width: ${
 			jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit
 		}) {
-			max-height: calc(100vh - ${jdgSizes.headerHeightMd});
+			max-height: calc(100vh - ${jdgSizes.headerHeightMd} - ${$topLevelBannerCumulativeHeightPx}px);
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			max-height: calc(100vh - ${jdgSizes.headerHeightLg});
+			max-height: calc(100vh - ${jdgSizes.headerHeightLg} - ${$topLevelBannerCumulativeHeightPx}px);
 		`;
 </script>
 
@@ -86,6 +86,7 @@
 	role="button"
 	tabindex="0"
 	transition:fade={{ duration: jdgDurations.default }}
+	style="top: ${$topLevelBannerCumulativeHeightPx}px;"
 >
 	{#if showTitleBar}
 		<div
@@ -124,7 +125,6 @@
 <style>
 	.jdg-overlay {
 		position: fixed;
-		top: 0;
 		left: 0;
 		width: 100%;
 		height: 100%;

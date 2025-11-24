@@ -1,5 +1,5 @@
 <script>
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
 	import { css } from '@emotion/css';
 	import { v4 as uuidv4 } from 'uuid';
@@ -9,21 +9,34 @@
 	import { incrementHighestZIndex } from '$lib/jdg-state-management.js';
 	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { darkenColor } from '$lib/jdg-utils.js';
-	import { JDGButton } from '$lib/index.js';
+	import { JDGButton, topLevelBannerCumulativeHeightPx } from '$lib/index.js';
 
 	export let showBanner = true;
-	export let notificationType = jdgNotificationTypes.information; // Inits color and icon
+	// Defines color and icon
+	export let notificationType = jdgNotificationTypes.information;
 	export let faIcon = 'fa-solid ' + notificationType.faIcon;
 	export let message = jdgNotificationTypes.information.message;
 	export let backgroundColor = undefined;
-	export let standalone = true; // set to false if included in a header already in a fixed position
+	// Set to true if banner should shift entire layout down
+	export let isTopLevel = false;
 	export let forceOnTop = false; // if true, will use z-index store to ensure always on top
 	export let showCloseButton = true;
 
-	let bannerId;
+	let bannerContainerRef;
+	let resizeObserver;
+	let bannerHeight = 0;
 
 	const onClickCloseButton = () => {
 		showBanner = false;
+	};
+
+	// Update the banner height in the store
+	const updateHeight = () => {
+		const newHeight = bannerContainerRef?.offsetHeight ?? 0;
+		if (newHeight !== bannerHeight) {
+			topLevelBannerCumulativeHeightPx.update((total) => total - bannerHeight + newHeight);
+			bannerHeight = newHeight;
+		}
 	};
 
 	let notificationContainerCss = css`
@@ -37,10 +50,20 @@
 	`;
 
 	onMount(() => {
-		if (standalone) {
-			// give this banner a unique id
-			bannerId = uuidv4();
+		// Top-level banners need to add their height to the cumulative height store
+		if (isTopLevel) {
+			updateHeight();
+			resizeObserver = new ResizeObserver(updateHeight);
+			resizeObserver.observe(bannerContainerRef);
 		}
+	});
+
+	onDestroy(() => {
+	// Remove observer and update height
+	if (isTopLevel) {
+			resizeObserver.disconnect();
+		topLevelBannerCumulativeHeightPx.update((total) => total - bannerHeight);
+	}
 	});
 
 	// Ensure the icon updates if the notification type updates
@@ -58,7 +81,11 @@
 </script>
 
 {#if showBanner}
-	<div class="notification-banner-outer-container {notificationContainerCss}" transition:slide>
+	<div
+		bind:this={bannerContainerRef}
+		class="notification-banner-outer-container {notificationContainerCss}"
+		transition:slide
+	>
 		<!-- Icon and message -->
 		<div class="notification-banner-message-container {notificationMessageContainerCss}">
 			<i class={'fa-solid ' + faIcon} />

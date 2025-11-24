@@ -36,6 +36,10 @@ export let scrollDirection = writable('down');
 export let jumpToNavItems = writable([]);
 export let showNavSidebar = writable(false);
 
+/*** BANNERS ***/
+// All top-level banners will add to this store
+export let topLevelBannerCumulativeHeightPx = writable(0);
+
 /*** HEADER ***/
 export let headerHeightPx = writable(0);
 export let showHeaderStripes = writable(false);
@@ -91,6 +95,8 @@ const storeMap = {
 	// nav
 	showNavSidebar,
 	jumpToNavItems,
+	// banner
+	topLevelBannerCumulativeHeightPx,
 	// header
 	headerHeightPx,
 	showHeaderStripes,

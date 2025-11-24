@@ -96,7 +96,7 @@
 	{showHeaderStripes}
 	fontFamily="Goldman"
 >
-	<JDGNotificationBanner notificationType={jdgNotificationTypes.information.id} />
+	<JDGNotificationBanner isTopLevel notificationType={jdgNotificationTypes.information.id} />
 	<JDGHeader
 		logoJustification="left"
 		logoSupertitle={'INTRODUCING'}
