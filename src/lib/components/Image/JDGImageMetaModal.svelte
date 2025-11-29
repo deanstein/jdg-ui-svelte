@@ -493,6 +493,9 @@
 <style>
 	.image-meta-modal-scrollable {
 		position: relative;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
 		overflow-y: auto;
 	}
 
