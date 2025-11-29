@@ -3,8 +3,15 @@
 
 	import jdgNavItem from '$lib/schemas/jdg-nav-item.js';
 	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
+
+	import { repoName, showDevTools } from '$lib/stores/jdg-ui-store.js';
+
+	import { jdgUiSvelteRepoName } from '$lib/jdg-persistence-management.js';
+	import { toggleDevTools } from '$lib/jdg-state-management.js';
 	import { instantiateObject } from '$lib/jdg-utils.js';
 	import jdgSharedUrlsStore from '$lib/stores/jdg-shared-urls-store.js';
+
+	import { imageMetaRegistry } from './image-meta-registry.js';
 
 	import {
 		JDGAppContainer,
@@ -17,11 +24,11 @@
 	} from '$lib/index.js';
 	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import sharedStrings from './shared-strings.js';
-	import { showDevTools } from '$lib/stores/jdg-ui-store.js';
-	import { toggleDevTools } from '$lib/jdg-state-management.js';
-	import { imageMetaRegistry } from './image-meta-registry.js';
 
-	// define the nav items in the header
+	// Define the repo name
+	repoName.set(jdgUiSvelteRepoName);
+
+	// Define the nav items in the header
 	const navItemHome = instantiateObject(jdgNavItem);
 	navItemHome.label = 'HOME';
 	navItemHome.href = '/';
@@ -65,7 +72,7 @@
 		navItemTimeline
 	];
 
-	// get the app version from package.json
+	// Get the app version from package.json
 	//@ts-expect-error
 	const appVersion = packageJson.version;
 	const disclaimerMessage =
