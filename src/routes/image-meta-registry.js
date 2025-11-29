@@ -483,7 +483,7 @@ const imageMetaRegistry = {
 		attribution: 'Englewood Public Library'
 	},
 	new_image: {
-		id: 'bd147b05-bfaa-49a7-8ba0-620f25878694',
+		id: 'd4c2ece2-84d3-4bb1-b43a-08f9b8828047',
 		src: 'https://res.cloudinary.com/jdg-main/image/upload/v1764447881/jdg-ui-svelte/image-testing/new-image.jpg.png'
 	}
 };
