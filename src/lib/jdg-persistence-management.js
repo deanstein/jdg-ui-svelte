@@ -192,10 +192,18 @@ export const fetchImageMetaRegistry = async (repoName) => {
 	return imageMetaRegistry;
 };
 
-// Write the imageMetaRegistry back to GitHub repo
-export const writeImageMetaRegistryToRepo = async (repoName, registryObject) => {
+// Write a single image meta entry to the registry
+export const writeImageMetaEntryToRepo = async (repoName, registryKey, imageMeta) => {
 	try {
-		// First, fetch the current file to get its structure
+		// Note: This currently only supports top-level registry keys
+		// Nested keys like "arch.atc_elevator" are not yet supported
+		if (registryKey.includes('.')) {
+			throw new Error(
+				`Nested registry keys (${registryKey}) are not yet supported for writing. Please use a top-level key.`
+			);
+		}
+
+		// Fetch the current file
 		const url = new URL(cfRouteFetchPublicFile, cfWorkerUrlJdgGithub);
 		url.searchParams.set('repoOwner', jdgRepoOwner);
 		url.searchParams.set('repoName', repoName);
@@ -206,20 +214,53 @@ export const writeImageMetaRegistryToRepo = async (repoName, registryObject) => 
 			throw new Error(`Failed to fetch existing file: ${response.status}`);
 		}
 
-		const originalJsFileString = await response.text();
+		let fileContent = await response.text();
 
-		// Convert the registry object to a formatted string
-		const registryBody = JSON.stringify(registryObject, null, '\t')
-			.slice(1, -1) // Remove outer braces
-			.trim();
+		// Create a clean image meta object (only include non-default fields)
+		const cleanImageMeta = {};
+		if (imageMeta.id) cleanImageMeta.id = imageMeta.id;
+		if (imageMeta.src) cleanImageMeta.src = imageMeta.src;
+		if (imageMeta.title) cleanImageMeta.title = imageMeta.title;
+		if (imageMeta.alt) cleanImageMeta.alt = imageMeta.alt;
+		if (imageMeta.caption) cleanImageMeta.caption = imageMeta.caption;
+		if (imageMeta.attribution) cleanImageMeta.attribution = imageMeta.attribution;
+		if (imageMeta.showBackgroundBlur === false) cleanImageMeta.showBackgroundBlur = false;
+		if (imageMeta.toolbarJustification && imageMeta.toolbarJustification !== 'right') {
+			cleanImageMeta.toolbarJustification = imageMeta.toolbarJustification;
+		}
 
-		// Replace the object literal in the file
-		const { replaceObjectLiteral } = await import('./jdg-utils.js');
-		const updatedJsFileString = replaceObjectLiteral(
-			originalJsFileString,
-			imageMetaRegistryVarName,
-			registryBody
-		);
+		// Convert to JavaScript object literal format (not JSON)
+		const indent = '\t\t';
+		const entryLines = [];
+		for (const [key, value] of Object.entries(cleanImageMeta)) {
+			if (typeof value === 'string') {
+				entryLines.push(`${indent}${key}: '${value.replace(/'/g, "\\'")}'`);
+			} else if (typeof value === 'boolean') {
+				entryLines.push(`${indent}${key}: ${value}`);
+			}
+		}
+		const entryString = `\t${registryKey}: {\n${entryLines.join(',\n')}\n\t}`;
+
+		// Find where to insert/update the entry
+		const registryMatch = fileContent.match(/const imageMetaRegistry = \{([\s\S]*?)\n\};/);
+		if (!registryMatch) {
+			throw new Error('Could not find imageMetaRegistry in file');
+		}
+
+		const registryContent = registryMatch[1];
+
+		// Check if the key already exists (simple top-level check)
+		const keyPattern = new RegExp(`\\n\\t${registryKey}:\\s*\\{[\\s\\S]*?\\n\\t\\}`, 'm');
+
+		if (keyPattern.test(registryContent)) {
+			// Replace existing entry
+			const newRegistryContent = registryContent.replace(keyPattern, `\n${entryString}`);
+			fileContent = fileContent.replace(registryMatch[1], newRegistryContent);
+		} else {
+			// Add new entry at the end (before the closing brace)
+			const newRegistryContent = registryContent + `,\n${entryString}`;
+			fileContent = fileContent.replace(registryMatch[1], newRegistryContent);
+		}
 
 		// Write the updated file back to GitHub
 		const writeUrl = new URL(cfRouteWritePublicJsFile, cfWorkerUrlJdgGithub);
@@ -230,7 +271,7 @@ export const writeImageMetaRegistryToRepo = async (repoName, registryObject) => 
 		const writeResponse = await fetch(writeUrl.toString(), {
 			method: 'POST',
 			headers: { 'Content-Type': 'text/plain' },
-			body: updatedJsFileString
+			body: fileContent
 		});
 
 		if (!writeResponse.ok) {
@@ -240,7 +281,7 @@ export const writeImageMetaRegistryToRepo = async (repoName, registryObject) => 
 		const result = await writeResponse.json();
 		return result.success ? result : null;
 	} catch (err) {
-		console.error('Error writing imageMetaRegistry to repo:', err);
+		console.error('Error writing image meta entry to repo:', err);
 		return null;
 	}
 };

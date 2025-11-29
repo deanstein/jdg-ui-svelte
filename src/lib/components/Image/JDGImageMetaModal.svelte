@@ -19,7 +19,7 @@
 	} from '$lib/jdg-utils.js';
 	import {
 		deleteCloudinaryImage,
-		writeImageMetaRegistryToRepo
+		writeImageMetaEntryToRepo
 	} from '$lib/jdg-persistence-management.js';
 
 	import {
@@ -204,22 +204,23 @@
 				setNestedRegistryValue(registry, registryKey, get(draftImageMeta))
 			);
 
-			// Step 5: Write the updated registry back to GitHub
+			// Step 5: Write only this entry back to GitHub
 			const currentRepoName = get(repoName);
 			if (!currentRepoName) {
 				throw new Error('No repo name set. Cannot write registry to GitHub.');
 			}
 
-			console.log(`💾 Writing image-meta-registry to ${currentRepoName}...`);
+			console.log(`💾 Writing image entry "${registryKey}" to ${currentRepoName}...`);
 			saveStatus.set(jdgSaveStatus.saving);
 
-			const writeResult = await writeImageMetaRegistryToRepo(
+			const writeResult = await writeImageMetaEntryToRepo(
 				currentRepoName,
-				get(draftImageMetaRegistry)
+				registryKey,
+				get(draftImageMeta)
 			);
 
 			if (!writeResult) {
-				throw new Error('Failed to write registry to GitHub');
+				throw new Error('Failed to write entry to GitHub');
 			}
 
 			console.log('✅ Registry saved successfully');
@@ -447,21 +448,22 @@
 							setNestedRegistryValue(registry, registryKey, $draftImageMeta)
 						);
 
-						// Write the updated registry back to GitHub
+						// Write only this entry back to GitHub
 						const currentRepoName = $repoName;
 						if (!currentRepoName) {
 							throw new Error('No repo name set. Cannot write registry to GitHub.');
 						}
 
-						console.log(`💾 Writing image-meta-registry to ${currentRepoName}...`);
+						console.log(`💾 Writing image entry "${registryKey}" to ${currentRepoName}...`);
 
-						const writeResult = await writeImageMetaRegistryToRepo(
+						const writeResult = await writeImageMetaEntryToRepo(
 							currentRepoName,
-							$draftImageMetaRegistry
+							registryKey,
+							$draftImageMeta
 						);
 
 						if (!writeResult) {
-							throw new Error('Failed to write registry to GitHub');
+							throw new Error('Failed to write entry to GitHub');
 						}
 
 						console.log('✅ Registry saved successfully');
