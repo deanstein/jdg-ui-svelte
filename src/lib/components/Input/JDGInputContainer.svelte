@@ -48,5 +48,6 @@
 	.label-container {
 		display: flex;
 		margin-bottom: 0.5svh;
+		font-weight: bold;
 	}
 </style>
