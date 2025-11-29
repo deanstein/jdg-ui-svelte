@@ -13,6 +13,10 @@ const jdgSaveStatus = {
 		label: 'Loaded!',
 		notificationType: jdgNotificationTypes.success // color, icon
 	},
+	uploading: {
+		label: 'Uploading image...',
+		notificationType: jdgNotificationTypes.inProgress // color, icon
+	},
 	saving: {
 		label: 'Saving...',
 		notificationType: jdgNotificationTypes.inProgress // color, icon

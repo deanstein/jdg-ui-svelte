@@ -192,6 +192,83 @@ export const fetchImageMetaRegistry = async (repoName) => {
 	return imageMetaRegistry;
 };
 
+// Write the imageMetaRegistry back to GitHub repo
+export const writeImageMetaRegistryToRepo = async (repoName, registryObject) => {
+	try {
+		// First, fetch the current file to get its structure
+		const url = new URL(cfRouteFetchPublicFile, cfWorkerUrlJdgGithub);
+		url.searchParams.set('repoOwner', jdgRepoOwner);
+		url.searchParams.set('repoName', repoName);
+		url.searchParams.set('filePath', imageMetaRegistryPath);
+
+		const response = await fetch(url.toString());
+		if (!response.ok) {
+			throw new Error(`Failed to fetch existing file: ${response.status}`);
+		}
+
+		const originalJsFileString = await response.text();
+
+		// Convert the registry object to a formatted string
+		const registryBody = JSON.stringify(registryObject, null, '\t')
+			.slice(1, -1) // Remove outer braces
+			.trim();
+
+		// Replace the object literal in the file
+		const { replaceObjectLiteral } = await import('./jdg-utils.js');
+		const updatedJsFileString = replaceObjectLiteral(
+			originalJsFileString,
+			imageMetaRegistryVarName,
+			registryBody
+		);
+
+		// Write the updated file back to GitHub
+		const writeUrl = new URL(cfRouteWritePublicJsFile, cfWorkerUrlJdgGithub);
+		writeUrl.searchParams.set('repoOwner', jdgRepoOwner);
+		writeUrl.searchParams.set('repoName', repoName);
+		writeUrl.searchParams.set('filePath', imageMetaRegistryPath);
+
+		const writeResponse = await fetch(writeUrl.toString(), {
+			method: 'POST',
+			headers: { 'Content-Type': 'text/plain' },
+			body: updatedJsFileString
+		});
+
+		if (!writeResponse.ok) {
+			throw new Error(`Failed to write file: ${writeResponse.status}`);
+		}
+
+		const result = await writeResponse.json();
+		return result.success ? result : null;
+	} catch (err) {
+		console.error('Error writing imageMetaRegistry to repo:', err);
+		return null;
+	}
+};
+
+// Delete an image from Cloudinary via Cloudflare worker
+export const deleteCloudinaryImage = async (assetPath, fileName) => {
+	try {
+		const url = `https://jdg-cloudinary.jdeangoldstein.workers.dev/delete-image?folder=${encodeURIComponent(
+			assetPath
+		)}&fileName=${encodeURIComponent(fileName)}`;
+
+		const response = await fetch(url, {
+			method: 'DELETE'
+		});
+
+		const data = await response.json();
+		if (!response.ok || !data.success) {
+			throw new Error(data.error || 'Delete failed');
+		}
+
+		console.log('✅ Delete complete:', assetPath + '/' + fileName);
+		return data;
+	} catch (err) {
+		console.error('❌ Delete error:', err.message);
+		throw err;
+	}
+};
+
 //
 // LEGACY FUNCTIONS (to be removed)
 //
