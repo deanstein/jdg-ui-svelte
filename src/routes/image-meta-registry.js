@@ -481,6 +481,10 @@ const imageMetaRegistry = {
 		caption:
 			"The Englewood Civic Center's north side faces into plaza where it formerly attached to Cinderella City Mall.",
 		attribution: 'Englewood Public Library'
+	},
+	new_image: {
+		id: 'bd147b05-bfaa-49a7-8ba0-620f25878694',
+		src: 'https://res.cloudinary.com/jdg-main/image/upload/v1764447881/jdg-ui-svelte/image-testing/new-image.jpg.png'
 	}
 };
 
