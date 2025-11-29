@@ -335,13 +335,17 @@
 >
 	<div bind:this={modalContainerRef} slot="modal-content-slot" class="image-meta-modal-scrollable">
 		{#if $draftImageMeta}
-			<!-- Save/Upload status banner -->
-			<JDGSaveStateBanner />
-
+			<!-- Changes detected banner -->
 			<JDGNotificationBanner
 				showBanner={hasUnsavedChanges && !$saveStatus && !isNewImage}
 				notificationType={jdgNotificationTypes.warning}
 				message={'Changes detected. Next, click Done or Cancel below.'}
+			/>
+			<!-- No repo name set banner -->
+			<JDGNotificationBanner
+				showBanner={!get(repoName)}
+				notificationType={jdgNotificationTypes.error}
+				message={'No repo name set! +layout.svelte must set the repo name.'}
 			/>
 			<!-- Image preview -->
 			<div class="image-preview-wrapper">
@@ -427,7 +431,8 @@
 				<JDGTextInput bind:inputValue={$draftImageMeta.toolbarJustification} />
 			</JDGInputContainer>
 		{/if}
-		{#if hasUnsavedChanges}
+		<!-- Only show compose toolbar if unsaved changes and repo name is set -->
+		{#if hasUnsavedChanges && get(repoName)}
 			<JDGComposeToolbar
 				parentRef={modalContainerRef}
 				onClickCompose={() => {}}
