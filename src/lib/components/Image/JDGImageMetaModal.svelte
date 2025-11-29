@@ -35,7 +35,7 @@
 	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
 	import jdgSaveStatus from '$lib/schemas/jdg-save-status.js';
 
-	const newImagePath = 'jdg-ui-svelte/image-test/new-image.jpg';
+	const newImagePath = 'jdg-ui-svelte/image-testing/new-image.jpg';
 
 	// Bind the hidden fileInput to a custom button for file picking
 	let fileInput;
