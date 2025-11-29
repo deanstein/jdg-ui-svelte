@@ -51,6 +51,9 @@
 	// Store the original registry key so it doesn't change when filename changes
 	let originalRegistryKey = '';
 
+	// Shows a banner when uploading
+	let isUploading = false;
+
 	// Track if this is a new image (no src with Cloudinary URL)
 	$: isNewImage = !originalDraftMeta?.src || !originalDraftMeta.src.includes('cloudinary');
 
@@ -111,6 +114,8 @@
 			console.warn('No file selected.');
 			return;
 		}
+
+		isUploading = true;
 
 		// For new images, check if registry key already exists
 		// (Registry key is auto-generated from filename)
@@ -211,6 +216,8 @@
 			}
 
 			console.log(`💾 Writing image entry "${registryKey}" to ${currentRepoName}...`);
+
+			// Set the save status
 			saveStatus.set(jdgSaveStatus.saving);
 
 			const writeResult = await writeImageMetaEntryToRepo(
@@ -224,7 +231,9 @@
 			}
 
 			console.log('✅ Registry saved successfully');
-			saveStatus.set(jdgSaveStatus.saveSuccess);
+
+			// Indicate the save was successful, and the site will be rebuilt
+			saveStatus.set(jdgSaveStatus.saveSuccessRebuilding);
 
 			// Update the original draft meta to reflect the new saved state
 			originalDraftMeta = instantiateObject(get(draftImageMeta));
@@ -236,11 +245,12 @@
 			setTimeout(() => {
 				showImageMetaModal.set(false);
 				draftImageMeta.set(undefined);
-				saveStatus.set(null);
+				isUploading = false;
 			}, 1500);
 		} catch (err) {
 			console.error('❌ Upload/Save error:', err.message);
 			saveStatus.set(jdgSaveStatus.saveFailed);
+			isUploading = false;
 			alert(`Error: ${err.message}`);
 		}
 	};
@@ -336,6 +346,12 @@
 >
 	<div bind:this={modalContainerRef} slot="modal-content-slot" class="image-meta-modal-scrollable">
 		{#if $draftImageMeta}
+			<!-- Uploading banner -->
+			<JDGNotificationBanner
+				showBanner={isUploading}
+				notificationType={jdgNotificationTypes.inProgress}
+				message={'Uploading image...'}
+			/>
 			<!-- Changes detected banner -->
 			<JDGNotificationBanner
 				showBanner={hasUnsavedChanges && !$saveStatus && !isNewImage}

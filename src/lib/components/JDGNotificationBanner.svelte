@@ -45,14 +45,14 @@
 
 	// Ensure the icon updates if the notification type updates
 	$: {
-		faIcon = 'fa-solid ' + notificationType.faIcon;
+		faIcon = 'fa-solid ' + notificationType?.faIcon;
 	}
 
 	// Dynamic styles
 	$: {
 		notificationContainerCss = css`
 			${notificationContainerCss};
-			background-color: ${backgroundColor ?? notificationType.color};
+			background-color: ${backgroundColor ?? notificationType?.color};
 		`;
 	}
 </script>

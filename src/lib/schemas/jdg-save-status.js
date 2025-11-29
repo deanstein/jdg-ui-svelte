@@ -28,6 +28,11 @@ const jdgSaveStatus = {
 	saveSuccess: {
 		label: 'Saved!',
 		notificationType: jdgNotificationTypes.success // color, icon
+	},
+	saveSuccessRebuilding: {
+		label:
+			'Saved! Website is now rebuilding with the new image metadata. Refresh to see the changes.',
+		notificationType: jdgNotificationTypes.success // color, icon
 	}
 };
 
