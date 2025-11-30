@@ -66,6 +66,6 @@
 
 	textarea:disabled {
 		background-color: white;
-		border: 2px solid transparent;
+		border: 2px solid gainsboro;
 	}
 </style>
