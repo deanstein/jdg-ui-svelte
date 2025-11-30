@@ -24,6 +24,7 @@
 
 	import {
 		JDGButton,
+		JDGCheckbox,
 		JDGComposeToolbar,
 		JDGImageTile,
 		JDGInputContainer,
@@ -394,10 +395,10 @@
 				<div style="display: flex; flex-direction: column; gap: 8px;">
 					<div>{registryKey || '(derived from filename)'}</div>
 					{#if isNewImage}
-						<label style="display: flex; align-items: center; gap: 8px; font-size: 0.9em;">
-							<input type="checkbox" bind:checked={matchCloudinaryNesting} />
-							Match Cloudinary folder nesting
-						</label>
+						<JDGCheckbox
+							bind:isChecked={matchCloudinaryNesting}
+							label="Match Cloudinary folder nesting"
+						/>
 					{/if}
 				</div>
 			</JDGInputContainer>
