@@ -60,6 +60,8 @@
 
 	// Shows a banner when uploading
 	let isUploading = false;
+	// Shows a banner when saving
+	let isSaving = false;
 
 	// Track if this is a new image (no src with Cloudinary URL)
 	$: isNewImage = !originalDraftMeta?.src || !originalDraftMeta.src.includes('cloudinary');
@@ -387,6 +389,12 @@
 				notificationType={jdgNotificationTypes.inProgress}
 				message={'Uploading image...'}
 			/>
+			<!-- Saving banner -->
+			<JDGNotificationBanner
+				showBanner={isSaving}
+				notificationType={jdgNotificationTypes.inProgress}
+				message={'Saving image metadata...'}
+			/>
 			<!-- Changes detected banner -->
 			<JDGNotificationBanner
 				showBanner={hasUnsavedChanges && !$saveStatus && !isNewImage}
@@ -501,6 +509,8 @@
 				onClickCompose={() => {}}
 				onClickDone={async () => {
 					try {
+						// Set save status
+						isSaving = true;
 						saveStatus.set(jdgSaveStatus.saving);
 
 						// Update the registry store with the current draft meta
@@ -530,13 +540,7 @@
 
 						console.log('✅ Registry saved successfully');
 						saveStatus.set(jdgSaveStatus.saveSuccess);
-
-						// Close modal after a brief delay
-						setTimeout(() => {
-							showImageMetaModal.set(false);
-							draftImageMeta.set(undefined);
-							saveStatus.set(null);
-						}, 1000);
+						isSaving = false;
 					} catch (err) {
 						console.error('❌ Save error:', err.message);
 						saveStatus.set(jdgSaveStatus.saveFailed);
