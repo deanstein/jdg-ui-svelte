@@ -26,7 +26,7 @@
 		JDGDatePicker,
 		JDGTextArea,
 		JDGTextInput,
-		JDGImageMetaSelector,
+		JDGImageSelector,
 		JDGImageThumbnailGroup,
 		JDGButton
 	} from '$lib/index.js';
@@ -233,7 +233,7 @@
 						</div>
 						{#if isImageSelectorOpen}
 							<div class="image-selector-container">
-								<JDGImageMetaSelector
+								<JDGImageSelector
 									bind:selectedImages={$localAdditionalStore[key]}
 									isEnabled={isEditing}
 								/>
@@ -271,7 +271,7 @@
 						</div>
 						{#if isImageSelectorOpen}
 							<div class="image-selector-container">
-								<JDGImageMetaSelector
+								<JDGImageSelector
 									bind:selectedImages={$localEventStore[key]}
 									isEnabled={isEditing}
 								/>

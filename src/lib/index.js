@@ -133,8 +133,8 @@ export { JDGImageHybridGridCarousel };
 import JDGImageMetaModal from './components/Image/JDGImageMetaModal.svelte';
 export { JDGImageMetaModal };
 
-import JDGImageMetaSelector from './components/Image/JDGImageMetaSelector.svelte';
-export { JDGImageMetaSelector };
+import JDGImageSelector from './components/Image/JDGImageSelector.svelte';
+export { JDGImageSelector };
 
 import JDGImageTile from './components/Image/JDGImageTile.svelte';
 export { JDGImageTile };
