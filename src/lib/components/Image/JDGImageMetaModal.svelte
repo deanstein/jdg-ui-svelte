@@ -55,6 +55,9 @@
 	// For new images, should registry key match Cloudinary folder nesting?
 	let matchCloudinaryNesting = true;
 
+	// Should Alt field sync with Caption field?
+	let syncAltWithCaption = true;
+
 	// Shows a banner when uploading
 	let isUploading = false;
 
@@ -100,6 +103,16 @@
 	// If there are unsaved changes,
 	// show a banner and show the cancel/done buttons
 	$: hasUnsavedChanges = !areObjectsEqual($draftImageMeta, originalDraftMeta);
+
+	// Sync Alt with Caption when locked
+	$: {
+		if (syncAltWithCaption && $draftImageMeta) {
+			draftImageMeta.update((meta) => ({
+				...meta,
+				alt: meta.caption || meta.alt
+			}));
+		}
+	}
 
 	// When the asset path changes, update the cloudinary URL
 	const onAssetPathChange = (e) => {
@@ -346,6 +359,10 @@
 		// Always upgrade to ensure UUID id is present
 		draftImageMeta.set(upgradeImageMeta(currentMeta));
 
+		// Set initial sync state: if alt is undefined or matches caption, enable sync
+		const upgradedMeta = get(draftImageMeta);
+		syncAltWithCaption = !upgradedMeta.alt || upgradedMeta.alt === upgradedMeta.caption;
+
 		// Store the image meta to compare before any changes
 		originalDraftMeta = instantiateObject($draftImageMeta);
 	});
@@ -455,7 +472,10 @@
 				<JDGTextInput bind:inputValue={$draftImageMeta.caption} />
 			</JDGInputContainer>
 			<JDGInputContainer label="Alt">
-				<JDGTextInput bind:inputValue={$draftImageMeta.alt} />
+				<div style="display: flex; flex-direction: column; gap: 8px;">
+					<JDGTextInput bind:inputValue={$draftImageMeta.alt} isEnabled={!syncAltWithCaption} />
+					<JDGCheckbox bind:isChecked={syncAltWithCaption} label="Sync Alt with Caption" />
+				</div>
 			</JDGInputContainer>
 			<JDGInputContainer label="Attribution">
 				<JDGTextInput bind:inputValue={$draftImageMeta.attribution} />
