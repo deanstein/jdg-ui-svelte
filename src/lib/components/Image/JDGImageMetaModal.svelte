@@ -51,6 +51,9 @@
 	// Store the original registry key so it doesn't change when filename changes
 	let originalRegistryKey = '';
 
+	// For new images, should registry key match Cloudinary folder nesting?
+	let matchCloudinaryNesting = true;
+
 	// Shows a banner when uploading
 	let isUploading = false;
 
@@ -66,10 +69,24 @@
 	$: {
 		if (isNewImage && assetPath) {
 			const pathParts = assetPath.split('/');
-			const filename = pathParts[pathParts.length - 1];
-			const filenameWithoutExt = filename.replace(/\.[^/.]+$/, ''); // Remove extension
-			// Convert to valid identifier (replace spaces/special chars with underscores)
-			registryKey = filenameWithoutExt.replace(/[^a-zA-Z0-9_]/g, '_');
+
+			if (matchCloudinaryNesting && pathParts.length > 2) {
+				// Match Cloudinary nesting: use folder(s) + filename
+				// Skip the root folder (e.g., 'jdg-ui-svelte')
+				const registryKeyParts = pathParts.slice(1).map(
+					(part) =>
+						part
+							.replace(/\.[^/.]+$/, '') // Remove extension
+							.replace(/[^a-zA-Z0-9_]/g, '_') // Clean special chars
+				);
+				registryKey = registryKeyParts.join('.');
+			} else {
+				// Don't match nesting: only use filename
+				const filename = pathParts[pathParts.length - 1];
+				const filenameWithoutExt = filename.replace(/\.[^/.]+$/, ''); // Remove extension
+				// Convert to valid identifier (replace spaces/special chars with underscores)
+				registryKey = filenameWithoutExt.replace(/[^a-zA-Z0-9_]/g, '_');
+			}
 		} else if (originalRegistryKey) {
 			// For existing images, use the original key (don't update if filename changes)
 			registryKey = originalRegistryKey;
@@ -374,7 +391,15 @@
 
 			<!-- Registry Key (auto-generated for new images) -->
 			<JDGInputContainer label="Registry Key">
-				{registryKey || '(derived from filename)'}
+				<div style="display: flex; flex-direction: column; gap: 8px;">
+					<div>{registryKey || '(derived from filename)'}</div>
+					{#if isNewImage}
+						<label style="display: flex; align-items: center; gap: 8px; font-size: 0.9em;">
+							<input type="checkbox" bind:checked={matchCloudinaryNesting} />
+							Match Cloudinary folder nesting
+						</label>
+					{/if}
+				</div>
 			</JDGInputContainer>
 
 			<!-- ID (UUID for programmatic lookup) -->

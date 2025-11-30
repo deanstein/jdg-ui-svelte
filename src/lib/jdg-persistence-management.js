@@ -195,14 +195,6 @@ export const fetchImageMetaRegistry = async (repoName) => {
 // Write a single image meta entry to the registry
 export const writeImageMetaEntryToRepo = async (repoName, registryKey, imageMeta) => {
 	try {
-		// Note: This currently only supports top-level registry keys
-		// Nested keys like "arch.atc_elevator" are not yet supported
-		if (registryKey.includes('.')) {
-			throw new Error(
-				`Nested registry keys (${registryKey}) are not yet supported for writing. Please use a top-level key.`
-			);
-		}
-
 		// Fetch the current file
 		const url = new URL(cfRouteFetchPublicFile, cfWorkerUrlJdgGithub);
 		url.searchParams.set('repoOwner', jdgRepoOwner);
@@ -229,17 +221,19 @@ export const writeImageMetaEntryToRepo = async (repoName, registryKey, imageMeta
 			cleanImageMeta.toolbarJustification = imageMeta.toolbarJustification;
 		}
 
+		// Handle both top-level and nested keys
+		const keyParts = registryKey.split('.');
+		const isNested = keyParts.length > 1;
+
 		// Convert to JavaScript object literal format (not JSON)
-		const indent = '\t\t';
 		const entryLines = [];
 		for (const [key, value] of Object.entries(cleanImageMeta)) {
 			if (typeof value === 'string') {
-				entryLines.push(`${indent}${key}: '${value.replace(/'/g, "\\'")}'`);
+				entryLines.push(`\t\t\t${key}: '${value.replace(/'/g, "\\'")}'`);
 			} else if (typeof value === 'boolean') {
-				entryLines.push(`${indent}${key}: ${value}`);
+				entryLines.push(`\t\t\t${key}: ${value}`);
 			}
 		}
-		const entryString = `\t${registryKey}: {\n${entryLines.join(',\n')}\n\t}`;
 
 		// Find where to insert/update the entry
 		const registryMatch = fileContent.match(/const imageMetaRegistry = \{([\s\S]*?)\n\};/);
@@ -247,20 +241,56 @@ export const writeImageMetaEntryToRepo = async (repoName, registryKey, imageMeta
 			throw new Error('Could not find imageMetaRegistry in file');
 		}
 
-		const registryContent = registryMatch[1];
+		let registryContent = registryMatch[1];
 
-		// Check if the key already exists (simple top-level check)
-		const keyPattern = new RegExp(`\\n\\t${registryKey}:\\s*\\{[\\s\\S]*?\\n\\t\\}`, 'm');
+		if (isNested) {
+			// Handle nested key (e.g., "arch.atc_elevator")
+			const parentKey = keyParts[0];
+			const childKey = keyParts.slice(1).join('.');
 
-		if (keyPattern.test(registryContent)) {
-			// Replace existing entry
-			const newRegistryContent = registryContent.replace(keyPattern, `\n${entryString}`);
-			fileContent = fileContent.replace(registryMatch[1], newRegistryContent);
+			// Check if parent object exists
+			const parentPattern = new RegExp(`\\n\\t${parentKey}:\\s*\\{([\\s\\S]*?)\\n\\t\\}`, 'm');
+			const parentMatch = registryContent.match(parentPattern);
+
+			const childEntryString = `\t\t${childKey}: {\n${entryLines.join(',\n')}\n\t\t}`;
+
+			if (parentMatch) {
+				// Parent exists, check if child exists
+				let parentContent = parentMatch[1];
+				const childPattern = new RegExp(`\\n\\t\\t${childKey}:\\s*\\{[\\s\\S]*?\\n\\t\\t\\}`, 'm');
+
+				if (childPattern.test(parentContent)) {
+					// Replace existing child
+					parentContent = parentContent.replace(childPattern, `\n${childEntryString}`);
+				} else {
+					// Add new child (add comma if parent has other children)
+					const hasChildren = parentContent.trim().length > 0;
+					parentContent += `${hasChildren ? ',' : ''}\n${childEntryString}`;
+				}
+
+				// Replace the entire parent block
+				const newParentBlock = `\n\t${parentKey}: {${parentContent}\n\t}`;
+				registryContent = registryContent.replace(parentPattern, newParentBlock);
+			} else {
+				// Parent doesn't exist, create it with the child
+				const newParentBlock = `\t${parentKey}: {\n${childEntryString}\n\t}`;
+				registryContent += `,\n${newParentBlock}`;
+			}
 		} else {
-			// Add new entry at the end (before the closing brace)
-			const newRegistryContent = registryContent + `,\n${entryString}`;
-			fileContent = fileContent.replace(registryMatch[1], newRegistryContent);
+			// Handle top-level key
+			const entryString = `\t${registryKey}: {\n${entryLines.join(',\n')}\n\t}`;
+			const keyPattern = new RegExp(`\\n\\t${registryKey}:\\s*\\{[\\s\\S]*?\\n\\t\\}`, 'm');
+
+			if (keyPattern.test(registryContent)) {
+				// Replace existing entry
+				registryContent = registryContent.replace(keyPattern, `\n${entryString}`);
+			} else {
+				// Add new entry at the end
+				registryContent += `,\n${entryString}`;
+			}
 		}
+
+		fileContent = fileContent.replace(registryMatch[1], registryContent);
 
 		// Write the updated file back to GitHub
 		const writeUrl = new URL(cfRouteWritePublicJsFile, cfWorkerUrlJdgGithub);
