@@ -83,7 +83,28 @@ export const getIsObjectInArray = (array, obj) => {
 
 export const getIsObjectInObject = (objToSearch, key, value) => {
 	if (!objToSearch || !key || typeof value === 'undefined') return false;
-	return Object.values(objToSearch).some((nested) => nested?.[key] === value);
+	
+	// Recursive search through nested objects
+	const searchRecursive = (obj) => {
+		for (const nested of Object.values(obj)) {
+			if (nested && typeof nested === 'object') {
+				// Check if this object has the matching key-value pair
+				if (nested[key] === value) {
+					return true;
+				}
+				// Recurse into nested objects (but only if it doesn't have the key we're looking for)
+				// This allows us to check nested structures like arch.atc_elevator
+				if (nested[key] === undefined) {
+					if (searchRecursive(nested)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	};
+	
+	return searchRecursive(objToSearch);
 };
 
 export const removeValueFromArray = (array, value) => {
