@@ -863,6 +863,7 @@
 	.caption-attribution-wrapper {
 		position: absolute;
 		width: 100%;
+		z-index: 2;
 	}
 
 	.debug-overlay {
