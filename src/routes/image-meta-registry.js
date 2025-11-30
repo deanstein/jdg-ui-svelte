@@ -52,7 +52,8 @@ const imageMetaRegistry = {
 	ccp_gold_mall_80s90s_1: {
 			id: 'c958317e-3c70-4f01-a384-8d302b87159d',
 			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1716959969/jdg-ui-svelte/ccp/gold-mall-80s90s-1_jzmeeb.png',
-			alt: 'Cinderella City\'s Gold Mall as seen simulated in the 1987-1997 era.'
+			alt: 'This is a test caption',
+			caption: 'This is a test caption'
 	},
 	lakeside_1: {
 		src: 'https://res.cloudinary.com/jdg-main/image/upload/v1716959966/jdg-ui-svelte/history/lakeside-1_kcrblc.jpg',
