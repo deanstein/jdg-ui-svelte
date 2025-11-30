@@ -25,11 +25,15 @@
 		JDGCheckbox,
 		JDGDatePicker,
 		JDGTextArea,
-		JDGTextInput
+		JDGTextInput,
+		JDGImageMetaSelector,
+		JDGImageThumbnailGroup,
+		JDGButton
 	} from '$lib/index.js';
 	import JDGSelect from '../Input/JDGSelect.svelte';
 	import JDGComposeToolbar from '../Compose/JDGComposeToolbar.svelte';
 	import JDGInputContainer from '../Input/JDGInputContainer.svelte';
+	import { jdgColors } from '$lib/jdg-shared-styles.js';
 
 	// Read from and write to this store
 	export let eventStore = writable(instantiateObject(jdgTimelineEvent));
@@ -48,6 +52,9 @@
 	// Local writable stores for editing
 	let localEventStore = writable({});
 	let localAdditionalStore = writable({});
+
+	// Track whether image selector is open
+	let isImageSelectorOpen = false;
 
 	// Sync when parent store changes
 	$: {
@@ -127,6 +134,11 @@
 		const dataOnlyAddlContent = extractDataSchemaFields(newAddlContent);
 		localAdditionalStore.set(dataOnlyAddlContent);
 	}
+
+	// Reset image selector when editing state changes
+	$: if (!isEditing) {
+		isImageSelectorOpen = false;
+	}
 </script>
 
 <div bind:this={parentRef} class="jdg-timeline-form">
@@ -190,7 +202,83 @@
 					</select>
 				{/if}
 			{:else if def.inputType === JDG_INPUT_TYPES.IMAGE_LIST}
-				<div>[...]</div>
+				{#if isAdditional}
+					<!-- Always show selected images if any exist -->
+					{#if $localAdditionalStore[key]?.length > 0}
+						<div class="image-list-display">
+							<JDGImageThumbnailGroup imageMetaSet={$localAdditionalStore[key]} />
+						</div>
+					{:else if !isEditing}
+						<div class="no-images-message">No images selected</div>
+					{/if}
+
+					<!-- In edit mode, show button and selector -->
+					{#if isEditing}
+						<div class="image-selector-actions">
+							<JDGButton
+								label={isImageSelectorOpen
+									? 'Close Image Selector'
+									: $localAdditionalStore[key]?.length > 0
+										? 'Manage Images'
+										: 'Add Images'}
+								faIcon={isImageSelectorOpen ? 'fa-times' : 'fa-images'}
+								onClickFunction={() => {
+									isImageSelectorOpen = !isImageSelectorOpen;
+								}}
+								fontSize="14px"
+								paddingLeftRight="16px"
+								paddingTopBottom="8px"
+								backgroundColor={jdgColors.active}
+							/>
+						</div>
+						{#if isImageSelectorOpen}
+							<div class="image-selector-container">
+								<JDGImageMetaSelector
+									bind:selectedImages={$localAdditionalStore[key]}
+									isEnabled={isEditing}
+								/>
+							</div>
+						{/if}
+					{/if}
+				{:else}
+					<!-- Always show selected images if any exist -->
+					{#if $localEventStore[key]?.length > 0}
+						<div class="image-list-display">
+							<JDGImageThumbnailGroup imageMetaSet={$localEventStore[key]} />
+						</div>
+					{:else if !isEditing}
+						<div class="no-images-message">No images selected</div>
+					{/if}
+
+					<!-- In edit mode, show button and selector -->
+					{#if isEditing}
+						<div class="image-selector-actions">
+							<JDGButton
+								label={isImageSelectorOpen
+									? 'Close Image Selector'
+									: $localEventStore[key]?.length > 0
+										? 'Manage Images'
+										: 'Add Images'}
+								faIcon={isImageSelectorOpen ? 'fa-times' : 'fa-images'}
+								onClickFunction={() => {
+									isImageSelectorOpen = !isImageSelectorOpen;
+								}}
+								fontSize="14px"
+								paddingLeftRight="16px"
+								paddingTopBottom="8px"
+								backgroundColor={jdgColors.active}
+							/>
+						</div>
+						{#if isImageSelectorOpen}
+							<div class="image-selector-container">
+								<JDGImageMetaSelector
+									bind:selectedImages={$localEventStore[key]}
+									isEnabled={isEditing}
+								/>
+							</div>
+						{/if}
+					{/if}
+				{/if}
 			{:else if isAdditional}
 				<JDGTextInput bind:inputValue={$localAdditionalStore[key]} />
 			{:else}
@@ -260,5 +348,34 @@
 
 	.form-store-preview {
 		margin-top: 20px;
+	}
+
+	.image-list-display {
+		padding: 12px;
+		background-color: rgba(240, 240, 240, 0.5);
+		border-radius: 8px;
+		margin-bottom: 12px;
+	}
+
+	.no-images-message {
+		padding: 12px;
+		font-style: italic;
+		color: #999;
+		text-align: center;
+		margin-bottom: 12px;
+	}
+
+	.image-selector-actions {
+		display: flex;
+		justify-content: flex-start;
+		margin-bottom: 12px;
+	}
+
+	.image-selector-container {
+		margin-top: 12px;
+		padding: 16px;
+		background-color: rgba(255, 255, 255, 0.5);
+		border-radius: 8px;
+		border: 2px solid rgba(200, 200, 200, 0.5);
 	}
 </style>
