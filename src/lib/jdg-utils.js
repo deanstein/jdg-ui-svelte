@@ -83,7 +83,7 @@ export const getIsObjectInArray = (array, obj) => {
 
 export const getIsObjectInObject = (objToSearch, key, value) => {
 	if (!objToSearch || !key || typeof value === 'undefined') return false;
-	
+
 	// Recursive search through nested objects
 	const searchRecursive = (obj) => {
 		for (const nested of Object.values(obj)) {
@@ -103,7 +103,7 @@ export const getIsObjectInObject = (objToSearch, key, value) => {
 		}
 		return false;
 	};
-	
+
 	return searchRecursive(objToSearch);
 };
 
