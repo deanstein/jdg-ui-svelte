@@ -60,8 +60,6 @@
 
 	// Shows a banner when uploading
 	let isUploading = false;
-	// Shows a banner when saving
-	let isSaving = false;
 
 	// Track if this is a new image (no src with Cloudinary URL)
 	$: isNewImage = !originalDraftMeta?.src || !originalDraftMeta.src.includes('cloudinary');
@@ -148,7 +146,7 @@
 			return;
 		}
 
-		isUploading = true;
+		saveStatus.set(jdgSaveStatus.uploading);
 
 		// For new images, check if registry key already exists
 		// (Registry key is auto-generated from filename)
@@ -278,12 +276,12 @@
 			setTimeout(() => {
 				showImageMetaModal.set(false);
 				draftImageMeta.set(undefined);
-				isUploading = false;
+				saveStatus.set(undefined);
 			}, 1500);
 		} catch (err) {
 			console.error('❌ Upload/Save error:', err.message);
 			saveStatus.set(jdgSaveStatus.saveFailed);
-			isUploading = false;
+			saveStatus.set(undefined);
 			alert(`Error: ${err.message}`);
 		}
 	};
@@ -383,18 +381,8 @@
 >
 	<div bind:this={modalContainerRef} slot="modal-content-slot" class="image-meta-modal-scrollable">
 		{#if $draftImageMeta}
-			<!-- Uploading banner -->
-			<JDGNotificationBanner
-				showBanner={isUploading}
-				notificationType={jdgNotificationTypes.inProgress}
-				message={'Uploading image...'}
-			/>
-			<!-- Saving banner -->
-			<JDGNotificationBanner
-				showBanner={isSaving}
-				notificationType={jdgNotificationTypes.inProgress}
-				message={'Saving image metadata...'}
-			/>
+			<!-- Banner when saving or uploading -->
+			<JDGSaveStateBanner />
 			<!-- Changes detected banner -->
 			<JDGNotificationBanner
 				showBanner={hasUnsavedChanges && !$saveStatus && !isNewImage}
@@ -510,7 +498,6 @@
 				onClickDone={async () => {
 					try {
 						// Set save status
-						isSaving = true;
 						saveStatus.set(jdgSaveStatus.saving);
 
 						// Update the registry store with the current draft meta
@@ -540,7 +527,15 @@
 
 						console.log('✅ Registry saved successfully');
 						saveStatus.set(jdgSaveStatus.saveSuccess);
-						isSaving = false;
+
+						// Update the original draft meta to reflect the new saved state
+						// This prevents "unsaved changes" from showing after successful save
+						originalDraftMeta = instantiateObject($draftImageMeta);
+
+						// Clear save status after showing success briefly
+						setTimeout(() => {
+							saveStatus.set(null);
+						}, 3000);
 					} catch (err) {
 						console.error('❌ Save error:', err.message);
 						saveStatus.set(jdgSaveStatus.saveFailed);

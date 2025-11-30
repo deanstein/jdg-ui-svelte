@@ -14,7 +14,7 @@ const jdgSaveStatus = {
 		notificationType: jdgNotificationTypes.success // color, icon
 	},
 	uploading: {
-		label: 'Uploading image...',
+		label: 'Uploading...',
 		notificationType: jdgNotificationTypes.inProgress // color, icon
 	},
 	saving: {
