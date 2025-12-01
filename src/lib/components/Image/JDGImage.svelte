@@ -15,13 +15,14 @@
 		isNumberValid
 	} from '$lib/jdg-utils.js';
 	import {
+		imageViewerScale,
 		imageViewerWidth,
+		isAdminMode,
 		isMobileBreakpoint,
+		showImageEditButtons,
+		showImageMetaModal,
 		showHeaderStripes,
 		windowWidth,
-		imageViewerScale,
-		isAdminMode,
-		showImageMetaModal
 	} from '$lib/stores/jdg-ui-store.js';
 	import {
 		addImageLoading,
@@ -705,7 +706,7 @@
 	<!-- Only load the image if it's visible -->
 	{#if isVisible}
 		<!-- Show the toolbar if in adminMode -->
-		{#if $isAdminMode}
+		{#if $isAdminMode && $showImageEditButtons}
 			<JDGImageToolbar {imageMeta} toolbarAligment="top">
 				<JDGButton
 					onClickFunction={() => {

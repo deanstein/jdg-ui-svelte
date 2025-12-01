@@ -2,11 +2,12 @@
 	import { css } from '@emotion/css';
 
 	import {
-		showDevToolbarSticky,
-		showDevModal,
 		allowTextSelection,
 		showAdminLoginModal,
-		showImageMetaModal
+		showDevModal,
+		showDevToolbarSticky,
+		showImageEditButtons,
+		showImageMetaModal,
 	} from '$lib/stores/jdg-ui-store.js';
 
 	import { instantiateObject, JDGButton, JDGH3H4 } from '$lib/index.js';
@@ -41,6 +42,17 @@
 			faIcon={'fa-square-plus'}
 			label={'Add New Image'}
 			backgroundColor={jdgColors.buttonColor}
+			paddingTopBottom="5px"
+			paddingLeftRight="10px"
+			fontSize={jdgSizes.fontSizeBodyXSm}
+		/>
+		<JDGButton
+			onClickFunction={() => {
+				showImageEditButtons.set(!$showImageEditButtons);
+			}}
+			faIcon={$showImageEditButtons ? 'fa-eye-slash' : 'fa-pencil'}
+			label={$showImageEditButtons ? 'Hide Image Edit Buttons' : 'Show Image Edit Buttons'}
+			backgroundColor={jdgColors.activeSecondary}
 			paddingTopBottom="5px"
 			paddingLeftRight="10px"
 			fontSize={jdgSizes.fontSizeBodyXSm}

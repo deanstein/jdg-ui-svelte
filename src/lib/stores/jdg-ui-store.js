@@ -2,6 +2,8 @@ import { derived, writable } from 'svelte/store';
 
 /*** ADMINISTRATION ***/
 export let isAdminMode = writable(false);
+// Show an edit button on all images (admin mode only)
+export let showImageEditButtons = writable(true);
 export let showAdminLoginModal = writable(false);
 export let postAdminLoginFunction = writable(() => {});
 // Consuming websites must set this to search other website repos
