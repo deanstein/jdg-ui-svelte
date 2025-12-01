@@ -25,7 +25,7 @@
 	const overlayCss = css`
 		z-index: ${getHighestZIndex()};
 		background-color: ${colorRgba};
-		backdrop-filter: ${useBlur ? 'blur(${jdgSizes.blurSizeMedium})' : ''};
+		backdrop-filter: ${useBlur ? `blur(${jdgSizes.blurSizeMedium})` : ''};
 	`;
 
 	const closeButtonCss = css`
