@@ -95,6 +95,9 @@
 			role="button"
 			tabindex="0"
 			on:click={(event) => {
+				// Stop event propagation to prevent parent click handlers from firing
+				event.stopPropagation();
+
 				// if provided, use the onclick prop
 				if (onClickFunction) {
 					//@ts-expect-error
