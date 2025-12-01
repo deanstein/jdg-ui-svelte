@@ -70,6 +70,7 @@
 
 	// Save the current draft timeline host collection to the GitHub repo
 	const saveToRepo = async () => {
+
 		// Set the status to saving
 		saveStatus.set(jdgSaveStatus.saving);
 
@@ -84,6 +85,7 @@
 		if (writeResult) {
 			// Success: clear the draft and pull latest
 			saveStatus.set(jdgSaveStatus.saveSuccess);
+			draftTimelineHost.set(undefined);
 			draftTimelineHostCollection.set(undefined);
 			selectedHostCollection = await readJsonFileFromRepo(
 				jdgRepoOwner,
