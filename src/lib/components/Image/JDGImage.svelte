@@ -22,7 +22,7 @@
 		showImageEditButtons,
 		showImageMetaModal,
 		showHeaderStripes,
-		windowWidth,
+		windowWidth
 	} from '$lib/stores/jdg-ui-store.js';
 	import {
 		addImageLoading,

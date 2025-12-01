@@ -7,7 +7,7 @@
 		showDevModal,
 		showDevToolbarSticky,
 		showImageEditButtons,
-		showImageMetaModal,
+		showImageMetaModal
 	} from '$lib/stores/jdg-ui-store.js';
 
 	import { instantiateObject, JDGButton, JDGH3H4 } from '$lib/index.js';
