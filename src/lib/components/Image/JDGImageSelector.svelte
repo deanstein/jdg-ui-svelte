@@ -267,6 +267,7 @@
 						{/if}
 						<JDGImageTile
 							{imageMeta}
+							onClickFunction={() => {}}
 							maxHeight="120px"
 							maxWidth="120px"
 							useAutoHeightOnMobile={false}
