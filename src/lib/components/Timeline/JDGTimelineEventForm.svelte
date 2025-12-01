@@ -45,7 +45,9 @@
 	// For debugging
 	export let showLocalStore = false;
 
-	let parentRef; // for positioning the compose toolbar
+	const noImageMessage = 'No images in this event';
+
+	let parentRef; // For positioning the compose toolbar
 
 	let isNewEvent; // If true, this event wasn't found in the draft timeline host
 
@@ -209,7 +211,7 @@
 							<JDGImageThumbnailGroup imageMetaSet={$localAdditionalStore[key]} />
 						</div>
 					{:else if !isEditing}
-						<div class="no-images-message">No images selected</div>
+						<div class="no-images-message">{noImageMessage}</div>
 					{/if}
 
 					<!-- In edit mode, show button and selector -->
@@ -247,7 +249,7 @@
 							<JDGImageThumbnailGroup imageMetaSet={$localEventStore[key]} />
 						</div>
 					{:else if !isEditing}
-						<div class="no-images-message">No images selected</div>
+						<div class="no-images-message">{noImageMessage}</div>
 					{/if}
 
 					<!-- In edit mode, show button and selector -->

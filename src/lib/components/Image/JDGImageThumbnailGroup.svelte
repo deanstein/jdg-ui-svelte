@@ -6,7 +6,8 @@
 
 	export let imageMetaSet;
 	export let activeImageMeta = undefined;
-	export let maxWidth = undefined;
+	export let maxImageHeight = '10svh';
+	export let maxContainerWidth = undefined;
 	export let activeThumbnailColor = $appAccentColors[0];
 	export let showBlurInUnfilledSpace = false;
 	export let justifyContent = 'center';
@@ -26,9 +27,9 @@
 	// the thumbnail container shouldn't be wider than the image
 	let dynamicThumbnailContainerWidthCss = css``;
 	$: {
-		if (isFinite(maxWidth)) {
+		if (isFinite(maxContainerWidth)) {
 			dynamicThumbnailContainerWidthCss = css`
-				width: ${showBlurInUnfilledSpace ? '100%' : `${maxWidth}px`};
+				width: ${showBlurInUnfilledSpace ? '100%' : `${maxContainerWidth}px`};
 			`;
 		}
 	}
@@ -47,11 +48,18 @@
 					setActiveImage(imageAttributesObject, true);
 				}}
 				imageMeta={imageAttributesObject}
-				maxHeight="50px"
-				maxWidth="75px"
+				maxHeight={maxImageHeight}
 				useAutoHeightOnMobile={false}
 				recordAspectRatioInState
 			/>
 		</div>
 	{/each}
 </div>
+
+<style>
+	.jdg-thumbnail-group-container {
+		display: flex;
+		gap: 10px;
+		justify-content: left;
+	}
+</style>
