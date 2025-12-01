@@ -15,7 +15,8 @@
 
 	// Filter state
 	let filterText = '';
-	let currentPage = 0;
+	let visibleCount = imagesPerPage; // Start by showing one page worth
+	let scrollContainer; // Reference to scrollable container
 
 	// Flatten the registry to get all images (handles nested structure like arch.*, exp.*, etc.)
 	const flattenRegistry = (obj, prefix = '') => {
@@ -48,34 +49,38 @@
 		return keyMatch || captionMatch;
 	});
 
-	// Reset to first page when filter changes
-	$: if (filterText) {
-		currentPage = 0;
+	// Reset visible count when filter changes
+	$: if (filterText !== undefined) {
+		visibleCount = imagesPerPage;
 	}
 
-	// Paginate filtered images
-	$: totalPages = Math.ceil(filteredImages.length / imagesPerPage);
-	$: paginatedImages = filteredImages.slice(
-		currentPage * imagesPerPage,
-		(currentPage + 1) * imagesPerPage
-	);
-
-	// Pagination controls
-	const goToNextPage = () => {
-		if (currentPage < totalPages - 1) {
-			currentPage++;
-		}
-	};
-
-	const goToPreviousPage = () => {
-		if (currentPage > 0) {
-			currentPage--;
-		}
-	};
+	// Show images up to visibleCount
+	$: visibleImages = filteredImages.slice(0, visibleCount);
+	$: hasMore = visibleCount < filteredImages.length;
 
 	const clearFilter = () => {
 		filterText = '';
-		currentPage = 0;
+		visibleCount = imagesPerPage;
+	};
+
+	// Load more images when scrolling near the bottom
+	const handleScroll = (e) => {
+		if (!hasMore) return;
+
+		const container = e.target;
+		const scrollBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
+
+		// Load more when within 200px of the bottom
+		if (scrollBottom < 200) {
+			loadMore();
+		}
+	};
+
+	// Load more images
+	const loadMore = () => {
+		if (hasMore) {
+			visibleCount = Math.min(visibleCount + imagesPerPage, filteredImages.length);
+		}
 	};
 
 	// Create a reactive set of selected image sources for fast lookup
@@ -115,6 +120,7 @@
 		border-radius: 8px;
 		padding: 12px;
 		background-color: ${jdgColors.backgroundSubtle};
+		scroll-behavior: smooth;
 	`;
 
 	const imageGridCss = css`
@@ -172,26 +178,25 @@
 		margin-bottom: 12px;
 	`;
 
-	const paginationCss = css`
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		gap: 12px;
-		margin-top: 12px;
-		padding-top: 12px;
-		border-top: 1px solid ${jdgColors.border};
-	`;
-
-	const pageInfoCss = css`
-		font-size: 14px;
-		color: ${jdgColors.textLight};
-		min-width: 120px;
-		text-align: center;
-	`;
-
 	const noResultsCss = css`
 		text-align: center;
 		padding: 40px 20px;
+		color: ${jdgColors.textLight};
+		font-style: italic;
+	`;
+
+	const loadMoreIndicatorCss = css`
+		text-align: center;
+		padding: 16px;
+		color: ${jdgColors.textLight};
+		font-size: 12px;
+	`;
+
+	const showingInfoCss = css`
+		text-align: center;
+		padding: 12px;
+		margin-top: 8px;
+		font-size: 12px;
 		color: ${jdgColors.textLight};
 		font-style: italic;
 	`;
@@ -234,14 +239,14 @@
 		{/if}
 	</div>
 
-	<div class={selectorContainerCss}>
-		{#if paginatedImages.length === 0}
+	<div class={selectorContainerCss} bind:this={scrollContainer} on:scroll={handleScroll}>
+		{#if visibleImages.length === 0}
 			<div class={noResultsCss}>
 				{filterText ? 'No images match your filter' : 'No images available'}
 			</div>
 		{:else}
 			<div class={imageGridCss}>
-				{#each paginatedImages as imageMeta (imageMeta.key)}
+				{#each visibleImages as imageMeta (imageMeta.key)}
 					{@const selected = isImageSelected(imageMeta, selectedImageSrcs)}
 					<div
 						class={imageTileWrapperCss}
@@ -272,40 +277,19 @@
 					</div>
 				{/each}
 			</div>
+
+			{#if hasMore}
+				<div class={loadMoreIndicatorCss}>
+					<i class="fa-solid fa-arrow-down" />
+					Scroll down to load more images...
+				</div>
+			{:else if filteredImages.length > imagesPerPage}
+				<div class={showingInfoCss}>
+					Showing all {filteredImages.length} image{filteredImages.length !== 1 ? 's' : ''}
+				</div>
+			{/if}
 		{/if}
 	</div>
-
-	{#if totalPages > 1}
-		<div class={paginationCss}>
-			<JDGButton
-				label="Previous"
-				faIcon="fa-chevron-left"
-				onClickFunction={goToPreviousPage}
-				isEnabled={currentPage > 0}
-				fontSize="12px"
-				paddingLeftRight="12px"
-				paddingTopBottom="6px"
-				backgroundColor={jdgColors.backgroundSubtle}
-			/>
-			<div class={pageInfoCss}>
-				Page {currentPage + 1} of {totalPages}
-				<br />
-				<span style="font-size: 12px;">
-					({filteredImages.length} image{filteredImages.length !== 1 ? 's' : ''})
-				</span>
-			</div>
-			<JDGButton
-				label="Next"
-				faIcon="fa-chevron-right"
-				onClickFunction={goToNextPage}
-				isEnabled={currentPage < totalPages - 1}
-				fontSize="12px"
-				paddingLeftRight="12px"
-				paddingTopBottom="6px"
-				backgroundColor={jdgColors.backgroundSubtle}
-			/>
-		</div>
-	{/if}
 </div>
 
 <style>
