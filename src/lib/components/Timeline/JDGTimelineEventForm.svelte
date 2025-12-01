@@ -246,7 +246,10 @@
 					<!-- Always show selected images if any exist -->
 					{#if $localEventStore[key]?.length > 0}
 						<div class="image-list-display">
-							<JDGImageThumbnailGroup imageMetaSet={$localEventStore[key]} />
+							<JDGImageThumbnailGroup
+								imageMetaSet={$localEventStore[key]}
+								maxImageHeight={'15svh'}
+							/>
 						</div>
 					{:else if !isEditing}
 						<div class="no-images-message">{noImageMessage}</div>
