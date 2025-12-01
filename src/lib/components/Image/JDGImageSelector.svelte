@@ -78,21 +78,23 @@
 		currentPage = 0;
 	};
 
+	// Create a reactive set of selected image sources for fast lookup
+	// This ensures the UI updates immediately when selections change
+	$: selectedImageSrcs = new Set(selectedImages.map((img) => img.src));
+
 	// Check if an image is selected
-	const isImageSelected = (imageMeta) => {
-		return selectedImages.some((img) => img.src === imageMeta.src || img.id === imageMeta.id);
+	const isImageSelected = (imageMeta, selectedSrcs) => {
+		return selectedSrcs.has(imageMeta.src);
 	};
 
 	// Toggle image selection
 	const toggleImage = (imageMeta) => {
 		if (!isEnabled) return;
 
-		const selected = isImageSelected(imageMeta);
+		const selected = selectedImageSrcs.has(imageMeta.src);
 		if (selected) {
-			// Remove from selection
-			selectedImages = selectedImages.filter(
-				(img) => img.src !== imageMeta.src && img.id !== imageMeta.id
-			);
+			// Remove from selection - filter by src for consistency
+			selectedImages = selectedImages.filter((img) => img.src !== imageMeta.src);
 		} else {
 			// Add to selection
 			selectedImages = [...selectedImages, imageMeta];
@@ -240,6 +242,7 @@
 		{:else}
 			<div class={imageGridCss}>
 				{#each paginatedImages as imageMeta (imageMeta.key)}
+					{@const selected = isImageSelected(imageMeta, selectedImageSrcs)}
 					<div
 						class={imageTileWrapperCss}
 						role="button"
@@ -250,11 +253,9 @@
 								toggleImage(imageMeta);
 							}
 						}}
-						style={isImageSelected(imageMeta)
-							? `outline: 4px solid ${jdgColors.active}; outline-offset: -4px;`
-							: ''}
+						style={selected ? `outline: 4px solid ${jdgColors.active}; outline-offset: -4px;` : ''}
 					>
-						{#if isImageSelected(imageMeta)}
+						{#if selected}
 							<div class={selectedBadgeCss}>
 								<i class="fa-solid fa-check" />
 							</div>
