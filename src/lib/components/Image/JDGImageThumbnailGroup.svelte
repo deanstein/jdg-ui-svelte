@@ -12,7 +12,6 @@
 	export let showBlurInUnfilledSpace = false;
 	export let justifyContent = 'center';
 
-
 	const justificationCss = css`
 		justify-content: ${justifyContent};
 		align-items: ${justifyContent === 'right' ? 'end' : 'center'};
