@@ -12,12 +12,6 @@
 	export let showBlurInUnfilledSpace = false;
 	export let justifyContent = 'center';
 
-	const setActiveImage = (imageAttributesObject, endAutoAdvance = false) => {
-		// only set active image if image is different
-		if (activeImageMeta.src !== imageAttributesObject.src) {
-			activeImageMeta = imageAttributesObject;
-		}
-	};
 
 	const justificationCss = css`
 		justify-content: ${justifyContent};
@@ -44,9 +38,6 @@
 				: ''}
 		>
 			<JDGImageTile
-				onClickFunction={() => {
-					setActiveImage(imageAttributesObject, true);
-				}}
 				imageMeta={imageAttributesObject}
 				maxHeight={maxImageHeight}
 				useAutoHeightOnMobile={false}
