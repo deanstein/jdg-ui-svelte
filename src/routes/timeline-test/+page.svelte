@@ -63,14 +63,12 @@
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
 	import JDGDatePicker from '$lib/components/Input/JDGDatePicker.svelte';
 	import jdgSaveStatus from '$lib/schemas/jdg-save-status.js';
-	import { imageMetaRegistry } from '../image-meta-registry.js';
 
 	// Ensure this page allows text selection
 	allowTextSelection.set(true);
 
 	// Save the current draft timeline host collection to the GitHub repo
 	const saveToRepo = async () => {
-
 		// Set the status to saving
 		saveStatus.set(jdgSaveStatus.saving);
 
@@ -82,11 +80,15 @@
 			$draftTimelineHostCollection
 		);
 
+		// Successfully wrote the JSON file
 		if (writeResult) {
-			// Success: clear the draft and pull latest
 			saveStatus.set(jdgSaveStatus.saveSuccess);
+			// Set the local timeline host store to the draft one
+			localTimelineHostStore.set($draftTimelineHost);
+			// Clear the drafts
 			draftTimelineHost.set(undefined);
 			draftTimelineHostCollection.set(undefined);
+
 			selectedHostCollection = await readJsonFileFromRepo(
 				jdgRepoOwner,
 				jdgBuildingDataRepoName,
