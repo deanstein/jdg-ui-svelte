@@ -10,11 +10,11 @@
 	export let maxContainerWidth = undefined;
 	export let activeThumbnailColor = $appAccentColors[0];
 	export let showBlurInUnfilledSpace = false;
-	export let justifyContent = 'center';
+	export let justifyContent = 'flex-start';
 
 	const justificationCss = css`
 		justify-content: ${justifyContent};
-		align-items: ${justifyContent === 'right' ? 'end' : 'center'};
+		align-items: ${justifyContent === 'right' ? 'end' : 'flex-start'};
 	`;
 
 	// the thumbnail container shouldn't be wider than the image
@@ -29,11 +29,11 @@
 </script>
 
 <div class="jdg-thumbnail-group-container {dynamicThumbnailContainerWidthCss} {justificationCss}">
-	{#each imageMetaSet as imageAttributesObject, i}
+	{#each imageMetaSet ?? [] as imageAttributesObject, i}
 		<div
 			class="jdg-thumbnail-group-wrapper"
 			style={imageAttributesObject === activeImageMeta
-				? `outline: 5px solid ${activeThumbnailColor}`
+				? `outline: 3px solid ${activeThumbnailColor}; outline-offset: 2px;`
 				: ''}
 		>
 			<JDGImageTile
@@ -49,7 +49,11 @@
 <style>
 	.jdg-thumbnail-group-container {
 		display: flex;
-		gap: 10px;
-		justify-content: left;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+
+	.jdg-thumbnail-group-wrapper {
+		flex-shrink: 0;
 	}
 </style>
