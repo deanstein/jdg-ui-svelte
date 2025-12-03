@@ -267,13 +267,14 @@
 						{/if}
 						<JDGImageTile
 							{imageMeta}
-							onClickFunction={() => {}}
+							onClickFunction={() => toggleImage(imageMeta)}
 							maxHeight="120px"
 							maxWidth="120px"
 							useAutoHeightOnMobile={false}
 							cropToFillContainer={true}
 							showCaption={false}
 							showAttribution={false}
+							showHorizontalStripesOnHover={false}
 						/>
 					</div>
 				{/each}
