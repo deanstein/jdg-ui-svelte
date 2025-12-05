@@ -17,9 +17,29 @@
 
 	let overlayRef;
 
+	// Check if an element or any of its ancestors (up to the overlay) is scrollable
+	function isInsideScrollableElement(target) {
+		let el = target;
+		while (el && el !== overlayRef) {
+			const style = window.getComputedStyle(el);
+			const overflowY = style.overflowY;
+			const isScrollable = overflowY === 'auto' || overflowY === 'scroll';
+			const hasOverflow = el.scrollHeight > el.clientHeight;
+
+			if (isScrollable && hasOverflow) {
+				return true;
+			}
+			el = el.parentElement;
+		}
+		return false;
+	}
+
 	// Generally, the content in an overlay shouldn't scroll the page
+	// But allow scrolling if inside a scrollable child element
 	function preventScroll(e) {
-		e.preventDefault();
+		if (!isInsideScrollableElement(e.target)) {
+			e.preventDefault();
+		}
 	}
 
 	const overlayCss = css`
