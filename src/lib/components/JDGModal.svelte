@@ -16,7 +16,9 @@
 	export let subtitle = 'This is a modal subtitle';
 	export let width = 'auto';
 	export let height = 'auto';
-	export let maximizeOnMobile = false; // maximize size on mobile
+	export let minWidth = undefined; // only applies to desktop/tablet
+	export let maxWidth = undefined; // only applies to desktop/tablet
+	export let maximizeOnMobile = false; // maximize width on mobile
 	export let padding = '10px';
 	export let overflow = ''; // default is not set but can be set per instance
 	export let backgroundColor = jdgColors.contentBoxBackground;
@@ -29,6 +31,8 @@
 		modalContentContainerCss = css`
 			width: ${$isMobileBreakpoint && maximizeOnMobile ? '90vw' : width};
 			height: ${$isMobileBreakpoint && maximizeOnMobile ? '90svh' : height};
+			min-width: ${!$isMobileBreakpoint && minWidth ? minWidth : 'auto'};
+			max-width: ${!$isMobileBreakpoint && maxWidth ? maxWidth : 'none'};
 			overflow: ${overflow};
 			background-color: ${transparency
 				? setRgbaAlpha(backgroundColor, transparency)
@@ -153,7 +157,9 @@
 		overflow-y: auto;
 		height: 80vh;
 		overscroll-behavior: contain;
-		-webkit-overflow-scrolling: touch;
+		width: -webkit-fill-available;
+		width: -moz-available;
+		box-sizing: border-box;
 	}
 
 	.modal-toolbar-slot {
