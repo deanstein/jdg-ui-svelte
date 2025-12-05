@@ -35,8 +35,10 @@
 		$showTimelineEventModal = false;
 	}}
 	backgroundColor={'rgba(235, 235, 235, 1)'}
+	minWidth="30vw"
+	maxWidth="80vw"
 >
-	<div slot="modal-content-slot">
+	<div slot="modal-content-slot" class="modal-content-wrapper">
 		<JDGTimelineEventForm
 			eventStore={draftTimelineEvent}
 			isEditable={$isTimelineEventModalEditable || isNewEvent}
@@ -44,3 +46,10 @@
 		/>
 	</div>
 </JDGModal>
+
+<style>
+	.modal-content-wrapper {
+		width: 100%;
+		box-sizing: border-box;
+	}
+</style>

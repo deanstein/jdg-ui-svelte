@@ -348,7 +348,9 @@
 		flex-direction: column;
 		gap: 20px;
 		min-width: 0;
+		width: 100%;
 		overflow-x: hidden;
+		box-sizing: border-box;
 	}
 
 	.form-store-preview {
