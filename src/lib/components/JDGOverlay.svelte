@@ -1,8 +1,10 @@
 <script>
+	import { onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
 	import { fade } from 'svelte/transition';
 
+	import { highestZIndex } from '$lib/stores/jdg-ui-store.js';
 	import { getHighestZIndex } from '$lib/jdg-state-management.js';
 
 	import { JDGCloseIcon } from '$lib/index.js';
@@ -94,6 +96,12 @@
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 			max-height: calc(100vh - ${jdgSizes.headerHeightLg});
 		`;
+
+	onMount(() => {
+		// Increment the highest z-index on mount
+		// to ensure every new Overlay (likely a Modal) is on top
+		highestZIndex.set(getHighestZIndex() + 1);
+	})
 </script>
 
 <div
