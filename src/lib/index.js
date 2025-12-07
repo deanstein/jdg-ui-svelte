@@ -172,6 +172,9 @@ export { JDGNotificationBanner };
 import JDGOverlay from './components/JDGOverlay.svelte';
 export { JDGOverlay };
 
+import JDGPortal from './components/JDGPortal.svelte';
+export { JDGPortal };
+
 import JDGVersionPackageJson from './components/Version/JDGVersionPackageJson.svelte';
 export { JDGVersionPackageJson };
 

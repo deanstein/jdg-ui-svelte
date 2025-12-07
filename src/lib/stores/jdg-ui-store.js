@@ -34,6 +34,13 @@ export let isScrollingToAnchorTag = writable(false);
 export let windowScrollPosition = writable(0);
 export let scrollDirection = writable('down');
 
+/* -------------------- DOM ELEMENTS -------------------- */
+
+/*** APP CONTAINER ***/
+// Reference to JDGAppContainer div
+// used by JDGPortal to render modals in the right context
+export let appContainerRef = writable(undefined);
+
 /*** NAVIGATION ***/
 export let jumpToNavItems = writable([]);
 export let showNavSidebar = writable(false);
