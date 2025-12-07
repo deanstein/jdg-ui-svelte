@@ -30,6 +30,7 @@
 
 <style>
 	.jdg-nav-item {
+		text-align: center;
 		align-items: baseline;
 		display: flex;
 		font-weight: bold;
