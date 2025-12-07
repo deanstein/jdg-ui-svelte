@@ -188,7 +188,7 @@
 			}, {})
 		};
 	}
-	
+
 	// Manage draft fields
 	$: {
 		if ($localTimelineHostStore !== undefined && $draftTimelineHost === undefined) {

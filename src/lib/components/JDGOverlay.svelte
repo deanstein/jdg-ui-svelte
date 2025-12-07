@@ -101,7 +101,7 @@
 		// Increment the highest z-index on mount
 		// to ensure every new Overlay (likely a Modal) is on top
 		highestZIndex.set(getHighestZIndex() + 1);
-	})
+	});
 </script>
 
 <div
