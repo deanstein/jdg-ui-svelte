@@ -33,7 +33,6 @@
 			height: ${$isMobileBreakpoint && maximizeOnMobile ? '90svh' : height};
 			min-width: ${!$isMobileBreakpoint && minWidth ? minWidth : 'auto'};
 			max-width: ${!$isMobileBreakpoint && maxWidth ? maxWidth : 'none'};
-			overflow: ${overflow};
 			background-color: ${transparency
 				? setRgbaAlpha(backgroundColor, transparency)
 				: backgroundColor};
@@ -41,6 +40,7 @@
 	}
 
 	const modalContentSlotCss = css`
+		overflow: ${overflow};
 		padding: ${padding};
 	`;
 
@@ -65,9 +65,11 @@
 			{#if title || onClickCloseButton}
 				<div class="modal-title-bar-container {modalTitleBarContainerCss}">
 					<div class="modal-title-container">
-						<div class="modal-title {modalTitleCss}">
-							{title}
-						</div>
+						{#if title}
+							<div class="modal-title {modalTitleCss}">
+								{title}
+							</div>
+						{/if}
 					</div>
 					{#if subtitle}
 						<div class="modal-subtitle-container">
@@ -154,7 +156,6 @@
 		align-items: center;
 		gap: 1vh;
 		min-height: 0;
-		overflow-y: auto;
 		height: 80vh;
 		overscroll-behavior: contain;
 		width: -webkit-fill-available;
