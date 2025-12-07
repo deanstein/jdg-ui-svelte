@@ -47,6 +47,7 @@
 	import {
 		JDGBodyCopy,
 		JDGButton,
+		JDGCheckbox,
 		JDGContentBoxFloating,
 		JDGContentContainer,
 		JDGGridLayout,
@@ -157,6 +158,7 @@
 	const newTimelineHost = instantiateTimelineHost();
 	newTimelineHost.id = uuid();
 	newTimelineHost.name = 'New Timeline Host';
+
 	// This is the store we have locally, not a draft
 	let localTimelineHostStore = writable();
 	let localTimelineHostInceptionDateStore = writable();
@@ -165,6 +167,10 @@
 	let draftTimelineHostNameStore = writable();
 	let draftTimelineHostInceptionDateStore = writable();
 	let draftTimelineHostCessationDateStore = writable();
+
+	// Show timeline as preview only?
+	let previewOnly = false;
+
 	// Create Select options,
 	// including the new host and hosts from the selected collection
 	let timelineHostOptionsGroup;
@@ -182,6 +188,7 @@
 			}, {})
 		};
 	}
+	
 	// Manage draft fields
 	$: {
 		if ($localTimelineHostStore !== undefined && $draftTimelineHost === undefined) {
@@ -471,6 +478,7 @@
 		</JDGBodyCopy>
 
 		<JDGH3H4 h3String="Timeline" paddingBottom="15px" />
+		<JDGCheckbox label="Preview only" bind:isChecked={previewOnly} />
 		<JDGTimeline
 			timelineHost={$draftTimelineHost ?? $localTimelineHostStore ?? newTimelineHost}
 			allowEditing={$draftTimelineHost !== undefined}
@@ -483,7 +491,7 @@
 				showTimelineEventModal.set(true);
 				draftTimelineEvent.set(instantiateTimelineEvent(jdgTimelineEventKeys.generic));
 			}}
-			previewOnly
+			{previewOnly}
 		/>
 		<JDGButton
 			label="Write image-meta-registry.js"
