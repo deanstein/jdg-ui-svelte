@@ -128,6 +128,11 @@
 	const lastEventRowHeightStore = writable(0);
 	setContext(JDG_CONTEXT_KEYS.timelineLastRowHeight, lastEventRowHeightStore);
 
+	const onClickPreviewOverlay = () => {
+		showTimelineModal = true;
+		isHovering = false;
+	};
+
 	const onCheckRelativeSpacing = () => {
 		forceRelativeSpacing = true;
 	};
@@ -317,14 +322,20 @@
 	<JDGSaveStateBanner />
 	<!-- Hover overlay for previewOnly mode -->
 	{#if previewOnly && isHovering}
-		<div class="timeline-hover-overlay" transition:fade={{ duration: jdgDurations.default }}>
+		<div
+			class="timeline-hover-overlay"
+			transition:fade={{ duration: jdgDurations.default }}
+			on:click={() => {
+				onClickPreviewOverlay();
+			}}
+			on:keydown={(e) => e.key === 'Enter' && (showTimelineModal = true)}
+			role="button"
+			tabindex="0"
+		>
 			<JDGButton
+				onClickFunction={onClickPreviewOverlay}
 				label="Open timeline"
 				faIcon="fa-expand"
-				onClickFunction={() => {
-					showTimelineModal = true;
-					isHovering = false;
-				}}
 				shadow={true}
 			/>
 		</div>
