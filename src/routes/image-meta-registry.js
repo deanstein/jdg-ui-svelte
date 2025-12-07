@@ -1,6 +1,6 @@
 import { addCloudinaryUrlTransformation, upgradeImageMetaRegistry } from '$lib/jdg-utils.js';
 
-// all available images and their metadata
+// This holds all available images and their metadata
 // new images with a caption must be added here
 const imageMetaRegistry = {
 	aerial_60s70s_1: {
