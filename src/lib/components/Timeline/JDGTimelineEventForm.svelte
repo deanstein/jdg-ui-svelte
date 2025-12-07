@@ -139,12 +139,20 @@
 		localAdditionalStore.set(dataOnlyAddlContent);
 	}
 
-	// Keep the age updated
+	// Keep the age and years ago values updated
 	let eventAge;
+	let yearsAgo;
 	$: {
 		const eventDateCorrected = new Date($eventStore?.date);
 		eventAge = getNumYearsBetweenDates($timelineEventModalInceptionDate, eventDateCorrected);
+		yearsAgo = getNumYearsBetweenDates(eventDateCorrected, new Date());
 	}
+
+	// Get current event type info for header display
+	$: currentTypeInfo = jdgTimelineEventTypes[$localEventStore.type] ?? {};
+	$: currentTypeLabel = currentTypeInfo.label ?? $localEventStore.type ?? 'Event';
+	$: currentTypeIcon = currentTypeInfo.icon ?? 'fa-calendar';
+	$: isGenericType = $localEventStore.type === 'generic';
 
 	// Reset image selector when editing state changes
 	$: if (!isEditing) {
@@ -153,7 +161,22 @@
 </script>
 
 <div bind:this={parentRef} class="jdg-timeline-form">
-	<!-- Only show Type dropdown when editing -->
+	<!-- Event type and age header -->
+	<div class="event-header">
+		<div class="event-header-view event-header-age">
+			{#if !isGenericType}
+				<i class="fa-solid {currentTypeIcon} event-header-icon" />
+				<span class="event-header-separator">|</span>
+			{/if}
+			{#if isFinite(eventAge)}
+				<span>{eventAge} years old</span>
+				<span class="event-header-separator">|</span>
+				<span>{yearsAgo} years ago</span>
+			{/if}
+		</div>
+	</div>
+
+	<!-- Type picker when editing -->
 	{#if isEditing}
 		<JDGInputContainer label="Type">
 			<JDGSelect
@@ -161,13 +184,6 @@
 				bind:inputValue={$localEventStore.type}
 				isEnabled={isEditing}
 			/>
-		</JDGInputContainer>
-	{/if}
-
-	<!-- Show age if it's valid -->
-	{#if isFinite(eventAge)}
-		<JDGInputContainer label={'Age'}>
-			{eventAge}
 		</JDGInputContainer>
 	{/if}
 
@@ -367,6 +383,32 @@
 		width: 100%;
 		overflow-x: hidden;
 		box-sizing: border-box;
+	}
+
+	.event-header {
+		display: flex;
+		justify-content: center;
+		width: 100%;
+	}
+
+	.event-header-view {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		font-size: 1.1rem;
+	}
+
+	.event-header-icon {
+		font-size: 1.2rem;
+	}
+
+	.event-header-separator {
+		color: #999;
+		font-weight: 300;
+	}
+
+	.event-header-age {
+		color: #666;
 	}
 
 	.form-store-preview {
