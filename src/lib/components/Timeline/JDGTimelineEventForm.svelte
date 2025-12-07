@@ -173,9 +173,7 @@
 
 	<!-- All fields from the schema -->
 	{#each renderFields as { key, def, isAdditional } (key)}
-		<div class="form-group">
-			<label for={key}>{def.label}</label>
-
+		<JDGInputContainer label={def.label}>
 			{#if def.inputType === JDG_INPUT_TYPES.DATE}
 				<div class="date-with-checkbox">
 					{#if isAdditional}
@@ -307,7 +305,7 @@
 			{:else}
 				<JDGTextInput bind:inputValue={$localEventStore[key]} />
 			{/if}
-		</div>
+		</JDGInputContainer>
 	{/each}
 	{#if isEditable}
 		<JDGComposeToolbar
@@ -376,18 +374,16 @@
 	}
 
 	.image-list-display {
-		padding: 12px;
 		background-color: rgba(240, 240, 240, 0.5);
 		border-radius: 8px;
 		margin-bottom: 12px;
 	}
 
 	.no-images-message {
-		padding: 12px;
 		font-style: italic;
 		color: #999;
-		text-align: center;
-		margin-bottom: 12px;
+		text-align: left;
+		margin-top: 4px;
 	}
 
 	.image-selector-actions {
