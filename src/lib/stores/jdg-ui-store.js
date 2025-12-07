@@ -60,9 +60,10 @@ export let showImageViewerModal = writable(false);
 /*** IMAGE META MODAL ***/
 export let showImageMetaModal = writable(false);
 
-/*** TIMELINE ***/
+/*** TIMELINE EVENT MODAL ***/
 export let showTimelineEventModal = writable(false);
 export let isTimelineEventModalEditable = writable(false);
+export let timelineEventModalInceptionDate = writable(undefined);
 
 /*** DELETION ***/
 export let showDeleteModal = writable(false);
@@ -97,6 +98,8 @@ const storeMap = {
 	isScrollingToAnchorTag,
 	scrollDirection,
 	windowScrollPosition,
+	// app container ref
+	appContainerRef,
 	// nav
 	showNavSidebar,
 	jumpToNavItems,
@@ -112,6 +115,8 @@ const storeMap = {
 	imageViewerScale,
 	// timeline
 	showTimelineEventModal,
+	isTimelineEventModalEditable,
+	timelineEventModalInceptionDate,
 	// quantities
 	clientWidth,
 	windowWidth,

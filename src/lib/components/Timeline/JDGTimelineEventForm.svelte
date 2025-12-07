@@ -3,6 +3,7 @@
 
 	import { get, writable } from 'svelte/store';
 
+	import { timelineEventModalInceptionDate } from '$lib/stores/jdg-ui-store.js';
 	import { draftTimelineEvent, draftTimelineHost } from '$lib/stores/jdg-temp-store.js';
 	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
 	import jdgTimelineEventTypes, {
@@ -16,6 +17,7 @@
 	import {
 		addOrReplaceObjectByKeyValue,
 		deleteObjectByKeyValue,
+		getNumYearsBetweenDates,
 		getIsObjectInArray
 	} from '$lib/jdg-utils.js';
 
@@ -137,6 +139,13 @@
 		localAdditionalStore.set(dataOnlyAddlContent);
 	}
 
+	// Keep the age updated
+	let eventAge;
+	$: {
+		const eventDateCorrected = new Date($eventStore?.date);
+		eventAge = getNumYearsBetweenDates($timelineEventModalInceptionDate, eventDateCorrected);
+	}
+
 	// Reset image selector when editing state changes
 	$: if (!isEditing) {
 		isImageSelectorOpen = false;
@@ -154,6 +163,15 @@
 			/>
 		</JDGInputContainer>
 	{/if}
+
+	<!-- Show age if it's valid -->
+	{#if isFinite(eventAge)}
+		<JDGInputContainer label={'Age'}>
+			{eventAge}
+		</JDGInputContainer>
+	{/if}
+
+	<!-- All fields from the schema -->
 	{#each renderFields as { key, def, isAdditional } (key)}
 		<div class="form-group">
 			<label for={key}>{def.label}</label>

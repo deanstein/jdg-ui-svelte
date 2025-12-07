@@ -14,7 +14,8 @@
 		isAdminMode,
 		isTimelineEventModalEditable,
 		showImageViewerModal,
-		imageViewerMeta
+		imageViewerMeta,
+		timelineEventModalInceptionDate
 	} from '$lib/stores/jdg-ui-store.js';
 
 	import { jdgTimelineEventKeys } from '$lib/schemas/timeline/jdg-timeline-event-types.js';
@@ -425,6 +426,7 @@
 									draftTimelineEvent.set(timelineRowItem.event);
 									showTimelineEventModal.set(true);
 									isTimelineEventModalEditable.set(allowEditing);
+									timelineEventModalInceptionDate.set(timelineHost.inceptionDate);
 								}}
 								rowIndex={timelineRowItem.index}
 								backgroundColor={timelineEventColors[i]}
