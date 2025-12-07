@@ -7,6 +7,7 @@
 
 	import {
 		appAccentColors,
+		appContainerRef as appContainerRefStore,
 		appFontFamily,
 		clientWidth,
 		allowTextSelection as allowTextSelectionStore,
@@ -149,6 +150,9 @@
 	onMount(async () => {
 		// Call onPageResize() once for initialization
 		setTimeout(onPageResize, 0);
+
+		// Set the app container element reference for JDGPortal to use
+		appContainerRefStore.set(appContainerRef);
 
 		await tick(); // Delay until layout and all children are loaded
 		isAppLoaded = true;

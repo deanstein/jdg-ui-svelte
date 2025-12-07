@@ -483,6 +483,7 @@
 				showTimelineEventModal.set(true);
 				draftTimelineEvent.set(instantiateTimelineEvent(jdgTimelineEventKeys.generic));
 			}}
+			previewOnly
 		/>
 		<JDGButton
 			label="Write image-meta-registry.js"

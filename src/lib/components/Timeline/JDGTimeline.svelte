@@ -1,6 +1,7 @@
 <script>
 	import { onMount, setContext } from 'svelte';
 	import { writable } from 'svelte/store';
+	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
 	import { JDG_CONTEXT_KEYS } from '$lib/stores/jdg-context-keys.js';
@@ -28,13 +29,22 @@
 	import { generateGradient } from '$lib/jdg-utils.js';
 
 	import {
+		JDGButton,
 		JDGCheckbox,
 		JDGComposeToolbar,
 		JDGImage,
+		JDGModal,
+		JDGPortal,
 		JDGSaveStateBanner,
 		JDGTimelineEvent
 	} from '$lib/index.js';
-	import { jdgBreakpoints, jdgColors, jdgQuantities, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import {
+		jdgBreakpoints,
+		jdgColors,
+		jdgDurations,
+		jdgQuantities,
+		jdgSizes
+	} from '$lib/jdg-shared-styles.js';
 	import { imageMetaRegistry } from '../../../routes/image-meta-registry.js';
 
 	// Timeline host contains events and event references
@@ -51,9 +61,16 @@
 	export let width = '100%';
 	export let minHeight = '50svh';
 	export let maxHeight = '50svh';
+	// When true, this timeline is a preview
+	// with a button to open it in a modal for a better experience
+	export let previewOnly = false;
 
 	export let onClickInceptionEvent = () => {};
 	export let addClickAddEvent = () => {};
+
+	// State for hover overlay and modal
+	let isHovering = false;
+	let showTimelineModal = false;
 
 	/*** Eventually needed, but not developed yet ***/
 	// export let onClickEventRefHost = () => {};
@@ -290,8 +307,28 @@
 	}
 </script>
 
-<div bind:this={timelineWrapperRef} class="timeline-wrapper">
+<div
+	bind:this={timelineWrapperRef}
+	class="timeline-wrapper"
+	on:mouseenter={() => previewOnly && (isHovering = true)}
+	on:mouseleave={() => previewOnly && (isHovering = false)}
+	role="region"
+>
 	<JDGSaveStateBanner />
+	<!-- Hover overlay for previewOnly mode -->
+	{#if previewOnly && isHovering}
+		<div class="timeline-hover-overlay" transition:fade={{ duration: jdgDurations.default }}>
+			<JDGButton
+				label="Open timeline"
+				faIcon="fa-expand"
+				onClickFunction={() => {
+					showTimelineModal = true;
+					isHovering = false;
+				}}
+				shadow={true}
+			/>
+		</div>
+	{/if}
 	<!-- Title Bar-->
 	{#if showTitleBar}
 		<div class="timeline-title-bar {timelineTitleBarCss}">
@@ -400,11 +437,65 @@
 	</div>
 </div>
 
+<!-- Modal for full timeline view - portaled to JDGAppContainer for proper positioning -->
+{#if showTimelineModal}
+	<JDGPortal>
+		<JDGModal
+			title={null}
+			subtitle={null}
+			onClickCloseButton={() => (showTimelineModal = false)}
+			backgroundColor="rgba(245, 245, 245, 1)"
+			width="90vw"
+			height="85vh"
+			maxWidth="none"
+			overflow={'hidden'}
+		>
+			<div slot="modal-content-slot" class="timeline-modal-content">
+				<svelte:self
+					{timelineHost}
+					{contextEvents}
+					{showTitleBar}
+					{allowEditing}
+					{isInteractive}
+					width="100%"
+					minHeight="70vh"
+					maxHeight="75vh"
+					{onClickInceptionEvent}
+					{addClickAddEvent}
+				/>
+			</div>
+		</JDGModal>
+	</JDGPortal>
+{/if}
+
 <style>
 	.timeline-wrapper {
+		position: relative;
 		height: -webkit-fill-available;
 		width: -webkit-fill-available;
 		width: -moz-available;
+	}
+
+	.timeline-hover-overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgba(255, 255, 255, 0.85);
+		backdrop-filter: blur(4px);
+		z-index: 10;
+		border-radius: 10px;
+		cursor: pointer;
+	}
+
+	.timeline-modal-content {
+		width: 100%;
+		height: 100%;
+		box-sizing: border-box;
 	}
 
 	.timeline-title-bar {
