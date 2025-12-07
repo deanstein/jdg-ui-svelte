@@ -263,8 +263,30 @@
 		height: 100%;
 	}
 
+	/* Disable the default highlight animation on the logo link - we use custom effects instead */
+	.logo-container a::before {
+		display: none !important;
+	}
+
 	.logo-img {
 		height: 100%;
+	}
+
+	.logo-container a:hover .logo-img,
+	.logo-container a:focus .logo-img {
+		animation: logo-press 0.3s ease-out;
+	}
+
+	@keyframes logo-press {
+		0% {
+			transform: translate(0, 0);
+		}
+		40% {
+			transform: translate(-3px, 3px);
+		}
+		100% {
+			transform: translate(0, 0);
+		}
 	}
 
 	.logo-title-container {
@@ -273,6 +295,32 @@
 		flex-direction: column;
 		align-items: baseline;
 		justify-content: end;
+		position: relative;
+	}
+
+	.logo-title-container::after {
+		content: '';
+		position: absolute;
+		bottom: -6px;
+		left: -8px; /* overshoot left like a highlighter */
+		right: -8px; /* overshoot right like a highlighter */
+		height: 0;
+		background-color: #E1D779; /* jdgColors.accentColorsJDG[0] */
+		z-index: -1;
+	}
+
+	.logo-container a:hover .logo-title-container::after,
+	.logo-container a:focus .logo-title-container::after {
+		animation: slide-up 0.5s forwards;
+	}
+
+	@keyframes slide-up {
+		0% {
+			height: 0;
+		}
+		100% {
+			height: 10px;
+		}
 	}
 
 	.logo-supertitle {
