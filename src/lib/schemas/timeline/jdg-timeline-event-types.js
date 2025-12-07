@@ -15,6 +15,57 @@ export const timelineEventStrings = {
 };
 
 const jdgTimelineEventTypes = {
+	/* ========== GENERIC ========== */
+	/* Base event types applicable to people, buildings, etc. */
+	article: {
+		label: 'Article',
+		icon: 'fa-newspaper'
+	},
+	generic: {
+		label: 'Generic',
+		icon: 'fa-rectangle-list'
+	},
+	media: {
+		label: 'Media',
+		icon: 'fa-image'
+	},
+	memory: {
+		label: 'Memory',
+		icon: 'fa-comment'
+	},
+	/* ========== GENERIC (CONTEXTUAL) ========== */
+	/* Not selectable in selectors or clickable in Timelines */
+	context: {
+		label: 'Contextual Event',
+		icon: 'fa-globe',
+		isContextual: true
+	},
+	// Inception is only used when
+	// no inception event is set, and there are no other events
+	inception: {
+		label: 'Inception',
+		icon: 'fa-wand-magic-sparkles',
+		description: 'Inception',
+		isContextual: true
+	},
+	reference: {
+		label: 'Event Reference',
+		icon: 'fa-asterisk',
+		isContextual: true
+	},
+	today: {
+		icon: 'fa-sun',
+		isContextual: true,
+		description: 'Today'
+	},
+	world: {
+		label: 'World Event',
+		icon: 'fa-globe',
+		isContextual: true
+	},
+
+	/* ========== PEOPLE ========== */
+	/* Event types applicable to people, used in apps like Family Tree */
 	birth: {
 		label: 'Birth',
 		icon: 'fa-wand-magic-sparkles',
@@ -36,7 +87,6 @@ const jdgTimelineEventTypes = {
 			}
 		}
 	},
-
 	death: {
 		label: 'Death',
 		icon: 'fa-umbrella-beach',
@@ -63,32 +113,22 @@ const jdgTimelineEventTypes = {
 			}
 		}
 	},
-
-	generic: {
-		label: 'Generic',
-		icon: 'fa-rectangle-list'
-	},
-
-	media: {
-		label: 'Media',
-		icon: 'fa-image'
-	},
-
 	education: {
 		label: 'Education',
 		icon: 'fa-graduation-cap'
 	},
-
+	relationship: {
+		label: 'Relationship',
+		icon: 'fa-heart'
+	},
 	residence: {
 		label: 'Residence',
 		icon: 'fa-house'
 	},
-
 	workplace: {
 		label: 'Workplace',
 		icon: 'fa-building'
 	},
-
 	vehicle: {
 		label: 'Vehicle',
 		icon: 'fa-car',
@@ -110,33 +150,8 @@ const jdgTimelineEventTypes = {
 			}
 		}
 	},
-
-	relationship: {
-		label: 'Relationship',
-		icon: 'fa-heart'
-	},
-
-	// This is only used when
-	// no inception event is set, and there are no other events
-	inception: {
-		label: 'Inception',
-		icon: 'fa-wand-magic-sparkles',
-		description: 'Inception',
-		isContextual: true
-	},
-
-	// Contextual types:
-	// Not selectable in drop-down selectors or clickable in Timelines
-	context: {
-		label: 'Contextual Event',
-		icon: 'fa-globe',
-		isContextual: true
-	},
-	reference: {
-		label: 'Event Reference',
-		icon: 'fa-asterisk',
-		isContextual: true
-	},
+	/* ========== PEOPLE (CONTEXTUAL) ========== */
+	/* Not selectable in selectors or clickable in Timelines */
 	childBirth: {
 		label: 'Child Born',
 		icon: 'fa-child-reaching',
@@ -153,15 +168,24 @@ const jdgTimelineEventTypes = {
 			parentId: ''
 		}
 	},
-	world: {
-		label: 'World Event',
-		icon: 'fa-globe',
-		isContextual: true
+
+	/* ========== BUILDINGS ========== */
+	/* Base event types applicable to buildings, used in apps like CCP */
+	ownershipChanged: {
+		label: 'Ownership Changed',
+		icon: 'fa-handshake'
 	},
-	today: {
-		icon: 'fa-sun',
-		isContextual: true,
-		description: 'Today'
+	renovation: {
+		label: 'Renovation',
+		icon: 'fa-wrench'
+	},
+	storeClosed: {
+		label: 'Store Closed',
+		icon: 'fa-store-slash'
+	},
+	storeOpened: {
+		label: 'Store Opened',
+		icon: 'fa-store'
 	}
 };
 
