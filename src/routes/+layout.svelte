@@ -104,6 +104,12 @@
 	fontFamily="Goldman"
 >
 	<JDGNotificationBanner notificationType={jdgNotificationTypes.information.id} />
+	<JDGNotificationBanner
+		message="This notification banner has a custom icon, color, and font size."
+		iconSrc="https://res.cloudinary.com/jdg-main/image/upload/v1759708726/jdg-ui-svelte/jdg-logo-ui.png"
+		backgroundColor="#a7ffa4"
+		fontSize="0.7rem"
+	/>
 	<JDGHeader
 		logoJustification="left"
 		logoSupertitle={'INTRODUCING'}

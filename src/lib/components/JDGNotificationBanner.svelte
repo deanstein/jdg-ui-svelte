@@ -14,7 +14,9 @@
 	export let showBanner = true;
 	export let notificationType = jdgNotificationTypes.information; // Inits color and icon
 	export let faIcon = 'fa-solid ' + notificationType.faIcon;
+	export let iconSrc = null; // path to SVG/PNG image (takes priority over faIcon if set)
 	export let message = jdgNotificationTypes.information.message;
+	export let fontSize = jdgSizes.fontSizeBodyXSm;
 	export let backgroundColor = undefined;
 	export let standalone = true; // set to false if included in a header already in a fixed position
 	export let forceOnTop = false; // if true, will use z-index store to ensure always on top
@@ -27,7 +29,7 @@
 	};
 
 	let notificationContainerCss = css`
-		font-size: ${jdgSizes.fontSizeBodyXSm};
+		font-size: ${fontSize};
 		z-index: ${forceOnTop ? incrementHighestZIndex() : 1};
 		color: ${jdgColors.text};
 	`;
@@ -61,8 +63,12 @@
 	<div class="notification-banner-outer-container {notificationContainerCss}" transition:slide>
 		<!-- Icon and message -->
 		<div class="notification-banner-message-container {notificationMessageContainerCss}">
-			<i class={'fa-solid ' + faIcon} />
-			{message}
+			{#if iconSrc}
+				<img src={iconSrc} alt="" class="notification-banner-icon" />
+			{:else}
+				<i class={'fa-solid ' + faIcon} />
+			{/if}
+			<span class="notification-banner-message">{message}</span>
 		</div>
 		<div class="notification-button-container">
 			<slot />
@@ -103,6 +109,17 @@
 		justify-content: center;
 		align-items: center;
 		gap: 7px;
+		flex-wrap: wrap;
+	}
+
+	.notification-banner-icon {
+		height: 1.2em;
+		width: auto;
+		object-fit: contain;
+	}
+
+	.notification-banner-message {
+		text-wrap: balance;
 	}
 
 	.notification-button-container {
