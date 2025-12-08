@@ -12,6 +12,12 @@
 <JDGContentContainer overlapWithHeader={false}>
 	<JDGContentBoxFloating>
 		<JDGImageTile
+			imageMeta={imageMetaRegistry.reupload_test}
+			showCaption={true}
+			showAttribution={true}
+			cropToFillContainer={false}
+		/>
+		<JDGImageTile
 			imageMeta={imageMetaRegistry.swe.ccp_1}
 			showCaption={true}
 			showAttribution={true}
