@@ -1,7 +1,7 @@
 import { addCloudinaryUrlTransformation, upgradeImageMetaRegistry } from '$lib/jdg-utils.js';
 
-// This holds all available images and their metadata
-// new images with a caption must be added here
+// This registry contains all available images and their metadata
+// New images with a caption must be added manually or via ImageMetaModal
 const imageMetaRegistry = {
 	aerial_60s70s_1: {
 		src: 'https://res.cloudinary.com/jdg-main/image/upload/v1716959961/jdg-ui-svelte/history/aerial-60s70s-1_e4hg6b.jpg',
