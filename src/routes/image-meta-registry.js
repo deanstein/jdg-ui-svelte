@@ -490,7 +490,7 @@ const imageMetaRegistry = {
 	},
 	reupload_test: {
 			id: '1f8e9f97-8fe5-43fa-a316-1d370cf82cda',
-			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765174096/jdg-ui-svelte/image-testing/reupload-test.jpg.jpg.jpg',
+			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765174234/jdg-ui-svelte/image-testing/reupload-test.jpg.jpg.jpg.jpg',
 			alt: 'This is a reupload test!',
 			caption: 'This is a reupload test!',
 			attribution: 'Some attribution'
