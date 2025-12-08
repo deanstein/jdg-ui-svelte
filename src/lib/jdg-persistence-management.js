@@ -35,13 +35,19 @@ export const jsonToListRepoName = 'json-to-html';
 export const encryptedPAT =
 	'U2FsdGVkX19E4XXmu4s1Y76A+iKILjKYG1n92+pqbtzdoJpeMyl6Pit0H8Kq8G28M+ZuqmdhHEfb/ud4GEe5gw==';
 
-// Location of image metadata collection for all websites
-export const imageMetaRegistryPath = 'src/routes/image-meta-registry.js';
+// Possible locations of image metadata collection across websites
+// The fetch function will try each path in order until one succeeds
+export const imageMetaRegistryPaths = [
+	'src/routes/image-meta-registry.js',
+	'src/image-meta-registry.js'
+];
+// Keep single path for backwards compatibility (uses first path)
+export const imageMetaRegistryPath = imageMetaRegistryPaths[0];
 // Typical imageMetaRegistry variable name, for finding within the .js file
 export const imageMetaRegistryVarName = 'imageMetaRegistry';
 // All repos containing an imageMetaRegistry
 // that may require checking before changing a Cloudinary asset path
-const allImageMetaRegistryRepoNames = [
+export const allImageMetaRegistryRepoNames = [
 	jdgUiSvelteRepoName,
 	jdgWebsiteRepoName,
 	pmx3dWebsiteRepoName,
@@ -173,23 +179,141 @@ export async function writeJsonFileToRepo(repoOwner, repoName, filePath, jsonCon
 }
 
 // Fetch the imageMetaRegistry object from a given repo
+// Tries each path in imageMetaRegistryPaths until one succeeds
 export const fetchImageMetaRegistry = async (repoName) => {
-	const url = new URL(cfRouteFetchPublicFile, cfWorkerUrlJdgGithub);
-	url.searchParams.set('repoOwner', jdgRepoOwner);
-	url.searchParams.set('repoName', repoName);
-	url.searchParams.set('filePath', imageMetaRegistryPath);
+	let lastError = null;
 
-	const response = await fetch(url.toString());
+	for (const filePath of imageMetaRegistryPaths) {
+		try {
+			const url = new URL(cfRouteFetchPublicFile, cfWorkerUrlJdgGithub);
+			url.searchParams.set('repoOwner', jdgRepoOwner);
+			url.searchParams.set('repoName', repoName);
+			url.searchParams.set('filePath', filePath);
 
-	if (!response.ok) {
-		throw new Error(`Failed to fetch file: ${response.status}`);
+			const response = await fetch(url.toString());
+
+			if (!response.ok) {
+				// Try next path
+				lastError = new Error(`Failed to fetch from ${filePath}: ${response.status}`);
+				continue;
+			}
+
+			const jsFileString = await response.text();
+			// Extract the imageMetaRegistry object from the JS file string
+			const imageMetaRegistry = extractObjectLiteral(jsFileString, 'imageMetaRegistry');
+
+			if (imageMetaRegistry) {
+				console.log(`📁 Found imageMetaRegistry in ${repoName} at ${filePath}`);
+				return imageMetaRegistry;
+			}
+		} catch (err) {
+			lastError = err;
+			// Continue to try next path
+		}
 	}
 
-	const jsFileString = await response.text();
-	// Extract the imageMetaRegistry object from the JS file string
-	const imageMetaRegistry = extractObjectLiteral(jsFileString, 'imageMetaRegistry');
+	// If we get here, none of the paths worked
+	throw lastError || new Error(`Could not find imageMetaRegistry in ${repoName}`);
+};
 
-	return imageMetaRegistry;
+// Fetch the raw image-meta-registry.js file content from a repo
+// Returns the raw file content as a string (not parsed)
+const fetchImageMetaRegistryRaw = async (repoName) => {
+	let lastError = null;
+
+	for (const filePath of imageMetaRegistryPaths) {
+		try {
+			const url = new URL(cfRouteFetchPublicFile, cfWorkerUrlJdgGithub);
+			url.searchParams.set('repoOwner', jdgRepoOwner);
+			url.searchParams.set('repoName', repoName);
+			url.searchParams.set('filePath', filePath);
+
+			console.log(`🔍 Trying to fetch ${repoName}/${filePath}...`);
+			const response = await fetch(url.toString());
+
+			if (!response.ok) {
+				console.log(`   ❌ HTTP ${response.status} for ${filePath}`);
+				lastError = new Error(`Failed to fetch from ${filePath}: ${response.status}`);
+				continue;
+			}
+
+			const fileContent = await response.text();
+			console.log(`   📄 Got response (${fileContent.length} chars) from ${filePath}`);
+
+			// Check if the response is an error JSON (worker might return 200 with error body)
+			if (fileContent.startsWith('{') && fileContent.includes('"error"')) {
+				console.log(`   ⚠️ Response appears to be an error JSON`);
+				lastError = new Error(`Error response from ${filePath}`);
+				continue;
+			}
+
+			// Verify this looks like an image meta registry file
+			if (fileContent.includes('imageMetaRegistry')) {
+				console.log(`   ✅ Found imageMetaRegistry in ${repoName} at ${filePath}`);
+				return fileContent;
+			} else {
+				console.log(`   ⚠️ File found but doesn't contain 'imageMetaRegistry'`);
+			}
+		} catch (err) {
+			console.log(`   ❌ Exception: ${err.message}`);
+			lastError = err;
+		}
+	}
+
+	throw lastError || new Error(`Could not find imageMetaRegistry in ${repoName}`);
+};
+
+// Check if a Cloudinary URL is used across all repos with image meta registries
+// Returns an array of objects with repo name and whether the URL was found
+export const getImageMetaSrcUsageInRepos = async (targetUrl, excludeRepoName = null) => {
+	const results = [];
+
+	// Filter out the current repo if specified
+	const reposToCheck = excludeRepoName
+		? allImageMetaRegistryRepoNames.filter((name) => name !== excludeRepoName)
+		: allImageMetaRegistryRepoNames;
+
+	console.log(`🔍 Checking URL usage across ${reposToCheck.length} repos...`);
+
+	// Fetch all registries in parallel
+	const fetchPromises = reposToCheck.map(async (repoName) => {
+		try {
+			const fileContent = await fetchImageMetaRegistryRaw(repoName);
+			return { repoName, fileContent, error: null };
+		} catch (err) {
+			console.warn(`⚠️ Failed to fetch registry from ${repoName}:`, err.message);
+			return { repoName, fileContent: null, error: err.message };
+		}
+	});
+
+	const fetchResults = await Promise.all(fetchPromises);
+
+	// Search each registry file for the target URL
+	for (const { repoName, fileContent, error } of fetchResults) {
+		if (error || !fileContent) {
+			results.push({
+				repoName,
+				error: error || 'Registry is empty',
+				found: false
+			});
+			continue;
+		}
+
+		// Simply check if the URL string exists in the file content
+		const found = fileContent.includes(targetUrl);
+
+		results.push({
+			repoName,
+			error: null,
+			found
+		});
+
+		if (found) {
+			console.log(`✅ Found URL in ${repoName}`);
+		}
+	}
+
+	return results;
 };
 
 // Write a single image meta entry to the registry

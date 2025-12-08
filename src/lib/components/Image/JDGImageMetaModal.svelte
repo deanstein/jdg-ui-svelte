@@ -19,6 +19,7 @@
 	} from '$lib/jdg-utils.js';
 	import {
 		deleteCloudinaryImage,
+		getImageMetaSrcUsageInRepos,
 		writeImageMetaEntryToRepo
 	} from '$lib/jdg-persistence-management.js';
 
@@ -60,6 +61,9 @@
 
 	// Shows a banner when uploading
 	let isUploading = false;
+
+	// State for checking URL usage across repos
+	let isCheckingUsage = false;
 
 	// Track if this is a new image (no src with Cloudinary URL)
 	$: isNewImage = !originalDraftMeta?.src || !originalDraftMeta.src.includes('cloudinary');
@@ -306,6 +310,55 @@
 		return null;
 	};
 
+	// Check if the current image URL is used in other repos
+	const onCheckUrlUsage = async () => {
+		const currentSrc = $draftImageMeta?.src;
+		if (!currentSrc || !currentSrc.includes('cloudinary')) {
+			alert('No valid Cloudinary URL to check.');
+			return;
+		}
+
+		isCheckingUsage = true;
+
+		try {
+			const currentRepoName = get(repoName);
+			const results = await getImageMetaSrcUsageInRepos(currentSrc, currentRepoName);
+
+			// Find repos where the URL was found
+			const reposWithUrl = results.filter((r) => r.found);
+			const reposWithErrors = results.filter((r) => r.error);
+
+			let message;
+
+			if (reposWithUrl.length === 0) {
+				message = '✅ This URL is not used in any other repos.';
+			} else {
+				message = `⚠️ This URL is referenced in ${reposWithUrl.length} other repo(s):\n\n`;
+
+				for (const { repoName: repo } of reposWithUrl) {
+					message += `   • ${repo}\n`;
+				}
+
+				message +=
+					'\nIf you change this URL, you will need to update these references in other repos.';
+			}
+
+			// Always show repos that couldn't be checked
+			if (reposWithErrors.length > 0) {
+				message += `\n\n⚠️ Could not check ${reposWithErrors.length} repo(s): ${reposWithErrors
+					.map((r) => r.repoName)
+					.join(', ')}`;
+			}
+
+			alert(message);
+		} catch (err) {
+			console.error('❌ Error checking URL usage:', err);
+			alert(`Error checking URL usage: ${err.message}`);
+		} finally {
+			isCheckingUsage = false;
+		}
+	};
+
 	// Helper function to set a value at a nested path in the registry
 	const setNestedRegistryValue = (registry, path, value) => {
 		const keys = path.split('.');
@@ -445,6 +498,19 @@
 			<JDGInputContainer label="Asset Path">
 				<JDGTextInput inputValue={assetPath} onInputFunction={onAssetPathChange} />
 			</JDGInputContainer>
+			<!-- Check URL usage in other repos button -->
+			{#if !isNewImage}
+				<div class="check-usage-button-container">
+					<JDGButton
+						label={isCheckingUsage ? 'Checking...' : 'Check Usage in Other Sites'}
+						faIcon={isCheckingUsage ? 'fa-spinner fa-spin' : 'fa-search'}
+						onClickFunction={onCheckUrlUsage}
+						paddingLeftRight="10px"
+						paddingTopBottom="5px"
+						isEnabled={!isCheckingUsage}
+					/>
+				</div>
+			{/if}
 			<div class="upload-button-container">
 				<JDGButton
 					label="Upload..."
@@ -572,6 +638,10 @@
 		max-width: 500px;
 		word-break: break-word;
 		overflow-wrap: anywhere;
+	}
+
+	.check-usage-button-container {
+		margin-bottom: 10px;
 	}
 
 	.upload-button-container {
