@@ -491,10 +491,9 @@ const imageMetaRegistry = {
 	reupload_test: {
 		src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765161210/jdg-ui-svelte/image-testing/reupload-test.jpg',
 		alt: 'This is a reupload test!',
-		caption:
-			'This is a reupload test!',
+		caption: 'This is a reupload test!',
 		attribution: 'Some attribution'
-	},
+	}
 };
 
 // Upgrade the registry - this upgrades and post-processes each imageMeta
