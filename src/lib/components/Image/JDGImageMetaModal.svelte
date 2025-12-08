@@ -20,6 +20,7 @@
 	import {
 		deleteCloudinaryImage,
 		getImageMetaSrcUsageInRepos,
+		replaceUrlAcrossRepos,
 		writeImageMetaEntryToRepo
 	} from '$lib/jdg-persistence-management.js';
 
@@ -150,8 +151,6 @@
 			return;
 		}
 
-		saveStatus.set(jdgSaveStatus.uploading);
-
 		// For new images, check if registry key already exists
 		// (Registry key is auto-generated from filename)
 		if (isNewImage) {
@@ -177,7 +176,7 @@
 		// Parse the full asset path into folder + filename
 		// e.g., "jdg-ui-svelte/my-image.jpg" → folder: "jdg-ui-svelte", fileName: "my-image.jpg"
 		const pathParts = fullAssetPath.split('/');
-		const fileName = pathParts.pop();
+		let fileName = pathParts.pop();
 		const folderPath = pathParts.join('/');
 
 		if (!fileName) {
@@ -185,10 +184,66 @@
 			return;
 		}
 
-		// Store original path to compare for deletion
-		// For new images, there's no original path, so never delete
-		const originalFullPath = isNewImage ? null : extractCloudinaryAssetpath(originalDraftMeta?.src);
+		// Strip ALL trailing image extensions from fileName - Cloudinary worker will add the correct one
+		// This prevents/fixes double extensions like "image.jpg.jpg.jpg"
+		const imageExtPattern = /\.(jpg|jpeg|png|gif|webp|svg|bmp|tiff?|avif)$/i;
+		while (imageExtPattern.test(fileName)) {
+			fileName = fileName.replace(imageExtPattern, '');
+		}
+		console.log('📎 Cleaned fileName:', fileName);
+
+		// Store original URL and path for later use
+		const originalSrc = originalDraftMeta?.src;
+		const originalFullPath = isNewImage ? null : extractCloudinaryAssetpath(originalSrc);
 		const hasPathChanged = !isNewImage && originalFullPath && originalFullPath !== fullAssetPath;
+
+		// Debug logging
+		console.log('📋 Upload check:', {
+			isNewImage,
+			originalSrc,
+			originalFullPath,
+			fullAssetPath,
+			hasPathChanged
+		});
+
+		// For existing images, check if URL is used in other repos
+		// This applies even if path hasn't changed, because re-uploading changes the version/URL
+		let reposWithUrl = [];
+		const currentRepoName = get(repoName);
+
+		if (!isNewImage && originalSrc) {
+			console.log('🔍 Checking if URL is used in other repos before upload...');
+			try {
+				const usageResults = await getImageMetaSrcUsageInRepos(originalSrc, currentRepoName);
+				reposWithUrl = usageResults.filter((r) => r.found);
+
+				console.log('📊 Usage results:', { reposWithUrl, total: usageResults.length });
+
+				if (reposWithUrl.length > 0) {
+					const repoList = reposWithUrl.map((r) => r.repoName).join('\n   • ');
+					const confirmProceed = confirm(
+						`⚠️ This URL is also used in ${reposWithUrl.length} other repo(s):\n\n   • ${repoList}\n\nRe-uploading will change the URL. All these repos will be updated with the new URL.\n\nContinue?`
+					);
+					if (!confirmProceed) {
+						// Clear file input so user can try again
+						fileInput.value = '';
+						return;
+					}
+				} else {
+					console.log('ℹ️ URL not found in other repos, proceeding with upload');
+				}
+			} catch (err) {
+				console.warn('⚠️ Could not check URL usage:', err.message);
+				// Ask user if they want to continue anyway
+				const continueAnyway = confirm(
+					`⚠️ Could not check if URL is used in other repos:\n${err.message}\n\nDo you want to continue anyway? Other repos may not be updated.`
+				);
+				if (!continueAnyway) {
+					fileInput.value = '';
+					return;
+				}
+			}
+		}
 
 		console.log(`📤 Uploading "${file.name}" to "${fullAssetPath}"...`);
 		saveStatus.set(jdgSaveStatus.uploading);
@@ -213,7 +268,8 @@
 				throw new Error(uploadData.error || 'Upload failed');
 			}
 
-			console.log('✅ Upload complete:', uploadData.url);
+			const newUrl = uploadData.url;
+			console.log('✅ Upload complete:', newUrl);
 
 			// Step 2: Delete old image if path changed
 			if (hasPathChanged) {
@@ -235,7 +291,7 @@
 			}
 
 			// Step 3: Update image src in draft meta
-			draftImageMeta.update((meta) => ({ ...meta, src: uploadData.url }));
+			draftImageMeta.update((meta) => ({ ...meta, src: newUrl }));
 
 			// Step 4: Update the registry store with the new image meta
 			// Use the registry key (not the UUID id) as the object key
@@ -244,15 +300,12 @@
 				setNestedRegistryValue(registry, registryKey, get(draftImageMeta))
 			);
 
-			// Step 5: Write only this entry back to GitHub
-			const currentRepoName = get(repoName);
+			// Step 5: Write to current repo
 			if (!currentRepoName) {
 				throw new Error('No repo name set. Cannot write registry to GitHub.');
 			}
 
 			console.log(`💾 Writing image entry "${registryKey}" to ${currentRepoName}...`);
-
-			// Set the save status
 			saveStatus.set(jdgSaveStatus.saving);
 
 			const writeResult = await writeImageMetaEntryToRepo(
@@ -265,7 +318,31 @@
 				throw new Error('Failed to write entry to GitHub');
 			}
 
-			console.log('✅ Registry saved successfully');
+			console.log('✅ Registry saved to current repo');
+
+			// Step 6: Update other repos if they contain the old URL
+			// This applies for any re-upload since the URL changes (version number changes)
+			if (reposWithUrl.length > 0 && originalSrc) {
+				console.log(`🔄 Updating URL in ${reposWithUrl.length} other repo(s)...`);
+
+				const { updated, failed } = await replaceUrlAcrossRepos(
+					originalSrc,
+					newUrl,
+					currentRepoName
+				);
+
+				if (updated.length > 0) {
+					console.log(`✅ Updated ${updated.length} repo(s): ${updated.join(', ')}`);
+				}
+				if (failed.length > 0) {
+					console.warn(`⚠️ Failed to update ${failed.length} repo(s):`, failed);
+					alert(
+						`Warning: Failed to update some repos:\n${failed
+							.map((f) => `${f.repoName}: ${f.error}`)
+							.join('\n')}\n\nYou may need to update these manually.`
+					);
+				}
+			}
 
 			// Indicate the save was successful, and the site will be rebuilt
 			saveStatus.set(jdgSaveStatus.saveSuccessRebuilding);

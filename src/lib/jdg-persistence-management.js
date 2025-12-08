@@ -316,6 +316,100 @@ export const getImageMetaSrcUsageInRepos = async (targetUrl, excludeRepoName = n
 	return results;
 };
 
+// Replace an old URL with a new URL in a repo's image-meta-registry file
+// This does a simple string replacement - useful when an image URL changes
+export const replaceUrlInImageMetaRegistry = async (repoName, oldUrl, newUrl) => {
+	try {
+		// Try each possible path
+		let fileContent = null;
+		let successfulPath = null;
+
+		for (const filePath of imageMetaRegistryPaths) {
+			try {
+				const url = new URL(cfRouteFetchPublicFile, cfWorkerUrlJdgGithub);
+				url.searchParams.set('repoOwner', jdgRepoOwner);
+				url.searchParams.set('repoName', repoName);
+				url.searchParams.set('filePath', filePath);
+
+				const response = await fetch(url.toString());
+				if (response.ok) {
+					fileContent = await response.text();
+					if (fileContent.includes('imageMetaRegistry')) {
+						successfulPath = filePath;
+						break;
+					}
+				}
+			} catch {
+				// Try next path
+			}
+		}
+
+		if (!fileContent || !successfulPath) {
+			throw new Error(`Could not find imageMetaRegistry in ${repoName}`);
+		}
+
+		// Check if the old URL exists in the file
+		if (!fileContent.includes(oldUrl)) {
+			console.log(`ℹ️ URL not found in ${repoName}, skipping`);
+			return { success: true, skipped: true, repoName };
+		}
+
+		// Replace all occurrences of the old URL with the new URL
+		const updatedContent = fileContent.split(oldUrl).join(newUrl);
+
+		// Write the updated file back
+		const writeUrl = new URL(cfRouteWritePublicJsFile, cfWorkerUrlJdgGithub);
+		writeUrl.searchParams.set('repoOwner', jdgRepoOwner);
+		writeUrl.searchParams.set('repoName', repoName);
+		writeUrl.searchParams.set('filePath', successfulPath);
+
+		const writeResponse = await fetch(writeUrl.toString(), {
+			method: 'POST',
+			headers: { 'Content-Type': 'text/plain' },
+			body: updatedContent
+		});
+
+		if (!writeResponse.ok) {
+			throw new Error(`Failed to write file: ${writeResponse.status}`);
+		}
+
+		const result = await writeResponse.json();
+		console.log(`✅ Replaced URL in ${repoName}`);
+		return { success: result.success, skipped: false, repoName };
+	} catch (err) {
+		console.error(`❌ Failed to replace URL in ${repoName}:`, err.message);
+		return { success: false, error: err.message, repoName };
+	}
+};
+
+// Replace a URL across all repos that contain it
+export const replaceUrlAcrossRepos = async (oldUrl, newUrl, excludeRepoName = null) => {
+	// First, find which repos contain the URL
+	const usageResults = await getImageMetaSrcUsageInRepos(oldUrl, excludeRepoName);
+	const reposWithUrl = usageResults.filter((r) => r.found);
+
+	if (reposWithUrl.length === 0) {
+		console.log('ℹ️ No other repos contain this URL');
+		return { updated: [], failed: [] };
+	}
+
+	console.log(`🔄 Replacing URL in ${reposWithUrl.length} repo(s)...`);
+
+	// Replace URL in each repo
+	const replacePromises = reposWithUrl.map((r) =>
+		replaceUrlInImageMetaRegistry(r.repoName, oldUrl, newUrl)
+	);
+
+	const results = await Promise.all(replacePromises);
+
+	const updated = results.filter((r) => r.success && !r.skipped).map((r) => r.repoName);
+	const failed = results
+		.filter((r) => !r.success)
+		.map((r) => ({ repoName: r.repoName, error: r.error }));
+
+	return { updated, failed };
+};
+
 // Write a single image meta entry to the registry
 export const writeImageMetaEntryToRepo = async (repoName, registryKey, imageMeta) => {
 	try {
