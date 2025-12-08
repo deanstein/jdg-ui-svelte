@@ -655,6 +655,33 @@
 				isEnabled={isTestButtonEnabled}
 			/>
 		</div>
+		<JDGBodyCopy textAlign="center" paddingBottom="0"
+			>Custom icon (SVG/PNG via iconSrc):</JDGBodyCopy
+		>
+		<div
+			style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;"
+		>
+			<JDGButton
+				onClickFunction={() => {}}
+				iconSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E"
+				label="SVG icon"
+			/>
+			<JDGButton
+				onClickFunction={() => {}}
+				iconSrc="https://res.cloudinary.com/jdg-main/image/upload/v1759708726/jdg-ui-svelte/jdg-logo-ui.png"
+				label="PNG icon"
+				isPrimary={false}
+			/>
+			<JDGButton
+				onClickFunction={() => {}}
+				iconSrc="https://res.cloudinary.com/jdg-main/image/upload/v1759708726/jdg-ui-svelte/jdg-logo-ui.png"
+				label={null}
+				doForceSquareAspect
+				paddingLeftRight={'8px'}
+				paddingTopBottom={'8px'}
+				tooltip="Custom SVG, square"
+			/>
+		</div>
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="FEATURE CARD">
 		<JDGFeatureCard

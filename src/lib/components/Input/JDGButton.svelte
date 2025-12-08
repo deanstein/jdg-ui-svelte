@@ -47,6 +47,7 @@
 	export let label = 'This is a button'; // set null if no label is desired
 	export let faClass = 'fa-solid fa-fw'; // fa-fw ensures consistent width for all icons
 	export let faIcon = 'fa-circle-info'; // set null if no icon is desired
+	export let iconSrc = null; // path to SVG/PNG image (takes priority over faIcon if set)
 	export let isEnabled = true;
 	export let isPrimary = true;
 	export let onClickFunction;
@@ -106,7 +107,9 @@
 	title={tooltip ?? ''}
 	class="jdg-button {buttonCss} {shadow ? jdgBoxShadowStandard : ''}"
 >
-	{#if faIcon !== null}
+	{#if iconSrc}
+		<img src={iconSrc} alt="" class="jdg-button-icon" />
+	{:else if faIcon !== null}
 		<i class="{faClass} {doForceSquareAspect ? 'fa-fw' : ''} {faIcon}" />
 	{/if}
 	{#if label !== null}
@@ -123,5 +126,11 @@
 		outline: none;
 		font-weight: bold;
 		text-wrap: balance;
+	}
+
+	.jdg-button-icon {
+		height: 1.2em; /* scales with font-size, slightly larger to match FA icons */
+		width: auto;
+		object-fit: contain;
 	}
 </style>
