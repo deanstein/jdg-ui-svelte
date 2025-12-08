@@ -213,6 +213,7 @@
 
 		if (!isNewImage && originalSrc) {
 			console.log('🔍 Checking if URL is used in other repos before upload...');
+			isCheckingUsage = true;
 			try {
 				const usageResults = await getImageMetaSrcUsageInRepos(originalSrc, currentRepoName);
 				reposWithUrl = usageResults.filter((r) => r.found);
@@ -227,6 +228,7 @@
 					if (!confirmProceed) {
 						// Clear file input so user can try again
 						fileInput.value = '';
+						isCheckingUsage = false;
 						return;
 					}
 				} else {
@@ -240,9 +242,11 @@
 				);
 				if (!continueAnyway) {
 					fileInput.value = '';
+					isCheckingUsage = false;
 					return;
 				}
 			}
+			isCheckingUsage = false;
 		}
 
 		console.log(`📤 Uploading "${file.name}" to "${fullAssetPath}"...`);
@@ -352,13 +356,6 @@
 
 			// Clear file input so it can be reused
 			fileInput.value = '';
-
-			// Close modal after successful save
-			setTimeout(() => {
-				showImageMetaModal.set(false);
-				draftImageMeta.set(undefined);
-				saveStatus.set(undefined);
-			}, 1500);
 		} catch (err) {
 			console.error('❌ Upload/Save error:', err.message);
 			saveStatus.set(jdgSaveStatus.saveFailed);
