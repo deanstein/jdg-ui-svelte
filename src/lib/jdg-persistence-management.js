@@ -558,6 +558,35 @@ export const deleteCloudinaryImage = async (assetPath, fileName) => {
 	}
 };
 
+// Rename/move an image in Cloudinary via Cloudflare worker
+// This changes the public_id (path) of an existing image without re-uploading
+export const renameCloudinaryImage = async (fromPublicId, toPublicId) => {
+	try {
+		// Remove file extension from public IDs (Cloudinary stores without extension)
+		const cleanFrom = fromPublicId.replace(/\.[^/.]+$/, '');
+		const cleanTo = toPublicId.replace(/\.[^/.]+$/, '');
+
+		const url = `https://jdg-cloudinary.jdeangoldstein.workers.dev/rename-image?fromPublicId=${encodeURIComponent(
+			cleanFrom
+		)}&toPublicId=${encodeURIComponent(cleanTo)}`;
+
+		const response = await fetch(url, {
+			method: 'POST'
+		});
+
+		const data = await response.json();
+		if (!response.ok || !data.success) {
+			throw new Error(data.error || 'Rename failed');
+		}
+
+		console.log('✅ Rename complete:', cleanFrom, '→', cleanTo);
+		return data; // { success: true, url: "new secure URL", public_id: "new-path" }
+	} catch (err) {
+		console.error('❌ Rename error:', err.message);
+		throw err;
+	}
+};
+
 //
 // LEGACY FUNCTIONS (to be removed)
 //

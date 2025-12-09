@@ -20,6 +20,7 @@
 	import {
 		deleteCloudinaryImage,
 		getImageMetaSrcUsageInRepos,
+		renameCloudinaryImage,
 		replaceUrlAcrossRepos,
 		writeImageMetaEntryToRepo
 	} from '$lib/jdg-persistence-management.js';
@@ -433,6 +434,117 @@
 		}
 	};
 
+	// Move an existing image to a new path in Cloudinary (rename operation)
+	const onMoveImage = async () => {
+		if (!hasAssetPathChanged || isNewImage) return;
+
+		const originalPath = extractCloudinaryAssetpath(originalDraftMeta.src);
+		const newPath = extractCloudinaryAssetpath($draftImageMeta.src);
+
+		if (!originalPath || !newPath) {
+			alert('Could not determine image paths');
+			return;
+		}
+
+		// Check usage in other repos first
+		const currentRepoName = get(repoName);
+		let reposWithUrl = [];
+
+		isCheckingUsage = true;
+		try {
+			const usageResults = await getImageMetaSrcUsageInRepos(
+				originalDraftMeta.src,
+				currentRepoName
+			);
+			reposWithUrl = usageResults.filter((r) => r.found);
+
+			if (reposWithUrl.length > 0) {
+				const repoList = reposWithUrl.map((r) => r.repoName).join('\n   • ');
+				const confirmProceed = confirm(
+					`⚠️ This image URL is used in ${reposWithUrl.length} other repo(s):\n\n   • ${repoList}\n\nMoving will update all references automatically.\n\nContinue?`
+				);
+				if (!confirmProceed) {
+					isCheckingUsage = false;
+					return;
+				}
+			}
+		} catch (err) {
+			console.warn('⚠️ Could not check URL usage:', err.message);
+			const continueAnyway = confirm(
+				`⚠️ Could not check if URL is used in other repos:\n${err.message}\n\nDo you want to continue anyway? Other repos may not be updated.`
+			);
+			if (!continueAnyway) {
+				isCheckingUsage = false;
+				return;
+			}
+		}
+		isCheckingUsage = false;
+
+		saveStatus.set(jdgSaveStatus.saving);
+
+		try {
+			// Step 1: Rename in Cloudinary
+			console.log(`🔄 Moving image from "${originalPath}" to "${newPath}"...`);
+			const renameResult = await renameCloudinaryImage(originalPath, newPath);
+
+			// Step 2: Update the src with the new URL from Cloudinary
+			const newUrl = renameResult.url;
+			draftImageMeta.update((meta) => ({ ...meta, src: newUrl }));
+
+			// Step 3: Update registry and save to current repo
+			draftImageMetaRegistry.update((registry) =>
+				setNestedRegistryValue(registry, registryKey, get(draftImageMeta))
+			);
+
+			console.log(`💾 Writing image entry "${registryKey}" to ${currentRepoName}...`);
+
+			const writeResult = await writeImageMetaEntryToRepo(
+				currentRepoName,
+				registryKey,
+				get(draftImageMeta)
+			);
+
+			if (!writeResult) {
+				throw new Error('Failed to write entry to GitHub');
+			}
+
+			console.log('✅ Registry saved to current repo');
+
+			// Step 4: Update other repos if they contain the old URL
+			if (reposWithUrl.length > 0) {
+				console.log(`🔄 Updating URL in ${reposWithUrl.length} other repo(s)...`);
+
+				const { updated, failed } = await replaceUrlAcrossRepos(
+					originalDraftMeta.src,
+					newUrl,
+					currentRepoName
+				);
+
+				if (updated.length > 0) {
+					console.log(`✅ Updated ${updated.length} repo(s): ${updated.join(', ')}`);
+				}
+				if (failed.length > 0) {
+					console.warn(`⚠️ Failed to update ${failed.length} repo(s):`, failed);
+					alert(
+						`Warning: Failed to update some repos:\n${failed
+							.map((f) => `${f.repoName}: ${f.error}`)
+							.join('\n')}\n\nYou may need to update these manually.`
+					);
+				}
+			}
+
+			saveStatus.set(jdgSaveStatus.saveSuccessRebuilding);
+
+			// Update the original draft meta to reflect the new saved state
+			originalDraftMeta = instantiateObject(get(draftImageMeta));
+		} catch (err) {
+			console.error('❌ Move error:', err.message);
+			saveStatus.set(jdgSaveStatus.saveFailed);
+			setTimeout(() => saveStatus.set(undefined), 3000);
+			alert(`Error moving image: ${err.message}`);
+		}
+	};
+
 	// Helper function to set a value at a nested path in the registry
 	const setNestedRegistryValue = (registry, path, value) => {
 		const keys = path.split('.');
@@ -561,7 +673,7 @@
 			<JDGNotificationBanner
 				showBanner={hasAssetPathChanged && !isNewImage}
 				notificationType={jdgNotificationTypes.warning}
-				message={'The asset path or name has changed. This will require deletion and reupload.'}
+				message={'The asset path has changed. Clicking Done will rename the image in Cloudinary.'}
 			/>
 			<!-- Show a banner when we can't determine other repo impacts due to asset path change -->
 			<JDGNotificationBanner
@@ -637,6 +749,12 @@
 				onClickCompose={() => {}}
 				onClickDone={async () => {
 					try {
+						// If asset path changed on existing image, perform move operation instead
+						if (hasAssetPathChanged && !isNewImage) {
+							await onMoveImage();
+							return;
+						}
+
 						// Set save status
 						saveStatus.set(jdgSaveStatus.saving);
 
