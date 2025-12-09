@@ -17,7 +17,7 @@ const jdgNotificationTypes = {
 	inProgress: {
 		color: '#FFFF00',
 		message: 'Operation in progress.',
-		faIcon: 'fa-spinner'
+		faIcon: 'fa-spinner fa-spin'
 	},
 	success: {
 		color: '#77FF16',
