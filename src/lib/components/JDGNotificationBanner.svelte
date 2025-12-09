@@ -15,7 +15,7 @@
 	export let notificationType = jdgNotificationTypes.information; // Inits color and icon
 	export let faIcon = 'fa-solid ' + notificationType.faIcon;
 	export let iconSrc = null; // path to SVG/PNG image (takes priority over faIcon if set)
-	export let message = jdgNotificationTypes.information.message;
+	export let message = notificationType.message;
 	export let fontSize = jdgSizes.fontSizeBodyXSm;
 	export let backgroundColor = undefined;
 	export let standalone = true; // set to false if included in a header already in a fixed position

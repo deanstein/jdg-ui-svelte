@@ -22,6 +22,7 @@
 		JDGImageHybridGridCarousel,
 		JDGImageTile,
 		JDGJumpTo,
+		JDGNotificationBanner,
 		JDGUpNext,
 		JDGVersionNpmPackage,
 		JDGVersionPackageJson
@@ -38,6 +39,7 @@
 		jdgWebsiteRepoName,
 		pmx3dWebsiteRepoName
 	} from '$lib/jdg-persistence-management.js';
+	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
 
 	let isTestButtonEnabled = true;
 
@@ -140,6 +142,25 @@
 				</div>
 			</div>
 		</JDGBodyCopy>
+	</JDGContentBoxFloating>
+	<JDGContentBoxFloating title="NOTIFICATION BANNERS">
+		<JDGBodyCopy paddingTop="0" paddingBottom="0" textAlign="center">
+			<b>Standard banners</b>
+		</JDGBodyCopy>
+		<JDGNotificationBanner notificationType={jdgNotificationTypes.information} />
+		<JDGNotificationBanner notificationType={jdgNotificationTypes.inProgress} />
+		<JDGNotificationBanner notificationType={jdgNotificationTypes.warning} />
+		<JDGNotificationBanner notificationType={jdgNotificationTypes.error} />
+		<JDGNotificationBanner notificationType={jdgNotificationTypes.success} />
+		<JDGBodyCopy paddingBottom="0" textAlign="center">
+			<b>Custom banners</b>
+		</JDGBodyCopy>
+		<JDGNotificationBanner
+			message="This notification banner has a custom icon, color, and font size."
+			iconSrc="https://res.cloudinary.com/jdg-main/image/upload/v1759708726/jdg-ui-svelte/jdg-logo-ui.png"
+			backgroundColor="#fdb1f5"
+			fontSize="0.7rem"
+		/>
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="IMAGES">
 		<JDGBodyCopy textAlign="center" paddingTop="0">We've got lots of image components!</JDGBodyCopy>
