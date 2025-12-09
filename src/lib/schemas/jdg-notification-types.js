@@ -1,11 +1,11 @@
 const jdgNotificationTypes = {
 	error: {
-		color: '#DB7093',
+		color: '#ff7777',
 		message: 'An error occurred.',
 		faIcon: 'fa-circle-xmark'
 	},
 	warning: {
-		color: '#FFFFE0',
+		color: '#fdce5b',
 		message: 'This is a warning.',
 		faIcon: 'fa-triangle-exclamation'
 	},
@@ -20,7 +20,7 @@ const jdgNotificationTypes = {
 		faIcon: 'fa-spinner fa-spin'
 	},
 	success: {
-		color: '#77FF16',
+		color: '#a7ff68',
 		message: 'Operation successful.',
 		faIcon: 'fa-circle-check'
 	}
