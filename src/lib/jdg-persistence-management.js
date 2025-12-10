@@ -444,12 +444,14 @@ export const writeImageMetaEntryToRepo = async (repoName, registryKey, imageMeta
 		const isNested = keyParts.length > 1;
 
 		// Convert to JavaScript object literal format (not JSON)
+		// Top-level entries use 2 tabs for properties, nested entries use 3 tabs
+		const propertyIndent = isNested ? '\t\t\t' : '\t\t';
 		const entryLines = [];
 		for (const [key, value] of Object.entries(cleanImageMeta)) {
 			if (typeof value === 'string') {
-				entryLines.push(`\t\t\t${key}: '${value.replace(/'/g, "\\'")}'`);
+				entryLines.push(`${propertyIndent}${key}: '${value.replace(/'/g, "\\'")}'`);
 			} else if (typeof value === 'boolean') {
-				entryLines.push(`\t\t\t${key}: ${value}`);
+				entryLines.push(`${propertyIndent}${key}: ${value}`);
 			}
 		}
 
