@@ -496,11 +496,11 @@ const imageMetaRegistry = {
 		attribution: 'Some attribution'
 	},
 	new_image_2: {
-		id: '9ff5a56e-da1f-4206-a8b1-785467fc78d1',
-		src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765341363/jdg-ui-svelte/image-testing/new-image-2.jpg',
-		alt: 'This is another test image',
-		caption: 'This is another test image',
-		attribution: 'Some attribution'
+			id: '9ff5a56e-da1f-4206-a8b1-785467fc78d1',
+			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765342010/jdg-ui-svelte/image-testing/new-image-2.jpg',
+			alt: 'This is another test image',
+			caption: 'This is another test image',
+			attribution: 'Some attribution'
 	}
 };
 
