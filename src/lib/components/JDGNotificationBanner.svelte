@@ -1,5 +1,5 @@
 <script>
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import { slide } from 'svelte/transition';
 	import { css } from '@emotion/css';
 	import { v4 as uuidv4 } from 'uuid';
@@ -21,11 +21,45 @@
 	export let standalone = true; // set to false if included in a header already in a fixed position
 	export let forceOnTop = false; // if true, will use z-index store to ensure always on top
 	export let showCloseButton = true;
+	export let scrollToTopOnStatusChange = true; // scroll context to top when transitioning from inProgress
 
 	let bannerId;
+	let bannerElement;
+	let previousNotificationType = notificationType;
 
 	const onClickCloseButton = () => {
 		showBanner = false;
+	};
+
+	// Find the nearest scrollable ancestor element
+	const findScrollableParent = (element) => {
+		if (!element) return null;
+
+		let parent = element.parentElement;
+		while (parent) {
+			const style = window.getComputedStyle(parent);
+			const overflowY = style.overflowY;
+			const isScrollable =
+				(overflowY === 'auto' || overflowY === 'scroll') && parent.scrollHeight > parent.clientHeight;
+
+			if (isScrollable) {
+				return parent;
+			}
+			parent = parent.parentElement;
+		}
+		return null;
+	};
+
+	// Scroll the containing context to the top
+	const scrollContextToTop = async () => {
+		await tick(); // Wait for DOM to update
+		const scrollableParent = findScrollableParent(bannerElement);
+		if (scrollableParent) {
+			scrollableParent.scrollTo({ top: 0, behavior: 'smooth' });
+		} else {
+			// Fall back to window scroll
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+		}
 	};
 
 	let notificationContainerCss = css`
@@ -50,6 +84,21 @@
 		faIcon = 'fa-solid ' + notificationType?.faIcon;
 	}
 
+	// Watch for transitions to inProgress (so user sees it start) and from inProgress to final status
+	$: if (notificationType !== previousNotificationType) {
+		if (scrollToTopOnStatusChange) {
+			// Scroll when entering inProgress state
+			if (notificationType === jdgNotificationTypes.inProgress) {
+				scrollContextToTop();
+			}
+			// Scroll when leaving inProgress state (to see the result)
+			else if (previousNotificationType === jdgNotificationTypes.inProgress) {
+				scrollContextToTop();
+			}
+		}
+		previousNotificationType = notificationType;
+	}
+
 	// Dynamic styles
 	$: {
 		notificationContainerCss = css`
@@ -60,7 +109,11 @@
 </script>
 
 {#if showBanner}
-	<div class="notification-banner-outer-container {notificationContainerCss}" transition:slide>
+	<div
+		bind:this={bannerElement}
+		class="notification-banner-outer-container {notificationContainerCss}"
+		transition:slide
+	>
 		<!-- Icon and message -->
 		<div class="notification-banner-message-container {notificationMessageContainerCss}">
 			{#if iconSrc}
