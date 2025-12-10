@@ -489,18 +489,18 @@ const imageMetaRegistry = {
 		src: 'https://res.cloudinary.com/jdg-main/image/upload/v1764447881/jdg-ui-svelte/image-testing/new-image.jpg.png'
 	},
 	reupload_test: {
-			id: '1f8e9f97-8fe5-43fa-a316-1d370cf82cda',
-			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765245473/jdg-ui-svelte/image-testing/reupload-test2.jpg',
-			alt: 'This is a reupload test!',
-			caption: 'This is a reupload test!',
-			attribution: 'Some attribution'
+		id: '1f8e9f97-8fe5-43fa-a316-1d370cf82cda',
+		src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765245473/jdg-ui-svelte/image-testing/reupload-test2.jpg',
+		alt: 'This is a reupload test!',
+		caption: 'This is a reupload test!',
+		attribution: 'Some attribution'
 	},
 	new_image_2: {
-			id: '9ff5a56e-da1f-4206-a8b1-785467fc78d1',
-			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765341363/jdg-ui-svelte/image-testing/new-image-2.jpg',
-			alt: 'This is another test image',
-			caption: 'This is another test image',
-			attribution: 'Some attribution'
+		id: '9ff5a56e-da1f-4206-a8b1-785467fc78d1',
+		src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765341363/jdg-ui-svelte/image-testing/new-image-2.jpg',
+		alt: 'This is another test image',
+		caption: 'This is another test image',
+		attribution: 'Some attribution'
 	}
 };
 
