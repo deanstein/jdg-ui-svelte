@@ -33,6 +33,7 @@
 		JDGModal,
 		JDGNotificationBanner,
 		JDGSaveStateBanner,
+		JDGTextArea,
 		JDGTextInput
 	} from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
@@ -717,14 +718,14 @@
 				/>
 			</div>
 			<JDGInputContainer label="Title">
-				<JDGTextInput inputValue={$draftImageMeta.title} />
+				<JDGTextArea inputValue={$draftImageMeta.title} />
 			</JDGInputContainer>
 			<JDGInputContainer label="Caption">
-				<JDGTextInput bind:inputValue={$draftImageMeta.caption} />
+				<JDGTextArea bind:inputValue={$draftImageMeta.caption} />
 			</JDGInputContainer>
 			<JDGInputContainer label="Alt">
 				<div style="display: flex; flex-direction: column; gap: 8px;">
-					<JDGTextInput bind:inputValue={$draftImageMeta.alt} isEnabled={!syncAltWithCaption} />
+					<JDGTextArea bind:inputValue={$draftImageMeta.alt} isEnabled={!syncAltWithCaption} />
 					<JDGCheckbox bind:isChecked={syncAltWithCaption} label="Sync Alt with Caption" />
 				</div>
 			</JDGInputContainer>
