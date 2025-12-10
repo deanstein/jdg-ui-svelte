@@ -6,7 +6,6 @@
 	import {
 		draftImageMeta,
 		draftImageMetaRegistry,
-		saveFunction,
 		saveStatus
 	} from '$lib/stores/jdg-temp-store.js';
 	import {
@@ -36,6 +35,7 @@
 		JDGSaveStateBanner,
 		JDGTextInput
 	} from '$lib/index.js';
+	import { jdgColors } from '$lib/jdg-shared-styles.js';
 	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
 	import jdgSaveStatus from '$lib/schemas/jdg-save-status.js';
 
@@ -688,12 +688,15 @@
 			{#if !isNewImage}
 				<div class="check-usage-button-container">
 					<JDGButton
-						label={isCheckingUsage ? 'Checking...' : 'Check Usage in Other Sites'}
+						label={isCheckingUsage ? 'Checking...' : 'Check usage in other repos'}
 						faIcon={isCheckingUsage ? 'fa-spinner fa-spin' : 'fa-search'}
+						fontSize="0.7rem"
 						onClickFunction={onCheckUrlUsage}
 						paddingLeftRight="10px"
 						paddingTopBottom="5px"
 						isEnabled={!isCheckingUsage}
+						backgroundColor={jdgColors.activeSecondary}
+						textColor={jdgColors.textDm}
 					/>
 				</div>
 			{/if}
