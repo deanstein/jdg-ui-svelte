@@ -784,16 +784,11 @@
 						}
 
 						console.log('✅ Registry saved successfully');
-						saveStatus.set(jdgSaveStatus.saveSuccess);
+						saveStatus.set(jdgSaveStatus.saveSuccessRebuilding);
 
 						// Update the original draft meta to reflect the new saved state
 						// This prevents "unsaved changes" from showing after successful save
 						originalDraftMeta = instantiateObject($draftImageMeta);
-
-						// Clear save status after showing success briefly
-						setTimeout(() => {
-							saveStatus.set(null);
-						}, 3000);
 					} catch (err) {
 						console.error('❌ Save error:', err.message);
 						saveStatus.set(jdgSaveStatus.saveFailed);
