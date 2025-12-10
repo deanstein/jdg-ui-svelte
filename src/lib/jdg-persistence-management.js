@@ -449,7 +449,11 @@ export const writeImageMetaEntryToRepo = async (repoName, registryKey, imageMeta
 		const entryLines = [];
 		for (const [key, value] of Object.entries(cleanImageMeta)) {
 			if (typeof value === 'string') {
-				entryLines.push(`${propertyIndent}${key}: '${value.replace(/'/g, "\\'")}'`);
+				// Use backticks if string contains apostrophe, single quotes otherwise
+				// This matches Prettier's output and avoids escape characters
+				const hasApostrophe = value.includes("'");
+				const quote = hasApostrophe ? '`' : "'";
+				entryLines.push(`${propertyIndent}${key}: ${quote}${value}${quote}`);
 			} else if (typeof value === 'boolean') {
 				entryLines.push(`${propertyIndent}${key}: ${value}`);
 			}
