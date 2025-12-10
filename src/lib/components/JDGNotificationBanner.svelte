@@ -40,7 +40,8 @@
 			const style = window.getComputedStyle(parent);
 			const overflowY = style.overflowY;
 			const isScrollable =
-				(overflowY === 'auto' || overflowY === 'scroll') && parent.scrollHeight > parent.clientHeight;
+				(overflowY === 'auto' || overflowY === 'scroll') &&
+				parent.scrollHeight > parent.clientHeight;
 
 			if (isScrollable) {
 				return parent;
