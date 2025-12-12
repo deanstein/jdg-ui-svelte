@@ -28,6 +28,7 @@
 	import {
 		JDGButton,
 		JDGCheckbox,
+		JDGComposeButton,
 		JDGComposeToolbar,
 		JDGImageTile,
 		JDGInputContainer,
@@ -37,6 +38,7 @@
 		JDGTextArea,
 		JDGTextInput
 	} from '$lib/index.js';
+	import composeButtonTypes from '$lib/schemas/jdg-compose-button-types.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
 	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
 	import jdgSaveStatus from '$lib/schemas/jdg-save-status.js';
@@ -761,11 +763,97 @@
 				notificationType={jdgNotificationTypes.error}
 				message={'No repo name set! +layout.svelte must set the repo name.'}
 			/>
+			<!-- Compose toolbar with Upload/Delete buttons in slot, and Done/Cancel when editing -->
+			<JDGComposeToolbar
+				parentRef={modalContainerRef}
+				justification="center"
+				onClickDone={async () => {
+					try {
+						// If asset path changed on existing image, perform move operation instead
+						if (hasAssetPathChanged && !isNewImage) {
+							await onMoveImage();
+							return;
+						}
+
+						// Set save status
+						saveStatus.set(jdgSaveStatus.saving);
+
+						// Update the registry store with the current draft meta
+						// Use the registry key (not the UUID id) as the object key
+						// Handle nested keys like "arch.atc_elevator"
+						draftImageMetaRegistry.update((registry) =>
+							setNestedRegistryValue(registry, registryKey, $draftImageMeta)
+						);
+
+						// Write only this entry back to GitHub
+						const currentRepoName = $repoName;
+						if (!currentRepoName) {
+							throw new Error('No repo name set. Cannot write registry to GitHub.');
+						}
+
+						console.log(`💾 Writing image entry "${registryKey}" to ${currentRepoName}...`);
+
+						const writeResult = await writeImageMetaEntryToRepo(
+							currentRepoName,
+							registryKey,
+							$draftImageMeta
+						);
+
+						if (!writeResult) {
+							throw new Error('Failed to write entry to registry');
+						}
+
+						console.log('✅ Registry saved successfully');
+						saveStatus.set(jdgSaveStatus.saveSuccessRebuilding);
+
+						// Update the original draft meta to reflect the new saved state
+						// This prevents "unsaved changes" from showing after successful save
+						originalDraftMeta = instantiateObject($draftImageMeta);
+					} catch (err) {
+						console.error('❌ Save error:', err.message);
+						saveStatus.set(jdgSaveStatus.saveFailed);
+						alert(`Error: ${err.message}`);
+					}
+				}}
+				onClickCancel={() => {
+					showImageMetaModal.set(false);
+					draftImageMeta.set(undefined);
+					saveStatus.set(null);
+				}}
+				isEditActive={hasUnsavedChanges && get(repoName)}
+			></JDGComposeToolbar>
+			<!-- Hidden file input for button to trigger upload -->
+			<input
+				type="file"
+				style="display: none;"
+				on:change={onClickFileUpload}
+				bind:this={fileInput}
+			/>
 			<!-- Image preview -->
 			<div class="image-preview-wrapper">
 				<JDGImageTile imageMeta={$draftImageMeta} maxHeight="20svh" cropToFillContainer={false} />
 			</div>
-
+			<JDGComposeToolbar parentRef={modalContainerRef} justification="center" isEditActive={false}>
+				<div slot="buttons">
+					<!-- Upload button (always visible) -->
+					<JDGComposeButton
+						label="Upload..."
+						faIcon="fa-upload"
+						onClickFunction={onClickFileUpload}
+						buttonType={composeButtonTypes.standard.type}
+						tooltip="Upload image"
+					/>
+					<!-- Delete button (always visible when not a new image) -->
+					{#if !isNewImage}
+						<JDGComposeButton
+							label="Delete..."
+							onClickFunction={onDeleteImage}
+							buttonType={composeButtonTypes.delete.type}
+							tooltip="Delete image"
+						/>
+					{/if}
+				</div>
+			</JDGComposeToolbar>
 			<!-- Spacer-->
 			<div style="height: 20px;" />
 
@@ -827,36 +915,6 @@
 					/>
 				</div>
 			{/if}
-			<div class="upload-button-container">
-				<JDGButton
-					label="Upload..."
-					faIcon="fa-upload"
-					onClickFunction={onClickFileUpload}
-					paddingLeftRight="10px"
-					paddingTopBottom="5px"
-				/>
-				<!-- Hidden file input for button to trigger upload -->
-				<input
-					type="file"
-					style="display: none;"
-					on:change={onClickFileUpload}
-					bind:this={fileInput}
-				/>
-			</div>
-			<!-- Standalone Delete button (only shown when no unsaved changes) -->
-			{#if !isNewImage && !hasUnsavedChanges}
-				<div class="delete-button-container">
-					<JDGButton
-						label="Delete..."
-						faIcon="fa-trash"
-						onClickFunction={onDeleteImage}
-						paddingLeftRight="10px"
-						paddingTopBottom="5px"
-						backgroundColor={jdgColors.error || '#dc3545'}
-						textColor="#ffffff"
-					/>
-				</div>
-			{/if}
 			<JDGInputContainer label="Title">
 				<JDGTextArea inputValue={$draftImageMeta.title} />
 			</JDGInputContainer>
@@ -886,68 +944,6 @@
 				<JDGTextInput bind:inputValue={$draftImageMeta.toolbarJustification} />
 			</JDGInputContainer>
 		{/if}
-		<!-- Only show compose toolbar if unsaved changes and repo name is set -->
-		{#if hasUnsavedChanges && get(repoName)}
-			<JDGComposeToolbar
-				parentRef={modalContainerRef}
-				onClickCompose={() => {}}
-				onClickDelete={!isNewImage ? onDeleteImage : undefined}
-				onClickDone={async () => {
-					try {
-						// If asset path changed on existing image, perform move operation instead
-						if (hasAssetPathChanged && !isNewImage) {
-							await onMoveImage();
-							return;
-						}
-
-						// Set save status
-						saveStatus.set(jdgSaveStatus.saving);
-
-						// Update the registry store with the current draft meta
-						// Use the registry key (not the UUID id) as the object key
-						// Handle nested keys like "arch.atc_elevator"
-						draftImageMetaRegistry.update((registry) =>
-							setNestedRegistryValue(registry, registryKey, $draftImageMeta)
-						);
-
-						// Write only this entry back to GitHub
-						const currentRepoName = $repoName;
-						if (!currentRepoName) {
-							throw new Error('No repo name set. Cannot write registry to GitHub.');
-						}
-
-						console.log(`💾 Writing image entry "${registryKey}" to ${currentRepoName}...`);
-
-						const writeResult = await writeImageMetaEntryToRepo(
-							currentRepoName,
-							registryKey,
-							$draftImageMeta
-						);
-
-						if (!writeResult) {
-							throw new Error('Failed to write entry to registry');
-						}
-
-						console.log('✅ Registry saved successfully');
-						saveStatus.set(jdgSaveStatus.saveSuccessRebuilding);
-
-						// Update the original draft meta to reflect the new saved state
-						// This prevents "unsaved changes" from showing after successful save
-						originalDraftMeta = instantiateObject($draftImageMeta);
-					} catch (err) {
-						console.error('❌ Save error:', err.message);
-						saveStatus.set(jdgSaveStatus.saveFailed);
-						alert(`Error: ${err.message}`);
-					}
-				}}
-				onClickCancel={() => {
-					showImageMetaModal.set(false);
-					draftImageMeta.set(undefined);
-					saveStatus.set(null);
-				}}
-				isEditActive
-			/>
-		{/if}
 	</div>
 </JDGModal>
 
@@ -974,13 +970,5 @@
 
 	.check-usage-button-container {
 		margin-bottom: 10px;
-	}
-
-	.upload-button-container {
-		margin-bottom: 20px;
-	}
-
-	.delete-button-container {
-		margin-bottom: 20px;
 	}
 </style>

@@ -8,7 +8,7 @@
 
 	export let parentRef; // required to determine where to show the compose button
 	export let isEditActive = false; // when active, show done/cancel
-	export let onClickCompose; // edit, add, etc
+	export let onClickCompose = undefined; // edit, add, etc
 	export let composeButtonFaIcon = 'fa-pencil fa-fw';
 	export let composeButtonTooltip = 'Compose';
 	export let onClickDone = undefined; // if provided, show done
@@ -21,6 +21,7 @@
 	export let deleteButtonTooltip = 'Delete';
 	export let deleteButtonLabel = 'Delete';
 	export let zIndex = 1000; // override depending on the context
+	export let justification = 'right'; // 'left' | 'center' | 'right' - justification of toolbar buttons
 
 	// distance from top or right edge the compose button should appear
 	const distanceFromEdgesPx = 50;
@@ -64,10 +65,19 @@
 			z-index: ${zIndex};
 		`;
 	}
+
+	let toolbarJustifyCss = css``;
+	$: {
+		const justifyValue =
+			justification === 'left' ? 'flex-start' : justification === 'center' ? 'center' : 'flex-end';
+		toolbarJustifyCss = css`
+			justify-content: ${justifyValue};
+		`;
+	}
 </script>
 
 <!-- show compose button if not in edit mode -->
-{#if !isEditActive}
+{#if !isEditActive && onClickCompose !== undefined}
 	<div bind:this={composeToolbarWrapperRef} class="compose-button-absolute-wrapper">
 		<div
 			bind:this={composeContainerRef}
@@ -83,8 +93,17 @@
 			</div>
 		</div>
 	</div>
-{:else if isEditActive}
-	<div class="compose-button-toolbar-wrapper">
+{/if}
+
+<!-- toolbar with slot buttons (always visible) and default buttons (when isEditActive) -->
+<div class="compose-button-toolbar-wrapper {toolbarJustifyCss}">
+	<!-- Slot for parent-provided buttons (always visible) -->
+	<div class="slot-buttons-wrapper">
+		<slot name="buttons" />
+	</div>
+
+	<!-- Default buttons (only show when isEditActive) -->
+	{#if isEditActive}
 		<!-- show delete if function is provided -->
 		{#if onClickDelete}
 			<ComposeButton
@@ -109,8 +128,8 @@
 				tooltip={doneButtonTooltip}
 			/>
 		{/if}
-	</div>
-{/if}
+	{/if}
+</div>
 
 <style>
 	.compose-button-absolute-wrapper {
@@ -132,9 +151,22 @@
 
 	.compose-button-toolbar-wrapper {
 		display: flex;
-		justify-content: flex-end;
+		align-items: center;
 		padding: 1rem;
 		gap: 1rem;
 		/* background-color: rgba(255, 254, 248, 0.8); */
+	}
+
+	.slot-buttons-wrapper {
+		display: flex;
+		gap: 1rem;
+		align-items: center;
+	}
+
+	/* Ensure any wrapper divs inside the slot are also flex */
+	.slot-buttons-wrapper :global(> div) {
+		display: flex;
+		gap: 1rem;
+		align-items: center;
 	}
 </style>

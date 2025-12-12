@@ -35,6 +35,13 @@ const jdgComposeButtonTypes = {
 		tooltip: 'Cancel',
 		color: jdgColors.active,
 		backgroundColor: '#ffffff'
+	},
+	standard: {
+		type: 'standard',
+		faIcon: 'fa-wrench fa-fw',
+		tooltip: '',
+		color: '#ffffff',
+		backgroundColor: jdgColors.active
 	}
 };
 
