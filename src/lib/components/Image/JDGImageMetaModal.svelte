@@ -18,6 +18,7 @@
 	} from '$lib/jdg-utils.js';
 	import {
 		deleteCloudinaryImage,
+		deleteImageMetaEntryFromRepo,
 		getImageMetaSrcUsageInRepos,
 		renameCloudinaryImage,
 		replaceUrlAcrossRepos,
@@ -546,6 +547,131 @@
 		}
 	};
 
+	// Delete an image (from Cloudinary and registry)
+	const onDeleteImage = async () => {
+		if (isNewImage) {
+			alert('Cannot delete a new image that has not been uploaded yet.');
+			return;
+		}
+
+		const currentSrc = $draftImageMeta?.src;
+		if (!currentSrc || !currentSrc.includes('cloudinary')) {
+			alert('No valid Cloudinary URL to delete.');
+			return;
+		}
+
+		// Confirm deletion
+		const confirmDelete = confirm(
+			'⚠️ Are you sure you want to delete this image?\n\nThis will:\n• Delete the image from Cloudinary\n• Remove it from the registry\n\nThis action cannot be undone.'
+		);
+		if (!confirmDelete) {
+			return;
+		}
+
+		// Check if URL is used in other repos
+		const currentRepoName = get(repoName);
+		let reposWithUrl = [];
+
+		isCheckingUsage = true;
+		try {
+			const usageResults = await getImageMetaSrcUsageInRepos(currentSrc, currentRepoName);
+			reposWithUrl = usageResults.filter((r) => r.found);
+
+			if (reposWithUrl.length > 0) {
+				const repoList = reposWithUrl.map((r) => r.repoName).join('\n   • ');
+				const confirmProceed = confirm(
+					`⚠️ This image URL is also used in ${reposWithUrl.length} other repo(s):\n\n   • ${repoList}\n\nDeleting will remove the image from Cloudinary, which will break these references.\n\nContinue anyway?`
+				);
+				if (!confirmProceed) {
+					isCheckingUsage = false;
+					return;
+				}
+			}
+		} catch (err) {
+			console.warn('⚠️ Could not check URL usage:', err.message);
+			const continueAnyway = confirm(
+				`⚠️ Could not check if URL is used in other repos:\n${err.message}\n\nDo you want to continue anyway? Other repos may break.`
+			);
+			if (!continueAnyway) {
+				isCheckingUsage = false;
+				return;
+			}
+		}
+		isCheckingUsage = false;
+
+		saveStatus.set(jdgSaveStatus.saving);
+
+		try {
+			// Step 1: Delete from Cloudinary
+			const assetPath = extractCloudinaryAssetpath(currentSrc);
+			if (!assetPath) {
+				throw new Error('Could not determine asset path from URL');
+			}
+
+			// Parse path into folder and filename
+			const pathParts = assetPath.split('/');
+			const fileName = pathParts.pop();
+			const folderPath = pathParts.join('/');
+
+			console.log(`🗑️ Deleting image from Cloudinary at "${assetPath}"...`);
+			await deleteCloudinaryImage(folderPath, fileName);
+
+			// Step 2: Delete from registry in current repo
+			if (!currentRepoName) {
+				throw new Error('No repo name set. Cannot delete from registry.');
+			}
+
+			console.log(`🗑️ Removing image entry "${registryKey}" from ${currentRepoName}...`);
+			const deleteResult = await deleteImageMetaEntryFromRepo(currentRepoName, registryKey);
+
+			if (!deleteResult) {
+				throw new Error('Failed to delete entry from registry');
+			}
+
+			console.log('✅ Image deleted successfully');
+
+			// Step 3: Update the registry store (remove the entry)
+			draftImageMetaRegistry.update((registry) => {
+				const newRegistry = { ...registry };
+				const keyParts = registryKey.split('.');
+
+				if (keyParts.length === 1) {
+					// Top-level key
+					delete newRegistry[registryKey];
+				} else {
+					// Nested key
+					const parentKey = keyParts[0];
+					const childKey = keyParts.slice(1).join('.');
+
+					if (newRegistry[parentKey] && typeof newRegistry[parentKey] === 'object') {
+						const parent = { ...newRegistry[parentKey] };
+						delete parent[childKey];
+
+						// If parent is now empty, remove it too
+						if (Object.keys(parent).length === 0) {
+							delete newRegistry[parentKey];
+						} else {
+							newRegistry[parentKey] = parent;
+						}
+					}
+				}
+
+				return newRegistry;
+			});
+
+			saveStatus.set(jdgSaveStatus.saveSuccessRebuilding);
+
+			// Close the modal
+			showImageMetaModal.set(false);
+			draftImageMeta.set(undefined);
+		} catch (err) {
+			console.error('❌ Delete error:', err.message);
+			saveStatus.set(jdgSaveStatus.saveFailed);
+			setTimeout(() => saveStatus.set(undefined), 3000);
+			alert(`Error deleting image: ${err.message}`);
+		}
+	};
+
 	// Helper function to set a value at a nested path in the registry
 	const setNestedRegistryValue = (registry, path, value) => {
 		const keys = path.split('.');
@@ -717,6 +843,20 @@
 					bind:this={fileInput}
 				/>
 			</div>
+			<!-- Standalone Delete button (only shown when no unsaved changes) -->
+			{#if !isNewImage && !hasUnsavedChanges}
+				<div class="delete-button-container">
+					<JDGButton
+						label="Delete..."
+						faIcon="fa-trash"
+						onClickFunction={onDeleteImage}
+						paddingLeftRight="10px"
+						paddingTopBottom="5px"
+						backgroundColor={jdgColors.error || '#dc3545'}
+						textColor="#ffffff"
+					/>
+				</div>
+			{/if}
 			<JDGInputContainer label="Title">
 				<JDGTextArea inputValue={$draftImageMeta.title} />
 			</JDGInputContainer>
@@ -751,6 +891,7 @@
 			<JDGComposeToolbar
 				parentRef={modalContainerRef}
 				onClickCompose={() => {}}
+				onClickDelete={!isNewImage ? onDeleteImage : undefined}
 				onClickDone={async () => {
 					try {
 						// If asset path changed on existing image, perform move operation instead
@@ -784,7 +925,7 @@
 						);
 
 						if (!writeResult) {
-							throw new Error('Failed to write entry to GitHub');
+							throw new Error('Failed to write entry to registry');
 						}
 
 						console.log('✅ Registry saved successfully');
@@ -836,6 +977,10 @@
 	}
 
 	.upload-button-container {
+		margin-bottom: 20px;
+	}
+
+	.delete-button-container {
 		margin-bottom: 20px;
 	}
 </style>

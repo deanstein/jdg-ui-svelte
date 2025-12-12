@@ -1,6 +1,6 @@
 import { decrypt, extractObjectLiteral } from './jdg-utils.js';
 
-// Admin Cloudflare worker
+// JDG-ADMIN Cloudflare worker
 export const cfWorkerUrlAdmin = 'https://jdg-admin.jdeangoldstein.workers.dev';
 export const cfRouteCheckAdmin = '/check-admin';
 export const cfRouteListJsonFiles = '/list-json-files';
@@ -12,6 +12,11 @@ export const cfWorkerUrlJdgGithub = 'https://jdg-github.jdeangoldstein.workers.d
 export const cfRouteDebugCors = '/debug-cors';
 export const cfRouteFetchPublicFile = '/fetch-public-file';
 export const cfRouteWritePublicJsFile = '/write-public-js-file';
+
+// JDG-CLOUDINARY Cloudflare worker
+export const cfWorkerUrlJdgCloudinary = 'https://jdg-cloudinary.jdeangoldstein.workers.dev';
+export const cfRouteDeleteImage = '/delete-image';
+export const cfRouteRenameImage = '/rename-image';
 
 // Family Tree Data and Building Data use different keys
 // for identifying the collection of TimelineHosts
@@ -540,10 +545,116 @@ export const writeImageMetaEntryToRepo = async (repoName, registryKey, imageMeta
 	}
 };
 
+// Delete a single image meta entry from the registry
+export const deleteImageMetaEntryFromRepo = async (repoName, registryKey) => {
+	try {
+		// Fetch the current file
+		const url = new URL(cfRouteFetchPublicFile, cfWorkerUrlJdgGithub);
+		url.searchParams.set('repoOwner', jdgRepoOwner);
+		url.searchParams.set('repoName', repoName);
+		url.searchParams.set('filePath', imageMetaRegistryPath);
+
+		const response = await fetch(url.toString());
+		if (!response.ok) {
+			throw new Error(`Failed to fetch existing file: ${response.status}`);
+		}
+
+		let fileContent = await response.text();
+
+		// Find the registry content
+		const registryMatch = fileContent.match(/const imageMetaRegistry = \{([\s\S]*?)\n\};/);
+		if (!registryMatch) {
+			throw new Error('Could not find imageMetaRegistry in file');
+		}
+
+		let registryContent = registryMatch[1];
+
+		// Handle both top-level and nested keys
+		const keyParts = registryKey.split('.');
+		const isNested = keyParts.length > 1;
+
+		if (isNested) {
+			// Handle nested key (e.g., "arch.atc_elevator")
+			const parentKey = keyParts[0];
+			const childKey = keyParts.slice(1).join('.');
+
+			// Find parent object
+			const parentPattern = new RegExp(`\\n\\t${parentKey}:\\s*\\{([\\s\\S]*?)\\n\\t\\}`, 'm');
+			const parentMatch = registryContent.match(parentPattern);
+
+			if (parentMatch) {
+				let parentContent = parentMatch[1];
+				// Remove the child entry
+				const childPattern = new RegExp(`\\n\\t\\t${childKey}:\\s*\\{[\\s\\S]*?\\n\\t\\t\\}`, 'm');
+
+				if (childPattern.test(parentContent)) {
+					// Remove the child entry and any trailing comma
+					parentContent = parentContent.replace(childPattern, '');
+					// Clean up: remove leading comma if it exists after removal
+					parentContent = parentContent.replace(/,\s*,/g, ','); // Remove double commas
+					parentContent = parentContent.replace(/^\s*,\s*/m, ''); // Remove leading comma on first line
+					parentContent = parentContent.replace(/,\s*$/m, ''); // Remove trailing comma on last line
+
+					// If parent is now empty, remove the entire parent block
+					if (parentContent.trim().length === 0) {
+						registryContent = registryContent.replace(parentPattern, '');
+						// Clean up any trailing comma before the removed parent
+						registryContent = registryContent.replace(/,\s*$/, '');
+					} else {
+						// Replace the parent block with updated content
+						const newParentBlock = `\n\t${parentKey}: {${parentContent}\n\t}`;
+						registryContent = registryContent.replace(parentPattern, newParentBlock);
+					}
+				} else {
+					throw new Error(`Child key "${childKey}" not found in parent "${parentKey}"`);
+				}
+			} else {
+				throw new Error(`Parent key "${parentKey}" not found`);
+			}
+		} else {
+			// Handle top-level key
+			const keyPattern = new RegExp(`\\n\\t${registryKey}:\\s*\\{[\\s\\S]*?\\n\\t\\}`, 'm');
+
+			if (keyPattern.test(registryContent)) {
+				// Remove the entry
+				registryContent = registryContent.replace(keyPattern, '');
+				// Clean up any trailing comma before the removed entry
+				registryContent = registryContent.replace(/,\s*$/, '');
+			} else {
+				throw new Error(`Registry key "${registryKey}" not found`);
+			}
+		}
+
+		fileContent = fileContent.replace(registryMatch[1], registryContent);
+
+		// Write the updated file back to GitHub
+		const writeUrl = new URL(cfRouteWritePublicJsFile, cfWorkerUrlJdgGithub);
+		writeUrl.searchParams.set('repoOwner', jdgRepoOwner);
+		writeUrl.searchParams.set('repoName', repoName);
+		writeUrl.searchParams.set('filePath', imageMetaRegistryPath);
+
+		const writeResponse = await fetch(writeUrl.toString(), {
+			method: 'POST',
+			headers: { 'Content-Type': 'text/plain' },
+			body: fileContent
+		});
+
+		if (!writeResponse.ok) {
+			throw new Error(`Failed to write file: ${writeResponse.status}`);
+		}
+
+		const result = await writeResponse.json();
+		return result.success ? result : null;
+	} catch (err) {
+		console.error('Error deleting image meta entry from repo:', err);
+		return null;
+	}
+};
+
 // Delete an image from Cloudinary via Cloudflare worker
 export const deleteCloudinaryImage = async (assetPath, fileName) => {
 	try {
-		const url = `https://jdg-cloudinary.jdeangoldstein.workers.dev/delete-image?folder=${encodeURIComponent(
+		const url = `${cfWorkerUrlJdgCloudinary}/${cfRouteDeleteImage}?folder=${encodeURIComponent(
 			assetPath
 		)}&fileName=${encodeURIComponent(fileName)}`;
 
@@ -572,7 +683,7 @@ export const renameCloudinaryImage = async (fromPublicId, toPublicId) => {
 		const cleanFrom = fromPublicId.replace(/\.[^/.]+$/, '');
 		const cleanTo = toPublicId.replace(/\.[^/.]+$/, '');
 
-		const url = `https://jdg-cloudinary.jdeangoldstein.workers.dev/rename-image?fromPublicId=${encodeURIComponent(
+		const url = `${cfWorkerUrlJdgCloudinary}/${cfRouteRenameImage}?fromPublicId=${encodeURIComponent(
 			cleanFrom
 		)}&toPublicId=${encodeURIComponent(cleanTo)}`;
 
