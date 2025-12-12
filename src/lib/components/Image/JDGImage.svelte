@@ -718,7 +718,7 @@
 					paddingLeftRight={'8px'}
 					paddingTopBottom={'8px'}
 					backgroundColor={jdgColors.activeSecondary}
-					tooltip="Expand image"
+					tooltip="Edit image meta"
 					doForceSquareAspect
 				/>
 			</JDGImageToolbar>
