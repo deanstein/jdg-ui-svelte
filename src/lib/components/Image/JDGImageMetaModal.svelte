@@ -755,7 +755,7 @@
 			<JDGNotificationBanner
 				showBanner={hasUnsavedChanges && !$saveStatus && !isNewImage}
 				notificationType={jdgNotificationTypes.warning}
-				message={'Changes detected. Next, click Done or Cancel below.'}
+				message={'You have unsaved changes.'}
 			/>
 			<!-- No repo name set banner -->
 			<JDGNotificationBanner
@@ -841,7 +841,7 @@
 						faIcon="fa-upload"
 						onClickFunction={onClickFileUpload}
 						buttonType={composeButtonTypes.standard.type}
-						tooltip="Upload image"
+						tooltip="Upload a new image"
 					/>
 					<!-- Delete button (always visible when not a new image) -->
 					{#if !isNewImage}
@@ -849,7 +849,7 @@
 							label="Delete..."
 							onClickFunction={onDeleteImage}
 							buttonType={composeButtonTypes.delete.type}
-							tooltip="Delete image"
+							tooltip="Delete this image"
 						/>
 					{/if}
 				</div>
@@ -916,7 +916,7 @@
 				</div>
 			{/if}
 			<JDGInputContainer label="Title">
-				<JDGTextArea inputValue={$draftImageMeta.title} />
+				<JDGTextArea bind:inputValue={$draftImageMeta.title} />
 			</JDGInputContainer>
 			<JDGInputContainer label="Caption">
 				<JDGTextArea bind:inputValue={$draftImageMeta.caption} />
