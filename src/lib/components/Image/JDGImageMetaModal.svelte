@@ -873,6 +873,19 @@
 				bind:this={fileInput}
 			/>
 
+			<!-- Show a banner when the asset path has changed -->
+			<JDGNotificationBanner
+				showBanner={hasAssetPathChanged && !isNewImage}
+				notificationType={jdgNotificationTypes.warning}
+				message={'The asset path has changed. Clicking Done will rename the image in Cloudinary.'}
+			/>
+			<!-- Show a banner when we can't determine other repo impacts due to asset path change -->
+			<JDGNotificationBanner
+				showBanner={hasAssetPathChanged && !isNewImage && $repoName === undefined}
+				notificationType={jdgNotificationTypes.error}
+				message={'No repo name set. \nImages in other repos may break as a result of this change.'}
+			/>
+
 			<!-- Spacer-->
 			<div style="height: 20px;" />
 
@@ -892,7 +905,6 @@
 							{/if}
 						</div>
 					</JDGInputContainer>
-
 					<!-- ID (UUID for programmatic lookup) -->
 					<JDGInputContainer label="ID">
 						{$draftImageMeta.id || '(Will be auto-generated)'}
@@ -907,20 +919,8 @@
 					</JDGInputContainer>
 				</div>
 
-				<!-- Right column: Banners and editable inputs -->
+				<!-- Right column: Editable inputs -->
 				<div style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
-					<!-- Show a banner when the asset path has changed -->
-					<JDGNotificationBanner
-						showBanner={hasAssetPathChanged && !isNewImage}
-						notificationType={jdgNotificationTypes.warning}
-						message={'The asset path has changed. Clicking Done will rename the image in Cloudinary.'}
-					/>
-					<!-- Show a banner when we can't determine other repo impacts due to asset path change -->
-					<JDGNotificationBanner
-						showBanner={hasAssetPathChanged && !isNewImage && $repoName === undefined}
-						notificationType={jdgNotificationTypes.error}
-						message={'No repo name set. \nImages in other repos may break as a result of this change.'}
-					/>
 					<JDGInputContainer label="Asset Path">
 						<JDGTextInput inputValue={assetPath} onInputFunction={onAssetPathChange} />
 					</JDGInputContainer>
