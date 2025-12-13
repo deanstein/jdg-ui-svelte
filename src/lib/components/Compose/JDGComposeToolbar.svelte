@@ -96,40 +96,42 @@
 {/if}
 
 <!-- toolbar with slot buttons (always visible) and default buttons (when isEditActive) -->
-<div class="compose-button-toolbar-wrapper {toolbarJustifyCss}">
-	<!-- Slot for parent-provided buttons (always visible) -->
-	<div class="slot-buttons-wrapper">
-		<slot name="buttons" />
-	</div>
+{#if isEditActive}
+	<div class="compose-button-toolbar-wrapper {toolbarJustifyCss}">
+		<!-- Slot for parent-provided buttons (always visible) -->
+		<div class="slot-buttons-wrapper">
+			<slot name="buttons" />
+		</div>
 
-	<!-- Default buttons (only show when isEditActive) -->
-	{#if isEditActive}
-		<!-- show delete if function is provided -->
-		{#if onClickDelete}
-			<ComposeButton
-				onClickFunction={onClickDelete}
-				buttonType={composeButtonTypes.delete.type}
-				label={deleteButtonLabel}
-				tooltip={deleteButtonTooltip}
-			/>
+		<!-- Default buttons (only show when isEditActive) -->
+		{#if isEditActive}
+			<!-- show delete if function is provided -->
+			{#if onClickDelete}
+				<ComposeButton
+					onClickFunction={onClickDelete}
+					buttonType={composeButtonTypes.delete.type}
+					label={deleteButtonLabel}
+					tooltip={deleteButtonTooltip}
+				/>
+			{/if}
+			{#if onClickCancel && onClickDone}
+				<!-- show done/cancel buttons if in edit mode -->
+				<ComposeButton
+					onClickFunction={onClickCancel}
+					buttonType={composeButtonTypes.cancel.type}
+					label={cancelButtonLabel}
+					tooltip={cancelButtonTooltip}
+				/>
+				<ComposeButton
+					onClickFunction={onClickDone}
+					buttonType={composeButtonTypes.confirm.type}
+					label={doneButtonLabel}
+					tooltip={doneButtonTooltip}
+				/>
+			{/if}
 		{/if}
-		{#if onClickCancel && onClickDone}
-			<!-- show done/cancel buttons if in edit mode -->
-			<ComposeButton
-				onClickFunction={onClickCancel}
-				buttonType={composeButtonTypes.cancel.type}
-				label={cancelButtonLabel}
-				tooltip={cancelButtonTooltip}
-			/>
-			<ComposeButton
-				onClickFunction={onClickDone}
-				buttonType={composeButtonTypes.confirm.type}
-				label={doneButtonLabel}
-				tooltip={doneButtonTooltip}
-			/>
-		{/if}
-	{/if}
-</div>
+	</div>
+{/if}
 
 <style>
 	.compose-button-absolute-wrapper {
