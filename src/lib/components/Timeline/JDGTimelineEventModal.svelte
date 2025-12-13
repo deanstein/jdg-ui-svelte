@@ -37,6 +37,7 @@
 	backgroundColor={'rgba(235, 235, 235, 1)'}
 	minWidth="30vw"
 	maxWidth="80vw"
+	overflow="auto"
 >
 	<div slot="modal-content-slot" class="modal-content-wrapper">
 		<JDGTimelineEventForm
