@@ -30,6 +30,7 @@
 		JDGCheckbox,
 		JDGComposeButton,
 		JDGComposeToolbar,
+		JDGGridLayout,
 		JDGImageTile,
 		JDGInputContainer,
 		JDGModal,
@@ -64,9 +65,6 @@
 
 	// Should Alt field sync with Caption field?
 	let syncAltWithCaption = true;
-
-	// Shows a banner when uploading
-	let isUploading = false;
 
 	// State for checking URL usage across repos
 	let isCheckingUsage = false;
@@ -763,7 +761,8 @@
 				notificationType={jdgNotificationTypes.error}
 				message={'No repo name set! +layout.svelte must set the repo name.'}
 			/>
-			<!-- Compose toolbar with Upload/Delete buttons in slot, and Done/Cancel when editing -->
+
+			<!-- Show Done/Cancel when changes are detected -->
 			<JDGComposeToolbar
 				parentRef={modalContainerRef}
 				justification="center"
@@ -822,6 +821,12 @@
 				}}
 				isEditActive={hasUnsavedChanges && get(repoName)}
 			></JDGComposeToolbar>
+
+			<!-- Image preview -->
+			<div class="image-preview-wrapper">
+				<JDGImageTile imageMeta={$draftImageMeta} maxHeight="20svh" cropToFillContainer={false} />
+			</div>
+
 			<!-- Hidden file input for button to trigger upload -->
 			<input
 				type="file"
@@ -829,10 +834,7 @@
 				on:change={onClickFileUpload}
 				bind:this={fileInput}
 			/>
-			<!-- Image preview -->
-			<div class="image-preview-wrapper">
-				<JDGImageTile imageMeta={$draftImageMeta} maxHeight="20svh" cropToFillContainer={false} />
-			</div>
+			<!-- Upload and Delete buttons -->
 			<JDGComposeToolbar parentRef={modalContainerRef} justification="center" isEditActive={false}>
 				<div slot="buttons">
 					<!-- Upload button (always visible) -->
@@ -854,95 +856,105 @@
 					{/if}
 				</div>
 			</JDGComposeToolbar>
+
 			<!-- Spacer-->
 			<div style="height: 20px;" />
 
-			<!-- Registry Key (auto-generated for new images) -->
-			<JDGInputContainer label="Registry Key">
-				<div style="display: flex; flex-direction: column; gap: 8px;">
-					<div>{registryKey || '(derived from filename)'}</div>
-					{#if isNewImage}
-						<JDGCheckbox
-							bind:isChecked={matchCloudinaryNesting}
-							label="Match Cloudinary folder nesting"
-						/>
-					{/if}
-				</div>
-			</JDGInputContainer>
+			<!-- Two-column layout for tablet and desktop -->
+			<JDGGridLayout maxColumns={2} useMinWidthOnTwoColumns={false}>
+				<!-- Left column: Read-only values -->
+				<div style="display: flex; flex-direction: column; gap: 10px;">
+					<!-- Registry Key (auto-generated for new images) -->
+					<JDGInputContainer label="Registry Key">
+						<div style="display: flex; flex-direction: column; gap: 8px;">
+							<div>{registryKey || '(derived from filename)'}</div>
+							{#if isNewImage}
+								<JDGCheckbox
+									bind:isChecked={matchCloudinaryNesting}
+									label="Match Cloudinary folder nesting"
+								/>
+							{/if}
+						</div>
+					</JDGInputContainer>
 
-			<!-- ID (UUID for programmatic lookup) -->
-			<JDGInputContainer label="ID">
-				{$draftImageMeta.id || '(Will be auto-generated)'}
-			</JDGInputContainer>
-			<JDGInputContainer label="Version">
-				{$draftImageMeta.version}
-			</JDGInputContainer>
-			<JDGInputContainer label="Source">
-				<div class="image-src-string">
-					{$draftImageMeta.src}
-				</div>
-			</JDGInputContainer>
+					<!-- ID (UUID for programmatic lookup) -->
+					<JDGInputContainer label="ID">
+						{$draftImageMeta.id || '(Will be auto-generated)'}
+					</JDGInputContainer>
+					<JDGInputContainer label="Version">
+						{$draftImageMeta.version}
+					</JDGInputContainer>
+					<JDGInputContainer label="Source">
+						<div class="image-src-string">
+							{$draftImageMeta.src}
+						</div>
+					</JDGInputContainer>
 
-			<!-- Editable values -->
-			<!-- Show a banner when the asset path has changed -->
-			<JDGNotificationBanner
-				showBanner={hasAssetPathChanged && !isNewImage}
-				notificationType={jdgNotificationTypes.warning}
-				message={'The asset path has changed. Clicking Done will rename the image in Cloudinary.'}
-			/>
-			<!-- Show a banner when we can't determine other repo impacts due to asset path change -->
-			<JDGNotificationBanner
-				showBanner={hasAssetPathChanged && !isNewImage && $repoName === undefined}
-				notificationType={jdgNotificationTypes.error}
-				message={'No repo name set. \nImages in other repos may break as a result of this change.'}
-			/>
-			<JDGInputContainer label="Asset Path">
-				<JDGTextInput inputValue={assetPath} onInputFunction={onAssetPathChange} />
-			</JDGInputContainer>
-			<!-- Check URL usage in other repos button -->
-			{#if !isNewImage}
-				<div class="check-usage-button-container">
-					<JDGButton
-						label={isCheckingUsage ? 'Checking...' : 'Check usage in other repos'}
-						faIcon={isCheckingUsage ? 'fa-spinner fa-spin' : 'fa-search'}
-						fontSize="0.7rem"
-						onClickFunction={onCheckUrlUsage}
-						paddingLeftRight="10px"
-						paddingTopBottom="5px"
-						isEnabled={!isCheckingUsage}
-						backgroundColor={jdgColors.activeSecondary}
-						textColor={jdgColors.textDm}
+					<!-- Show a banner when the asset path has changed -->
+					<JDGNotificationBanner
+						showBanner={hasAssetPathChanged && !isNewImage}
+						notificationType={jdgNotificationTypes.warning}
+						message={'The asset path has changed. Clicking Done will rename the image in Cloudinary.'}
+					/>
+					<!-- Show a banner when we can't determine other repo impacts due to asset path change -->
+					<JDGNotificationBanner
+						showBanner={hasAssetPathChanged && !isNewImage && $repoName === undefined}
+						notificationType={jdgNotificationTypes.error}
+						message={'No repo name set. \nImages in other repos may break as a result of this change.'}
 					/>
 				</div>
-			{/if}
-			<JDGInputContainer label="Title">
-				<JDGTextArea bind:inputValue={$draftImageMeta.title} />
-			</JDGInputContainer>
-			<JDGInputContainer label="Caption">
-				<JDGTextArea bind:inputValue={$draftImageMeta.caption} />
-			</JDGInputContainer>
-			<JDGInputContainer label="Alt">
-				<div style="display: flex; flex-direction: column; gap: 8px;">
-					<JDGTextArea bind:inputValue={$draftImageMeta.alt} isEnabled={!syncAltWithCaption} />
-					<JDGCheckbox bind:isChecked={syncAltWithCaption} label="Sync Alt with Caption" />
+
+				<!-- Right column: Asset Path and all other inputs -->
+				<div style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+					<JDGInputContainer label="Asset Path">
+						<JDGTextInput inputValue={assetPath} onInputFunction={onAssetPathChange} />
+					</JDGInputContainer>
+					<!-- Check URL usage in other repos button -->
+					{#if !isNewImage}
+						<div class="check-usage-button-container">
+							<JDGButton
+								label={isCheckingUsage ? 'Checking...' : 'Check usage in other repos'}
+								faIcon={isCheckingUsage ? 'fa-spinner fa-spin' : 'fa-search'}
+								fontSize="0.7rem"
+								onClickFunction={onCheckUrlUsage}
+								paddingLeftRight="10px"
+								paddingTopBottom="5px"
+								isEnabled={!isCheckingUsage}
+								backgroundColor={jdgColors.activeSecondary}
+								textColor={jdgColors.textDm}
+							/>
+						</div>
+					{/if}
+					<JDGInputContainer label="Title">
+						<JDGTextArea bind:inputValue={$draftImageMeta.title} />
+					</JDGInputContainer>
+					<JDGInputContainer label="Caption">
+						<JDGTextArea bind:inputValue={$draftImageMeta.caption} />
+					</JDGInputContainer>
+					<JDGInputContainer label="Alt">
+						<div style="display: flex; flex-direction: column; gap: 8px;">
+							<JDGTextArea bind:inputValue={$draftImageMeta.alt} isEnabled={!syncAltWithCaption} />
+							<JDGCheckbox bind:isChecked={syncAltWithCaption} label="Sync Alt with Caption" />
+						</div>
+					</JDGInputContainer>
+					<JDGInputContainer label="Attribution">
+						<JDGTextInput bind:inputValue={$draftImageMeta.attribution} />
+					</JDGInputContainer>
+					<JDGInputContainer label="Show background blur?">
+						<label>
+							<input type="radio" bind:group={$draftImageMeta.showBackgroundBlur} value={true} />
+							Yes
+						</label>
+						<label>
+							<input type="radio" bind:group={$draftImageMeta.showBackgroundBlur} value={false} />
+							No
+						</label>
+					</JDGInputContainer>
+					<JDGInputContainer label="Toolbar alignment">
+						<JDGTextInput bind:inputValue={$draftImageMeta.toolbarJustification} />
+					</JDGInputContainer>
 				</div>
-			</JDGInputContainer>
-			<JDGInputContainer label="Attribution">
-				<JDGTextInput bind:inputValue={$draftImageMeta.attribution} />
-			</JDGInputContainer>
-			<JDGInputContainer label="Show background blur?">
-				<label>
-					<input type="radio" bind:group={$draftImageMeta.showBackgroundBlur} value={true} />
-					Yes
-				</label>
-				<label>
-					<input type="radio" bind:group={$draftImageMeta.showBackgroundBlur} value={false} />
-					No
-				</label>
-			</JDGInputContainer>
-			<JDGInputContainer label="Toolbar alignment">
-				<JDGTextInput bind:inputValue={$draftImageMeta.toolbarJustification} />
-			</JDGInputContainer>
+			</JDGGridLayout>
 		{/if}
 	</div>
 </JDGModal>

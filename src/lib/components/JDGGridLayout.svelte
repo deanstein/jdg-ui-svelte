@@ -6,8 +6,12 @@
 	import { jdgSharedIdentifiers } from '$lib/jdg-shared-strings.js';
 
 	export let maxColumns = 3;
-	export let forceMaxColumns = false; // if true, max columns even on smallest breakpoints
-	export let gap = undefined; // if not defined, uses breakpoint definitions below
+	// Needs to be true for typical two-column cases
+	export let useMinWidthOnTwoColumns = true;
+	// If true, max columns even on smallest breakpoints
+	export let forceMaxColumns = false;
+	// if not defined, uses breakpoint definitions below
+	export let gap = undefined;
 
 	// used for determining number of children passed into slot
 	let gridLayoutContainer;
@@ -53,7 +57,7 @@
 	afterUpdate(() => {
 		const items = gridLayoutContainer.children;
 		// if there are only two items passed into the slot
-		if (items.length === 2) {
+		if (useMinWidthOnTwoColumns && items.length === 2) {
 			// wrap each item in their own grid so they align toward each other/toward screen center
 			Array.from(items).forEach((node) => {
 				const wrapper = document.createElement('div');
