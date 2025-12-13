@@ -1,8 +1,11 @@
 <script>
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { get } from 'svelte/store';
 
-	import { repoName, showImageMetaModal } from '$lib/stores/jdg-ui-store.js';
+	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
+	import jdgSaveStatus from '$lib/schemas/jdg-save-status.js';
+
+	import { repoName, showImageEditButtons, showImageMetaModal } from '$lib/stores/jdg-ui-store.js';
 	import {
 		draftImageMeta,
 		draftImageMetaRegistry,
@@ -38,19 +41,15 @@
 		JDGTextArea,
 		JDGTextInput
 	} from '$lib/index.js';
-	import composeButtonTypes from '$lib/schemas/jdg-compose-button-types.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
-	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
-	import jdgSaveStatus from '$lib/schemas/jdg-save-status.js';
-
-	const newImagePath = 'jdg-ui-svelte/image-testing/new-image.jpg';
 
 	// Bind the hidden fileInput to a custom button for file picking
 	let fileInput;
+
 	// Container for ComposeToolbar
 	let modalContainerRef;
 
-	// Keep track of the original metal for comparison purposes
+	// Keep track of the original meta for comparison purposes
 	let originalDraftMeta;
 
 	// Registry key is separate from the id field (which is a UUID)
@@ -68,6 +67,12 @@
 	// State for checking URL usage across repos
 	let isCheckingUsage = false;
 
+	// Record the original showImageEditButtons value
+	// because we turn this off when this modal shows
+	let originalShowImageEditButtonsValue;
+
+	// The default path for new images
+	const newImagePath = 'jdg-ui-svelte/image-testing/new-image.jpg';
 	// Track if this is a new image (no src with Cloudinary URL)
 	$: isNewImage = !originalDraftMeta?.src || !originalDraftMeta.src.includes('cloudinary');
 
@@ -387,7 +392,7 @@
 	};
 
 	// Check if the current image URL is used in other repos
-	const onCheckUrlUsage = async () => {
+	const onClickCheckUrlUsage = async () => {
 		const currentSrc = $draftImageMeta?.src;
 		if (!currentSrc || !currentSrc.includes('cloudinary')) {
 			alert('No valid Cloudinary URL to check.');
@@ -547,7 +552,7 @@
 	};
 
 	// Delete an image (from Cloudinary and registry)
-	const onDeleteImage = async () => {
+	const onClickDeleteImage = async () => {
 		if (isNewImage) {
 			alert('Cannot delete a new image that has not been uploaded yet.');
 			return;
@@ -702,6 +707,7 @@
 	};
 
 	onMount(() => {
+		// Get the draft image meta from the store
 		const currentMeta = get(draftImageMeta);
 
 		// For existing images, find the registry key by looking up the src URL in the registry
@@ -730,6 +736,16 @@
 
 		// Store the image meta to compare before any changes
 		originalDraftMeta = instantiateObject($draftImageMeta);
+
+		// Store the original showImageEditButtons value
+		originalShowImageEditButtonsValue = get(showImageEditButtons);
+		// Hide the image edit buttons globally while this modal is up
+		showImageEditButtons.set(false);
+	});
+
+	onDestroy(() => {
+		// Restore the original showImageEditButtons value
+		showImageEditButtons.set(originalShowImageEditButtonsValue);
 	});
 </script>
 
@@ -837,7 +853,7 @@
 						doForceSquareAspect
 					/>
 					<JDGButton
-						onClickFunction={onDeleteImage}
+						onClickFunction={onClickDeleteImage}
 						faIcon="fa-solid fa-trash"
 						label={null}
 						paddingLeftRight={'8px'}
@@ -915,7 +931,7 @@
 								label={isCheckingUsage ? 'Checking...' : 'Check usage in other repos'}
 								faIcon={isCheckingUsage ? 'fa-spinner fa-spin' : 'fa-search'}
 								fontSize="0.7rem"
-								onClickFunction={onCheckUrlUsage}
+								onClickFunction={onClickCheckUrlUsage}
 								paddingLeftRight="10px"
 								paddingTopBottom="5px"
 								isEnabled={!isCheckingUsage}
@@ -924,9 +940,6 @@
 							/>
 						</div>
 					{/if}
-					<JDGInputContainer label="Title">
-						<JDGTextArea bind:inputValue={$draftImageMeta.title} />
-					</JDGInputContainer>
 					<JDGInputContainer label="Caption">
 						<JDGTextArea bind:inputValue={$draftImageMeta.caption} />
 					</JDGInputContainer>
@@ -938,6 +951,9 @@
 					</JDGInputContainer>
 					<JDGInputContainer label="Attribution">
 						<JDGTextInput bind:inputValue={$draftImageMeta.attribution} />
+					</JDGInputContainer>
+					<JDGInputContainer label="Title">
+						<JDGTextArea bind:inputValue={$draftImageMeta.title} />
 					</JDGInputContainer>
 					<JDGInputContainer label="Show background blur?">
 						<label>
