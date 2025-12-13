@@ -28,7 +28,6 @@
 	import {
 		JDGButton,
 		JDGCheckbox,
-		JDGComposeButton,
 		JDGComposeToolbar,
 		JDGGridLayout,
 		JDGImageTile,
@@ -822,9 +821,32 @@
 				isEditActive={hasUnsavedChanges && get(repoName)}
 			></JDGComposeToolbar>
 
-			<!-- Image preview -->
+			<!-- Image preview with absolutely-positioned buttons -->
 			<div class="image-preview-wrapper">
 				<JDGImageTile imageMeta={$draftImageMeta} maxHeight="20svh" cropToFillContainer={false} />
+				<!-- Upload and Delete buttons -->
+				<div class="image-meta-toolbar-overlay">
+					<JDGButton
+						onClickFunction={onClickFileUpload}
+						faIcon="fa-solid fa-upload"
+						label={null}
+						paddingLeftRight={'8px'}
+						paddingTopBottom={'8px'}
+						backgroundColor={jdgColors.active}
+						tooltip="Upload new image"
+						doForceSquareAspect
+					/>
+					<JDGButton
+						onClickFunction={onDeleteImage}
+						faIcon="fa-solid fa-trash"
+						label={null}
+						paddingLeftRight={'8px'}
+						paddingTopBottom={'8px'}
+						backgroundColor={jdgColors.delete}
+						tooltip="Delete image"
+						doForceSquareAspect
+					/>
+				</div>
 			</div>
 
 			<!-- Hidden file input for button to trigger upload -->
@@ -834,28 +856,6 @@
 				on:change={onClickFileUpload}
 				bind:this={fileInput}
 			/>
-			<!-- Upload and Delete buttons -->
-			<JDGComposeToolbar parentRef={modalContainerRef} justification="center" isEditActive={false}>
-				<div slot="buttons">
-					<!-- Upload button (always visible) -->
-					<JDGComposeButton
-						label="Upload..."
-						faIcon="fa-upload"
-						onClickFunction={onClickFileUpload}
-						buttonType={composeButtonTypes.standard.type}
-						tooltip="Upload a new image"
-					/>
-					<!-- Delete button (always visible when not a new image) -->
-					{#if !isNewImage}
-						<JDGComposeButton
-							label="Delete..."
-							onClickFunction={onDeleteImage}
-							buttonType={composeButtonTypes.delete.type}
-							tooltip="Delete this image"
-						/>
-					{/if}
-				</div>
-			</JDGComposeToolbar>
 
 			<!-- Spacer-->
 			<div style="height: 20px;" />
@@ -889,7 +889,10 @@
 							{$draftImageMeta.src}
 						</div>
 					</JDGInputContainer>
+				</div>
 
+				<!-- Right column: Banners and editable inputs -->
+				<div style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
 					<!-- Show a banner when the asset path has changed -->
 					<JDGNotificationBanner
 						showBanner={hasAssetPathChanged && !isNewImage}
@@ -902,10 +905,6 @@
 						notificationType={jdgNotificationTypes.error}
 						message={'No repo name set. \nImages in other repos may break as a result of this change.'}
 					/>
-				</div>
-
-				<!-- Right column: Asset Path and all other inputs -->
-				<div style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
 					<JDGInputContainer label="Asset Path">
 						<JDGTextInput inputValue={assetPath} onInputFunction={onAssetPathChange} />
 					</JDGInputContainer>
@@ -969,9 +968,21 @@
 	}
 
 	.image-preview-wrapper {
+		position: relative;
 		width: 100%;
 		display: flex;
 		justify-content: center;
+	}
+
+	.image-meta-toolbar-overlay {
+		position: absolute;
+		display: flex;
+		flex-direction: row;
+		gap: 10px;
+		bottom: 10px;
+		left: 50%;
+		transform: translateX(-50%);
+		z-index: 10;
 	}
 
 	.image-src-string {
