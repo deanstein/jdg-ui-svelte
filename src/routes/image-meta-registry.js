@@ -534,6 +534,12 @@ const imageMetaRegistry = {
 			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765687118/jdg-ui-svelte/ccm/1981-06-25-rose-mall-sketch.jpg',
 			alt: 'A 1981 sketch of the renovated Rose Mall.',
 			caption: 'A 1981 sketch of the renovated Rose Mall.'
+		},
+		_1998_01_01_blue_mall_mw_entrance: {
+			id: '3558903b-2343-4f31-af02-8503e4b37959',
+			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765688240/jdg-ui-svelte/ccm/1998-01-01-blue-mall-mw-entrance.jpg',
+			alt: 'The southeast Blue Mall entrance after Cinderella City closed to the public.',
+			caption: 'The southeast Blue Mall entrance after Cinderella City closed to the public.'
 		}
 	}
 };
