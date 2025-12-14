@@ -18,8 +18,8 @@
 </script>
 
 <JDGModal
-	title="Image Gallery"
-	subtitle="View all available images"
+	title="Image Meta Registry Gallery"
+	subtitle="View all available images in the image meta registry"
 	onClickCloseButton={() => {
 		$showImageGalleryModal = false;
 	}}
