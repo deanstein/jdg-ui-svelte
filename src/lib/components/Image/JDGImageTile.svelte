@@ -199,6 +199,11 @@
 		box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
 		overflow: hidden;
 		outline: none;
+		/* Fix iOS sub-pixel rendering gap with box-shadow */
+		-webkit-backface-visibility: hidden;
+		backface-visibility: hidden;
+		-webkit-transform: translateZ(0);
+		transform: translateZ(0);
 	}
 
 	@media (hover: hover) {
