@@ -315,10 +315,10 @@
 		<div class="timeline-event-title-bar {eventTitleBarCss}">
 			<!-- event icon -->
 			<i class="fa-solid {timelineEventTypes[upgradedEvent?.type]?.icon} {eventFaIconCss}" />
-			<!-- hide age if this is the birth event -->
-			{#if upgradedEvent?.type !== timelineEventTypes.birth.type}
+			<!-- hide age if this is the birth event or if age is 0 or negative -->
+			{#if upgradedEvent?.type !== timelineEventTypes.birth.type && eventAge > 0}
 				<div class="timeline-event-age {eventAgeCss}">
-					{eventAge?.toString() !== 'NaN' && eventAge !== 0 ? 'Age: ' + eventAge : ''}
+					Age: {eventAge}
 				</div>
 			{/if}
 			<!-- if this is a reference event, show the timeline host it's shared from -->
