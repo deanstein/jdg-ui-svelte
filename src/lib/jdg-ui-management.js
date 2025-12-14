@@ -230,20 +230,15 @@ export const generateTimelineRowItems = (timelineHost, contextualEvents, incepti
 };
 
 // sorts timeline event row items by date
-// and ensurs any conflicting row indices are resolved
+// and assigns sequential row indices to ensure chronological order
 export const updateTimelineRowItems = (rowItems) => {
 	const sortedRowItems = rowItems.sort(
-		(a, b) => new Date(a.event.eventDate).getTime() - new Date(b.event.eventDate).getTime()
+		(a, b) => new Date(a.event.date).getTime() - new Date(b.event.date).getTime()
 	);
-	let indices = sortedRowItems.map((rowItem) => rowItem.index);
-	let duplicates = indices.filter((item, index) => indices.indexOf(item) != index);
-	while (duplicates.length > 0) {
-		let conflictingRowItems = sortedRowItems.filter((obj) => obj.index === duplicates[0]);
-		for (let i = 1; i < conflictingRowItems.length; i++) {
-			conflictingRowItems[i].index++;
-		}
-		indices = sortedRowItems.map((rowItem) => rowItem.index);
-		duplicates = indices.filter((item, index) => indices.indexOf(item) != index);
+	// Reassign row indices sequentially after sorting
+	// This ensures predating events appear before later events regardless of proportion calculation
+	for (let i = 0; i < sortedRowItems.length; i++) {
+		sortedRowItems[i].index = i + 1; // Start at 1 to leave room for inception event at 0
 	}
 	return sortedRowItems;
 };
