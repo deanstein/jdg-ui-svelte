@@ -80,6 +80,9 @@
 	// For brand new images without a Cloudinary URL yet, use the default path
 	$: assetPath = extractCloudinaryAssetpath($draftImageMeta?.src) || newImagePath;
 
+	// Ensure a key is a valid JS identifier by prefixing with _ if it starts with a digit
+	const ensureValidKey = (key) => (/^\d/.test(key) ? '_' + key : key);
+
 	// For new images, auto-generate registry key from filename (without extension)
 	// For existing images, keep the original registry key
 	$: {
@@ -89,11 +92,12 @@
 			if (matchCloudinaryNesting && pathParts.length > 2) {
 				// Match Cloudinary nesting: use folder(s) + filename
 				// Skip the root folder (e.g., 'jdg-ui-svelte')
-				const registryKeyParts = pathParts.slice(1).map(
-					(part) =>
+				const registryKeyParts = pathParts.slice(1).map((part) =>
+					ensureValidKey(
 						part
 							.replace(/\.[^/.]+$/, '') // Remove extension
 							.replace(/[^a-zA-Z0-9_]/g, '_') // Clean special chars
+					)
 				);
 				registryKey = registryKeyParts.join('.');
 			} else {
@@ -101,7 +105,8 @@
 				const filename = pathParts[pathParts.length - 1];
 				const filenameWithoutExt = filename.replace(/\.[^/.]+$/, ''); // Remove extension
 				// Convert to valid identifier (replace spaces/special chars with underscores)
-				registryKey = filenameWithoutExt.replace(/[^a-zA-Z0-9_]/g, '_');
+				const cleanedKey = filenameWithoutExt.replace(/[^a-zA-Z0-9_]/g, '_');
+				registryKey = ensureValidKey(cleanedKey);
 			}
 		} else if (originalRegistryKey) {
 			// For existing images, use the original key (don't update if filename changes)
