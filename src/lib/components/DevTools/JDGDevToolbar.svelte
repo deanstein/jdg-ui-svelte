@@ -7,7 +7,8 @@
 		showDevModal,
 		showDevToolbarSticky,
 		showImageEditButtons,
-		showImageMetaModal
+		showImageMetaModal,
+		showImageGalleryModal
 	} from '$lib/stores/jdg-ui-store.js';
 
 	import { instantiateObject, JDGButton, JDGH3H4 } from '$lib/index.js';
@@ -41,6 +42,17 @@
 			}}
 			faIcon={'fa-square-plus'}
 			label={'Add New Image'}
+			backgroundColor={jdgColors.buttonColor}
+			paddingTopBottom="5px"
+			paddingLeftRight="10px"
+			fontSize={jdgSizes.fontSizeBodyXSm}
+		/>
+		<JDGButton
+			onClickFunction={() => {
+				showImageGalleryModal.set(true);
+			}}
+			faIcon={'fa-images'}
+			label={'View Image Gallery'}
 			backgroundColor={jdgColors.buttonColor}
 			paddingTopBottom="5px"
 			paddingLeftRight="10px"

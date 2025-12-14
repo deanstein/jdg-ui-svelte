@@ -59,6 +59,8 @@ export let imageViewerScale = writable(1.0);
 export let showImageViewerModal = writable(false);
 /*** IMAGE META MODAL ***/
 export let showImageMetaModal = writable(false);
+/*** IMAGE GALLERY MODAL ***/
+export let showImageGalleryModal = writable(false);
 
 /*** TIMELINE EVENT MODAL ***/
 export let showTimelineEventModal = writable(false);
@@ -113,6 +115,7 @@ const storeMap = {
 	imageViewerMeta,
 	imageViewerWidth,
 	imageViewerScale,
+	showImageGalleryModal,
 	// timeline
 	showTimelineEventModal,
 	isTimelineEventModalEditable,

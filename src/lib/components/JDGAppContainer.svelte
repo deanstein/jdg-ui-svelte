@@ -16,6 +16,7 @@
 		showDevToolbarSticky,
 		showHeaderStripes as showHeaderStripesStore,
 		showImageMetaModal,
+		showImageGalleryModal,
 		showImageViewerModal,
 		showTimelineEventModal,
 		headerHeightPx,
@@ -43,6 +44,7 @@
 		JDGDevToolbarSticky,
 		JDGImageViewerModal,
 		JDGImageMetaModal,
+		JDGImageRegistryGalleryModal,
 		JDGLoadingOverlay,
 		JDGScrollToTop,
 		JDGTimelineEventModal,
@@ -260,6 +262,9 @@
 	{/if}
 	{#if $showImageMetaModal}
 		<JDGImageMetaModal />
+	{/if}
+	{#if $showImageGalleryModal}
+		<JDGImageRegistryGalleryModal />
 	{/if}
 	<!-- Dev -->
 	{#if $showDevModal}
