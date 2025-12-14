@@ -528,6 +528,12 @@ const imageMetaRegistry = {
 			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765686933/jdg-ui-svelte/ccm/1981-12-23-center-court-sketch.jpg',
 			alt: 'A 1981 sketch of the renovated Blue Mall center court.',
 			caption: 'A 1981 sketch of the renovated Blue Mall center court.'
+		},
+		_1981_06_25_rose_mall_sketch: {
+			id: '1868dedc-0c05-41e5-961e-60e82bd355ce',
+			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765687118/jdg-ui-svelte/ccm/1981-06-25-rose-mall-sketch.jpg',
+			alt: 'A 1981 sketch of the renovated Rose Mall.',
+			caption: 'A 1981 sketch of the renovated Rose Mall.'
 		}
 	}
 };
