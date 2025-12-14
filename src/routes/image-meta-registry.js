@@ -559,6 +559,12 @@ const imageMetaRegistry = {
 			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765691713/jdg-ui-svelte/ccm/1978-12-30-von-frellick.jpg',
 			alt: 'Von Frellick sells interest in Cinderella City.',
 			caption: 'Von Frellick sells interest in Cinderella City.'
+		},
+		_1987_rose_mall: {
+			id: '63b2d605-6877-47b8-b034-ef5fd4fc8955',
+			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765691792/jdg-ui-svelte/ccm/1987-rose-mall.jpg',
+			alt: 'Rose Mall as seen in roughly 1987.',
+			caption: 'Rose Mall as seen in roughly 1987.'
 		}
 	},
 	_1968_blue_mall: {
