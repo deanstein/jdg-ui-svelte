@@ -503,14 +503,14 @@ const imageMetaRegistry = {
 		attribution: 'Some attribution'
 	},
 	ccm: {
-		1968_03_07_von_frellick: {
+		_1968_03_07_von_frellick: {
 			id: 'ea492456-4cad-45d7-8e45-86ea138606f5',
 			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765685193/jdg-ui-svelte/ccm/1968-03-07-von-frellick.png',
 			alt: 'Gerri Von Frellick stands on a Blue Room stair landing while grand opening festivities take place below.',
 			caption: 'Gerri Von Frellick stands on a Blue Room stair landing while grand opening festivities take place below.',
 			attribution: 'Englewood Public Library'
 		},
-		1968_03_07_grand_opening_crowds_1: {
+		_1968_03_07_grand_opening_crowds_1: {
 			id: 'a85af0af-6b45-43c9-b7a5-ad5b2fc03794',
 			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765685321/jdg-ui-svelte/ccm/1968-03-07-grand-opening-crowds-1.jpg',
 			alt: `Crowds in the Blue Room at Cinderella City's grand opening.`,
