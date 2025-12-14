@@ -549,7 +549,7 @@ const imageMetaRegistry = {
 		},
 		_1983_05_19_blue_mall_and_food_court: {
 			id: '1a22b2cd-4188-4a89-8bcb-04c43f8a0610',
-			src: 'https://res.cloudinary.com/jdg-main/image/upload/jdg-ui-svelte/ccm/1983-05-19-blue-mall-and-food-court.jpg',
+			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765691026/jdg-ui-svelte/ccm/1983-05-19-blue-mall-and-food-court.jpg',
 			alt: 'The newly-renovated Blue Mall and Food Court.',
 			caption: 'The newly-renovated Blue Mall and Food Court.',
 			attribution: 'Englewood Public Library'
