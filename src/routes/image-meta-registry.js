@@ -540,6 +540,12 @@ const imageMetaRegistry = {
 			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765688240/jdg-ui-svelte/ccm/1998-01-01-blue-mall-mw-entrance.jpg',
 			alt: 'The southeast Blue Mall entrance after Cinderella City closed to the public.',
 			caption: 'The southeast Blue Mall entrance after Cinderella City closed to the public.'
+		},
+		_1967_01_01_blue_mall_exterior_rendering: {
+			id: 'd756eca8-d547-47fc-856a-652b2a4fb366',
+			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765689354/jdg-ui-svelte/ccm/1967-01-01-blue-mall-exterior-rendering.jpg',
+			alt: 'A 1967 rendering of the southeast Blue Mall entrance.',
+			caption: 'A 1967 rendering of the southeast Blue Mall entrance.'
 		}
 	}
 };
