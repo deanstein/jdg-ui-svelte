@@ -51,9 +51,13 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 8px;
+		/* Ensure container respects parent bounds on iOS */
+		max-width: 100%;
 	}
 
 	.jdg-thumbnail-group-wrapper {
 		flex-shrink: 0;
+		/* Allow proper sizing within flex parent on iOS */
+		max-width: 100%;
 	}
 </style>

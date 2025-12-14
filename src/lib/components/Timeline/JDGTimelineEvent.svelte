@@ -490,6 +490,9 @@
 		padding: 3px;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		/* Fix iOS flexbox sizing - ensure container doesn't exceed parent */
+		min-width: 0;
+		flex: 1 1 0%;
 	}
 
 	.timeline-event-content {
@@ -502,6 +505,9 @@
 
 	.timeline-event-image-preview {
 		padding-bottom: 8px;
+		/* Constrain width to prevent iOS flexbox overflow issues */
+		max-width: 100%;
+		overflow: hidden;
 	}
 
 	.timeline-event-reference-info {

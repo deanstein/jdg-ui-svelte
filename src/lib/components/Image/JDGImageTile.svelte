@@ -190,6 +190,8 @@
 		display: flex;
 		flex-direction: column;
 		min-width: 0;
+		/* Ensure tile respects parent bounds on iOS */
+		max-width: 100%;
 		cursor: pointer;
 		transition:
 			transform 0.3s ease-in-out,
