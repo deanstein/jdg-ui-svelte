@@ -424,7 +424,7 @@
 		/* if max height is not specified, use all available space below the header */
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			max-height: ${maxHeight === 'auto'
-				? `calc(100vh - ${jdgSizes.headerHeightSm} - ${
+				? `calc(100svh - ${jdgSizes.headerHeightSm} - ${
 						$showHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightSm : 0
 					}px)`
 				: ''};
@@ -433,14 +433,14 @@
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
 			max-height: ${maxHeight === 'auto'
-				? `calc(100vh - ${jdgSizes.headerHeightMd}  - ${
+				? `calc(100svh - ${jdgSizes.headerHeightMd}  - ${
 						$showHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightMd : 0
 					}px)`
 				: ''};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 			max-height: ${maxHeight === 'auto'
-				? `calc(100vh - ${jdgSizes.headerHeightLg} - ${
+				? `calc(100svh - ${jdgSizes.headerHeightLg} - ${
 						$showHeaderStripes ? 3 * jdgSizes.nHorizontalStripeHeightLg : 0
 					}px)`
 				: ''};

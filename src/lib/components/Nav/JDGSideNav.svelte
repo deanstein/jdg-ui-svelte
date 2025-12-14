@@ -95,7 +95,7 @@
 
 	.jdg-nav-sidebar-container {
 		position: relative;
-		height: 100vh;
+		height: 100svh;
 		z-index: -1;
 	}
 
@@ -117,6 +117,6 @@
 
 	.jdg-nav-sidebar-click-overlay {
 		flex-grow: 1;
-		height: 100vh;
+		height: 100svh;
 	}
 </style>
