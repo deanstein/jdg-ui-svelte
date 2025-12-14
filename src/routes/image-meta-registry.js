@@ -516,6 +516,12 @@ const imageMetaRegistry = {
 			alt: `Crowds in the Blue Room at Cinderella City's grand opening.`,
 			caption: `Crowds in the Blue Room at Cinderella City's grand opening.`,
 			attribution: 'Gerri Lu Von Frellick'
+		},
+		_1967_blue_mall_interior_rendering: {
+			id: '832df8f3-b731-423c-986d-d95124756a1f',
+			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765686585/jdg-ui-svelte/ccm/1967-blue-mall-interior-rendering.jpg',
+			alt: `A rendering of Cinderella City's Blue Mall.`,
+			caption: `A rendering of Cinderella City's Blue Mall.`
 		}
 	}
 };
