@@ -522,6 +522,12 @@ const imageMetaRegistry = {
 			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765686585/jdg-ui-svelte/ccm/1967-blue-mall-interior-rendering.jpg',
 			alt: `A rendering of Cinderella City's Blue Mall.`,
 			caption: `A rendering of Cinderella City's Blue Mall.`
+		},
+		_1981_12_23_center_court_sketch: {
+			id: 'b7d77600-debc-4bba-9c38-43e658621dff',
+			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765686933/jdg-ui-svelte/ccm/1981-12-23-center-court-sketch.jpg',
+			alt: 'A 1981 sketch of the renovated Blue Mall center court.',
+			caption: 'A 1981 sketch of the renovated Blue Mall center court.'
 		}
 	}
 };
