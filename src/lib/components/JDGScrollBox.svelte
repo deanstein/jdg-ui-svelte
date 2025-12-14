@@ -17,5 +17,9 @@
 <style>
 	.jdg-scrollbox-container {
 		overflow-y: auto;
+		/* Prevent scroll chaining to parent on iOS */
+		overscroll-behavior: contain;
+		/* Optimize touch scrolling on iOS */
+		-webkit-overflow-scrolling: touch;
 	}
 </style>
