@@ -41,6 +41,7 @@
 				maxHeight={maxImageHeight}
 				useAutoHeightOnMobile={false}
 				recordAspectRatioInState
+				cropToFillContainer={false}
 			/>
 		</div>
 	{/each}
