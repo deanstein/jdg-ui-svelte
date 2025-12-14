@@ -553,6 +553,12 @@ const imageMetaRegistry = {
 			alt: 'The newly-renovated Blue Mall and Food Court.',
 			caption: 'The newly-renovated Blue Mall and Food Court.',
 			attribution: 'Englewood Public Library'
+		},
+		_1978_12_30_von_frellick: {
+			id: '00ff7741-a792-413f-982b-4996775e3ff9',
+			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765691713/jdg-ui-svelte/ccm/1978-12-30-von-frellick.jpg',
+			alt: 'Von Frellick sells interest in Cinderella City.',
+			caption: 'Von Frellick sells interest in Cinderella City.'
 		}
 	},
 	_1968_blue_mall: {
