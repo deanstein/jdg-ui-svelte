@@ -41,7 +41,7 @@
 	.input-content {
 		display: flex;
 		flex-direction: column;
-		min-height: 2vh;
+		min-height: 2svh;
 		height: 100%;
 	}
 
