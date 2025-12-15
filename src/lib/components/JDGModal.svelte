@@ -38,7 +38,9 @@
 			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 				max-height: calc(100dvh - ${jdgSizes.headerHeightSm} - 20px);
 			}
-			@media (min-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			@media (min-width: ${jdgBreakpoints.width[0].toString() +
+				jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+				jdgBreakpoints.unit}) {
 				max-height: calc(100dvh - ${jdgSizes.headerHeightMd} - 20px);
 			}
 			@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
