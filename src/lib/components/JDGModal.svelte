@@ -34,14 +34,15 @@
 			min-width: ${!$isMobileBreakpoint && minWidth ? minWidth : 'auto'};
 			max-width: ${!$isMobileBreakpoint && maxWidth ? maxWidth : 'none'};
 			/* Constrain max-height to available viewport minus overlay header */
+			/* Use dvh (dynamic viewport height) to handle iOS browser chrome appearing/disappearing */
 			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-				max-height: calc(100vh - ${jdgSizes.headerHeightSm} - 20px);
+				max-height: calc(100dvh - ${jdgSizes.headerHeightSm} - 20px);
 			}
 			@media (min-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-				max-height: calc(100vh - ${jdgSizes.headerHeightMd} - 20px);
+				max-height: calc(100dvh - ${jdgSizes.headerHeightMd} - 20px);
 			}
 			@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-				max-height: calc(100vh - ${jdgSizes.headerHeightLg} - 20px);
+				max-height: calc(100dvh - ${jdgSizes.headerHeightLg} - 20px);
 			}
 			background-color: ${transparency
 				? setRgbaAlpha(backgroundColor, transparency)
