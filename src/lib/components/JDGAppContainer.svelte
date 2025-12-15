@@ -97,17 +97,28 @@
 	// helps determine if last scroll direction was up or down
 	let lastWindowScrollY = 0;
 
+	// track last known width to avoid unnecessary updates on iOS
+	// (iOS fires resize when action bar shows/hides, but only height changes)
+	let lastKnownWidth = 0;
+
 	// app sets window and client width in the ui state
 	// so children don't have to add event handlers
 	const onPageResize = () => {
-		windowWidth.set(window.innerWidth);
-		clientWidth.set(appContainerRef?.clientWidth);
-		headerHeightPx.set(getDistancePxToBottomOfHeader($showHeaderStripesStore));
-		isMobileBreakpoint.set(appContainerRef?.clientWidth <= jdgBreakpoints.width[0]);
-		isTabletBreakpoint.set(
-			appContainerRef?.clientWidth > jdgBreakpoints.width[0] &&
-				appContainerRef?.clientWidth <= jdgBreakpoints.width[1]
-		);
+		const currentWidth = window.innerWidth;
+
+		// Only update stores if width actually changed
+		// This prevents iOS action bar show/hide from triggering re-renders
+		if (currentWidth !== lastKnownWidth) {
+			lastKnownWidth = currentWidth;
+			windowWidth.set(currentWidth);
+			clientWidth.set(appContainerRef?.clientWidth);
+			headerHeightPx.set(getDistancePxToBottomOfHeader($showHeaderStripesStore));
+			isMobileBreakpoint.set(appContainerRef?.clientWidth <= jdgBreakpoints.width[0]);
+			isTabletBreakpoint.set(
+				appContainerRef?.clientWidth > jdgBreakpoints.width[0] &&
+					appContainerRef?.clientWidth <= jdgBreakpoints.width[1]
+			);
+		}
 	};
 
 	// set whether page is being scrolled or not
