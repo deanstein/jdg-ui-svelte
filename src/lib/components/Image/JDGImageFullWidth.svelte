@@ -23,7 +23,7 @@
 
 	export let imageMeta = instantiateObject(jdgImageMeta);
 	export let objectPosition = 'center';
-	export let maxHeight = '80vh';
+	export let maxHeight = '80svh';
 	export let overlapWithHeader = false; // if true, the overlays will be moved down so they're visually centered
 	export let showOverlay = false;
 	export let overlayColorRgba = 'rgba(50, 50, 50, 0.2)';
@@ -35,7 +35,7 @@
 	export let secondaryText = undefined;
 	export let secondaryTextFontFamily = $appFontFamily;
 	export let overlayImageAttributes = undefined; // for example, a logo or vector graphic over the image
-	export let overlayImageMaxHeight = '18vh';
+	export let overlayImageMaxHeight = '18svh';
 	export let overlayImageText = undefined;
 	export let overlayImageTextFontFamily = $appFontFamily;
 	export let parallax = false; // if true, image will appear stationary as page scrolls
