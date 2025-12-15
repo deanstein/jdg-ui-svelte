@@ -235,6 +235,7 @@
 				{filterText ? 'No images match your filter' : 'No images available'}
 			</div>
 		{:else}
+			{#key filterText}
 			<div class={imageGridCss}>
 				{#each visibleImages as imageMeta (imageMeta.key)}
 					{@const selected = selectionEnabled && isImageSelected(imageMeta, selectedImageSrcs)}
@@ -271,6 +272,7 @@
 					</div>
 				{/each}
 			</div>
+			{/key}
 
 			{#if hasMore}
 				<div bind:this={loadMoreIndicator} class={loadMoreIndicatorCss}>
