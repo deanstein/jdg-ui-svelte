@@ -86,15 +86,15 @@
 
 	const overlayContentCss = css`
 	@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			max-height: calc(100svh - ${jdgSizes.headerHeightSm});
+			max-height: calc(100vh - ${jdgSizes.headerHeightSm});
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) and (max-width: ${
 			jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit
 		}) {
-			max-height: calc(100svh - ${jdgSizes.headerHeightMd});
+			max-height: calc(100vh - ${jdgSizes.headerHeightMd});
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			max-height: calc(100svh - ${jdgSizes.headerHeightLg});
+			max-height: calc(100vh - ${jdgSizes.headerHeightLg});
 		`;
 
 	onMount(() => {
