@@ -22,7 +22,7 @@
 	export let imageMetaSet; // all images shown in thumbnail collection
 	export let showCaption = true;
 	export let showAttribution = true;
-	export let maxHeight = '50svh';
+	export let maxHeight = '50vh';
 	export let activeThumbnailColor = $appAccentColors[0];
 	export let autoAdvance = true; // if true, auto advance through images at given interval
 	export let autoAdvanceInterval = 5000; // ms, interval between auto-advances

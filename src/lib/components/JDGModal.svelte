@@ -154,9 +154,9 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 1svh;
+		gap: 1vh;
 		min-height: 0;
-		height: 80svh;
+		height: 80vh;
 		overscroll-behavior: contain;
 		width: -webkit-fill-available;
 		width: -moz-available;
