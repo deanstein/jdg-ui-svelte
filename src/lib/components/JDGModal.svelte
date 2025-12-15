@@ -30,7 +30,7 @@
 	$: {
 		modalContentContainerCss = css`
 			width: ${$isMobileBreakpoint && maximizeOnMobile ? '90vw' : width};
-			height: ${$isMobileBreakpoint && maximizeOnMobile ? '90svh' : height};
+			height: ${$isMobileBreakpoint && maximizeOnMobile ? '90dvh' : height};
 			min-width: ${!$isMobileBreakpoint && minWidth ? minWidth : 'auto'};
 			max-width: ${!$isMobileBreakpoint && maxWidth ? maxWidth : 'none'};
 			/* Constrain max-height to available viewport minus overlay header */
