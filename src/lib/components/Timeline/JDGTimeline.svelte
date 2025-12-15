@@ -556,18 +556,22 @@
 	.timeline-content-container {
 		position: relative;
 		display: flex;
-		height: -webkit-fill-available;
-		flex-grow: 1;
+		/* Use flex: 1 with min-height: 0 for proper iOS flex shrinking */
+		flex: 1 1 0%;
+		min-height: 0;
 		overflow: hidden;
 	}
 
 	.timeline-scrolling-canvas {
 		position: relative;
-		height: -webkit-fill-available;
-		width: -webkit-fill-available;
-		width: -moz-available;
+		/* Use flex: 1 with min-height: 0 for proper iOS scrolling */
+		flex: 1 1 0%;
+		min-height: 0;
+
 		display: flex;
 		overflow: auto;
+		/* Ensure iOS respects the scroll container bounds */
+		-webkit-overflow-scrolling: touch;
 	}
 
 	.timeline-event-grid {
@@ -579,7 +583,9 @@
 	.timeline-spine {
 		position: absolute;
 		display: flex;
-		height: inherit;
+		/* Use top/bottom instead of height: inherit for flex parent compatibility */
+		top: 0;
+		bottom: 0;
 		background: linear-gradient(
 			to bottom,
 			rgba(255, 0, 0, 0) 0%,
