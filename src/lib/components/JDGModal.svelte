@@ -4,7 +4,7 @@
 	import { isMobileBreakpoint } from '$lib/stores/jdg-ui-store.js';
 	import { setRgbaAlpha } from '$lib/jdg-utils.js';
 
-	import { jdgColors, jdgSizes } from '$lib/index.js';
+	import { jdgColors, jdgSizes, jdgBreakpoints } from '$lib/index.js';
 	import { JDGOverlay } from '$lib/index.js';
 	import { jdgDurations } from '$lib/index.js';
 	import { drawCrossfade } from '$lib/jdg-graphics-factory.js';
@@ -20,7 +20,7 @@
 	export let maxWidth = undefined; // only applies to desktop/tablet
 	export let maximizeOnMobile = false; // maximize width on mobile
 	export let padding = '10px';
-	export let overflow = ''; // default is not set but can be set per instance
+	export let overflow = 'auto'; // default to auto for proper scrolling
 	export let backgroundColor = jdgColors.contentBoxBackground;
 	export let transparency = undefined; // default is in default bg color
 
@@ -33,6 +33,16 @@
 			height: ${$isMobileBreakpoint && maximizeOnMobile ? '90svh' : height};
 			min-width: ${!$isMobileBreakpoint && minWidth ? minWidth : 'auto'};
 			max-width: ${!$isMobileBreakpoint && maxWidth ? maxWidth : 'none'};
+			/* Constrain max-height to available viewport minus overlay header */
+			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+				max-height: calc(100vh - ${jdgSizes.headerHeightSm} - 20px);
+			}
+			@media (min-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+				max-height: calc(100vh - ${jdgSizes.headerHeightMd} - 20px);
+			}
+			@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+				max-height: calc(100vh - ${jdgSizes.headerHeightLg} - 20px);
+			}
 			background-color: ${transparency
 				? setRgbaAlpha(backgroundColor, transparency)
 				: backgroundColor};
@@ -92,20 +102,21 @@
 
 <style>
 	.modal-outer-container {
-		position: absolute;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		width: 100%;
+		max-height: 100%;
 	}
 
 	.modal-content-container {
-		position: absolute;
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		justify-content: center;
 		border-radius: 10px;
+		/* Ensure proper sizing within overlay */
+		max-height: 100%;
 	}
 
 	.modal-title-bar-container {
@@ -155,12 +166,14 @@
 		flex-direction: column;
 		align-items: center;
 		gap: 1vh;
+		/* Use flex: 1 with min-height: 0 for proper flex shrinking and scrolling */
+		flex: 1 1 auto;
 		min-height: 0;
-		height: 80vh;
 		overscroll-behavior: contain;
 		width: -webkit-fill-available;
 		width: -moz-available;
 		box-sizing: border-box;
+		-webkit-overflow-scrolling: touch;
 	}
 
 	.modal-toolbar-slot {
