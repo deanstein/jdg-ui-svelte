@@ -166,9 +166,9 @@
 		<div class="event-header-view event-header-age">
 			{#if !isGenericType}
 				<i class="fa-solid {currentTypeIcon} event-header-icon" />
-				<span class="event-header-separator">|</span>
 			{/if}
 			{#if isFinite(eventAge) && eventAge > 0}
+				<span class="event-header-separator">|</span>
 				<span>{eventAge} years old</span>
 				<span class="event-header-separator">|</span>
 				<span>{yearsAgo} years ago</span>
