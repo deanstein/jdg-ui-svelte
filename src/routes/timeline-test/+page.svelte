@@ -114,7 +114,15 @@
 		if (hasUnsavedChanges) {
 			saveStatus.set(jdgSaveStatus.unsavedChanges);
 		} else {
-			saveStatus.set(null);
+			// Don't clear status if a success message is being displayed
+			// (let the banner's timeout handle dismissal)
+			const isSuccessStatus =
+				$saveStatus === jdgSaveStatus.saveSuccess ||
+				$saveStatus === jdgSaveStatus.loadSucccess ||
+				$saveStatus === jdgSaveStatus.saveSuccessRebuilding;
+			if (!isSuccessStatus) {
+				saveStatus.set(null);
+			}
 		}
 	}
 
