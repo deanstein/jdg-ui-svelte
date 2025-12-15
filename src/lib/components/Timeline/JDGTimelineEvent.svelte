@@ -173,6 +173,8 @@
 	const eventNodeCss = css`
 		height: ${jdgSizes.timelineEventNodeSize};
 		background-color: ${jdgColors.textLight};
+		/* Center node on spine: offset by half the difference between node and spine width */
+		margin-left: ${-((jdgSizes.nTimelineEventNodeSize - jdgSizes.nTimelineSpineWidth) / 2) + jdgSizes.timelineUnit};
 	`;
 
 	const eventLineCss = css`
