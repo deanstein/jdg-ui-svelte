@@ -294,12 +294,23 @@
 	bind:this={eventRowDivRef}
 >
 	<div class="timeline-event-date-year-container {eventDateYearCss}">
-		<div class="timeline-event-date {eventDateCss}">
-			<!-- show month name with three letters like AUG -->
-			{eventDateCorrected?.toString() !== 'Invalid Date'
-				? monthNames[eventDateCorrected?.getUTCMonth()] + ' ' + eventDateCorrected?.getUTCDate()
-				: 'Date?'}
-		</div>
+		<!-- For approximate dates: hide day if day=01, hide month+day if month=01 -->
+		{#if !(upgradedEvent?.isApprxDate && eventDateCorrected?.getUTCMonth() === 0 && eventDateCorrected?.getUTCDate() === 1)}
+			<div class="timeline-event-date {eventDateCss}">
+				<!-- show month name with three letters like AUG -->
+				{#if eventDateCorrected?.toString() !== 'Invalid Date'}
+					{#if upgradedEvent?.isApprxDate && eventDateCorrected?.getUTCDate() === 1}
+						<!-- Approximate date with day=01: show only month -->
+						{monthNames[eventDateCorrected?.getUTCMonth()]}
+					{:else}
+						<!-- Full date: show month and day -->
+						{monthNames[eventDateCorrected?.getUTCMonth()] + ' ' + eventDateCorrected?.getUTCDate()}
+					{/if}
+				{:else}
+					Date?
+				{/if}
+			</div>
+		{/if}
 		<div class="timeline-event-year {eventYearCss}">
 			{eventDateCorrected?.toString() !== 'Invalid Date'
 				? eventDateCorrected?.getUTCFullYear()
