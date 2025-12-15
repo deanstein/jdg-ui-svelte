@@ -60,8 +60,8 @@
 	export let isInteractive = true;
 	// Width and height for timeline interface
 	export let width = '100%';
-	export let minHeight = '50svh';
-	export let maxHeight = '50svh';
+	export let minHeight = '50lvh';
+	export let maxHeight = '50lvh';
 	// When true, this timeline is a preview
 	// with a button to open it in a modal for a better experience
 	export let previewOnly = false;
@@ -459,7 +459,7 @@
 			onClickCloseButton={() => (showTimelineModal = false)}
 			backgroundColor="rgba(245, 245, 245, 1)"
 			width="90vw"
-			height="85svh"
+			height="85lvh"
 			maxWidth="none"
 			overflow={'hidden'}
 		>
@@ -471,8 +471,8 @@
 					{allowEditing}
 					{isInteractive}
 					width="100%"
-					minHeight="70svh"
-					maxHeight="75svh"
+					minHeight="70lvh"
+					maxHeight="75lvh"
 					{onClickInceptionEvent}
 					{addClickAddEvent}
 				/>
