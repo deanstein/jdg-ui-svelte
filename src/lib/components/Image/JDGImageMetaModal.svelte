@@ -764,6 +764,7 @@
 		draftImageMeta.set(undefined);
 	}}
 	closeOnOverlayClick={false}
+	maxWidth="90vw"
 >
 	<div bind:this={modalContainerRef} slot="modal-content-slot" class="image-meta-modal-scrollable">
 		{#if $draftImageMeta}
@@ -897,7 +898,7 @@
 			<!-- Two-column layout for tablet and desktop -->
 			<JDGGridLayout maxColumns={2} useMinWidthOnTwoColumns={false}>
 				<!-- Left column: Read-only values -->
-				<div style="display: flex; flex-direction: column; gap: 10px;">
+				<div class="modal-column">
 					<!-- Registry Key (auto-generated for new images) -->
 					<JDGInputContainer label="Registry Key">
 						<div style="display: flex; flex-direction: column; gap: 8px;">
@@ -925,7 +926,7 @@
 				</div>
 
 				<!-- Right column: Editable inputs -->
-				<div style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+				<div class="modal-column">
 					<JDGInputContainer label="Asset Path">
 						<JDGTextInput inputValue={assetPath} onInputFunction={onAssetPathChange} />
 					</JDGInputContainer>
@@ -986,6 +987,8 @@
 		flex-direction: column;
 		gap: 10px;
 		overflow-y: auto;
+		overflow-x: hidden; /* Prevent horizontal expansion */
+		max-width: 100%;
 	}
 
 	.image-preview-wrapper {
@@ -1014,5 +1017,15 @@
 
 	.check-usage-button-container {
 		margin-bottom: 10px;
+	}
+
+	.modal-column {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		width: 100%;
+		min-width: 0; /* Allow shrinking */
+		max-width: 100%; /* Prevent expanding beyond parent */
+		overflow: hidden; /* Clip overflowing content */
 	}
 </style>

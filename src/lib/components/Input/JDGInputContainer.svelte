@@ -35,6 +35,8 @@
 		display: flex;
 		flex-direction: column;
 		width: 100%;
+		min-width: 0; /* Allow container to shrink in flex layouts */
+		max-width: 100%; /* Prevent expanding beyond parent */
 		margin-bottom: 1svh;
 	}
 
@@ -43,6 +45,9 @@
 		flex-direction: column;
 		min-height: 2svh;
 		height: 100%;
+		min-width: 0; /* Allow shrinking */
+		max-width: 100%; /* Prevent expanding beyond parent */
+		overflow: hidden;
 	}
 
 	.label-container {

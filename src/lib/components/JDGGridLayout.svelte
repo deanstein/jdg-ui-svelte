@@ -23,6 +23,13 @@
 		justify-content: center;
 		width: 100%;
 
+		/* Allow flex items to shrink and constrain content overflow */
+		> * {
+			min-width: 0;
+			max-width: 100%;
+			overflow: hidden;
+		}
+
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			> * {
 				flex: 0 1 ${forceMaxColumns ? `calc(100% / ${maxColumns})` : '100%'};
