@@ -1,7 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
 	import { css } from '@emotion/css';
-	import { imageMetaRegistry } from '../../../routes/image-meta-registry.js';
+	import { draftImageMetaRegistry } from '$lib/stores/jdg-temp-store.js';
 	import { imagesLoading } from '$lib/stores/jdg-ui-store.js';
 	import { JDGTextInput, JDGButton, JDGImageTile, JDGLoadingSpinner } from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
@@ -81,7 +81,7 @@
 		return flat;
 	};
 
-	const allImages = flattenRegistry(imageMetaRegistry);
+	$: allImages = flattenRegistry($draftImageMetaRegistry);
 
 	// Filter images based on search text
 	$: filteredImages = allImages.filter((img) => {
