@@ -139,8 +139,9 @@
 		isHovering = false;
 	};
 
-	// Touch handlers for mobile previewOnly mode
+	// Touch/click handlers for mobile previewOnly mode
 	let previewOverlayTimeout;
+	const previewOverlayDuration = 400;
 
 	const onTouchStartPreview = () => {
 		if (previewOnly && !showTimelineModal) {
@@ -159,7 +160,23 @@
 			previewOverlayTimeout = setTimeout(() => {
 				isHovering = false;
 				previewOverlayTimeout = null;
-			}, 400);
+			}, previewOverlayDuration);
+		}
+	};
+
+	const onClickPreview = () => {
+		if (previewOnly && !showTimelineModal) {
+			// Clear any pending timeout to reset the timer
+			if (previewOverlayTimeout) {
+				clearTimeout(previewOverlayTimeout);
+				previewOverlayTimeout = null;
+			}
+			isHovering = true;
+			// Hide overlay after a delay
+			previewOverlayTimeout = setTimeout(() => {
+				isHovering = false;
+				previewOverlayTimeout = null;
+			}, previewOverlayDuration);
 		}
 	};
 
@@ -342,6 +359,7 @@
 	}
 </script>
 
+<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <div
 	bind:this={timelineWrapperRef}
 	class="timeline-wrapper {previewOnly ? 'preview-only' : ''}"
@@ -350,7 +368,9 @@
 	on:touchstart={onTouchStartPreview}
 	on:touchend={onTouchEndPreview}
 	on:touchcancel={onTouchEndPreview}
-	role="region"
+	on:click={onClickPreview}
+	role={previewOnly ? 'button' : 'region'}
+	tabindex={previewOnly ? 0 : undefined}
 >
 	<JDGSaveStateBanner />
 	<!-- Hover overlay for previewOnly mode -->
