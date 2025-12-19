@@ -130,14 +130,36 @@
 	setContext(JDG_CONTEXT_KEYS.timelineLastRowHeight, lastEventRowHeightStore);
 
 	const onClickPreviewOverlay = () => {
+		// Clear any pending timeout
+		if (previewOverlayTimeout) {
+			clearTimeout(previewOverlayTimeout);
+			previewOverlayTimeout = null;
+		}
 		showTimelineModal = true;
 		isHovering = false;
 	};
 
-	// Touch handler for mobile previewOnly mode
+	// Touch handlers for mobile previewOnly mode
+	let previewOverlayTimeout;
+
 	const onTouchStartPreview = () => {
 		if (previewOnly && !showTimelineModal) {
+			// Clear any pending timeout to reset the timer
+			if (previewOverlayTimeout) {
+				clearTimeout(previewOverlayTimeout);
+				previewOverlayTimeout = null;
+			}
 			isHovering = true;
+		}
+	};
+
+	const onTouchEndPreview = () => {
+		if (previewOnly && isHovering) {
+			// Hide overlay after a delay
+			previewOverlayTimeout = setTimeout(() => {
+				isHovering = false;
+				previewOverlayTimeout = null;
+			}, 2000);
 		}
 	};
 
@@ -326,6 +348,8 @@
 	on:mouseenter={() => previewOnly && (isHovering = true)}
 	on:mouseleave={() => previewOnly && (isHovering = false)}
 	on:touchstart={onTouchStartPreview}
+	on:touchend={onTouchEndPreview}
+	on:touchcancel={onTouchEndPreview}
 	role="region"
 >
 	<JDGSaveStateBanner />
