@@ -2,7 +2,8 @@
 	import { onMount } from 'svelte';
 	import { css } from '@emotion/css';
 	import { imageMetaRegistry } from '../../../routes/image-meta-registry.js';
-	import { JDGTextInput, JDGButton, JDGImageTile } from '$lib/index.js';
+	import { imagesLoading } from '$lib/stores/jdg-ui-store.js';
+	import { JDGTextInput, JDGButton, JDGImageTile, JDGLoadingSpinner } from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
 	import { showImageDetailModal } from '$lib/jdg-state-management.js';
 
@@ -24,9 +25,13 @@
 
 	// Filter state
 	let filterText = '';
+	let previousFilterText = '';
 	let visibleCount = imagesPerPage; // Start by showing one page worth
 	let loadMoreIndicator; // Reference for IntersectionObserver
 	let observer; // IntersectionObserver instance
+
+	// Track if content is ready (prevents showing empty container during load/filter)
+	let isContentReady = false;
 
 	// Create a reactive set of selected image sources for fast lookup
 	$: selectedImageSrcs = new Set(selectedImages.map((img) => img.src));
@@ -87,9 +92,15 @@
 		return keyMatch || captionMatch;
 	});
 
-	// Reset visible count when filter changes
-	$: if (filterText !== undefined) {
+	// Reset visible count and content ready state when filter actually changes
+	$: if (filterText !== previousFilterText) {
+		previousFilterText = filterText;
 		visibleCount = imagesPerPage;
+		isContentReady = false;
+		// Wait a moment for images to start rendering before showing UI elements
+		setTimeout(() => {
+			isContentReady = true;
+		}, 500);
 	}
 
 	// Show images up to visibleCount
@@ -110,6 +121,11 @@
 
 	// Set up IntersectionObserver to detect when load more indicator is visible
 	onMount(() => {
+		// Mark content as ready after images have had time to start rendering
+		setTimeout(() => {
+			isContentReady = true;
+		}, 500);
+
 		observer = new IntersectionObserver(
 			(entries) => {
 				entries.forEach((entry) => {
@@ -136,7 +152,6 @@
 	const galleryContainerCss = css`
 		overflow-y: auto;
 		overflow-x: hidden;
-		border: 1px solid ${jdgColors.border};
 		padding: 12px;
 		background-color: ${jdgColors.backgroundSubtle};
 		scroll-behavior: smooth;
@@ -229,57 +244,66 @@
 		</div>
 	{/if}
 
-	<div class={galleryContainerCss}>
-		{#if visibleImages.length === 0}
+	<div
+		class={galleryContainerCss}
+		style="border: 1px solid {isContentReady ? jdgColors.border : 'transparent'};"
+	>
+		{#if !isContentReady && visibleImages.length > 0}
+			<div class="loading-container">
+				<JDGLoadingSpinner spinnerHeightPx={60} />
+			</div>
+		{:else if visibleImages.length === 0}
 			<div class={noResultsCss}>
 				{filterText ? 'No images match your filter' : 'No images available'}
 			</div>
 		{:else}
 			{#key filterText}
-			<div class={imageGridCss}>
-				{#each visibleImages as imageMeta (imageMeta.key)}
-					{@const selected = selectionEnabled && isImageSelected(imageMeta, selectedImageSrcs)}
-					<div
-						class={imageTileWrapperCss}
-						role="button"
-						tabindex="0"
-						on:click={() => handleImageClick(imageMeta)}
-						on:keydown={(e) => {
-							if (e.key === 'Enter' || e.key === ' ') {
-								handleImageClick(imageMeta);
-							}
-						}}
-					>
-						<div class="image-container" style="--selection-color: {jdgColors.active}">
-							{#if selected}
-								<div class={selectedBadgeCss}>
-									<i class="fa-solid fa-check" />
-								</div>
-								<div class="selection-border"></div>
-							{/if}
-							<JDGImageTile
-								{imageMeta}
-								onClickFunction={() => handleImageClick(imageMeta)}
-								maxHeight={imageHeight}
-								maxWidth="none"
-								useAutoHeightOnMobile={false}
-								cropToFillContainer={false}
-								showCaption={showCaptions}
-								showAttribution={false}
-								showHorizontalStripesOnHover={!selectionEnabled}
-							/>
+				<div class={imageGridCss}>
+					{#each visibleImages as imageMeta (imageMeta.key)}
+						{@const selected = selectionEnabled && isImageSelected(imageMeta, selectedImageSrcs)}
+						<div
+							class={imageTileWrapperCss}
+							role="button"
+							tabindex="0"
+							on:click={() => handleImageClick(imageMeta)}
+							on:keydown={(e) => {
+								if (e.key === 'Enter' || e.key === ' ') {
+									handleImageClick(imageMeta);
+								}
+							}}
+						>
+							<div class="image-container" style="--selection-color: {jdgColors.active}">
+								{#if selected}
+									<div class={selectedBadgeCss}>
+										<i class="fa-solid fa-check" />
+									</div>
+									<div class="selection-border"></div>
+								{/if}
+								<JDGImageTile
+									{imageMeta}
+									onClickFunction={() => handleImageClick(imageMeta)}
+									maxHeight={imageHeight}
+									maxWidth="none"
+									useAutoHeightOnMobile={false}
+									cropToFillContainer={false}
+									showCaption={showCaptions}
+									showAttribution={false}
+									showHorizontalStripesOnHover={!selectionEnabled}
+								/>
+							</div>
 						</div>
-					</div>
-				{/each}
-			</div>
+					{/each}
+				</div>
 			{/key}
 
 			{#if hasMore}
 				<div bind:this={loadMoreIndicator} class={loadMoreIndicatorCss}>
-					<i class="fa-solid fa-arrow-down" />
-					Scroll down to load more images...
+					{#if isContentReady && $imagesLoading.length === 0}
+						<i class="fa-solid fa-arrow-down" />
+						Scroll down to load more images...
+					{/if}
 				</div>
-			{:else if filteredImages.length > imagesPerPage}
+			{:else if filteredImages.length > imagesPerPage && isContentReady && $imagesLoading.length === 0}
 				<div class={showingInfoCss}>
 					Showing all {filteredImages.length} image{filteredImages.length !== 1 ? 's' : ''}
 				</div>
@@ -291,6 +315,15 @@
 <style>
 	.jdg-image-gallery {
 		width: 100%;
+	}
+
+	.loading-container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		height: 100%;
+		min-height: 200px;
 	}
 
 	.image-container {
