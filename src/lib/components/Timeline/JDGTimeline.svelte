@@ -159,7 +159,7 @@
 			previewOverlayTimeout = setTimeout(() => {
 				isHovering = false;
 				previewOverlayTimeout = null;
-			}, 750);
+			}, 500);
 		}
 	};
 
