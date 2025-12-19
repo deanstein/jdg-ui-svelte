@@ -134,16 +134,10 @@
 		isHovering = false;
 	};
 
-	// Touch handlers for mobile previewOnly mode
+	// Touch handler for mobile previewOnly mode
 	const onTouchStartPreview = () => {
 		if (previewOnly && !showTimelineModal) {
 			isHovering = true;
-		}
-	};
-
-	const onTouchEndPreview = () => {
-		if (previewOnly) {
-			isHovering = false;
 		}
 	};
 
@@ -332,8 +326,6 @@
 	on:mouseenter={() => previewOnly && (isHovering = true)}
 	on:mouseleave={() => previewOnly && (isHovering = false)}
 	on:touchstart={onTouchStartPreview}
-	on:touchend={onTouchEndPreview}
-	on:touchcancel={onTouchEndPreview}
 	role="region"
 >
 	<JDGSaveStateBanner />
@@ -519,8 +511,8 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: rgba(255, 255, 255, 0.85);
-		backdrop-filter: blur(4px);
+		background: rgba(255, 255, 255, 0.5);
+		backdrop-filter: blur(5px);
 		z-index: 10;
 		border-radius: 10px;
 		cursor: pointer;
