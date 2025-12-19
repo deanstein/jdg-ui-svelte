@@ -134,6 +134,15 @@
 		isHovering = false;
 	};
 
+	// Touch handler for mobile previewOnly mode
+	const onTouchStartPreview = (event) => {
+		if (previewOnly && !showTimelineModal) {
+			// Prevent scrolling and show the overlay
+			event.preventDefault();
+			isHovering = true;
+		}
+	};
+
 	const onCheckRelativeSpacing = () => {
 		forceRelativeSpacing = true;
 	};
@@ -315,9 +324,10 @@
 
 <div
 	bind:this={timelineWrapperRef}
-	class="timeline-wrapper"
+	class="timeline-wrapper {previewOnly ? 'preview-only' : ''}"
 	on:mouseenter={() => previewOnly && (isHovering = true)}
 	on:mouseleave={() => previewOnly && (isHovering = false)}
+	on:touchstart={onTouchStartPreview}
 	role="region"
 >
 	<JDGSaveStateBanner />
@@ -487,6 +497,11 @@
 		height: -webkit-fill-available;
 		width: -webkit-fill-available;
 		width: -moz-available;
+	}
+
+	/* Prevent touch scrolling when in preview-only mode */
+	.timeline-wrapper.preview-only {
+		touch-action: none;
 	}
 
 	.timeline-hover-overlay {
