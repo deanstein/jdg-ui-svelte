@@ -176,7 +176,7 @@
 			previewOverlayTimeout = setTimeout(() => {
 				isHovering = false;
 				previewOverlayTimeout = null;
-			}, previewOverlayDuration);
+			}, previewOverlayDuration + 200);
 		}
 	};
 
