@@ -619,8 +619,8 @@ export const doesStringContainVh = (string) => {
 };
 
 // converts either a number (assuming vh)
-// or a string containing 'vh' to pixels
-// based on the current window height
+// or a string containing 'vh' (including svh, dvh, lvh) to pixels
+// based on the current window/viewport height
 export const convertVhToPixels = (vhValue) => {
 	// if no window, can't calculate equivalent pixels
 	if (typeof window === 'undefined') {
@@ -628,7 +628,26 @@ export const convertVhToPixels = (vhValue) => {
 	}
 	// only handle raw numbers or strings containing 'vh'
 	if (isFinite(vhValue) || doesStringContainVh(vhValue)) {
-		return (parseFloat(vhValue) / 100) * window.innerHeight;
+		const numericValue = parseFloat(vhValue);
+		const valueStr = String(vhValue).toLowerCase();
+
+		// Determine the correct viewport height based on the unit
+		let viewportHeight;
+		if (valueStr.includes('svh')) {
+			// Small viewport height - when browser chrome is visible
+			viewportHeight = Math.min(window.innerHeight, document.documentElement.clientHeight);
+		} else if (valueStr.includes('lvh')) {
+			// Large viewport height - when browser chrome is hidden
+			viewportHeight = Math.max(window.innerHeight, document.documentElement.clientHeight);
+		} else if (valueStr.includes('dvh')) {
+			// Dynamic viewport height - current actual viewport
+			viewportHeight = document.documentElement.clientHeight;
+		} else {
+			// Default vh - use window.innerHeight
+			viewportHeight = window.innerHeight;
+		}
+
+		return (numericValue / 100) * viewportHeight;
 	}
 	// otherwise, pass the value through and do nothing
 	else {
