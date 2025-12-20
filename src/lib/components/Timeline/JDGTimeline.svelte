@@ -167,12 +167,13 @@
 
 	const onClickPreview = () => {
 		if (previewOnly && !showTimelineModal) {
-			// If a timeout is already pending (from touch), let it run
+			// Clear any pending timeout (from touchend) and set a longer one for taps
 			if (previewOverlayTimeout) {
-				return;
+				clearTimeout(previewOverlayTimeout);
+				previewOverlayTimeout = null;
 			}
 			isHovering = true;
-			// Hide overlay after a delay
+			// Hide overlay after a delay (longer for tap)
 			previewOverlayTimeout = setTimeout(() => {
 				isHovering = false;
 				previewOverlayTimeout = null;
