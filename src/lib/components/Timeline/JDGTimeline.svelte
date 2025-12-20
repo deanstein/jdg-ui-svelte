@@ -66,6 +66,8 @@
 	// When true, this timeline is a preview
 	// with a button to open it in a modal for a better experience
 	export let previewOnly = false;
+	// The duration of the preview overlay in milliseconds
+	export let previewOverlayDuration = 500;
 
 	export let onClickInceptionEvent = () => {};
 	export let addClickAddEvent = () => {};
@@ -132,7 +134,6 @@
 
 	// Preview overlay handlers
 	let previewOverlayTimeout;
-	const previewOverlayDuration = 500;
 
 	// Show the overlay
 	const showPreviewOverlay = () => {
