@@ -8,14 +8,15 @@
 		jdgBreakpoints,
 		jdgSizes
 	} from '$lib/jdg-shared-styles.js';
-	import { darkenColor } from '$lib/jdg-utils.js';
+
+	import JDGButton from '$lib/components/Input/JDGButton.svelte';
 
 	// Font Awesome icon class (e.g., 'fa-gear', 'fa-sliders')
 	export let faIcon = 'fa-gear';
 	export let faClass = 'fa-solid fa-fw';
 	// Button styling
-	export let buttonSize = '1.5rem';
-	export let buttonPadding = '0.4rem';
+	export let buttonFontSize = '0.9rem';
+	export let buttonPadding = '0.2rem';
 	export let buttonBackgroundColor = jdgColors.activeSecondary;
 	export let buttonTextColor = jdgColors.textDm;
 	export let tooltip = '';
@@ -30,7 +31,7 @@
 
 	let isOpen = false;
 	let flyoutRef;
-	let buttonRef;
+	let buttonWrapperRef;
 
 	const toggleFlyout = () => {
 		isOpen = !isOpen;
@@ -44,9 +45,9 @@
 	const handleClickOutside = (event) => {
 		if (
 			flyoutRef &&
-			buttonRef &&
+			buttonWrapperRef &&
 			!flyoutRef.contains(event.target) &&
-			!buttonRef.contains(event.target)
+			!buttonWrapperRef.contains(event.target)
 		) {
 			closeFlyout();
 		}
@@ -68,21 +69,6 @@
 			document.removeEventListener('keydown', handleKeydown);
 		}
 	}
-
-	// Compute hover color
-	$: buttonBackgroundColorHover = darkenColor(buttonBackgroundColor, 0.15);
-
-	// Dynamic button styles
-	$: buttonCss = css`
-		width: ${buttonSize};
-		height: ${buttonSize};
-		padding: ${buttonPadding};
-		background-color: ${buttonBackgroundColor};
-		color: ${buttonTextColor};
-		:hover {
-			background-color: ${buttonBackgroundColorHover};
-		}
-	`;
 
 	// Dynamic flyout position styles
 	$: flyoutPositionCss = css`
@@ -110,17 +96,21 @@
 </script>
 
 <div class="jdg-flyout-container">
-	<button
-		bind:this={buttonRef}
-		type="button"
-		class="jdg-flyout-button {buttonCss}"
-		on:click|stopPropagation={toggleFlyout}
-		title={tooltip}
-		aria-expanded={isOpen}
-		aria-haspopup="true"
-	>
-		<i class="{faClass} {faIcon}" />
-	</button>
+	<div bind:this={buttonWrapperRef} class="jdg-flyout-button-wrapper">
+		<JDGButton
+			label={null}
+			{faIcon}
+			{faClass}
+			onClickFunction={toggleFlyout}
+			backgroundColor={buttonBackgroundColor}
+			textColor={buttonTextColor}
+			fontSize={buttonFontSize}
+			paddingTopBottom={buttonPadding}
+			paddingLeftRight={buttonPadding}
+			doForceSquareAspect={true}
+			{tooltip}
+		/>
+	</div>
 
 	{#if isOpen}
 		<div
@@ -145,14 +135,8 @@
 		display: inline-flex;
 	}
 
-	.jdg-flyout-button {
+	.jdg-flyout-button-wrapper {
 		display: flex;
-		align-items: center;
-		justify-content: center;
-		border: none;
-		border-radius: 50%;
-		cursor: pointer;
-		transition: background-color 0.2s ease;
 	}
 
 	.jdg-flyout-panel {
