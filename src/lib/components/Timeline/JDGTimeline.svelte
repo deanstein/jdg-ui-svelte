@@ -130,73 +130,42 @@
 	const lastEventRowHeightStore = writable(0);
 	setContext(JDG_CONTEXT_KEYS.timelineLastRowHeight, lastEventRowHeightStore);
 
-	const onClickPreviewOverlay = () => {
-		// Clear any pending timeout
+	// Preview overlay handlers
+	let previewOverlayTimeout;
+	const previewOverlayDuration = 1000;
+
+	// Show the overlay
+	const showPreviewOverlay = () => {
+		if (previewOnly && !showTimelineModal) {
+			if (previewOverlayTimeout) {
+				clearTimeout(previewOverlayTimeout);
+				previewOverlayTimeout = null;
+			}
+			isHovering = true;
+		}
+	};
+
+	// Hide the overlay after a delay
+	const hidePreviewOverlayAfterDelay = () => {
+		if (previewOnly && isHovering) {
+			if (previewOverlayTimeout) {
+				clearTimeout(previewOverlayTimeout);
+			}
+			previewOverlayTimeout = setTimeout(() => {
+				isHovering = false;
+				previewOverlayTimeout = null;
+			}, previewOverlayDuration);
+		}
+	};
+
+	// Open the modal (clicking the overlay button)
+	const openTimelineModal = () => {
 		if (previewOverlayTimeout) {
 			clearTimeout(previewOverlayTimeout);
 			previewOverlayTimeout = null;
 		}
 		showTimelineModal = true;
-		// Hide overlay after a delay to match scroll behavior
-		setTimeout(() => {
-			isHovering = false;
-		}, previewOverlayDuration + 800);
-	};
-
-	// Touch/click handlers for mobile previewOnly mode
-	let previewOverlayTimeout;
-	const previewOverlayDuration = 500;
-
-	const onTouchStartPreview = () => {
-		if (previewOnly && !showTimelineModal) {
-			// Clear any pending timeout to reset the timer
-			if (previewOverlayTimeout) {
-				clearTimeout(previewOverlayTimeout);
-				previewOverlayTimeout = null;
-			}
-			isHovering = true;
-		}
-	};
-
-	const onTouchEndPreview = () => {
-		if (previewOnly && isHovering) {
-			// Hide overlay after a delay
-			previewOverlayTimeout = setTimeout(() => {
-				isHovering = false;
-				previewOverlayTimeout = null;
-			}, previewOverlayDuration);
-		}
-	};
-
-	const onClickPreview = () => {
-		if (previewOnly && !showTimelineModal) {
-			// Clear any pending timeout (from touchend) and set a longer one for taps
-			if (previewOverlayTimeout) {
-				clearTimeout(previewOverlayTimeout);
-				previewOverlayTimeout = null;
-			}
-			isHovering = true;
-			// Hide overlay after a delay (longer for tap)
-			previewOverlayTimeout = setTimeout(() => {
-				isHovering = false;
-				previewOverlayTimeout = null;
-			}, previewOverlayDuration + 800);
-		}
-	};
-
-	const onMouseLeavePreview = () => {
-		if (previewOnly && isHovering) {
-			// Clear any pending timeout to reset the timer
-			if (previewOverlayTimeout) {
-				clearTimeout(previewOverlayTimeout);
-				previewOverlayTimeout = null;
-			}
-			// Hide overlay after a delay (same as touch/click)
-			previewOverlayTimeout = setTimeout(() => {
-				isHovering = false;
-				previewOverlayTimeout = null;
-			}, previewOverlayDuration);
-		}
+		isHovering = false;
 	};
 
 	const onCheckRelativeSpacing = () => {
@@ -382,12 +351,11 @@
 <div
 	bind:this={timelineWrapperRef}
 	class="timeline-wrapper {previewOnly ? 'preview-only' : ''}"
-	on:mouseenter={() => previewOnly && (isHovering = true)}
-	on:mouseleave={onMouseLeavePreview}
-	on:touchstart={onTouchStartPreview}
-	on:touchend={onTouchEndPreview}
-	on:touchcancel={onTouchEndPreview}
-	on:click={onClickPreview}
+	on:mouseenter={showPreviewOverlay}
+	on:mouseleave={hidePreviewOverlayAfterDelay}
+	on:touchstart={showPreviewOverlay}
+	on:touchend={hidePreviewOverlayAfterDelay}
+	on:touchcancel={hidePreviewOverlayAfterDelay}
 	role={previewOnly ? 'button' : 'region'}
 	tabindex={previewOnly ? 0 : undefined}
 >
@@ -397,15 +365,13 @@
 		<div
 			class="timeline-hover-overlay"
 			transition:fade={{ duration: jdgDurations.default }}
-			on:click={() => {
-				onClickPreviewOverlay();
-			}}
-			on:keydown={(e) => e.key === 'Enter' && (showTimelineModal = true)}
+			on:click={openTimelineModal}
+			on:keydown={(e) => e.key === 'Enter' && openTimelineModal()}
 			role="button"
 			tabindex="0"
 		>
 			<JDGButton
-				onClickFunction={onClickPreviewOverlay}
+				onClickFunction={openTimelineModal}
 				label="Open timeline"
 				faIcon="fa-expand"
 				shadow={true}
