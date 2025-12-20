@@ -18,6 +18,7 @@
 		border: 2px solid ${jdgColors.active};
 		resize: ${resizable};
 		min-height: ${minHeight};
+		color: ${jdgColors.text};
 		border: 2px solid ${jdgColors.activeSecondary};
 		:hover {
 			border: 2px solid ${jdgColors.active};
