@@ -614,7 +614,7 @@
 		display: flex;
 		flex-direction: column;
 		flex-grow: 1;
-		gap: 1rem;
+		gap: 0.5rem;
 		box-sizing: border-box;
 		border-radius: 10px;
 	}
