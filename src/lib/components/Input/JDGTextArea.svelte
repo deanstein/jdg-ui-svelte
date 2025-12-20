@@ -68,5 +68,8 @@
 	textarea:disabled {
 		background-color: white;
 		border: 2px solid gainsboro;
+		/* Prevent iOS Safari from overriding color on disabled inputs */
+		-webkit-opacity: 1;
+		opacity: 1;
 	}
 </style>

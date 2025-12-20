@@ -57,5 +57,9 @@
 	input:disabled {
 		background-color: white;
 		border: 2px solid gainsboro;
+		/* Prevent iOS Safari from overriding color on disabled inputs */
+		-webkit-text-fill-color: inherit;
+		-webkit-opacity: 1;
+		opacity: 1;
 	}
 </style>
