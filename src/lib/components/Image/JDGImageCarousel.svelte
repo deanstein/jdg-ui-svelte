@@ -396,6 +396,8 @@
 
 	.carousel-crossfade-wrapper-relative {
 		position: relative;
+		display: flex;
+		align-items: center;
 	}
 
 	.carousel-crossfade-wrapper-absolute {
