@@ -142,7 +142,7 @@
 
 	// Touch/click handlers for mobile previewOnly mode
 	let previewOverlayTimeout;
-	const previewOverlayDuration = 400;
+	const previewOverlayDuration = 500;
 
 	const onTouchStartPreview = () => {
 		if (previewOnly && !showTimelineModal) {
@@ -174,6 +174,21 @@
 			}
 			isHovering = true;
 			// Hide overlay after a delay
+			previewOverlayTimeout = setTimeout(() => {
+				isHovering = false;
+				previewOverlayTimeout = null;
+			}, previewOverlayDuration);
+		}
+	};
+
+	const onMouseLeavePreview = () => {
+		if (previewOnly && isHovering) {
+			// Clear any pending timeout to reset the timer
+			if (previewOverlayTimeout) {
+				clearTimeout(previewOverlayTimeout);
+				previewOverlayTimeout = null;
+			}
+			// Hide overlay after a delay (same as touch/click)
 			previewOverlayTimeout = setTimeout(() => {
 				isHovering = false;
 				previewOverlayTimeout = null;
@@ -365,7 +380,7 @@
 	bind:this={timelineWrapperRef}
 	class="timeline-wrapper {previewOnly ? 'preview-only' : ''}"
 	on:mouseenter={() => previewOnly && (isHovering = true)}
-	on:mouseleave={() => previewOnly && (isHovering = false)}
+	on:mouseleave={onMouseLeavePreview}
 	on:touchstart={onTouchStartPreview}
 	on:touchend={onTouchEndPreview}
 	on:touchcancel={onTouchEndPreview}
