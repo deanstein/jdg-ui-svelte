@@ -75,11 +75,13 @@
 			font-size: ${fontSize};
 			font-family: ${$appFontFamily};
 			width: ${
-				width == 'fit-content'
-					? 'fit-content'
-					: $isMobileBreakpoint
-						? '100%'
-						: width /* button is 100% width on smallest breakpoint */
+				doForceSquareAspect
+					? 'auto'
+					: width == 'fit-content'
+						? 'fit-content'
+						: $isMobileBreakpoint
+							? '100%'
+							: width /* button is 100% width on smallest breakpoint */
 			};
 			border-radius: ${doForceSquareAspect ? '50%' : borderRadius};
 			padding: ${`${paddingTopBottom} ${paddingLeftRight} ${paddingTopBottom} ${paddingLeftRight}`};
