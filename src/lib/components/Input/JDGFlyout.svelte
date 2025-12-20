@@ -16,7 +16,7 @@
 	export let faClass = 'fa-solid fa-fw';
 	// Button styling
 	export let buttonFontSize = '0.9rem';
-	export let buttonPadding = '0.2rem';
+	export let buttonPadding = '0.4rem';
 	export let buttonBackgroundColor = jdgColors.activeSecondary;
 	export let buttonTextColor = jdgColors.textDm;
 	export let tooltip = '';
@@ -93,10 +93,17 @@
 			font-size: ${jdgSizes.fontSizeBodySm};
 		}
 	`;
+
+	// Explicit square wrapper to bypass aspect-ratio issues on mobile
+	// Size = icon (approx 1em based on fontSize) + padding on both sides
+	$: buttonWrapperCss = css`
+		width: calc(${buttonFontSize} + ${buttonPadding} * 2);
+		height: calc(${buttonFontSize} + ${buttonPadding} * 2);
+	`;
 </script>
 
 <div class="jdg-flyout-container">
-	<div bind:this={buttonWrapperRef} class="jdg-flyout-button-wrapper">
+	<div bind:this={buttonWrapperRef} class="jdg-flyout-button-wrapper {buttonWrapperCss}">
 		<JDGButton
 			label={null}
 			{faIcon}
@@ -105,9 +112,10 @@
 			backgroundColor={buttonBackgroundColor}
 			textColor={buttonTextColor}
 			fontSize={buttonFontSize}
-			paddingTopBottom={buttonPadding}
-			paddingLeftRight={buttonPadding}
-			doForceSquareAspect={true}
+			paddingTopBottom="0"
+			paddingLeftRight="0"
+			width="100%"
+			borderRadius="50%"
 			{tooltip}
 		/>
 	</div>
@@ -133,10 +141,19 @@
 	.jdg-flyout-container {
 		position: relative;
 		display: inline-flex;
+		align-items: center;
 	}
 
 	.jdg-flyout-button-wrapper {
 		display: flex;
+		flex-shrink: 0;
+		border-radius: 50%;
+		overflow: hidden;
+	}
+
+	/* Ensure button fills the wrapper */
+	.jdg-flyout-button-wrapper :global(button) {
+		height: 100%;
 	}
 
 	.jdg-flyout-panel {
