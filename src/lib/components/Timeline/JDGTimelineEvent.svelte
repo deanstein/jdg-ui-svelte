@@ -277,8 +277,10 @@
 			eventRowDynamicCss = css`
 				grid-row: ${rowIndex};
 				cursor: ${canClickCalculated ? 'pointer' : 'default'};
-				&:hover {
-					background-color: ${canClickCalculated ? 'rgba(255, 255, 255, 0.75)' : ''};
+				@media (hover: hover) {
+					&:hover {
+						background-color: ${canClickCalculated ? 'rgba(255, 255, 255, 0.75)' : ''};
+					}
 				}
 			`;
 		}
