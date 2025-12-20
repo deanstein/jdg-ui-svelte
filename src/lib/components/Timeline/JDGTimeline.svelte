@@ -167,10 +167,9 @@
 
 	const onClickPreview = () => {
 		if (previewOnly && !showTimelineModal) {
-			// Clear any pending timeout to reset the timer
+			// If a timeout is already pending (from touch), let it run
 			if (previewOverlayTimeout) {
-				clearTimeout(previewOverlayTimeout);
-				previewOverlayTimeout = null;
+				return;
 			}
 			isHovering = true;
 			// Hide overlay after a delay
