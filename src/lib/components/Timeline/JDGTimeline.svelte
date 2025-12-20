@@ -137,7 +137,10 @@
 			previewOverlayTimeout = null;
 		}
 		showTimelineModal = true;
-		isHovering = false;
+		// Hide overlay after a delay to match scroll behavior
+		setTimeout(() => {
+			isHovering = false;
+		}, previewOverlayDuration);
 	};
 
 	// Touch/click handlers for mobile previewOnly mode
@@ -177,7 +180,7 @@
 			previewOverlayTimeout = setTimeout(() => {
 				isHovering = false;
 				previewOverlayTimeout = null;
-			}, previewOverlayDuration + 800);
+			}, previewOverlayDuration);
 		}
 	};
 
