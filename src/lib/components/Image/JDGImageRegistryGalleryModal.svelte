@@ -8,11 +8,6 @@
 	// Whether to show captions (with checkbox toggle)
 	let showCaptions = true;
 
-	// Fixed dimensions for the gallery - prevents resize when images load/filter
-	// Adjust these values to change the modal's size
-	const galleryWidth = '80vw';
-	const galleryHeight = '70vh';
-
 	const checkboxContainerCss = css`
 		display: flex;
 		align-items: center;
@@ -29,13 +24,13 @@
 		$showImageGalleryModal = false;
 	}}
 	backgroundColor={'rgba(235, 235, 235, 1)'}
-	maxWidth="90vw"
+	width="90vw"
+	height="80dvh"
 	overflow="hidden"
 >
 	<div
 		slot="modal-content-slot"
 		class="gallery-content-wrapper"
-		style="width: {galleryWidth}; height: {galleryHeight};"
 	>
 		<div class={checkboxContainerCss}>
 			<JDGCheckbox label="Show captions" bind:isChecked={showCaptions} labelFontSize="14px" />
