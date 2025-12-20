@@ -51,7 +51,9 @@
 	let eventAge;
 	let eventRowDivRef;
 
-	const cornerRadius = '10px';
+	const eventBorderRadius = '10px';
+	const dateBorderRadius = '5px';
+
 	const monthNames = [
 		'JAN',
 		'FEB',
@@ -121,6 +123,7 @@
 	const eventDateCss = css`
 		color: ${jdgColors.text};
 		background-color: ${jdgColors.activeSubtle};
+		border-radius: ${dateBorderRadius} ${dateBorderRadius} 0 0;
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: 0.6rem;
 			width: ${jdgSizes.timelineEventYearWidthSm};
@@ -140,6 +143,7 @@
 	const eventYearCss = css`
 		color: ${jdgColors.text};
 		background-color: ${jdgColors.activeSubtle};
+		border-radius: 0 0 ${dateBorderRadius} ${dateBorderRadius};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: 0.9rem;
 			width: ${jdgSizes.timelineEventYearWidthSm};
@@ -185,7 +189,7 @@
 
 	const eventTitleBarCss = css`
 		background-color: rgb(205, 205, 205);
-		border-radius: ${cornerRadius} ${cornerRadius} 0px 0px;
+		border-radius: ${eventBorderRadius} ${eventBorderRadius} 0px 0px;
 	`;
 
 	const eventFaIconCss = css`
@@ -220,7 +224,7 @@
 
 	const eventContentCss = css`
 		background-color: ${backgroundColor};
-		border-radius: 0px 0px ${cornerRadius} ${cornerRadius};
+		border-radius: 0px 0px ${eventBorderRadius} ${eventBorderRadius};
 	`;
 
 	const firstRowContext = getContext(JDG_CONTEXT_KEYS.timelineFirstRowHeight);
@@ -237,6 +241,12 @@
 			eventAge = getNumYearsBetweenDates(timelineHost.inceptionDate, eventDateCorrected);
 		}
 	}
+
+	// For approximate dates with month=01 and day=01, hide the date div entirely
+	$: hideDateDiv =
+		upgradedEvent?.isApprxDate &&
+		eventDateCorrected?.getUTCMonth() === 0 &&
+		eventDateCorrected?.getUTCDate() === 1;
 
 	// Update row heights
 	$: {
@@ -297,9 +307,9 @@
 >
 	<div class="timeline-event-date-year-container {eventDateYearCss}">
 		<!-- For approximate dates: hide day if day=01, hide month+day if month=01 -->
-		{#if !(upgradedEvent?.isApprxDate && eventDateCorrected?.getUTCMonth() === 0 && eventDateCorrected?.getUTCDate() === 1)}
+		{#if !hideDateDiv}
 			<div class="timeline-event-date {eventDateCss}">
-				<!-- show month name with three letters like AUG -->
+				<!-- Show month name with three letters like AUG -->
 				{#if eventDateCorrected?.toString() !== 'Invalid Date'}
 					{#if upgradedEvent?.isApprxDate && eventDateCorrected?.getUTCDate() === 1}
 						<!-- Approximate date with day=01: show only month -->
@@ -313,7 +323,10 @@
 				{/if}
 			</div>
 		{/if}
-		<div class="timeline-event-year {eventYearCss}">
+		<div
+			class="timeline-event-year {eventYearCss}"
+			style:border-radius={hideDateDiv ? dateBorderRadius : null}
+		>
 			{eventDateCorrected?.toString() !== 'Invalid Date'
 				? eventDateCorrected?.getUTCFullYear()
 				: 'Year?'}
@@ -450,7 +463,6 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		border-radius: 5px 5px 0px 0px;
 	}
 
 	.timeline-event-year {
@@ -458,7 +470,6 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		border-radius: 0px 0px 5px 5px;
 	}
 
 	.timeline-event-date-apprx {

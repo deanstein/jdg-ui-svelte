@@ -35,7 +35,7 @@
 		showTimelineEventModal,
 		isMobileBreakpoint,
 		isTabletBreakpoint,
-		isTimelineEventModalEditable,
+		isTimelineEventModalEditable
 	} from '$lib/stores/jdg-ui-store.js';
 
 	import {
