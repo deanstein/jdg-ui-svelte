@@ -6,11 +6,11 @@
 		jdgTimelineEventKeys
 	} from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 	import timelineEventReference from '$lib/schemas/timeline/jdg-timeline-event-reference.js';
+	import { ageSuffix } from '$lib/stores/jdg-ui-store.js';
 
 	import { JDG_CONTEXT_KEYS } from '$lib/stores/jdg-context-keys.js';
 
 	import { getNumYearsBetweenDates, instantiateObject } from '$lib/jdg-utils.js';
-
 	import { upgradeTimelineEvent } from '$lib/jdg-timeline-management.js';
 
 	import {
@@ -334,7 +334,7 @@
 			<!-- hide age if this is the birth event or if age is 0 or negative -->
 			{#if upgradedEvent?.type !== timelineEventTypes.birth.type && eventAge > 0}
 				<div class="timeline-event-age {eventAgeCss}">
-					Age: {eventAge}
+					{eventAge} years {$ageSuffix}
 				</div>
 			{/if}
 			<!-- if this is a reference event, show the timeline host it's shared from -->

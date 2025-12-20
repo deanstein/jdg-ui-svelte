@@ -62,6 +62,9 @@ export let showImageMetaModal = writable(false);
 /*** IMAGE GALLERY MODAL ***/
 export let showImageGalleryModal = writable(false);
 
+/*** TIMELINE ***/
+export let ageSuffix = writable('old');
+
 /*** TIMELINE EVENT MODAL ***/
 export let showTimelineEventModal = writable(false);
 export let isTimelineEventModalEditable = writable(false);

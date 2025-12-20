@@ -3,7 +3,7 @@
 
 	import { get, writable } from 'svelte/store';
 
-	import { timelineEventModalInceptionDate } from '$lib/stores/jdg-ui-store.js';
+	import { ageSuffix, timelineEventModalInceptionDate } from '$lib/stores/jdg-ui-store.js';
 	import { draftTimelineEvent, draftTimelineHost } from '$lib/stores/jdg-temp-store.js';
 	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
 	import jdgTimelineEventTypes, {
@@ -169,7 +169,7 @@
 			{/if}
 			{#if isFinite(eventAge) && eventAge > 0}
 				<span class="event-header-separator">|</span>
-				<span>{eventAge} years old</span>
+				<span>{eventAge} years {$ageSuffix}</span>
 				<span class="event-header-separator">|</span>
 				<span>{yearsAgo} years ago</span>
 			{/if}
