@@ -96,7 +96,6 @@
 			}
 			cursor: ${isEnabled ? 'pointer' : 'default'};
 			aspect-ratio: ${doForceSquareAspect ? '1' : ''};
-			flex-shrink: ${doForceSquareAspect ? '0' : ''};
 		`;
 	}
 </script>
