@@ -623,7 +623,7 @@
 	.timeline-actions-bar {
 		display: flex;
 		justify-content: right;
-		column-gap: 1svh;
+		column-gap: 0.5rem;
 	}
 
 	.timeline-event-count {
