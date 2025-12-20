@@ -132,7 +132,7 @@
 
 	// Preview overlay handlers
 	let previewOverlayTimeout;
-	const previewOverlayDuration = 1000;
+	const previewOverlayDuration = 500;
 
 	// Show the overlay
 	const showPreviewOverlay = () => {
