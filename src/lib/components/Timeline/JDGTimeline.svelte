@@ -33,6 +33,7 @@
 		JDGButton,
 		JDGCheckbox,
 		JDGComposeToolbar,
+		JDGFlyout,
 		JDGImage,
 		JDGModal,
 		JDGPortal,
@@ -433,16 +434,22 @@
 				Showing {timelineRowItems.length + (emptyStateEvent ? 1 : 0) + (todayEvent ? 1 : 0)} timeline
 				events
 			</div>
-			<!-- Relative Spacing: Space out events out based on how much time passed -->
-			<JDGCheckbox
-				isEnabled={true}
-				showLabel={true}
-				label="Relative spacing"
-				isChecked={forceRelativeSpacing}
-				onCheckAction={onCheckRelativeSpacing}
-				onUncheckAction={onUncheckRelativeSpacing}
-				labelFontSize={''}
-			/>
+			<!-- Timeline Options Flyout -->
+			<JDGFlyout
+				tooltip="Timeline options"
+				flyoutTitle="Timeline Options"
+				flyoutPosition="bottom-left"
+			>
+				<JDGCheckbox
+					isEnabled={true}
+					showLabel={true}
+					label="Relative spacing"
+					isChecked={forceRelativeSpacing}
+					onCheckAction={onCheckRelativeSpacing}
+					onUncheckAction={onUncheckRelativeSpacing}
+					labelFontSize={''}
+				/>
+			</JDGFlyout>
 		</div>
 		<!-- Timeline: A collection of TimelineEvents shown chronologically -->
 		<div class="timeline-content-container">
