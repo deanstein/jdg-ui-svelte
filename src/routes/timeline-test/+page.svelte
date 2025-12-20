@@ -31,10 +31,11 @@
 	} from '$lib/stores/jdg-temp-store.js';
 	import {
 		allowTextSelection,
+		ageSuffix,
 		showTimelineEventModal,
 		isMobileBreakpoint,
 		isTabletBreakpoint,
-		isTimelineEventModalEditable
+		isTimelineEventModalEditable,
 	} from '$lib/stores/jdg-ui-store.js';
 
 	import {
@@ -67,6 +68,9 @@
 
 	// Ensure this page allows text selection
 	allowTextSelection.set(true);
+
+	// Set the age suffix
+	ageSuffix.set('after opening');
 
 	// Save the current draft timeline host collection to the GitHub repo
 	const saveToRepo = async () => {
