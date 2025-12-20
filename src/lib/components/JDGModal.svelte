@@ -16,35 +16,44 @@
 	export let subtitle = 'This is a modal subtitle';
 	export let width = 'auto';
 	export let height = 'auto';
-	export let minWidth = undefined; // only applies to desktop/tablet
-	export let maxWidth = undefined; // only applies to desktop/tablet
-	export let maximizeOnMobile = false; // maximize width on mobile
+	// Only applies to desktop/tablet
+	export let minWidth = undefined;
+	// Only applies to desktop/tablet
+	export let maxWidth = undefined;
+	// Ignores width and ensures mobile is always as wide as possible
+	export let maximizeWidthOnMobile = true;
 	export let padding = '10px';
-	export let overflow = 'auto'; // default to auto for proper scrolling
+	// Default to auto for proper scrolling
+	export let overflow = 'auto';
 	export let backgroundColor = jdgColors.contentBoxBackground;
-	export let transparency = undefined; // default is in default bg color
+	export let transparency = undefined;
 
+	// Minimum padding around content when it maximizes available space
+	const minPadding = '20px';
+	// Configure crossfade animation
 	const [send, receive] = drawCrossfade(jdgDurations.fadeIn);
 
 	let modalContentContainerCss = css``;
 	$: {
 		modalContentContainerCss = css`
-			width: ${$isMobileBreakpoint && maximizeOnMobile ? '90vw' : width};
-			height: ${$isMobileBreakpoint && maximizeOnMobile ? '90dvh' : height};
+			width: ${$isMobileBreakpoint && maximizeWidthOnMobile
+				? `calc(100vw - ${minPadding})`
+				: width};
+			height: ${$isMobileBreakpoint && maximizeWidthOnMobile ? '90dvh' : height};
 			min-width: ${!$isMobileBreakpoint && minWidth ? minWidth : 'auto'};
 			max-width: ${!$isMobileBreakpoint && maxWidth ? maxWidth : 'none'};
 			/* Constrain max-height to available viewport minus overlay header */
 			/* Use dvh (dynamic viewport height) to handle iOS browser chrome appearing/disappearing */
 			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-				max-height: calc(100dvh - ${jdgSizes.headerHeightSm} - 20px);
+				max-height: calc(100dvh - ${jdgSizes.headerHeightSm} - ${minPadding});
 			}
 			@media (min-width: ${jdgBreakpoints.width[0].toString() +
 				jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 				jdgBreakpoints.unit}) {
-				max-height: calc(100dvh - ${jdgSizes.headerHeightMd} - 20px);
+				max-height: calc(100dvh - ${jdgSizes.headerHeightMd} - ${minPadding});
 			}
 			@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-				max-height: calc(100dvh - ${jdgSizes.headerHeightLg} - 20px);
+				max-height: calc(100dvh - ${jdgSizes.headerHeightLg} - ${minPadding});
 			}
 			background-color: ${transparency
 				? setRgbaAlpha(backgroundColor, transparency)
