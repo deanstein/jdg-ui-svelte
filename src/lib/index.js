@@ -94,6 +94,9 @@ export { JDGDevOverlay };
 import JDGFeatureCard from './components/JDGFeatureCard.svelte';
 export { JDGFeatureCard };
 
+import JDGFlyout from './components/Input/JDGFlyout.svelte';
+export { JDGFlyout };
+
 import JDGFooter from './components/JDGFooter.svelte';
 export { JDGFooter };
 
