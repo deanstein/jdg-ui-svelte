@@ -28,10 +28,7 @@
 	height="80dvh"
 	overflow="hidden"
 >
-	<div
-		slot="modal-content-slot"
-		class="gallery-content-wrapper"
-	>
+	<div slot="modal-content-slot" class="gallery-content-wrapper">
 		<div class={checkboxContainerCss}>
 			<JDGCheckbox label="Show captions" bind:isChecked={showCaptions} labelFontSize="14px" />
 		</div>
