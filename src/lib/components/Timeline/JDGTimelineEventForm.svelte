@@ -409,6 +409,7 @@
 
 	.event-header-age {
 		color: #666;
+		font-size: 0.8rem;
 	}
 
 	.form-store-preview {
