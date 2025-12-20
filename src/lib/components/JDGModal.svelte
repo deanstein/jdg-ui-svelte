@@ -118,8 +118,6 @@
 		flex-direction: column;
 		align-items: center;
 		border-radius: 10px;
-		/* Ensure proper sizing within overlay */
-		max-height: 100%;
 	}
 
 	.modal-title-bar-container {
