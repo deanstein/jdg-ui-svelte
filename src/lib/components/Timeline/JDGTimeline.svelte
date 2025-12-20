@@ -140,7 +140,7 @@
 		// Hide overlay after a delay to match scroll behavior
 		setTimeout(() => {
 			isHovering = false;
-		}, previewOverlayDuration);
+		}, previewOverlayDuration + 800);
 	};
 
 	// Touch/click handlers for mobile previewOnly mode
@@ -180,7 +180,7 @@
 			previewOverlayTimeout = setTimeout(() => {
 				isHovering = false;
 				previewOverlayTimeout = null;
-			}, previewOverlayDuration);
+			}, previewOverlayDuration + 800);
 		}
 	};
 
