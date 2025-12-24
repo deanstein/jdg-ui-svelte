@@ -1,6 +1,8 @@
 <script>
-	import { onMount, tick } from 'svelte';
+	import { onMount, setContext, tick } from 'svelte';
 	import { css } from '@emotion/css';
+
+	import { JDG_CONTEXTS } from '$lib/jdg-contexts.js';
 
 	import { jdgSharedUrls } from '$lib/jdg-shared-strings.js';
 	import jdgSharedUrlsStore from '$lib/stores/jdg-shared-urls-store.js';
@@ -63,6 +65,9 @@
 	// IMAGE META REGISTRY
 	// Consuming websites *must* provide an image meta regisry
 	export let imageMetaRegistry;
+
+	// Set the registry in context for read-only access by descendant components
+	setContext(JDG_CONTEXTS.IMAGE_META_REGISTRY, imageMetaRegistry);
 
 	// STYLING OPTIONS
 	export let fontFamily = jdgFonts.body;

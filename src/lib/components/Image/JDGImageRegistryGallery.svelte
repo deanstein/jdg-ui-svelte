@@ -33,20 +33,22 @@
 	// Track if content is ready (prevents showing empty container during load/filter)
 	let isContentReady = false;
 
-	// Create a reactive set of selected image sources for fast lookup
-	$: selectedImageSrcs = new Set(selectedImages.map((img) => img.src));
+	// Create a reactive set of selected image keys for fast lookup
+	// selectedImages is now an array of registry key strings
+	$: selectedImageKeys = new Set(selectedImages);
 
-	// Check if an image is selected (pass selectedImageSrcs to ensure reactivity)
-	const isImageSelected = (imageMeta, srcs) => srcs.has(imageMeta.src);
+	// Check if an image is selected by its registry key
+	const isImageSelected = (imageMeta, keys) => keys.has(imageMeta.key);
 
 	// Toggle image selection
+	// When in selection mode, store registry keys (strings) instead of full imageMeta objects
 	const toggleImage = (imageMeta) => {
 		if (!selectionEnabled) return;
-		const selected = selectedImageSrcs.has(imageMeta.src);
+		const selected = selectedImageKeys.has(imageMeta.key);
 		if (selected) {
-			selectedImages = selectedImages.filter((img) => img.src !== imageMeta.src);
+			selectedImages = selectedImages.filter((key) => key !== imageMeta.key);
 		} else {
-			selectedImages = [...selectedImages, imageMeta];
+			selectedImages = [...selectedImages, imageMeta.key];
 		}
 	};
 
@@ -260,7 +262,7 @@
 			{#key filterText}
 				<div class={imageGridCss}>
 					{#each visibleImages as imageMeta (imageMeta.key)}
-						{@const selected = selectionEnabled && isImageSelected(imageMeta, selectedImageSrcs)}
+						{@const selected = selectionEnabled && isImageSelected(imageMeta, selectedImageKeys)}
 						<div
 							class={imageTileWrapperCss}
 							role="button"

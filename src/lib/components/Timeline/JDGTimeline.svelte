@@ -4,7 +4,7 @@
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
-	import { JDG_CONTEXT_KEYS } from '$lib/stores/jdg-context-keys.js';
+	import { JDG_CONTEXTS } from '$lib/jdg-contexts.js';
 	import { getMaxElementHeightPx, getNumDaysBetweenDates, lightenColor } from '$lib/jdg-utils.js';
 
 	import { draftImageMeta, draftTimelineEvent } from '$lib/stores/jdg-temp-store.js';
@@ -128,9 +128,9 @@
 	// Make a local store for values
 	// that should be shared with TimelineEvents
 	const firstEventRowHeightStore = writable(0);
-	setContext(JDG_CONTEXT_KEYS.timelineFirstRowHeight, firstEventRowHeightStore);
+	setContext(JDG_CONTEXTS.TIMELINE_FIRST_ROW_HEIGHT, firstEventRowHeightStore);
 	const lastEventRowHeightStore = writable(0);
-	setContext(JDG_CONTEXT_KEYS.timelineLastRowHeight, lastEventRowHeightStore);
+	setContext(JDG_CONTEXTS.TIMELINE_LAST_ROW_HEIGHT, lastEventRowHeightStore);
 
 	// Preview overlay handlers
 	let previewOverlayTimeout;

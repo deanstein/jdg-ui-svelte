@@ -8,9 +8,13 @@
 	import timelineEventReference from '$lib/schemas/timeline/jdg-timeline-event-reference.js';
 	import { ageSuffix } from '$lib/stores/jdg-ui-store.js';
 
-	import { JDG_CONTEXT_KEYS } from '$lib/stores/jdg-context-keys.js';
+	import { JDG_CONTEXTS } from '$lib/jdg-contexts.js';
 
-	import { getNumYearsBetweenDates, instantiateObject } from '$lib/jdg-utils.js';
+	import {
+		getNumYearsBetweenDates,
+		instantiateObject,
+		resolveImageMetaKeys
+	} from '$lib/jdg-utils.js';
 	import { upgradeTimelineEvent } from '$lib/jdg-timeline-management.js';
 
 	import {
@@ -227,8 +231,11 @@
 		border-radius: 0px 0px ${eventBorderRadius} ${eventBorderRadius};
 	`;
 
-	const firstRowContext = getContext(JDG_CONTEXT_KEYS.timelineFirstRowHeight);
-	const lastRowContext = getContext(JDG_CONTEXT_KEYS.timelineLastRowHeight);
+	const firstRowContext = getContext(JDG_CONTEXTS.TIMELINE_FIRST_ROW_HEIGHT);
+	const lastRowContext = getContext(JDG_CONTEXTS.TIMELINE_LAST_ROW_HEIGHT);
+
+	// Get the image meta registry from context for resolving image keys
+	const imageMetaRegistry = getContext(JDG_CONTEXTS.IMAGE_META_REGISTRY);
 
 	$: {
 		// Ensure the event is upgraded and updated if the input changes
@@ -435,10 +442,13 @@
 				{upgradedEvent?.description ? upgradedEvent?.description : 'Event description'}
 			</div>
 			{#if upgradedEvent?.images?.length > 0}
-				<div class="timeline-event-image-preview">
-					<!-- show a few of the timeline event images, if there are any -->
-					<JDGImageThumbnailGroup imageMetaSet={upgradedEvent?.images} maxImageHeight={'15svh'} />
-				</div>
+				{@const resolvedImages = resolveImageMetaKeys(upgradedEvent.images, imageMetaRegistry)}
+				{#if resolvedImages?.length > 0}
+					<div class="timeline-event-image-preview">
+						<!-- show a few of the timeline event images, if there are any -->
+						<JDGImageThumbnailGroup imageMetaSet={resolvedImages} maxImageHeight={'15svh'} />
+					</div>
+				{/if}
 			{/if}
 		</div>
 	</div>

@@ -581,6 +581,103 @@ export const upgradeImageMetaRegistry = (registry) => {
 	return upgradeEntry(registry);
 };
 
+// Get an imageMeta from the registry by key
+// Supports dot notation for nested keys (e.g., "ccm._1968_03_07_von_frellick")
+export const getImageMetaByKey = (registry, key) => {
+	if (!registry || !key) return null;
+
+	const parts = key.split('.');
+	let current = registry;
+
+	for (const part of parts) {
+		if (!current || typeof current !== 'object') return null;
+		current = current[part];
+	}
+
+	// Verify this looks like an imageMeta (has src)
+	return current?.src ? current : null;
+};
+
+// Resolve an array of image references to imageMeta objects
+// Handles both old format (full imageMeta objects) and new format (registry key strings)
+// If old format is detected, automatically migrates the array in-place to the new format
+export const resolveImageMetaKeys = (images, registry) => {
+	if (!Array.isArray(images) || !registry) return [];
+
+	const resolved = [];
+	let needsMigration = false;
+
+	for (let i = 0; i < images.length; i++) {
+		const item = images[i];
+
+		if (typeof item === 'string') {
+			// New format: it's already a registry key
+			const imageMeta = getImageMetaByKey(registry, item);
+			if (imageMeta) resolved.push(imageMeta);
+		} else if (item && typeof item === 'object' && item.src) {
+			// Old format: it's a full imageMeta object - try to find its registry key
+			const key = findImageMetaRegistryKey(item, registry);
+			if (key) {
+				// Migrate in-place to new format
+				images[i] = key;
+				needsMigration = true;
+				const imageMeta = getImageMetaByKey(registry, key);
+				if (imageMeta) resolved.push(imageMeta);
+			} else {
+				// Can't find in registry - use the object as-is (fallback)
+				resolved.push(item);
+				console.warn('Image not found in registry, using embedded data:', item.src);
+			}
+		}
+	}
+
+	if (needsMigration) {
+		console.log('Auto-migrated timeline event images to registry key format');
+	}
+
+	return resolved;
+};
+
+// Flatten a nested imageMetaRegistry into an array of { key, ...imageMeta }
+// Handles nested structures like registry.ccm._1968_03_07_von_frellick
+export const flattenImageMetaRegistry = (registry, prefix = '') => {
+	let flat = [];
+	for (const [key, value] of Object.entries(registry)) {
+		const fullKey = prefix ? `${prefix}.${key}` : key;
+		// Check if value has an 'src' property (it's an imageMeta)
+		if (value?.src) {
+			flat.push({ key: fullKey, ...value });
+		}
+		// If it's an object without src, it's a nested category - recurse
+		else if (typeof value === 'object' && value !== null) {
+			flat = flat.concat(flattenImageMetaRegistry(value, fullKey));
+		}
+	}
+	return flat;
+};
+
+// Find a registry key by matching an imageMeta's src or id
+// Returns the key string if found, null otherwise
+export const findImageMetaRegistryKey = (imageMeta, registry) => {
+	if (!imageMeta || !registry) return null;
+
+	const flatRegistry = flattenImageMetaRegistry(registry);
+
+	// Try to match by src first (most reliable)
+	if (imageMeta.src) {
+		const srcMatch = flatRegistry.find((entry) => entry.src === imageMeta.src);
+		if (srcMatch) return srcMatch.key;
+	}
+
+	// Fall back to matching by id
+	if (imageMeta.id) {
+		const idMatch = flatRegistry.find((entry) => entry.id === imageMeta.id);
+		if (idMatch) return idMatch.key;
+	}
+
+	return null;
+};
+
 export const getMIMEType = (binaryData) => {
 	if (!binaryData) {
 		return;

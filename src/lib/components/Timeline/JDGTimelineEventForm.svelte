@@ -1,8 +1,10 @@
 <script>
 	// @ts-nocheck
 
+	import { getContext } from 'svelte';
 	import { get, writable } from 'svelte/store';
 
+	import { JDG_CONTEXTS } from '$lib/jdg-contexts.js';
 	import { ageSuffix, timelineEventModalInceptionDate } from '$lib/stores/jdg-ui-store.js';
 	import { draftTimelineEvent, draftTimelineHost } from '$lib/stores/jdg-temp-store.js';
 	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
@@ -18,7 +20,8 @@
 		addOrReplaceObjectByKeyValue,
 		deleteObjectByKeyValue,
 		getNumYearsBetweenDates,
-		getIsObjectInArray
+		getIsObjectInArray,
+		resolveImageMetaKeys
 	} from '$lib/jdg-utils.js';
 
 	import {
@@ -48,6 +51,9 @@
 	export let showLocalStore = false;
 
 	const noImageMessage = 'No images in this event';
+
+	// Get the image meta registry from context for resolving image keys
+	const imageMetaRegistry = getContext(JDG_CONTEXTS.IMAGE_META_REGISTRY);
 
 	let parentRef; // For positioning the compose toolbar
 
@@ -237,10 +243,12 @@
 				{/if}
 			{:else if def.inputType === JDG_INPUT_TYPES.IMAGE_LIST}
 				{#if isAdditional}
+					{@const imageKeys = $localAdditionalStore[key] || []}
+					{@const resolvedImages = resolveImageMetaKeys(imageKeys, imageMetaRegistry)}
 					<!-- Always show selected images if any exist -->
-					{#if $localAdditionalStore[key]?.length > 0}
+					{#if resolvedImages?.length > 0}
 						<div class="image-list-display">
-							<JDGImageThumbnailGroup imageMetaSet={$localAdditionalStore[key]} />
+							<JDGImageThumbnailGroup imageMetaSet={resolvedImages} />
 						</div>
 					{:else if !isEditing}
 						<div class="no-images-message">{noImageMessage}</div>
@@ -252,7 +260,7 @@
 							<JDGButton
 								label={isImageSelectorOpen
 									? 'Close Image Selector'
-									: $localAdditionalStore[key]?.length > 0
+									: imageKeys?.length > 0
 										? 'Manage Images'
 										: 'Add Images'}
 								faIcon={isImageSelectorOpen ? 'fa-times' : 'fa-images'}
@@ -275,13 +283,12 @@
 						{/if}
 					{/if}
 				{:else}
+					{@const imageKeys = $localEventStore[key] || []}
+					{@const resolvedImages = resolveImageMetaKeys(imageKeys, imageMetaRegistry)}
 					<!-- Always show selected images if any exist -->
-					{#if $localEventStore[key]?.length > 0}
+					{#if resolvedImages?.length > 0}
 						<div class="image-list-display">
-							<JDGImageThumbnailGroup
-								imageMetaSet={$localEventStore[key]}
-								maxImageHeight={'15svh'}
-							/>
+							<JDGImageThumbnailGroup imageMetaSet={resolvedImages} maxImageHeight={'15svh'} />
 						</div>
 					{:else if !isEditing}
 						<div class="no-images-message">{noImageMessage}</div>
@@ -293,7 +300,7 @@
 							<JDGButton
 								label={isImageSelectorOpen
 									? 'Close Image Selector'
-									: $localEventStore[key]?.length > 0
+									: imageKeys?.length > 0
 										? 'Manage Images'
 										: 'Add Images'}
 								faIcon={isImageSelectorOpen ? 'fa-times' : 'fa-images'}

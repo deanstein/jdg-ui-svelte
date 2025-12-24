@@ -505,13 +505,6 @@
 			}}
 			{previewOnly}
 		/>
-		<JDGButton
-			label="Write image-meta-registry.js"
-			onClickFunction={async () => {
-				const imageMetaRegistry = await fetchImageMetaRegistry(jdgUiSvelteRepoName);
-				console.log(imageMetaRegistry);
-			}}
-		/>
 	</JDGContentBoxFloating>
 
 	<!-- TIMELINE EVENT -->
