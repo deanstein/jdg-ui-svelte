@@ -25,7 +25,7 @@ export const instantiateTimelineHost = () => {
 	// Initial host
 	const newHost = instantiateObject(jdgTimelineHost);
 	// Set a default avatar imageMeta
-	newHost.avatarImageMeta = getJdgimageMetaRegistry().jdg_avatar_placeholder;
+	newHost.avatarImage = getJdgimageMetaRegistry().jdg_avatar_placeholder;
 	return newHost;
 };
 

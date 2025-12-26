@@ -7,7 +7,7 @@ import { jdgSchemaVersion } from '../jdg-schema-versions.js';
 const jdgTimelineHost = {
 	id: '',
 	name: '',
-	avatarImageMeta: '',
+	avatarImage: '',
 	inceptionDate: '', // birth date, construction date, etc.
 	cessationDate: '', // death date, demolition date, etc.
 	timelineEvents: [],
