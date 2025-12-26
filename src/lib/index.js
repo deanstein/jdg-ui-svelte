@@ -118,6 +118,9 @@ export { JDGIFrame };
 import JDGImage from './components/Image/JDGImage.svelte';
 export { JDGImage };
 
+import JDGImageAvatar from './components/Image/JDGImageAvatar.svelte';
+export { JDGImageAvatar };
+
 import JDGImageCaptionAttribution from './components/Image/JDGImageCaptionAttribution.svelte';
 export { JDGImageCaptionAttribution };
 
