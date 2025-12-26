@@ -9,11 +9,9 @@
 	import {
 		buildingDataCollectionKey,
 		familyTreeDataCollectionKey,
-		fetchImageMetaRegistry,
 		fetchJsonFileList,
 		jdgBuildingDataRepoName,
 		jdgRepoOwner,
-		jdgUiSvelteRepoName,
 		readJsonFileFromRepo,
 		writeJsonFileToRepo
 	} from '$lib/jdg-persistence-management.js';
@@ -42,8 +40,12 @@
 		addOrReplaceObjectByKeyValue,
 		areObjectsEqual,
 		deleteObjectByKeyValue,
+		getImageMetaByKey,
 		instantiateObject
 	} from '$lib/jdg-utils.js';
+
+	import { imageMetaRegistry } from '.././image-meta-registry.js';
+	import getJdgImageMetaRegistry from '$lib/jdg-image-meta-registry.js';
 
 	import {
 		JDGBodyCopy,
@@ -53,6 +55,8 @@
 		JDGContentContainer,
 		JDGGridLayout,
 		JDGH3H4,
+		JDGImageAvatar,
+		JDGImageSelector,
 		JDGInputContainer,
 		JDGJumpTo,
 		JDGModalActionsBar,
@@ -202,6 +206,7 @@
 	}
 
 	// Manage draft fields
+	// Initialize draft form fields when local store is set (but draft is not)
 	$: {
 		if ($localTimelineHostStore !== undefined && $draftTimelineHost === undefined) {
 			draftTimelineHostNameStore.set($localTimelineHostStore.name);
@@ -209,6 +214,20 @@
 			draftTimelineHostCessationDateStore.set($localTimelineHostStore.cessationDate);
 		}
 	}
+
+	// Get the current avatar key - prefer draft when editing, otherwise use local store
+	$: currentAvatarKey =
+		$draftTimelineHost?.avatarImage ?? $localTimelineHostStore?.avatarImage ?? '';
+
+	// Resolve avatar image key to full imageMeta for display
+	$: avatarImageMeta = currentAvatarKey
+		? getImageMetaByKey(imageMetaRegistry, currentAvatarKey) ||
+			getJdgImageMetaRegistry().jdg_avatar_placeholder
+		: getJdgImageMetaRegistry().jdg_avatar_placeholder;
+
+	// Debug logging
+	$: console.log('timeline-test currentAvatarKey:', currentAvatarKey);
+	$: console.log('timeline-test avatarImageMeta:', avatarImageMeta?.src);
 
 	/*** TIMELINE EVENT ***/
 	// All event types to show
@@ -382,6 +401,26 @@
 							isEnabled={$draftTimelineHost !== undefined}
 						/>
 					</JDGInputContainer>
+					<JDGInputContainer label="Avatar Image">
+						<JDGImageAvatar
+							imageMeta={avatarImageMeta}
+							imageKey={currentAvatarKey}
+							size="100px"
+							allowEditing={$draftTimelineHost !== undefined}
+							onImageSelect={(newKey) => {
+								console.log(
+									'Form onImageSelect received:',
+									newKey,
+									'draft exists:',
+									!!$draftTimelineHost
+								);
+								if ($draftTimelineHost) {
+									console.log('Updating draft with new avatarImage:', newKey);
+									draftTimelineHost.set({ ...$draftTimelineHost, avatarImage: newKey });
+								}
+							}}
+						/>
+					</JDGInputContainer>
 					<JDGInputContainer label="Inception Date">
 						<JDGDatePicker
 							bind:inputValue={$draftTimelineHostInceptionDateStore}
@@ -416,6 +455,7 @@
 						backgroundColor={jdgColors.cancel}
 						onClickFunction={() => {
 							draftTimelineHost.set(undefined);
+							// Avatar will automatically reset via reactive derivation
 						}}
 					/>
 					<JDGButton
@@ -481,6 +521,7 @@
 									currentValue.name = $draftTimelineHostNameStore;
 									currentValue.inceptionDate = $draftTimelineHostInceptionDateStore;
 									currentValue.cessationDate = $draftTimelineHostCessationDateStore;
+									currentValue.avatarImage = $draftTimelineHost?.avatarImage || '';
 									return currentValue;
 								});
 								draftTimelineHost.set(undefined);
@@ -502,6 +543,19 @@
 			addClickAddEvent={() => {
 				showTimelineEventModal.set(true);
 				draftTimelineEvent.set(instantiateTimelineEvent(jdgTimelineEventKeys.generic));
+			}}
+			onAvatarChange={(newKey) => {
+				// Update the draft store directly
+				console.log(
+					'Timeline onAvatarChange received:',
+					newKey,
+					'draft exists:',
+					!!$draftTimelineHost
+				);
+				if ($draftTimelineHost) {
+					console.log('Updating draft with new avatarImage from Timeline:', newKey);
+					draftTimelineHost.set({ ...$draftTimelineHost, avatarImage: newKey });
+				}
 			}}
 			{previewOnly}
 		/>

@@ -1,11 +1,18 @@
 <script>
-	import { onMount, setContext } from 'svelte';
+	import { onMount, getContext, setContext } from 'svelte';
 	import { writable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
 	import { JDG_CONTEXTS } from '$lib/jdg-contexts.js';
-	import { getMaxElementHeightPx, getNumDaysBetweenDates, lightenColor } from '$lib/jdg-utils.js';
+
+	import getJdgImageMetaRegistry from '$lib/jdg-image-meta-registry.js';
+	import {
+		getImageMetaByKey,
+		getMaxElementHeightPx,
+		getNumDaysBetweenDates,
+		lightenColor
+	} from '$lib/jdg-utils.js';
 
 	import { draftImageMeta, draftTimelineEvent } from '$lib/stores/jdg-temp-store.js';
 	import {
@@ -34,7 +41,7 @@
 		JDGCheckbox,
 		JDGComposeToolbar,
 		JDGFlyout,
-		JDGImage,
+		JDGImageAvatar,
 		JDGModal,
 		JDGPortal,
 		JDGSaveStateBanner,
@@ -42,12 +49,10 @@
 	} from '$lib/index.js';
 	import {
 		jdgBreakpoints,
-		jdgColors,
 		jdgDurations,
 		jdgQuantities,
 		jdgSizes
 	} from '$lib/jdg-shared-styles.js';
-	import { imageMetaRegistry } from '../../../routes/image-meta-registry.js';
 
 	// Timeline host contains events and event references
 	export let timelineHost;
@@ -71,6 +76,8 @@
 
 	export let onClickInceptionEvent = () => {};
 	export let addClickAddEvent = () => {};
+	// Called when a new avatar is selected (passes the new image key)
+	export let onAvatarChange = undefined;
 
 	// State for hover overlay and modal
 	let isHovering = false;
@@ -89,13 +96,23 @@
 	let emptyStateEvent;
 	let todayEvent;
 
+	// Get the image meta registry from context for resolving avatar
+	const contextImageMetaRegistry = getContext(JDG_CONTEXTS.IMAGE_META_REGISTRY);
+
+	// Resolve avatar image from timelineHost's avatarImage key
+	$: avatarImageMeta =
+		timelineHost?.avatarImage && contextImageMetaRegistry
+			? getImageMetaByKey(contextImageMetaRegistry, timelineHost.avatarImage) ||
+				getJdgImageMetaRegistry().jdg_avatar_placeholder
+			: getJdgImageMetaRegistry().jdg_avatar_placeholder;
+
 	const avatarHeight = '30px';
 	const onClickAvatar = () => {
 		if (allowEditing) {
-			draftImageMeta.set(imageMetaRegistry.aerial_60s70s_1);
+			draftImageMeta.set(avatarImageMeta);
 			showImageMetaModal.set(true);
 		} else {
-			imageViewerMeta.set(imageMetaRegistry.aerial_60s70s_1);
+			imageViewerMeta.set(avatarImageMeta);
 			showImageViewerModal.set(true);
 		}
 	};
@@ -221,14 +238,6 @@
 
 	const timelineTitleBarCss = css`
 		background-color: ${lightenColor(timelineBackgroundColor, 0.03)};
-	`;
-
-	const timelineAvatarCss = css`
-		height: ${avatarHeight};
-		border: 2px solid transparent;
-		:hover {
-			border: 2px solid ${jdgColors.accentColorsJDG[1]};
-		}
 	`;
 
 	const timelineEventCountCss = css`
@@ -383,20 +392,14 @@
 	{#if showTitleBar}
 		<div class="timeline-title-bar {timelineTitleBarCss}">
 			<!-- Avatar -->
-			<div
-				class="timeline-avatar {timelineAvatarCss}"
-				role="button"
-				tabindex="0"
-				on:click={onClickAvatar}
-				on:keydown={onClickAvatar}
-			>
-				<JDGImage
-					imageMeta={imageMetaRegistry.aerial_60s70s_1}
-					maxHeight={avatarHeight}
-					maxWidth={avatarHeight}
-					cropToFillContainer={true}
-				/>
-			</div>
+			<JDGImageAvatar
+				imageMeta={avatarImageMeta}
+				imageKey={timelineHost?.avatarImage || ''}
+				size={avatarHeight}
+				onClickFunction={onClickAvatar}
+				allowEditing={allowEditing && onAvatarChange !== undefined}
+				onImageSelect={onAvatarChange}
+			/>
 			<div class="timeline-title">
 				{timelineHost.name}
 			</div>
@@ -568,16 +571,6 @@
 		border-radius: 10px 10px 0 0;
 		margin-bottom: -10px;
 		gap: 10px;
-	}
-
-	.timeline-avatar {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		aspect-ratio: 1;
-		overflow: hidden;
-		border-radius: 50%;
-		cursor: pointer;
 	}
 
 	.timeline-container {

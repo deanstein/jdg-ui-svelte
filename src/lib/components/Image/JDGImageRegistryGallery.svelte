@@ -1,11 +1,19 @@
 <script>
-	import { onMount } from 'svelte';
+	import { onMount, getContext } from 'svelte';
 	import { css } from '@emotion/css';
+
+	import { JDG_CONTEXTS } from '$lib/jdg-contexts.js';
+	
 	import { draftImageMetaRegistry } from '$lib/stores/jdg-temp-store.js';
 	import { imagesLoading } from '$lib/stores/jdg-ui-store.js';
+
+	import { showImageDetailModal } from '$lib/jdg-state-management.js';
+
 	import { JDGTextInput, JDGButton, JDGImageTile, JDGLoadingSpinner } from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
-	import { showImageDetailModal } from '$lib/jdg-state-management.js';
+
+	// Get registry from context as fallback if draft store is empty
+	const contextImageMetaRegistry = getContext(JDG_CONTEXTS.IMAGE_META_REGISTRY);
 
 	// Number of images per page
 	export let imagesPerPage = 24;
@@ -22,6 +30,11 @@
 	// Selection mode props
 	export let selectionEnabled = false;
 	export let selectedImages = [];
+	// If true, only one image can be selected at a time (selecting replaces)
+	export let singleSelect = false;
+	// Optional callback when selection changes
+	/** @type {((selection: string[]) => void) | undefined} */
+	export let onSelectionChange = undefined;
 
 	// Filter state
 	let filterText = '';
@@ -45,10 +58,28 @@
 	const toggleImage = (imageMeta) => {
 		if (!selectionEnabled) return;
 		const selected = selectedImageKeys.has(imageMeta.key);
-		if (selected) {
-			selectedImages = selectedImages.filter((key) => key !== imageMeta.key);
+
+		if (singleSelect) {
+			// Single select mode: clicking selected image deselects, otherwise replace selection
+			selectedImages = selected ? [] : [imageMeta.key];
 		} else {
-			selectedImages = [...selectedImages, imageMeta.key];
+			// Multi select mode: toggle the clicked image
+			if (selected) {
+				selectedImages = selectedImages.filter((key) => key !== imageMeta.key);
+			} else {
+				selectedImages = [...selectedImages, imageMeta.key];
+			}
+		}
+
+		// Call the selection change callback if provided
+		console.log(
+			'JDGImageRegistryGallery selection changed:',
+			selectedImages,
+			'has callback:',
+			!!onSelectionChange
+		);
+		if (onSelectionChange) {
+			onSelectionChange(selectedImages);
 		}
 	};
 
@@ -83,7 +114,12 @@
 		return flat;
 	};
 
-	$: allImages = flattenRegistry($draftImageMetaRegistry);
+	// Use draft registry if available, otherwise fall back to context registry
+	$: registryToUse =
+		Object.keys($draftImageMetaRegistry || {}).length > 0
+			? $draftImageMetaRegistry
+			: contextImageMetaRegistry;
+	$: allImages = flattenRegistry(registryToUse || {});
 
 	// Filter images based on search text
 	$: filteredImages = allImages.filter((img) => {

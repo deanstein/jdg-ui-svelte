@@ -15,7 +15,6 @@ import {
 import jdgTimelineEventTypes, {
 	jdgTimelineEventKeys
 } from '$lib/schemas/timeline/jdg-timeline-event-types.js';
-import getJdgImageMetaRegistry from '$lib/jdg-image-meta-registry.js';
 
 //
 // TIMELINE HOST
@@ -24,8 +23,8 @@ import getJdgImageMetaRegistry from '$lib/jdg-image-meta-registry.js';
 export const instantiateTimelineHost = () => {
 	// Initial host
 	const newHost = instantiateObject(jdgTimelineHost);
-	// Set a default avatar imageMeta
-	newHost.avatarImage = getJdgImageMetaRegistry().jdg_avatar_placeholder;
+	// Set a default avatar (jdgImageRegistry key)
+	newHost.avatarImage = 'jdg_avatar_placeholder';
 	return newHost;
 };
 
@@ -37,6 +36,23 @@ export function upgradeTimelineHost(timelineHost) {
 	const upgradedHost = deepMatchObjects(newHost, timelineHost);
 	// Update the version to the schema version
 	upgradedHost.version = jdgSchemaVersion;
+
+	// Clean up invalid formats
+	// avatarImage should be a string (registry key), not an object
+	if (upgradedHost.avatarImage && typeof upgradedHost.avatarImage !== 'string') {
+		upgradedHost.avatarImage = '';
+	}
+
+	// Clean up images in timeline events - should be arrays of strings (registry keys)
+	if (upgradedHost.timelineEvents && Array.isArray(upgradedHost.timelineEvents)) {
+		for (const event of upgradedHost.timelineEvents) {
+			if (event.images && Array.isArray(event.images)) {
+				// Filter out any non-string entries
+				event.images = event.images.filter((img) => typeof img === 'string');
+			}
+		}
+	}
+
 	return upgradedHost;
 }
 
