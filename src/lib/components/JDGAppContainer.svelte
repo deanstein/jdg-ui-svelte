@@ -59,7 +59,7 @@
 		jdgFonts,
 		setUpdatedHyperlinkStyleBar
 	} from '$lib/jdg-shared-styles.js';
-	import getJdgimageMetaRegistry from '$lib/jdg-image-meta-registry.js';
+	import getJdgImageMetaRegistry from '$lib/jdg-image-meta-registry.js';
 	import { draftImageMetaRegistry } from '$lib/stores/jdg-temp-store.js';
 
 	// IMAGE META REGISTRY
@@ -71,7 +71,7 @@
 
 	// STYLING OPTIONS
 	export let fontFamily = jdgFonts.body;
-	export let appLoadingIconSrc = getJdgimageMetaRegistry().jdg_logo_ui.src;
+	export let appLoadingIconSrc = getJdgImageMetaRegistry().jdg_logo_ui.src;
 	export let accentColors = jdgColors.accentColorsJDG;
 	// "Banner under text" hyperlink style
 	export let linkColorDefault = accentColors[0];

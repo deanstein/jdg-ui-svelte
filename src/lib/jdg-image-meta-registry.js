@@ -4,7 +4,7 @@
 import { upgradeImageMetaRegistry } from './jdg-utils.js';
 
 // This must be a getter function to prevent SSR errors on build with a raw object
-const getJdgimageMetaRegistry = () => {
+const getJdgImageMetaRegistry = () => {
 	return upgradeImageMetaRegistry({
 		jdg_avatar_placeholder: {
 			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1761358399/jdg-ui-svelte/jdg-avatar-placeholder.jpg',
@@ -21,4 +21,4 @@ const getJdgimageMetaRegistry = () => {
 	});
 };
 
-export default getJdgimageMetaRegistry;
+export default getJdgImageMetaRegistry;
