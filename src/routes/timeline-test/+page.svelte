@@ -119,18 +119,22 @@
 			(!areObjectsEqual(selectedHostCollection, $draftTimelineHostCollection) ||
 				!areObjectsEqual($localTimelineHostStore, $draftTimelineHost));
 		// Set the saveStatus if unsaved changes are detected
-		if (hasUnsavedChanges) {
+		// Don't overwrite if an operation is in progress or showing success
+		const isInProgressStatus =
+			$saveStatus === jdgSaveStatus.saving ||
+			$saveStatus === jdgSaveStatus.loading ||
+			$saveStatus === jdgSaveStatus.uploading;
+		const isSuccessStatus =
+			$saveStatus === jdgSaveStatus.saveSuccess ||
+			$saveStatus === jdgSaveStatus.loadSucccess ||
+			$saveStatus === jdgSaveStatus.saveSuccessRebuilding;
+
+		// Only show the unsaved changes status if not saving or success
+		if (hasUnsavedChanges && !isInProgressStatus && !isSuccessStatus) {
 			saveStatus.set(jdgSaveStatus.unsavedChanges);
-		} else {
-			// Don't clear status if a success message is being displayed
-			// (let the banner's timeout handle dismissal)
-			const isSuccessStatus =
-				$saveStatus === jdgSaveStatus.saveSuccess ||
-				$saveStatus === jdgSaveStatus.loadSucccess ||
-				$saveStatus === jdgSaveStatus.saveSuccessRebuilding;
-			if (!isSuccessStatus) {
-				saveStatus.set(null);
-			}
+		} else if (!hasUnsavedChanges && !isSuccessStatus) {
+			// Only clear the status if no success message is being shown
+			saveStatus.set(null);
 		}
 	}
 
