@@ -47,12 +47,7 @@
 		JDGSaveStateBanner,
 		JDGTimelineEvent
 	} from '$lib/index.js';
-	import {
-		jdgBreakpoints,
-		jdgDurations,
-		jdgQuantities,
-		jdgSizes
-	} from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgDurations, jdgQuantities, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	// Timeline host contains events and event references
 	export let timelineHost;

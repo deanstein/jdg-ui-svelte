@@ -3,7 +3,7 @@
 	import { css } from '@emotion/css';
 
 	import { JDG_CONTEXTS } from '$lib/jdg-contexts.js';
-	
+
 	import { draftImageMetaRegistry } from '$lib/stores/jdg-temp-store.js';
 	import { imagesLoading } from '$lib/stores/jdg-ui-store.js';
 
