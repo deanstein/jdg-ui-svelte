@@ -6,10 +6,15 @@
 	export let showLabel = true;
 	export let label = 'Checkbox label';
 	export let labelFontSize = jdgSizes.fontSizeBodySm;
+	export let justifyContent = 'left';
 	export let isChecked = false;
 	export let isEnabled = true;
 	export let onCheckAction = () => {};
 	export let onUncheckAction = () => {};
+
+	const checkboxWrapperCss = css`
+		justify-content: ${justifyContent};
+	`;
 
 	let checkboxLabelCss = css`
 		font-size: ${labelFontSize};
@@ -25,7 +30,7 @@
 	}
 </script>
 
-<div class="checkbox-wrapper">
+<div class="checkbox-wrapper {checkboxWrapperCss}">
 	<input type="checkbox" bind:checked={isChecked} disabled={!isEnabled} class="checkbox" />
 	{#if showLabel}
 		<div class={checkboxLabelCss}>
