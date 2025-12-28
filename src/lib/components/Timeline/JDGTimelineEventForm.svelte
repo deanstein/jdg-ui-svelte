@@ -5,13 +5,18 @@
 	import { get, writable } from 'svelte/store';
 
 	import { JDG_CONTEXTS } from '$lib/jdg-contexts.js';
-	import { ageSuffix, timelineEventModalInceptionDate } from '$lib/stores/jdg-ui-store.js';
-	import { draftTimelineEvent, draftTimelineHost } from '$lib/stores/jdg-temp-store.js';
-	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
+	import { JDG_INPUT_TYPES } from '$lib/schemas/timeline/jdg-input-types.js';
+
+	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
 	import jdgTimelineEventTypes, {
 		jdgTimelineEventKeys
 	} from '$lib/schemas/timeline/jdg-timeline-event-types.js';
-	import { JDG_INPUT_TYPES } from '$lib/schemas/timeline/jdg-input-types.js';
+	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
+
+	import { ageSuffix, timelineEventModalInceptionDate, showTimelineEventModal } from '$lib/stores/jdg-ui-store.js';
+	import { draftTimelineEvent, draftTimelineHost } from '$lib/stores/jdg-temp-store.js';
+
+	import { getImageMetaRegistryLabel } from '$lib/jdg-persistence-management.js';
 	import {
 		extractDataSchemaFields,
 		extractUiFromDataSchema
@@ -21,23 +26,23 @@
 		deleteObjectByKeyValue,
 		getNumYearsBetweenDates,
 		getIsObjectInArray,
+		instantiateObject,
 		resolveImageMetaKeys
 	} from '$lib/jdg-utils.js';
 
 	import {
-		showTimelineEventModal,
-		instantiateObject,
+		JDGButton,
 		JDGCheckbox,
+		JDGComposeToolbar,
 		JDGDatePicker,
-		JDGTextArea,
-		JDGTextInput,
 		JDGImageSelector,
 		JDGImageThumbnailGroup,
-		JDGButton
+		JDGInputContainer,
+		JDGNotificationBanner,
+		JDGSelect,
+		JDGTextArea,
+		JDGTextInput,
 	} from '$lib/index.js';
-	import JDGSelect from '../Input/JDGSelect.svelte';
-	import JDGComposeToolbar from '../Compose/JDGComposeToolbar.svelte';
-	import JDGInputContainer from '../Input/JDGInputContainer.svelte';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
 
 	// Read from and write to this store
@@ -49,6 +54,10 @@
 	export let isEditing = false; // fields are in edit state if true
 	// For debugging
 	export let showLocalStore = false;
+
+	// Get the registry repo name from the draft timeline host
+	$: registryRepoName = $draftTimelineHost?.imageMetaRegistryRepoName;
+	$: registryLabel = getImageMetaRegistryLabel(registryRepoName);
 
 	const noImageMessage = 'No images in this event';
 
@@ -167,6 +176,13 @@
 </script>
 
 <div bind:this={parentRef} class="jdg-timeline-form">
+	<!-- Image Meta Registry indicator (locked to timeline's registry) -->
+	<JDGNotificationBanner
+		showBanner={!!registryRepoName}
+		notificationType={jdgNotificationTypes.information}
+		message={`Image Meta Registry: ${registryLabel}`}
+	/>
+
 	<!-- Event type and age header -->
 	<div class="event-header">
 		<div class="event-header-view event-header-age">
@@ -278,6 +294,7 @@
 								<JDGImageSelector
 									bind:selectedImages={$localAdditionalStore[key]}
 									isEnabled={isEditing}
+									{registryRepoName}
 								/>
 							</div>
 						{/if}
@@ -318,6 +335,7 @@
 								<JDGImageSelector
 									bind:selectedImages={$localEventStore[key]}
 									isEnabled={isEditing}
+									{registryRepoName}
 								/>
 							</div>
 						{/if}

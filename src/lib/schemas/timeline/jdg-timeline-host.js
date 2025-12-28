@@ -8,8 +8,12 @@ const jdgTimelineHost = {
 	id: '',
 	name: '',
 	avatarImage: '',
-	inceptionDate: '', // birth date, construction date, etc.
-	cessationDate: '', // death date, demolition date, etc.
+	// The repo containing the image registry for this timeline
+	imageMetaRegistryRepoName: '',
+	// Birth date, construction date, etc.
+	inceptionDate: '',
+	// Death date, demolition date, etc.
+	cessationDate: '',
 	timelineEvents: [],
 	timelineEventReferences: [],
 	contextualEvents: [],

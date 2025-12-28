@@ -4,7 +4,6 @@
 
 	import { JDG_CONTEXTS } from '$lib/jdg-contexts.js';
 
-	import { draftImageMetaRegistry } from '$lib/stores/jdg-temp-store.js';
 	import { imagesLoading } from '$lib/stores/jdg-ui-store.js';
 
 	import { showImageDetailModal } from '$lib/jdg-state-management.js';
@@ -12,8 +11,12 @@
 	import { JDGTextInput, JDGButton, JDGImageTile, JDGLoadingSpinner } from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
 
-	// Get registry from context as fallback if draft store is empty
+	// Get registry from context as fallback
 	const contextImageMetaRegistry = getContext(JDG_CONTEXTS.IMAGE_META_REGISTRY);
+
+	// Optional: pass a specific registry (e.g., for Timeline with different registry)
+	// If not provided, falls back to context
+	export let imageMetaRegistry = undefined;
 
 	// Number of images per page
 	export let imagesPerPage = 24;
@@ -114,11 +117,8 @@
 		return flat;
 	};
 
-	// Use draft registry if available, otherwise fall back to context registry
-	$: registryToUse =
-		Object.keys($draftImageMetaRegistry || {}).length > 0
-			? $draftImageMetaRegistry
-			: contextImageMetaRegistry;
+	// Use prop if provided, otherwise fall back to context
+	$: registryToUse = imageMetaRegistry || contextImageMetaRegistry;
 	$: allImages = flattenRegistry(registryToUse || {});
 
 	// Filter images based on search text

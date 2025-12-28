@@ -60,7 +60,6 @@
 		setUpdatedHyperlinkStyleBar
 	} from '$lib/jdg-shared-styles.js';
 	import getJdgImageMetaRegistry from '$lib/jdg-image-meta-registry.js';
-	import { draftImageMetaRegistry } from '$lib/stores/jdg-temp-store.js';
 
 	// IMAGE META REGISTRY
 	// Consuming websites *must* provide an image meta regisry
@@ -212,13 +211,6 @@
 		}
 	});
 
-	// If isAdminMode changes to true,
-	// hydrate the imageMetaAdminRegistry store for editing
-	$: {
-		if ($isAdminMode) {
-			draftImageMetaRegistry.set(imageMetaRegistry);
-		}
-	}
 
 	// OPTIONAL DEBUG: Set sticky dev toolbar overlay content and show it
 	// $: {

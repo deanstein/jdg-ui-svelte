@@ -12,9 +12,6 @@ export let saveFunction = writable(async () => {});
 /*** IMAGE ***/
 // Read and write source when editing an imageMeta
 export let draftImageMeta = writable(undefined);
-// In adminMode, the static imageMetaRegistry in each website is
-// duplicated to this store for editing
-export let draftImageMetaRegistry = writable({});
 
 /*** TIMELINE ***/
 export let draftTimelineHostCollection = writable(undefined);
@@ -31,7 +28,6 @@ const storeMap = {
 	saveStatus,
 	// image meta editing
 	draftImageMeta,
-	draftImageMetaRegistry,
 	// timeline
 	draftTimelineHostCollection,
 	isTimelineHostDrafting,

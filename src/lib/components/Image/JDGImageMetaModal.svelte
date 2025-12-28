@@ -1,16 +1,23 @@
 <script>
-	import { onDestroy, onMount } from 'svelte';
+	import { onDestroy, onMount, getContext } from 'svelte';
 	import { get } from 'svelte/store';
 
+	import { JDG_CONTEXTS } from '$lib/jdg-contexts.js';
 	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
 	import jdgSaveStatus from '$lib/schemas/jdg-save-status.js';
 
-	import { repoName, showImageEditButtons, showImageMetaModal } from '$lib/stores/jdg-ui-store.js';
+	import {
+		repoName,
+		showImageEditButtons,
+		showImageMetaModal
+	} from '$lib/stores/jdg-ui-store.js';
 	import {
 		draftImageMeta,
-		draftImageMetaRegistry,
 		saveStatus
 	} from '$lib/stores/jdg-temp-store.js';
+
+	// Get the image meta registry from context (read-only)
+	const imageMetaRegistry = getContext(JDG_CONTEXTS.IMAGE_META_REGISTRY);
 	import {
 		areObjectsEqual,
 		extractCloudinaryAssetpath,
@@ -22,7 +29,9 @@
 	import {
 		deleteCloudinaryImage,
 		deleteImageMetaEntryFromRepo,
+		getImageMetaRegistryLabel,
 		getImageMetaSrcUsageInRepos,
+		imageMetaRegistryOptions,
 		renameCloudinaryImage,
 		replaceUrlAcrossRepos,
 		writeImageMetaEntryToRepo
@@ -38,6 +47,7 @@
 		JDGModal,
 		JDGNotificationBanner,
 		JDGSaveStateBanner,
+		JDGSelect,
 		JDGTextArea,
 		JDGTextInput
 	} from '$lib/index.js';
@@ -75,6 +85,18 @@
 	const newImagePath = 'jdg-ui-svelte/image-testing/new-image.jpg';
 	// Track if this is a new image (no src with Cloudinary URL)
 	$: isNewImage = !originalDraftMeta?.src || !originalDraftMeta.src.includes('cloudinary');
+
+	// For new images: user can select which registry to upload to (local variable)
+	// For existing images: always use the current website's repoName
+	let selectedRegistryForNewImage;
+	// Initialize when repoName becomes available
+	$: if ($repoName && !selectedRegistryForNewImage) {
+		selectedRegistryForNewImage = $repoName;
+	}
+
+	// The effective registry: for new images use selection, for existing use repoName
+	$: effectiveRepoName = isNewImage ? selectedRegistryForNewImage : $repoName;
+	$: registryLabel = getImageMetaRegistryLabel(effectiveRepoName);
 
 	// Extract asset path from src URL for both new and existing images
 	// For brand new images without a Cloudinary URL yet, use the default path
@@ -167,7 +189,7 @@
 		// (Registry key is auto-generated from filename)
 		if (isNewImage) {
 			// Check for top-level key
-			if (get(draftImageMetaRegistry)[registryKey]) {
+			if (imageMetaRegistry?.[registryKey]) {
 				const confirmOverwrite = confirm(
 					`A registry entry with key "${registryKey}" already exists. Do you want to overwrite it?`
 				);
@@ -221,7 +243,7 @@
 		// For existing images, check if URL is used in other repos
 		// This applies even if path hasn't changed, because re-uploading changes the version/URL
 		let reposWithUrl = [];
-		const currentRepoName = get(repoName);
+		const currentRepoName = effectiveRepoName;
 
 		if (!isNewImage && originalSrc) {
 			console.log('🔍 Checking if URL is used in other repos before upload...');
@@ -309,14 +331,7 @@
 			// Step 3: Update image src in draft meta
 			draftImageMeta.update((meta) => ({ ...meta, src: newUrl }));
 
-			// Step 4: Update the registry store with the new image meta
-			// Use the registry key (not the UUID id) as the object key
-			// Handle nested keys like "arch.atc_elevator"
-			draftImageMetaRegistry.update((registry) =>
-				setNestedRegistryValue(registry, registryKey, get(draftImageMeta))
-			);
-
-			// Step 5: Write to current repo
+			// Step 4: Write to current repo
 			if (!currentRepoName) {
 				throw new Error('No repo name set. Cannot write registry to GitHub.');
 			}
@@ -407,7 +422,7 @@
 		isCheckingUsage = true;
 
 		try {
-			const currentRepoName = get(repoName);
+			const currentRepoName = effectiveRepoName;
 			const results = await getImageMetaSrcUsageInRepos(currentSrc, currentRepoName);
 
 			// Find repos where the URL was found
@@ -458,7 +473,7 @@
 		}
 
 		// Check usage in other repos first
-		const currentRepoName = get(repoName);
+		const currentRepoName = effectiveRepoName;
 		let reposWithUrl = [];
 
 		isCheckingUsage = true;
@@ -502,11 +517,7 @@
 			const newUrl = renameResult.url;
 			draftImageMeta.update((meta) => ({ ...meta, src: newUrl }));
 
-			// Step 3: Update registry and save to current repo
-			draftImageMetaRegistry.update((registry) =>
-				setNestedRegistryValue(registry, registryKey, get(draftImageMeta))
-			);
-
+			// Step 3: Save to current repo
 			console.log(`💾 Writing image entry "${registryKey}" to ${currentRepoName}...`);
 
 			const writeResult = await writeImageMetaEntryToRepo(
@@ -578,7 +589,7 @@
 		}
 
 		// Check if URL is used in other repos
-		const currentRepoName = get(repoName);
+		const currentRepoName = effectiveRepoName;
 		let reposWithUrl = [];
 
 		isCheckingUsage = true;
@@ -639,35 +650,6 @@
 
 			console.log('✅ Image deleted successfully');
 
-			// Step 3: Update the registry store (remove the entry)
-			draftImageMetaRegistry.update((registry) => {
-				const newRegistry = { ...registry };
-				const keyParts = registryKey.split('.');
-
-				if (keyParts.length === 1) {
-					// Top-level key
-					delete newRegistry[registryKey];
-				} else {
-					// Nested key
-					const parentKey = keyParts[0];
-					const childKey = keyParts.slice(1).join('.');
-
-					if (newRegistry[parentKey] && typeof newRegistry[parentKey] === 'object') {
-						const parent = { ...newRegistry[parentKey] };
-						delete parent[childKey];
-
-						// If parent is now empty, remove it too
-						if (Object.keys(parent).length === 0) {
-							delete newRegistry[parentKey];
-						} else {
-							newRegistry[parentKey] = parent;
-						}
-					}
-				}
-
-				return newRegistry;
-			});
-
 			saveStatus.set(jdgSaveStatus.saveSuccessRebuilding);
 
 			// Close the modal
@@ -718,8 +700,7 @@
 		// For existing images, find the registry key by looking up the src URL in the registry
 		// Do this BEFORE upgrade, since we need to find the original entry
 		if (currentMeta?.src && currentMeta.src.includes('cloudinary')) {
-			const registry = get(draftImageMetaRegistry);
-			const foundKey = findRegistryKeyBySrc(registry, currentMeta.src);
+			const foundKey = findRegistryKeyBySrc(imageMetaRegistry, currentMeta.src);
 			if (foundKey) {
 				registryKey = foundKey;
 				originalRegistryKey = foundKey; // Store so it doesn't change if filename changes
@@ -755,7 +736,7 @@
 </script>
 
 <JDGModal
-	title={getIsObjectInObject($draftImageMetaRegistry, 'id', $draftImageMeta?.id)
+	title={getIsObjectInObject(imageMetaRegistry, 'id', $draftImageMeta?.id)
 		? 'Edit Image Meta'
 		: 'New Image Meta'}
 	subtitle={null}
@@ -778,9 +759,9 @@
 			/>
 			<!-- No repo name set banner -->
 			<JDGNotificationBanner
-				showBanner={!get(repoName)}
+				showBanner={!effectiveRepoName}
 				notificationType={jdgNotificationTypes.error}
-				message={'No repo name set! +layout.svelte must set the repo name.'}
+				message={'No image registry selected! Use the Dev Toolbar to select a registry.'}
 			/>
 
 			<!-- Show Done/Cancel when changes are detected -->
@@ -798,17 +779,12 @@
 						// Set save status
 						saveStatus.set(jdgSaveStatus.saving);
 
-						// Update the registry store with the current draft meta
-						// Use the registry key (not the UUID id) as the object key
-						// Handle nested keys like "arch.atc_elevator"
-						draftImageMetaRegistry.update((registry) =>
-							setNestedRegistryValue(registry, registryKey, $draftImageMeta)
-						);
-
 						// Write only this entry back to GitHub
-						const currentRepoName = $repoName;
+						const currentRepoName = effectiveRepoName;
 						if (!currentRepoName) {
-							throw new Error('No repo name set. Cannot write registry to GitHub.');
+							throw new Error(
+								'No image registry selected. Use the Dev Toolbar to select a registry.'
+							);
 						}
 
 						console.log(`💾 Writing image entry "${registryKey}" to ${currentRepoName}...`);
@@ -840,7 +816,7 @@
 					draftImageMeta.set(undefined);
 					saveStatus.set(null);
 				}}
-				isEditActive={hasUnsavedChanges && get(repoName)}
+				isEditActive={hasUnsavedChanges && effectiveRepoName}
 			></JDGComposeToolbar>
 
 			<!-- Image preview with absolutely-positioned buttons -->
@@ -887,9 +863,9 @@
 			/>
 			<!-- Show a banner when we can't determine other repo impacts due to asset path change -->
 			<JDGNotificationBanner
-				showBanner={hasAssetPathChanged && !isNewImage && $repoName === undefined}
+				showBanner={hasAssetPathChanged && !isNewImage && !effectiveRepoName}
 				notificationType={jdgNotificationTypes.error}
-				message={'No repo name set. \nImages in other repos may break as a result of this change.'}
+				message={'No image registry selected. Images in other repos may break as a result of this change.'}
 			/>
 
 			<!-- Spacer-->
@@ -899,6 +875,19 @@
 			<JDGGridLayout maxColumns={2} useMinWidthOnTwoColumns={false}>
 				<!-- Left column: Read-only values -->
 				<div class="modal-column">
+					<!-- New images only: choose target image meta registry -->
+					{#if isNewImage}
+						<JDGInputContainer label="Image Meta Registry">
+							<JDGSelect
+								optionsGroup={imageMetaRegistryOptions}
+								bind:inputValue={selectedRegistryForNewImage}
+							/>
+						</JDGInputContainer>
+					{:else}
+						<JDGInputContainer label="Image Meta Registry">
+							{registryLabel}
+						</JDGInputContainer>
+					{/if}
 					<!-- Registry Key (auto-generated for new images) -->
 					<JDGInputContainer label="Registry Key">
 						<div style="display: flex; flex-direction: column; gap: 8px;">
@@ -927,7 +916,7 @@
 
 				<!-- Right column: Editable inputs -->
 				<div class="modal-column">
-					<JDGInputContainer label="Asset Path">
+					<JDGInputContainer label="Cloudinary Path">
 						<JDGTextInput inputValue={assetPath} onInputFunction={onAssetPathChange} />
 					</JDGInputContainer>
 					<!-- Check URL usage in other repos button -->

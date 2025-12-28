@@ -1,7 +1,11 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { JDGButton, JDGCheckbox, JDGImageRegistryGallery } from '$lib/index.js';
+	import { repoName } from '$lib/stores/jdg-ui-store.js';
+	import { getImageMetaRegistryLabel } from '$lib/jdg-persistence-management.js';
+	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
+
+	import { JDGButton, JDGCheckbox, JDGImageRegistryGallery, JDGNotificationBanner } from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
 
 	// The selected images array - bind to this from parent
@@ -17,6 +21,15 @@
 	// Optional callback when selection changes (useful to avoid bidirectional binding issues)
 	/** @type {((selection: string[]) => void) | undefined} */
 	export let onSelectionChange = undefined;
+	// Optional: override the registry repo name (for context-driven use like Timeline)
+	// If not provided, falls back to the current website's repoName
+	export let registryRepoName = undefined;
+
+	// The effective registry to use: prop overrides repoName
+	$: effectiveRegistry = registryRepoName || $repoName;
+
+	// Get the display label for the effective registry
+	$: registryLabel = getImageMetaRegistryLabel(effectiveRegistry);
 
 	// Whether to show captions (with checkbox toggle)
 	let showCaptions = false;
@@ -60,6 +73,13 @@
 </script>
 
 <div class="jdg-image-selector">
+	<!-- Registry indicator -->
+	<JDGNotificationBanner
+		showBanner={!!effectiveRegistry}
+		notificationType={jdgNotificationTypes.information}
+		message={`Browsing: ${registryLabel}`}
+	/>
+
 	<div class={headerCss}>
 		<div style="display: flex; align-items: center; gap: 12px;">
 			<JDGCheckbox label="Show captions" bind:isChecked={showCaptions} labelFontSize="14px" />

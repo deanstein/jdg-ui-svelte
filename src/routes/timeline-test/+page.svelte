@@ -533,9 +533,13 @@
 				/>
 			</JDGModalActionsBar>
 		</JDGBodyCopy>
-
-		<JDGH3H4 h3String="Timeline" paddingBottom="15px" />
-		<JDGCheckbox label="Preview only" bind:isChecked={previewOnly} />
+		<JDGBodyCopy textAlign="center">
+			<JDGH3H4 h3String="Timeline" paddingBottom="15px" />
+			<JDGCheckbox label="Preview only" bind:isChecked={previewOnly} justifyContent="center" />
+			<p style="font-size: 0.8rem; color: gray;">
+				Enables an overlay that forces the timeline to launch in a modal
+			</p>
+		</JDGBodyCopy>
 		<JDGTimeline
 			timelineHost={$draftTimelineHost ?? $localTimelineHostStore ?? newTimelineHost}
 			allowEditing={$draftTimelineHost !== undefined}

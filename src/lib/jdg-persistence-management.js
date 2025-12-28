@@ -59,6 +59,41 @@ export const allImageMetaRegistryRepoNames = [
 	ccpWebsiteRepoName
 ];
 
+// Options for JDGSelect component to choose which image meta registry to use
+// Each option includes the repo name (value), display label, and file path within the repo
+export const imageMetaRegistryOptions = {
+	registries: {
+		label: 'Image Meta Registries',
+		jdgUiSvelte: {
+			value: jdgUiSvelteRepoName,
+			label: 'JDG UI Svelte (Package)'
+		},
+		jdgWebsite: {
+			value: jdgWebsiteRepoName,
+			label: 'JDG Website'
+		},
+		pmx3dWebsite: {
+			value: pmx3dWebsiteRepoName,
+			label: 'PMX Website'
+		},
+		ccpWebsite: {
+			value: ccpWebsiteRepoName,
+			label: 'CCP Website'
+		}
+	}
+};
+
+// Helper to get a display label for a repo name
+export const getImageMetaRegistryLabel = (repoName) => {
+	const options = imageMetaRegistryOptions.registries;
+	for (const key in options) {
+		if (options[key].value === repoName) {
+			return options[key].label;
+		}
+	}
+	return repoName || 'Unknown Registry';
+};
+
 // TODO: Remove, this won't be needed once we switch entirely to Cloudflare workers
 const getAuthHeaders = (password) => ({
 	Authorization: `Bearer ${decrypt(encryptedPAT, password)}`,
