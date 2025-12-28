@@ -388,7 +388,7 @@
 		<div class="timeline-title-bar {timelineTitleBarCss}">
 			<!-- Avatar -->
 			<JDGImageAvatar
-			registryRepoName={timelineHost?.imageMetaRegistryRepoName}
+				registryRepoName={timelineHost?.imageMetaRegistryRepoName}
 				imageMeta={avatarImageMeta}
 				imageKey={timelineHost?.avatarImage || ''}
 				size={avatarHeight}

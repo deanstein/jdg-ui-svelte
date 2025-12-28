@@ -6,15 +6,8 @@
 	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
 	import jdgSaveStatus from '$lib/schemas/jdg-save-status.js';
 
-	import {
-		repoName,
-		showImageEditButtons,
-		showImageMetaModal
-	} from '$lib/stores/jdg-ui-store.js';
-	import {
-		draftImageMeta,
-		saveStatus
-	} from '$lib/stores/jdg-temp-store.js';
+	import { repoName, showImageEditButtons, showImageMetaModal } from '$lib/stores/jdg-ui-store.js';
+	import { draftImageMeta, saveStatus } from '$lib/stores/jdg-temp-store.js';
 
 	// Get the image meta registry from context (read-only)
 	const imageMetaRegistry = getContext(JDG_CONTEXTS.IMAGE_META_REGISTRY);

@@ -21,8 +21,8 @@
 	// Callback when user selects a new image (passes the new key)
 	/** @type {((newKey: string) => void) | undefined} */
 	export let onImageSelect = undefined;
-	// Override the registry repo name 
-    // (for context-driven use like Timeline)
+	// Override the registry repo name
+	// (for context-driven use like Timeline)
 	export let registryRepoName = undefined;
 
 	// Internal state for whether the selector is open
@@ -109,7 +109,7 @@
 	{#if allowEditing && isSelectorOpen}
 		<div class="avatar-selector">
 			<JDGImageSelector
-                {registryRepoName}
+				{registryRepoName}
 				selectedImages={selectorSelection}
 				isEnabled={true}
 				imageHeight="80px"
