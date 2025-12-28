@@ -91,9 +91,32 @@
 	$: effectiveRepoName = isNewImage ? selectedRegistryForNewImage : $repoName;
 	$: registryLabel = getImageMetaRegistryLabel(effectiveRepoName);
 
-	// Extract asset path from src URL for both new and existing images
-	// For brand new images without a Cloudinary URL yet, use the default path
-	$: assetPath = extractCloudinaryAssetpath($draftImageMeta?.src) || newImagePath;
+	// For new images: track intended path locally (don't set src until upload)
+	// For existing images: extract path from src
+	let newImageIntendedPath = newImagePath;
+	$: assetPath = isNewImage
+		? newImageIntendedPath
+		: extractCloudinaryAssetpath($draftImageMeta?.src);
+
+	// For new images: check if path prefix matches the selected registry
+	$: pathPrefix = assetPath?.split('/')[0] || '';
+	$: isPathPrefixMismatch =
+		isNewImage && selectedRegistryForNewImage && pathPrefix !== selectedRegistryForNewImage;
+
+	// When registry selection changes for new images, update the intended path prefix to match
+	let previousRegistry = null;
+	$: if (
+		isNewImage &&
+		selectedRegistryForNewImage &&
+		selectedRegistryForNewImage !== previousRegistry
+	) {
+		// Update the path prefix to match the new registry
+		const pathParts = newImageIntendedPath.split('/');
+		// Replace the first folder with the new registry name
+		pathParts[0] = selectedRegistryForNewImage;
+		newImageIntendedPath = pathParts.join('/');
+		previousRegistry = selectedRegistryForNewImage;
+	}
 
 	// Ensure a key is a valid JS identifier by prefixing with _ if it starts with a digit
 	const ensureValidKey = (key) => (/^\d/.test(key) ? '_' + key : key);
@@ -146,23 +169,19 @@
 		}
 	}
 
-	// When the asset path changes, update the cloudinary URL
+	// When the asset path changes, update accordingly
 	const onAssetPathChange = (e) => {
 		const newPath = e.target.value;
-		draftImageMeta.update((meta) => {
-			// For new images, construct a Cloudinary URL from scratch
-			if (isNewImage) {
-				return {
-					...meta,
-					src: `https://res.cloudinary.com/jdg-main/image/upload/${newPath}`
-				};
-			}
+		if (isNewImage) {
+			// For new images, update the local intended path (don't touch src)
+			newImageIntendedPath = newPath;
+		} else {
 			// For existing images, replace the path in the existing URL
-			return {
+			draftImageMeta.update((meta) => ({
 				...meta,
 				src: replaceCloudinaryAssetPathInUrl(meta.src, newPath)
-			};
-		});
+			}));
+		}
 	};
 
 	const onClickFileUpload = async () => {
@@ -198,6 +217,17 @@
 		if (!fullAssetPath) {
 			alert('Missing asset path for upload. Please set an asset path.');
 			return;
+		}
+
+		// For new images, validate that path prefix matches the selected registry
+		if (isNewImage && selectedRegistryForNewImage) {
+			const uploadPathPrefix = fullAssetPath.split('/')[0];
+			if (uploadPathPrefix !== selectedRegistryForNewImage) {
+				alert(
+					`Path must start with "${selectedRegistryForNewImage}/" to match the selected registry.\n\nCurrent path: ${fullAssetPath}`
+				);
+				return;
+			}
 		}
 
 		// Parse the full asset path into folder + filename
@@ -814,7 +844,13 @@
 
 			<!-- Image preview with absolutely-positioned buttons -->
 			<div class="image-preview-wrapper">
-				<JDGImageTile imageMeta={$draftImageMeta} maxHeight="20svh" cropToFillContainer={false} />
+				<JDGImageTile
+					imageMeta={isNewImage
+						? imageMetaRegistry?.jdg_image_placeholder || $draftImageMeta
+						: $draftImageMeta}
+					maxHeight="20svh"
+					cropToFillContainer={false}
+				/>
 				<!-- Upload and Delete buttons -->
 				<div class="image-meta-toolbar-overlay">
 					<JDGButton
@@ -912,6 +948,12 @@
 					<JDGInputContainer label="Cloudinary Path">
 						<JDGTextInput inputValue={assetPath} onInputFunction={onAssetPathChange} />
 					</JDGInputContainer>
+					{#if isPathPrefixMismatch}
+						<JDGNotificationBanner
+							notificationType={jdgNotificationTypes.WARNING}
+							message={`Path must start with "${selectedRegistryForNewImage}/" to match registry`}
+						/>
+					{/if}
 					<!-- Check URL usage in other repos button -->
 					{#if !isNewImage}
 						<div class="check-usage-button-container">
