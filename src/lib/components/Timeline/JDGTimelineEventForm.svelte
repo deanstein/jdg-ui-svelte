@@ -60,7 +60,7 @@
 	export let showLocalStore = false;
 
 	// Get the registry repo name from the draft timeline host
-	$: registryRepoName = $draftTimelineHost?.imageMetaRegistryRepoName;
+	$: registryRepoName = $draftTimelineHost?.imageMetaRegistryRepo;
 	$: registryLabel = getImageMetaRegistryLabel(registryRepoName);
 
 	const noImageMessage = 'No images in this event';

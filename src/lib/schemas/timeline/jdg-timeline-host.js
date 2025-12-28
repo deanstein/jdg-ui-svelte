@@ -7,9 +7,10 @@ import { jdgSchemaVersion } from '../jdg-schema-versions.js';
 const jdgTimelineHost = {
 	id: '',
 	name: '',
+	// The repo containing the image meta registry for this timeline host
+	imageMetaRegistryRepo: '',
+	// Image meta registry key for the avatar
 	avatarImage: '',
-	// The repo containing the image registry for this timeline
-	imageMetaRegistryRepoName: '',
 	// Birth date, construction date, etc.
 	inceptionDate: '',
 	// Death date, demolition date, etc.

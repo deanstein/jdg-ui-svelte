@@ -219,7 +219,7 @@
 			draftTimelineHostInceptionDateStore.set($localTimelineHostStore.inceptionDate);
 			draftTimelineHostCessationDateStore.set($localTimelineHostStore.cessationDate);
 			draftTimelineHostImageMetaRegistryRepoNameStore.set(
-				$localTimelineHostStore.imageMetaRegistryRepoName
+				$localTimelineHostStore.imageMetaRegistryRepo
 			);
 		}
 	}
@@ -538,7 +538,7 @@
 									currentValue.inceptionDate = $draftTimelineHostInceptionDateStore;
 									currentValue.cessationDate = $draftTimelineHostCessationDateStore;
 									currentValue.avatarImage = $draftTimelineHost?.avatarImage || '';
-									currentValue.imageMetaRegistryRepoName =
+									currentValue.imageMetaRegistryRepo =
 										$draftTimelineHostImageMetaRegistryRepoNameStore || '';
 									return currentValue;
 								});
