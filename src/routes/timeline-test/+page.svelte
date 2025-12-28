@@ -10,6 +10,7 @@
 		buildingDataCollectionKey,
 		familyTreeDataCollectionKey,
 		fetchJsonFileList,
+		imageMetaRegistryOptions,
 		jdgBuildingDataRepoName,
 		jdgRepoOwner,
 		readJsonFileFromRepo,
@@ -187,6 +188,7 @@
 	let draftTimelineHostNameStore = writable();
 	let draftTimelineHostInceptionDateStore = writable();
 	let draftTimelineHostCessationDateStore = writable();
+	let draftTimelineHostImageMetaRegistryRepoNameStore = writable();
 
 	// Show timeline as preview only?
 	let previewOnly = false;
@@ -216,6 +218,9 @@
 			draftTimelineHostNameStore.set($localTimelineHostStore.name);
 			draftTimelineHostInceptionDateStore.set($localTimelineHostStore.inceptionDate);
 			draftTimelineHostCessationDateStore.set($localTimelineHostStore.cessationDate);
+			draftTimelineHostImageMetaRegistryRepoNameStore.set(
+				$localTimelineHostStore.imageMetaRegistryRepoName
+			);
 		}
 	}
 
@@ -405,6 +410,13 @@
 							isEnabled={$draftTimelineHost !== undefined}
 						/>
 					</JDGInputContainer>
+					<JDGInputContainer label="Image Meta Registry">
+						<JDGSelect
+							optionsGroup={imageMetaRegistryOptions}
+							bind:inputValue={$draftTimelineHostImageMetaRegistryRepoNameStore}
+							isEnabled={$draftTimelineHost !== undefined}
+						/>
+					</JDGInputContainer>
 					<JDGInputContainer label="Avatar Image">
 						<JDGImageAvatar
 							imageMeta={avatarImageMeta}
@@ -526,6 +538,8 @@
 									currentValue.inceptionDate = $draftTimelineHostInceptionDateStore;
 									currentValue.cessationDate = $draftTimelineHostCessationDateStore;
 									currentValue.avatarImage = $draftTimelineHost?.avatarImage || '';
+									currentValue.imageMetaRegistryRepoName =
+										$draftTimelineHostImageMetaRegistryRepoNameStore || '';
 									return currentValue;
 								});
 								draftTimelineHost.set(undefined);

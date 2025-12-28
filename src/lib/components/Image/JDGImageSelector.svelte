@@ -5,7 +5,12 @@
 	import { getImageMetaRegistryLabel } from '$lib/jdg-persistence-management.js';
 	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
 
-	import { JDGButton, JDGCheckbox, JDGImageRegistryGallery, JDGNotificationBanner } from '$lib/index.js';
+	import {
+		JDGButton,
+		JDGCheckbox,
+		JDGImageRegistryGallery,
+		JDGNotificationBanner
+	} from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
 
 	// The selected images array - bind to this from parent
@@ -24,9 +29,15 @@
 	// Optional: override the registry repo name (for context-driven use like Timeline)
 	// If not provided, falls back to the current website's repoName
 	export let registryRepoName = undefined;
+	// If true, require a registry to be defined (blocks selection when undefined)
+	// Use this for Timeline to enforce that images come from the host's assigned registry
+	export let requireRegistry = false;
 
 	// The effective registry to use: prop overrides repoName
 	$: effectiveRegistry = registryRepoName || $repoName;
+
+	// Check if registry is missing when required
+	$: isRegistryMissing = requireRegistry && !registryRepoName;
 
 	// Get the display label for the effective registry
 	$: registryLabel = getImageMetaRegistryLabel(effectiveRegistry);
@@ -73,43 +84,52 @@
 </script>
 
 <div class="jdg-image-selector">
-	<!-- Registry indicator -->
+	<!-- Error banner when registry is required but missing -->
 	<JDGNotificationBanner
-		showBanner={!!effectiveRegistry}
-		notificationType={jdgNotificationTypes.information}
-		message={`Browsing: ${registryLabel}`}
+		showBanner={isRegistryMissing}
+		notificationType={jdgNotificationTypes.error}
+		message="No Image Meta Registry assigned to this Timeline Host. Set the registry in the host's settings to enable image selection."
 	/>
 
-	<div class={headerCss}>
-		<div style="display: flex; align-items: center; gap: 12px;">
-			<JDGCheckbox label="Show captions" bind:isChecked={showCaptions} labelFontSize="14px" />
-			{#if !singleSelect}
-				<div class={infoCss}>
-					{selectedImages.length} image{selectedImages.length !== 1 ? 's' : ''} selected
-				</div>
+	{#if !isRegistryMissing}
+		<!-- Registry indicator -->
+		<JDGNotificationBanner
+			showBanner={!!effectiveRegistry}
+			notificationType={jdgNotificationTypes.information}
+			message={`Browsing: ${registryLabel}`}
+		/>
+
+		<div class={headerCss}>
+			<div style="display: flex; align-items: center; gap: 12px;">
+				<JDGCheckbox label="Show captions" bind:isChecked={showCaptions} labelFontSize="14px" />
+				{#if !singleSelect}
+					<div class={infoCss}>
+						{selectedImages.length} image{selectedImages.length !== 1 ? 's' : ''} selected
+					</div>
+				{/if}
+			</div>
+			{#if selectedImages.length > 0 && isEnabled}
+				<JDGButton
+					label={singleSelect ? 'Clear' : 'Clear Selection'}
+					onClickFunction={clearAll}
+					fontSize="12px"
+					paddingLeftRight="12px"
+					paddingTopBottom="4px"
+					backgroundColor={jdgColors.backgroundSubtle}
+				/>
 			{/if}
 		</div>
-		{#if selectedImages.length > 0 && isEnabled}
-			<JDGButton
-				label={singleSelect ? 'Clear' : 'Clear Selection'}
-				onClickFunction={clearAll}
-				fontSize="12px"
-				paddingLeftRight="12px"
-				paddingTopBottom="4px"
-				backgroundColor={jdgColors.backgroundSubtle}
-			/>
-		{/if}
-	</div>
 
-	<JDGImageRegistryGallery
-		{imagesPerPage}
-		{showCaptions}
-		{imageHeight}
-		{singleSelect}
-		selectionEnabled={isEnabled}
-		bind:selectedImages
-		onSelectionChange={handleGallerySelection}
-	/>
+		<JDGImageRegistryGallery
+			{imagesPerPage}
+			{showCaptions}
+			{imageHeight}
+			{singleSelect}
+			selectionEnabled={isEnabled}
+			bind:selectedImages
+			onSelectionChange={handleGallerySelection}
+		/>
+	{/if}
 </div>
 
 <style>

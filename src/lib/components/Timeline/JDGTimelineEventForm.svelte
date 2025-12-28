@@ -13,7 +13,11 @@
 	} from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
 
-	import { ageSuffix, timelineEventModalInceptionDate, showTimelineEventModal } from '$lib/stores/jdg-ui-store.js';
+	import {
+		ageSuffix,
+		timelineEventModalInceptionDate,
+		showTimelineEventModal
+	} from '$lib/stores/jdg-ui-store.js';
 	import { draftTimelineEvent, draftTimelineHost } from '$lib/stores/jdg-temp-store.js';
 
 	import { getImageMetaRegistryLabel } from '$lib/jdg-persistence-management.js';
@@ -41,7 +45,7 @@
 		JDGNotificationBanner,
 		JDGSelect,
 		JDGTextArea,
-		JDGTextInput,
+		JDGTextInput
 	} from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
 
@@ -295,6 +299,7 @@
 									bind:selectedImages={$localAdditionalStore[key]}
 									isEnabled={isEditing}
 									{registryRepoName}
+									requireRegistry={true}
 								/>
 							</div>
 						{/if}
@@ -336,6 +341,7 @@
 									bind:selectedImages={$localEventStore[key]}
 									isEnabled={isEditing}
 									{registryRepoName}
+									requireRegistry={true}
 								/>
 							</div>
 						{/if}
