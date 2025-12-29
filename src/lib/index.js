@@ -97,6 +97,9 @@ export { JDGFeatureCard };
 import JDGFlyout from './components/Input/JDGFlyout.svelte';
 export { JDGFlyout };
 
+import JDGForm from './components/Input/JDGForm.svelte';
+export { JDGForm };
+
 import JDGFooter from './components/JDGFooter.svelte';
 export { JDGFooter };
 
