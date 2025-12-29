@@ -142,6 +142,8 @@
 		position: relative;
 		display: inline-flex;
 		align-items: center;
+		align-self: flex-start; /* Prevent stretching in flex parents */
+		width: fit-content; /* Ensure container sizes to content */
 	}
 
 	.jdg-flyout-button-wrapper {
