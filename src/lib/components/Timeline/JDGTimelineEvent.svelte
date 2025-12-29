@@ -41,6 +41,8 @@
 
 	export let backgroundColor = jdgColors.activeColorSubtle;
 	export let rowIndex;
+	// eventIndex is used for alternating left/right sides on desktop
+	export let eventIndex = 0;
 
 	// canClick may need to be overridden
 	let canClickCalculated;
@@ -49,6 +51,11 @@
 		upgradedEvent;
 		canClickCalculated = canClickOnTimelineEvent();
 	}
+
+	// Determine if this event should appear on the left side of the spine (desktop only)
+	// Odd-indexed events appear on the left, even on the right
+	$: isLeftSide = eventIndex % 2 === 1;
+	$: isDesktop = !$isMobileBreakpoint && !$isTabletBreakpoint;
 
 	let upgradedEvent;
 	let eventDateCorrected;
@@ -88,7 +95,7 @@
 		}
 	};
 
-	const eventRowCss = css`
+	const eventRowBaseCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			padding-left: ${jdgSizes.nTimelineEventGapSize / 4 + jdgSizes.timelineUnit};
 			gap: ${jdgSizes.nTimelineEventGapSize / 4 + jdgSizes.timelineUnit};
@@ -101,9 +108,58 @@
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 			padding-left: ${jdgSizes.nTimelineEventGapSize / 2 + jdgSizes.timelineUnit};
+			padding-right: ${jdgSizes.nTimelineEventGapSize / 2 + jdgSizes.timelineUnit};
 		}
 	`;
 
+	// Dynamic CSS for left/right side positioning on desktop
+	let eventRowCss;
+	$: {
+		eventRowCss = css`
+			${eventRowBaseCss}
+			@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+				/* Desktop: 50% width, positioned on left or right side */
+				width: 50%;
+				padding: 0;
+				gap: ${jdgSizes.nTimelineEventGapSize / 4 + jdgSizes.timelineUnit};
+				
+				${isLeftSide
+					? `
+					/* LEFT SIDE: event in left half, node at right edge (touches spine) */
+					margin-left: 0;
+					margin-right: auto;
+					flex-direction: row;
+					padding-left: ${jdgSizes.nTimelineEventGapSize / 2 + jdgSizes.timelineUnit};
+					
+					/* Order: content (left) → date → node (right, touches spine) */
+					.timeline-event-content-outer-container { 
+						order: 0;
+						text-align: right;
+					}
+					.timeline-event-date-year-container { order: 1; }
+					.timeline-event-node { order: 2; }
+					
+					.timeline-event-title-bar {
+						flex-direction: row-reverse;
+					}
+				`
+					: `
+					/* RIGHT SIDE: event in right half, node at left edge (touches spine) */
+					margin-left: auto;
+					margin-right: 0;
+					flex-direction: row;
+					padding-right: ${jdgSizes.nTimelineEventGapSize / 2 + jdgSizes.timelineUnit};
+					
+					/* Order: node (left, touches spine) → date → content (right) */
+					.timeline-event-node { order: 0; }
+					.timeline-event-date-year-container { order: 1; }
+					.timeline-event-content-outer-container { order: 2; }
+				`}
+			}
+		`;
+	}
+
+	// Date/year container CSS
 	const eventDateYearCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			> :nth-child(1) {
@@ -118,8 +174,9 @@
 			}
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			/* On desktop, spacing is handled by parent's gap */
 			> :nth-child(1) {
-				margin-right: ${jdgSizes.timelineEventGapSize};
+				margin-right: 0;
 			}
 		}
 	`;
@@ -178,19 +235,33 @@
 		}
 	`;
 
-	const eventNodeCss = css`
-		height: ${jdgSizes.timelineEventNodeSize};
-		background-color: ${jdgColors.textLight};
-		/* Center node on spine: offset by half the difference between node and spine width */
-		margin-left: ${-((jdgSizes.nTimelineEventNodeSize - jdgSizes.nTimelineSpineWidth) / 2) +
-		jdgSizes.timelineUnit};
-	`;
+	// Node CSS - slight offset to center on the spine
+	let eventNodeCss;
+	$: {
+		eventNodeCss = css`
+			height: ${jdgSizes.timelineEventNodeSize};
+			background-color: ${jdgColors.textLight};
+			/* Center node on spine: offset by half the difference between node and spine width */
+			margin-left: ${-((jdgSizes.nTimelineEventNodeSize - jdgSizes.nTimelineSpineWidth) / 2) +
+			jdgSizes.timelineUnit};
+			
+			@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+				margin-left: 0;
+				margin-right: 0;
+				${isLeftSide
+					? `transform: translateX(50%);`
+					: `transform: translateX(15%);`
+				}
+			}
+		`;
+	}
 
 	const eventLineCss = css`
 		height: ${jdgSizes.nTimelineEventNodeSize / 3 + jdgSizes.timelineUnit};
 		background-color: ${jdgColors.textLight};
 	`;
 
+	// Title bar CSS - direction handled by parent eventRowCss on desktop
 	const eventTitleBarCss = css`
 		background-color: rgb(205, 205, 205);
 		border-radius: ${eventBorderRadius} ${eventBorderRadius} 0px 0px;
@@ -444,7 +515,7 @@
 			{#if upgradedEvent?.images?.length > 0}
 				{@const resolvedImages = resolveImageMetaKeys(upgradedEvent.images, imageMetaRegistry)}
 				{#if resolvedImages?.length > 0}
-					<div class="timeline-event-image-preview">
+					<div class="timeline-event-image-preview" class:left-side={isDesktop && isLeftSide}>
 						<!-- show a few of the timeline event images, if there are any -->
 						<JDGImageThumbnailGroup imageMetaSet={resolvedImages} maxImageHeight={'15svh'} />
 					</div>
@@ -543,9 +614,22 @@
 		/* Constrain width to prevent iOS flexbox overflow issues */
 		max-width: 100%;
 		overflow: hidden;
+		display: flex;
+	}
+
+	/* Left side alignment for desktop alternating layout */
+	.timeline-event-image-preview.left-side {
+		justify-content: flex-end;
 	}
 
 	.timeline-event-reference-info {
 		display: flex;
+	}
+
+	/* Desktop alternating layout adjustments */
+	@media (min-width: 1024px) {
+		.timeline-event-line {
+			display: none;
+		}
 	}
 </style>

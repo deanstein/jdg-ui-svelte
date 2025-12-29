@@ -271,10 +271,10 @@
 			jdgSizes.timelineUnit};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			margin-left: ${jdgSizes.nTimelineEventGapSize / 2 +
-			jdgSizes.ntimelineEventYearWidthLg +
-			jdgSizes.nTimelineSpineWidth * 2 +
-			jdgSizes.timelineUnit};
+			/* Center the spine on desktop */
+			left: 50%;
+			transform: translateX(-50%);
+			margin-left: 0;
 		}
 	`;
 	$: {
@@ -295,6 +295,11 @@
 		// Ensure custom css is kept updated
 		timelineEventGridCss = css`
 			row-gap: ${forceRelativeSpacing ? rowHeightEmptyPx + 'px' : '0'};
+			@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+				/* On desktop, keep grid but allow events to position themselves */
+				display: flex;
+				flex-direction: column;
+			}
 		`;
 	}
 
@@ -445,48 +450,51 @@
 			<div class="timeline-scrolling-canvas" bind:this={scrollingCanvasDivRef}>
 				<!-- The grid containing all timeline events -->
 				<div class="timeline-event-grid {timelineEventGridCss}">
-					<!-- If there are no events, make an empty state event at the top -->
-					{#if emptyStateEvent}
+				<!-- If there are no events, make an empty state event at the top -->
+				{#if emptyStateEvent}
+					<JDGTimelineEvent
+						{timelineHost}
+						timelineEvent={emptyStateEvent}
+						onClickTimelineEvent={isInteractive && allowEditing
+							? onClickInceptionEvent
+							: () => {}}
+						isInteractive={isInteractive && allowEditing && $isAdminMode}
+						rowIndex={0}
+						eventIndex={0}
+						backgroundColor={timelineEventColors[0]}
+					/>
+				{/if}
+				<!-- All timeline events saved to the host -->
+				{#each timelineRowItems as timelineRowItem, i}
+					<!-- Use a key to ensure the UI reacts when these values change -->
+					{#key `${timelineHost.id}-${timelineRowItem.event.eventId}`}
 						<JDGTimelineEvent
 							{timelineHost}
-							timelineEvent={emptyStateEvent}
-							onClickTimelineEvent={isInteractive && allowEditing
-								? onClickInceptionEvent
-								: () => {}}
-							isInteractive={isInteractive && allowEditing && $isAdminMode}
-							rowIndex={0}
-							backgroundColor={timelineEventColors[0]}
+							timelineEvent={timelineRowItem.event}
+							onClickTimelineEvent={() => {
+								draftTimelineEvent.set(timelineRowItem.event);
+								showTimelineEventModal.set(true);
+								isTimelineEventModalEditable.set(allowEditing);
+								timelineEventModalInceptionDate.set(timelineHost.inceptionDate);
+							}}
+							rowIndex={timelineRowItem.index}
+							eventIndex={emptyStateEvent ? i + 1 : i}
+							backgroundColor={timelineEventColors[i]}
+							eventReference={timelineRowItem.eventReference}
+							isInteractive={isInteractive || $isAdminMode}
 						/>
-					{/if}
-					<!-- All timeline events saved to the host -->
-					{#each timelineRowItems as timelineRowItem, i}
-						<!-- Use a key to ensure the UI reacts when these values change -->
-						{#key `${timelineHost.id}-${timelineRowItem.event.eventId}`}
-							<JDGTimelineEvent
-								{timelineHost}
-								timelineEvent={timelineRowItem.event}
-								onClickTimelineEvent={() => {
-									draftTimelineEvent.set(timelineRowItem.event);
-									showTimelineEventModal.set(true);
-									isTimelineEventModalEditable.set(allowEditing);
-									timelineEventModalInceptionDate.set(timelineHost.inceptionDate);
-								}}
-								rowIndex={timelineRowItem.index}
-								backgroundColor={timelineEventColors[i]}
-								eventReference={timelineRowItem.eventReference}
-								isInteractive={isInteractive || $isAdminMode}
-							/>
-						{/key}
-					{/each}
-					<!-- Show the today event if there's no cessation date provided -->
-					{#if timelineHost.cessationDate === '' || (!timelineHost?.cessationDate && todayEvent)}
-						<JDGTimelineEvent
-							{timelineHost}
-							timelineEvent={todayEvent}
-							rowIndex={jdgQuantities.initialTimelineRowCount + 1}
-							backgroundColor={timelineEventColors[timelineEventColors.length - 1]}
-						/>
-					{/if}
+					{/key}
+				{/each}
+				<!-- Show the today event if there's no cessation date provided -->
+				{#if timelineHost.cessationDate === '' || (!timelineHost?.cessationDate && todayEvent)}
+					<JDGTimelineEvent
+						{timelineHost}
+						timelineEvent={todayEvent}
+						rowIndex={jdgQuantities.initialTimelineRowCount + 1}
+						eventIndex={timelineRowItems.length + (emptyStateEvent ? 1 : 0)}
+						backgroundColor={timelineEventColors[timelineEventColors.length - 1]}
+					/>
+				{/if}
 				</div>
 			</div>
 		</div>
