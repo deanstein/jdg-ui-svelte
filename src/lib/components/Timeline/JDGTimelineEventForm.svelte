@@ -39,6 +39,7 @@
 		JDGCheckbox,
 		JDGComposeToolbar,
 		JDGDatePicker,
+		JDGForm,
 		JDGImageSelector,
 		JDGImageThumbnailGroup,
 		JDGInputContainer,
@@ -179,7 +180,7 @@
 	}
 </script>
 
-<div bind:this={parentRef} class="jdg-timeline-form">
+<JDGForm bind:containerRef={parentRef}>
 	<!-- Image Meta Registry indicator (locked to timeline's registry) -->
 	<JDGNotificationBanner
 		showBanner={!!registryRepoName}
@@ -394,7 +395,7 @@
 					}}
 		/>
 	{/if}
-</div>
+</JDGForm>
 {#if showLocalStore}
 	<div class="form-store-preview">
 		FORM STORE:
@@ -405,17 +406,6 @@
 {/if}
 
 <style>
-	.jdg-timeline-form {
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		gap: 20px;
-		min-width: 0;
-		width: 100%;
-		overflow-x: hidden;
-		box-sizing: border-box;
-	}
-
 	.event-header {
 		display: flex;
 		justify-content: center;
