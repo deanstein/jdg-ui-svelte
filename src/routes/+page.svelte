@@ -631,7 +631,7 @@
 	>
 		<JDGBodyCopy paddingTop="0">
 			<JDGForm>
-				<JDGInputContainer label="Options flyout" description="A real-world example of a flyout">
+				<JDGInputContainer label="Options flyout" description="Enable or disable all inputs here">
 					<JDGFlyout
 						faIcon="fa-gear"
 						flyoutTitle="Form Options"
