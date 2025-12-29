@@ -36,19 +36,10 @@
 		selectorSelection = imageKey ? [imageKey] : [];
 	}
 
-	// Debug: log when imageMeta changes
-	$: console.log('JDGImageAvatar imageMeta:', imageMeta?.src, 'imageKey:', imageKey);
-
 	// Handle selection change from selector
 	const handleSelectionChange = (newSelection) => {
 		const newKey = newSelection[0] || '';
-		console.log('JDGImageAvatar handleSelectionChange:', {
-			newKey,
-			currentImageKey: imageKey,
-			hasCallback: !!onImageSelect
-		});
 		if (newKey !== imageKey && onImageSelect) {
-			console.log('JDGImageAvatar calling onImageSelect with:', newKey);
 			onImageSelect(newKey);
 		}
 	};

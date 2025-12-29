@@ -234,10 +234,6 @@
 			getJdgImageMetaRegistry().jdg_avatar_placeholder
 		: getJdgImageMetaRegistry().jdg_avatar_placeholder;
 
-	// Debug logging
-	$: console.log('timeline-test currentAvatarKey:', currentAvatarKey);
-	$: console.log('timeline-test avatarImageMeta:', avatarImageMeta?.src);
-
 	/*** TIMELINE EVENT ***/
 	// All event types to show
 	const instantiatedEventSchemas = Object.entries(jdgTimelineEventTypes)
