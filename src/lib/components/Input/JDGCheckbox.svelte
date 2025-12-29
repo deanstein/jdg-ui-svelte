@@ -18,6 +18,7 @@
 
 	let checkboxLabelCss = css`
 		font-size: ${labelFontSize};
+		line-height: normal;
 		color: ${jdgColors.text};
 	`;
 
