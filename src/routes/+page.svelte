@@ -8,10 +8,14 @@
 		JDGAccentText,
 		JDGBodyCopy,
 		JDGButton,
+		JDGCheckbox,
 		JDGClipFade,
 		JDGContentBoxFloating,
 		JDGContentContainer,
+		JDGDatePicker,
 		JDGFeatureCard,
+		JDGFlyout,
+		JDGForm,
 		JDGFullWidthContainer,
 		JDGGridLayout,
 		JDGH3H4,
@@ -21,8 +25,12 @@
 		JDGImageFullWidth,
 		JDGImageHybridGridCarousel,
 		JDGImageTile,
+		JDGInputContainer,
 		JDGJumpTo,
 		JDGNotificationBanner,
+		JDGSelect,
+		JDGTextArea,
+		JDGTextInput,
 		JDGUpNext,
 		JDGVersionNpmPackage,
 		JDGVersionPackageJson
@@ -42,6 +50,17 @@
 	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
 
 	let isTestButtonEnabled = true;
+
+	// Example options for JDGSelect demonstration
+	const exampleSelectOptions = {
+		colors: {
+			red: { value: 'red', label: 'Red' },
+			green: { value: 'green', label: 'Green' },
+			blue: { value: 'blue', label: 'Blue' }
+		}
+	};
+	let selectedColor = 'red';
+	let areFormInputsEnabled = true;
 
 	const pmxTestCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
@@ -604,6 +623,92 @@
 				<li>Assembled manually using two components: <b>AccentBlock</b> and <b>AccentText</b></li>
 				<li>Does <b>not</b> adjust the background color automatically for most contrast</li>
 			</ul>
+		</JDGBodyCopy>
+	</JDGContentBoxFloating>
+	<JDGContentBoxFloating
+		title="FORMS + INPUTS"
+		subtitle="Forms, input containers, and inputs, oh my!"
+	>
+		<JDGBodyCopy paddingTop="0">
+			<JDGForm>
+				<JDGInputContainer label="Options flyout" description="A real-world example of a flyout">
+					<JDGFlyout
+						faIcon="fa-gear"
+						flyoutTitle="Form Options"
+						tooltip="Form options"
+						flyoutPosition="bottom-right"
+					>
+						<JDGCheckbox label="Enable all inputs" bind:isChecked={areFormInputsEnabled} />
+					</JDGFlyout>
+				</JDGInputContainer>
+				<JDGInputContainer label="Text input">
+					<JDGTextInput inputValue="This is a text input" isEnabled={areFormInputsEnabled} />
+				</JDGInputContainer>
+				<JDGInputContainer label="Text input with description" description="This is a description">
+					<JDGTextInput
+						inputValue="This is a text input with a description"
+						isEnabled={areFormInputsEnabled}
+					/>
+				</JDGInputContainer>
+				<JDGInputContainer label="Text area">
+					<JDGTextArea inputValue="This is a text area" isEnabled={areFormInputsEnabled} />
+				</JDGInputContainer>
+				<JDGInputContainer label="Text area with description" description="This is a description">
+					<JDGTextArea
+						inputValue="This is a text area with a description"
+						isEnabled={areFormInputsEnabled}
+					/>
+				</JDGInputContainer>
+				<JDGInputContainer label="Date input">
+					<JDGDatePicker isEnabled={areFormInputsEnabled} />
+				</JDGInputContainer>
+				<JDGInputContainer label="Date input with description" description="This is a description">
+					<JDGDatePicker isEnabled={areFormInputsEnabled} />
+				</JDGInputContainer>
+				<JDGInputContainer label="Checkbox input">
+					<JDGCheckbox label="Some checkable option" isEnabled={areFormInputsEnabled} />
+				</JDGInputContainer>
+				<JDGInputContainer label="Checkbox with description" description="This is a description">
+					<JDGCheckbox label="Some checkable option" isEnabled={areFormInputsEnabled} />
+				</JDGInputContainer>
+				<JDGInputContainer label="Select input">
+					<JDGSelect
+						optionsGroup={exampleSelectOptions}
+						bind:inputValue={selectedColor}
+						isEnabled={areFormInputsEnabled}
+					/>
+				</JDGInputContainer>
+				<JDGInputContainer
+					label="Select input with description"
+					description="This is a description"
+				>
+					<JDGSelect
+						optionsGroup={exampleSelectOptions}
+						bind:inputValue={selectedColor}
+						isEnabled={areFormInputsEnabled}
+					/>
+				</JDGInputContainer>
+				<JDGInputContainer label="Button input">
+					<JDGButton label="Click me" onClickFunction={() => {}} isEnabled={areFormInputsEnabled} />
+				</JDGInputContainer>
+				<JDGInputContainer
+					label="Button input with description"
+					description="This is a description"
+				>
+					<JDGButton label="Click me" onClickFunction={() => {}} isEnabled={areFormInputsEnabled} />
+				</JDGInputContainer>
+				<JDGInputContainer
+					label="Centered input"
+					description="Inputs can be centered within the container"
+					justification="center"
+				>
+					<JDGCheckbox
+						label="Checkbox input"
+						justifyContent="center"
+						isEnabled={areFormInputsEnabled}
+					/>
+				</JDGInputContainer>
+			</JDGForm>
 		</JDGBodyCopy>
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="BUTTONS">
