@@ -277,8 +277,8 @@
 	<JDGJumpTo />
 	<!-- HOST COLLECTIONS -->
 	<JDGContentBoxFloating
-		title={'TIMELINE HOST COLLECTIONS'}
-		subtitle={'Cloud collections from GitHub'}
+		title={'TIMELINE HOST COLLECTION'}
+		subtitle={'Collections of people and buildings'}
 	>
 		<JDGBodyCopy>
 			<JDGH3H4 h3String="Choose Timeline Host Collection" paddingBottom="20px" />
@@ -368,7 +368,7 @@
 	</JDGContentBoxFloating>
 
 	<!-- TIMELINE HOST -->
-	<JDGContentBoxFloating title={'TIMELINE HOST'} subtitle={'For people and buildings'}>
+	<JDGContentBoxFloating title={'TIMELINE HOST'} subtitle={'People and buildings'}>
 		<JDGBodyCopy>
 			<JDGInputContainer label="Choose timeline host from collection">
 				<JDGSelect
@@ -543,20 +543,21 @@
 				/>
 			</JDGModalActionsBar>
 		</JDGBodyCopy>
-		<JDGBodyCopy textAlign="center">
-			<JDGH3H4 h3String="Timeline" paddingBottom="15px" />
+		</JDGContentBoxFloating>
+		<JDGContentBoxFloating title={'TIMELINE'} subtitle={'Resulting timeline from the host above'}>
+		<JDGBodyCopy textAlign="center" paddingTop="0" paddingBottom="0">
+			<JDGInputContainer
+				label="Preview Mode"
+				description="On hover or touch, displays an overlay that forces the timeline to launch in a modal"
+				justification="center"
+			>
+				<JDGCheckbox
+					label="Enable Preview Mode"
+					bind:isChecked={previewOnly}
+					justifyContent="center"
+				/>
+			</JDGInputContainer>
 		</JDGBodyCopy>
-		<JDGInputContainer
-			label="Preview Mode"
-			description="On hover or touch, displays an overlay that forces the timeline to launch in a modal"
-			justification="center"
-		>
-			<JDGCheckbox
-				label="Enable Preview Mode"
-				bind:isChecked={previewOnly}
-				justifyContent="center"
-			/>
-		</JDGInputContainer>
 		<JDGTimeline
 			timelineHost={$draftTimelineHost ?? $localTimelineHostStore ?? newTimelineHost}
 			allowEditing={$draftTimelineHost !== undefined}
