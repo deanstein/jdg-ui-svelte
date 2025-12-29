@@ -35,7 +35,7 @@
 	<!-- Title and optional description for input component-->
 	<div class="label-and-description-container">
 		<div class="label-container {labelContainercss}">
-			<div class={labelCss}>
+			<div class="label {labelCss}">
 				{label}
 			</div>
 		</div>
@@ -61,16 +61,21 @@
 		min-width: 0; /* Allow container to shrink in flex layouts */
 		max-width: 100%; /* Prevent expanding beyond parent */
 		margin-bottom: 1svh;
-		overflow: hidden;
 	}
 
 	.label-and-description-container {
 		margin-bottom: 0.5svh;
 	}
 
+	.label {
+		font-size: 1.05rem;
+		line-height: normal;
+	}
+
 	.description {
 		font-size: 0.8rem;
 		margin-bottom: 0.5svh;
+		line-height: normal;
 	}
 
 	.label-container {
