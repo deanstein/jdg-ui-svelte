@@ -1,8 +1,10 @@
 <script>
-	import { onDestroy, onMount } from 'svelte';
+	import { onDestroy, onMount, getContext } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
+	import { get } from 'svelte/store';
 
+	import { JDG_CONTEXTS } from '$lib/jdg-contexts.js';
 	import jdgImageMeta from '$lib/schemas/jdg-image-meta.js';
 	import {
 		addCloudinaryUrlTransformation,
@@ -47,7 +49,16 @@
 
 	// show a local image while image is loading
 	import imagePlaceholder from '$lib/assets/raster/jdg-image-placeholder.png';
-	import { draftImageMeta } from '$lib/stores/jdg-temp-store.js';
+	import {
+		draftImageMeta,
+		draftTimelineImageMetaRegistry,
+		draftTimelineImageRegistryRepo
+	} from '$lib/stores/jdg-temp-store.js';
+
+	// Check if we're inside a Timeline context (for image editing)
+	// These will be undefined if not inside a Timeline
+	const timelineRegistryContext = getContext(JDG_CONTEXTS.TIMELINE_IMAGE_REGISTRY);
+	const timelineRegistryRepoContext = getContext(JDG_CONTEXTS.TIMELINE_IMAGE_REGISTRY_REPO);
 
 	// EXPORTS
 
@@ -711,6 +722,16 @@
 				<JDGButton
 					onClickFunction={() => {
 						draftImageMeta.set(imageMeta);
+						// If inside a Timeline context, set the draft stores so the modal
+						// (which is outside the context tree) can use the timeline's registry
+						if (timelineRegistryContext && timelineRegistryRepoContext) {
+							const registry = get(timelineRegistryContext);
+							const repoName = get(timelineRegistryRepoContext);
+							if (registry && repoName) {
+								draftTimelineImageMetaRegistry.set(registry);
+								draftTimelineImageRegistryRepo.set(repoName);
+							}
+						}
 						showImageMetaModal.set(true);
 					}}
 					faIcon="fa-solid fa-pencil"

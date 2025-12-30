@@ -9,7 +9,12 @@
 	import { jdgTimelineEventKeys } from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 	import getJdgImageMetaRegistry from '$lib/jdg-image-meta-registry.js';
 
-	import { draftImageMeta, draftTimelineEvent } from '$lib/stores/jdg-temp-store.js';
+	import {
+		draftImageMeta,
+		draftTimelineEvent,
+		draftTimelineImageMetaRegistry,
+		draftTimelineImageRegistryRepo
+	} from '$lib/stores/jdg-temp-store.js';
 	import {
 		showImageMetaModal,
 		showTimelineEventModal,
@@ -136,8 +141,13 @@
 	const timelineImageRegistryStore = writable(undefined);
 	setContext(JDG_CONTEXTS.TIMELINE_IMAGE_REGISTRY, timelineImageRegistryStore);
 
-	// Update the context store when registry loads
+	// Also set the registry repo name as context for JDGImage to use when opening ImageMetaModal
+	const timelineImageRegistryRepoStore = writable(undefined);
+	setContext(JDG_CONTEXTS.TIMELINE_IMAGE_REGISTRY_REPO, timelineImageRegistryRepoStore);
+
+	// Update the context stores when registry loads
 	$: timelineImageRegistryStore.set(timelineImageMetaRegistry);
+	$: timelineImageRegistryRepoStore.set(timelineHost?.imageMetaRegistryRepo);
 
 	// Resolve avatar image from timelineHost's avatarImage key using the timeline registry
 	$: avatarImageMeta =
@@ -148,8 +158,16 @@
 
 	const avatarHeight = '30px';
 	const onClickAvatar = () => {
-		if (allowEditing) {
+		if ($isAdminMode) {
+			console.log('🖼️ Timeline avatar click - setting stores:', {
+				hasTimelineRegistry: !!timelineImageMetaRegistry,
+				registryRepo: timelineHost?.imageMetaRegistryRepo,
+				avatarImageSrc: avatarImageMeta?.src
+			});
 			draftImageMeta.set(avatarImageMeta);
+			// Set the timeline's registry context for the ImageMetaModal
+			draftTimelineImageMetaRegistry.set(timelineImageMetaRegistry);
+			draftTimelineImageRegistryRepo.set(timelineHost?.imageMetaRegistryRepo);
 			showImageMetaModal.set(true);
 		} else {
 			imageViewerMeta.set(avatarImageMeta);

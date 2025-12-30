@@ -7,8 +7,10 @@ export const JDG_CONTEXTS = {
 	IMAGE_META_REGISTRY: 'jdg-image-meta-registry',
 
 	// Timeline-specific image registry - set by JDGTimeline for its host's registry
-	// Used by TimelineEvent and TimelineEventModal (which renders inside Timeline)
+	// Used by TimelineEvent, TimelineEventModal, and JDGImage (when inside Timeline)
 	TIMELINE_IMAGE_REGISTRY: 'jdg-timeline-image-registry',
+	// Timeline's registry repo name - needed for saves when editing images inside a timeline
+	TIMELINE_IMAGE_REGISTRY_REPO: 'jdg-timeline-image-registry-repo',
 
 	// Timeline row heights - used for spine alignment
 	TIMELINE_FIRST_ROW_HEIGHT: 'jdg-timeline-first-row-height',

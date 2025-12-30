@@ -7,10 +7,17 @@
 	import jdgSaveStatus from '$lib/schemas/jdg-save-status.js';
 
 	import { repoName, showImageEditButtons, showImageMetaModal } from '$lib/stores/jdg-ui-store.js';
-	import { draftImageMeta, saveStatus } from '$lib/stores/jdg-temp-store.js';
+	import {
+		draftImageMeta,
+		draftTimelineImageMetaRegistry,
+		draftTimelineImageRegistryRepo,
+		saveStatus
+	} from '$lib/stores/jdg-temp-store.js';
 
 	// Get the image meta registry from context (read-only)
-	const imageMetaRegistry = getContext(JDG_CONTEXTS.IMAGE_META_REGISTRY);
+	const contextImageMetaRegistry = getContext(JDG_CONTEXTS.IMAGE_META_REGISTRY);
+	// Use timeline registry if set, otherwise fall back to context registry
+	$: effectiveRegistry = $draftTimelineImageMetaRegistry ?? contextImageMetaRegistry;
 	import {
 		areObjectsEqual,
 		extractCloudinaryAssetpath,
@@ -91,8 +98,15 @@
 		selectedRegistryForNewImage = $repoName;
 	}
 
-	// The effective registry: for new images use selection, for existing use repoName
-	$: effectiveRepoName = isNewImage ? selectedRegistryForNewImage : $repoName;
+	// The effective registry repo:
+	// - For timeline images: use the timeline's registry repo
+	// - For new images: use the selected registry
+	// - For existing images: use the current website's repoName
+	$: effectiveRepoName = $draftTimelineImageRegistryRepo
+		? $draftTimelineImageRegistryRepo
+		: isNewImage
+			? selectedRegistryForNewImage
+			: $repoName;
 	$: registryLabel = getImageMetaRegistryLabel(effectiveRepoName);
 
 	// For new images: track intended path locally (don't set src until upload)
@@ -237,7 +251,7 @@
 		// (Registry key is auto-generated from filename)
 		if (isNewImage) {
 			// Check for top-level key
-			if (imageMetaRegistry?.[registryKey]) {
+			if (effectiveRegistry?.[registryKey]) {
 				const confirmOverwrite = confirm(
 					`A registry entry with key "${registryKey}" already exists. Do you want to overwrite it?`
 				);
@@ -721,6 +735,9 @@
 			// Close the modal
 			showImageMetaModal.set(false);
 			draftImageMeta.set(undefined);
+			// Clear timeline-specific registry context
+			draftTimelineImageMetaRegistry.set(undefined);
+			draftTimelineImageRegistryRepo.set(undefined);
 		} catch (err) {
 			console.error('❌ Delete error:', err.message);
 			saveStatus.set(jdgSaveStatus.saveFailed);
@@ -763,10 +780,15 @@
 		// Get the draft image meta from the store
 		const currentMeta = get(draftImageMeta);
 
+		// Get the effective registry at mount time
+		// Must use get() to read current store value, not rely on reactive variable timing
+		const timelineRegistry = get(draftTimelineImageMetaRegistry);
+		const registryToUse = timelineRegistry ?? contextImageMetaRegistry;
+
 		// For existing images, find the registry key by looking up the src URL in the registry
 		// Do this BEFORE upgrade, since we need to find the original entry
 		if (currentMeta?.src && currentMeta.src.includes('cloudinary')) {
-			const foundKey = findRegistryKeyBySrc(imageMetaRegistry, currentMeta.src);
+			const foundKey = findRegistryKeyBySrc(registryToUse, currentMeta.src);
 			if (foundKey) {
 				registryKey = foundKey;
 				originalRegistryKey = foundKey; // Store so it doesn't change if filename changes
@@ -806,13 +828,16 @@
 </script>
 
 <JDGModal
-	title={getIsObjectInObject(imageMetaRegistry, 'id', $draftImageMeta?.id)
+	title={getIsObjectInObject(effectiveRegistry, 'id', $draftImageMeta?.id)
 		? 'Edit Image Meta'
 		: 'New Image Meta'}
 	subtitle={null}
 	onClickCloseButton={() => {
 		showImageMetaModal.set(false);
 		draftImageMeta.set(undefined);
+		// Clear timeline-specific registry context
+		draftTimelineImageMetaRegistry.set(undefined);
+		draftTimelineImageRegistryRepo.set(undefined);
 	}}
 	closeOnOverlayClick={false}
 	maxWidth="90vw"
@@ -885,6 +910,9 @@
 					onClickCancel={() => {
 						showImageMetaModal.set(false);
 						draftImageMeta.set(undefined);
+						// Clear timeline-specific registry context
+						draftTimelineImageMetaRegistry.set(undefined);
+						draftTimelineImageRegistryRepo.set(undefined);
 						saveStatus.set(null);
 					}}
 					isEditActive={hasUnsavedChanges && effectiveRepoName}
@@ -899,7 +927,7 @@
 				{:else}
 					<JDGImageTile
 						imageMeta={isNewImage
-							? imageMetaRegistry?.jdg_image_placeholder || $draftImageMeta
+							? effectiveRegistry?.jdg_image_placeholder || $draftImageMeta
 							: $draftImageMeta}
 						maxHeight="20svh"
 						cropToFillContainer={false}
