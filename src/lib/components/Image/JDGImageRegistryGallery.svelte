@@ -4,7 +4,8 @@
 
 	import { JDG_CONTEXTS } from '$lib/jdg-contexts.js';
 
-	import { imagesLoading } from '$lib/stores/jdg-ui-store.js';
+	import { imagesLoading, repoName as currentRepoName } from '$lib/stores/jdg-ui-store.js';
+	import { fetchImageMetaRegistry } from '$lib/jdg-persistence-management.js';
 
 	import { showImageDetailModal } from '$lib/jdg-state-management.js';
 
@@ -14,9 +15,66 @@
 	// Get registry from context as fallback
 	const contextImageMetaRegistry = getContext(JDG_CONTEXTS.IMAGE_META_REGISTRY);
 
-	// Optional: pass a specific registry (e.g., for Timeline with different registry)
+	// Optional: pass a specific registry object (e.g., for Timeline with different registry)
 	// If not provided, falls back to context
 	export let imageMetaRegistry = undefined;
+
+	// Optional: pass a repo name to fetch a remote registry
+	// This takes precedence over imageMetaRegistry prop if provided and different from current repo
+	export let registryRepoName = undefined;
+
+	// Track the fetched registry from a remote repo
+	let fetchedRegistry = undefined;
+	let isFetchingRegistry = false;
+	let fetchError = null;
+	let lastFetchedRepoName = undefined;
+
+	// Function to fetch registry - called reactively
+	async function loadRemoteRegistry(repoName) {
+		if (repoName === lastFetchedRepoName && fetchedRegistry) {
+			// Already have this registry loaded
+			return;
+		}
+
+		lastFetchedRepoName = repoName;
+		isFetchingRegistry = true;
+		fetchError = null;
+		fetchedRegistry = undefined;
+
+		try {
+			const registry = await fetchImageMetaRegistry(repoName);
+			// Only update if this is still the repo we want
+			if (repoName === lastFetchedRepoName) {
+				fetchedRegistry = registry;
+				console.log(
+					'✅ Loaded registry:',
+					typeof registry,
+					'| Sample keys:',
+					Object.keys(registry || {}).slice(0, 5)
+				);
+			}
+		} catch (err) {
+			console.error('Failed to fetch registry from', repoName, err);
+			if (repoName === lastFetchedRepoName) {
+				fetchError = err.message;
+				fetchedRegistry = undefined;
+			}
+		} finally {
+			if (repoName === lastFetchedRepoName) {
+				isFetchingRegistry = false;
+			}
+		}
+	}
+
+	// Trigger fetch when registryRepoName changes and is different from current repo
+	$: if (registryRepoName && registryRepoName !== $currentRepoName) {
+		loadRemoteRegistry(registryRepoName);
+	} else if (!registryRepoName || registryRepoName === $currentRepoName) {
+		// Reset fetched registry when using local/context registry
+		fetchedRegistry = undefined;
+		fetchError = null;
+		lastFetchedRepoName = undefined;
+	}
 
 	// Number of images per page
 	export let imagesPerPage = 24;
@@ -117,9 +175,15 @@
 		return flat;
 	};
 
-	// Use prop if provided, otherwise fall back to context
-	$: registryToUse = imageMetaRegistry || contextImageMetaRegistry;
+	// Priority: fetchedRegistry (from remote repo) > imageMetaRegistry prop > context
+	$: registryToUse = fetchedRegistry || imageMetaRegistry || contextImageMetaRegistry;
 	$: allImages = flattenRegistry(registryToUse || {});
+	$: console.log(
+		'📷 Gallery using registry:',
+		fetchedRegistry ? 'fetched' : imageMetaRegistry ? 'prop' : 'context',
+		'| Images found:',
+		allImages.length
+	);
 
 	// Filter images based on search text
 	$: filteredImages = allImages.filter((img) => {
@@ -284,9 +348,22 @@
 
 	<div
 		class={galleryContainerCss}
-		style="border: 1px solid {isContentReady ? jdgColors.border : 'transparent'};"
+		style="border: 1px solid {isContentReady && !isFetchingRegistry
+			? jdgColors.border
+			: 'transparent'};"
 	>
-		{#if !isContentReady && visibleImages.length > 0}
+		{#if isFetchingRegistry}
+			<div class="loading-container">
+				<JDGLoadingSpinner spinnerHeightPx={60} />
+				<div style="margin-top: 12px; color: {jdgColors.textLight};">
+					Loading images from {registryRepoName}...
+				</div>
+			</div>
+		{:else if fetchError}
+			<div class={noResultsCss}>
+				Failed to load images: {fetchError}
+			</div>
+		{:else if !isContentReady && visibleImages.length > 0}
 			<div class="loading-container">
 				<JDGLoadingSpinner spinnerHeightPx={60} />
 			</div>

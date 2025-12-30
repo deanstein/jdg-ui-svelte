@@ -9,6 +9,7 @@
 	import {
 		buildingDataCollectionKey,
 		familyTreeDataCollectionKey,
+		fetchImageMetaRegistry,
 		fetchJsonFileList,
 		imageMetaRegistryOptions,
 		jdgBuildingDataRepoName,
@@ -34,7 +35,8 @@
 		showTimelineEventModal,
 		isMobileBreakpoint,
 		isTabletBreakpoint,
-		isTimelineEventModalEditable
+		isTimelineEventModalEditable,
+		repoName as currentRepoName
 	} from '$lib/stores/jdg-ui-store.js';
 
 	import {
@@ -228,9 +230,40 @@
 	$: currentAvatarKey =
 		$draftTimelineHost?.avatarImage ?? $localTimelineHostStore?.avatarImage ?? '';
 
-	// Resolve avatar image key to full imageMeta for display
+	// Track fetched registry for form's imageMetaRegistryRepo
+	let formHostRegistry = undefined;
+	let lastFetchedFormRegistryRepo = undefined;
+
+	// Fetch the host's registry when the selected registry changes
+	async function loadFormHostRegistry(registryRepoName) {
+		if (!registryRepoName || registryRepoName === $currentRepoName) {
+			formHostRegistry = undefined;
+			lastFetchedFormRegistryRepo = undefined;
+			return;
+		}
+		if (registryRepoName === lastFetchedFormRegistryRepo && formHostRegistry) {
+			return; // Already loaded
+		}
+		lastFetchedFormRegistryRepo = registryRepoName;
+		try {
+			formHostRegistry = await fetchImageMetaRegistry(registryRepoName);
+		} catch (err) {
+			console.error('Failed to fetch form host registry:', err);
+			formHostRegistry = undefined;
+		}
+	}
+
+	// Trigger registry fetch when the form's registry selection changes
+	$: if ($draftTimelineHostImageMetaRegistryRepoNameStore) {
+		loadFormHostRegistry($draftTimelineHostImageMetaRegistryRepoNameStore);
+	}
+
+	// Use fetched registry if available, otherwise fall back to local registry
+	$: effectiveFormRegistry = formHostRegistry || imageMetaRegistry;
+
+	// Resolve avatar image key to full imageMeta for display using effective registry
 	$: avatarImageMeta = currentAvatarKey
-		? getImageMetaByKey(imageMetaRegistry, currentAvatarKey) ||
+		? getImageMetaByKey(effectiveFormRegistry, currentAvatarKey) ||
 			getJdgImageMetaRegistry().jdg_avatar_placeholder
 		: getJdgImageMetaRegistry().jdg_avatar_placeholder;
 
@@ -417,6 +450,7 @@
 						<JDGImageAvatar
 							imageMeta={avatarImageMeta}
 							imageKey={currentAvatarKey}
+							registryRepoName={$draftTimelineHostImageMetaRegistryRepoNameStore}
 							size="100px"
 							allowEditing={$draftTimelineHost !== undefined}
 							onImageSelect={(newKey) => {

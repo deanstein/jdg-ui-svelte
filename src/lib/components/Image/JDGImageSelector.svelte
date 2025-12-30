@@ -121,6 +121,7 @@
 		</div>
 
 		<JDGImageRegistryGallery
+			{registryRepoName}
 			{imagesPerPage}
 			{showCaptions}
 			{imageHeight}

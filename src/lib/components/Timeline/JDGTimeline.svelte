@@ -6,13 +6,8 @@
 
 	import { JDG_CONTEXTS } from '$lib/jdg-contexts.js';
 
+	import { jdgTimelineEventKeys } from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 	import getJdgImageMetaRegistry from '$lib/jdg-image-meta-registry.js';
-	import {
-		getImageMetaByKey,
-		getMaxElementHeightPx,
-		getNumDaysBetweenDates,
-		lightenColor
-	} from '$lib/jdg-utils.js';
 
 	import { draftImageMeta, draftTimelineEvent } from '$lib/stores/jdg-temp-store.js';
 	import {
@@ -22,19 +17,24 @@
 		isTimelineEventModalEditable,
 		showImageViewerModal,
 		imageViewerMeta,
-		timelineEventModalInceptionDate
+		timelineEventModalInceptionDate,
+		repoName as currentRepoName
 	} from '$lib/stores/jdg-ui-store.js';
 
-	import { jdgTimelineEventKeys } from '$lib/schemas/timeline/jdg-timeline-event-types.js';
-
+	import {
+		generateGradient,
+		getImageMetaByKey,
+		getMaxElementHeightPx,
+		getNumDaysBetweenDates,
+		lightenColor
+	} from '$lib/jdg-utils.js';
+	import { fetchImageMetaRegistry } from '$lib/jdg-persistence-management.js';
 	import { instantiateTimelineEvent } from '$lib/jdg-timeline-management.js';
 	import {
 		generateTimelineRowItems,
 		getEarliestTimelineEvent,
 		updateTimelineRowItems
 	} from '$lib/jdg-ui-management.js';
-
-	import { generateGradient } from '$lib/jdg-utils.js';
 
 	import {
 		JDGButton,
@@ -94,10 +94,41 @@
 	// Get the image meta registry from context for resolving avatar
 	const contextImageMetaRegistry = getContext(JDG_CONTEXTS.IMAGE_META_REGISTRY);
 
-	// Resolve avatar image from timelineHost's avatarImage key
+	// Track fetched registry for timeline host's imageMetaRegistryRepo
+	let hostRegistry = undefined;
+	let lastFetchedHostRegistryRepo = undefined;
+
+	// Fetch the host's registry if different from current repo
+	async function loadHostRegistry(registryRepoName) {
+		if (!registryRepoName || registryRepoName === $currentRepoName) {
+			hostRegistry = undefined;
+			lastFetchedHostRegistryRepo = undefined;
+			return;
+		}
+		if (registryRepoName === lastFetchedHostRegistryRepo && hostRegistry) {
+			return; // Already loaded
+		}
+		lastFetchedHostRegistryRepo = registryRepoName;
+		try {
+			hostRegistry = await fetchImageMetaRegistry(registryRepoName);
+		} catch (err) {
+			console.error('Failed to fetch host registry:', err);
+			hostRegistry = undefined;
+		}
+	}
+
+	// Trigger registry fetch when timelineHost's registry changes
+	$: if (timelineHost?.imageMetaRegistryRepo) {
+		loadHostRegistry(timelineHost.imageMetaRegistryRepo);
+	}
+
+	// Use host registry if available, otherwise fall back to context
+	$: effectiveRegistry = hostRegistry || contextImageMetaRegistry;
+
+	// Resolve avatar image from timelineHost's avatarImage key using the effective registry
 	$: avatarImageMeta =
-		timelineHost?.avatarImage && contextImageMetaRegistry
-			? getImageMetaByKey(contextImageMetaRegistry, timelineHost.avatarImage) ||
+		timelineHost?.avatarImage && effectiveRegistry
+			? getImageMetaByKey(effectiveRegistry, timelineHost.avatarImage) ||
 				getJdgImageMetaRegistry().jdg_avatar_placeholder
 			: getJdgImageMetaRegistry().jdg_avatar_placeholder;
 

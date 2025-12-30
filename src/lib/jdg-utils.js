@@ -245,11 +245,94 @@ export const extractDefaultsFromSchema = (schemaObject = {}) => {
 /*
  * @param {string} source - The full JS file content as a string.
  * @param {string} variableName - The name of the object variable to extract.
+ * @returns {string|null} - The raw string content inside the braces (not parsed).
  */
 export let extractObjectLiteral = (jsFileString, variableName) => {
 	const pattern = new RegExp(`const\\s+${variableName}\\s*=\\s*{([\\s\\S]*?)};?\\s*$`, 'm');
 	const match = jsFileString.match(pattern);
 	return match ? match[1].trim() : null;
+};
+
+/*
+ * Extract an object literal from a JS file string, properly handling nested braces.
+ * @param {string} jsFileString - The full JS file content as a string.
+ * @param {string} variableName - The name of the object variable to extract.
+ * @returns {string|null} - The full object literal including outer braces, or null if not found.
+ */
+export let extractObjectLiteralBalanced = (jsFileString, variableName) => {
+	// Find where the variable declaration starts
+	const startPattern = new RegExp(`const\\s+${variableName}\\s*=\\s*{`);
+	const startMatch = jsFileString.match(startPattern);
+	if (!startMatch) {
+		return null;
+	}
+
+	const startIndex = startMatch.index + startMatch[0].length - 1; // Position of opening {
+	let braceCount = 0;
+	let inString = false;
+	let stringChar = null;
+	let escaped = false;
+
+	for (let i = startIndex; i < jsFileString.length; i++) {
+		const char = jsFileString[i];
+
+		if (escaped) {
+			escaped = false;
+			continue;
+		}
+
+		if (char === '\\') {
+			escaped = true;
+			continue;
+		}
+
+		// Handle string boundaries
+		if (!inString && (char === '"' || char === "'" || char === '`')) {
+			inString = true;
+			stringChar = char;
+		} else if (inString && char === stringChar) {
+			inString = false;
+			stringChar = null;
+		}
+
+		// Only count braces outside of strings
+		if (!inString) {
+			if (char === '{') {
+				braceCount++;
+			} else if (char === '}') {
+				braceCount--;
+				if (braceCount === 0) {
+					// Found the matching closing brace
+					return jsFileString.substring(startIndex, i + 1);
+				}
+			}
+		}
+	}
+
+	return null; // No matching closing brace found
+};
+
+/*
+ * Extract and parse an object literal from a JS file string.
+ * @param {string} jsFileString - The full JS file content as a string.
+ * @param {string} variableName - The name of the object variable to extract.
+ * @returns {object|null} - The parsed object, or null if extraction/parsing fails.
+ */
+export let extractAndParseObjectLiteral = (jsFileString, variableName) => {
+	const objectLiteralString = extractObjectLiteralBalanced(jsFileString, variableName);
+	if (!objectLiteralString) {
+		console.error('Could not extract object literal for', variableName);
+		return null;
+	}
+	try {
+		// Use Function constructor to safely parse the object literal
+		// This is safer than eval() as it doesn't have access to local scope
+		return new Function(`return ${objectLiteralString}`)();
+	} catch (err) {
+		console.error('Failed to parse object literal for', variableName, ':', err);
+		console.error('Extracted string (first 500 chars):', objectLiteralString.substring(0, 500));
+		return null;
+	}
 };
 
 // Replace an object literal in a file

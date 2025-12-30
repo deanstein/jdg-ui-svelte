@@ -1,4 +1,4 @@
-import { decrypt, extractObjectLiteral } from './jdg-utils.js';
+import { decrypt, extractAndParseObjectLiteral } from './jdg-utils.js';
 
 // JDG-ADMIN Cloudflare worker
 export const cfWorkerUrlAdmin = 'https://jdg-admin.jdeangoldstein.workers.dev';
@@ -43,9 +43,9 @@ export const encryptedPAT =
 // Possible locations of image metadata collection across websites
 // The fetch function will try each path in order until one succeeds
 export const imageMetaRegistryPaths = [
+	'src/lib/image-meta-registry.js',
 	'src/routes/image-meta-registry.js',
-	'src/image-meta-registry.js',
-	'src/lib/image-meta-registry.js'
+	'src/image-meta-registry.js'
 ];
 // Keep single path for backwards compatibility (uses first path)
 export const imageMetaRegistryPath = imageMetaRegistryPaths[0];
@@ -219,42 +219,89 @@ export async function writeJsonFileToRepo(repoOwner, repoName, filePath, jsonCon
 	return result.success ? result : null;
 }
 
+// Cache for fetched image meta registries (keyed by repo name)
+const imageMetaRegistryCache = new Map();
+// Track in-flight fetch promises to avoid duplicate concurrent requests
+const imageMetaRegistryPending = new Map();
+
 // Fetch the imageMetaRegistry object from a given repo
 // Tries each path in imageMetaRegistryPaths until one succeeds
+// Results are cached to avoid redundant fetches
 export const fetchImageMetaRegistry = async (repoName) => {
-	let lastError = null;
+	console.log(`🔍 Fetching imageMetaRegistry for ${repoName}`);
 
-	for (const filePath of imageMetaRegistryPaths) {
-		try {
-			const url = new URL(cfRouteFetchPublicFile, cfWorkerUrlJdgGithub);
-			url.searchParams.set('repoOwner', jdgRepoOwner);
-			url.searchParams.set('repoName', repoName);
-			url.searchParams.set('filePath', filePath);
-
-			const response = await fetch(url.toString());
-
-			if (!response.ok) {
-				// Try next path
-				lastError = new Error(`Failed to fetch from ${filePath}: ${response.status}`);
-				continue;
-			}
-
-			const jsFileString = await response.text();
-			// Extract the imageMetaRegistry object from the JS file string
-			const imageMetaRegistry = extractObjectLiteral(jsFileString, 'imageMetaRegistry');
-
-			if (imageMetaRegistry) {
-				console.log(`📁 Found imageMetaRegistry in ${repoName} at ${filePath}`);
-				return imageMetaRegistry;
-			}
-		} catch (err) {
-			lastError = err;
-			// Continue to try next path
-		}
+	// Return cached registry if available
+	if (imageMetaRegistryCache.has(repoName)) {
+		console.log(`📦 Using cached imageMetaRegistry for ${repoName}`);
+		return imageMetaRegistryCache.get(repoName);
 	}
 
-	// If we get here, none of the paths worked
-	throw lastError || new Error(`Could not find imageMetaRegistry in ${repoName}`);
+	// If there's already a fetch in progress for this repo, wait for it
+	if (imageMetaRegistryPending.has(repoName)) {
+		console.log(`⏳ Waiting for in-flight fetch of imageMetaRegistry for ${repoName}`);
+		return imageMetaRegistryPending.get(repoName);
+	}
+
+	// Create the fetch promise and store it
+	const fetchPromise = (async () => {
+		let lastError = null;
+
+		for (const filePath of imageMetaRegistryPaths) {
+			try {
+				const url = new URL(cfRouteFetchPublicFile, cfWorkerUrlJdgGithub);
+				url.searchParams.set('repoOwner', jdgRepoOwner);
+				url.searchParams.set('repoName', repoName);
+				url.searchParams.set('filePath', filePath);
+
+				const response = await fetch(url.toString());
+
+				if (!response.ok) {
+					// Try next path
+					lastError = new Error(`Failed to fetch from ${filePath}: ${response.status}`);
+					continue;
+				}
+
+				const jsFileString = await response.text();
+				// Extract and parse the imageMetaRegistry object from the JS file string
+				const imageMetaRegistry = extractAndParseObjectLiteral(jsFileString, 'imageMetaRegistry');
+
+				if (imageMetaRegistry) {
+					console.log(`✅ Found imageMetaRegistry in ${repoName} at ${filePath}`);
+					// Cache the result
+					imageMetaRegistryCache.set(repoName, imageMetaRegistry);
+					return imageMetaRegistry;
+				}
+			} catch (err) {
+				lastError = err;
+				// Continue to try next path
+			}
+		}
+
+		// If we get here, none of the paths worked
+		throw lastError || new Error(`Could not find imageMetaRegistry in ${repoName}`);
+	})();
+
+	// Store the pending promise
+	imageMetaRegistryPending.set(repoName, fetchPromise);
+
+	try {
+		const result = await fetchPromise;
+		return result;
+	} finally {
+		// Remove from pending once complete (success or failure)
+		imageMetaRegistryPending.delete(repoName);
+	}
+};
+
+// Clear the cache for a specific repo (useful after updates) or all repos
+export const clearImageMetaRegistryCache = (repoName = null) => {
+	if (repoName) {
+		imageMetaRegistryCache.delete(repoName);
+		console.log(`🗑️ Cleared imageMetaRegistry cache for ${repoName}`);
+	} else {
+		imageMetaRegistryCache.clear();
+		console.log(`🗑️ Cleared all imageMetaRegistry cache`);
+	}
 };
 
 // Fetch the raw image-meta-registry.js file content from a repo
