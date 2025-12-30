@@ -12,8 +12,10 @@ const jdgTimelineHost = {
 	// Image meta registry key for the avatar
 	avatarImage: '',
 	// Birth date, construction date, etc.
+	// Also provides bounds for contextual events
 	inceptionDate: '',
 	// Death date, demolition date, etc.
+	// Also provides bounds for contextual events
 	cessationDate: '',
 	timelineEvents: [],
 	timelineEventReferences: [],
