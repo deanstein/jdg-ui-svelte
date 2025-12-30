@@ -514,18 +514,10 @@ export const writeImageMetaEntryToRepo = async (repoName, registryKey, imageMeta
 
 		let fileContent = await response.text();
 
-		// Create a clean image meta object (only include non-default fields)
-		const cleanImageMeta = {};
-		if (imageMeta.id) cleanImageMeta.id = imageMeta.id;
-		if (imageMeta.src) cleanImageMeta.src = imageMeta.src;
-		if (imageMeta.title) cleanImageMeta.title = imageMeta.title;
-		if (imageMeta.alt) cleanImageMeta.alt = imageMeta.alt;
-		if (imageMeta.caption) cleanImageMeta.caption = imageMeta.caption;
-		if (imageMeta.attribution) cleanImageMeta.attribution = imageMeta.attribution;
-		if (imageMeta.showBackgroundBlur === false) cleanImageMeta.showBackgroundBlur = false;
-		if (imageMeta.toolbarJustification && imageMeta.toolbarJustification !== 'right') {
-			cleanImageMeta.toolbarJustification = imageMeta.toolbarJustification;
-		}
+		// Filter out undefined/null values, keep everything else from the schema
+		const cleanImageMeta = Object.fromEntries(
+			Object.entries(imageMeta).filter(([_, value]) => value !== undefined && value !== null)
+		);
 
 		// Handle both top-level and nested keys
 		const keyParts = registryKey.split('.');
@@ -543,6 +535,8 @@ export const writeImageMetaEntryToRepo = async (repoName, registryKey, imageMeta
 				const quote = hasApostrophe ? '`' : "'";
 				entryLines.push(`${propertyIndent}${key}: ${quote}${value}${quote}`);
 			} else if (typeof value === 'boolean') {
+				entryLines.push(`${propertyIndent}${key}: ${value}`);
+			} else if (typeof value === 'number') {
 				entryLines.push(`${propertyIndent}${key}: ${value}`);
 			}
 		}
