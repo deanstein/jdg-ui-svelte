@@ -17,7 +17,8 @@
 		isTimelineEventModalEditable,
 		showImageViewerModal,
 		imageViewerMeta,
-		timelineEventModalInceptionDate
+		timelineEventModalInceptionDate,
+		repoName as currentRepoName
 	} from '$lib/stores/jdg-ui-store.js';
 
 	import {
@@ -91,7 +92,10 @@
 	let emptyStateEvent;
 	let todayEvent;
 
-	// Timeline image registry - fetched from the host
+	// Get the app-level image registry from context (for when timeline uses same repo as current website)
+	const contextImageMetaRegistry = getContext(JDG_CONTEXTS.IMAGE_META_REGISTRY);
+
+	// Timeline image registry - either from context (same repo) or fetched (different repo)
 	let timelineImageMetaRegistry = undefined;
 	let lastFetchedRegistryRepoName = undefined;
 
@@ -101,6 +105,14 @@
 			lastFetchedRegistryRepoName = undefined;
 			return;
 		}
+
+		// If the timeline uses the same repo as the current website, use the already-loaded context registry
+		if (registryRepoName === $currentRepoName) {
+			timelineImageMetaRegistry = contextImageMetaRegistry;
+			lastFetchedRegistryRepoName = registryRepoName;
+			return;
+		}
+
 		if (registryRepoName === lastFetchedRegistryRepoName && timelineImageMetaRegistry) {
 			return; // Already loaded
 		}
