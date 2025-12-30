@@ -82,7 +82,7 @@
 	// export let onClickEventRefHost = () => {};
 	// export let onClickAssociatedHost = () => {};
 
-	const rowHeightEmptyPx = 1;
+	const rowHeightEmptyPx = 3;
 	const rowHeightFilledPx = 80;
 
 	const timelineBackgroundColor = 'rgba(225, 225, 225, 1)';
@@ -293,13 +293,20 @@
 	let timelineEventGridCss;
 	$: {
 		// Ensure custom css is kept updated
+		// When relative spacing is on: use row-gap for proportional spacing, align-content: start
+		// When relative spacing is off: no row-gap, align-content: space-between for even distribution
 		timelineEventGridCss = css`
 			row-gap: ${forceRelativeSpacing ? rowHeightEmptyPx + 'px' : '0'};
+			align-content: ${forceRelativeSpacing ? 'start' : 'space-between'};
 		`;
 	}
 
 	// Keep emptyState and today events updated
+	// Include forceRelativeSpacing as dependency to recalculate when toggled
 	$: {
+		// Reference forceRelativeSpacing to ensure reactivity
+		const useRelativeSpacing = forceRelativeSpacing;
+
 		// If there is no inception date, use the earliest date
 		const earliestEvent = getEarliestTimelineEvent(timelineHost.timelineEvents);
 		let earliestOrInceptionDate =
@@ -329,14 +336,22 @@
 		}
 
 		// Convert events to timeline row items
-		// and ensure no shared rows in the grid
+		// When relative spacing is on, keep proportional indices for date-based spacing
+		// When off, use sequential indices for even distribution
 		timelineRowItems = updateTimelineRowItems(
-			generateTimelineRowItems(timelineHost, contextEvents, earliestOrInceptionDate)
+			generateTimelineRowItems(timelineHost, contextEvents, earliestOrInceptionDate),
+			!useRelativeSpacing // use sequential indices when NOT using relative spacing
 		);
 	}
 
-	// Keep timeline row items updated
+	// Compute the todayEvent row index based on spacing mode
+	// Sequential mode: place after all events
+	// Relative mode: place at the end of the proportional grid (row 1001)
+	let todayEventRowIndex;
 	$: {
+		todayEventRowIndex = forceRelativeSpacing
+			? jdgQuantities.initialTimelineRowCount + 1
+			: timelineRowItems.length + (emptyStateEvent ? 1 : 0) + 1;
 	}
 
 	$: {
@@ -483,7 +498,7 @@
 						<JDGTimelineEvent
 							{timelineHost}
 							timelineEvent={todayEvent}
-							rowIndex={jdgQuantities.initialTimelineRowCount + 1}
+							rowIndex={todayEventRowIndex}
 							backgroundColor={timelineEventColors[timelineEventColors.length - 1]}
 						/>
 					{/if}
@@ -616,6 +631,7 @@
 		display: grid;
 		grid-template-columns: 1fr;
 		flex-grow: 1;
+		/* align-content is set dynamically based on forceRelativeSpacing */
 	}
 
 	.timeline-spine {
