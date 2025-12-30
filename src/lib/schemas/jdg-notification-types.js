@@ -5,7 +5,7 @@ const jdgNotificationTypes = {
 		faIcon: 'fa-circle-xmark'
 	},
 	warning: {
-		color: '#FFFF3C',
+		color: '#ffff9c',
 		message: 'This is a warning.',
 		faIcon: 'fa-triangle-exclamation'
 	},
@@ -15,7 +15,7 @@ const jdgNotificationTypes = {
 		faIcon: 'fa-circle-info'
 	},
 	inProgress: {
-		color: '#ffff9c',
+		color: '#FFFF3C',
 		message: 'Operation in progress.',
 		faIcon: 'fa-spinner fa-spin'
 	},
