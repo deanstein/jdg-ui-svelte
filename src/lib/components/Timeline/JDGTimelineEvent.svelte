@@ -2,14 +2,21 @@
 	import { getContext } from 'svelte';
 	import { css } from '@emotion/css';
 
+	import { JDG_CONTEXTS } from '$lib/jdg-contexts.js';
+
 	import timelineEventTypes, {
 		jdgTimelineEventKeys
 	} from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 	import timelineEventReference from '$lib/schemas/timeline/jdg-timeline-event-reference.js';
-	import { ageSuffix } from '$lib/stores/jdg-ui-store.js';
 
-	import { JDG_CONTEXTS } from '$lib/jdg-contexts.js';
+	import {
+		ageSuffix,
+		isMobileBreakpoint,
+		isTabletBreakpoint,
+		repoName as currentRepoName
+	} from '$lib/stores/jdg-ui-store.js';
 
+	import { fetchImageMetaRegistry } from '$lib/jdg-persistence-management.js';
 	import {
 		getNumYearsBetweenDates,
 		instantiateObject,
@@ -17,12 +24,7 @@
 	} from '$lib/jdg-utils.js';
 	import { upgradeTimelineEvent } from '$lib/jdg-timeline-management.js';
 
-	import {
-		isMobileBreakpoint,
-		isTabletBreakpoint,
-		JDGButton,
-		JDGImageThumbnailGroup
-	} from '$lib/index.js';
+	import { JDGButton, JDGImageThumbnailGroup } from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let timelineHost;
@@ -234,8 +236,38 @@
 	const firstRowContext = getContext(JDG_CONTEXTS.TIMELINE_FIRST_ROW_HEIGHT);
 	const lastRowContext = getContext(JDG_CONTEXTS.TIMELINE_LAST_ROW_HEIGHT);
 
-	// Get the image meta registry from context for resolving image keys
-	const imageMetaRegistry = getContext(JDG_CONTEXTS.IMAGE_META_REGISTRY);
+	// Get the image meta registry from context as fallback
+	const contextImageMetaRegistry = getContext(JDG_CONTEXTS.IMAGE_META_REGISTRY);
+
+	// Fetch the host's registry if different from current repo
+	let hostRegistry = undefined;
+	let lastFetchedHostRegistryRepo = undefined;
+
+	async function loadHostRegistry(repoName) {
+		if (!repoName || repoName === $currentRepoName) {
+			hostRegistry = undefined;
+			lastFetchedHostRegistryRepo = undefined;
+			return;
+		}
+		if (repoName === lastFetchedHostRegistryRepo && hostRegistry) {
+			return; // Already loaded
+		}
+		lastFetchedHostRegistryRepo = repoName;
+		try {
+			hostRegistry = await fetchImageMetaRegistry(repoName);
+		} catch (err) {
+			console.error('Failed to fetch host registry for event:', err);
+			hostRegistry = undefined;
+		}
+	}
+
+	// Trigger registry fetch when timelineHost's registry changes
+	$: if (timelineHost?.imageMetaRegistryRepo) {
+		loadHostRegistry(timelineHost.imageMetaRegistryRepo);
+	}
+
+	// Use host registry if available, otherwise fall back to context
+	$: imageMetaRegistry = hostRegistry || contextImageMetaRegistry;
 
 	$: {
 		// Ensure the event is upgraded and updated if the input changes

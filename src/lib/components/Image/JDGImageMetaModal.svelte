@@ -48,6 +48,10 @@
 
 	// Bind the hidden fileInput to a custom button for file picking
 	let fileInput;
+	// Track whether a file has been selected (for two-stage upload flow)
+	let hasFileSelected = false;
+	// Preview URL for the selected file (before upload)
+	let filePreviewUrl = null;
 
 	// Container for ComposeToolbar
 	let modalContainerRef;
@@ -184,9 +188,39 @@
 		}
 	};
 
+	// Handle file selection (separate from upload)
+	const onFileSelected = () => {
+		const file = fileInput?.files?.[0];
+		if (!file) {
+			hasFileSelected = false;
+			// Clean up old preview URL
+			if (filePreviewUrl) {
+				URL.revokeObjectURL(filePreviewUrl);
+				filePreviewUrl = null;
+			}
+			return;
+		}
+
+		hasFileSelected = true;
+
+		// Create preview URL for the selected file
+		if (filePreviewUrl) {
+			URL.revokeObjectURL(filePreviewUrl);
+		}
+		filePreviewUrl = URL.createObjectURL(file);
+
+		// Auto-populate Cloudinary path with filename (only for new images)
+		if (isNewImage) {
+			const pathParts = newImageIntendedPath.split('/');
+			// Keep the folder structure, just replace the filename
+			pathParts[pathParts.length - 1] = file.name;
+			newImageIntendedPath = pathParts.join('/');
+		}
+	};
+
 	const onClickFileUpload = async () => {
-		// Trigger file picker if no file is selected yet
-		if (!fileInput?.files?.length) {
+		// If no file selected yet, trigger file picker
+		if (!hasFileSelected || !fileInput?.files?.length) {
 			fileInput.click();
 			return;
 		}
@@ -285,6 +319,7 @@
 					if (!confirmProceed) {
 						// Clear file input so user can try again
 						fileInput.value = '';
+						hasFileSelected = false;
 						isCheckingUsage = false;
 						return;
 					}
@@ -299,6 +334,7 @@
 				);
 				if (!continueAnyway) {
 					fileInput.value = '';
+					hasFileSelected = false;
 					isCheckingUsage = false;
 					return;
 				}
@@ -404,8 +440,13 @@
 			// Update the original draft meta to reflect the new saved state
 			originalDraftMeta = instantiateObject(get(draftImageMeta));
 
-			// Clear file input so it can be reused
+			// Clear file input and preview
 			fileInput.value = '';
+			hasFileSelected = false;
+			if (filePreviewUrl) {
+				URL.revokeObjectURL(filePreviewUrl);
+				filePreviewUrl = null;
+			}
 		} catch (err) {
 			console.error('❌ Upload/Save error:', err.message);
 			saveStatus.set(jdgSaveStatus.saveFailed);
@@ -755,6 +796,10 @@
 	onDestroy(() => {
 		// Restore the original showImageEditButtons value
 		showImageEditButtons.set(originalShowImageEditButtonsValue);
+		// Clean up preview URL
+		if (filePreviewUrl) {
+			URL.revokeObjectURL(filePreviewUrl);
+		}
 	});
 </script>
 
@@ -787,80 +832,87 @@
 				message={'No image registry selected! Use the Dev Toolbar to select a registry.'}
 			/>
 
-			<!-- Show Done/Cancel when changes are detected -->
-			<JDGComposeToolbar
-				parentRef={modalContainerRef}
-				justification="center"
-				onClickDone={async () => {
-					try {
-						// If asset path changed on existing image, perform move operation instead
-						if (hasAssetPathChanged && !isNewImage) {
-							await onMoveImage();
-							return;
-						}
+			<!-- Show Done/Cancel when changes are detected (only for existing images) -->
+			{#if !isNewImage}
+				<JDGComposeToolbar
+					parentRef={modalContainerRef}
+					justification="center"
+					onClickDone={async () => {
+						try {
+							// If asset path changed on existing image, perform move operation instead
+							if (hasAssetPathChanged && !isNewImage) {
+								await onMoveImage();
+								return;
+							}
 
-						// Set save status
-						saveStatus.set(jdgSaveStatus.saving);
+							// Set save status
+							saveStatus.set(jdgSaveStatus.saving);
 
-						// Write only this entry back to GitHub
-						const currentRepoName = effectiveRepoName;
-						if (!currentRepoName) {
-							throw new Error(
-								'No image registry selected. Use the Dev Toolbar to select a registry.'
+							// Write only this entry back to GitHub
+							const currentRepoName = effectiveRepoName;
+							if (!currentRepoName) {
+								throw new Error(
+									'No image registry selected. Use the Dev Toolbar to select a registry.'
+								);
+							}
+
+							console.log(`💾 Writing image entry "${registryKey}" to ${currentRepoName}...`);
+
+							const writeResult = await writeImageMetaEntryToRepo(
+								currentRepoName,
+								registryKey,
+								$draftImageMeta
 							);
+
+							if (!writeResult) {
+								throw new Error('Failed to write entry to registry');
+							}
+
+							console.log('✅ Registry saved successfully');
+							saveStatus.set(jdgSaveStatus.saveSuccessRebuilding);
+
+							// Update the original draft meta to reflect the new saved state
+							// This prevents "unsaved changes" from showing after successful save
+							originalDraftMeta = instantiateObject($draftImageMeta);
+						} catch (err) {
+							console.error('❌ Save error:', err.message);
+							saveStatus.set(jdgSaveStatus.saveFailed);
+							alert(`Error: ${err.message}`);
 						}
-
-						console.log(`💾 Writing image entry "${registryKey}" to ${currentRepoName}...`);
-
-						const writeResult = await writeImageMetaEntryToRepo(
-							currentRepoName,
-							registryKey,
-							$draftImageMeta
-						);
-
-						if (!writeResult) {
-							throw new Error('Failed to write entry to registry');
-						}
-
-						console.log('✅ Registry saved successfully');
-						saveStatus.set(jdgSaveStatus.saveSuccessRebuilding);
-
-						// Update the original draft meta to reflect the new saved state
-						// This prevents "unsaved changes" from showing after successful save
-						originalDraftMeta = instantiateObject($draftImageMeta);
-					} catch (err) {
-						console.error('❌ Save error:', err.message);
-						saveStatus.set(jdgSaveStatus.saveFailed);
-						alert(`Error: ${err.message}`);
-					}
-				}}
-				onClickCancel={() => {
-					showImageMetaModal.set(false);
-					draftImageMeta.set(undefined);
-					saveStatus.set(null);
-				}}
-				isEditActive={hasUnsavedChanges && effectiveRepoName}
-			></JDGComposeToolbar>
+					}}
+					onClickCancel={() => {
+						showImageMetaModal.set(false);
+						draftImageMeta.set(undefined);
+						saveStatus.set(null);
+					}}
+					isEditActive={hasUnsavedChanges && effectiveRepoName}
+				></JDGComposeToolbar>
+			{/if}
 
 			<!-- Image preview with absolutely-positioned buttons -->
 			<div class="image-preview-wrapper">
-				<JDGImageTile
-					imageMeta={isNewImage
-						? imageMetaRegistry?.jdg_image_placeholder || $draftImageMeta
-						: $draftImageMeta}
-					maxHeight="20svh"
-					cropToFillContainer={false}
-				/>
+				{#if filePreviewUrl}
+					<!-- Show preview of selected file before upload -->
+					<img src={filePreviewUrl} alt="Preview of selected file" class="file-preview-image" />
+				{:else}
+					<JDGImageTile
+						imageMeta={isNewImage
+							? imageMetaRegistry?.jdg_image_placeholder || $draftImageMeta
+							: $draftImageMeta}
+						maxHeight="20svh"
+						cropToFillContainer={false}
+					/>
+				{/if}
 				<!-- Upload and Delete buttons -->
 				<div class="image-meta-toolbar-overlay">
 					<JDGButton
 						onClickFunction={onClickFileUpload}
-						faIcon="fa-solid fa-upload"
+						faIcon={hasFileSelected ? 'fa-upload' : 'fa-arrow-pointer'}
 						label={null}
 						paddingLeftRight={'8px'}
 						paddingTopBottom={'8px'}
 						backgroundColor={jdgColors.active}
-						tooltip="Upload new image"
+						tooltip={hasFileSelected ? 'Upload image' : 'Select image file'}
 						doForceSquareAspect
 					/>
 					<JDGButton
@@ -877,12 +929,7 @@
 			</div>
 
 			<!-- Hidden file input for button to trigger upload -->
-			<input
-				type="file"
-				style="display: none;"
-				on:change={onClickFileUpload}
-				bind:this={fileInput}
-			/>
+			<input type="file" style="display: none;" on:change={onFileSelected} bind:this={fileInput} />
 
 			<!-- Show a banner when the asset path has changed -->
 			<JDGNotificationBanner
@@ -1020,6 +1067,13 @@
 		width: 100%;
 		display: flex;
 		justify-content: center;
+	}
+
+	.file-preview-image {
+		max-height: 20svh;
+		max-width: 100%;
+		object-fit: contain;
+		border-radius: 8px;
 	}
 
 	.image-meta-toolbar-overlay {

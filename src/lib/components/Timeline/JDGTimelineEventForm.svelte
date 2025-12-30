@@ -16,11 +16,15 @@
 	import {
 		ageSuffix,
 		timelineEventModalInceptionDate,
-		showTimelineEventModal
+		showTimelineEventModal,
+		repoName as currentRepoName
 	} from '$lib/stores/jdg-ui-store.js';
 	import { draftTimelineEvent, draftTimelineHost } from '$lib/stores/jdg-temp-store.js';
 
-	import { getImageMetaRegistryLabel } from '$lib/jdg-persistence-management.js';
+	import {
+		getImageMetaRegistryLabel,
+		fetchImageMetaRegistry
+	} from '$lib/jdg-persistence-management.js';
 	import {
 		extractDataSchemaFields,
 		extractUiFromDataSchema
@@ -66,8 +70,38 @@
 
 	const noImageMessage = 'No images in this event';
 
-	// Get the image meta registry from context for resolving image keys
-	const imageMetaRegistry = getContext(JDG_CONTEXTS.IMAGE_META_REGISTRY);
+	// Get the image meta registry from context as fallback
+	const contextImageMetaRegistry = getContext(JDG_CONTEXTS.IMAGE_META_REGISTRY);
+
+	// Fetch the host's registry if different from current repo
+	let hostRegistry = undefined;
+	let lastFetchedHostRegistryRepo = undefined;
+
+	async function loadHostRegistry(repoName) {
+		if (!repoName || repoName === $currentRepoName) {
+			hostRegistry = undefined;
+			lastFetchedHostRegistryRepo = undefined;
+			return;
+		}
+		if (repoName === lastFetchedHostRegistryRepo && hostRegistry) {
+			return; // Already loaded
+		}
+		lastFetchedHostRegistryRepo = repoName;
+		try {
+			hostRegistry = await fetchImageMetaRegistry(repoName);
+		} catch (err) {
+			console.error('Failed to fetch host registry for form:', err);
+			hostRegistry = undefined;
+		}
+	}
+
+	// Trigger registry fetch when registryRepoName changes
+	$: if (registryRepoName) {
+		loadHostRegistry(registryRepoName);
+	}
+
+	// Use host registry if available, otherwise fall back to context
+	$: imageMetaRegistry = hostRegistry || contextImageMetaRegistry;
 
 	let parentRef; // For positioning the compose toolbar
 
@@ -264,24 +298,29 @@
 				{/if}
 			{:else if def.inputType === JDG_INPUT_TYPES.IMAGE_LIST}
 				{#if isAdditional}
-					{@const imageKeys = $localAdditionalStore[key] || []}
-					{@const resolvedImages = resolveImageMetaKeys(imageKeys, imageMetaRegistry)}
-					<!-- Always show selected images if any exist -->
-					{#if resolvedImages?.length > 0}
-						<div class="image-list-display">
-							<JDGImageThumbnailGroup imageMetaSet={resolvedImages} />
-						</div>
-					{:else if !isEditing}
-						<div class="no-images-message">{noImageMessage}</div>
-					{/if}
+					<!-- Image display - keyed to update when selection changes -->
+					{#key $localAdditionalStore[key]?.length}
+						{#if resolveImageMetaKeys($localAdditionalStore[key] || [], imageMetaRegistry)?.length > 0}
+							<div class="image-list-display">
+								<JDGImageThumbnailGroup
+									imageMetaSet={resolveImageMetaKeys(
+										$localAdditionalStore[key] || [],
+										imageMetaRegistry
+									)}
+								/>
+							</div>
+						{:else if !isEditing}
+							<div class="no-images-message">{noImageMessage}</div>
+						{/if}
+					{/key}
 
-					<!-- In edit mode, show button and selector -->
+					<!-- In edit mode, show button and selector (outside key block to prevent remount) -->
 					{#if isEditing}
 						<div class="image-selector-actions">
 							<JDGButton
 								label={isImageSelectorOpen
 									? 'Close Image Selector'
-									: imageKeys?.length > 0
+									: ($localAdditionalStore[key]?.length || 0) > 0
 										? 'Manage Images'
 										: 'Add Images'}
 								faIcon={isImageSelectorOpen ? 'fa-times' : 'fa-images'}
@@ -297,33 +336,45 @@
 						{#if isImageSelectorOpen}
 							<div class="image-selector-container">
 								<JDGImageSelector
-									bind:selectedImages={$localAdditionalStore[key]}
+									selectedImages={$localAdditionalStore[key] || []}
 									isEnabled={isEditing}
 									{registryRepoName}
 									requireRegistry={true}
+									onSelectionChange={(newSelection) => {
+										localAdditionalStore.update((store) => ({
+											...store,
+											[key]: newSelection
+										}));
+									}}
 								/>
 							</div>
 						{/if}
 					{/if}
 				{:else}
-					{@const imageKeys = $localEventStore[key] || []}
-					{@const resolvedImages = resolveImageMetaKeys(imageKeys, imageMetaRegistry)}
-					<!-- Always show selected images if any exist -->
-					{#if resolvedImages?.length > 0}
-						<div class="image-list-display">
-							<JDGImageThumbnailGroup imageMetaSet={resolvedImages} maxImageHeight={'15svh'} />
-						</div>
-					{:else if !isEditing}
-						<div class="no-images-message">{noImageMessage}</div>
-					{/if}
+					<!-- Image display - keyed to update when selection changes -->
+					{#key $localEventStore[key]?.length}
+						{#if resolveImageMetaKeys($localEventStore[key] || [], imageMetaRegistry)?.length > 0}
+							<div class="image-list-display">
+								<JDGImageThumbnailGroup
+									imageMetaSet={resolveImageMetaKeys(
+										$localEventStore[key] || [],
+										imageMetaRegistry
+									)}
+									maxImageHeight={'15svh'}
+								/>
+							</div>
+						{:else if !isEditing}
+							<div class="no-images-message">{noImageMessage}</div>
+						{/if}
+					{/key}
 
-					<!-- In edit mode, show button and selector -->
+					<!-- In edit mode, show button and selector (outside key block to prevent remount) -->
 					{#if isEditing}
 						<div class="image-selector-actions">
 							<JDGButton
 								label={isImageSelectorOpen
 									? 'Close Image Selector'
-									: imageKeys?.length > 0
+									: ($localEventStore[key]?.length || 0) > 0
 										? 'Manage Images'
 										: 'Add Images'}
 								faIcon={isImageSelectorOpen ? 'fa-times' : 'fa-images'}
@@ -339,10 +390,16 @@
 						{#if isImageSelectorOpen}
 							<div class="image-selector-container">
 								<JDGImageSelector
-									bind:selectedImages={$localEventStore[key]}
+									selectedImages={$localEventStore[key] || []}
 									isEnabled={isEditing}
 									{registryRepoName}
 									requireRegistry={true}
+									onSelectionChange={(newSelection) => {
+										localEventStore.update((store) => ({
+											...store,
+											[key]: newSelection
+										}));
+									}}
 								/>
 							</div>
 						{/if}
