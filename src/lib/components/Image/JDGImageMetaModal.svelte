@@ -210,10 +210,12 @@
 		filePreviewUrl = URL.createObjectURL(file);
 
 		// Auto-populate Cloudinary path with filename (only for new images)
+		// Replace spaces with dashes to avoid CSS url() encoding issues with background-image
 		if (isNewImage) {
 			const pathParts = newImageIntendedPath.split('/');
-			// Keep the folder structure, just replace the filename
-			pathParts[pathParts.length - 1] = file.name;
+			// Keep the folder structure, just replace the filename (with spaces replaced by dashes)
+			const sanitizedFilename = file.name.replace(/\s+/g, '-');
+			pathParts[pathParts.length - 1] = sanitizedFilename;
 			newImageIntendedPath = pathParts.join('/');
 		}
 	};
