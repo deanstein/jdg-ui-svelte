@@ -543,8 +543,8 @@
 				/>
 			</JDGModalActionsBar>
 		</JDGBodyCopy>
-		</JDGContentBoxFloating>
-		<JDGContentBoxFloating title={'TIMELINE'} subtitle={'Resulting timeline from the host above'}>
+	</JDGContentBoxFloating>
+	<JDGContentBoxFloating title={'TIMELINE'} subtitle={'Resulting timeline from the host above'}>
 		<JDGBodyCopy textAlign="center" paddingTop="0" paddingBottom="0">
 			<JDGInputContainer
 				label="Preview Mode"

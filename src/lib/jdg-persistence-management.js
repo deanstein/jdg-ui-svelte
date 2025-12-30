@@ -44,7 +44,8 @@ export const encryptedPAT =
 // The fetch function will try each path in order until one succeeds
 export const imageMetaRegistryPaths = [
 	'src/routes/image-meta-registry.js',
-	'src/image-meta-registry.js'
+	'src/image-meta-registry.js',
+	'src/lib/image-meta-registry.js'
 ];
 // Keep single path for backwards compatibility (uses first path)
 export const imageMetaRegistryPath = imageMetaRegistryPaths[0];
