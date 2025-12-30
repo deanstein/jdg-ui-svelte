@@ -17,8 +17,7 @@
 		isTimelineEventModalEditable,
 		showImageViewerModal,
 		imageViewerMeta,
-		timelineEventModalInceptionDate,
-		repoName as currentRepoName
+		timelineEventModalInceptionDate
 	} from '$lib/stores/jdg-ui-store.js';
 
 	import {
@@ -45,7 +44,8 @@
 		JDGModal,
 		JDGPortal,
 		JDGSaveStateBanner,
-		JDGTimelineEvent
+		JDGTimelineEvent,
+		JDGTimelineEventModal
 	} from '$lib/index.js';
 	import { jdgBreakpoints, jdgDurations, jdgQuantities, jdgSizes } from '$lib/jdg-shared-styles.js';
 
@@ -91,44 +91,46 @@
 	let emptyStateEvent;
 	let todayEvent;
 
-	// Get the image meta registry from context for resolving avatar
-	const contextImageMetaRegistry = getContext(JDG_CONTEXTS.IMAGE_META_REGISTRY);
+	// Timeline image registry - fetched from the host
+	let timelineImageMetaRegistry = undefined;
+	let lastFetchedRegistryRepoName = undefined;
 
-	// Track fetched registry for timeline host's imageMetaRegistryRepo
-	let hostRegistry = undefined;
-	let lastFetchedHostRegistryRepo = undefined;
-
-	// Fetch the host's registry if different from current repo
-	async function loadHostRegistry(registryRepoName) {
-		if (!registryRepoName || registryRepoName === $currentRepoName) {
-			hostRegistry = undefined;
-			lastFetchedHostRegistryRepo = undefined;
+	async function loadTimelineImageMetaRegistry(registryRepoName) {
+		if (!registryRepoName) {
+			timelineImageMetaRegistry = undefined;
+			lastFetchedRegistryRepoName = undefined;
 			return;
 		}
-		if (registryRepoName === lastFetchedHostRegistryRepo && hostRegistry) {
+		if (registryRepoName === lastFetchedRegistryRepoName && timelineImageMetaRegistry) {
 			return; // Already loaded
 		}
-		lastFetchedHostRegistryRepo = registryRepoName;
+		lastFetchedRegistryRepoName = registryRepoName;
 		try {
-			hostRegistry = await fetchImageMetaRegistry(registryRepoName);
+			// fetchImageMetaRegistry caches results, so this is efficient even for repeated calls
+			timelineImageMetaRegistry = await fetchImageMetaRegistry(registryRepoName);
 		} catch (err) {
-			console.error('Failed to fetch host registry:', err);
-			hostRegistry = undefined;
+			console.error('Failed to fetch timeline registry:', err);
+			timelineImageMetaRegistry = undefined;
 		}
 	}
 
-	// Trigger registry fetch when timelineHost's registry changes
+	// Fetch the timeline's registry when the host's registry repo is set/changes
 	$: if (timelineHost?.imageMetaRegistryRepo) {
-		loadHostRegistry(timelineHost.imageMetaRegistryRepo);
+		loadTimelineImageMetaRegistry(timelineHost.imageMetaRegistryRepo);
 	}
 
-	// Use host registry if available, otherwise fall back to context
-	$: effectiveRegistry = hostRegistry || contextImageMetaRegistry;
+	// Create a store for the timeline's registry and set it as context
+	// This allows child components to access the registry once loaded
+	const timelineImageRegistryStore = writable(undefined);
+	setContext(JDG_CONTEXTS.TIMELINE_IMAGE_REGISTRY, timelineImageRegistryStore);
 
-	// Resolve avatar image from timelineHost's avatarImage key using the effective registry
+	// Update the context store when registry loads
+	$: timelineImageRegistryStore.set(timelineImageMetaRegistry);
+
+	// Resolve avatar image from timelineHost's avatarImage key using the timeline registry
 	$: avatarImageMeta =
-		timelineHost?.avatarImage && effectiveRegistry
-			? getImageMetaByKey(effectiveRegistry, timelineHost.avatarImage) ||
+		timelineHost?.avatarImage && timelineImageMetaRegistry
+			? getImageMetaByKey(timelineImageMetaRegistry, timelineHost.avatarImage) ||
 				getJdgImageMetaRegistry().jdg_avatar_placeholder
 			: getJdgImageMetaRegistry().jdg_avatar_placeholder;
 
@@ -567,6 +569,14 @@
 				/>
 			</div>
 		</JDGModal>
+	</JDGPortal>
+{/if}
+
+<!-- Timeline Event Modal - rendered here so it can access timeline context -->
+<!-- Portal renders DOM at body level while preserving component hierarchy for context -->
+{#if $showTimelineEventModal}
+	<JDGPortal>
+		<JDGTimelineEventModal />
 	</JDGPortal>
 {/if}
 

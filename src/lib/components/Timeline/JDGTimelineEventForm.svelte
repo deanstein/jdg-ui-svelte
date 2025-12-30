@@ -16,15 +16,11 @@
 	import {
 		ageSuffix,
 		timelineEventModalInceptionDate,
-		showTimelineEventModal,
-		repoName as currentRepoName
+		showTimelineEventModal
 	} from '$lib/stores/jdg-ui-store.js';
 	import { draftTimelineEvent, draftTimelineHost } from '$lib/stores/jdg-temp-store.js';
 
-	import {
-		getImageMetaRegistryLabel,
-		fetchImageMetaRegistry
-	} from '$lib/jdg-persistence-management.js';
+	import { getImageMetaRegistryLabel } from '$lib/jdg-persistence-management.js';
 	import {
 		extractDataSchemaFields,
 		extractUiFromDataSchema
@@ -70,38 +66,9 @@
 
 	const noImageMessage = 'No images in this event';
 
-	// Get the image meta registry from context as fallback
-	const contextImageMetaRegistry = getContext(JDG_CONTEXTS.IMAGE_META_REGISTRY);
-
-	// Fetch the host's registry if different from current repo
-	let hostRegistry = undefined;
-	let lastFetchedHostRegistryRepo = undefined;
-
-	async function loadHostRegistry(repoName) {
-		if (!repoName || repoName === $currentRepoName) {
-			hostRegistry = undefined;
-			lastFetchedHostRegistryRepo = undefined;
-			return;
-		}
-		if (repoName === lastFetchedHostRegistryRepo && hostRegistry) {
-			return; // Already loaded
-		}
-		lastFetchedHostRegistryRepo = repoName;
-		try {
-			hostRegistry = await fetchImageMetaRegistry(repoName);
-		} catch (err) {
-			console.error('Failed to fetch host registry for form:', err);
-			hostRegistry = undefined;
-		}
-	}
-
-	// Trigger registry fetch when registryRepoName changes
-	$: if (registryRepoName) {
-		loadHostRegistry(registryRepoName);
-	}
-
-	// Use host registry if available, otherwise fall back to context
-	$: imageMetaRegistry = hostRegistry || contextImageMetaRegistry;
+	// Get the timeline's image registry from context (set by parent JDGTimeline)
+	const timelineImageRegistryStore = getContext(JDG_CONTEXTS.TIMELINE_IMAGE_REGISTRY);
+	$: imageMetaRegistry = $timelineImageRegistryStore;
 
 	let parentRef; // For positioning the compose toolbar
 

@@ -6,6 +6,10 @@ export const JDG_CONTEXTS = {
 	// Set by JDGAppContainer, consumed by Timeline components
 	IMAGE_META_REGISTRY: 'jdg-image-meta-registry',
 
+	// Timeline-specific image registry - set by JDGTimeline for its host's registry
+	// Used by TimelineEvent and TimelineEventModal (which renders inside Timeline)
+	TIMELINE_IMAGE_REGISTRY: 'jdg-timeline-image-registry',
+
 	// Timeline row heights - used for spine alignment
 	TIMELINE_FIRST_ROW_HEIGHT: 'jdg-timeline-first-row-height',
 	TIMELINE_LAST_ROW_HEIGHT: 'jdg-timeline-last-row-height'

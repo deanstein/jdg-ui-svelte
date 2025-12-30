@@ -20,7 +20,6 @@
 		showImageMetaModal,
 		showImageGalleryModal,
 		showImageViewerModal,
-		showTimelineEventModal,
 		headerHeightPx,
 		imageViewerMeta,
 		isMobileBreakpoint,
@@ -49,7 +48,6 @@
 		JDGImageRegistryGalleryModal,
 		JDGLoadingOverlay,
 		JDGScrollToTop,
-		JDGTimelineEventModal,
 		JDGSaveStateBanner
 	} from '$lib/index.js';
 	import {
@@ -263,10 +261,7 @@
 	{#if $showImageViewerModal}
 		<JDGImageViewerModal imageMeta={$imageViewerMeta} />
 	{/if}
-	<!-- Timeline -->
-	{#if $showTimelineEventModal}
-		<JDGTimelineEventModal />
-	{/if}
+	<!-- TimelineEventModal is rendered inside JDGTimeline for context access -->
 	{#if $showImageMetaModal}
 		<JDGImageMetaModal />
 	{/if}
