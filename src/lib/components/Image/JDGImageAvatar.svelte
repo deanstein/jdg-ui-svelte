@@ -101,6 +101,7 @@
 		<div class="avatar-selector">
 			<JDGImageSelector
 				{registryRepoName}
+				requireRegistry={true}
 				selectedImages={selectorSelection}
 				isEnabled={true}
 				imageHeight="80px"
