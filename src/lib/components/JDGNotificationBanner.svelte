@@ -21,7 +21,7 @@
 	export let standalone = true; // set to false if included in a header already in a fixed position
 	export let forceOnTop = false; // if true, will use z-index store to ensure always on top
 	export let showCloseButton = true;
-	export let scrollToTopOnStatusChange = true; // scroll context to top when transitioning from inProgress
+	export let scrollOnStatusChange = true; // scroll context to top when transitioning from inProgress
 
 	let bannerId;
 	let bannerElement;
@@ -87,7 +87,7 @@
 
 	// Watch for transitions to inProgress (so user sees it start) and from inProgress to final status
 	$: if (notificationType !== previousNotificationType) {
-		if (scrollToTopOnStatusChange) {
+		if (scrollOnStatusChange) {
 			// Scroll when entering inProgress state
 			if (notificationType === jdgNotificationTypes.inProgress) {
 				scrollContextToTop();
