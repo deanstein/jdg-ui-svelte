@@ -370,12 +370,23 @@
 		// Reference forceRelativeSpacing to ensure reactivity
 		const useRelativeSpacing = forceRelativeSpacing;
 
-		// If there is no inception date, use the earliest date
+		// Use whichever is earlier: the inception date or the earliest event date
+		// This handles cases where events (like planning) occur before the inception date
 		const earliestEvent = getEarliestTimelineEvent(timelineHost.timelineEvents);
-		let earliestOrInceptionDate =
-			timelineHost?.inceptionDate === undefined || timelineHost.inceptionDate !== ''
-				? timelineHost.inceptionDate
-				: earliestEvent?.date;
+		let earliestOrInceptionDate;
+		if (!timelineHost?.inceptionDate || timelineHost.inceptionDate === '') {
+			// No inception date, use earliest event
+			earliestOrInceptionDate = earliestEvent?.date;
+		} else if (!earliestEvent?.date) {
+			// No events, use inception date
+			earliestOrInceptionDate = timelineHost.inceptionDate;
+		} else {
+			// Both exist - use whichever is earlier
+			const inceptionTime = new Date(timelineHost.inceptionDate).getTime();
+			const earliestEventTime = new Date(earliestEvent.date).getTime();
+			earliestOrInceptionDate =
+				earliestEventTime < inceptionTime ? earliestEvent.date : timelineHost.inceptionDate;
+		}
 
 		// If there are no timeline events,
 		// or if there's no event on the inception date,

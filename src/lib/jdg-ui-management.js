@@ -243,6 +243,24 @@ export const updateTimelineRowItems = (rowItems, useSequentialIndices = true) =>
 		for (let i = 0; i < sortedRowItems.length; i++) {
 			sortedRowItems[i].index = i + 1; // Start at 1 to leave room for inception event at 0
 		}
+	} else {
+		// When using proportional indices, normalize so the first event starts at row 1
+		// This removes empty space above the first event while preserving relative spacing
+		if (sortedRowItems.length > 0) {
+			const firstIndex = sortedRowItems[0].index;
+			const offset = firstIndex - 1; // How much to shift all indices down
+			for (let i = 0; i < sortedRowItems.length; i++) {
+				sortedRowItems[i].index = sortedRowItems[i].index - offset;
+			}
+		}
+		// Ensure each item gets its own unique row
+		// Items with the same date would otherwise get the same row index and overlap
+		for (let i = 1; i < sortedRowItems.length; i++) {
+			if (sortedRowItems[i].index <= sortedRowItems[i - 1].index) {
+				// Ensure this item's index is at least 1 greater than the previous item
+				sortedRowItems[i].index = sortedRowItems[i - 1].index + 1;
+			}
+		}
 	}
 	return sortedRowItems;
 };
