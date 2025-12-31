@@ -1,8 +1,10 @@
 <script>
+	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
+	import jdgSaveStatus from '$lib/schemas/jdg-save-status.js';
+
 	import { saveFunction, saveStatus } from '$lib/stores/jdg-temp-store.js';
 
 	import { JDGButton, JDGNotificationBanner, runFnSyncOrAsync } from '$lib/index.js';
-	import jdgSaveStatus from '$lib/schemas/jdg-save-status.js';
 
 	export let showBanner = false;
 
@@ -14,11 +16,13 @@
 			showBanner = false;
 		}
 
-		// success messages get a delay before dismissing
-		if ($saveStatus === jdgSaveStatus.loadSucccess || $saveStatus === jdgSaveStatus.saveSuccess) {
-			setTimeout(() => {
-				saveStatus.set(null);
-			}, 2000);
+		// Auto-dismiss success messages after a delay (but not successPersistent)
+		if ($saveStatus?.notificationType !== jdgNotificationTypes.successPersistent) {
+			if ($saveStatus === jdgSaveStatus.loadSucccess || $saveStatus === jdgSaveStatus.saveSuccess) {
+				setTimeout(() => {
+					saveStatus.set(null);
+				}, 2000);
+			}
 		}
 	}
 </script>
