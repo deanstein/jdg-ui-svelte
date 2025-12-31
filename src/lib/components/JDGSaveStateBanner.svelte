@@ -7,6 +7,7 @@
 	import { JDGButton, JDGNotificationBanner, runFnSyncOrAsync } from '$lib/index.js';
 
 	export let showBanner = false;
+	export let scrollOnStatusChange = true;
 
 	// Show the banner when there's a valid save status
 	$: {
@@ -33,6 +34,7 @@
 	notificationType={$saveStatus?.notificationType}
 	standalone={true}
 	showCloseButton={false}
+	scrollOnStatusChange={scrollOnStatusChange}
 >
 	{#if $saveStatus === jdgSaveStatus.unsavedChanges}
 		<JDGButton

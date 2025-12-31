@@ -442,7 +442,7 @@
 	role={previewOnly ? 'button' : 'region'}
 	tabindex={previewOnly ? 0 : undefined}
 >
-	<JDGSaveStateBanner />
+	<JDGSaveStateBanner scrollOnStatusChange={false} />
 	<!-- Hover overlay for previewOnly mode -->
 	{#if previewOnly && isHovering}
 		<div

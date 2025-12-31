@@ -846,7 +846,7 @@
 	<div bind:this={modalContainerRef} slot="modal-content-slot" class="image-meta-modal-scrollable">
 		{#if $draftImageMeta}
 			<!-- Banner when saving or uploading -->
-			<JDGSaveStateBanner />
+			<JDGSaveStateBanner scrollOnStatusChange={false} />
 			<!-- Banner when checking usage in other repos -->
 			{#if isCheckingUsage}
 				<JDGNotificationBanner
