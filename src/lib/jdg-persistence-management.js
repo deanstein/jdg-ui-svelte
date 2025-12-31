@@ -501,18 +501,31 @@ export const replaceUrlAcrossRepos = async (oldUrl, newUrl, excludeRepoName = nu
 // Write a single image meta entry to the registry
 export const writeImageMetaEntryToRepo = async (repoName, registryKey, imageMeta) => {
 	try {
-		// Fetch the current file
-		const url = new URL(cfRouteFetchPublicFile, cfWorkerUrlJdgGithub);
-		url.searchParams.set('repoOwner', jdgRepoOwner);
-		url.searchParams.set('repoName', repoName);
-		url.searchParams.set('filePath', imageMetaRegistryPath);
+		// Try each possible registry path until one succeeds
+		let fileContent = null;
+		let successfulPath = null;
 
-		const response = await fetch(url.toString());
-		if (!response.ok) {
-			throw new Error(`Failed to fetch existing file: ${response.status}`);
+		for (const filePath of imageMetaRegistryPaths) {
+			try {
+				const url = new URL(cfRouteFetchPublicFile, cfWorkerUrlJdgGithub);
+				url.searchParams.set('repoOwner', jdgRepoOwner);
+				url.searchParams.set('repoName', repoName);
+				url.searchParams.set('filePath', filePath);
+
+				const response = await fetch(url.toString());
+				if (response.ok) {
+					fileContent = await response.text();
+					successfulPath = filePath;
+					break;
+				}
+			} catch {
+				// Try next path
+			}
 		}
 
-		let fileContent = await response.text();
+		if (!fileContent || !successfulPath) {
+			throw new Error(`Registry file not found in any expected location`);
+		}
 
 		// Filter out undefined/null values, keep everything else from the schema
 		const cleanImageMeta = Object.fromEntries(
@@ -598,11 +611,11 @@ export const writeImageMetaEntryToRepo = async (repoName, registryKey, imageMeta
 
 		fileContent = fileContent.replace(registryMatch[1], registryContent);
 
-		// Write the updated file back to GitHub
+		// Write the updated file back to GitHub using the same path we found the file at
 		const writeUrl = new URL(cfRouteWritePublicJsFile, cfWorkerUrlJdgGithub);
 		writeUrl.searchParams.set('repoOwner', jdgRepoOwner);
 		writeUrl.searchParams.set('repoName', repoName);
-		writeUrl.searchParams.set('filePath', imageMetaRegistryPath);
+		writeUrl.searchParams.set('filePath', successfulPath);
 
 		const writeResponse = await fetch(writeUrl.toString(), {
 			method: 'POST',
@@ -625,18 +638,31 @@ export const writeImageMetaEntryToRepo = async (repoName, registryKey, imageMeta
 // Delete a single image meta entry from the registry
 export const deleteImageMetaEntryFromRepo = async (repoName, registryKey) => {
 	try {
-		// Fetch the current file
-		const url = new URL(cfRouteFetchPublicFile, cfWorkerUrlJdgGithub);
-		url.searchParams.set('repoOwner', jdgRepoOwner);
-		url.searchParams.set('repoName', repoName);
-		url.searchParams.set('filePath', imageMetaRegistryPath);
+		// Try each possible registry path until one succeeds
+		let fileContent = null;
+		let successfulPath = null;
 
-		const response = await fetch(url.toString());
-		if (!response.ok) {
-			throw new Error(`Failed to fetch existing file: ${response.status}`);
+		for (const filePath of imageMetaRegistryPaths) {
+			try {
+				const url = new URL(cfRouteFetchPublicFile, cfWorkerUrlJdgGithub);
+				url.searchParams.set('repoOwner', jdgRepoOwner);
+				url.searchParams.set('repoName', repoName);
+				url.searchParams.set('filePath', filePath);
+
+				const response = await fetch(url.toString());
+				if (response.ok) {
+					fileContent = await response.text();
+					successfulPath = filePath;
+					break;
+				}
+			} catch {
+				// Try next path
+			}
 		}
 
-		let fileContent = await response.text();
+		if (!fileContent || !successfulPath) {
+			throw new Error(`Registry file not found in any expected location`);
+		}
 
 		// Find the registry content
 		const registryMatch = fileContent.match(/const imageMetaRegistry = \{([\s\S]*?)\n\};/);
@@ -704,11 +730,11 @@ export const deleteImageMetaEntryFromRepo = async (repoName, registryKey) => {
 
 		fileContent = fileContent.replace(registryMatch[1], registryContent);
 
-		// Write the updated file back to GitHub
+		// Write the updated file back to GitHub using the same path we found the file at
 		const writeUrl = new URL(cfRouteWritePublicJsFile, cfWorkerUrlJdgGithub);
 		writeUrl.searchParams.set('repoOwner', jdgRepoOwner);
 		writeUrl.searchParams.set('repoName', repoName);
-		writeUrl.searchParams.set('filePath', imageMetaRegistryPath);
+		writeUrl.searchParams.set('filePath', successfulPath);
 
 		const writeResponse = await fetch(writeUrl.toString(), {
 			method: 'POST',
@@ -731,7 +757,7 @@ export const deleteImageMetaEntryFromRepo = async (repoName, registryKey) => {
 // Delete an image from Cloudinary via Cloudflare worker
 export const deleteCloudinaryImage = async (assetPath, fileName) => {
 	try {
-		const url = `${cfWorkerUrlJdgCloudinary}/${cfRouteDeleteImage}?folder=${encodeURIComponent(
+		const url = `${cfWorkerUrlJdgCloudinary}${cfRouteDeleteImage}?folder=${encodeURIComponent(
 			assetPath
 		)}&fileName=${encodeURIComponent(fileName)}`;
 
@@ -760,7 +786,7 @@ export const renameCloudinaryImage = async (fromPublicId, toPublicId) => {
 		const cleanFrom = fromPublicId.replace(/\.[^/.]+$/, '');
 		const cleanTo = toPublicId.replace(/\.[^/.]+$/, '');
 
-		const url = `${cfWorkerUrlJdgCloudinary}/${cfRouteRenameImage}?fromPublicId=${encodeURIComponent(
+		const url = `${cfWorkerUrlJdgCloudinary}${cfRouteRenameImage}?fromPublicId=${encodeURIComponent(
 			cleanFrom
 		)}&toPublicId=${encodeURIComponent(cleanTo)}`;
 

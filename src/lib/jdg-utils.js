@@ -1195,7 +1195,10 @@ export const extractCloudinaryAssetpath = (url) => {
 		const folderParts = parts.slice(folderStart, parts.length - 1);
 
 		const folder = folderParts.join('/');
-		return folder ? `${folder}/${fileName}` : fileName;
+		const path = folder ? `${folder}/${fileName}` : fileName;
+		// Decode URL-encoded characters (e.g., %20 → space) to prevent double-encoding
+		// when this path is later used in API calls with encodeURIComponent
+		return decodeURIComponent(path);
 	} catch {
 		return null;
 	}

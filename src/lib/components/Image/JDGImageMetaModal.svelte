@@ -333,7 +333,6 @@
 						`⚠️ This URL is also used in ${reposWithUrl.length} other repo(s):\n\n   • ${repoList}\n\nRe-uploading will change the URL. All these repos will be updated with the new URL.\n\nContinue?`
 					);
 					if (!confirmProceed) {
-						// Clear file input so user can try again
 						fileInput.value = '';
 						hasFileSelected = false;
 						isCheckingUsage = false;
@@ -344,7 +343,6 @@
 				}
 			} catch (err) {
 				console.warn('⚠️ Could not check URL usage:', err.message);
-				// Ask user if they want to continue anyway
 				const continueAnyway = confirm(
 					`⚠️ Could not check if URL is used in other repos:\n${err.message}\n\nDo you want to continue anyway? Other repos may not be updated.`
 				);
@@ -846,9 +844,15 @@
 		{#if $draftImageMeta}
 			<!-- Banner when saving or uploading -->
 			<JDGSaveStateBanner />
+			<!-- Banner when checking usage in other repos -->
+			<JDGNotificationBanner
+				showBanner={isCheckingUsage}
+				notificationType={jdgNotificationTypes.inProgress}
+				message={'Checking usage in other repos...'}
+			/>
 			<!-- Changes detected banner -->
 			<JDGNotificationBanner
-				showBanner={hasUnsavedChanges && !$saveStatus && !isNewImage}
+				showBanner={hasUnsavedChanges && !$saveStatus && !isCheckingUsage && !isNewImage}
 				notificationType={jdgNotificationTypes.warning}
 				message={'You have unsaved changes.'}
 			/>
@@ -860,7 +864,8 @@
 			/>
 
 			<!-- Show Done/Cancel when changes are detected (only for existing images) -->
-			{#if !isNewImage}
+			<!-- Hide during checking/saving/uploading operations -->
+			{#if !isNewImage && !isCheckingUsage && !$saveStatus}
 				<JDGComposeToolbar
 					parentRef={modalContainerRef}
 					justification="center"
@@ -942,7 +947,7 @@
 						paddingLeftRight={'8px'}
 						paddingTopBottom={'8px'}
 						backgroundColor={jdgColors.active}
-						tooltip={hasFileSelected ? 'Upload image' : 'Select image file'}
+						tooltip={hasFileSelected ? 'Upload image' : 'Select new image'}
 						doForceSquareAspect
 					/>
 					<JDGButton
@@ -963,13 +968,13 @@
 
 			<!-- Show a banner when the asset path has changed -->
 			<JDGNotificationBanner
-				showBanner={hasAssetPathChanged && !isNewImage}
+				showBanner={hasAssetPathChanged && !isNewImage && !$saveStatus && !isCheckingUsage}
 				notificationType={jdgNotificationTypes.warning}
 				message={'The asset path has changed. Clicking Done will rename the image in Cloudinary.'}
 			/>
 			<!-- Show a banner when we can't determine other repo impacts due to asset path change -->
 			<JDGNotificationBanner
-				showBanner={hasAssetPathChanged && !isNewImage && !effectiveRepoName}
+				showBanner={hasAssetPathChanged && !isNewImage && !effectiveRepoName && !$saveStatus && !isCheckingUsage}
 				notificationType={jdgNotificationTypes.error}
 				message={'No image registry selected. Images in other repos may break as a result of this change.'}
 			/>
