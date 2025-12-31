@@ -23,6 +23,11 @@ const jdgNotificationTypes = {
 		color: '#a7ff68',
 		message: 'Operation successful.',
 		faIcon: 'fa-circle-check'
+	},
+	successPersistent: {
+		color: '#a7ff68',
+		message: 'Operation successful. This message will persist.',
+		faIcon: 'fa-circle-check'
 	}
 };
 

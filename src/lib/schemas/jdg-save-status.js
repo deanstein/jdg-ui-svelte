@@ -32,7 +32,7 @@ const jdgSaveStatus = {
 	saveSuccessRebuilding: {
 		label:
 			'Saved! Website is now rebuilding with the new image metadata. Refresh to see the changes.',
-		notificationType: jdgNotificationTypes.success // color, icon
+		notificationType: jdgNotificationTypes.successPersistent // color, icon - persistent so user remembers to refresh
 	}
 };
 
