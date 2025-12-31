@@ -505,7 +505,7 @@ const imageMetaRegistry = {
 	ccm: {
 		_1968_03_07_von_frellick: {
 			id: 'ea492456-4cad-45d7-8e45-86ea138606f5',
-			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765685193/jdg-ui-svelte/ccm/1968-03-07-von-frellick-7.png',
+			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765685193/jdg-ui-svelte/ccm/1968-03-07-von-frellick-8.png',
 			alt: 'Gerri Von Frellick stands on a Blue Room stair landing while grand opening festivities take place below.',
 			caption: 'Gerri Von Frellick stands on a Blue Room stair landing while grand opening festivities take place below.',
 			attribution: 'Englewood Public Library',
