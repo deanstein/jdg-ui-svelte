@@ -135,8 +135,8 @@
 		// Only show the unsaved changes status if not saving or success
 		if (hasUnsavedChanges && !isInProgressStatus && !isSuccessStatus) {
 			saveStatus.set(jdgSaveStatus.unsavedChanges);
-		} else if (!hasUnsavedChanges && !isSuccessStatus) {
-			// Only clear the status if no success message is being shown
+		} else if (!hasUnsavedChanges && !isInProgressStatus && !isSuccessStatus) {
+			// Only clear the status if no operation is in progress and no success message is being shown
 			saveStatus.set(null);
 		}
 	}
