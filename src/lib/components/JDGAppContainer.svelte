@@ -3,6 +3,7 @@
 	import { css } from '@emotion/css';
 
 	import { JDG_CONTEXTS } from '$lib/jdg-contexts.js';
+	import getJdgImageMetaRegistry from '$lib/jdg-image-meta-registry.js';
 
 	import { jdgSharedUrls } from '$lib/jdg-shared-strings.js';
 	import jdgSharedUrlsStore from '$lib/stores/jdg-shared-urls-store.js';
@@ -31,6 +32,7 @@
 		isTabletBreakpoint,
 		isAdminMode
 	} from '$lib/stores/jdg-ui-store.js';
+	import { draftImageMeta, draftTimelineHost } from '$lib/stores/jdg-temp-store.js';
 
 	import { getDistancePxToBottomOfHeader } from '$lib/jdg-ui-management.js';
 	import {
@@ -57,7 +59,6 @@
 		jdgFonts,
 		setUpdatedHyperlinkStyleBar
 	} from '$lib/jdg-shared-styles.js';
-	import getJdgImageMetaRegistry from '$lib/jdg-image-meta-registry.js';
 
 	// IMAGE META REGISTRY
 	// Consuming websites *must* provide an image meta regisry
@@ -236,12 +237,18 @@
 	class="jdg-app-container {appContainerCss} {appContainerCssDynamic} {$appCssHyperlinkBar}"
 	bind:this={appContainerRef}
 >
-	<!-- all content goes here after the app is loaded -->
+	<!-- ALL CONTENT GOES HERE AFTER APP IS LOADED -->
 	{#if isAppLoaded}
-		<!-- Save state banner will show when required -->
-		<JDGSaveStateBanner />
 		<slot />
 	{/if}
+
+	<!-- SaveStateBanner will show when required-->
+	{#if !$draftTimelineHost && !$draftImageMeta}
+		<!-- Don't scroll for timeline and image editing -->
+		<JDGSaveStateBanner scrollOnStatusChange={!$draftTimelineHost && !$draftImageMeta} />
+	{/if}
+
+	<!-- Show button to scroll to the top of page -->
 	{#if showScrollToTopButton}
 		<JDGScrollToTop />
 	{/if}
