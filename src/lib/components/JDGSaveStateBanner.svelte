@@ -34,7 +34,7 @@
 	notificationType={$saveStatus?.notificationType}
 	standalone={true}
 	showCloseButton={false}
-	scrollOnStatusChange={scrollOnStatusChange}
+	{scrollOnStatusChange}
 >
 	{#if $saveStatus === jdgSaveStatus.unsavedChanges}
 		<JDGButton
