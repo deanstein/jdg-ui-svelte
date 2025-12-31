@@ -14,10 +14,6 @@
 		saveStatus
 	} from '$lib/stores/jdg-temp-store.js';
 
-	// Get the image meta registry from context (read-only)
-	const contextImageMetaRegistry = getContext(JDG_CONTEXTS.IMAGE_META_REGISTRY);
-	// Use timeline registry if set, otherwise fall back to context registry
-	$: effectiveRegistry = $draftTimelineImageMetaRegistry ?? contextImageMetaRegistry;
 	import {
 		areObjectsEqual,
 		extractCloudinaryAssetpath,
@@ -53,6 +49,11 @@
 	} from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
 
+	// Get the image meta registry from context (read-only)
+	const contextImageMetaRegistry = getContext(JDG_CONTEXTS.IMAGE_META_REGISTRY);
+	// Use timeline registry if set, otherwise fall back to context registry
+	$: effectiveRegistry = $draftTimelineImageMetaRegistry ?? contextImageMetaRegistry;
+
 	// Bind the hidden fileInput to a custom button for file picking
 	let fileInput;
 	// Track whether a file has been selected (for two-stage upload flow)
@@ -78,7 +79,7 @@
 	// Should Alt field sync with Caption field?
 	let syncAltWithCaption = true;
 
-	// State for checking URL usage across repos
+	// Track if we're currently checking URL usage in other repos
 	let isCheckingUsage = false;
 
 	// Record the original showImageEditButtons value
@@ -582,9 +583,10 @@
 				return;
 			}
 		}
-		isCheckingUsage = false;
 
+		// Set save status BEFORE clearing checking to prevent gap where banners/toolbar flash
 		saveStatus.set(jdgSaveStatus.saving);
+		isCheckingUsage = false;
 
 		try {
 			// Step 1: Rename in Cloudinary
@@ -695,9 +697,10 @@
 				return;
 			}
 		}
-		isCheckingUsage = false;
 
+		// Set save status BEFORE clearing checking to prevent gap where banners/toolbar flash
 		saveStatus.set(jdgSaveStatus.saving);
+		isCheckingUsage = false;
 
 		try {
 			// Step 1: Delete from Cloudinary
@@ -845,11 +848,13 @@
 			<!-- Banner when saving or uploading -->
 			<JDGSaveStateBanner />
 			<!-- Banner when checking usage in other repos -->
-			<JDGNotificationBanner
-				showBanner={isCheckingUsage}
-				notificationType={jdgNotificationTypes.inProgress}
-				message={'Checking usage in other repos...'}
-			/>
+			{#if isCheckingUsage}
+				<JDGNotificationBanner
+					showBanner={true}
+					notificationType={jdgNotificationTypes.inProgress}
+					message={'Checking usage in other repos...'}
+				/>
+			{/if}
 			<!-- Changes detected banner -->
 			<JDGNotificationBanner
 				showBanner={hasUnsavedChanges && !$saveStatus && !isCheckingUsage && !isNewImage}
@@ -974,7 +979,11 @@
 			/>
 			<!-- Show a banner when we can't determine other repo impacts due to asset path change -->
 			<JDGNotificationBanner
-				showBanner={hasAssetPathChanged && !isNewImage && !effectiveRepoName && !$saveStatus && !isCheckingUsage}
+				showBanner={hasAssetPathChanged &&
+					!isNewImage &&
+					!effectiveRepoName &&
+					!$saveStatus &&
+					!isCheckingUsage}
 				notificationType={jdgNotificationTypes.error}
 				message={'No image registry selected. Images in other repos may break as a result of this change.'}
 			/>
@@ -1039,17 +1048,31 @@
 					<!-- Check URL usage in other repos button -->
 					{#if !isNewImage}
 						<div class="check-usage-button-container">
-							<JDGButton
-								label={isCheckingUsage ? 'Checking...' : 'Check usage in other repos'}
-								faIcon={isCheckingUsage ? 'fa-spinner fa-spin' : 'fa-search'}
-								fontSize="0.7rem"
-								onClickFunction={onClickCheckUrlUsage}
-								paddingLeftRight="10px"
-								paddingTopBottom="5px"
-								isEnabled={!isCheckingUsage}
-								backgroundColor={jdgColors.activeSecondary}
-								textColor={jdgColors.textDm}
-							/>
+							{#if isCheckingUsage}
+								<JDGButton
+									label="Checking..."
+									faIcon="fa-spinner fa-spin"
+									fontSize="0.7rem"
+									onClickFunction={() => {}}
+									paddingLeftRight="10px"
+									paddingTopBottom="5px"
+									isEnabled={false}
+									backgroundColor={jdgColors.activeSecondary}
+									textColor={jdgColors.textDm}
+								/>
+							{:else}
+								<JDGButton
+									label="Check usage in other repos"
+									faIcon="fa-search"
+									fontSize="0.7rem"
+									onClickFunction={onClickCheckUrlUsage}
+									paddingLeftRight="10px"
+									paddingTopBottom="5px"
+									isEnabled={true}
+									backgroundColor={jdgColors.activeSecondary}
+									textColor={jdgColors.textDm}
+								/>
+							{/if}
 						</div>
 					{/if}
 					<JDGInputContainer label="Caption">
