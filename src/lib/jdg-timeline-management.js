@@ -43,14 +43,16 @@ export function upgradeTimelineHost(timelineHost) {
 		upgradedHost.avatarImage = '';
 	}
 
-	// Clean up images in timeline events - should be arrays of strings (registry keys)
+	// Upgrade each timeline event to include new schema fields
 	if (upgradedHost.timelineEvents && Array.isArray(upgradedHost.timelineEvents)) {
-		for (const event of upgradedHost.timelineEvents) {
-			if (event.images && Array.isArray(event.images)) {
-				// Filter out any non-string entries
-				event.images = event.images.filter((img) => typeof img === 'string');
+		upgradedHost.timelineEvents = upgradedHost.timelineEvents.map((event) => {
+			const upgradedEvent = upgradeTimelineEvent(event);
+			// Clean up images - should be arrays of strings (registry keys)
+			if (upgradedEvent.images && Array.isArray(upgradedEvent.images)) {
+				upgradedEvent.images = upgradedEvent.images.filter((img) => typeof img === 'string');
 			}
-		}
+			return upgradedEvent;
+		});
 	}
 
 	return upgradedHost;
