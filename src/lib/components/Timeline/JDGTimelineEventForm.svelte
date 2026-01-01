@@ -81,11 +81,16 @@
 	// Track whether image selector is open
 	let isImageSelectorOpen = false;
 
+	// Track the previous type to detect actual type changes
+	let previousType = null;
+
 	// Sync when parent store changes
 	$: {
 		const snapshot = get(eventStore);
 		localEventStore.set({ ...snapshot });
 		localAdditionalStore.set({ ...snapshot.additionalContent });
+		// Also sync the previousType when parent changes
+		previousType = snapshot.type;
 	}
 
 	// Consider this a new event if it's not present in the
@@ -153,11 +158,22 @@
 		};
 	};
 
-	// If this event has a type, ensure the additionalData is upgraded
-	$: if ($localEventStore.type) {
+	// If the event type changes, upgrade the additionalContent schema
+	// Only runs when the type actually changes (not on every store update)
+	$: if ($localEventStore.type && $localEventStore.type !== previousType) {
 		const newAddlContent = jdgTimelineEventTypes[$localEventStore.type]?.additionalContent ?? {};
 		const dataOnlyAddlContent = extractDataSchemaFields(newAddlContent);
-		localAdditionalStore.set(dataOnlyAddlContent);
+		// Merge existing values with new schema defaults (preserves user input)
+		const currentAddl = get(localAdditionalStore);
+		const mergedAddlContent = { ...dataOnlyAddlContent };
+		// Preserve existing values for keys that exist in both
+		for (const key of Object.keys(dataOnlyAddlContent)) {
+			if (currentAddl[key] !== undefined && currentAddl[key] !== '') {
+				mergedAddlContent[key] = currentAddl[key];
+			}
+		}
+		localAdditionalStore.set(mergedAddlContent);
+		previousType = $localEventStore.type;
 	}
 
 	// Keep the age and years ago values updated
