@@ -623,7 +623,7 @@
 				}
 			}}
 			{previewOnly}
-			minHeight={"70svh"}
+			minHeight={'70svh'}
 		/>
 	</JDGContentBoxFloating>
 
