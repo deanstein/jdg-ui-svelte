@@ -19,7 +19,14 @@ const jdgTimelineEventTypes = {
 	/* Base event types applicable to people, buildings, etc. */
 	article: {
 		label: 'Article',
-		icon: 'fa-newspaper'
+		icon: 'fa-newspaper',
+		additionalContent: {
+			publication: {
+				default: '',
+				label: 'Publication',
+				inputType: JDG_INPUT_TYPES.TEXT
+			}
+		}
 	},
 	generic: {
 		label: 'Generic',
@@ -32,6 +39,21 @@ const jdgTimelineEventTypes = {
 	memory: {
 		label: 'Memory',
 		icon: 'fa-comment'
+	},
+	quote: {
+		label: 'Quote',
+		icon: 'fa-regular fa-comment',
+		additionalContent: {
+			attribution: {
+				default: '',
+				label: 'Attribution',
+				inputType: JDG_INPUT_TYPES.TEXT
+			}
+		}
+	},
+	statistic: {
+		label: 'Statistic',
+		icon: 'fa-chart-line'
 	},
 	/* ========== GENERIC (CONTEXTUAL) ========== */
 	/* Not selectable in selectors or clickable in Timelines */
@@ -175,9 +197,13 @@ const jdgTimelineEventTypes = {
 		label: 'Ownership Changed',
 		icon: 'fa-handshake'
 	},
+	planning: {
+		label: 'Planning',
+		icon: 'fa-compass-drafting'
+	},
 	renovation: {
 		label: 'Renovation',
-		icon: 'fa-wrench'
+		icon: 'fa-person-digging'
 	},
 	storeClosed: {
 		label: 'Store Closed',
