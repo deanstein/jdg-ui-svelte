@@ -389,6 +389,7 @@
 					isEnabled={$isAdminMode}
 					label={$draftTimelineHostCollection ? 'Save to Repo' : 'Set to Editing Store'}
 					faIcon={$draftTimelineHostCollection ? 'fa-floppy-disk' : 'fa-pen-to-square'}
+					tooltip={'Start editing this timeline host collection (admin mode required)'}
 					backgroundColor={$draftTimelineHostCollection ? jdgColors.done : jdgColors.active}
 					onClickFunction={$draftTimelineHostCollection === undefined
 						? () => {
@@ -528,6 +529,7 @@
 				<JDGButton
 					isEnabled={$isAdminMode}
 					label={$draftTimelineHost ? 'Update in Host Collection' : 'Set to Editing Store'}
+					tooltip={'Start editing this timeline host (admin mode required)'}
 					faIcon={$draftTimelineHost ? 'fa-floppy-disk' : 'fa-pen-to-square'}
 					backgroundColor={$draftTimelineHost ? jdgColors.done : jdgColors.active}
 					onClickFunction={$draftTimelineHost === undefined
