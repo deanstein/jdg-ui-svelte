@@ -30,6 +30,7 @@
 		saveFunction
 	} from '$lib/stores/jdg-temp-store.js';
 	import {
+		isAdminMode,
 		allowTextSelection,
 		ageSuffix,
 		showTimelineEventModal,
@@ -385,6 +386,7 @@
 					/>
 				{/if}
 				<JDGButton
+					isEnabled={$isAdminMode}
 					label={$draftTimelineHostCollection ? 'Save to Repo' : 'Set to Editing Store'}
 					faIcon={$draftTimelineHostCollection ? 'fa-floppy-disk' : 'fa-pen-to-square'}
 					backgroundColor={$draftTimelineHostCollection ? jdgColors.done : jdgColors.active}
@@ -524,6 +526,7 @@
 					/>
 				{/if}
 				<JDGButton
+					isEnabled={$isAdminMode}
 					label={$draftTimelineHost ? 'Update in Host Collection' : 'Set to Editing Store'}
 					faIcon={$draftTimelineHost ? 'fa-floppy-disk' : 'fa-pen-to-square'}
 					backgroundColor={$draftTimelineHost ? jdgColors.done : jdgColors.active}
