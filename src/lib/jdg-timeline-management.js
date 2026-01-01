@@ -98,25 +98,21 @@ export const instantiateTimelineEvent = (typeKey) => {
 
 // Upgrades a timeline event with the latest fields
 export function upgradeTimelineEvent(event) {
-	const typeKey = event?.type;
-	const typeDef = jdgTimelineEventTypes[typeKey];
+	const typeKey = event?.type || 'generic';
 
-	if (!typeDef) {
-		console.warn(`Unknown timeline event type: ${typeKey}`);
-		return { ...event, version: jdgSchemaVersion };
-	}
+	// Create a fresh event with all current schema fields
+	const newEvent = instantiateTimelineEvent(typeKey);
 
-	const defaultContent = typeDef.content || {};
-	const existingContent = event.additionalContent || {};
+	// Merge existing data into the new schema (preserves user data, adds new fields)
+	const upgradedEvent = deepMatchObjects(newEvent, event);
 
-	// Merge defaults with existing content, preserving user-entered values
-	const upgradedContent = deepMatchObjects(defaultContent, { ...existingContent });
+	// Preserve the original ID (instantiateTimelineEvent generates a new one)
+	upgradedEvent.id = event.id;
 
-	return {
-		...event,
-		additionalContent: upgradedContent,
-		version: jdgSchemaVersion
-	};
+	// Ensure version is current
+	upgradedEvent.version = jdgSchemaVersion;
+
+	return upgradedEvent;
 }
 
 // Timeline events contain both UI and data in their schema.
