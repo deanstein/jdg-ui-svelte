@@ -101,7 +101,7 @@
 	accentColors={jdgColors.accentColorsJDG}
 	linkColorContrastAdjustment={6}
 	{showHeaderStripes}
-	fontFamily="Goldman"
+	fontFamily="REM"
 >
 	<JDGNotificationBanner notificationType={jdgNotificationTypes.information.id} />
 	<JDGHeader
