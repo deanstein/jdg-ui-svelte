@@ -33,10 +33,11 @@
 	const getDefaultBackgroundHoverColor = () => {
 		let bgColorHover;
 
+		// Don't check isEnabled here - the CSS hover style already handles the disabled state
+		// Checking it here causes the hover color to get "stuck" as disabled if the component
+		// mounts while disabled, even after isEnabled becomes true
 		if (backgroundColor === 'transparent') {
 			bgColorHover = rgbToHex(darkenColor(hexToRgb(getDefaultBackgroundColor()), 0.2));
-		} else if (!isEnabled) {
-			bgColorHover = jdgColors.disabled;
 		} else {
 			bgColorHover = darkenColor(backgroundColor, 0.2);
 		}
@@ -70,7 +71,34 @@
 
 	let buttonCss = css``; // redeefined in the reactive block
 
+	// Track whether backgroundColorHover was explicitly passed by checking if it equals the default
+	// If not explicitly passed, compute it reactively based on the current backgroundColor
+	const defaultHoverColor = getDefaultBackgroundHoverColor();
+
 	$: {
+		// Compute effective hover color - if the default was used, recalculate based on current backgroundColor
+		// This handles cases where backgroundColor is passed by parent but backgroundColorHover is not
+		let effectiveHoverColor;
+		if (backgroundColorHover === defaultHoverColor) {
+			// backgroundColorHover wasn't explicitly passed, compute from current backgroundColor
+			if (backgroundColor === 'transparent') {
+				effectiveHoverColor = adjustColorForContrast(
+					rgbToHex(darkenColor(hexToRgb(jdgColors.active), 0.2)),
+					textColor,
+					2.5
+				);
+			} else {
+				effectiveHoverColor = adjustColorForContrast(
+					darkenColor(backgroundColor, 0.2),
+					textColor,
+					2.5
+				);
+			}
+		} else {
+			// backgroundColorHover was explicitly passed, use it as-is
+			effectiveHoverColor = backgroundColorHover;
+		}
+
 		buttonCss = css`
 			font-size: ${fontSize};
 			font-family: ${$appFontFamily};
@@ -92,7 +120,7 @@
 				: jdgColors.disabled};
 			:hover {
 				color: ${textColorHover};
-				background-color: ${isEnabled ? backgroundColorHover : jdgColors.disabled};
+				background-color: ${isEnabled ? effectiveHoverColor : jdgColors.disabled};
 			}
 			cursor: ${isEnabled ? 'pointer' : 'default'};
 			aspect-ratio: ${doForceSquareAspect ? '1' : ''};
