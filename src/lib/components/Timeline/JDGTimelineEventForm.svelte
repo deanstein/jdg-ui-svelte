@@ -208,7 +208,7 @@
 	<!-- Event type and age header -->
 	<div class="event-header">
 		<div class="event-header-view event-header-age">
-			<i class="fa-solid {currentTypeIcon} event-header-icon" />
+			<i class="fa-solid {currentTypeIcon} event-header-icon" title="{currentTypeLabel} event" />
 			{#if isFinite(eventAge) && eventAge > 0}
 				<span class="event-header-separator">|</span>
 				<span>{eventAge} years {$ageSuffix}</span>

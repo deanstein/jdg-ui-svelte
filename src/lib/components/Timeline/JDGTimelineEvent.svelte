@@ -346,7 +346,10 @@
 	<div class="timeline-event-content-outer-container {eventRowContainerCss}">
 		<div class="timeline-event-title-bar {eventTitleBarCss}">
 			<!-- event icon -->
-			<i class="fa-solid {timelineEventTypes[upgradedEvent?.type]?.icon} {eventFaIconCss}" />
+			<i
+				class="fa-solid {timelineEventTypes[upgradedEvent?.type]?.icon} {eventFaIconCss}"
+				title="{timelineEventTypes[upgradedEvent?.type]?.label ?? upgradedEvent?.type} event"
+			/>
 			<!-- hide age if this is the birth event or if age is 0 or negative -->
 			{#if upgradedEvent?.type !== timelineEventTypes.birth.type && eventAge > 0}
 				<div class="timeline-event-age {eventAgeCss}">
