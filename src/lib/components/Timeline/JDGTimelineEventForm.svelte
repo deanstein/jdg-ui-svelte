@@ -233,6 +233,8 @@
 
 	<!-- All fields from the schema -->
 	{#each renderFields as { key, def, isAdditional } (key)}
+		<!-- Source field only shows when editing or when it has content -->
+		{#if key !== 'source' || isEditing || $localEventStore.source}
 		<JDGInputContainer label={def.label}>
 			{#if def.inputType === JDG_INPUT_TYPES.DATE}
 				<div class="date-with-checkbox">
@@ -388,12 +390,13 @@
 						{/if}
 					{/if}
 				{/if}
-			{:else if isAdditional}
-				<JDGTextInput bind:inputValue={$localAdditionalStore[key]} />
-			{:else}
-				<JDGTextInput bind:inputValue={$localEventStore[key]} />
-			{/if}
+		{:else if isAdditional}
+			<JDGTextInput bind:inputValue={$localAdditionalStore[key]} />
+		{:else}
+			<JDGTextInput bind:inputValue={$localEventStore[key]} />
+		{/if}
 		</JDGInputContainer>
+		{/if}
 	{/each}
 	{#if isEditable}
 		<JDGComposeToolbar
