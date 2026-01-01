@@ -1,5 +1,8 @@
-export const jdgSchemaVersion = '0.3.0';
+export const jdgSchemaVersion = '0.4.0';
 export const jdgSchemachanges = {
+	'v0.4.x': {
+		changes: ["Added 'source' to timeline-event schema", 'Reordered jdg-image-meta']
+	},
 	'v0.3.x': {
 		changes: [
 			"Added 'ID' to image-meta schema",
