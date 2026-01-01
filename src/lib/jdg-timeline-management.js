@@ -160,7 +160,7 @@ export const addOrReplaceTimelineEvent = (timelineHostStore, event) => {
 		};
 
 		const updatedEvents = getObjectByKeyValue(safeValue.timelineEvents, 'id', event.id)
-			? addOrReplaceObjectByKeyValue(safeValue.timelineEvents, 'id', event.eventId, event)
+			? addOrReplaceObjectByKeyValue(safeValue.timelineEvents, 'id', event.id, event)
 			: [...safeValue.timelineEvents, event];
 
 		return {

@@ -550,7 +550,7 @@
 					<!-- All timeline events saved to the host -->
 					{#each timelineRowItems as timelineRowItem, i}
 						<!-- Use a key to ensure the UI reacts when these values change -->
-						{#key `${timelineHost.id}-${timelineRowItem.event.eventId}`}
+						{#key `${timelineHost.id}-${timelineRowItem.event.id}`}
 							<JDGTimelineEvent
 								{timelineHost}
 								timelineEvent={timelineRowItem.event}
