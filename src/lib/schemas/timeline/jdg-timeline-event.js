@@ -28,9 +28,19 @@ const jdgTimelineEvent = {
 		label: 'Images',
 		inputType: JDG_INPUT_TYPES.IMAGE_LIST
 	},
-	referencedHostIds: [], // other timeline hosts that should have an eventRef to this event and host
-	additionalContent: {}, // optional; certain event types may have additional data
-	// version
+	// Other timeline hosts that should have an eventRef to this event and host
+	referencedHostIds: [],
+	// Where did the information in this event come from?
+	// e.g. person, publication, etc.
+	// Note that some types like article and quote have their own source types like attribution and publication
+	source: {
+		default: '',
+		label: 'Source',
+		inputType: JDG_INPUT_TYPES.TEXT
+	},
+	// Optional; certain event types may have additional data
+	additionalContent: {},
+	// Timeline events are upgraded with new fields on version mismatch
 	version: jdgSchemaVersion
 };
 
