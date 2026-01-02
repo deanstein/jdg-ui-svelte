@@ -251,7 +251,11 @@
 			const ageData = getYearsAndMonthsBetweenDates(timelineHost.inceptionDate, eventDateCorrected);
 			eventAge = ageData.years;
 			// Format age display with rounding logic
-			eventAgeDisplay = formatAgeDisplayWithRounding(ageData.years, ageData.months, eventAgeShowMonths);
+			eventAgeDisplay = formatAgeDisplayWithRounding(
+				ageData.years,
+				ageData.months,
+				eventAgeShowMonths
+			);
 			// Determine if age is positive (event after inception) or negative (event before inception)
 			// Check based on the formatted display - if it shows, determine sign from the data
 			if (eventAgeDisplay) {

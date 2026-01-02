@@ -214,7 +214,11 @@
 		);
 		eventAge = ageData.years;
 		// Format age display with rounding logic
-		eventAgeDisplay = formatAgeDisplayWithRounding(ageData.years, ageData.months, eventAgeShowMonths);
+		eventAgeDisplay = formatAgeDisplayWithRounding(
+			ageData.years,
+			ageData.months,
+			eventAgeShowMonths
+		);
 		// Determine if age is positive (event after inception) or negative (event before inception)
 		if (eventAgeDisplay) {
 			const totalYears = ageData.years + ageData.months / 12;
@@ -226,7 +230,11 @@
 		const yearsAgoData = getYearsAndMonthsBetweenDates(eventDateCorrected, new Date());
 		yearsAgo = yearsAgoData.years;
 		// Format years ago display with rounding logic
-		yearsAgoDisplay = formatAgeDisplayWithRounding(yearsAgoData.years, yearsAgoData.months, eventAgeShowMonths);
+		yearsAgoDisplay = formatAgeDisplayWithRounding(
+			yearsAgoData.years,
+			yearsAgoData.months,
+			eventAgeShowMonths
+		);
 	}
 
 	// Get current event type info for header display
