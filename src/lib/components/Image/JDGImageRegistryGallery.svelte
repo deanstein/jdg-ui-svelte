@@ -2,7 +2,7 @@
 	import { onMount, getContext } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { JDG_CONTEXTS } from '$lib/jdg-contexts.js';
+	import JDG_CONTEXTS from '$lib/jdg-contexts.js';
 
 	import { imagesLoading, repoName as currentRepoName } from '$lib/stores/jdg-ui-store.js';
 	import { fetchImageMetaRegistry } from '$lib/jdg-persistence-management.js';

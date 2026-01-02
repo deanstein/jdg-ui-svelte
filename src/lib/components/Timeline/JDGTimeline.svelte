@@ -4,7 +4,7 @@
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
-	import { JDG_CONTEXTS } from '$lib/jdg-contexts.js';
+	import JDG_CONTEXTS from '$lib/jdg-contexts.js';
 
 	import { jdgTimelineEventKeys } from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 	import getJdgImageMetaRegistry from '$lib/jdg-image-meta-registry.js';

@@ -2,7 +2,7 @@
 	import { onDestroy, onMount, getContext } from 'svelte';
 	import { get } from 'svelte/store';
 
-	import { JDG_CONTEXTS } from '$lib/jdg-contexts.js';
+	import JDG_CONTEXTS from '$lib/jdg-contexts.js';
 	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
 	import jdgSaveStatus from '$lib/schemas/jdg-save-status.js';
 

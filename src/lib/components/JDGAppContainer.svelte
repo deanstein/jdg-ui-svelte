@@ -2,7 +2,7 @@
 	import { onMount, setContext, tick } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { JDG_CONTEXTS } from '$lib/jdg-contexts.js';
+	import JDG_CONTEXTS from '$lib/jdg-contexts.js';
 	import getJdgImageMetaRegistry from '$lib/jdg-image-meta-registry.js';
 
 	import { jdgSharedUrls } from '$lib/jdg-shared-strings.js';

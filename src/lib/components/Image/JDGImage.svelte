@@ -4,7 +4,7 @@
 	import { css } from '@emotion/css';
 	import { get } from 'svelte/store';
 
-	import { JDG_CONTEXTS } from '$lib/jdg-contexts.js';
+	import JDG_CONTEXTS from '$lib/jdg-contexts.js';
 	import jdgImageMeta from '$lib/schemas/jdg-image-meta.js';
 	import {
 		addCloudinaryUrlTransformation,
