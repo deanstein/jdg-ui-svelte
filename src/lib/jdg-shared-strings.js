@@ -12,7 +12,7 @@ export const jdgSharedSources = [
 		label: 'Kurt P. Schweigart, Cinderella City Historical Narrative'
 	},
 	{ value: 'denver-public-library', label: 'Denver Public Library' },
-	{ value: 'englewood-public-library', label: 'Englewood Public Library' },
+	{ value: 'englewood-public-library', label: 'Englewood Public Library' }
 ];
 
 export const jdgSharedIdentifiers = {

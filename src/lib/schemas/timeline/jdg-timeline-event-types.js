@@ -9,7 +9,7 @@ const jdgTimelineEventTypes = {
 	/* Base event types applicable to people, buildings, etc. */
 	article: {
 		label: 'Article',
-		icon: 'fa-newspaper',
+		icon: 'fa-newspaper'
 	},
 	generic: {
 		label: 'Generic',
