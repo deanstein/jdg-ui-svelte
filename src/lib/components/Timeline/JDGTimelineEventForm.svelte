@@ -212,11 +212,11 @@
 			<i class="fa-solid {currentTypeIcon} event-header-icon" title="{currentTypeLabel} event" />
 			{#if isFinite(eventAge) && eventAge > 0}
 				<span class="event-header-separator">|</span>
-				<span>{eventAge} years {$ageSuffix}</span>
+				<span>{eventAge} {eventAge === 1 ? 'year' : 'years'} {$ageSuffix}</span>
 			{/if}
 			{#if isFinite(yearsAgo)}
 				<span class="event-header-separator">|</span>
-				<span>{yearsAgo} years ago</span>
+				<span>{yearsAgo} {yearsAgo === 1 ? 'year' : 'years'} ago</span>
 			{/if}
 		</div>
 	</div>

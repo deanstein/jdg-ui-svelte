@@ -353,7 +353,7 @@
 			<!-- hide age if this is the birth event or if age is 0 or negative -->
 			{#if upgradedEvent?.type !== timelineEventTypes.birth.type && eventAge > 0}
 				<div class="timeline-event-age {eventAgeCss}">
-					{eventAge} years {$ageSuffix}
+					{eventAge} {eventAge === 1 ? 'year' : 'years'} {$ageSuffix}
 				</div>
 			{/if}
 			<!-- if this is a reference event, show the timeline host it's shared from -->
