@@ -33,7 +33,6 @@
 	import {
 		isAdminMode,
 		allowTextSelection,
-		ageSuffix,
 		showTimelineEventModal,
 		isMobileBreakpoint,
 		isTabletBreakpoint,
@@ -77,8 +76,9 @@
 	// Ensure this page allows text selection
 	allowTextSelection.set(true);
 
-	// Set the age suffix
-	ageSuffix.set('after opening');
+	// Set the age suffixes for timeline events
+	setContext(JDG_CONTEXTS.EVENT_AGE_SUFFIX_POSITIVE, 'after opening');
+	setContext(JDG_CONTEXTS.EVENT_AGE_SUFFIX_NEGATIVE, 'before opening');
 
 	/*** TIMELINE EVENT TYPE CONTEXT ***/
 	// Define which event types should be available in the timeline event form

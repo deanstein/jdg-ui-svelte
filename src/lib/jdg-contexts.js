@@ -14,7 +14,18 @@ const JDG_CONTEXTS = {
 
 	// Timeline event type keys - set by parent components to filter available event types
 	// Used by JDGTimelineEventForm to determine which event types to show in dropdown
-	TIMELINE_EVENT_TYPE_KEYS: 'jdg-timeline-event-type-keys'
+	TIMELINE_EVENT_TYPE_KEYS: 'jdg-timeline-event-type-keys',
+
+	// Event age suffixes - set by parent components to customize age display
+	// Used by JDGTimelineEvent and JDGTimelineEventForm
+	// Positive suffix is used when eventAge > 0, negative suffix when eventAge < 0
+	EVENT_AGE_SUFFIX_POSITIVE: 'jdg-event-age-suffix-positive',
+	EVENT_AGE_SUFFIX_NEGATIVE: 'jdg-event-age-suffix-negative',
+
+	// Show months in age display - set by parent components to control whether months are shown
+	// Used by JDGTimelineEvent and JDGTimelineEventForm
+	// Default is false (don't show months, e.g., "7 years" instead of "7 years, 3 months")
+	EVENT_AGE_SHOW_MONTHS: 'jdg-event-age-show-months'
 };
 
 export default JDG_CONTEXTS;

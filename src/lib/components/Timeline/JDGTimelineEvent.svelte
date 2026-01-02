@@ -9,9 +9,10 @@
 	} from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 	import timelineEventReference from '$lib/schemas/timeline/jdg-timeline-event-reference.js';
 
-	import { ageSuffix, isMobileBreakpoint, isTabletBreakpoint } from '$lib/stores/jdg-ui-store.js';
+	import { isMobileBreakpoint, isTabletBreakpoint } from '$lib/stores/jdg-ui-store.js';
 	import {
-		getNumYearsBetweenDates,
+		getYearsAndMonthsBetweenDates,
+		formatAgeDisplayWithRounding,
 		instantiateObject,
 		resolveImageMetaKeys
 	} from '$lib/jdg-utils.js';
@@ -37,6 +38,13 @@
 	export let backgroundColor = jdgColors.activeColorSubtle;
 	export let rowIndex;
 
+	// Get age suffixes from context (set by parent components)
+	// Falls back to default values if context not available
+	const eventAgeSuffixPositive = getContext(JDG_CONTEXTS.EVENT_AGE_SUFFIX_POSITIVE) ?? 'old';
+	const eventAgeSuffixNegative = getContext(JDG_CONTEXTS.EVENT_AGE_SUFFIX_NEGATIVE) ?? 'old';
+	// Get show months setting from context (default is false)
+	const eventAgeShowMonths = getContext(JDG_CONTEXTS.EVENT_AGE_SHOW_MONTHS) ?? false;
+
 	// canClick may need to be overridden
 	let canClickCalculated;
 	$: {
@@ -48,6 +56,8 @@
 	let upgradedEvent;
 	let eventDateCorrected;
 	let eventAge;
+	let eventAgeDisplay;
+	let isEventAgePositive;
 	let eventRowDivRef;
 
 	const eventBorderRadius = '10px';
@@ -238,7 +248,18 @@
 		if (upgradedEvent) {
 			eventDateCorrected = new Date(upgradedEvent.date);
 
-			eventAge = getNumYearsBetweenDates(timelineHost.inceptionDate, eventDateCorrected);
+			const ageData = getYearsAndMonthsBetweenDates(timelineHost.inceptionDate, eventDateCorrected);
+			eventAge = ageData.years;
+			// Format age display with rounding logic
+			eventAgeDisplay = formatAgeDisplayWithRounding(ageData.years, ageData.months, eventAgeShowMonths);
+			// Determine if age is positive (event after inception) or negative (event before inception)
+			// Check based on the formatted display - if it shows, determine sign from the data
+			if (eventAgeDisplay) {
+				const totalYears = ageData.years + ageData.months / 12;
+				isEventAgePositive = totalYears > 0 || (totalYears === 0 && ageData.months > 0);
+			} else {
+				isEventAgePositive = true; // Default, won't be used if display is null
+			}
 		}
 	}
 
@@ -333,12 +354,11 @@
 				class="fa-solid {timelineEventTypes[upgradedEvent?.type]?.icon} {eventFaIconCss}"
 				title="{timelineEventTypes[upgradedEvent?.type]?.label ?? upgradedEvent?.type} event"
 			/>
-			<!-- hide age if this is the birth event or if age is 0 or negative -->
-			{#if upgradedEvent?.type !== timelineEventTypes.birth.type && eventAge > 0}
+			<!-- hide age if this is the birth event or if there's no age to display -->
+			{#if upgradedEvent?.type !== timelineEventTypes.birth.type && eventAgeDisplay}
 				<div class="timeline-event-age {eventAgeCss}">
-					{eventAge}
-					{eventAge === 1 ? 'year' : 'years'}
-					{$ageSuffix}
+					{eventAgeDisplay}
+					{isEventAgePositive ? eventAgeSuffixPositive : eventAgeSuffixNegative}
 				</div>
 			{/if}
 			<!-- if this is a reference event, show the timeline host it's shared from -->

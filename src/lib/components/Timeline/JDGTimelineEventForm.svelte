@@ -14,7 +14,6 @@
 	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
 
 	import {
-		ageSuffix,
 		timelineEventModalInceptionDate,
 		showTimelineEventModal
 	} from '$lib/stores/jdg-ui-store.js';
@@ -28,7 +27,8 @@
 	import {
 		addOrReplaceObjectByKeyValue,
 		deleteObjectByKeyValue,
-		getNumYearsBetweenDates,
+		getYearsAndMonthsBetweenDates,
+		formatAgeDisplayWithRounding,
 		getIsObjectInArray,
 		instantiateObject,
 		resolveImageMetaKeys
@@ -60,6 +60,13 @@
 	// Falls back to prop if context not available
 	// Context can be either an array of key strings or an object like jdgTimelineEventKeys
 	const contextEventTypeKeys = getContext(JDG_CONTEXTS.TIMELINE_EVENT_TYPE_KEYS);
+
+	// Get age suffixes from context (set by parent components)
+	// Falls back to default values if context not available
+	const eventAgeSuffixPositive = getContext(JDG_CONTEXTS.EVENT_AGE_SUFFIX_POSITIVE) ?? 'old';
+	const eventAgeSuffixNegative = getContext(JDG_CONTEXTS.EVENT_AGE_SUFFIX_NEGATIVE) ?? 'old';
+	// Get show months setting from context (default is false)
+	const eventAgeShowMonths = getContext(JDG_CONTEXTS.EVENT_AGE_SHOW_MONTHS) ?? false;
 
 	// Normalize event type keys: convert array to object format if needed
 	$: effectiveEventTypeKeys = (() => {
@@ -195,11 +202,31 @@
 
 	// Keep the age and years ago values updated
 	let eventAge;
+	let eventAgeDisplay;
+	let isEventAgePositive;
 	let yearsAgo;
+	let yearsAgoDisplay;
 	$: {
 		const eventDateCorrected = new Date($eventStore?.date);
-		eventAge = getNumYearsBetweenDates($timelineEventModalInceptionDate, eventDateCorrected);
-		yearsAgo = getNumYearsBetweenDates(eventDateCorrected, new Date());
+		const ageData = getYearsAndMonthsBetweenDates(
+			$timelineEventModalInceptionDate,
+			eventDateCorrected
+		);
+		eventAge = ageData.years;
+		// Format age display with rounding logic
+		eventAgeDisplay = formatAgeDisplayWithRounding(ageData.years, ageData.months, eventAgeShowMonths);
+		// Determine if age is positive (event after inception) or negative (event before inception)
+		if (eventAgeDisplay) {
+			const totalYears = ageData.years + ageData.months / 12;
+			isEventAgePositive = totalYears > 0 || (totalYears === 0 && ageData.months > 0);
+		} else {
+			isEventAgePositive = true; // Default, won't be used if display is null
+		}
+
+		const yearsAgoData = getYearsAndMonthsBetweenDates(eventDateCorrected, new Date());
+		yearsAgo = yearsAgoData.years;
+		// Format years ago display with rounding logic
+		yearsAgoDisplay = formatAgeDisplayWithRounding(yearsAgoData.years, yearsAgoData.months, eventAgeShowMonths);
 	}
 
 	// Get current event type info for header display
@@ -226,13 +253,16 @@
 	<div class="event-header">
 		<div class="event-header-view event-header-age">
 			<i class="fa-solid {currentTypeIcon} event-header-icon" title="{currentTypeLabel} event" />
-			{#if isFinite(eventAge) && eventAge > 0}
+			{#if eventAgeDisplay}
 				<span class="event-header-separator">|</span>
-				<span>{eventAge} {eventAge === 1 ? 'year' : 'years'} {$ageSuffix}</span>
+				<span
+					>{eventAgeDisplay}
+					{isEventAgePositive ? eventAgeSuffixPositive : eventAgeSuffixNegative}</span
+				>
 			{/if}
-			{#if isFinite(yearsAgo)}
+			{#if yearsAgoDisplay}
 				<span class="event-header-separator">|</span>
-				<span>{yearsAgo} {yearsAgo === 1 ? 'year' : 'years'} ago</span>
+				<span>{yearsAgoDisplay} ago</span>
 			{/if}
 		</div>
 	</div>

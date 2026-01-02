@@ -456,18 +456,112 @@ export const getNumYearsBetweenDates = (startDate, endDate) => {
 	const correctedStartDate = new Date(startDate);
 	const correctedEndDate = new Date(endDate);
 
-	var years = correctedEndDate.getFullYear() - correctedStartDate.getFullYear();
+	const diffInMs = correctedEndDate.getTime() - correctedStartDate.getTime();
+	const days = diffInMs / (1000 * 60 * 60 * 24);
 
-	// Subtract a year if the other date is earlier in the year than the birth date
-	if (
-		correctedEndDate.getMonth() < correctedStartDate.getMonth() ||
-		(correctedEndDate.getMonth() == correctedStartDate.getMonth() &&
-			correctedEndDate.getDate() < correctedStartDate.getDate())
-	) {
-		years--;
-	}
+	// Calculate years using average days per year (365.25 accounts for leap years)
+	// For positive values: floor to round down (1.2 years -> 1 year)
+	// For negative values: ceil to round towards zero (-0.0164 years -> 0 years)
+	const yearsDecimal = days / 365.25;
+	const years = yearsDecimal >= 0 ? Math.floor(yearsDecimal) : Math.ceil(yearsDecimal);
 
 	return years;
+};
+
+export const getYearsAndMonthsBetweenDates = (startDate, endDate) => {
+	const correctedStartDate = new Date(startDate);
+	const correctedEndDate = new Date(endDate);
+
+	const diffInMs = correctedEndDate.getTime() - correctedStartDate.getTime();
+	const days = diffInMs / (1000 * 60 * 60 * 24);
+
+	// Calculate years using average days per year (365.25 accounts for leap years)
+	// For positive values: floor to round down (1.2 years -> 1 year)
+	// For negative values: ceil to round towards zero (-0.0164 years -> 0 years)
+	const yearsDecimal = days / 365.25;
+	const years = yearsDecimal >= 0 ? Math.floor(yearsDecimal) : Math.ceil(yearsDecimal);
+
+	// Calculate remaining days after removing full years
+	const daysInYears = years * 365.25;
+	const remainingDays = days - daysInYears;
+
+	// Calculate months from remaining days (average 30.44 days per month)
+	// For positive values: floor to round down
+	// For negative values: ceil to round towards zero
+	const monthsDecimal = remainingDays / 30.44;
+	const months = monthsDecimal >= 0 ? Math.floor(monthsDecimal) : Math.ceil(monthsDecimal);
+
+	return { years, months };
+};
+
+export const formatAgeDisplay = (years, months) => {
+	const parts = [];
+
+	// Only show years if not 0
+	if (years !== 0) {
+		parts.push(`${Math.abs(years)} ${Math.abs(years) === 1 ? 'year' : 'years'}`);
+	}
+
+	// Only show months if not 0
+	if (months !== 0) {
+		parts.push(`${Math.abs(months)} ${Math.abs(months) === 1 ? 'month' : 'months'}`);
+	}
+
+	return parts.join(', ');
+};
+
+export const formatAgeDisplayWithRounding = (years, months, showMonths = false) => {
+	// Check for invalid values
+	if (!isFinite(years) || !isFinite(months)) {
+		return null;
+	}
+
+	// Calculate total decimal years
+	const totalYears = years + months / 12;
+
+	// If both years and months are 0, show nothing
+	if (years === 0 && months === 0) {
+		return null;
+	}
+
+	// If total is less than 1 year, show months (if months > 0)
+	if (Math.abs(totalYears) < 1) {
+		if (months !== 0) {
+			return `${Math.abs(months)} ${Math.abs(months) === 1 ? 'month' : 'months'}`;
+		}
+		return null;
+	}
+
+	// For 1 year or more, round to nearest year using 0.5 as midpoint
+	// Check the fractional part: if >= 0.5, round up; if < 0.5, round down
+	// Handle both positive and negative values
+	const absTotalYears = Math.abs(totalYears);
+	const wholeYears = Math.floor(absTotalYears);
+	const fractionalPart = absTotalYears - wholeYears;
+
+	let roundedYears;
+	if (fractionalPart >= 0.5) {
+		// Round up (away from zero)
+		roundedYears = totalYears >= 0 ? wholeYears + 1 : -(wholeYears + 1);
+	} else {
+		// Round down (towards zero)
+		roundedYears = totalYears >= 0 ? wholeYears : -wholeYears;
+	}
+
+	// If rounded to 0, show nothing
+	if (roundedYears === 0) {
+		return null;
+	}
+
+	// Build the display string
+	let display = `${Math.abs(roundedYears)} ${Math.abs(roundedYears) === 1 ? 'year' : 'years'}`;
+
+	// If showMonths is true and months is non-zero, append months
+	if (showMonths && months !== 0) {
+		display += `, ${Math.abs(months)} ${Math.abs(months) === 1 ? 'month' : 'months'}`;
+	}
+
+	return display;
 };
 
 ///
