@@ -298,6 +298,15 @@
 			`;
 		}
 	}
+
+	let eventDescriptionDynamicCss = css``;
+	$: {
+		if (upgradedEvent) {
+			eventDescriptionDynamicCss = css`
+				${upgradedEvent?.type === jdgTimelineEventKeys.article ? 'font-style: italic;' : ''}
+			`;
+		}
+	}
 </script>
 
 <div
@@ -437,7 +446,7 @@
 			{/if}
 		</div>
 		<div class="timeline-event-content {eventContentCss}">
-			<div class="timeline-event-description {eventDescriptionCss}">
+			<div class="timeline-event-description {eventDescriptionCss} {eventDescriptionDynamicCss}">
 				{upgradedEvent?.description ? upgradedEvent?.description : 'Event description'}
 			</div>
 			{#if upgradedEvent?.images?.length > 0}
