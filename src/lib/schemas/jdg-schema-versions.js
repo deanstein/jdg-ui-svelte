@@ -1,5 +1,10 @@
-export const jdgSchemaVersion = '0.4.0';
+export const jdgSchemaVersion = '0.5.0';
 export const jdgSchemachanges = {
+	'v0.5.x': {
+		changes: [
+			"Renamed 'storeClose' to 'closure', 'storeOpen' to 'opening', and 'ownershipChanged' to 'ownershipChange' in timeline-event-types"
+		]
+	},
 	'v0.4.x': {
 		changes: ["Added 'source' to timeline-event schema", 'Reordered jdg-image-meta']
 	},
