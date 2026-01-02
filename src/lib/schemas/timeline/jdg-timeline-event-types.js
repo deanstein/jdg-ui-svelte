@@ -32,6 +32,10 @@ const jdgTimelineEventTypes = {
 		label: 'Generic',
 		icon: 'fa-rectangle-list'
 	},
+	legal: {
+		label: 'Legal',
+		icon: 'fa-gavel'
+	},
 	media: {
 		label: 'Media',
 		icon: 'fa-image'
@@ -58,7 +62,7 @@ const jdgTimelineEventTypes = {
 	/* ========== GENERIC (CONTEXTUAL) ========== */
 	/* Not selectable in selectors or clickable in Timelines */
 	context: {
-		label: 'Contextual Event',
+		label: 'Context',
 		icon: 'fa-globe',
 		isContextual: true
 	},
@@ -67,6 +71,7 @@ const jdgTimelineEventTypes = {
 	inception: {
 		label: 'Inception',
 		icon: 'fa-wand-magic-sparkles',
+		// Set the description directly since it's a placeholder event
 		description: 'Inception',
 		isContextual: true
 	},
@@ -76,9 +81,11 @@ const jdgTimelineEventTypes = {
 		isContextual: true
 	},
 	today: {
+		label: 'Today',
 		icon: 'fa-sun',
-		isContextual: true,
-		description: 'Today'
+		// Set the description directly since it's a placeholder event
+		description: 'Today',
+		isContextual: true
 	},
 	world: {
 		label: 'World Event',
@@ -193,8 +200,20 @@ const jdgTimelineEventTypes = {
 
 	/* ========== BUILDINGS ========== */
 	/* Base event types applicable to buildings, used in apps like CCP */
-	ownershipChanged: {
-		label: 'Ownership Changed',
+	closure: {
+		label: 'Closure',
+		icon: 'fa-store-slash'
+	},
+	construction: {
+		label: 'Construction',
+		icon: 'fa-helmet-safety'
+	},
+	opening: {
+		label: 'Opening',
+		icon: 'fa-store'
+	},
+	ownershipChange: {
+		label: 'Ownership Change',
 		icon: 'fa-handshake'
 	},
 	planning: {
@@ -204,14 +223,6 @@ const jdgTimelineEventTypes = {
 	renovation: {
 		label: 'Renovation',
 		icon: 'fa-person-digging'
-	},
-	storeClosed: {
-		label: 'Store Closed',
-		icon: 'fa-store-slash'
-	},
-	storeOpened: {
-		label: 'Store Opened',
-		icon: 'fa-store'
 	}
 };
 
