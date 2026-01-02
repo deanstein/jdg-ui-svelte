@@ -235,167 +235,167 @@
 	{#each renderFields as { key, def, isAdditional } (key)}
 		<!-- Source field only shows when editing or when it has content -->
 		{#if key !== 'source' || isEditing || $localEventStore.source}
-		<JDGInputContainer label={def.label}>
-			{#if def.inputType === JDG_INPUT_TYPES.DATE}
-				<div class="date-with-checkbox">
+			<JDGInputContainer label={def.label}>
+				{#if def.inputType === JDG_INPUT_TYPES.DATE}
+					<div class="date-with-checkbox">
+						{#if isAdditional}
+							<JDGDatePicker bind:inputValue={$localAdditionalStore[key]} isEnabled={isEditing} />
+						{:else}
+							<JDGDatePicker bind:inputValue={$localEventStore[key]} isEnabled={isEditing} />
+						{/if}
+						<JDGCheckbox
+							label="Is approximate?"
+							bind:isChecked={$localEventStore.isApprxDate}
+							isEnabled={isEditing}
+						/>
+					</div>
+				{:else if def.inputType === JDG_INPUT_TYPES.TEXT}
 					{#if isAdditional}
-						<JDGDatePicker bind:inputValue={$localAdditionalStore[key]} isEnabled={isEditing} />
+						<JDGTextInput bind:inputValue={$localAdditionalStore[key]} isEnabled={isEditing} />
 					{:else}
-						<JDGDatePicker bind:inputValue={$localEventStore[key]} isEnabled={isEditing} />
+						<JDGTextInput bind:inputValue={$localEventStore[key]} isEnabled={isEditing} />
 					{/if}
-					<JDGCheckbox
-						label="Is approximate?"
-						bind:isChecked={$localEventStore.isApprxDate}
-						isEnabled={isEditing}
-					/>
-				</div>
-			{:else if def.inputType === JDG_INPUT_TYPES.TEXT}
-				{#if isAdditional}
-					<JDGTextInput bind:inputValue={$localAdditionalStore[key]} isEnabled={isEditing} />
-				{:else}
-					<JDGTextInput bind:inputValue={$localEventStore[key]} isEnabled={isEditing} />
-				{/if}
-			{:else if def.inputType === JDG_INPUT_TYPES.TEXTAREA}
-				{#if isAdditional}
-					<JDGTextArea bind:inputValue={$localAdditionalStore[key]} isEnabled={isEditing} />
-				{:else}
-					<JDGTextArea bind:inputValue={$localEventStore[key]} isEnabled={isEditing} />
-				{/if}
-			{:else if def.inputType === JDG_INPUT_TYPES.CHECKBOX}
-				{#if isAdditional}
-					<JDGCheckbox bind:isChecked={$localAdditionalStore[key]} isEnabled={isEditing} />
-				{:else}
-					<JDGCheckbox bind:isChecked={$localEventStore[key]} isEnabled={isEditing} />
-				{/if}
-			{:else if def.inputType === JDG_INPUT_TYPES.SELECT}
-				{#if isAdditional}
-					<select id={key} bind:value={$localAdditionalStore[key]}>
-						{#each def.options as opt}
-							<option value={opt.value}>{opt.label}</option>
-						{/each}
-					</select>
-				{:else}
-					<select id={key} bind:value={$localEventStore[key]}>
-						{#each def.options as opt}
-							<option value={opt.value}>{opt.label}</option>
-						{/each}
-					</select>
-				{/if}
-			{:else if def.inputType === JDG_INPUT_TYPES.IMAGE_LIST}
-				{#if isAdditional}
-					<!-- Image display - keyed to update when selection changes -->
-					{#key $localAdditionalStore[key]?.length}
-						{#if resolveImageMetaKeys($localAdditionalStore[key] || [], imageMetaRegistry)?.length > 0}
-							<div class="image-list-display">
-								<JDGImageThumbnailGroup
-									imageMetaSet={resolveImageMetaKeys(
-										$localAdditionalStore[key] || [],
-										imageMetaRegistry
-									)}
-								/>
-							</div>
-						{:else if !isEditing}
-							<div class="no-images-message">{noImageMessage}</div>
-						{/if}
-					{/key}
+				{:else if def.inputType === JDG_INPUT_TYPES.TEXTAREA}
+					{#if isAdditional}
+						<JDGTextArea bind:inputValue={$localAdditionalStore[key]} isEnabled={isEditing} />
+					{:else}
+						<JDGTextArea bind:inputValue={$localEventStore[key]} isEnabled={isEditing} />
+					{/if}
+				{:else if def.inputType === JDG_INPUT_TYPES.CHECKBOX}
+					{#if isAdditional}
+						<JDGCheckbox bind:isChecked={$localAdditionalStore[key]} isEnabled={isEditing} />
+					{:else}
+						<JDGCheckbox bind:isChecked={$localEventStore[key]} isEnabled={isEditing} />
+					{/if}
+				{:else if def.inputType === JDG_INPUT_TYPES.SELECT}
+					{#if isAdditional}
+						<select id={key} bind:value={$localAdditionalStore[key]}>
+							{#each def.options as opt}
+								<option value={opt.value}>{opt.label}</option>
+							{/each}
+						</select>
+					{:else}
+						<select id={key} bind:value={$localEventStore[key]}>
+							{#each def.options as opt}
+								<option value={opt.value}>{opt.label}</option>
+							{/each}
+						</select>
+					{/if}
+				{:else if def.inputType === JDG_INPUT_TYPES.IMAGE_LIST}
+					{#if isAdditional}
+						<!-- Image display - keyed to update when selection changes -->
+						{#key $localAdditionalStore[key]?.length}
+							{#if resolveImageMetaKeys($localAdditionalStore[key] || [], imageMetaRegistry)?.length > 0}
+								<div class="image-list-display">
+									<JDGImageThumbnailGroup
+										imageMetaSet={resolveImageMetaKeys(
+											$localAdditionalStore[key] || [],
+											imageMetaRegistry
+										)}
+									/>
+								</div>
+							{:else if !isEditing}
+								<div class="no-images-message">{noImageMessage}</div>
+							{/if}
+						{/key}
 
-					<!-- In edit mode, show button and selector (outside key block to prevent remount) -->
-					{#if isEditing}
-						<div class="image-selector-actions">
-							<JDGButton
-								label={isImageSelectorOpen
-									? 'Close Image Selector'
-									: ($localAdditionalStore[key]?.length || 0) > 0
-										? 'Manage Images'
-										: 'Add Images'}
-								faIcon={isImageSelectorOpen ? 'fa-times' : 'fa-images'}
-								onClickFunction={() => {
-									isImageSelectorOpen = !isImageSelectorOpen;
-								}}
-								fontSize="14px"
-								paddingLeftRight="16px"
-								paddingTopBottom="8px"
-								backgroundColor={jdgColors.active}
-							/>
-						</div>
-						{#if isImageSelectorOpen}
-							<div class="image-selector-container">
-								<JDGImageSelector
-									selectedImages={$localAdditionalStore[key] || []}
-									isEnabled={isEditing}
-									{registryRepoName}
-									requireRegistry={true}
-									onSelectionChange={(newSelection) => {
-										localAdditionalStore.update((store) => ({
-											...store,
-											[key]: newSelection
-										}));
+						<!-- In edit mode, show button and selector (outside key block to prevent remount) -->
+						{#if isEditing}
+							<div class="image-selector-actions">
+								<JDGButton
+									label={isImageSelectorOpen
+										? 'Close Image Selector'
+										: ($localAdditionalStore[key]?.length || 0) > 0
+											? 'Manage Images'
+											: 'Add Images'}
+									faIcon={isImageSelectorOpen ? 'fa-times' : 'fa-images'}
+									onClickFunction={() => {
+										isImageSelectorOpen = !isImageSelectorOpen;
 									}}
+									fontSize="14px"
+									paddingLeftRight="16px"
+									paddingTopBottom="8px"
+									backgroundColor={jdgColors.active}
 								/>
 							</div>
+							{#if isImageSelectorOpen}
+								<div class="image-selector-container">
+									<JDGImageSelector
+										selectedImages={$localAdditionalStore[key] || []}
+										isEnabled={isEditing}
+										{registryRepoName}
+										requireRegistry={true}
+										onSelectionChange={(newSelection) => {
+											localAdditionalStore.update((store) => ({
+												...store,
+												[key]: newSelection
+											}));
+										}}
+									/>
+								</div>
+							{/if}
 						{/if}
-					{/if}
-				{:else}
-					<!-- Image display - keyed to update when selection changes -->
-					{#key $localEventStore[key]?.length}
-						{#if resolveImageMetaKeys($localEventStore[key] || [], imageMetaRegistry)?.length > 0}
-							<div class="image-list-display">
-								<JDGImageThumbnailGroup
-									imageMetaSet={resolveImageMetaKeys(
-										$localEventStore[key] || [],
-										imageMetaRegistry
-									)}
-									maxImageHeight={'15svh'}
-								/>
-							</div>
-						{:else if !isEditing}
-							<div class="no-images-message">{noImageMessage}</div>
-						{/if}
-					{/key}
+					{:else}
+						<!-- Image display - keyed to update when selection changes -->
+						{#key $localEventStore[key]?.length}
+							{#if resolveImageMetaKeys($localEventStore[key] || [], imageMetaRegistry)?.length > 0}
+								<div class="image-list-display">
+									<JDGImageThumbnailGroup
+										imageMetaSet={resolveImageMetaKeys(
+											$localEventStore[key] || [],
+											imageMetaRegistry
+										)}
+										maxImageHeight={'15svh'}
+									/>
+								</div>
+							{:else if !isEditing}
+								<div class="no-images-message">{noImageMessage}</div>
+							{/if}
+						{/key}
 
-					<!-- In edit mode, show button and selector (outside key block to prevent remount) -->
-					{#if isEditing}
-						<div class="image-selector-actions">
-							<JDGButton
-								label={isImageSelectorOpen
-									? 'Close Image Selector'
-									: ($localEventStore[key]?.length || 0) > 0
-										? 'Manage Images'
-										: 'Add Images'}
-								faIcon={isImageSelectorOpen ? 'fa-times' : 'fa-images'}
-								onClickFunction={() => {
-									isImageSelectorOpen = !isImageSelectorOpen;
-								}}
-								fontSize="14px"
-								paddingLeftRight="16px"
-								paddingTopBottom="8px"
-								backgroundColor={jdgColors.active}
-							/>
-						</div>
-						{#if isImageSelectorOpen}
-							<div class="image-selector-container">
-								<JDGImageSelector
-									selectedImages={$localEventStore[key] || []}
-									isEnabled={isEditing}
-									{registryRepoName}
-									requireRegistry={true}
-									onSelectionChange={(newSelection) => {
-										localEventStore.update((store) => ({
-											...store,
-											[key]: newSelection
-										}));
+						<!-- In edit mode, show button and selector (outside key block to prevent remount) -->
+						{#if isEditing}
+							<div class="image-selector-actions">
+								<JDGButton
+									label={isImageSelectorOpen
+										? 'Close Image Selector'
+										: ($localEventStore[key]?.length || 0) > 0
+											? 'Manage Images'
+											: 'Add Images'}
+									faIcon={isImageSelectorOpen ? 'fa-times' : 'fa-images'}
+									onClickFunction={() => {
+										isImageSelectorOpen = !isImageSelectorOpen;
 									}}
+									fontSize="14px"
+									paddingLeftRight="16px"
+									paddingTopBottom="8px"
+									backgroundColor={jdgColors.active}
 								/>
 							</div>
+							{#if isImageSelectorOpen}
+								<div class="image-selector-container">
+									<JDGImageSelector
+										selectedImages={$localEventStore[key] || []}
+										isEnabled={isEditing}
+										{registryRepoName}
+										requireRegistry={true}
+										onSelectionChange={(newSelection) => {
+											localEventStore.update((store) => ({
+												...store,
+												[key]: newSelection
+											}));
+										}}
+									/>
+								</div>
+							{/if}
 						{/if}
 					{/if}
+				{:else if isAdditional}
+					<JDGTextInput bind:inputValue={$localAdditionalStore[key]} />
+				{:else}
+					<JDGTextInput bind:inputValue={$localEventStore[key]} />
 				{/if}
-		{:else if isAdditional}
-			<JDGTextInput bind:inputValue={$localAdditionalStore[key]} />
-		{:else}
-			<JDGTextInput bind:inputValue={$localEventStore[key]} />
-		{/if}
-		</JDGInputContainer>
+			</JDGInputContainer>
 		{/if}
 	{/each}
 	{#if isEditable}
