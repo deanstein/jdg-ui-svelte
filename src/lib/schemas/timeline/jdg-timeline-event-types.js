@@ -10,13 +10,6 @@ const jdgTimelineEventTypes = {
 	article: {
 		label: 'Article',
 		icon: 'fa-newspaper',
-		additionalContent: {
-			publication: {
-				default: '',
-				label: 'Publication',
-				inputType: JDG_INPUT_TYPES.TEXT
-			}
-		}
 	},
 	generic: {
 		label: 'Generic',
