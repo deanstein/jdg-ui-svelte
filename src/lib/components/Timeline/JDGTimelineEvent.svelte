@@ -226,9 +226,6 @@
 		border-radius: 0px 0px ${eventBorderRadius} ${eventBorderRadius};
 	`;
 
-	const firstRowContext = getContext(JDG_CONTEXTS.TIMELINE_FIRST_ROW_HEIGHT);
-	const lastRowContext = getContext(JDG_CONTEXTS.TIMELINE_LAST_ROW_HEIGHT);
-
 	// Get the timeline's image registry from context (set by parent JDGTimeline)
 	const timelineImageRegistryStore = getContext(JDG_CONTEXTS.TIMELINE_IMAGE_REGISTRY);
 	$: imageMetaRegistry = $timelineImageRegistryStore;
@@ -250,29 +247,6 @@
 		upgradedEvent?.isApprxDate &&
 		eventDateCorrected?.getUTCMonth() === 0 &&
 		eventDateCorrected?.getUTCDate() === 1;
-
-	// Update row heights
-	$: {
-		if (upgradedEvent) {
-			// birth and death events report their row height for the spine to align to
-			if (
-				(upgradedEvent.type === timelineEventTypes.birth.type ||
-					upgradedEvent.type === timelineEventTypes.birth.type) &&
-				eventRowDivRef
-			) {
-				const eventRowHeight = eventRowDivRef.getBoundingClientRect().height;
-				firstRowContext.set(eventRowHeight);
-			}
-			if (
-				(upgradedEvent.type === timelineEventTypes.death.type ||
-					upgradedEvent.type === timelineEventTypes.death) &&
-				eventRowDivRef
-			) {
-				const eventRowHeight = eventRowDivRef.getBoundingClientRect().height;
-				lastRowContext.set(eventRowHeight);
-			}
-		}
-	}
 
 	// Dynamic CSS
 	let eventRowContainerCss = css``;

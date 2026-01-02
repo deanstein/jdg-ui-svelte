@@ -200,13 +200,6 @@
 	// depending on whether the canvas is scrolled to the top or bottom
 	let canvasScrollState = { top: true, bottom: true };
 
-	// Make a local store for values
-	// that should be shared with TimelineEvents
-	const firstEventRowHeightStore = writable(0);
-	setContext(JDG_CONTEXTS.TIMELINE_FIRST_ROW_HEIGHT, firstEventRowHeightStore);
-	const lastEventRowHeightStore = writable(0);
-	setContext(JDG_CONTEXTS.TIMELINE_LAST_ROW_HEIGHT, lastEventRowHeightStore);
-
 	// Preview overlay handlers
 	let previewOverlayTimeout;
 
@@ -340,13 +333,6 @@
 			jdgSizes.timelineUnit};
 		}
 	`;
-	$: {
-		spineContainerCss = css`
-			${spineContainerCss}
-			margin-top: ${canvasScrollState.top ? $firstEventRowHeightStore / 2 + 'px' : 0};
-			margin-bottom: ${canvasScrollState.bottom ? $lastEventRowHeightStore / 2 + 'px' : 0};
-		`;
-	}
 
 	let spineColumnCss = css`
 		width: ${jdgSizes.timelineSpineWidth};
