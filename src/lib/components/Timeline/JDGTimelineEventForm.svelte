@@ -4,7 +4,7 @@
 	import { getContext } from 'svelte';
 	import { get, writable } from 'svelte/store';
 
-	import { JDG_CONTEXTS } from '$lib/jdg-contexts.js';
+	import JDG_CONTEXTS from '$lib/jdg-contexts.js';
 	import JDG_INPUT_TYPES from '$lib/schemas/jdg-input-types.js';
 
 	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
@@ -53,8 +53,24 @@
 
 	// Read from and write to this store
 	export let eventStore = writable(instantiateObject(jdgTimelineEvent));
-	// The types of events to show
+	// The types of events to show (fallback if context not provided)
 	export let eventTypeKeys = jdgTimelineEventKeys;
+
+	// Get event type keys from context (set by parent components like +page.svelte)
+	// Falls back to prop if context not available
+	// Context can be either an array of key strings or an object like jdgTimelineEventKeys
+	const contextEventTypeKeys = getContext(JDG_CONTEXTS.TIMELINE_EVENT_TYPE_KEYS);
+
+	// Normalize event type keys: convert array to object format if needed
+	$: effectiveEventTypeKeys = (() => {
+		const keys = contextEventTypeKeys ?? eventTypeKeys;
+		// If it's an array, convert to object format
+		if (Array.isArray(keys)) {
+			return Object.fromEntries(keys.map((key) => [key, key]));
+		}
+		// Otherwise, assume it's already in object format
+		return keys;
+	})();
 	// Editing
 	export let isEditable = true; // show compose toolbar if true
 	export let isEditing = false; // fields are in edit state if true
@@ -225,7 +241,7 @@
 	{#if isEditing}
 		<JDGInputContainer label="Type">
 			<JDGSelect
-				optionsGroup={timelineEventOptionsGroup(eventTypeKeys)}
+				optionsGroup={timelineEventOptionsGroup(effectiveEventTypeKeys)}
 				bind:inputValue={$localEventStore.type}
 				isEnabled={isEditing}
 			/>
