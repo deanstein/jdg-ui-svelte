@@ -1,6 +1,8 @@
+import JDG_INPUT_TYPES from '$lib/schemas/jdg-input-types.js';
 import { jdgSchemaVersion } from '$lib/schemas/jdg-schema-versions.js';
-import { JDG_INPUT_TYPES } from './jdg-input-types.js';
-import jdgTimelineEventTypes from './jdg-timeline-event-types.js';
+
+import { jdgSharedSources } from '$lib/jdg-shared-strings.js';
+import jdgTimelineEventTypes from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 
 // NOTE: This is a HYBRID SCHEMA - it has both data and UI
 const jdgTimelineEvent = {
@@ -36,7 +38,8 @@ const jdgTimelineEvent = {
 	source: {
 		default: '',
 		label: 'Source',
-		inputType: JDG_INPUT_TYPES.TEXT
+		inputType: JDG_INPUT_TYPES.COMBOBOX,
+		options: jdgSharedSources
 	},
 	// Optional; certain event types may have additional data
 	additionalContent: {},

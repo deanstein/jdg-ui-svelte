@@ -1,4 +1,4 @@
-import { JDG_INPUT_TYPES } from './jdg-input-types.js';
+import JDG_INPUT_TYPES from '$lib/schemas/jdg-input-types.js';
 
 // the various types of timeline events and the additionalContent they can display
 // this is used for upgrading timeline events

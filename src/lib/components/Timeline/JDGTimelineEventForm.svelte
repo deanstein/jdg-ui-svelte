@@ -5,7 +5,7 @@
 	import { get, writable } from 'svelte/store';
 
 	import { JDG_CONTEXTS } from '$lib/jdg-contexts.js';
-	import { JDG_INPUT_TYPES } from '$lib/schemas/timeline/jdg-input-types.js';
+	import JDG_INPUT_TYPES from '$lib/schemas/jdg-input-types.js';
 
 	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
 	import jdgTimelineEventTypes, {
@@ -37,6 +37,7 @@
 	import {
 		JDGButton,
 		JDGCheckbox,
+		JDGCombobox,
 		JDGComposeToolbar,
 		JDGDatePicker,
 		JDGForm,
@@ -254,6 +255,20 @@
 						<JDGTextInput bind:inputValue={$localAdditionalStore[key]} isEnabled={isEditing} />
 					{:else}
 						<JDGTextInput bind:inputValue={$localEventStore[key]} isEnabled={isEditing} />
+					{/if}
+				{:else if def.inputType === JDG_INPUT_TYPES.COMBOBOX}
+					{#if isAdditional}
+						<JDGCombobox
+							bind:inputValue={$localAdditionalStore[key]}
+							options={def.options || []}
+							isEnabled={isEditing}
+						/>
+					{:else}
+						<JDGCombobox
+							bind:inputValue={$localEventStore[key]}
+							options={def.options || []}
+							isEnabled={isEditing}
+						/>
 					{/if}
 				{:else if def.inputType === JDG_INPUT_TYPES.TEXTAREA}
 					{#if isAdditional}

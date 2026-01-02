@@ -3,6 +3,18 @@ export const jdgSharedStrings = {
 	jdgCopyrightName: 'Joshua Dean Goldstein'
 };
 
+// Common sources/attributions for timeline events and image metadata
+// Used in COMBOBOX input to provide suggestions while allowing custom entry
+// The 'value' is stored in the data, and 'label' is displayed to the user
+export const jdgSharedSources = [
+	{
+		value: 'cc-historical-narrative',
+		label: 'Kurt P. Schweigart, Cinderella City Historical Narrative'
+	},
+	{ value: 'denver-public-library', label: 'Denver Public Library' },
+	{ value: 'englewood-public-library', label: 'Englewood Public Library' },
+];
+
 export const jdgSharedIdentifiers = {
 	// GridLayout may need to communicate its children in some cases
 	gridLayout: 'jdg-grid-layout',

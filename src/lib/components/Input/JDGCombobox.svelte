@@ -3,7 +3,7 @@
 	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let isEnabled = true;
-	export let inputValue = '';
+	export let inputValue = ''; // Stores the value (key) or custom string
 	export let options = []; // Array of { value, label }
 	export let placeholder = 'Type or select...';
 	export let fontColorOverride = undefined;
@@ -13,10 +13,31 @@
 	let showDropdown = false;
 	let inputElement;
 	let highlightedIndex = -1;
+	let displayValue = ''; // What's shown in the input field (label or custom text)
+	let isUserTyping = false; // Track if user is actively typing
 
-	// Filter options based on current input
-	$: filteredOptions = inputValue
-		? options.filter((opt) => opt.label.toLowerCase().includes(inputValue.toLowerCase()))
+	// Get the label for a given value, or return the value if it's not in options (custom)
+	function getLabelForValue(value) {
+		if (!value) return '';
+		const option = options.find((opt) => opt.value === value);
+		return option ? option.label : value;
+	}
+
+	// Get the value for a given label, or return the label if it's not in options (custom)
+	function getValueForLabel(label) {
+		if (!label) return '';
+		const option = options.find((opt) => opt.label === label);
+		return option ? option.value : label;
+	}
+
+	// Initialize displayValue from inputValue on mount
+	$: if (!isUserTyping) {
+		displayValue = getLabelForValue(inputValue);
+	}
+
+	// Filter options based on current display input
+	$: filteredOptions = displayValue
+		? options.filter((opt) => opt.label.toLowerCase().includes(displayValue.toLowerCase()))
 		: options;
 
 	// Reset highlighted index when filtered options change
@@ -25,9 +46,23 @@
 	}
 
 	function selectOption(option) {
-		inputValue = option.label;
+		isUserTyping = false; // User selected, not typing
+		inputValue = option.value; // Store the value (key)
+		displayValue = option.label; // Update display
 		showDropdown = false;
 		highlightedIndex = -1;
+	}
+
+	function handleInput(event) {
+		isUserTyping = true;
+		const newDisplayValue = event.target.value;
+		displayValue = newDisplayValue;
+		// Convert display value back to stored value
+		inputValue = getValueForLabel(newDisplayValue);
+		// Reset typing flag after a short delay to allow external updates
+		setTimeout(() => {
+			isUserTyping = false;
+		}, 100);
 	}
 
 	function handleFocus() {
@@ -86,7 +121,8 @@
 	<input
 		type="text"
 		bind:this={inputElement}
-		bind:value={inputValue}
+		bind:value={displayValue}
+		on:input={handleInput}
 		on:focus={handleFocus}
 		on:blur={handleBlur}
 		on:keydown={handleKeydown}
@@ -98,11 +134,24 @@
 		<ul class="dropdown">
 			{#each filteredOptions as option, index}
 				<li
+					role="option"
+					aria-selected={index === highlightedIndex}
 					class:highlighted={index === highlightedIndex}
-					on:mousedown={() => selectOption(option)}
-					on:mouseenter={() => (highlightedIndex = index)}
 				>
-					{option.label}
+					<button
+						type="button"
+						class="option-button"
+						on:mousedown={() => selectOption(option)}
+						on:mouseenter={() => (highlightedIndex = index)}
+						on:keydown={(e) => {
+							if (e.key === 'Enter' || e.key === ' ') {
+								e.preventDefault();
+								selectOption(option);
+							}
+						}}
+					>
+						{option.label}
+					</button>
 				</li>
 			{/each}
 		</ul>
@@ -150,13 +199,23 @@
 	}
 
 	.dropdown li {
-		padding: 8px 12px;
+		padding: 0;
 		cursor: pointer;
 	}
 
-	.dropdown li:hover,
-	.dropdown li.highlighted {
+	.dropdown li .option-button {
+		width: 100%;
+		padding: 8px 12px;
+		border: none;
+		background: transparent;
+		text-align: left;
+		cursor: pointer;
+		font: inherit;
+		color: inherit;
+	}
+
+	.dropdown li:hover .option-button,
+	.dropdown li.highlighted .option-button {
 		background: #f0f0f0;
 	}
 </style>
-
