@@ -14,7 +14,11 @@ const JDG_CONTEXTS = {
 
 	// Timeline row heights - used for spine alignment
 	TIMELINE_FIRST_ROW_HEIGHT: 'jdg-timeline-first-row-height',
-	TIMELINE_LAST_ROW_HEIGHT: 'jdg-timeline-last-row-height'
+	TIMELINE_LAST_ROW_HEIGHT: 'jdg-timeline-last-row-height',
+
+	// Timeline event type keys - set by parent components to filter available event types
+	// Used by JDGTimelineEventForm to determine which event types to show in dropdown
+	TIMELINE_EVENT_TYPE_KEYS: 'jdg-timeline-event-type-keys'
 };
 
 export default JDG_CONTEXTS;

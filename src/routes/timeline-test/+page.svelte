@@ -1,8 +1,9 @@
 <script>
-	import { onMount } from 'svelte';
+	import { onMount, setContext } from 'svelte';
 	import { writable } from 'svelte/store';
 	import { v4 as uuid } from 'uuid';
 
+	import JDG_CONTEXTS from '$lib/jdg-contexts.js';
 	import jdgTimelineEventTypes, {
 		jdgTimelineEventKeys
 	} from '$lib/schemas/timeline/jdg-timeline-event-types.js';
@@ -60,7 +61,6 @@
 		JDGGridLayout,
 		JDGH3H4,
 		JDGImageAvatar,
-		JDGImageSelector,
 		JDGInputContainer,
 		JDGJumpTo,
 		JDGModalActionsBar,
@@ -79,6 +79,33 @@
 
 	// Set the age suffix
 	ageSuffix.set('after opening');
+
+	/*** TIMELINE EVENT TYPE CONTEXT ***/
+	// Define which event types should be available in the timeline event form
+	// This context will be consumed by JDGTimelineEventForm (via JDGTimelineEventModal)
+	// You can provide either an array of key strings or an object like jdgTimelineEventKeys
+	// Example: Filter to only building-related event types
+	const allowedEventTypeKeys = [
+		// Building-specific events
+		jdgTimelineEventKeys.opening,
+		jdgTimelineEventKeys.closure,
+		jdgTimelineEventKeys.construction,
+		jdgTimelineEventKeys.renovation,
+		jdgTimelineEventKeys.planning,
+		jdgTimelineEventKeys.ownershipChange,
+		// Generic events
+		jdgTimelineEventKeys.generic,
+		jdgTimelineEventKeys.article,
+		jdgTimelineEventKeys.legal,
+		jdgTimelineEventKeys.media,
+		jdgTimelineEventKeys.memory,
+		jdgTimelineEventKeys.quote,
+		jdgTimelineEventKeys.statistic
+	];
+
+	// Set the context for timeline event type keys
+	// This will be available to all child components, including JDGTimelineEventForm
+	setContext(JDG_CONTEXTS.TIMELINE_EVENT_TYPE_KEYS, allowedEventTypeKeys);
 
 	// Save the current draft timeline host collection to the GitHub repo
 	const saveToRepo = async () => {
