@@ -1,18 +1,8 @@
 import JDG_INPUT_TYPES from '$lib/schemas/jdg-input-types.js';
 
-// the various types of timeline events and the additionalContent they can display
+// The various types of timeline events and the additionalContent they can display
 // this is used for upgrading timeline events
 // to ensure no errors when new data is supported
-
-export const timelineEventStrings = {
-	birthEventModalTitle: 'Birth Event Details',
-	deathEventModalTitle: 'Death Event Details',
-	deceased: 'Deceased',
-	childEventModalTitle: 'Child Event Details',
-	residenceEventModalTitle: 'Residence Event Details',
-	vehicleEventModalTitle: 'Vehicle Event Details',
-	textEventModalTitle: 'Event Details'
-};
 
 const jdgTimelineEventTypes = {
 	/* ========== GENERIC ========== */
