@@ -67,6 +67,9 @@ export { JDGCheckbox };
 import JDGClipFade from './components/JDGClipFade.svelte';
 export { JDGClipFade };
 
+import JDGCombobox from './components/Input/JDGCombobox.svelte';
+export { JDGCombobox };
+
 import JDGComposeButton from './components/Compose/JDGComposeButton.svelte';
 export { JDGComposeButton };
 
