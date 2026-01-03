@@ -1088,7 +1088,7 @@
 						<JDGTextInput bind:inputValue={$draftImageMeta.attribution} />
 					</JDGInputContainer>
 					<JDGInputContainer label="Title">
-						<JDGTextArea bind:inputValue={$draftImageMeta.title} />
+						<JDGTextInput bind:inputValue={$draftImageMeta.title} />
 					</JDGInputContainer>
 					<JDGInputContainer label="Show background blur?">
 						<label>
