@@ -10,7 +10,8 @@ import {
 	deleteObjectByKeyValue,
 	extractDefaultsFromSchema as extractDataFromHybridSchema,
 	getObjectByKeyValue,
-	instantiateObject
+	instantiateObject,
+	orderObjectBySchema
 } from '$lib/jdg-utils.js';
 import jdgTimelineEventTypes, {
 	jdgTimelineEventKeys
@@ -55,7 +56,8 @@ export function upgradeTimelineHost(timelineHost) {
 		});
 	}
 
-	return upgradedHost;
+	// Reconstruct object in schema order to ensure version appears at the end
+	return orderObjectBySchema(jdgTimelineHost, upgradedHost);
 }
 
 //
@@ -114,7 +116,8 @@ export function upgradeTimelineEvent(event) {
 	// Ensure version is current
 	upgradedEvent.version = jdgSchemaVersion;
 
-	return upgradedEvent;
+	// Reconstruct object in schema order to ensure version appears at the end
+	return orderObjectBySchema(jdgTimelineEvent, upgradedEvent);
 }
 
 // Timeline events contain both UI and data in their schema.

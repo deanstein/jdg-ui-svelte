@@ -240,6 +240,25 @@ export const extractDefaultsFromSchema = (schemaObject = {}) => {
 	return result;
 };
 
+// Reconstruct an object in schema order to ensure properties appear in the same order as defined in the schema
+// This is useful for ensuring version fields and other schema-defined properties appear in the correct position
+export const orderObjectBySchema = (schemaObject, dataObject) => {
+	const orderedObject = {};
+	// First, add properties in schema order
+	for (const key of Object.keys(schemaObject)) {
+		if (dataObject.hasOwnProperty(key)) {
+			orderedObject[key] = dataObject[key];
+		}
+	}
+	// Then, add any extra properties that might not be in the schema (shouldn't happen, but be safe)
+	for (const key of Object.keys(dataObject)) {
+		if (!schemaObject.hasOwnProperty(key)) {
+			orderedObject[key] = dataObject[key];
+		}
+	}
+	return orderedObject;
+};
+
 // Extract an object from a file
 // Useful for getting the imageMetaRegistry from an imageMetaRegistry.js file
 /*
@@ -737,7 +756,8 @@ export const upgradeImageMeta = (imageMeta) => {
 		upgradedImageMeta.alt = upgradedImageMeta.caption;
 	}
 
-	return upgradedImageMeta;
+	// Reconstruct object in schema order to ensure version appears at the end
+	return orderObjectBySchema(jdgImageMeta, upgradedImageMeta);
 };
 
 // Upgrade all entries of an imageMetaRegistry
