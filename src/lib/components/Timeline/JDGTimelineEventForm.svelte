@@ -242,6 +242,10 @@
 	$: currentTypeLabel = currentTypeInfo.label ?? $localEventStore.type ?? 'Event';
 	$: currentTypeIcon = currentTypeInfo.icon ?? 'fa-calendar';
 	$: isGenericType = $localEventStore.type === 'generic';
+	// Convert label to sentence case for hover text (first letter uppercase, rest lowercase)
+	$: sentenceCaseLabel = currentTypeLabel
+		? currentTypeLabel.charAt(0) + currentTypeLabel.slice(1).toLowerCase()
+		: currentTypeLabel;
 
 	// Reset image selector when editing state changes
 	$: if (!isEditing) {
@@ -260,7 +264,10 @@
 	<!-- Event type and age header -->
 	<div class="event-header">
 		<div class="event-header-view event-header-age">
-			<i class="fa-solid {currentTypeIcon} event-header-icon" title="{currentTypeLabel} event" />
+			<i class="fa-solid {currentTypeIcon} event-header-icon" title="{sentenceCaseLabel} event" />
+			{#if !isGenericType}
+				<span class="event-header-type-label">{currentTypeLabel}</span>
+			{/if}
 			{#if eventAgeDisplay}
 				<span class="event-header-separator">|</span>
 				<span
@@ -533,6 +540,10 @@
 
 	.event-header-icon {
 		font-size: 1.2rem;
+	}
+
+	.event-header-type-label {
+		font-weight: 500;
 	}
 
 	.event-header-separator {
