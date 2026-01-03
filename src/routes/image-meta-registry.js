@@ -582,6 +582,19 @@ const imageMetaRegistry = {
 			version: '0.3.0',
 			title: ''
 		}
+	},
+	image_testing: {
+		test: {
+			id: '8f2a3c50-d3f9-4092-9f24-4223a5f1003a',
+			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1767421888/jdg-ui-svelte/image-testing/test.jpg',
+			caption: 'This is a test image',
+			attribution: '',
+			alt: 'This is a test image',
+			title: '',
+			showBackgroundBlur: true,
+			toolbarJustification: 'right',
+			version: '0.5.1'
+		}
 	}
 };
 
