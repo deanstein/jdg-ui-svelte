@@ -89,10 +89,14 @@
 		// Building-specific events
 		jdgTimelineEventKeys.opening,
 		jdgTimelineEventKeys.closure,
+		jdgTimelineEventKeys.demolition,
 		jdgTimelineEventKeys.construction,
 		jdgTimelineEventKeys.renovation,
 		jdgTimelineEventKeys.planning,
+		jdgTimelineEventKeys.rebrand,
 		jdgTimelineEventKeys.ownershipChange,
+		jdgTimelineEventKeys.ownershipNegotiation,
+		jdgTimelineEventKeys.structural,
 		// Generic events
 		jdgTimelineEventKeys.generic,
 		jdgTimelineEventKeys.article,
