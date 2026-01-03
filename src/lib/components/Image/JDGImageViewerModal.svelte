@@ -14,7 +14,9 @@
 
 	export let imageMeta = instantiateObject(jdgImageMeta);
 
-	const imageAndCaptionWrapperCss = css`
+	// JDGImage upgrades imageMeta internally, which mutates the shared object
+	// Make CSS reactive so it updates when imageMeta changes
+	$: imageAndCaptionWrapperCss = css`
 		display: ${imageMeta.showBackgroundBlur ? 'flex' : 'grid'};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			padding: 0px;
