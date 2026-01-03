@@ -189,7 +189,11 @@ const jdgTimelineEventTypes = {
 	},
 	construction: {
 		label: 'Construction',
-		icon: 'fa-helmet-safety'
+		icon: 'fa-person-digging'
+	},
+	demolition: {
+		label: 'Demolition',
+		icon: 'fa-hammer'
 	},
 	opening: {
 		label: 'Opening',
@@ -199,13 +203,25 @@ const jdgTimelineEventTypes = {
 		label: 'Ownership Change',
 		icon: 'fa-handshake'
 	},
+	ownershipNegotiation: {
+		label: 'Ownership Negotiation',
+		icon: 'fa-people-arrows'
+	},
 	planning: {
 		label: 'Planning',
 		icon: 'fa-compass-drafting'
 	},
+	rebrand: {
+		label: 'Rebrand',
+		icon: 'fa-sign-hanging'
+	},
 	renovation: {
 		label: 'Renovation',
 		icon: 'fa-person-digging'
+	},
+	structural: {
+		label: 'Structural',
+		icon: 'fa-triangle-exclamation'
 	}
 };
 
