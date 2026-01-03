@@ -306,6 +306,12 @@
 			`;
 		}
 	}
+
+	// Get event label and convert to sentence case for hover text
+	$: eventLabel = timelineEventTypes[upgradedEvent?.type]?.label ?? upgradedEvent?.type;
+	$: sentenceCaseLabel = eventLabel
+		? eventLabel.charAt(0) + eventLabel.slice(1).toLowerCase()
+		: eventLabel;
 </script>
 
 <div
@@ -356,7 +362,7 @@
 			<!-- event icon -->
 			<i
 				class="fa-solid {timelineEventTypes[upgradedEvent?.type]?.icon} {eventFaIconCss}"
-				title="{timelineEventTypes[upgradedEvent?.type]?.label ?? upgradedEvent?.type} event"
+				title="{sentenceCaseLabel} event"
 			/>
 			<!-- hide age if this is the birth event or if there's no age to display -->
 			{#if upgradedEvent?.type !== timelineEventTypes.birth.type && eventAgeDisplay}
