@@ -574,13 +574,13 @@ const imageMetaRegistry = {
 		_1968_blue_mall: {
 			id: '6b86e002-91b9-4ecf-8a18-5e150232f741',
 			src: 'https://res.cloudinary.com/jdg-main/image/upload/v1765691299/jdg-ui-svelte/ccm/1968-blue-mall.jpg',
-			alt: 'The Blue Mall some time in 1968.',
-			caption: 'The Blue Mall some time in 1968.',
+			caption: 'The Blue Mall and its fountain some time in 1968.',
 			attribution: 'Englewood Public Library',
+			alt: 'The Blue Mall and its fountain some time in 1968.',
+			title: '',
 			showBackgroundBlur: true,
 			toolbarJustification: 'right',
-			version: '0.3.0',
-			title: ''
+			version: '0.5.1'
 		}
 	},
 	image_testing: {
