@@ -716,8 +716,9 @@ export const getMaxElementHeightPx = (elementRef) => {
 export const upgradeImageMeta = (imageMeta) => {
 	let upgradedImageMeta = imageMeta;
 
-	// Instantiate and deepmatch if the version isn't matching
-	if (!imageMeta?.id || imageMeta.version !== jdgSchemaVersion) {
+	// Instantiate and deepmatch if the version isn't matching or is missing
+	// Also upgrade if id is missing (new images)
+	if (!imageMeta?.id || !imageMeta.version || imageMeta.version !== jdgSchemaVersion) {
 		const newImageMeta = instantiateObject(jdgImageMeta);
 		upgradedImageMeta = deepMatchObjects(newImageMeta, imageMeta);
 

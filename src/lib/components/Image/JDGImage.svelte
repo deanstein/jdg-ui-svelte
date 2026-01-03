@@ -36,7 +36,8 @@
 		addCloudinaryUrlHeight,
 		addCloudinaryUrlWidth,
 		isUrlCloudinary,
-		instantiateObject
+		instantiateObject,
+		upgradeImageMeta
 	} from '$lib/jdg-utils.js';
 
 	import { jdgBreakpoints, jdgColors, jdgDurations, jdgSizes } from '$lib/jdg-shared-styles.js';
@@ -63,6 +64,11 @@
 	// EXPORTS
 
 	export let imageMeta = instantiateObject(jdgImageMeta); // one object for all image data
+
+	// Upgrade imageMeta when it changes to ensure all fields have default values
+	// and schema version is up to date. This ensures any consumer of JDGImage
+	// automatically gets upgraded imageMetas.
+	$: imageMeta = upgradeImageMeta(imageMeta);
 	export let maxHeight = '350px'; // image will never exceed this height, but could be less depending on other props
 	export let maxWidth = 'auto'; // if not defined, takes available space
 	export let useAutoHeightOnMobile = true; // if true, sets height to 'auto' on smallest breakpoint for no cropping if calculatedAutoHeight is less than maxHeightPxFromProp (ignores cropToFitContainer)
@@ -117,7 +123,12 @@
 	// this will be replaced with a higher-quality request with a specific width or height
 	// this will also be ignored if the src is not a Cloudinary URL
 	const initialCloudinaryTransform = 'f_auto,q_1';
-	let adjustedImgSrc = addCloudinaryUrlTransformation(imageMeta.src, initialCloudinaryTransform);
+	// Initialize adjustedImgSrc reactively when imageMeta changes
+	// Other reactive blocks will modify this value for optimized transforms
+	let adjustedImgSrc;
+	$: {
+		adjustedImgSrc = addCloudinaryUrlTransformation(imageMeta.src, initialCloudinaryTransform);
+	}
 	let imageAspectRatio;
 
 	// load states
@@ -139,12 +150,12 @@
 
 	// for the case where the src is not provided,
 	// consider the image immediately loaded
-	if (imageMeta.src === imagePlaceholder && !showDebugLoadingState) {
+	$: if (imageMeta.src === imagePlaceholder && !showDebugLoadingState) {
 		isImageLoaded = true;
 	}
 
 	// if imageMeta specifies no blur, override showBlur to false
-	if (!imageMeta.showBackgroundBlur) {
+	$: if (!imageMeta.showBackgroundBlur) {
 		showBlurInUnfilledSpace = false;
 	}
 
