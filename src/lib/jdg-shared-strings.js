@@ -11,6 +11,7 @@ export const jdgSharedSources = [
 		value: 'cc-historical-narrative',
 		label: 'Kurt P. Schweigart, Cinderella City Historical Narrative'
 	},
+	{ value: 'see-images', label: 'See image(s)' },
 	{ value: 'denver-public-library', label: 'Denver Public Library' },
 	{ value: 'englewood-public-library', label: 'Englewood Public Library' }
 ];
