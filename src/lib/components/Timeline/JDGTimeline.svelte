@@ -43,13 +43,13 @@
 
 	import {
 		JDGButton,
-		JDGCheckbox,
 		JDGComposeToolbar,
 		JDGFlyout,
 		JDGImageAvatar,
 		JDGModal,
 		JDGPortal,
 		JDGSaveStateBanner,
+		JDGSlider,
 		JDGTimelineEvent,
 		JDGTimelineEventModal
 	} from '$lib/index.js';
@@ -185,9 +185,11 @@
 	let timelineContainerRef;
 	let scrollingCanvasDivRef;
 
-	// If true, the timeline is spaced out
-	// to show relative spacing between events
-	let forceRelativeSpacing = false;
+	// Zoom value from 0 to 1
+	// 0 = static spacing (like checkbox unchecked)
+	// 1 = full relative spacing (like checkbox checked)
+	// Values in between blend the two modes
+	let timelineZoom = 0;
 	// Row items are converted from the activePerson's raw event data
 	// each row item is an object with the index and the event content
 	let timelineRowItems = [];
@@ -237,12 +239,8 @@
 		isHovering = false;
 	};
 
-	const onCheckRelativeSpacing = () => {
-		forceRelativeSpacing = true;
-	};
-
-	const onUncheckRelativeSpacing = () => {
-		forceRelativeSpacing = false;
+	const onZoomChange = (newValue) => {
+		timelineZoom = newValue;
 	};
 
 	let eventsInView = [];
@@ -251,7 +249,7 @@
 		const timelineHeightPx = getMaxElementHeightPx(scrollingCanvasDivRef);
 		const emptyRowHeightPx = 1;
 
-		// set relative spacing to true if at least 5 events would appear
+		// set zoom to 1 (full relative spacing) if at least 5 events would appear
 		const minEventsInView = 5;
 		for (let i = 0; i < timelineRowItems.length; i++) {
 			const rowItem = timelineRowItems[i];
@@ -261,7 +259,7 @@
 				eventsInView.push(rowItem.index);
 			}
 			if (eventsInView.length > minEventsInView) {
-				forceRelativeSpacing = true;
+				timelineZoom = 1;
 				break;
 			}
 		}
@@ -342,19 +340,31 @@
 	let timelineEventGridCss;
 	$: {
 		// Ensure custom css is kept updated
-		// When relative spacing is on: use row-gap for proportional spacing, align-content: start
-		// When relative spacing is off: no row-gap, align-content: space-between for even distribution
+		// Zoom 0: static spacing (20px gap, space-between)
+		// Zoom > 0: relative spacing multiplied by zoom
+		// As zoom increases, the relative spacing effect is multiplied
+		// This means items move farther apart and spaces get larger
+		const staticGap = 20;
+		const baseRelativeGap = rowHeightEmptyPx; // 3px
+		// When zoom is 0, use static gap
+		// When zoom > 0, use relative gap and multiply it by zoom to increase spacing
+		// Higher zoom = larger gaps between proportionally-spaced items
+		const blendedGap = timelineZoom === 0 ? staticGap : baseRelativeGap * (1 + timelineZoom * 2); // Scale from 3px to 9px as zoom goes 0->1
+		const useRelativeAlignment = timelineZoom > 0;
+
 		timelineEventGridCss = css`
-			row-gap: ${forceRelativeSpacing ? rowHeightEmptyPx + 'px' : '20px'};
-			align-content: ${forceRelativeSpacing ? 'start' : 'space-between'};
+			row-gap: ${blendedGap}px;
+			align-content: ${useRelativeAlignment ? 'start' : 'space-between'};
 		`;
 	}
 
 	// Keep emptyState and today events updated
-	// Include forceRelativeSpacing as dependency to recalculate when toggled
+	// Include timelineZoom as dependency to recalculate when changed
 	$: {
-		// Reference forceRelativeSpacing to ensure reactivity
-		const useRelativeSpacing = forceRelativeSpacing;
+		// Reference timelineZoom to ensure reactivity
+		// When zoom is 0, use sequential indices (static spacing)
+		// When zoom > 0, use proportional indices (relative spacing)
+		const useRelativeSpacing = timelineZoom > 0;
 
 		// Use whichever is earlier: the inception date or the earliest event date
 		// This handles cases where events (like planning) occur before the inception date
@@ -398,10 +408,26 @@
 		// Convert events to timeline row items
 		// When relative spacing is on, keep proportional indices for date-based spacing
 		// When off, use sequential indices for even distribution
-		timelineRowItems = updateTimelineRowItems(
+		let rowItems = updateTimelineRowItems(
 			generateTimelineRowItems(timelineHost, contextEvents, earliestOrInceptionDate),
 			!useRelativeSpacing // use sequential indices when NOT using relative spacing
 		);
+
+		// If using relative spacing, scale the indices by zoom to multiply the spacing effect
+		// This makes items that are farther apart in time move even farther apart visually
+		if (useRelativeSpacing && timelineZoom > 0) {
+			// Scale indices: zoom 0 = no scaling, zoom 1 = full scaling
+			// Use a multiplier that increases spacing (e.g., 1 + zoom means 2x spacing at max zoom)
+			const spacingMultiplier = 1 + timelineZoom;
+			const firstIndex = rowItems.length > 0 ? rowItems[0].index : 1;
+			for (let i = 0; i < rowItems.length; i++) {
+				// Scale the index relative to the first index to preserve relative spacing
+				const relativeIndex = rowItems[i].index - firstIndex;
+				rowItems[i].index = firstIndex + Math.round(relativeIndex * spacingMultiplier);
+			}
+		}
+
+		timelineRowItems = rowItems;
 	}
 
 	// Compute the todayEvent row index based on spacing mode
@@ -409,9 +435,10 @@
 	// Relative mode: place at the end of the proportional grid (row 1001)
 	let todayEventRowIndex;
 	$: {
-		todayEventRowIndex = forceRelativeSpacing
-			? jdgQuantities.initialTimelineRowCount + 1
-			: timelineRowItems.length + (emptyStateEvent ? 1 : 0) + 1;
+		todayEventRowIndex =
+			timelineZoom > 0
+				? jdgQuantities.initialTimelineRowCount + 1
+				: timelineRowItems.length + (emptyStateEvent ? 1 : 0) + 1;
 	}
 
 	$: {
@@ -499,14 +526,13 @@
 				flyoutTitle="Timeline Options"
 				flyoutPosition="bottom-left"
 			>
-				<JDGCheckbox
-					isEnabled={true}
-					showLabel={true}
-					label="Relative spacing"
-					isChecked={forceRelativeSpacing}
-					onCheckAction={onCheckRelativeSpacing}
-					onUncheckAction={onUncheckRelativeSpacing}
-					labelFontSize={''}
+				<JDGSlider
+					label="Zoom"
+					bind:value={timelineZoom}
+					min={0}
+					max={1}
+					step={0.01}
+					onChange={onZoomChange}
 				/>
 			</JDGFlyout>
 		</div>
@@ -699,7 +725,7 @@
 		display: grid;
 		grid-template-columns: 1fr;
 		flex-grow: 1;
-		/* align-content is set dynamically based on forceRelativeSpacing */
+		/* align-content is set dynamically based on timelineZoom */
 	}
 
 	.timeline-spine {
