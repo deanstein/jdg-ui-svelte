@@ -43,6 +43,7 @@
 
 	import {
 		JDGButton,
+		JDGCheckbox,
 		JDGComposeToolbar,
 		JDGFlyout,
 		JDGImageAvatar,
@@ -185,11 +186,14 @@
 	let timelineContainerRef;
 	let scrollingCanvasDivRef;
 
-	// Zoom value from 0 to 1
-	// 0 = static spacing (like checkbox unchecked)
-	// 1 = full relative spacing (like checkbox checked)
-	// Values in between blend the two modes
+	// Whether relative spacing is enabled
+	let useRelativeSpacing = false;
+	// Spacing multiplier (zoom) value from 0 to 1
+	// Only applies when useRelativeSpacing is true
+	// Multiplies the relative spacing effect
 	let timelineZoom = 0;
+	// Remember the last zoom value before unchecking, so we can restore it
+	let lastZoomValue = 0;
 	// Row items are converted from the activePerson's raw event data
 	// each row item is an object with the index and the event content
 	let timelineRowItems = [];
@@ -243,35 +247,62 @@
 		timelineZoom = newValue;
 	};
 
+	const onCheckRelativeSpacing = () => {
+		useRelativeSpacing = true;
+		// Restore the last zoom value, or use the calculated default if we don't have one
+		if (lastZoomValue > 0) {
+			timelineZoom = lastZoomValue;
+		} else {
+			// Recalculate default zoom if we don't have a saved value
+			const calculatedZoom = calculateDefaultZoom();
+			if (calculatedZoom !== undefined && calculatedZoom > 0) {
+				timelineZoom = Math.min(0.9, Math.max(0, calculatedZoom));
+				lastZoomValue = timelineZoom;
+			}
+		}
+	};
+
+	const onUncheckRelativeSpacing = () => {
+		// Save the current zoom value before disabling
+		if (timelineZoom > 0) {
+			lastZoomValue = timelineZoom;
+		}
+		useRelativeSpacing = false;
+		// Reset zoom to 0 when relative spacing is disabled (but we saved it in lastZoomValue)
+		timelineZoom = 0;
+	};
+
 	// Track the last timelineHost ID to detect when it changes
 	let lastTimelineHostId = null;
 
 	// Calculate zoom based on event count
 	const calculateDefaultZoom = () => {
 		if (!timelineHost) return 0;
-		
+
 		// Count events from the raw timelineHost data
-		const rawEventCount = (timelineHost.timelineEvents?.length || 0) + 
+		const rawEventCount =
+			(timelineHost.timelineEvents?.length || 0) +
 			(timelineHost.timelineEventReferences?.length || 0);
-		
+
 		// Account for inception and today events
 		const earliestEvent = getEarliestTimelineEvent(timelineHost.timelineEvents);
-		const hasInceptionEvent = timelineHost.timelineEvents.length === 0 ||
+		const hasInceptionEvent =
+			timelineHost.timelineEvents.length === 0 ||
 			getNumDaysBetweenDates(timelineHost.inceptionDate, earliestEvent?.date) > 0;
 		const hasTodayEvent = !timelineHost?.cessationDate || timelineHost.cessationDate === '';
 		const totalEvents = rawEventCount + (hasInceptionEvent ? 1 : 0) + (hasTodayEvent ? 1 : 0);
-		
+
 		// Skip if no events
 		if (totalEvents === 0) {
 			return 0;
 		}
-		
+
 		// Calculate zoom based purely on event count
 		// Formula: 100 events → 0.5 zoom
 		// For small counts (< 5), use zoom = 0
 		// For 5-100 events: zoom scales linearly from 0 to 0.5
 		// For 100+ events: zoom scales from 0.5 to 0.9
-		
+
 		if (totalEvents < 5) {
 			return 0;
 		} else if (totalEvents <= 100) {
@@ -294,7 +325,11 @@
 		lastTimelineHostId = currentTimelineHostId;
 		const calculatedZoom = calculateDefaultZoom();
 		if (calculatedZoom !== undefined) {
-			timelineZoom = Math.min(0.9, Math.max(0, calculatedZoom));
+			const newZoom = Math.min(0.9, Math.max(0, calculatedZoom));
+			timelineZoom = newZoom;
+			lastZoomValue = newZoom; // Save the calculated zoom value
+			// Enable relative spacing if zoom > 0
+			useRelativeSpacing = calculatedZoom > 0;
 		}
 	}
 
@@ -392,12 +427,10 @@
 	}
 
 	// Keep emptyState and today events updated
-	// Include timelineZoom as dependency to recalculate when changed
+	// Include useRelativeSpacing and timelineZoom as dependencies to recalculate when changed
 	$: {
-		// Reference timelineZoom to ensure reactivity
-		// When zoom is 0, use sequential indices (static spacing)
-		// When zoom > 0, use proportional indices (relative spacing)
-		const useRelativeSpacing = timelineZoom > 0;
+		// Use relative spacing if checkbox is checked
+		// Zoom only applies when relative spacing is enabled
 
 		// Use whichever is earlier: the inception date or the earliest event date
 		// This handles cases where events (like planning) occur before the inception date
@@ -468,10 +501,9 @@
 	// Relative mode: place at the end of the proportional grid (row 1001)
 	let todayEventRowIndex;
 	$: {
-		todayEventRowIndex =
-			timelineZoom > 0
-				? jdgQuantities.initialTimelineRowCount + 1
-				: timelineRowItems.length + (emptyStateEvent ? 1 : 0) + 1;
+		todayEventRowIndex = useRelativeSpacing
+			? jdgQuantities.initialTimelineRowCount + 1
+			: timelineRowItems.length + (emptyStateEvent ? 1 : 0) + 1;
 	}
 
 	$: {
@@ -559,14 +591,26 @@
 				flyoutTitle="Timeline Options"
 				flyoutPosition="bottom-left"
 			>
-				<JDGSlider
-					label="Zoom"
-					bind:value={timelineZoom}
-					min={0}
-					max={1}
-					step={0.01}
-					onChange={onZoomChange}
-				/>
+				<div class="timeline-options-controls">
+					<JDGCheckbox
+						isEnabled={true}
+						showLabel={true}
+						label="Relative spacing"
+						isChecked={useRelativeSpacing}
+						onCheckAction={onCheckRelativeSpacing}
+						onUncheckAction={onUncheckRelativeSpacing}
+						labelFontSize="14px"
+					/>
+					<JDGSlider
+						label="Spacing multiplier"
+						bind:value={timelineZoom}
+						min={0}
+						max={1}
+						step={0.01}
+						onChange={onZoomChange}
+						isEnabled={useRelativeSpacing}
+					/>
+				</div>
 			</JDGFlyout>
 		</div>
 		<!-- Timeline: A collection of TimelineEvents shown chronologically -->
@@ -778,5 +822,12 @@
 
 	.timeline-spine-line-column {
 		display: flex;
+	}
+
+	.timeline-options-controls {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		padding: 8px 0;
 	}
 </style>
