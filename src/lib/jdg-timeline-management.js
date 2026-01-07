@@ -26,16 +26,24 @@ export const instantiateTimelineHost = () => {
 	const newHost = instantiateObject(jdgTimelineHost);
 	// Set a default avatar (jdgImageRegistry key)
 	newHost.avatarImage = 'jdg_avatar_placeholder';
-	return newHost;
+	// Reconstruct object in schema order to ensure version appears at the end
+	return orderObjectBySchema(jdgTimelineHost, newHost);
 };
 
 // Ensure all new timelineHost fields are added to the given host
 export function upgradeTimelineHost(timelineHost) {
-	// Initial host
+	// Create a fresh host with all current schema fields
 	const newHost = instantiateTimelineHost();
-	// Upgrade
+
+	// Merge existing data into the new schema (preserves user data, adds new fields)
 	const upgradedHost = deepMatchObjects(newHost, timelineHost);
-	// Update the version to the schema version
+
+	// Preserve the original ID (instantiateTimelineHost generates a new one)
+	if (timelineHost?.id) {
+		upgradedHost.id = timelineHost.id;
+	}
+
+	// Ensure version is current
 	upgradedHost.version = jdgSchemaVersion;
 
 	// Clean up invalid formats
@@ -73,7 +81,10 @@ export const instantiateTimelineEvent = (typeKey) => {
 	if (!typeDef || typeof typeDef !== 'object') {
 		console.error(`No schema found for type "${typeKey}"`);
 		// HYBRID schema has both UI and data
-		return extractDataFromHybridSchema(initialTimelineEvent);
+		const extractedEvent = extractDataFromHybridSchema(initialTimelineEvent);
+		extractedEvent.version = jdgSchemaVersion;
+		// Reconstruct object in schema order to ensure version appears at the end
+		return orderObjectBySchema(jdgTimelineEvent, extractedEvent);
 	}
 
 	// HYBRID schema has both UI and data
@@ -97,7 +108,8 @@ export const instantiateTimelineEvent = (typeKey) => {
 	// Update the version to the schema version
 	extractedBaseEvent.version = jdgSchemaVersion;
 
-	return extractedBaseEvent;
+	// Reconstruct object in schema order to ensure version appears at the end
+	return orderObjectBySchema(jdgTimelineEvent, extractedBaseEvent);
 };
 
 // Upgrades a timeline event with the latest fields
