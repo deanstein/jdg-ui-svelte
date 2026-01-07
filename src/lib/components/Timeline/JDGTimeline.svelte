@@ -345,7 +345,7 @@
 		// When relative spacing is on: use row-gap for proportional spacing, align-content: start
 		// When relative spacing is off: no row-gap, align-content: space-between for even distribution
 		timelineEventGridCss = css`
-			row-gap: ${forceRelativeSpacing ? rowHeightEmptyPx + 'px' : '0'};
+			row-gap: ${forceRelativeSpacing ? rowHeightEmptyPx + 'px' : '20px'};
 			align-content: ${forceRelativeSpacing ? 'start' : 'space-between'};
 		`;
 	}
