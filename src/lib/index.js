@@ -211,6 +211,9 @@ export { JDGScrollToTop };
 import JDGSelect from './components/Input/JDGSelect.svelte';
 export { JDGSelect };
 
+import JDGSlider from './components/Input/JDGSlider.svelte';
+export { JDGSlider };
+
 import JDGSideNav from './components/Nav/JDGSideNav.svelte';
 export { JDGSideNav };
 
