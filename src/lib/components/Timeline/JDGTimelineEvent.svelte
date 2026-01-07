@@ -550,6 +550,7 @@
 
 	.timeline-event-description {
 		padding: 8px 0px 8px 0px;
+		white-space: pre-line;
 	}
 
 	.timeline-event-image-preview {
