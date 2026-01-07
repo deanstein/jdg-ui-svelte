@@ -243,27 +243,60 @@
 		timelineZoom = newValue;
 	};
 
-	let eventsInView = [];
-	onMount(() => {
-		// Determine whether the spacing should default to relative
-		const timelineHeightPx = getMaxElementHeightPx(scrollingCanvasDivRef);
-		const emptyRowHeightPx = 1;
+	// Track the last timelineHost ID to detect when it changes
+	let lastTimelineHostId = null;
 
-		// set zoom to 1 (full relative spacing) if at least 5 events would appear
-		const minEventsInView = 5;
-		for (let i = 0; i < timelineRowItems.length; i++) {
-			const rowItem = timelineRowItems[i];
-			const rowYPosPx =
-				rowItem.index * emptyRowHeightPx + (eventsInView.length + 1 * rowHeightFilledPx);
-			if (rowYPosPx < timelineHeightPx) {
-				eventsInView.push(rowItem.index);
-			}
-			if (eventsInView.length > minEventsInView) {
-				timelineZoom = 1;
-				break;
-			}
+	// Calculate zoom based on event count
+	const calculateDefaultZoom = () => {
+		if (!timelineHost) return 0;
+		
+		// Count events from the raw timelineHost data
+		const rawEventCount = (timelineHost.timelineEvents?.length || 0) + 
+			(timelineHost.timelineEventReferences?.length || 0);
+		
+		// Account for inception and today events
+		const earliestEvent = getEarliestTimelineEvent(timelineHost.timelineEvents);
+		const hasInceptionEvent = timelineHost.timelineEvents.length === 0 ||
+			getNumDaysBetweenDates(timelineHost.inceptionDate, earliestEvent?.date) > 0;
+		const hasTodayEvent = !timelineHost?.cessationDate || timelineHost.cessationDate === '';
+		const totalEvents = rawEventCount + (hasInceptionEvent ? 1 : 0) + (hasTodayEvent ? 1 : 0);
+		
+		// Skip if no events
+		if (totalEvents === 0) {
+			return 0;
 		}
-	});
+		
+		// Calculate zoom based purely on event count
+		// Formula: 100 events → 0.5 zoom
+		// For small counts (< 5), use zoom = 0
+		// For 5-100 events: zoom scales linearly from 0 to 0.5
+		// For 100+ events: zoom scales from 0.5 to 0.9
+		
+		if (totalEvents < 5) {
+			return 0;
+		} else if (totalEvents <= 100) {
+			// Linear from 5 events (zoom 0) to 100 events (zoom 0.5)
+			// zoom = 0.5 * ((totalEvents - 5) / (100 - 5))
+			return 0.5 * ((totalEvents - 5) / 95);
+		} else {
+			// For 100+ events, scale from 0.5 to 0.9
+			// Using a range: 100 events = 0.5, 200 events = 0.9
+			const excessOver100 = totalEvents - 100;
+			const additionalZoom = 0.4 * Math.min(1, excessOver100 / 100);
+			return 0.5 + additionalZoom;
+		}
+	};
+
+	// Reset and recalculate zoom when timelineHost changes
+	// Watch the timelineHost ID to detect changes
+	$: currentTimelineHostId = timelineHost?.id;
+	$: if (timelineHost && currentTimelineHostId !== lastTimelineHostId) {
+		lastTimelineHostId = currentTimelineHostId;
+		const calculatedZoom = calculateDefaultZoom();
+		if (calculatedZoom !== undefined) {
+			timelineZoom = Math.min(0.9, Math.max(0, calculatedZoom));
+		}
+	}
 
 	// DYNAMIC STYLES
 
