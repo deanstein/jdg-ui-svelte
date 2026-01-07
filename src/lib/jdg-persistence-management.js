@@ -547,7 +547,7 @@ export const writeImageMetaEntryToRepo = async (repoName, registryKey, imageMeta
 				const hasNewline = value.includes('\n');
 				const hasApostrophe = value.includes("'");
 				const useBackticks = hasNewline || hasApostrophe;
-				
+
 				let escapedValue;
 				if (useBackticks) {
 					// Escape backticks and backslashes for template literals
@@ -560,7 +560,7 @@ export const writeImageMetaEntryToRepo = async (repoName, registryKey, imageMeta
 						.replace(/\n/g, '\\n')
 						.replace(/\r/g, '\\r');
 				}
-				
+
 				const quote = useBackticks ? '`' : "'";
 				entryLines.push(`${propertyIndent}${key}: ${quote}${escapedValue}${quote}`);
 			} else if (typeof value === 'boolean') {
