@@ -408,22 +408,27 @@
 	let timelineEventGridCss;
 	$: {
 		// Ensure custom css is kept updated
-		// Zoom 0: static spacing (20px gap, space-between)
-		// Zoom > 0: relative spacing multiplied by zoom
-		// As zoom increases, the relative spacing effect is multiplied
-		// This means items move farther apart and spaces get larger
+		// If relative spacing is off OR zoom is 0, use static spacing
+		// If relative spacing is on AND zoom > 0, use zoom to multiply the spacing effect
 		const staticGap = 20;
 		const baseRelativeGap = rowHeightEmptyPx; // 3px
-		// When zoom is 0, use static gap
-		// When zoom > 0, use relative gap and multiply it by zoom to increase spacing
-		// Higher zoom = larger gaps between proportionally-spaced items
-		const blendedGap = timelineZoom === 0 ? staticGap : baseRelativeGap * (1 + timelineZoom * 2); // Scale from 3px to 9px as zoom goes 0->1
-		const useRelativeAlignment = timelineZoom > 0;
 
-		timelineEventGridCss = css`
-			row-gap: ${blendedGap}px;
-			align-content: ${useRelativeAlignment ? 'start' : 'space-between'};
-		`;
+		if (!useRelativeSpacing || timelineZoom === 0) {
+			// Static spacing: fixed gap, space-between alignment
+			// This happens when checkbox is unchecked OR slider is at 0
+			timelineEventGridCss = css`
+				row-gap: ${staticGap}px;
+				align-content: space-between;
+			`;
+		} else {
+			// Relative spacing: gap scales with zoom, start alignment
+			// As zoom increases, gap increases: 3px * (1 + zoom * 2) = 3px to 9px
+			const blendedGap = baseRelativeGap * (1 + timelineZoom * 2);
+			timelineEventGridCss = css`
+				row-gap: ${blendedGap}px;
+				align-content: start;
+			`;
+		}
 	}
 
 	// Keep emptyState and today events updated
@@ -472,16 +477,17 @@
 		}
 
 		// Convert events to timeline row items
-		// When relative spacing is on, keep proportional indices for date-based spacing
-		// When off, use sequential indices for even distribution
+		// When relative spacing is on AND zoom > 0, keep proportional indices for date-based spacing
+		// When off OR zoom is 0, use sequential indices for even distribution
+		const shouldUseRelativeSpacing = useRelativeSpacing && timelineZoom > 0;
 		let rowItems = updateTimelineRowItems(
 			generateTimelineRowItems(timelineHost, contextEvents, earliestOrInceptionDate),
-			!useRelativeSpacing // use sequential indices when NOT using relative spacing
+			!shouldUseRelativeSpacing // use sequential indices when NOT using relative spacing
 		);
 
-		// If using relative spacing, scale the indices by zoom to multiply the spacing effect
+		// If using relative spacing with zoom > 0, scale the indices by zoom to multiply the spacing effect
 		// This makes items that are farther apart in time move even farther apart visually
-		if (useRelativeSpacing && timelineZoom > 0) {
+		if (shouldUseRelativeSpacing) {
 			// Scale indices: zoom 0 = no scaling, zoom 1 = full scaling
 			// Use a multiplier that increases spacing (e.g., 1 + zoom means 2x spacing at max zoom)
 			const spacingMultiplier = 1 + timelineZoom;
@@ -501,7 +507,8 @@
 	// Relative mode: place at the end of the proportional grid (row 1001)
 	let todayEventRowIndex;
 	$: {
-		todayEventRowIndex = useRelativeSpacing
+		const shouldUseRelativeSpacing = useRelativeSpacing && timelineZoom > 0;
+		todayEventRowIndex = shouldUseRelativeSpacing
 			? jdgQuantities.initialTimelineRowCount + 1
 			: timelineRowItems.length + (emptyStateEvent ? 1 : 0) + 1;
 	}
