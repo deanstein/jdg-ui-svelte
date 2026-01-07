@@ -542,11 +542,27 @@ export const writeImageMetaEntryToRepo = async (repoName, registryKey, imageMeta
 		const entryLines = [];
 		for (const [key, value] of Object.entries(cleanImageMeta)) {
 			if (typeof value === 'string') {
-				// Use backticks if string contains apostrophe, single quotes otherwise
-				// This matches Prettier's output and avoids escape characters
+				// Escape string value based on quote type
+				// Use backticks if string contains newlines or apostrophes, single quotes otherwise
+				const hasNewline = value.includes('\n');
 				const hasApostrophe = value.includes("'");
-				const quote = hasApostrophe ? '`' : "'";
-				entryLines.push(`${propertyIndent}${key}: ${quote}${value}${quote}`);
+				const useBackticks = hasNewline || hasApostrophe;
+				
+				let escapedValue;
+				if (useBackticks) {
+					// Escape backticks and backslashes for template literals
+					escapedValue = value.replace(/\\/g, '\\\\').replace(/`/g, '\\`');
+				} else {
+					// Escape single quotes, backslashes, and newlines for single-quoted strings
+					escapedValue = value
+						.replace(/\\/g, '\\\\')
+						.replace(/'/g, "\\'")
+						.replace(/\n/g, '\\n')
+						.replace(/\r/g, '\\r');
+				}
+				
+				const quote = useBackticks ? '`' : "'";
+				entryLines.push(`${propertyIndent}${key}: ${quote}${escapedValue}${quote}`);
 			} else if (typeof value === 'boolean') {
 				entryLines.push(`${propertyIndent}${key}: ${value}`);
 			} else if (typeof value === 'number') {
