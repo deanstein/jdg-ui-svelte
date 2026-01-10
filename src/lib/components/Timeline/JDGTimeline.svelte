@@ -1,5 +1,5 @@
 <script>
-	import { onMount, getContext, setContext } from 'svelte';
+	import { onMount, onDestroy, getContext, setContext } from 'svelte';
 	import { writable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
@@ -185,6 +185,16 @@
 	let timelineWrapperRef;
 	let timelineContainerRef;
 	let scrollingCanvasDivRef;
+
+	// Scrollbar width for adjusting spine position
+	let scrollbarWidth = 0;
+
+	// Calculate scrollbar width and update spine position
+	const updateScrollbarWidth = () => {
+		if (scrollingCanvasDivRef) {
+			scrollbarWidth = scrollingCanvasDivRef.offsetWidth - scrollingCanvasDivRef.clientWidth;
+		}
+	};
 
 	// Whether relative spacing is enabled
 	let useRelativeSpacing = false;
@@ -377,28 +387,29 @@
 	`;
 
 	// Timeline spine styling
-	let spineContainerCss = css`
-		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			margin-left: ${jdgSizes.nTimelineEventGapSize / 4 +
-			jdgSizes.ntimelineEventYearWidthSm +
-			jdgSizes.nTimelineSpineWidth +
-			jdgSizes.timelineUnit};
-		}
-		@media (min-width: ${jdgBreakpoints.width[0].toString() +
-			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
-			jdgBreakpoints.unit}) {
-			margin-left: ${jdgSizes.nTimelineEventGapSize / 4 +
-			jdgSizes.ntimelineEventYearWidthMd +
-			jdgSizes.nTimelineSpineWidth +
-			jdgSizes.timelineUnit};
-		}
-		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			margin-left: ${jdgSizes.nTimelineEventGapSize / 2 +
-			jdgSizes.ntimelineEventYearWidthLg +
-			jdgSizes.nTimelineSpineWidth * 2 +
-			jdgSizes.timelineUnit};
-		}
-	`;
+	// Account for scrollbar width when centering on desktop/tablet
+	let spineContainerCss = css``;
+	$: {
+		const scrollbarOffset = scrollbarWidth / 2;
+		spineContainerCss = css`
+			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+				margin-left: ${jdgSizes.nTimelineEventGapSize / 4 +
+				jdgSizes.ntimelineEventYearWidthSm +
+				jdgSizes.nTimelineSpineWidth +
+				jdgSizes.timelineUnit};
+			}
+			@media (min-width: ${jdgBreakpoints.width[0].toString() +
+				jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+				jdgBreakpoints.unit}) {
+				left: calc(50% - ${scrollbarOffset}px);
+				transform: translateX(-50%);
+			}
+			@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+				left: calc(50% - ${scrollbarOffset}px);
+				transform: translateX(-50%);
+			}
+		`;
+	}
 
 	let spineColumnCss = css`
 		width: ${jdgSizes.timelineSpineWidth};
@@ -524,6 +535,39 @@
 			timelineEventColorGradient3
 		);
 	}
+
+	// Set up resize observer to detect scrollbar width changes
+	let resizeObserver;
+	onMount(() => {
+		updateScrollbarWidth();
+		
+		// Use ResizeObserver to detect when scrollbar appears/disappears
+		if (typeof ResizeObserver !== 'undefined' && scrollingCanvasDivRef) {
+			resizeObserver = new ResizeObserver(() => {
+				updateScrollbarWidth();
+			});
+			resizeObserver.observe(scrollingCanvasDivRef);
+		}
+
+		// Also listen for scroll events as content changes can affect scrollbar
+		if (scrollingCanvasDivRef) {
+			scrollingCanvasDivRef.addEventListener('scroll', updateScrollbarWidth);
+		}
+	});
+
+	onDestroy(() => {
+		if (resizeObserver) {
+			resizeObserver.disconnect();
+		}
+		if (scrollingCanvasDivRef) {
+			scrollingCanvasDivRef.removeEventListener('scroll', updateScrollbarWidth);
+		}
+	});
+
+	// Update scrollbar width when scrolling canvas ref changes
+	$: if (scrollingCanvasDivRef) {
+		updateScrollbarWidth();
+	}
 </script>
 
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
@@ -641,6 +685,7 @@
 							isInteractive={isInteractive && allowEditing && $isAdminMode}
 							rowIndex={0}
 							backgroundColor={timelineEventColors[0]}
+							isLeftAligned={true}
 						/>
 					{/if}
 					<!-- All timeline events saved to the host -->
@@ -660,6 +705,7 @@
 								backgroundColor={timelineEventColors[i]}
 								eventReference={timelineRowItem.eventReference}
 								isInteractive={isInteractive || $isAdminMode}
+								isLeftAligned={i % 2 === 0}
 							/>
 						{/key}
 					{/each}
@@ -670,6 +716,7 @@
 							timelineEvent={todayEvent}
 							rowIndex={todayEventRowIndex}
 							backgroundColor={timelineEventColors[timelineEventColors.length - 1]}
+							isLeftAligned={(timelineRowItems.length + (emptyStateEvent ? 1 : 0)) % 2 === 0}
 						/>
 					{/if}
 				</div>

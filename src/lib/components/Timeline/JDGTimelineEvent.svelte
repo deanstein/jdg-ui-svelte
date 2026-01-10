@@ -37,6 +37,9 @@
 
 	export let backgroundColor = jdgColors.activeColorSubtle;
 	export let rowIndex;
+	// Whether this event should be aligned to the left of the spine (true) or right (false)
+	// Only applies on desktop/tablet
+	export let isLeftAligned = true;
 
 	// Get age suffixes from context (set by parent components)
 	// Falls back to default values if context not available
@@ -101,11 +104,14 @@
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-			padding-left: ${jdgSizes.nTimelineEventGapSize / 4 + jdgSizes.timelineUnit};
+			padding-left: 0;
+			padding-right: 0;
 			gap: ${jdgSizes.nTimelineEventGapSize / 4 + jdgSizes.timelineUnit};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			padding-left: ${jdgSizes.nTimelineEventGapSize / 2 + jdgSizes.timelineUnit};
+			padding-left: 0;
+			padding-right: 0;
+			gap: ${jdgSizes.nTimelineEventGapSize / 2 + jdgSizes.timelineUnit};
 		}
 	`;
 
@@ -187,8 +193,10 @@
 		height: ${jdgSizes.timelineEventNodeSize};
 		background-color: ${jdgColors.textLight};
 		/* Center node on spine: offset by half the difference between node and spine width */
-		margin-left: ${-((jdgSizes.nTimelineEventNodeSize - jdgSizes.nTimelineSpineWidth) / 2) +
-		jdgSizes.timelineUnit};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			margin-left: ${-((jdgSizes.nTimelineEventNodeSize - jdgSizes.nTimelineSpineWidth) / 2) +
+			jdgSizes.timelineUnit};
+		}
 	`;
 
 	const eventLineCss = css`
@@ -298,6 +306,80 @@
 		}
 	}
 
+	// Dynamic CSS for date/year container positioning
+	// Date/year should be closest to the spine (just next to the node)
+	// For left-aligned: date is on the right side, just after the node (order 4)
+	// For right-aligned: date is on the left side, just before the node (order 1)
+	let eventDateYearContainerDynamicCss = css``;
+	$: {
+		if (upgradedEvent) {
+			eventDateYearContainerDynamicCss = css`
+				@media (min-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+					order: ${isLeftAligned ? 4 : 1};
+					align-items: ${isLeftAligned ? 'flex-end' : 'flex-start'};
+				}
+			`;
+		}
+	}
+
+	// Dynamic CSS for content container positioning
+	// Content should be furthest from the spine
+	// For left-aligned: content is on the left side (order 1)
+	// For right-aligned: content is on the right side (order 5)
+	let eventContentContainerDynamicCss = css``;
+	$: {
+		if (upgradedEvent) {
+			eventContentContainerDynamicCss = css`
+				@media (min-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+					order: ${isLeftAligned ? 1 : 5};
+					${isLeftAligned ? '' : 'margin-left: auto;'}
+				}
+			`;
+		}
+	}
+
+	// Dynamic CSS for node positioning
+	// Node is absolutely positioned at center (on the spine)
+	let eventNodeDynamicCss = css``;
+	$: {
+		if (upgradedEvent) {
+			eventNodeDynamicCss = css`
+				@media (min-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+					order: 3;
+					/* Center node on spine: offset by half the difference between node and spine width */
+					margin-left: ${-((jdgSizes.nTimelineEventNodeSize - jdgSizes.nTimelineSpineWidth) / 2) +
+					jdgSizes.timelineUnit};
+				}
+			`;
+		}
+	}
+
+	// Dynamic CSS for long line positioning (between node and content)
+	// For left-aligned: content (order 1), long line (order 2), node (order 3), short line (order 3), date (order 4)
+	// For right-aligned: date (order 1), short line (order 2), node (order 3), long line (order 4), content (order 5)
+	let eventLineDynamicCss = css``;
+	$: {
+		if (upgradedEvent) {
+			eventLineDynamicCss = css`
+				@media (min-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+					order: ${isLeftAligned ? 2 : 4};
+				}
+			`;
+		}
+	}
+
+	// Dynamic CSS for short line positioning (between date/year and node)
+	let eventLineShortDynamicCss = css``;
+	$: {
+		if (upgradedEvent) {
+			eventLineShortDynamicCss = css`
+				@media (min-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+					order: ${isLeftAligned ? 3 : 2};
+				}
+			`;
+		}
+	}
+
 	let eventDescriptionDynamicCss = css``;
 	$: {
 		if (upgradedEvent) {
@@ -322,7 +404,9 @@
 	on:keydown={onClickTimelineEvent}
 	bind:this={eventRowDivRef}
 >
-	<div class="timeline-event-date-year-container {eventDateYearCss}">
+	<!-- For left-aligned: content, line, node, date -->
+	<!-- For right-aligned: date, node, line, content -->
+	<div class="timeline-event-date-year-container {eventDateYearCss} {eventDateYearContainerDynamicCss}">
 		<!-- For approximate dates: hide day if day=01, hide month+day if month=01 -->
 		{#if !hideDateDiv}
 			<div class="timeline-event-date {eventDateCss}">
@@ -352,12 +436,18 @@
 			<div class="timeline-event-date-apprx">(apprx.)</div>
 		{/if}
 	</div>
-	<div class="timeline-event-node {eventNodeCss}" />
-	<!-- Only show the line on desktop -->
-	{#if !$isMobileBreakpoint && !$isTabletBreakpoint}
-		<div class="timeline-event-line {eventLineCss}" />
+	<!-- For left-aligned: content (far left) → long line → node (center) → short line → date (just right of node) -->
+	<!-- For right-aligned: date (just left of node) → short line → node (center) → long line → content (far right) -->
+	<div class="timeline-event-node {eventNodeCss} {eventNodeDynamicCss}" />
+	<!-- Short line between date/year and node (only on desktop/tablet) -->
+	{#if !$isMobileBreakpoint}
+		<div class="timeline-event-line-short {eventLineShortDynamicCss}" />
 	{/if}
-	<div class="timeline-event-content-outer-container {eventRowContainerCss}">
+	<!-- Long line between node and content (only on desktop/tablet) -->
+	{#if !$isMobileBreakpoint}
+		<div class="timeline-event-line {eventLineCss} {eventLineDynamicCss}" />
+	{/if}
+	<div class="timeline-event-content-outer-container {eventRowContainerCss} {eventContentContainerDynamicCss}">
 		<div class="timeline-event-title-bar {eventTitleBarCss}">
 			<!-- event icon -->
 			<i
@@ -475,11 +565,26 @@
 		align-items: center;
 		padding-top: 2px;
 		padding-bottom: 2px;
+		position: relative;
+	}
+
+	@media (min-width: 768px) {
+		.timeline-event-row {
+			justify-content: center;
+		}
 	}
 
 	.timeline-event-date-year-container {
 		display: flex;
 		flex-direction: column;
+		flex-shrink: 0;
+	}
+
+	@media (min-width: 768px) {
+		.timeline-event-date-year-container {
+			flex: 0 1 auto;
+			z-index: 2;
+		}
 	}
 
 	.timeline-event-date {
@@ -508,12 +613,47 @@
 	.timeline-event-node {
 		border-radius: 1rem;
 		aspect-ratio: 1;
+		flex-shrink: 0;
+		position: relative;
+		z-index: 1;
+	}
+
+	@media (min-width: 768px) {
+		.timeline-event-node {
+			position: absolute;
+			left: 50%;
+			transform: translateX(-50%);
+		}
 	}
 
 	.timeline-event-line {
 		display: flex;
 		flex-shrink: 0;
 		width: 2rem;
+	}
+
+	@media (min-width: 768px) {
+		.timeline-event-line {
+			flex: 1 1 auto;
+			min-width: 2rem;
+			max-width: calc(50% - 8rem);
+		}
+	}
+
+	.timeline-event-line-short {
+		display: flex;
+		flex-shrink: 0;
+		width: 1.5rem;
+		height: 0.25rem;
+		background-color: #737373;
+	}
+
+	@media (min-width: 768px) {
+		.timeline-event-line-short {
+			flex: 0 0 auto;
+			width: 1.5rem;
+			min-width: 1.5rem;
+		}
 	}
 
 	.timeline-event-title-bar {
@@ -542,6 +682,13 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		min-width: 0;
+	}
+
+	@media (min-width: 768px) {
+		.timeline-event-content-outer-container {
+			flex: 0 1 auto;
+			max-width: calc(50% - 5rem);
+		}
 	}
 
 	.timeline-event-content {
