@@ -94,39 +94,11 @@
 	};
 
 	const eventRowCss = css`
-		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			padding-left: ${jdgSizes.nTimelineEventGapSize / 4 + jdgSizes.timelineUnit};
-			gap: ${jdgSizes.nTimelineEventGapSize / 4 + jdgSizes.timelineUnit};
-		}
-		@media (min-width: ${jdgBreakpoints.width[0].toString() +
-			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
-			jdgBreakpoints.unit}) {
-			padding-left: ${jdgSizes.nTimelineEventGapSize / 4 + jdgSizes.timelineUnit};
-			gap: ${jdgSizes.nTimelineEventGapSize / 4 + jdgSizes.timelineUnit};
-		}
-		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			padding-left: ${jdgSizes.nTimelineEventGapSize / 2 + jdgSizes.timelineUnit};
-		}
+		/* Centered layout - no left padding needed */
 	`;
 
 	const eventDateYearCss = css`
-		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			> :nth-child(1) {
-				margin-right: ${jdgSizes.nTimelineEventGapSize / 4 + jdgSizes.timelineUnit};
-			}
-		}
-		@media (min-width: ${jdgBreakpoints.width[0].toString() +
-			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
-			jdgBreakpoints.unit}) {
-			> :nth-child(1) {
-				margin-right: ${jdgSizes.nTimelineEventGapSize / 4 + jdgSizes.timelineUnit};
-			}
-		}
-		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			> :nth-child(1) {
-				margin-right: ${jdgSizes.timelineEventGapSize};
-			}
-		}
+		/* Date/year now above content, no margin needed */
 	`;
 
 	const eventDateCss = css`
@@ -183,18 +155,7 @@
 		}
 	`;
 
-	const eventNodeCss = css`
-		height: ${jdgSizes.timelineEventNodeSize};
-		background-color: ${jdgColors.textLight};
-		/* Center node on spine: offset by half the difference between node and spine width */
-		margin-left: ${-((jdgSizes.nTimelineEventNodeSize - jdgSizes.nTimelineSpineWidth) / 2) +
-		jdgSizes.timelineUnit};
-	`;
-
-	const eventLineCss = css`
-		height: ${jdgSizes.nTimelineEventNodeSize / 3 + jdgSizes.timelineUnit};
-		background-color: ${jdgColors.textLight};
-	`;
+	// Node and line removed - no longer needed
 
 	const eventTitleBarCss = css`
 		background-color: rgb(205, 205, 205);
@@ -322,148 +283,151 @@
 	on:keydown={onClickTimelineEvent}
 	bind:this={eventRowDivRef}
 >
-	<div class="timeline-event-date-year-container {eventDateYearCss}">
-		<!-- For approximate dates: hide day if day=01, hide month+day if month=01 -->
-		{#if !hideDateDiv}
-			<div class="timeline-event-date {eventDateCss}">
-				<!-- Show month name with three letters like AUG -->
-				{#if eventDateCorrected?.toString() !== 'Invalid Date'}
-					{#if upgradedEvent?.isApprxDate && eventDateCorrected?.getUTCDate() === 1}
-						<!-- Approximate date with day=01: show only month -->
-						{monthNames[eventDateCorrected?.getUTCMonth()]}
+	<div class="timeline-event-content-wrapper">
+		<!-- Date and year above content -->
+		<div class="timeline-event-date-year-container {eventDateYearCss}">
+			<!-- For approximate dates: hide day if day=01, hide month+day if month=01 -->
+			{#if !hideDateDiv}
+				<div class="timeline-event-date {eventDateCss}">
+					<!-- Show month name with three letters like AUG -->
+					{#if eventDateCorrected?.toString() !== 'Invalid Date'}
+						{#if upgradedEvent?.isApprxDate && eventDateCorrected?.getUTCDate() === 1}
+							<!-- Approximate date with day=01: show only month -->
+							{monthNames[eventDateCorrected?.getUTCMonth()]}
+						{:else}
+							<!-- Full date: show month and day -->
+							{monthNames[eventDateCorrected?.getUTCMonth()] + ' ' + eventDateCorrected?.getUTCDate()}
+						{/if}
 					{:else}
-						<!-- Full date: show month and day -->
-						{monthNames[eventDateCorrected?.getUTCMonth()] + ' ' + eventDateCorrected?.getUTCDate()}
+						Date?
 					{/if}
-				{:else}
-					Date?
-				{/if}
-			</div>
-		{/if}
-		<div
-			class="timeline-event-year {eventYearCss}"
-			style:border-radius={hideDateDiv ? dateBorderRadius : null}
-		>
-			{eventDateCorrected?.toString() !== 'Invalid Date'
-				? eventDateCorrected?.getUTCFullYear()
-				: 'Year?'}
-		</div>
-		{#if upgradedEvent?.isApprxDate}
-			<div class="timeline-event-date-apprx">(apprx.)</div>
-		{/if}
-	</div>
-	<div class="timeline-event-node {eventNodeCss}" />
-	<!-- Only show the line on desktop -->
-	{#if !$isMobileBreakpoint && !$isTabletBreakpoint}
-		<div class="timeline-event-line {eventLineCss}" />
-	{/if}
-	<div class="timeline-event-content-outer-container {eventRowContainerCss}">
-		<div class="timeline-event-title-bar {eventTitleBarCss}">
-			<!-- event icon -->
-			<i
-				class="fa-solid {timelineEventTypes[upgradedEvent?.type]?.icon} {eventFaIconCss}"
-				title="{sentenceCaseLabel} event"
-			/>
-			<!-- hide age if this is the birth event or if there's no age to display -->
-			{#if upgradedEvent?.type !== timelineEventTypes.birth.type && eventAgeDisplay}
-				<div class="timeline-event-age {eventAgeCss}">
-					{eventAgeDisplay}
-					{isEventAgePositive ? eventAgeSuffixPositive : eventAgeSuffixNegative}
 				</div>
 			{/if}
-			<!-- if this is a reference event, show the timeline host it's shared from -->
-			{#if upgradedEvent?.type === timelineEventTypes.reference}
-				<div>
-					<div class="timeline-event-reference-info">
+			<div
+				class="timeline-event-year {eventYearCss}"
+				style:border-radius={hideDateDiv ? dateBorderRadius : null}
+			>
+				<div class="timeline-event-year-content">
+					<div class="timeline-event-year-number">
+						{eventDateCorrected?.toString() !== 'Invalid Date'
+							? eventDateCorrected?.getUTCFullYear()
+							: 'Year?'}
+					</div>
+					{#if upgradedEvent?.isApprxDate}
+						<div class="timeline-event-year-apprx">(apprx.)</div>
+					{/if}
+				</div>
+			</div>
+		</div>
+		<!-- Content below date/year -->
+		<div class="timeline-event-content-outer-container {eventRowContainerCss}">
+			<div class="timeline-event-title-bar {eventTitleBarCss}">
+				<!-- event icon -->
+				<i
+					class="fa-solid {timelineEventTypes[upgradedEvent?.type]?.icon} {eventFaIconCss}"
+					title="{sentenceCaseLabel} event"
+				/>
+				<!-- hide age if this is the birth event or if there's no age to display -->
+				{#if upgradedEvent?.type !== timelineEventTypes.birth.type && eventAgeDisplay}
+					<div class="timeline-event-age {eventAgeCss}">
+						{eventAgeDisplay}
+						{isEventAgePositive ? eventAgeSuffixPositive : eventAgeSuffixNegative}
+					</div>
+				{/if}
+				<!-- if this is a reference event, show the timeline host it's shared from -->
+				{#if upgradedEvent?.type === timelineEventTypes.reference}
+					<div>
+						<div class="timeline-event-reference-info">
+							<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event from &nbsp; </i>
+							<JDGButton
+								onClickFunction={() => {
+									onClickEventRefHost();
+								}}
+								faIcon={'fa-circle-arrow-right'}
+								backgroundColor={jdgColors.activeSubtle}
+								paddingLeftRight="8px"
+								paddingTopBottom="2px"
+								fontSize="12px"
+								gap="6px"
+								label={eventReference?.name}
+								tooltip={'Go to ' + eventReference?.name}
+							/>
+						</div>
+					</div>
+				{/if}
+				<!-- if this event has associated people, show the first -->
+				{#if upgradedEvent?.associatedPeopleIds?.length > 0 && upgradedEvent?.type !== timelineEventTypes.reference}
+					<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event with &nbsp; </i>
+					<JDGButton
+						onClickFunction={() => {
+							onClickAssociatedHost(upgradedEvent.associatedPeopleIds[0]);
+						}}
+						faIcon={'fa-circle-arrow-right'}
+						backgroundColor={jdgColors.active}
+						paddingLeftRight="8px"
+						paddingTopBottom="2px"
+						fontSize="12px"
+						gap="6px"
+						label={timelineHost.name}
+						tooltip={'Go to ' + timelineHost.name}
+					/>
+					<!-- if more than one, show a label -->
+					{#if upgradedEvent?.additionalContent?.associatedPeopleIds?.length > 1}
+						&nbsp;and others
+					{/if}
+				{/if}
+				<!-- if this is a contextual event, treat it specifically -->
+				{#if upgradedEvent?.originType === timelineEventTypes.context}
+					<!-- child birth -->
+					{#if upgradedEvent?.type === timelineEventTypes.childBirth.type}
 						<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event from &nbsp; </i>
 						<JDGButton
 							onClickFunction={() => {
-								onClickEventRefHost();
+								onClickEventRefHost(timelineHost.id);
 							}}
-							faIcon={'fa-circle-arrow-right'}
+							faIcon={timelineEventTypes.childBirth.icon}
 							backgroundColor={jdgColors.activeSubtle}
 							paddingLeftRight="8px"
 							paddingTopBottom="2px"
 							fontSize="12px"
 							gap="6px"
-							label={eventReference?.name}
-							tooltip={'Go to ' + eventReference?.name}
+							label={timelineHost.name}
+							tooltip={timelineHost.name}
 						/>
-					</div>
-				</div>
-			{/if}
-			<!-- if this event has associated people, show the first -->
-			{#if upgradedEvent?.associatedPeopleIds?.length > 0 && upgradedEvent?.type !== timelineEventTypes.reference}
-				<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event with &nbsp; </i>
-				<JDGButton
-					onClickFunction={() => {
-						onClickAssociatedHost(upgradedEvent.associatedPeopleIds[0]);
-					}}
-					faIcon={'fa-circle-arrow-right'}
-					backgroundColor={jdgColors.active}
-					paddingLeftRight="8px"
-					paddingTopBottom="2px"
-					fontSize="12px"
-					gap="6px"
-					label={timelineHost.name}
-					tooltip={'Go to ' + timelineHost.name}
-				/>
-				<!-- if more than one, show a label -->
-				{#if upgradedEvent?.additionalContent?.associatedPeopleIds?.length > 1}
-					&nbsp;and others
+					{/if}
+					<!-- parent death -->
+					{#if upgradedEvent?.type === timelineEventTypes.parentDeath.type}
+						<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event from &nbsp; </i>
+						<JDGButton
+							onClickFunction={() => {
+								onClickEventRefHost(timelineHost.id);
+							}}
+							faIcon={timelineEventTypes.parentDeath.icon}
+							backgroundColor={jdgColors.activeSubtle}
+							paddingLeftRight="8px"
+							paddingTopBottom="2px"
+							fontSize="12px"
+							gap="6px"
+							label={timelineHost.name}
+							tooltip={timelineHost.name}
+						/>
+					{/if}
 				{/if}
-			{/if}
-			<!-- if this is a contextual event, treat it specifically -->
-			{#if upgradedEvent?.originType === timelineEventTypes.context}
-				<!-- child birth -->
-				{#if upgradedEvent?.type === timelineEventTypes.childBirth.type}
-					<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event from &nbsp; </i>
-					<JDGButton
-						onClickFunction={() => {
-							onClickEventRefHost(timelineHost.id);
-						}}
-						faIcon={timelineEventTypes.childBirth.icon}
-						backgroundColor={jdgColors.activeSubtle}
-						paddingLeftRight="8px"
-						paddingTopBottom="2px"
-						fontSize="12px"
-						gap="6px"
-						label={timelineHost.name}
-						tooltip={timelineHost.name}
-					/>
-				{/if}
-				<!-- parent death -->
-				{#if upgradedEvent?.type === timelineEventTypes.parentDeath.type}
-					<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event from &nbsp; </i>
-					<JDGButton
-						onClickFunction={() => {
-							onClickEventRefHost(timelineHost.id);
-						}}
-						faIcon={timelineEventTypes.parentDeath.icon}
-						backgroundColor={jdgColors.activeSubtle}
-						paddingLeftRight="8px"
-						paddingTopBottom="2px"
-						fontSize="12px"
-						gap="6px"
-						label={timelineHost.name}
-						tooltip={timelineHost.name}
-					/>
-				{/if}
-			{/if}
-		</div>
-		<div class="timeline-event-content {eventContentCss}">
-			<div class="timeline-event-description {eventDescriptionCss} {eventDescriptionDynamicCss}">
-				{upgradedEvent?.description ? upgradedEvent?.description : 'Event description'}
 			</div>
-			{#if upgradedEvent?.images?.length > 0}
-				{@const resolvedImages = resolveImageMetaKeys(upgradedEvent.images, imageMetaRegistry)}
-				{#if resolvedImages?.length > 0}
-					<div class="timeline-event-image-preview">
-						<!-- show a few of the timeline event images, if there are any -->
-						<JDGImageThumbnailGroup imageMetaSet={resolvedImages} maxImageHeight={'15svh'} />
-					</div>
+			<div class="timeline-event-content {eventContentCss}">
+				<div class="timeline-event-description {eventDescriptionCss} {eventDescriptionDynamicCss}">
+					{upgradedEvent?.description ? upgradedEvent?.description : 'Event description'}
+				</div>
+				{#if upgradedEvent?.images?.length > 0}
+					{@const resolvedImages = resolveImageMetaKeys(upgradedEvent.images, imageMetaRegistry)}
+					{#if resolvedImages?.length > 0}
+						<div class="timeline-event-image-preview">
+							<!-- show a few of the timeline event images, if there are any -->
+							<JDGImageThumbnailGroup imageMetaSet={resolvedImages} maxImageHeight={'15svh'} />
+						</div>
+					{/if}
 				{/if}
-			{/if}
+			</div>
 		</div>
 	</div>
 </div>
@@ -472,14 +436,24 @@
 	.timeline-event-row {
 		max-width: 100%;
 		display: flex;
+		justify-content: center;
 		align-items: center;
 		padding-top: 2px;
 		padding-bottom: 2px;
 	}
 
+	.timeline-event-content-wrapper {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		/* Only take the space needed, not full width */
+	}
+
 	.timeline-event-date-year-container {
 		display: flex;
 		flex-direction: column;
+		align-items: center;
+		margin-bottom: 8px;
 	}
 
 	.timeline-event-date {
@@ -496,32 +470,32 @@
 		align-items: center;
 	}
 
-	.timeline-event-date-apprx {
+	.timeline-event-year-content {
 		display: flex;
-		width: -webkit-fill-available;
-		width: -moz-available;
+		flex-direction: column;
+		align-items: center;
 		justify-content: center;
-		font-size: 10px;
-		padding-top: 3px;
+		width: 100%;
 	}
 
-	.timeline-event-node {
-		border-radius: 1rem;
-		aspect-ratio: 1;
-	}
-
-	.timeline-event-line {
+	.timeline-event-year-number {
 		display: flex;
-		flex-shrink: 0;
-		width: 2rem;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.timeline-event-year-apprx {
+		font-size: 0.5em;
+		font-weight: normal;
+		margin-top: 2px;
 	}
 
 	.timeline-event-title-bar {
 		display: flex;
-		flex-basis: 0;
-		flex-grow: 1;
-		width: -webkit-fill-available;
+		justify-content: center;
+		align-items: center;
 		padding: 5px 10px 5px 10px;
+		/* Only take the space needed, not full width */
 	}
 
 	/* font awesome icon */
@@ -542,6 +516,7 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		min-width: 0;
+		/* Only take the space needed, not full width */
 	}
 
 	.timeline-event-content {
@@ -558,6 +533,9 @@
 		/* Constrain width to prevent iOS flexbox overflow issues */
 		max-width: 100%;
 		overflow: hidden;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 
 	.timeline-event-reference-info {

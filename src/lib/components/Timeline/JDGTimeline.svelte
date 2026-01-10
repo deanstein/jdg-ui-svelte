@@ -376,29 +376,38 @@
 		}
 	`;
 
-	// Timeline spine styling
+	// Timeline spine styling - position will be calculated dynamically
 	let spineContainerCss = css`
-		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			margin-left: ${jdgSizes.nTimelineEventGapSize / 4 +
-			jdgSizes.ntimelineEventYearWidthSm +
-			jdgSizes.nTimelineSpineWidth +
-			jdgSizes.timelineUnit};
-		}
-		@media (min-width: ${jdgBreakpoints.width[0].toString() +
-			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
-			jdgBreakpoints.unit}) {
-			margin-left: ${jdgSizes.nTimelineEventGapSize / 4 +
-			jdgSizes.ntimelineEventYearWidthMd +
-			jdgSizes.nTimelineSpineWidth +
-			jdgSizes.timelineUnit};
-		}
-		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			margin-left: ${jdgSizes.nTimelineEventGapSize / 2 +
-			jdgSizes.ntimelineEventYearWidthLg +
-			jdgSizes.nTimelineSpineWidth * 2 +
-			jdgSizes.timelineUnit};
-		}
+		transform: translateX(-50%);
 	`;
+
+	// Calculate spine position based on scrolling canvas's visible width (accounts for scrollbar)
+	let spineLeftPosition = '50%';
+
+	const updateSpinePosition = () => {
+		if (scrollingCanvasDivRef) {
+			// Use clientWidth which excludes scrollbar, so spine aligns with content
+			const canvasWidth = scrollingCanvasDivRef.clientWidth;
+			// Position at center of visible canvas area
+			spineLeftPosition = `${canvasWidth / 2}px`;
+		}
+	};
+
+	// Update position when canvas ref is available
+	$: if (scrollingCanvasDivRef) {
+		updateSpinePosition();
+	}
+
+	// Watch for size changes (scrollbar appearing/disappearing)
+	onMount(() => {
+		if (scrollingCanvasDivRef) {
+			const resizeObserver = new ResizeObserver(() => {
+				updateSpinePosition();
+			});
+			resizeObserver.observe(scrollingCanvasDivRef);
+			return () => resizeObserver.disconnect();
+		}
+	});
 
 	let spineColumnCss = css`
 		width: ${jdgSizes.timelineSpineWidth};
@@ -622,7 +631,7 @@
 		</div>
 		<!-- Timeline: A collection of TimelineEvents shown chronologically -->
 		<div class="timeline-content-container">
-			<div class="timeline-spine {spineContainerCss}">
+			<div class="timeline-spine {spineContainerCss}" style:left={spineLeftPosition}>
 				<div class="timeline-spine-line-column {spineColumnCss}">
 					<div class="timeline-spine-line" />
 				</div>
@@ -809,15 +818,24 @@
 		display: grid;
 		grid-template-columns: 1fr;
 		flex-grow: 1;
+		position: relative;
+		z-index: 1;
 		/* align-content is set dynamically based on timelineZoom */
 	}
 
 	.timeline-spine {
 		position: absolute;
 		display: flex;
+		justify-content: center;
 		/* Use top/bottom instead of height: inherit for flex parent compatibility */
 		top: 0;
 		bottom: 0;
+		z-index: 0;
+		/* Position at center - will align with events which are also centered */
+		left: 50%;
+		transform: translateX(-50%);
+		/* Account for scrollbar by positioning relative to scrolling canvas */
+		/* The scrolling canvas takes full width, so 50% of container aligns with 50% of canvas content */
 		background: linear-gradient(
 			to bottom,
 			rgba(255, 0, 0, 0) 0%,
@@ -829,6 +847,14 @@
 
 	.timeline-spine-line-column {
 		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.timeline-spine-line {
+		width: 100%;
+		height: 100%;
+		background-color: rgba(200, 200, 200, 0.7);
 	}
 
 	.timeline-options-controls {
