@@ -313,10 +313,16 @@
 	let eventDateYearContainerDynamicCss = css``;
 	$: {
 		if (upgradedEvent) {
+			const nodeHalfWidthRem = jdgSizes.nTimelineEventNodeSize / 2;
+			const gapRem = 0.5; // gap between node and date
 			eventDateYearContainerDynamicCss = css`
 				@media (min-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 					order: ${isLeftAligned ? 4 : 1};
-					align-items: ${isLeftAligned ? 'flex-end' : 'flex-start'};
+					align-items: center;
+					position: absolute;
+					${isLeftAligned
+						? `left: calc(50% + ${nodeHalfWidthRem + gapRem}rem);`
+						: `right: calc(50% + ${nodeHalfWidthRem + gapRem}rem);`}
 				}
 			`;
 		}
@@ -332,7 +338,7 @@
 			eventContentContainerDynamicCss = css`
 				@media (min-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 					order: ${isLeftAligned ? 1 : 5};
-					${isLeftAligned ? '' : 'margin-left: auto;'}
+					${isLeftAligned ? 'margin-right: auto;' : 'margin-left: auto;'}
 				}
 			`;
 		}
@@ -578,12 +584,14 @@
 		display: flex;
 		flex-direction: column;
 		flex-shrink: 0;
+		align-items: center;
 	}
 
 	@media (min-width: 768px) {
 		.timeline-event-date-year-container {
-			flex: 0 1 auto;
+			flex: 0 0 auto;
 			z-index: 2;
+			position: absolute;
 		}
 	}
 
@@ -630,13 +638,16 @@
 		display: flex;
 		flex-shrink: 0;
 		width: 2rem;
+		height: 0.25rem;
+		background-color: #737373;
+		min-height: 0.25rem;
 	}
 
 	@media (min-width: 768px) {
 		.timeline-event-line {
-			flex: 1 1 auto;
-			min-width: 2rem;
-			max-width: calc(50% - 8rem);
+			flex: 0 0 auto;
+			width: 1.5rem;
+			min-width: 1.5rem;
 		}
 	}
 
@@ -646,6 +657,7 @@
 		width: 1.5rem;
 		height: 0.25rem;
 		background-color: #737373;
+		min-height: 0.25rem;
 	}
 
 	@media (min-width: 768px) {
