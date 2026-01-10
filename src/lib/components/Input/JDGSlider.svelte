@@ -17,14 +17,6 @@
 	let uniqueId = `slider-${Math.random().toString(36).substr(2, 9)}`;
 	$: effectiveId = sliderId || uniqueId;
 
-	const sliderWrapperCss = css`
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
-		padding: 8px 0;
-		min-width: 200px;
-	`;
-
 	let sliderLabelCss = css`
 		font-size: ${labelFontSize};
 		color: #333;
@@ -38,7 +30,7 @@
 	};
 </script>
 
-<div class="slider-wrapper {sliderWrapperCss}">
+<div class="slider-wrapper">
 	{#if showLabel}
 		<label for={effectiveId} class={sliderLabelCss}>
 			{label}
@@ -58,6 +50,13 @@
 </div>
 
 <style>
+	.slider-wrapper {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		min-width: 200px;
+	}
+
 	.slider {
 		width: 100%;
 		height: 6px;
