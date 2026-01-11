@@ -28,7 +28,7 @@ export const jdgColors = {
 	done: '#4dc44d',
 	disabled: '#B5B5B5',
 	cancel: '#8B989DFF',
-	backgroundFillRangeLm: ['#e0d26e', '#e69623', '#ce595e'],
+	backgroundFillRangeLm: ['#BFDFF2', '#C9CCD3', '#CBB4E6'],
 	text: '#323232',
 	textLight: '#737373',
 	textDm: '#ffffff',
