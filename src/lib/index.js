@@ -262,3 +262,6 @@ export { JDGMenuIcon };
 
 import JDGRandomDelaunay from './assets/svg/JDGRandomDelaunay.svelte';
 export { JDGRandomDelaunay };
+
+import JDGRandomGradient from './assets/svg/JDGRandomGradient.svelte';
+export { JDGRandomGradient };

@@ -1,12 +1,40 @@
 import { cubicOut, quintOut } from 'svelte/easing';
 import { crossfade, fade, scale } from 'svelte/transition';
 
-import { parseRgba } from './jdg-utils.js';
+import { parseRgba, hexToRgb } from './jdg-utils.js';
+
+// Helper function to parse color strings (hex or rgba) into [r, g, b, a] array
+const parseColor = (colorString) => {
+	if (!colorString) return null;
+
+	// Check if it's a hex color
+	if (typeof colorString === 'string' && colorString.startsWith('#')) {
+		const hexRgb = hexToRgb(colorString);
+		if (hexRgb) {
+			return [hexRgb.r, hexRgb.g, hexRgb.b, hexRgb.a !== undefined ? hexRgb.a : 1];
+		}
+	}
+
+	// Try parsing as rgba/rgb
+	const rgba = parseRgba(colorString);
+	if (rgba) {
+		return rgba;
+	}
+
+	return null;
+};
 
 export const generateGradient = (steps, colorString1, colorString2, colorString3) => {
-	const startColor = parseRgba(colorString1);
-	const midColor = parseRgba(colorString2);
-	const endColor = colorString3 ? parseRgba(colorString3) : midColor;
+	const startColor = parseColor(colorString1);
+	const midColor = parseColor(colorString2);
+	const endColor = colorString3 ? parseColor(colorString3) : midColor;
+
+	// Validate that colors were parsed successfully
+	if (!startColor || !midColor || !endColor) {
+		console.error('Failed to parse color strings:', { colorString1, colorString2, colorString3 });
+		return [];
+	}
+
 	const colors = [];
 	const halfSteps = Math.floor(steps / 2);
 
