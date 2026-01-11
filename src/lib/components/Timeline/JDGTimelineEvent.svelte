@@ -38,16 +38,12 @@
 	// when clicking on an associated host
 	export let onClickAssociatedHost = (timelineHostId) => {};
 
-	export let backgroundColor = jdgColors.activeColorSubtle;
+	// Gradients
+	export let gradientColor1 = jdgColors.activeColorSubtle;
+	export let gradientColor2 = null;
 	export let rowIndex;
-	// Number of gradient points to use (default: 3)
+	// Number of gradient points to use
 	export let gradientPointsCount = 3;
-	// The mirror color from the gradient spectrum (opposite end)
-	export let gradientMirrorColor = null;
-
-	// Number of spectrum increments away for gradient color (edit this to control distance)
-	// Note: Also update the same value in JDGTimeline.svelte where spectrumIncrement is used
-	const gradientSpectrumIncrement = 5;
 
 	// Get age suffixes from context (set by parent components)
 	// Falls back to default values if context not available
@@ -245,7 +241,7 @@
 	// Generate gradient for this event
 	let eventGradientCss = css``;
 	$: {
-		if (backgroundColor && gradientPointsCount > 0 && gradientMirrorColor) {
+		if (gradientColor1 && gradientPointsCount > 0 && gradientColor2) {
 			// Use event ID as seed for consistent randomness per event, or rowIndex as fallback
 			const seed = upgradedEvent?.id
 				? upgradedEvent.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
@@ -255,12 +251,12 @@
 			// Constrain the corollary color to not exceed max contrast (1.3 ratio)
 			// This ensures gradients are never between colors that are too different
 			const constrainedCorollary = constrainCorollaryColor(
-				backgroundColor,
-				gradientMirrorColor,
+				gradientColor1,
+				gradientColor2,
 				1.3
 			);
 
-			const gradientString = generateEventGradient(backgroundColor, constrainedCorollary, points);
+			const gradientString = generateEventGradient(gradientColor1, constrainedCorollary, points);
 
 			eventGradientCss = css`
 				background: ${gradientString};
@@ -269,7 +265,7 @@
 		} else {
 			// Fallback to solid color
 			eventGradientCss = css`
-				background-color: ${backgroundColor};
+				background-color: ${gradientColor1};
 				border-radius: 0px 0px ${eventBorderRadius} ${eventBorderRadius};
 			`;
 		}

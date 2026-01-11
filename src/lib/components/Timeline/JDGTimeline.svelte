@@ -700,8 +700,8 @@
 								: () => {}}
 							isInteractive={isInteractive && allowEditing && $isAdminMode}
 							rowIndex={0}
-							backgroundColor={eventColorPairs[0].backgroundColor}
-							gradientMirrorColor={eventColorPairs[0].gradientMirrorColor}
+							gradientColor1={eventColorPairs[0].backgroundColor}
+							gradientColor2={eventColorPairs[0].gradientMirrorColor}
 							{gradientPointsCount}
 						/>
 					{/if}
@@ -720,8 +720,8 @@
 									timelineEventModalInceptionDate.set(timelineHost.inceptionDate);
 								}}
 								rowIndex={timelineRowItem.index}
-								backgroundColor={eventColorPairs[colorPairIndex]?.backgroundColor}
-								gradientMirrorColor={eventColorPairs[colorPairIndex]?.gradientMirrorColor}
+								gradientColor1={eventColorPairs[colorPairIndex]?.backgroundColor}
+								gradientColor2={eventColorPairs[colorPairIndex]?.gradientMirrorColor}
 								eventReference={timelineRowItem.eventReference}
 								isInteractive={isInteractive || $isAdminMode}
 								{gradientPointsCount}
@@ -735,8 +735,8 @@
 							{timelineHost}
 							timelineEvent={todayEvent}
 							rowIndex={todayEventRowIndex}
-							backgroundColor={eventColorPairs[todayColorPairIndex].backgroundColor}
-							gradientMirrorColor={eventColorPairs[todayColorPairIndex].gradientMirrorColor}
+							gradientColor1={eventColorPairs[todayColorPairIndex].backgroundColor}
+							gradientColor2={eventColorPairs[todayColorPairIndex].gradientMirrorColor}
 							{gradientPointsCount}
 						/>
 					{/if}
