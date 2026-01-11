@@ -250,11 +250,7 @@
 
 			// Constrain the corollary color to not exceed max contrast (1.3 ratio)
 			// This ensures gradients are never between colors that are too different
-			const constrainedCorollary = constrainCorollaryColor(
-				gradientColor1,
-				gradientColor2,
-				1.3
-			);
+			const constrainedCorollary = constrainCorollaryColor(gradientColor1, gradientColor2, 1.3);
 
 			const gradientString = generateEventGradient(gradientColor1, constrainedCorollary, points);
 
