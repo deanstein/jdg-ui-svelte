@@ -1284,6 +1284,227 @@ export const generateGradient = (steps, colorString1, colorString2, colorString3
 	return colors;
 };
 
+/**
+ * Convert RGB to HSL
+ */
+const rgbToHsl = (r, g, b) => {
+	r /= 255;
+	g /= 255;
+	b /= 255;
+	const max = Math.max(r, g, b);
+	const min = Math.min(r, g, b);
+	let h,
+		s,
+		l = (max + min) / 2;
+
+	if (max === min) {
+		h = s = 0; // achromatic
+	} else {
+		const d = max - min;
+		s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+		switch (max) {
+			case r:
+				h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+				break;
+			case g:
+				h = ((b - r) / d + 2) / 6;
+				break;
+			case b:
+				h = ((r - g) / d + 4) / 6;
+				break;
+		}
+	}
+	return [h * 360, s * 100, l * 100];
+};
+
+/**
+ * Convert HSL to RGB
+ */
+const hslToRgb = (h, s, l) => {
+	h /= 360;
+	s /= 100;
+	l /= 100;
+	let r, g, b;
+
+	if (s === 0) {
+		r = g = b = l; // achromatic
+	} else {
+		const hue2rgb = (p, q, t) => {
+			if (t < 0) t += 1;
+			if (t > 1) t -= 1;
+			if (t < 1 / 6) return p + (q - p) * 6 * t;
+			if (t < 1 / 2) return q;
+			if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+			return p;
+		};
+		const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+		const p = 2 * l - q;
+		r = hue2rgb(p, q, h + 1 / 3);
+		g = hue2rgb(p, q, h);
+		b = hue2rgb(p, q, h - 1 / 3);
+	}
+
+	return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+};
+
+/**
+ * Find the corollary (complementary) color by shifting hue 180 degrees
+ * while maintaining similar lightness and saturation
+ */
+export const getCorollaryColor = (rgbaColorString) => {
+	const parsed = parseRgbaColorString(rgbaColorString);
+	if (!parsed) return rgbaColorString;
+
+	const [r, g, b, a] = parsed;
+	const [h, s, l] = rgbToHsl(r, g, b);
+
+	// Shift hue by 180 degrees (complementary color)
+	const complementaryH = (h + 180) % 360;
+	const [newR, newG, newB] = hslToRgb(complementaryH, s, l);
+
+	return `rgba(${newR}, ${newG}, ${newB}, ${a.toFixed(2)})`;
+};
+
+/**
+ * Generate random gradient points for an event
+ * Returns an array of {x, y} positions as percentages
+ */
+export const generateGradientPoints = (numPoints, seed = null) => {
+	// Use seed for deterministic randomness per event
+	const random = seed !== null ? seededRandom(seed) : Math.random;
+	const points = [];
+
+	for (let i = 0; i < numPoints; i++) {
+		points.push({
+			x: random() * 100, // 0-100%
+			y: random() * 100 // 0-100%
+		});
+	}
+
+	return points;
+};
+
+/**
+ * Simple seeded random number generator
+ */
+const seededRandom = (seed) => {
+	let value = seed;
+	return () => {
+		value = (value * 9301 + 49297) % 233280;
+		return value / 233280;
+	};
+};
+
+/**
+ * Interpolate between two colors
+ * Returns a color that is a blend of color1 and color2
+ * @param {string} color1 - First color (rgba string)
+ * @param {string} color2 - Second color (rgba string)
+ * @param {number} ratio - Blend ratio (0 = color1, 1 = color2)
+ * @returns {string} Interpolated rgba color string
+ */
+export const interpolateColors = (color1, color2, ratio) => {
+	const parsed1 = parseRgbaColorString(color1);
+	const parsed2 = parseRgbaColorString(color2);
+	if (!parsed1 || !parsed2) return color1;
+
+	const [r1, g1, b1, a1] = parsed1;
+	const [r2, g2, b2, a2] = parsed2;
+
+	const r = Math.round(r1 + (r2 - r1) * ratio);
+	const g = Math.round(g1 + (g2 - g1) * ratio);
+	const b = Math.round(b1 + (b2 - b1) * ratio);
+	const a = a1 + (a2 - a1) * ratio;
+
+	return `rgba(${r}, ${g}, ${b}, ${a.toFixed(2)})`;
+};
+
+/**
+ * Constrain a corollary color to not exceed a maximum contrast ratio
+ * If the contrast is too high, interpolate between base and corollary
+ * @param {string} baseColor - The base color (rgba string)
+ * @param {string} corollaryColor - The corollary color from spectrum (rgba string)
+ * @param {number} maxContrastRatio - Maximum allowed contrast ratio (default: 1.3)
+ * @returns {string} Constrained corollary color (rgba string)
+ */
+export const constrainCorollaryColor = (baseColor, corollaryColor, maxContrastRatio = 1.3) => {
+	const rgbBase = rgbaToRgb(baseColor);
+	const rgbCorollary = rgbaToRgb(corollaryColor);
+
+	const contrast = calculateContrastRatio(rgbBase, rgbCorollary);
+
+	// If contrast is within limit, use the corollary as-is
+	if (contrast <= maxContrastRatio) {
+		return corollaryColor;
+	}
+
+	// Otherwise, find a color between base and corollary that's within the limit
+	// Use binary search to find the right interpolation ratio
+	let minRatio = 0;
+	let maxRatio = 1;
+	let bestColor = baseColor;
+
+	for (let i = 0; i < 10; i++) {
+		const testRatio = (minRatio + maxRatio) / 2;
+		const testColor = interpolateColors(baseColor, corollaryColor, testRatio);
+		const rgbTest = rgbaToRgb(testColor);
+		const testContrast = calculateContrastRatio(rgbBase, rgbTest);
+
+		if (testContrast <= maxContrastRatio) {
+			bestColor = testColor;
+			minRatio = testRatio;
+		} else {
+			maxRatio = testRatio;
+		}
+	}
+
+	return bestColor;
+};
+
+/**
+ * Generate a CSS radial gradient string from points
+ * Creates a gradient that transitions from the base color to corollary color
+ * at multiple points across the surface
+ */
+export const generateEventGradient = (baseColor, corollaryColor, points) => {
+	if (!points || points.length === 0) {
+		return baseColor; // Fallback to solid color
+	}
+
+	// Create multiple radial gradients, one for each point
+	// Each gradient creates a spot that blends the corollary color with the base
+	const gradientLayers = [];
+
+	points.forEach((point, index) => {
+		// Alternate between corollary and base color at center for variety
+		const centerColor = index % 2 === 0 ? corollaryColor : baseColor;
+
+		// Create a radial gradient for this point
+		// Control size through color stops - vary the stop positions for different sizes
+		// Smaller stop values = larger gradient, larger stop values = smaller gradient
+		const minStop = 25;
+		const maxStop = 50;
+		const stopStep = (maxStop - minStop) / Math.max(1, points.length - 1);
+		const centerStop = minStop + index * stopStep;
+		const fadeStop = centerStop + 25;
+
+		// Create gradient that fades from center color to transparent
+		// This allows the base color to show through
+		// Use simple circle syntax (no size specified) - most compatible
+		gradientLayers.push(
+			`radial-gradient(circle at ${point.x}% ${point.y}%, ${centerColor} 0%, ${centerColor} ${centerStop}%, transparent ${fadeStop}%)`
+		);
+	});
+
+	// Add base color as the bottom layer (background)
+	// In CSS, the last background listed is rendered first (bottom layer)
+	gradientLayers.push(baseColor);
+
+	// Return as comma-separated list for CSS background property
+	// First listed = top layer, last listed = bottom layer
+	return gradientLayers.join(', ');
+};
+
 ///
 /// CLOUDINARY UTILS
 ///

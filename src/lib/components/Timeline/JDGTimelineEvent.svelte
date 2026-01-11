@@ -14,7 +14,10 @@
 		getYearsAndMonthsBetweenDates,
 		formatAgeDisplayWithRounding,
 		instantiateObject,
-		resolveImageMetaKeys
+		resolveImageMetaKeys,
+		generateGradientPoints,
+		generateEventGradient,
+		constrainCorollaryColor
 	} from '$lib/jdg-utils.js';
 	import { upgradeTimelineEvent } from '$lib/jdg-timeline-management.js';
 
@@ -37,6 +40,14 @@
 
 	export let backgroundColor = jdgColors.activeColorSubtle;
 	export let rowIndex;
+	// Number of gradient points to use (default: 3)
+	export let gradientPointsCount = 3;
+	// The mirror color from the gradient spectrum (opposite end)
+	export let gradientMirrorColor = null;
+
+	// Number of spectrum increments away for gradient color (edit this to control distance)
+	// Note: Also update the same value in JDGTimeline.svelte where spectrumIncrement is used
+	const gradientSpectrumIncrement = 5;
 
 	// Get age suffixes from context (set by parent components)
 	// Falls back to default values if context not available
@@ -231,10 +242,38 @@
 		}
 	`;
 
-	const eventContentCss = css`
-		background-color: ${backgroundColor};
-		border-radius: 0px 0px ${eventBorderRadius} ${eventBorderRadius};
-	`;
+	// Generate gradient for this event
+	let eventGradientCss = css``;
+	$: {
+		if (backgroundColor && gradientPointsCount > 0 && gradientMirrorColor) {
+			// Use event ID as seed for consistent randomness per event, or rowIndex as fallback
+			const seed = upgradedEvent?.id
+				? upgradedEvent.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
+				: (rowIndex || 0) * 1000;
+			const points = generateGradientPoints(gradientPointsCount, seed);
+
+			// Constrain the corollary color to not exceed max contrast (1.3 ratio)
+			// This ensures gradients are never between colors that are too different
+			const constrainedCorollary = constrainCorollaryColor(
+				backgroundColor,
+				gradientMirrorColor,
+				1.3
+			);
+
+			const gradientString = generateEventGradient(backgroundColor, constrainedCorollary, points);
+
+			eventGradientCss = css`
+				background: ${gradientString};
+				border-radius: 0px 0px ${eventBorderRadius} ${eventBorderRadius};
+			`;
+		} else {
+			// Fallback to solid color
+			eventGradientCss = css`
+				background-color: ${backgroundColor};
+				border-radius: 0px 0px ${eventBorderRadius} ${eventBorderRadius};
+			`;
+		}
+	}
 
 	// Get the timeline's image registry from context (set by parent JDGTimeline)
 	const timelineImageRegistryStore = getContext(JDG_CONTEXTS.TIMELINE_IMAGE_REGISTRY);
@@ -451,7 +490,7 @@
 				{/if}
 			{/if}
 		</div>
-		<div class="timeline-event-content {eventContentCss}">
+		<div class="timeline-event-content {eventGradientCss}">
 			<div class="timeline-event-description {eventDescriptionCss} {eventDescriptionDynamicCss}">
 				{upgradedEvent?.description ? upgradedEvent?.description : 'Event description'}
 			</div>

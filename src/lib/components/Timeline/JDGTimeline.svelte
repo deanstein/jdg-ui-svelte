@@ -194,6 +194,14 @@
 	let timelineZoom = 0;
 	// Remember the last zoom value before unchecking, so we can restore it
 	let lastZoomValue = 0;
+
+	// EVENT GRADIENTS
+	// Number of gradient points per event (default: 3)
+	const gradientPointsCount = 3;
+	// Each event gradients between its normal color
+	// and a color this far toward the other color
+	const gradientMirrorFactor = 2.5;
+
 	// Row items are converted from the activePerson's raw event data
 	// each row item is an object with the index and the event content
 	let timelineRowItems = [];
@@ -201,10 +209,6 @@
 	// Timeline events will each have a slightly different color
 	// along a gradient defined here
 	let timelineEventColors = [];
-
-	// The spine changes its margin
-	// depending on whether the canvas is scrolled to the top or bottom
-	let canvasScrollState = { top: true, bottom: true };
 
 	// Preview overlay handlers
 	let previewOverlayTimeout;
@@ -632,6 +636,16 @@
 				<div class="timeline-event-grid {timelineEventGridCss}">
 					<!-- If there are no events, make an empty state event at the top -->
 					{#if emptyStateEvent}
+						{@const colorIndex = 0}
+						{@const spectrumIncrement = Math.max(
+							1,
+							Math.round(gradientMirrorFactor * (timelineEventColors.length / 10))
+						)}
+						{@const middleIndex = Math.floor(timelineEventColors.length / 2)}
+						{@const targetIndex =
+							colorIndex < middleIndex
+								? Math.min(colorIndex + spectrumIncrement, timelineEventColors.length - 1)
+								: Math.max(colorIndex - spectrumIncrement, 0)}
 						<JDGTimelineEvent
 							{timelineHost}
 							timelineEvent={emptyStateEvent}
@@ -640,11 +654,23 @@
 								: () => {}}
 							isInteractive={isInteractive && allowEditing && $isAdminMode}
 							rowIndex={0}
-							backgroundColor={timelineEventColors[0]}
+							backgroundColor={timelineEventColors[colorIndex]}
+							gradientMirrorColor={timelineEventColors[targetIndex]}
+							{gradientPointsCount}
 						/>
 					{/if}
 					<!-- All timeline events saved to the host -->
 					{#each timelineRowItems as timelineRowItem, i}
+						{@const colorIndex = (emptyStateEvent ? 1 : 0) + i}
+						{@const spectrumIncrement = Math.max(
+							1,
+							Math.round(gradientMirrorFactor * (timelineEventColors.length / 10))
+						)}
+						{@const middleIndex = Math.floor(timelineEventColors.length / 2)}
+						{@const targetIndex =
+							colorIndex < middleIndex
+								? Math.min(colorIndex + spectrumIncrement, timelineEventColors.length - 1)
+								: Math.max(colorIndex - spectrumIncrement, 0)}
 						<!-- Use a key to ensure the UI reacts when these values change -->
 						{#key `${timelineHost.id}-${timelineRowItem.event.id}`}
 							<JDGTimelineEvent
@@ -657,19 +683,33 @@
 									timelineEventModalInceptionDate.set(timelineHost.inceptionDate);
 								}}
 								rowIndex={timelineRowItem.index}
-								backgroundColor={timelineEventColors[i]}
+								backgroundColor={timelineEventColors[colorIndex]}
+								gradientMirrorColor={timelineEventColors[targetIndex]}
 								eventReference={timelineRowItem.eventReference}
 								isInteractive={isInteractive || $isAdminMode}
+								{gradientPointsCount}
 							/>
 						{/key}
 					{/each}
 					<!-- Show the today event if there's no cessation date provided -->
 					{#if timelineHost.cessationDate === '' || (!timelineHost?.cessationDate && todayEvent)}
+						{@const colorIndex = timelineEventColors.length - 1}
+						{@const spectrumIncrement = Math.max(
+							1,
+							Math.round(gradientMirrorFactor * (timelineEventColors.length / 10))
+						)}
+						{@const middleIndex = Math.floor(timelineEventColors.length / 2)}
+						{@const targetIndex =
+							colorIndex < middleIndex
+								? Math.min(colorIndex + spectrumIncrement, timelineEventColors.length - 1)
+								: Math.max(colorIndex - spectrumIncrement, 0)}
 						<JDGTimelineEvent
 							{timelineHost}
 							timelineEvent={todayEvent}
 							rowIndex={todayEventRowIndex}
-							backgroundColor={timelineEventColors[timelineEventColors.length - 1]}
+							backgroundColor={timelineEventColors[colorIndex]}
+							gradientMirrorColor={timelineEventColors[targetIndex]}
+							{gradientPointsCount}
 						/>
 					{/if}
 				</div>
@@ -703,6 +743,7 @@
 					maxHeight="75dvh"
 					{onClickInceptionEvent}
 					{addClickAddEvent}
+					{gradientPointsCount}
 				/>
 			</div>
 		</JDGModal>
