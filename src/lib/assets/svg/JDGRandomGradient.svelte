@@ -10,6 +10,7 @@
 	export let edgeBufferRatio = 0.25; // points will be this far away from screen edges (ratio of total width or height)
 	export let drawBorders = true;
 	export let borderColorsHex = ['#C3C3C3FF']; // only used if drawBorders is true
+	export let showDebugPoints = false; // show debug circles at gradient points
 
 	let gradientStyle = '';
 	let borderElements = [];
@@ -66,8 +67,8 @@
 		// Create the CSS background string
 		gradientStyle = gradientLayers.join(', ');
 
-		// Store border elements if needed
-		if (drawBorders) {
+		// Store border elements if debug points are enabled
+		if (showDebugPoints) {
 			borderElements = points.map((point, index) => ({
 				x: point.x,
 				y: point.y,
@@ -78,7 +79,7 @@
 </script>
 
 <div class="jdg-random-gradient" style="background: {gradientStyle};">
-	{#if drawBorders}
+	{#if showDebugPoints}
 		<svg class="jdg-random-gradient-borders" width="100%" height="100%">
 			{#each borderElements as border}
 				<circle
