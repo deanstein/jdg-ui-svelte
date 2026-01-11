@@ -1,6 +1,6 @@
 <script>
 	import { onDestroy, onMount } from 'svelte';
-	import { JDGRandomDelaunay } from '$lib/index.js';
+	import { JDGRandomDelaunay, JDGRandomGradient } from '$lib/index.js';
 
 	export let isParallax = false; // parallax could affect performance, use with caution
 
@@ -25,7 +25,7 @@
 </script>
 
 <div class="jdg-background-container" bind:this={backgroundContainerDiv}>
-	<JDGRandomDelaunay heightMultiplier={isParallax ? 1.5 : 1.0} />
+	<JDGRandomGradient />
 </div>
 
 <style>
