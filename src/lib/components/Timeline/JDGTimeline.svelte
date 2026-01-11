@@ -528,6 +528,62 @@
 			timelineEventColorGradient3
 		);
 	}
+
+	// Pre-calculate all event colors and their mirror colors
+	let eventColorPairs = [];
+	$: {
+		if (timelineEventColors.length === 0) {
+			eventColorPairs = [];
+		} else {
+			const pairs = [];
+			const middleIndex = Math.floor(timelineEventColors.length / 2);
+			const spectrumIncrement = Math.max(
+				1,
+				Math.round(gradientMirrorFactor * (timelineEventColors.length / 10))
+			);
+
+			// Calculate color pair for emptyStateEvent (if exists)
+			if (emptyStateEvent) {
+				const colorIndex = 0;
+				const targetIndex =
+					colorIndex < middleIndex
+						? Math.min(colorIndex + spectrumIncrement, timelineEventColors.length - 1)
+						: Math.max(colorIndex - spectrumIncrement, 0);
+				pairs.push({
+					backgroundColor: timelineEventColors[colorIndex],
+					gradientMirrorColor: timelineEventColors[targetIndex]
+				});
+			}
+
+			// Calculate color pairs for all timeline row items
+			for (let i = 0; i < timelineRowItems.length; i++) {
+				const colorIndex = (emptyStateEvent ? 1 : 0) + i;
+				const targetIndex =
+					colorIndex < middleIndex
+						? Math.min(colorIndex + spectrumIncrement, timelineEventColors.length - 1)
+						: Math.max(colorIndex - spectrumIncrement, 0);
+				pairs.push({
+					backgroundColor: timelineEventColors[colorIndex],
+					gradientMirrorColor: timelineEventColors[targetIndex]
+				});
+			}
+
+			// Calculate color pair for todayEvent (if exists)
+			if (todayEvent) {
+				const colorIndex = timelineEventColors.length - 1;
+				const targetIndex =
+					colorIndex < middleIndex
+						? Math.min(colorIndex + spectrumIncrement, timelineEventColors.length - 1)
+						: Math.max(colorIndex - spectrumIncrement, 0);
+				pairs.push({
+					backgroundColor: timelineEventColors[colorIndex],
+					gradientMirrorColor: timelineEventColors[targetIndex]
+				});
+			}
+
+			eventColorPairs = pairs;
+		}
+	}
 </script>
 
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
@@ -635,17 +691,7 @@
 				<!-- The grid containing all timeline events -->
 				<div class="timeline-event-grid {timelineEventGridCss}">
 					<!-- If there are no events, make an empty state event at the top -->
-					{#if emptyStateEvent}
-						{@const colorIndex = 0}
-						{@const spectrumIncrement = Math.max(
-							1,
-							Math.round(gradientMirrorFactor * (timelineEventColors.length / 10))
-						)}
-						{@const middleIndex = Math.floor(timelineEventColors.length / 2)}
-						{@const targetIndex =
-							colorIndex < middleIndex
-								? Math.min(colorIndex + spectrumIncrement, timelineEventColors.length - 1)
-								: Math.max(colorIndex - spectrumIncrement, 0)}
+					{#if emptyStateEvent && eventColorPairs.length > 0}
 						<JDGTimelineEvent
 							{timelineHost}
 							timelineEvent={emptyStateEvent}
@@ -654,23 +700,14 @@
 								: () => {}}
 							isInteractive={isInteractive && allowEditing && $isAdminMode}
 							rowIndex={0}
-							backgroundColor={timelineEventColors[colorIndex]}
-							gradientMirrorColor={timelineEventColors[targetIndex]}
+							backgroundColor={eventColorPairs[0].backgroundColor}
+							gradientMirrorColor={eventColorPairs[0].gradientMirrorColor}
 							{gradientPointsCount}
 						/>
 					{/if}
 					<!-- All timeline events saved to the host -->
 					{#each timelineRowItems as timelineRowItem, i}
-						{@const colorIndex = (emptyStateEvent ? 1 : 0) + i}
-						{@const spectrumIncrement = Math.max(
-							1,
-							Math.round(gradientMirrorFactor * (timelineEventColors.length / 10))
-						)}
-						{@const middleIndex = Math.floor(timelineEventColors.length / 2)}
-						{@const targetIndex =
-							colorIndex < middleIndex
-								? Math.min(colorIndex + spectrumIncrement, timelineEventColors.length - 1)
-								: Math.max(colorIndex - spectrumIncrement, 0)}
+						{@const colorPairIndex = (emptyStateEvent ? 1 : 0) + i}
 						<!-- Use a key to ensure the UI reacts when these values change -->
 						{#key `${timelineHost.id}-${timelineRowItem.event.id}`}
 							<JDGTimelineEvent
@@ -683,8 +720,8 @@
 									timelineEventModalInceptionDate.set(timelineHost.inceptionDate);
 								}}
 								rowIndex={timelineRowItem.index}
-								backgroundColor={timelineEventColors[colorIndex]}
-								gradientMirrorColor={timelineEventColors[targetIndex]}
+								backgroundColor={eventColorPairs[colorPairIndex]?.backgroundColor}
+								gradientMirrorColor={eventColorPairs[colorPairIndex]?.gradientMirrorColor}
 								eventReference={timelineRowItem.eventReference}
 								isInteractive={isInteractive || $isAdminMode}
 								{gradientPointsCount}
@@ -692,23 +729,14 @@
 						{/key}
 					{/each}
 					<!-- Show the today event if there's no cessation date provided -->
-					{#if timelineHost.cessationDate === '' || (!timelineHost?.cessationDate && todayEvent)}
-						{@const colorIndex = timelineEventColors.length - 1}
-						{@const spectrumIncrement = Math.max(
-							1,
-							Math.round(gradientMirrorFactor * (timelineEventColors.length / 10))
-						)}
-						{@const middleIndex = Math.floor(timelineEventColors.length / 2)}
-						{@const targetIndex =
-							colorIndex < middleIndex
-								? Math.min(colorIndex + spectrumIncrement, timelineEventColors.length - 1)
-								: Math.max(colorIndex - spectrumIncrement, 0)}
+					{#if (timelineHost.cessationDate === '' || (!timelineHost?.cessationDate && todayEvent)) && eventColorPairs.length > 0}
+						{@const todayColorPairIndex = eventColorPairs.length - 1}
 						<JDGTimelineEvent
 							{timelineHost}
 							timelineEvent={todayEvent}
 							rowIndex={todayEventRowIndex}
-							backgroundColor={timelineEventColors[colorIndex]}
-							gradientMirrorColor={timelineEventColors[targetIndex]}
+							backgroundColor={eventColorPairs[todayColorPairIndex].backgroundColor}
+							gradientMirrorColor={eventColorPairs[todayColorPairIndex].gradientMirrorColor}
 							{gradientPointsCount}
 						/>
 					{/if}
