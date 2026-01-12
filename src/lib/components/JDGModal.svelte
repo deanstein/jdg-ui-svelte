@@ -81,7 +81,7 @@
 	`;
 
 	const modalTitleCss = css`
-		font-size: ${jdgSizes.fontSizeAccentTextSecondaryMd};
+		font-size: 1.5vh;
 		color: ${jdgColors.title};
 	`;
 
