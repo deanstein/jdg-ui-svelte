@@ -12,19 +12,19 @@
 	import {
 		draftImageMeta,
 		draftTimelineEvent,
-		draftTimelineEventGradientColors,
 		draftTimelineImageMetaRegistry,
 		draftTimelineImageRegistryRepo
 	} from '$lib/stores/jdg-temp-store.js';
 	import {
-		showImageMetaModal,
-		showTimelineEventModal,
+		imageViewerMeta,
 		isAdminMode,
 		isTimelineEventModalEditable,
+		modalGradientColors,
+		repoName as currentRepoName,
+		showImageMetaModal,
+		showTimelineEventModal,
 		showImageViewerModal,
-		imageViewerMeta,
 		timelineEventModalInceptionDate,
-		repoName as currentRepoName
 	} from '$lib/stores/jdg-ui-store.js';
 
 	import {
@@ -644,7 +644,6 @@
 			<JDGRandomGradient
 				numberOfPoints={3}
 				edgeBufferRatio={0.1}
-				drawBorders={true}
 				color1={timelineGradientColor1}
 				color2={timelineGradientColor2}
 				color3={timelineGradientColor3}
@@ -735,7 +734,7 @@
 									// Store the gradient colors for this event's modal
 									const colorPair = eventColorPairs[colorPairIndex];
 									if (colorPair) {
-										draftTimelineEventGradientColors.set({
+										modalGradientColors.set({
 											color1: colorPair.backgroundColor,
 											color2: colorPair.gradientMirrorColor,
 											color3: colorPair.backgroundColor

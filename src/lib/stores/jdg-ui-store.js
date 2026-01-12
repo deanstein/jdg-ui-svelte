@@ -20,6 +20,7 @@ export let windowWidth = writable(0); // full window width, including scrollbar
 
 /*** FONTS, COLORS, SETTINGS ***/
 export let appAccentColors = writable([]);
+export let modalGradientColors = writable(undefined);
 export let appFontFamily = writable('');
 export let allowTextSelection = writable(false);
 // shared dynamic emotion css styles

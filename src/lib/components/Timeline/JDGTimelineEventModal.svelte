@@ -1,6 +1,10 @@
 <script>
-	import { draftTimelineEvent, draftTimelineHost } from '$lib/stores/jdg-temp-store.js';
 	import {
+		draftTimelineEvent,
+		draftTimelineHost
+	} from '$lib/stores/jdg-temp-store.js';
+	import {
+		modalGradientColors,
 		showTimelineEventModal,
 		isTimelineEventModalEditable
 	} from '$lib/stores/jdg-ui-store.js';
@@ -35,6 +39,9 @@
 		$showTimelineEventModal = false;
 	}}
 	backgroundColor={'rgba(235, 235, 235, 1)'}
+	gradientColor1={$modalGradientColors?.color1}
+	gradientColor2={$modalGradientColors?.color2}
+	gradientColor3={$modalGradientColors?.color3}
 	minWidth="30vw"
 	maxWidth="80vw"
 	overflow="auto"

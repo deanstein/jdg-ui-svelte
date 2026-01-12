@@ -561,8 +561,6 @@
 	}
 
 	.image-list-display {
-		background-color: rgba(240, 240, 240, 0.5);
-		border-radius: 8px;
 		margin-bottom: 12px;
 	}
 
