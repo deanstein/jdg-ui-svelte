@@ -1,8 +1,5 @@
 <script>
-	import {
-		draftTimelineEvent,
-		draftTimelineHost
-	} from '$lib/stores/jdg-temp-store.js';
+	import { draftTimelineEvent, draftTimelineHost } from '$lib/stores/jdg-temp-store.js';
 	import {
 		modalGradientColors,
 		showTimelineEventModal,

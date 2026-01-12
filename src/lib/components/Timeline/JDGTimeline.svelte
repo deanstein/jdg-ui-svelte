@@ -24,7 +24,7 @@
 		showImageMetaModal,
 		showTimelineEventModal,
 		showImageViewerModal,
-		timelineEventModalInceptionDate,
+		timelineEventModalInceptionDate
 	} from '$lib/stores/jdg-ui-store.js';
 
 	import {
