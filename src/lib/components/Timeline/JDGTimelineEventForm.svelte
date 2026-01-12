@@ -421,7 +421,7 @@
 											$localEventStore[key] || [],
 											imageMetaRegistry
 										)}
-										maxImageHeight={'15svh'}
+										maxImageHeight={'30svh'}
 									/>
 								</div>
 							{:else if !isEditing}
