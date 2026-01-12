@@ -81,8 +81,8 @@
 	`;
 
 	const modalTitleCss = css`
-		font-size: ${jdgSizes.fontSizeFloatingContentBoxTitle};
-		color: ${jdgColors.text};
+		font-size: ${jdgSizes.fontSizeAccentTextSecondaryMd};
+		color: ${jdgColors.title};
 	`;
 
 	const modalSubtitleCss = css`
@@ -100,7 +100,7 @@
 					<JDGRandomGradient
 						numberOfPoints={10}
 						edgeBufferRatio={0.1}
-						drawBorders={false}
+						drawDebugBorders={false}
 						color1={gradientColor1}
 						color2={gradientColor2}
 						color3={gradientColor3}
@@ -112,7 +112,20 @@
 					class="modal-title-bar-container {modalTitleBarContainerCss}"
 					style="position: relative; z-index: 1;"
 				>
-					<div class="modal-title-container">
+					<!-- Title bar gradient if gradient colors are provided -->
+					{#if gradientColor1 && gradientColor2 && gradientColor3}
+						<div class="modal-title-bar-gradient">
+							<JDGRandomGradient
+								numberOfPoints={8}
+								edgeBufferRatio={0.1}
+								drawDebugBorders={false}
+								color1={gradientColor1}
+								color2={gradientColor2}
+								color3={gradientColor3}
+							/>
+						</div>
+					{/if}
+					<div class="modal-title-container" style="position: relative; z-index: 1;">
 						{#if title}
 							<div class="modal-title {modalTitleCss}">
 								{title}
@@ -120,7 +133,7 @@
 						{/if}
 					</div>
 					{#if subtitle}
-						<div class="modal-subtitle-container">
+						<div class="modal-subtitle-container" style="position: relative; z-index: 1;">
 							<div class="modal-subtitle {modalSubtitleCss}">
 								{subtitle}
 							</div>
@@ -168,9 +181,22 @@
 	}
 
 	.modal-title-bar-container {
+		position: relative;
 		width: -webkit-fill-available;
 		width: -moz-available;
 		border-radius: 10px 10px 0px 0px;
+		overflow: hidden;
+	}
+
+	.modal-title-bar-gradient {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 0;
+		pointer-events: none;
+		overflow: hidden;
 	}
 
 	.modal-title-bar-actions-container {
