@@ -1,5 +1,5 @@
 <script>
-	import { onMount, getContext, setContext } from 'svelte';
+	import { getContext, setContext } from 'svelte';
 	import { writable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
@@ -12,6 +12,7 @@
 	import {
 		draftImageMeta,
 		draftTimelineEvent,
+		draftTimelineEventGradientColors,
 		draftTimelineImageMetaRegistry,
 		draftTimelineImageRegistryRepo
 	} from '$lib/stores/jdg-temp-store.js';
@@ -29,9 +30,9 @@
 	import {
 		generateGradient,
 		getImageMetaByKey,
-		getMaxElementHeightPx,
 		getNumDaysBetweenDates,
-		lightenColor
+		lightenColor,
+		darkenColor
 	} from '$lib/jdg-utils.js';
 	import { fetchImageMetaRegistry } from '$lib/jdg-persistence-management.js';
 	import { instantiateTimelineEvent } from '$lib/jdg-timeline-management.js';
@@ -49,12 +50,19 @@
 		JDGImageAvatar,
 		JDGModal,
 		JDGPortal,
+		JDGRandomGradient,
 		JDGSaveStateBanner,
 		JDGSlider,
 		JDGTimelineEvent,
 		JDGTimelineEventModal
 	} from '$lib/index.js';
-	import { jdgBreakpoints, jdgDurations, jdgQuantities, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import {
+		jdgBreakpoints,
+		jdgColors,
+		jdgDurations,
+		jdgQuantities,
+		jdgSizes
+	} from '$lib/jdg-shared-styles.js';
 
 	// Timeline host contains events and event references
 	export let timelineHost;
@@ -93,6 +101,12 @@
 	const rowHeightFilledPx = 80;
 
 	const timelineBackgroundColor = 'rgba(225, 225, 225, 1)';
+
+	// Calculate gradient colors based on background color
+	// Lighter gray -> current gray -> darker gray
+	$: timelineGradientColor1 = lightenColor(timelineBackgroundColor, 0.15); // lighter
+	$: timelineGradientColor2 = timelineBackgroundColor; // current (middle)
+	$: timelineGradientColor3 = darkenColor(timelineBackgroundColor, 0.15); // darker
 
 	// set up the inception and cessation events
 	let emptyStateEvent;
@@ -160,11 +174,6 @@
 	const avatarHeight = '30px';
 	const onClickAvatar = () => {
 		if ($isAdminMode) {
-			console.log('🖼️ Timeline avatar click - setting stores:', {
-				hasTimelineRegistry: !!timelineImageMetaRegistry,
-				registryRepo: timelineHost?.imageMetaRegistryRepo,
-				avatarImageSrc: avatarImageMeta?.src
-			});
 			draftImageMeta.set(avatarImageMeta);
 			// Set the timeline's registry context for the ImageMetaModal
 			draftTimelineImageMetaRegistry.set(timelineImageMetaRegistry);
@@ -175,12 +184,6 @@
 			showImageViewerModal.set(true);
 		}
 	};
-
-	// these three colors define the gradient
-	// that all timeline events will occupy from start to end
-	const timelineEventColorGradient1 = 'rgba(227, 244, 223, 1)';
-	const timelineEventColorGradient2 = 'rgba(208, 240, 242, 1)';
-	const timelineEventColorGradient3 = 'rgba(218, 228, 248, 1)';
 
 	let timelineWrapperRef;
 	let timelineContainerRef;
@@ -523,9 +526,9 @@
 			timelineHost?.timelineEvents?.length +
 				(emptyStateEvent ? 1 : 0) +
 				(todayEvent ? 2 : 0) /* account for birth and death */,
-			timelineEventColorGradient1,
-			timelineEventColorGradient2,
-			timelineEventColorGradient3
+			jdgColors.timelineEventColorGradient1,
+			jdgColors.timelineEventColorGradient2,
+			jdgColors.timelineEventColorGradient3
 		);
 	}
 
@@ -636,6 +639,17 @@
 		</div>
 	{/if}
 	<div bind:this={timelineContainerRef} class="timeline-container {timelineContainerCss}">
+		<!-- Background gradient -->
+		<div class="timeline-background-gradient">
+			<JDGRandomGradient
+				numberOfPoints={3}
+				edgeBufferRatio={0.1}
+				drawBorders={true}
+				color1={timelineGradientColor1}
+				color2={timelineGradientColor2}
+				color3={timelineGradientColor3}
+			/>
+		</div>
 		<!-- ComposeToolbar if editing is allowed -->
 		{#if allowEditing}
 			<JDGComposeToolbar
@@ -647,7 +661,10 @@
 			/>
 		{/if}
 		<!-- Actions Bar -->
-		<div class="timeline-actions-bar {timelineSupportingTextCss}">
+		<div
+			class="timeline-actions-bar {timelineSupportingTextCss}"
+			style="position: relative; z-index: 1;"
+		>
 			<div class="timeline-event-count {timelineEventCountCss}">
 				Showing {timelineRowItems.length + (emptyStateEvent ? 1 : 0) + (todayEvent ? 1 : 0)} timeline
 				events
@@ -681,7 +698,7 @@
 			</JDGFlyout>
 		</div>
 		<!-- Timeline: A collection of TimelineEvents shown chronologically -->
-		<div class="timeline-content-container">
+		<div class="timeline-content-container" style="position: relative; z-index: 1;">
 			<div class="timeline-spine {spineContainerCss}">
 				<div class="timeline-spine-line-column {spineColumnCss}">
 					<div class="timeline-spine-line" />
@@ -715,6 +732,15 @@
 								timelineEvent={timelineRowItem.event}
 								onClickTimelineEvent={() => {
 									draftTimelineEvent.set(timelineRowItem.event);
+									// Store the gradient colors for this event's modal
+									const colorPair = eventColorPairs[colorPairIndex];
+									if (colorPair) {
+										draftTimelineEventGradientColors.set({
+											color1: colorPair.backgroundColor,
+											color2: colorPair.gradientMirrorColor,
+											color3: colorPair.backgroundColor
+										});
+									}
 									showTimelineEventModal.set(true);
 									isTimelineEventModalEditable.set(allowEditing);
 									timelineEventModalInceptionDate.set(timelineHost.inceptionDate);
@@ -839,6 +865,18 @@
 		gap: 0.5rem;
 		box-sizing: border-box;
 		border-radius: 10px;
+		overflow: hidden;
+	}
+
+	.timeline-background-gradient {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 0;
+		pointer-events: none;
+		overflow: hidden;
 	}
 
 	.timeline-actions-bar {

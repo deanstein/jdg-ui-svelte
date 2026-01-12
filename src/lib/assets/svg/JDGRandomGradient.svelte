@@ -3,13 +3,16 @@
 	import * as d3 from 'd3';
 
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
-	import { generateGradient } from '$lib/jdg-graphics-factory.js';
 	import { getAccentColors } from '$lib/jdg-state-management.js';
 
 	export let numberOfPoints = 3;
-	export let edgeBufferRatio = 0.25; // points will be this far away from screen edges (ratio of total width or height)
+	export let edgeBufferRatio = 0.05; // points will be this far away from screen edges (ratio of total width or height)
 	export let drawBorders = true;
 	export let borderColorsHex = ['#C3C3C3FF']; // only used if drawBorders is true
+	// Optional custom colors - if provided, these override the default jdgColors
+	export let color1 = undefined;
+	export let color2 = undefined;
+	export let color3 = undefined;
 
 	let gradientStyle = '';
 	let borderElements = [];
@@ -25,13 +28,11 @@
 			};
 		});
 
-		// define fill colors
-		const fillColors = generateGradient(
-			numberOfPoints,
-			jdgColors.backgroundFillRangeLm[0],
-			jdgColors.backgroundFillRangeLm[1],
-			jdgColors.backgroundFillRangeLm[2]
-		);
+		// Define the three base colors - use custom colors if provided, otherwise use defaults
+		const baseColor1 = color1 || jdgColors.backgroundFillRangeLm[0];
+		const baseColor2 = color2 || jdgColors.backgroundFillRangeLm[1];
+		const baseColor3 = color3 || jdgColors.backgroundFillRangeLm[2];
+		const baseColors = [baseColor1, baseColor2, baseColor3];
 
 		if (drawBorders) {
 			borderColorsHex ?? getAccentColors();
@@ -41,9 +42,10 @@
 		const gradientLayers = [];
 
 		points.forEach((point, index) => {
-			// Use a color from the generated gradient, cycling through them
-			const colorIndex = index % fillColors.length;
-			const color = fillColors[colorIndex];
+			// Assign one of the 3 base colors to each point
+			// Distribute evenly: point 0 gets color1, point 1 gets color2, point 2 gets color3, etc.
+			const colorIndex = index % baseColors.length;
+			const color = baseColors[colorIndex];
 
 			// Create radial gradient with varying sizes
 			const minStop = 20;
@@ -59,8 +61,8 @@
 		});
 
 		// Add base color as the bottom layer (background)
-		// Use the first color from the gradient as the base
-		const baseColor = fillColors[0];
+		// Use the middle color (color2) as the base background
+		const baseColor = baseColor2;
 		gradientLayers.push(baseColor);
 
 		// Create the CSS background string
@@ -96,7 +98,7 @@
 
 <style>
 	.jdg-random-gradient {
-		height: 150%;
+		height: 100%;
 		width: 100%;
 		opacity: 50%;
 		position: relative;

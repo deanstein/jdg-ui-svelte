@@ -14,7 +14,7 @@ export const jdgFonts = {
 };
 
 export const jdgColors = {
-	/* these colors define the accent colors for different sites */
+	/* These colors define the accent colors for different sites */
 	/* lm = lightmode; dm = darkmode */
 	accentColorsCCP: ['#e0d26e', '#e69623', '#ce595e'],
 	accentColorsCCPRose: ['#e9acc1', '#ea9594', '#d47265'],
@@ -39,7 +39,12 @@ export const jdgColors = {
 	title: '#4F4F4F',
 	headerBackground: 'rgba(250, 250, 250, 1)',
 	contentBoxBackground: 'rgba(252, 252, 252, 0.7)',
-	imageLabelBackground: 'rgba(255, 255, 255, 0.75)'
+	imageLabelBackground: 'rgba(255, 255, 255, 0.75)',
+	/* TIMELINE */
+	/* Timeline events gradiate from colors 1-3 */
+	timelineEventColorGradient1: 'rgba(227, 244, 223, 1)',
+	timelineEventColorGradient2: 'rgba(208, 240, 242, 1)',
+	timelineEventColorGradient3: 'rgba(218, 228, 248, 1)'
 };
 
 export const jdgSizes = {

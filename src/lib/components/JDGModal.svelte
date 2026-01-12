@@ -5,7 +5,7 @@
 	import { setRgbaAlpha } from '$lib/jdg-utils.js';
 
 	import { jdgColors, jdgSizes, jdgBreakpoints } from '$lib/index.js';
-	import { JDGOverlay } from '$lib/index.js';
+	import { JDGOverlay, JDGRandomGradient } from '$lib/index.js';
 	import { jdgDurations } from '$lib/index.js';
 	import { drawCrossfade } from '$lib/jdg-graphics-factory.js';
 
@@ -27,6 +27,10 @@
 	export let overflow = 'auto';
 	export let backgroundColor = jdgColors.contentBoxBackground;
 	export let transparency = undefined;
+	// Optional gradient colors - if provided, use JDGRandomGradient instead of backgroundColor
+	export let gradientColor1 = undefined;
+	export let gradientColor2 = undefined;
+	export let gradientColor3 = undefined;
 
 	// Minimum padding around content when it maximizes available space
 	const minPadding = '20px';
@@ -35,6 +39,14 @@
 
 	let modalContentContainerCss = css``;
 	$: {
+		// Only set background-color if gradient colors are not provided
+		const bgColor =
+			gradientColor1 && gradientColor2 && gradientColor3
+				? 'transparent'
+				: transparency
+					? setRgbaAlpha(backgroundColor, transparency)
+					: backgroundColor;
+
 		modalContentContainerCss = css`
 			width: ${$isMobileBreakpoint && maximizeWidthOnMobile
 				? `calc(100vw - ${minPadding})`
@@ -55,9 +67,7 @@
 			@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 				max-height: calc(100dvh - ${jdgSizes.headerHeightLg} - ${minPadding});
 			}
-			background-color: ${transparency
-				? setRgbaAlpha(backgroundColor, transparency)
-				: backgroundColor};
+			background-color: ${bgColor};
 		`;
 	}
 
@@ -84,8 +94,24 @@
 <JDGOverlay onCloseFunction={onClickCloseButton} {closeOnOverlayClick}>
 	<div in:receive={{ key: showModal }} out:send={{ key: showModal }} class="modal-outer-container">
 		<div class="modal-content-container {modalContentContainerCss}">
+			<!-- Background gradient if gradient colors are provided -->
+			{#if gradientColor1 && gradientColor2 && gradientColor3}
+				<div class="modal-background-gradient">
+					<JDGRandomGradient
+						numberOfPoints={10}
+						edgeBufferRatio={0.1}
+						drawBorders={false}
+						color1={gradientColor1}
+						color2={gradientColor2}
+						color3={gradientColor3}
+					/>
+				</div>
+			{/if}
 			{#if title || onClickCloseButton}
-				<div class="modal-title-bar-container {modalTitleBarContainerCss}">
+				<div
+					class="modal-title-bar-container {modalTitleBarContainerCss}"
+					style="position: relative; z-index: 1;"
+				>
 					<div class="modal-title-container">
 						{#if title}
 							<div class="modal-title {modalTitleCss}">
@@ -102,10 +128,10 @@
 					{/if}
 				</div>
 			{/if}
-			<div class="modal-content-slot {modalContentSlotCss}">
+			<div class="modal-content-slot {modalContentSlotCss}" style="position: relative; z-index: 1;">
 				<slot name="modal-content-slot" />
 			</div>
-			<div class="modal-toolbar-slot">
+			<div class="modal-toolbar-slot" style="position: relative; z-index: 1;">
 				<slot name="modal-toolbar-slot" />
 			</div>
 		</div>
@@ -127,6 +153,18 @@
 		flex-direction: column;
 		align-items: center;
 		border-radius: 10px;
+		overflow: hidden;
+	}
+
+	.modal-background-gradient {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 0;
+		pointer-events: none;
+		overflow: hidden;
 	}
 
 	.modal-title-bar-container {
