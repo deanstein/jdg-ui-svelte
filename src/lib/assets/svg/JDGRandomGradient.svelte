@@ -7,7 +7,7 @@
 
 	export let numberOfPoints = 3;
 	export let edgeBufferRatio = 0.05; // points will be this far away from screen edges (ratio of total width or height)
-	export let drawBorders = true;
+	export let drawDebugBorders = false;
 	export let borderColorsHex = ['#C3C3C3FF']; // only used if drawBorders is true
 	// Optional custom colors - if provided, these override the default jdgColors
 	export let color1 = undefined;
@@ -34,7 +34,7 @@
 		const baseColor3 = color3 || jdgColors.backgroundFillRangeLm[2];
 		const baseColors = [baseColor1, baseColor2, baseColor3];
 
-		if (drawBorders) {
+		if (drawDebugBorders) {
 			borderColorsHex ?? getAccentColors();
 		}
 
@@ -69,7 +69,7 @@
 		gradientStyle = gradientLayers.join(', ');
 
 		// Store border elements if needed
-		if (drawBorders) {
+		if (drawDebugBorders) {
 			borderElements = points.map((point, index) => ({
 				x: point.x,
 				y: point.y,
@@ -80,7 +80,7 @@
 </script>
 
 <div class="jdg-random-gradient" style="background: {gradientStyle};">
-	{#if drawBorders}
+	{#if drawDebugBorders}
 		<svg class="jdg-random-gradient-borders" width="100%" height="100%">
 			{#each borderElements as border}
 				<circle
