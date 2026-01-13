@@ -656,7 +656,7 @@
 				composeButtonFaIcon={'fa-plus fa-fw'}
 				composeButtonTooltip={'Add a new event'}
 				onClickCompose={addClickAddEvent}
-				zIndex={1}
+				zIndex={10}
 			/>
 		{/if}
 		<!-- Actions Bar -->

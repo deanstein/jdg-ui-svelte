@@ -149,6 +149,7 @@
 		align-items: center;
 		justify-content: flex-end;
 		gap: 1rem;
+		pointer-events: auto;
 	}
 
 	.compose-button-toolbar-wrapper {
