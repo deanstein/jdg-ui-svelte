@@ -340,7 +340,7 @@
 					imageMetaSet={[
 						imageMetaRegistry.aerial_60s70s_1,
 						imageMetaRegistry.architecture_1,
-						imageMetaRegistry.cc_2,
+						imageMetaRegistry.cc_1,
 						imageMetaRegistry.ccp_blue_mall_60s70s_1,
 						imageMetaRegistry.fairgrounds_aerial
 					]}
@@ -409,7 +409,7 @@
 		</JDGGridLayout>
 		<JDGGridLayout>
 			<JDGImageTile
-				imageMeta={imageMetaRegistry.cc_2}
+				imageMeta={imageMetaRegistry.cc_1}
 				cropToFillContainer={false}
 				showCaption={true}
 				showAttribution={false}

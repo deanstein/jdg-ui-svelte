@@ -29,7 +29,7 @@
 				productId={model003D}
 				imageMetaSet={[
 					imageMetaRegistry.cc_1,
-					imageMetaRegistry.cc_2,
+					imageMetaRegistry.ccp_blue_mall_80s90s_1,
 					imageMetaRegistry.ccp_blue_mall_60s70s_1
 				]}
 			>
