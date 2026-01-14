@@ -477,9 +477,9 @@
     "_1967_blue_mall_interior_rendering": {
       "id": "832df8f3-b731-423c-986d-d95124756a1f",
       "src": "https://res.cloudinary.com/jdg-main/image/upload/v1765686585/jdg-ui-svelte/ccm/1967-blue-mall-interior-rendering.jpg",
-      "caption": "A rendering of Cinderella City's Blue Mall. This is an image meta update test.",
+      "caption": "A rendering of Cinderella City's Blue Mall.",
       "attribution": "",
-      "alt": "A rendering of Cinderella City's Blue Mall. This is an image meta update test.",
+      "alt": "A rendering of Cinderella City's Blue Mall.",
       "title": "",
       "showBackgroundBlur": true,
       "toolbarJustification": "right",
