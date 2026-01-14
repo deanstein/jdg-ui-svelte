@@ -43,9 +43,9 @@ export const encryptedPAT =
 // Possible locations of image metadata collection across websites
 // The fetch function will try each path in order until one succeeds
 export const imageMetaRegistryPaths = [
-	'src/lib/image-meta-registry.js',
-	'src/routes/image-meta-registry.js',
-	'src/image-meta-registry.js'
+	'src/routes/image-meta-registry.json',
+	'src/lib/image-meta-registry.json',
+	'src/image-meta-registry.json'
 ];
 // Keep single path for backwards compatibility (uses first path)
 export const imageMetaRegistryPath = imageMetaRegistryPaths[0];
@@ -211,7 +211,8 @@ export async function writeJsonFileToRepo(repoOwner, repoName, filePath, jsonCon
 		{
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(jsonContent)
+			// Format with tabs to match Prettier configuration (useTabs: true)
+			body: JSON.stringify(jsonContent, null, '\t')
 		}
 	);
 
@@ -409,61 +410,50 @@ export const getImageMetaSrcUsageInRepos = async (targetUrl, excludeRepoName = n
 export const replaceUrlInImageMetaRegistry = async (repoName, oldUrl, newUrl) => {
 	try {
 		// Try each possible path
-		let fileContent = null;
+		let registryData = null;
 		let successfulPath = null;
 
 		for (const filePath of imageMetaRegistryPaths) {
 			try {
-				const url = new URL(cfRouteFetchPublicFile, cfWorkerUrlJdgGithub);
-				url.searchParams.set('repoOwner', jdgRepoOwner);
-				url.searchParams.set('repoName', repoName);
-				url.searchParams.set('filePath', filePath);
-
-				const response = await fetch(url.toString());
-				if (response.ok) {
-					fileContent = await response.text();
-					if (fileContent.includes('imageMetaRegistry')) {
-						successfulPath = filePath;
-						break;
-					}
+				const data = await readJsonFileFromRepo(jdgRepoOwner, repoName, filePath);
+				if (data) {
+					registryData = data;
+					successfulPath = filePath;
+					break;
 				}
 			} catch {
 				// Try next path
 			}
 		}
 
-		if (!fileContent || !successfulPath) {
+		if (!registryData || !successfulPath) {
 			throw new Error(`Could not find imageMetaRegistry in ${repoName}`);
 		}
 
-		// Check if the old URL exists in the file
-		if (!fileContent.includes(oldUrl)) {
+		// Check if the old URL exists in the data
+		const jsonString = JSON.stringify(registryData);
+		if (!jsonString.includes(oldUrl)) {
 			console.log(`ℹ️ URL not found in ${repoName}, skipping`);
 			return { success: true, skipped: true, repoName };
 		}
 
-		// Replace all occurrences of the old URL with the new URL
-		const updatedContent = fileContent.split(oldUrl).join(newUrl);
+		// Work with JSON object - recursively replace URLs
+		const replaceUrlsInObject = (obj) => {
+			for (const key in obj) {
+				if (typeof obj[key] === 'string' && obj[key] === oldUrl) {
+					obj[key] = newUrl;
+				} else if (typeof obj[key] === 'object' && obj[key] !== null) {
+					replaceUrlsInObject(obj[key]);
+				}
+			}
+		};
 
-		// Write the updated file back
-		const writeUrl = new URL(cfRouteWritePublicJsFile, cfWorkerUrlJdgGithub);
-		writeUrl.searchParams.set('repoOwner', jdgRepoOwner);
-		writeUrl.searchParams.set('repoName', repoName);
-		writeUrl.searchParams.set('filePath', successfulPath);
+		replaceUrlsInObject(registryData);
 
-		const writeResponse = await fetch(writeUrl.toString(), {
-			method: 'POST',
-			headers: { 'Content-Type': 'text/plain' },
-			body: updatedContent
-		});
-
-		if (!writeResponse.ok) {
-			throw new Error(`Failed to write file: ${writeResponse.status}`);
-		}
-
-		const result = await writeResponse.json();
+		// Write JSON file back
+		const result = await writeJsonFileToRepo(jdgRepoOwner, repoName, successfulPath, registryData);
 		console.log(`✅ Replaced URL in ${repoName}`);
-		return { success: result.success, skipped: false, repoName };
+		return { success: result ? true : false, skipped: false, repoName };
 	} catch (err) {
 		console.error(`❌ Failed to replace URL in ${repoName}:`, err.message);
 		return { success: false, error: err.message, repoName };
@@ -502,19 +492,14 @@ export const replaceUrlAcrossRepos = async (oldUrl, newUrl, excludeRepoName = nu
 export const writeImageMetaEntryToRepo = async (repoName, registryKey, imageMeta) => {
 	try {
 		// Try each possible registry path until one succeeds
-		let fileContent = null;
+		let registryData = null;
 		let successfulPath = null;
 
 		for (const filePath of imageMetaRegistryPaths) {
 			try {
-				const url = new URL(cfRouteFetchPublicFile, cfWorkerUrlJdgGithub);
-				url.searchParams.set('repoOwner', jdgRepoOwner);
-				url.searchParams.set('repoName', repoName);
-				url.searchParams.set('filePath', filePath);
-
-				const response = await fetch(url.toString());
-				if (response.ok) {
-					fileContent = await response.text();
+				const data = await readJsonFileFromRepo(jdgRepoOwner, repoName, filePath);
+				if (data) {
+					registryData = data;
 					successfulPath = filePath;
 					break;
 				}
@@ -523,7 +508,7 @@ export const writeImageMetaEntryToRepo = async (repoName, registryKey, imageMeta
 			}
 		}
 
-		if (!fileContent || !successfulPath) {
+		if (!registryData || !successfulPath) {
 			throw new Error(`Registry file not found in any expected location`);
 		}
 
@@ -536,115 +521,21 @@ export const writeImageMetaEntryToRepo = async (repoName, registryKey, imageMeta
 		const keyParts = registryKey.split('.');
 		const isNested = keyParts.length > 1;
 
-		// Convert to JavaScript object literal format (not JSON)
-		// Top-level entries use 2 tabs for properties, nested entries use 3 tabs
-		const propertyIndent = isNested ? '\t\t\t' : '\t\t';
-		const entryLines = [];
-		for (const [key, value] of Object.entries(cleanImageMeta)) {
-			if (typeof value === 'string') {
-				// Escape string value based on quote type
-				// Use backticks if string contains newlines or apostrophes, single quotes otherwise
-				const hasNewline = value.includes('\n');
-				const hasApostrophe = value.includes("'");
-				const useBackticks = hasNewline || hasApostrophe;
-
-				let escapedValue;
-				if (useBackticks) {
-					// Escape backticks and backslashes for template literals
-					escapedValue = value.replace(/\\/g, '\\\\').replace(/`/g, '\\`');
-				} else {
-					// Escape single quotes, backslashes, and newlines for single-quoted strings
-					escapedValue = value
-						.replace(/\\/g, '\\\\')
-						.replace(/'/g, "\\'")
-						.replace(/\n/g, '\\n')
-						.replace(/\r/g, '\\r');
-				}
-
-				const quote = useBackticks ? '`' : "'";
-				entryLines.push(`${propertyIndent}${key}: ${quote}${escapedValue}${quote}`);
-			} else if (typeof value === 'boolean') {
-				entryLines.push(`${propertyIndent}${key}: ${value}`);
-			} else if (typeof value === 'number') {
-				entryLines.push(`${propertyIndent}${key}: ${value}`);
-			}
-		}
-
-		// Find where to insert/update the entry
-		const registryMatch = fileContent.match(/const imageMetaRegistry = \{([\s\S]*?)\n\};/);
-		if (!registryMatch) {
-			throw new Error('Could not find imageMetaRegistry in file');
-		}
-
-		let registryContent = registryMatch[1];
-
 		if (isNested) {
-			// Handle nested key (e.g., "arch.atc_elevator")
 			const parentKey = keyParts[0];
 			const childKey = keyParts.slice(1).join('.');
 
-			// Check if parent object exists
-			const parentPattern = new RegExp(`\\n\\t${parentKey}:\\s*\\{([\\s\\S]*?)\\n\\t\\}`, 'm');
-			const parentMatch = registryContent.match(parentPattern);
-
-			const childEntryString = `\t\t${childKey}: {\n${entryLines.join(',\n')}\n\t\t}`;
-
-			if (parentMatch) {
-				// Parent exists, check if child exists
-				let parentContent = parentMatch[1];
-				const childPattern = new RegExp(`\\n\\t\\t${childKey}:\\s*\\{[\\s\\S]*?\\n\\t\\t\\}`, 'm');
-
-				if (childPattern.test(parentContent)) {
-					// Replace existing child
-					parentContent = parentContent.replace(childPattern, `\n${childEntryString}`);
-				} else {
-					// Add new child (add comma if parent has other children)
-					const hasChildren = parentContent.trim().length > 0;
-					parentContent += `${hasChildren ? ',' : ''}\n${childEntryString}`;
-				}
-
-				// Replace the entire parent block
-				const newParentBlock = `\n\t${parentKey}: {${parentContent}\n\t}`;
-				registryContent = registryContent.replace(parentPattern, newParentBlock);
-			} else {
-				// Parent doesn't exist, create it with the child
-				const newParentBlock = `\t${parentKey}: {\n${childEntryString}\n\t}`;
-				registryContent += `,\n${newParentBlock}`;
+			if (!registryData[parentKey]) {
+				registryData[parentKey] = {};
 			}
+			registryData[parentKey][childKey] = cleanImageMeta;
 		} else {
-			// Handle top-level key
-			const entryString = `\t${registryKey}: {\n${entryLines.join(',\n')}\n\t}`;
-			const keyPattern = new RegExp(`\\n\\t${registryKey}:\\s*\\{[\\s\\S]*?\\n\\t\\}`, 'm');
-
-			if (keyPattern.test(registryContent)) {
-				// Replace existing entry
-				registryContent = registryContent.replace(keyPattern, `\n${entryString}`);
-			} else {
-				// Add new entry at the end
-				registryContent += `,\n${entryString}`;
-			}
+			registryData[registryKey] = cleanImageMeta;
 		}
 
-		fileContent = fileContent.replace(registryMatch[1], registryContent);
-
-		// Write the updated file back to GitHub using the same path we found the file at
-		const writeUrl = new URL(cfRouteWritePublicJsFile, cfWorkerUrlJdgGithub);
-		writeUrl.searchParams.set('repoOwner', jdgRepoOwner);
-		writeUrl.searchParams.set('repoName', repoName);
-		writeUrl.searchParams.set('filePath', successfulPath);
-
-		const writeResponse = await fetch(writeUrl.toString(), {
-			method: 'POST',
-			headers: { 'Content-Type': 'text/plain' },
-			body: fileContent
-		});
-
-		if (!writeResponse.ok) {
-			throw new Error(`Failed to write file: ${writeResponse.status}`);
-		}
-
-		const result = await writeResponse.json();
-		return result.success ? result : null;
+		// Write JSON file back
+		const result = await writeJsonFileToRepo(jdgRepoOwner, repoName, successfulPath, registryData);
+		return result;
 	} catch (err) {
 		console.error('Error writing image meta entry to repo:', err);
 		return null;
@@ -655,19 +546,14 @@ export const writeImageMetaEntryToRepo = async (repoName, registryKey, imageMeta
 export const deleteImageMetaEntryFromRepo = async (repoName, registryKey) => {
 	try {
 		// Try each possible registry path until one succeeds
-		let fileContent = null;
+		let registryData = null;
 		let successfulPath = null;
 
 		for (const filePath of imageMetaRegistryPaths) {
 			try {
-				const url = new URL(cfRouteFetchPublicFile, cfWorkerUrlJdgGithub);
-				url.searchParams.set('repoOwner', jdgRepoOwner);
-				url.searchParams.set('repoName', repoName);
-				url.searchParams.set('filePath', filePath);
-
-				const response = await fetch(url.toString());
-				if (response.ok) {
-					fileContent = await response.text();
+				const data = await readJsonFileFromRepo(jdgRepoOwner, repoName, filePath);
+				if (data) {
+					registryData = data;
 					successfulPath = filePath;
 					break;
 				}
@@ -676,94 +562,42 @@ export const deleteImageMetaEntryFromRepo = async (repoName, registryKey) => {
 			}
 		}
 
-		if (!fileContent || !successfulPath) {
+		if (!registryData || !successfulPath) {
 			throw new Error(`Registry file not found in any expected location`);
 		}
-
-		// Find the registry content
-		const registryMatch = fileContent.match(/const imageMetaRegistry = \{([\s\S]*?)\n\};/);
-		if (!registryMatch) {
-			throw new Error('Could not find imageMetaRegistry in file');
-		}
-
-		let registryContent = registryMatch[1];
 
 		// Handle both top-level and nested keys
 		const keyParts = registryKey.split('.');
 		const isNested = keyParts.length > 1;
 
 		if (isNested) {
-			// Handle nested key (e.g., "arch.atc_elevator")
 			const parentKey = keyParts[0];
 			const childKey = keyParts.slice(1).join('.');
 
-			// Find parent object
-			const parentPattern = new RegExp(`\\n\\t${parentKey}:\\s*\\{([\\s\\S]*?)\\n\\t\\}`, 'm');
-			const parentMatch = registryContent.match(parentPattern);
-
-			if (parentMatch) {
-				let parentContent = parentMatch[1];
-				// Remove the child entry
-				const childPattern = new RegExp(`\\n\\t\\t${childKey}:\\s*\\{[\\s\\S]*?\\n\\t\\t\\}`, 'm');
-
-				if (childPattern.test(parentContent)) {
-					// Remove the child entry and any trailing comma
-					parentContent = parentContent.replace(childPattern, '');
-					// Clean up: remove leading comma if it exists after removal
-					parentContent = parentContent.replace(/,\s*,/g, ','); // Remove double commas
-					parentContent = parentContent.replace(/^\s*,\s*/m, ''); // Remove leading comma on first line
-					parentContent = parentContent.replace(/,\s*$/m, ''); // Remove trailing comma on last line
-
-					// If parent is now empty, remove the entire parent block
-					if (parentContent.trim().length === 0) {
-						registryContent = registryContent.replace(parentPattern, '');
-						// Clean up any trailing comma before the removed parent
-						registryContent = registryContent.replace(/,\s*$/, '');
-					} else {
-						// Replace the parent block with updated content
-						const newParentBlock = `\n\t${parentKey}: {${parentContent}\n\t}`;
-						registryContent = registryContent.replace(parentPattern, newParentBlock);
-					}
-				} else {
-					throw new Error(`Child key "${childKey}" not found in parent "${parentKey}"`);
-				}
-			} else {
+			if (!registryData[parentKey]) {
 				throw new Error(`Parent key "${parentKey}" not found`);
 			}
-		} else {
-			// Handle top-level key
-			const keyPattern = new RegExp(`\\n\\t${registryKey}:\\s*\\{[\\s\\S]*?\\n\\t\\}`, 'm');
 
-			if (keyPattern.test(registryContent)) {
-				// Remove the entry
-				registryContent = registryContent.replace(keyPattern, '');
-				// Clean up any trailing comma before the removed entry
-				registryContent = registryContent.replace(/,\s*$/, '');
-			} else {
+			if (!(childKey in registryData[parentKey])) {
+				throw new Error(`Child key "${childKey}" not found in parent "${parentKey}"`);
+			}
+
+			delete registryData[parentKey][childKey];
+
+			// If parent is now empty, remove the entire parent object
+			if (Object.keys(registryData[parentKey]).length === 0) {
+				delete registryData[parentKey];
+			}
+		} else {
+			if (!(registryKey in registryData)) {
 				throw new Error(`Registry key "${registryKey}" not found`);
 			}
+			delete registryData[registryKey];
 		}
 
-		fileContent = fileContent.replace(registryMatch[1], registryContent);
-
-		// Write the updated file back to GitHub using the same path we found the file at
-		const writeUrl = new URL(cfRouteWritePublicJsFile, cfWorkerUrlJdgGithub);
-		writeUrl.searchParams.set('repoOwner', jdgRepoOwner);
-		writeUrl.searchParams.set('repoName', repoName);
-		writeUrl.searchParams.set('filePath', successfulPath);
-
-		const writeResponse = await fetch(writeUrl.toString(), {
-			method: 'POST',
-			headers: { 'Content-Type': 'text/plain' },
-			body: fileContent
-		});
-
-		if (!writeResponse.ok) {
-			throw new Error(`Failed to write file: ${writeResponse.status}`);
-		}
-
-		const result = await writeResponse.json();
-		return result.success ? result : null;
+		// Write JSON file back
+		const result = await writeJsonFileToRepo(jdgRepoOwner, repoName, successfulPath, registryData);
+		return result;
 	} catch (err) {
 		console.error('Error deleting image meta entry from repo:', err);
 		return null;
