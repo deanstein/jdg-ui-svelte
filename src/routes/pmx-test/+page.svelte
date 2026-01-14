@@ -1,5 +1,5 @@
 <script>
-	import { imageMetaRegistry } from '../image-meta-registry.js';
+	import imageMetaRegistry from '../image-meta-registry.js';
 	import { appAccentColors } from '$lib/stores/jdg-ui-store.js';
 
 	import { JDGContentBoxFloating, JDGContentContainer } from '$lib/index.js';

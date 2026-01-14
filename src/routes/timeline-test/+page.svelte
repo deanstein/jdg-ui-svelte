@@ -4,6 +4,9 @@
 	import { v4 as uuid } from 'uuid';
 
 	import JDG_CONTEXTS from '$lib/jdg-contexts.js';
+	import imageMetaRegistry from '.././image-meta-registry.js';
+	import getJdgImageMetaRegistry from '$lib/jdg-image-meta-registry.js';
+
 	import jdgTimelineEventTypes, {
 		jdgTimelineEventKeys
 	} from '$lib/schemas/timeline/jdg-timeline-event-types.js';
@@ -47,9 +50,6 @@
 		getImageMetaByKey,
 		instantiateObject
 	} from '$lib/jdg-utils.js';
-
-	import { imageMetaRegistry } from '.././image-meta-registry.js';
-	import getJdgImageMetaRegistry from '$lib/jdg-image-meta-registry.js';
 
 	import {
 		JDGBodyCopy,

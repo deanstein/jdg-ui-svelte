@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { imageMetaRegistry } from '../image-meta-registry.js';
+	import imageMetaRegistry from '../image-meta-registry.js';
 	import { jdgBreakpoints } from '$lib/jdg-shared-styles.js';
 
 	import { JDGImageCarousel } from '$lib/index.js';

@@ -1,4 +1,6 @@
 <script>
+	import imageMetaRegistry from '../image-meta-registry.js';
+
 	import {
 		JDGBodyCopy,
 		JDGContentBoxFloating,
@@ -8,7 +10,6 @@
 		JDGImageHybridGridCarousel,
 		JDGImageTile
 	} from '$lib/index.js';
-	import { imageMetaRegistry } from '../image-meta-registry.js';
 </script>
 
 <JDGContentContainer>

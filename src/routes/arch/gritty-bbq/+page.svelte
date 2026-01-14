@@ -1,5 +1,5 @@
 <script>
-	import { imageMetaRegistry } from '../../image-meta-registry.js';
+	import imageMetaRegistry from '../../image-meta-registry.js';
 	import { JDGContentBoxFloating, JDGContentContainer, JDGImageCarousel } from '$lib/index.js';
 </script>
 

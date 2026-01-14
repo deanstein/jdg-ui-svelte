@@ -1,4 +1,6 @@
 <script>
+	import imageMetaRegistry from '../image-meta-registry.js';
+
 	import {
 		JDGContentBoxFloating,
 		JDGContentContainer,
@@ -6,7 +8,6 @@
 		JDGImageCompare,
 		JDGImageTile
 	} from '$lib/index.js';
-	import { imageMetaRegistry } from '../image-meta-registry.js';
 </script>
 
 <JDGContentContainer overlapWithHeader={false}>

@@ -1,6 +1,21 @@
 <script>
+	import { css } from '@emotion/css';
+
 	import { appAccentColors } from '$lib/stores/jdg-ui-store.js';
 	import { scrollToAnchor } from '$lib/jdg-utils.js';
+
+	import { jdgBreakpoints, jdgColors, jdgFonts } from '$lib/jdg-shared-styles.js';
+	import {
+		ccpWebsiteRepoName,
+		familyTreeRepoName,
+		jdgRepoOwner,
+		jdgUiSvelteRepoName,
+		jdgWebsiteRepoName,
+		pmx3dWebsiteRepoName
+	} from '$lib/jdg-persistence-management.js';
+	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
+
+	import imageMetaRegistry from './image-meta-registry.js';
 
 	import {
 		JDGAccentBlock,
@@ -35,19 +50,6 @@
 		JDGVersionNpmPackage,
 		JDGVersionPackageJson
 	} from '$lib/index.js';
-	import { jdgBreakpoints, jdgColors, jdgFonts } from '$lib/jdg-shared-styles.js';
-
-	import { imageMetaRegistry } from './image-meta-registry.js';
-	import { css } from '@emotion/css';
-	import {
-		ccpWebsiteRepoName,
-		familyTreeRepoName,
-		jdgRepoOwner,
-		jdgUiSvelteRepoName,
-		jdgWebsiteRepoName,
-		pmx3dWebsiteRepoName
-	} from '$lib/jdg-persistence-management.js';
-	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
 
 	let isTestButtonEnabled = true;
 

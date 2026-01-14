@@ -11,7 +11,7 @@
 	import { instantiateObject } from '$lib/jdg-utils.js';
 	import jdgSharedUrlsStore from '$lib/stores/jdg-shared-urls-store.js';
 
-	import { imageMetaRegistry } from './image-meta-registry.js';
+	import imageMetaRegistry from './image-meta-registry.js';
 
 	import {
 		JDGAppContainer,
