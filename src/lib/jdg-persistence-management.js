@@ -1,4 +1,4 @@
-import { decrypt, extractAndParseObjectLiteral } from './jdg-utils.js';
+import { decrypt } from './jdg-utils.js';
 
 // JDG-ADMIN Cloudflare worker
 export const cfWorkerUrlAdmin = 'https://jdg-admin.jdeangoldstein.workers.dev';
@@ -43,14 +43,12 @@ export const encryptedPAT =
 // Possible locations of image metadata collection across websites
 // The fetch function will try each path in order until one succeeds
 export const imageMetaRegistryPaths = [
-	'src/routes/image-meta-registry.json',
 	'src/lib/image-meta-registry.json',
+	'src/routes/image-meta-registry.json',
 	'src/image-meta-registry.json'
 ];
 // Keep single path for backwards compatibility (uses first path)
 export const imageMetaRegistryPath = imageMetaRegistryPaths[0];
-// Typical imageMetaRegistry variable name, for finding within the .js file
-export const imageMetaRegistryVarName = 'imageMetaRegistry';
 // All repos containing an imageMetaRegistry
 // that may require checking before changing a Cloudinary asset path
 export const allImageMetaRegistryRepoNames = [
@@ -262,15 +260,19 @@ export const fetchImageMetaRegistry = async (repoName) => {
 					continue;
 				}
 
-				const jsFileString = await response.text();
-				// Extract and parse the imageMetaRegistry object from the JS file string
-				const imageMetaRegistry = extractAndParseObjectLiteral(jsFileString, 'imageMetaRegistry');
+				const fileContent = await response.text();
 
-				if (imageMetaRegistry) {
+				// Parse JSON directly
+				try {
+					const imageMetaRegistry = JSON.parse(fileContent);
 					console.log(`✅ Found imageMetaRegistry in ${repoName} at ${filePath}`);
 					// Cache the result
 					imageMetaRegistryCache.set(repoName, imageMetaRegistry);
 					return imageMetaRegistry;
+				} catch (parseErr) {
+					console.error(`Failed to parse JSON from ${filePath}:`, parseErr);
+					lastError = parseErr;
+					continue;
 				}
 			} catch (err) {
 				lastError = err;
@@ -305,7 +307,7 @@ export const clearImageMetaRegistryCache = (repoName = null) => {
 	}
 };
 
-// Fetch the raw image-meta-registry.js file content from a repo
+// Fetch the raw image-meta-registry.json file content from a repo
 // Returns the raw file content as a string (not parsed)
 const fetchImageMetaRegistryRaw = async (repoName) => {
 	let lastError = null;
@@ -336,12 +338,15 @@ const fetchImageMetaRegistryRaw = async (repoName) => {
 				continue;
 			}
 
-			// Verify this looks like an image meta registry file
-			if (fileContent.includes('imageMetaRegistry')) {
-				console.log(`   ✅ Found imageMetaRegistry in ${repoName} at ${filePath}`);
+			// Verify this is valid JSON
+			try {
+				JSON.parse(fileContent);
+				console.log(`   ✅ Found valid JSON imageMetaRegistry in ${repoName} at ${filePath}`);
 				return fileContent;
-			} else {
-				console.log(`   ⚠️ File found but doesn't contain 'imageMetaRegistry'`);
+			} catch (parseErr) {
+				console.log(`   ⚠️ File found but is not valid JSON`);
+				lastError = parseErr;
+				continue;
 			}
 		} catch (err) {
 			console.log(`   ❌ Exception: ${err.message}`);
