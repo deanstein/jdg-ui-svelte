@@ -11,6 +11,10 @@ const jdgTimelineEventTypes = {
 		label: 'Article',
 		icon: 'fa-newspaper'
 	},
+	celebration: {
+		label: 'Celebration',
+		icon: 'fa-champagne-glasses'
+	},
 	generic: {
 		label: 'Generic',
 		icon: 'fa-rectangle-list'
