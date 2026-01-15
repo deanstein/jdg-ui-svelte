@@ -37,7 +37,7 @@ const jdgTimelineEventTypes = {
 		additionalContent: {
 			attribution: {
 				default: '',
-				label: 'Attribution',
+				label: 'Quote Attribution',
 				inputType: JDG_INPUT_TYPES.TEXT
 			}
 		}
