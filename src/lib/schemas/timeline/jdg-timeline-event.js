@@ -37,7 +37,7 @@ const jdgTimelineEvent = {
 	// Note that some types like article and quote have their own source types like attribution and publication
 	source: {
 		default: '',
-		label: 'Source',
+		label: 'Data Source',
 		inputType: JDG_INPUT_TYPES.COMBOBOX,
 		options: jdgSharedSources
 	},

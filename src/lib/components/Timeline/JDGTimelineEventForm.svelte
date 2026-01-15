@@ -358,112 +358,59 @@
 						</select>
 					{/if}
 				{:else if def.inputType === JDG_INPUT_TYPES.IMAGE_LIST}
-					{#if isAdditional}
-						<!-- Image display - keyed to update when selection changes -->
-						{#key $localAdditionalStore[key]?.length}
-							{#if resolveImageMetaKeys($localAdditionalStore[key] || [], imageMetaRegistry)?.length > 0}
-								<div class="image-list-display">
-									<JDGImageThumbnailGroup
-										imageMetaSet={resolveImageMetaKeys(
-											$localAdditionalStore[key] || [],
-											imageMetaRegistry
-										)}
-									/>
-								</div>
-							{:else if !isEditing}
-								<div class="no-images-message">{noImageMessage}</div>
-							{/if}
-						{/key}
-
-						<!-- In edit mode, show button and selector (outside key block to prevent remount) -->
-						{#if isEditing}
-							<div class="image-selector-actions">
-								<JDGButton
-									label={isImageSelectorOpen
-										? 'Close Image Selector'
-										: ($localAdditionalStore[key]?.length || 0) > 0
-											? 'Manage Images'
-											: 'Add Images'}
-									faIcon={isImageSelectorOpen ? 'fa-times' : 'fa-images'}
-									onClickFunction={() => {
-										isImageSelectorOpen = !isImageSelectorOpen;
-									}}
-									fontSize="14px"
-									paddingLeftRight="16px"
-									paddingTopBottom="8px"
-									backgroundColor={jdgColors.active}
+					<!-- Images are only stored at the top-level timeline event, never in additionalContent -->
+					<!-- Image display - keyed to update when selection changes -->
+					{#key $localEventStore[key]?.length}
+						{#if resolveImageMetaKeys($localEventStore[key] || [], imageMetaRegistry)?.length > 0}
+							<div class="image-list-display">
+								<JDGImageThumbnailGroup
+									imageMetaSet={resolveImageMetaKeys(
+										$localEventStore[key] || [],
+										imageMetaRegistry
+									)}
+									maxImageHeight={'30svh'}
 								/>
 							</div>
-							{#if isImageSelectorOpen}
-								<div class="image-selector-container">
-									<JDGImageSelector
-										selectedImages={$localAdditionalStore[key] || []}
-										isEnabled={isEditing}
-										{registryRepoName}
-										requireRegistry={true}
-										onSelectionChange={(newSelection) => {
-											localAdditionalStore.update((store) => ({
-												...store,
-												[key]: newSelection
-											}));
-										}}
-									/>
-								</div>
-							{/if}
+							<div class="image-source-note">See each image for its source</div>
+						{:else if !isEditing}
+							<div class="no-images-message">{noImageMessage}</div>
 						{/if}
-					{:else}
-						<!-- Image display - keyed to update when selection changes -->
-						{#key $localEventStore[key]?.length}
-							{#if resolveImageMetaKeys($localEventStore[key] || [], imageMetaRegistry)?.length > 0}
-								<div class="image-list-display">
-									<JDGImageThumbnailGroup
-										imageMetaSet={resolveImageMetaKeys(
-											$localEventStore[key] || [],
-											imageMetaRegistry
-										)}
-										maxImageHeight={'30svh'}
-									/>
-								</div>
-							{:else if !isEditing}
-								<div class="no-images-message">{noImageMessage}</div>
-							{/if}
-						{/key}
+					{/key}
 
-						<!-- In edit mode, show button and selector (outside key block to prevent remount) -->
-						{#if isEditing}
-							<div class="image-selector-actions">
-								<JDGButton
-									label={isImageSelectorOpen
-										? 'Close Image Selector'
-										: ($localEventStore[key]?.length || 0) > 0
-											? 'Manage Images'
-											: 'Add Images'}
-									faIcon={isImageSelectorOpen ? 'fa-times' : 'fa-images'}
-									onClickFunction={() => {
-										isImageSelectorOpen = !isImageSelectorOpen;
+					<!-- In edit mode, show button and selector (outside key block to prevent remount) -->
+					{#if isEditing}
+						<div class="image-selector-actions">
+							<JDGButton
+								label={isImageSelectorOpen
+									? 'Close Image Selector'
+									: ($localEventStore[key]?.length || 0) > 0
+										? 'Manage Images'
+										: 'Add Images'}
+								faIcon={isImageSelectorOpen ? 'fa-times' : 'fa-images'}
+								onClickFunction={() => {
+									isImageSelectorOpen = !isImageSelectorOpen;
+								}}
+								fontSize="14px"
+								paddingLeftRight="16px"
+								paddingTopBottom="8px"
+								backgroundColor={jdgColors.active}
+							/>
+						</div>
+						{#if isImageSelectorOpen}
+							<div class="image-selector-container">
+								<JDGImageSelector
+									selectedImages={$localEventStore[key] || []}
+									isEnabled={isEditing}
+									{registryRepoName}
+									requireRegistry={true}
+									onSelectionChange={(newSelection) => {
+										localEventStore.update((store) => ({
+											...store,
+											[key]: newSelection
+										}));
 									}}
-									fontSize="14px"
-									paddingLeftRight="16px"
-									paddingTopBottom="8px"
-									backgroundColor={jdgColors.active}
 								/>
 							</div>
-							{#if isImageSelectorOpen}
-								<div class="image-selector-container">
-									<JDGImageSelector
-										selectedImages={$localEventStore[key] || []}
-										isEnabled={isEditing}
-										{registryRepoName}
-										requireRegistry={true}
-										onSelectionChange={(newSelection) => {
-											localEventStore.update((store) => ({
-												...store,
-												[key]: newSelection
-											}));
-										}}
-									/>
-								</div>
-							{/if}
 						{/if}
 					{/if}
 				{:else if isAdditional}
@@ -562,6 +509,15 @@
 
 	.image-list-display {
 		margin-bottom: 12px;
+	}
+
+	.image-source-note {
+		font-size: 0.85rem;
+		font-style: italic;
+		color: #666;
+		text-align: left;
+		margin-top: 8px;
+		margin-bottom: 8px;
 	}
 
 	.no-images-message {
