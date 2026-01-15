@@ -100,6 +100,7 @@
 		// Generic events
 		jdgTimelineEventKeys.generic,
 		jdgTimelineEventKeys.article,
+		jdgTimelineEventKeys.celebration,
 		jdgTimelineEventKeys.legal,
 		jdgTimelineEventKeys.media,
 		jdgTimelineEventKeys.memory,
