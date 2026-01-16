@@ -389,11 +389,11 @@
 						newTranslateX = 0;
 						newTranslateY = 0;
 					} else {
-						// At max zoom - pan in opposite direction of pinch center movement (traditional panning)
+						// At max zoom - pan in same direction as pinch center movement
 						newScale = maxScale;
-						// Reverse the direction so swipe down = content goes up, swipe right = content goes left
-						newTranslateX = baseTranslateXOnPinchStart - centerDeltaX;
-						newTranslateY = baseTranslateYOnPinchStart - centerDeltaY;
+						// Pan in the same direction as the gesture
+						newTranslateX = baseTranslateXOnPinchStart + centerDeltaX;
+						newTranslateY = baseTranslateYOnPinchStart + centerDeltaY;
 						// Keep origin at center when panning
 						newOriginX = 50;
 						newOriginY = 50;
