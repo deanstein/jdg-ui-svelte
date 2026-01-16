@@ -170,64 +170,279 @@
 	// image zoom vars
 	const scaleDelta = 0.05;
 	const maxScale = 3.0;
+	const panDelta = 2.0; // pixels to pan per gesture
 	let scale = 1.0;
+	let translateX = 0; // current translation in pixels
+	let translateY = 0;
 	let initialDistance = 0;
-	let originX = 0;
-	let originY = 0;
+	let baseScaleOnPinchStart = 1.0; // Track scale at the start of pinch gesture
+	let baseTranslateXOnPinchStart = 0; // Track translation at start of pinch
+	let baseTranslateYOnPinchStart = 0;
+	let lastPinchCenterX = 0; // Track pinch center for panning
+	let lastPinchCenterY = 0;
+	let animationFrameId = null;
+	let pendingScale = null;
+	let pendingTranslateX = null;
+	let pendingTranslateY = null;
+	let pendingOriginX = null;
+	let pendingOriginY = null;
+	let isZooming = false;
+	let wheelEndTimeout = null;
+
+	// Smooth update function using requestAnimationFrame
+	const applyTransform = () => {
+		if (pendingScale !== null || pendingTranslateX !== null || pendingTranslateY !== null || pendingOriginX !== null || pendingOriginY !== null) {
+			const targetElement = scaleContext === 'container' ? containerRef : imageRef;
+			
+			// Update transform origin first (needed for zoom-into-point)
+			if (pendingOriginX !== null && pendingOriginY !== null) {
+				targetElement.style.transformOrigin = `${pendingOriginX}% ${pendingOriginY}%`;
+				pendingOriginX = null;
+				pendingOriginY = null;
+			}
+			
+			if (pendingScale !== null) {
+				scale = pendingScale;
+				pendingScale = null;
+			}
+			
+			if (pendingTranslateX !== null) {
+				translateX = pendingTranslateX;
+				pendingTranslateX = null;
+			}
+			
+			if (pendingTranslateY !== null) {
+				translateY = pendingTranslateY;
+				pendingTranslateY = null;
+			}
+			
+			// Apply both scale and translate together
+			targetElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+			imageViewerScale.set(scale);
+			
+			animationFrameId = null;
+		}
+	};
+
+	const scheduleTransform = (newScale, newTranslateX, newTranslateY, newOriginX, newOriginY) => {
+		if (newScale !== null) pendingScale = newScale;
+		if (newTranslateX !== null) pendingTranslateX = newTranslateX;
+		if (newTranslateY !== null) pendingTranslateY = newTranslateY;
+		if (newOriginX !== null) pendingOriginX = newOriginX;
+		if (newOriginY !== null) pendingOriginY = newOriginY;
+		
+		if (animationFrameId === null) {
+			animationFrameId = requestAnimationFrame(applyTransform);
+		}
+	};
 
 	// image zoom functions
 	// only applicable if doScaleOnZoom is true
 	const handleWheel = (event) => {
 		if (doScaleOnScrollOrZoom) {
+			event.preventDefault();
 			const targetElement = scaleContext === 'container' ? containerRef : imageRef;
 			const rect = targetElement.getBoundingClientRect();
 
-			const cursorX = ((event.clientX - rect.left) / rect.width) * 100;
-			const cursorY = ((event.clientY - rect.top) / rect.height) * 100;
+			// Calculate cursor position as percentage for transform-origin
+			const cursorXPercent = ((event.clientX - rect.left) / rect.width) * 100;
+			const cursorYPercent = ((event.clientY - rect.top) / rect.height) * 100;
 
-			targetElement.style.transformOrigin = `${cursorX}% ${cursorY}%`;
-
-			if (event.deltaY < 0) {
-				scale = Math.min(scale + scaleDelta, maxScale); // scale up
+			let newScale = scale;
+			let newTranslateX = translateX;
+			let newTranslateY = translateY;
+			let newOriginX = cursorXPercent;
+			let newOriginY = cursorYPercent;
+			const isZoomingIn = event.deltaY < 0;
+			
+			if (isZoomingIn) {
+				// Trying to zoom in
+				if (scale < maxScale) {
+					// Can still zoom - zoom into cursor position
+					newScale = Math.min(scale + scaleDelta, maxScale);
+					// Transform origin is set to cursor, so zoom will happen from there
+					// Reset translate when zooming (transform-origin handles the zoom-into-point)
+					newTranslateX = 0;
+					newTranslateY = 0;
+				} else {
+					// At max zoom - pan towards cursor
+					const centerX = rect.width / 2;
+					const centerY = rect.height / 2;
+					const cursorX = event.clientX - rect.left;
+					const cursorY = event.clientY - rect.top;
+					const deltaX = cursorX - centerX;
+					const deltaY = cursorY - centerY;
+					const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+					const normalizedX = distance > 0 ? deltaX / distance : 0;
+					const normalizedY = distance > 0 ? deltaY / distance : 0;
+					const panAmount = panDelta * (distance / Math.max(rect.width, rect.height));
+					newTranslateX = translateX + normalizedX * panAmount;
+					newTranslateY = translateY + normalizedY * panAmount;
+					// Keep origin at center when panning
+					newOriginX = 50;
+					newOriginY = 50;
+				}
 			} else {
-				scale = Math.max(scale - scaleDelta, 1.0); // scale down, min 1.0
+				// Zooming out
+				if (scale > 1.0) {
+					newScale = Math.max(scale - scaleDelta, 1.0);
+					// Reset translate when zooming out
+					newTranslateX = 0;
+					newTranslateY = 0;
+					// Keep origin at cursor for zoom out
+				} else {
+					// At base scale - reset everything
+					newScale = 1.0;
+					newTranslateX = 0;
+					newTranslateY = 0;
+					newOriginX = 50;
+					newOriginY = 50;
+				}
 			}
 
-			targetElement.style.transform = `scale(${scale})`;
-			// update the scale state for other components to use
-			imageViewerScale.set(scale);
+			// Always update origin when zooming (not panning), otherwise only if scale/translate changed
+			const shouldUpdateOrigin = (isZoomingIn && scale < maxScale) || (!isZoomingIn && scale > 1.0);
+			if (newScale !== scale || newTranslateX !== translateX || newTranslateY !== translateY || shouldUpdateOrigin) {
+				isZooming = true;
+				scheduleTransform(
+					newScale !== scale ? newScale : null,
+					newTranslateX !== translateX ? newTranslateX : null,
+					newTranslateY !== translateY ? newTranslateY : null,
+					shouldUpdateOrigin ? newOriginX : null,
+					shouldUpdateOrigin ? newOriginY : null
+				);
+			}
+
+			// Reset wheel end timeout
+			if (wheelEndTimeout !== null) {
+				clearTimeout(wheelEndTimeout);
+			}
+			wheelEndTimeout = setTimeout(() => {
+				isZooming = false;
+				wheelEndTimeout = null;
+			}, 150);
 		}
 	};
 
 	const handleTouchStart = (event) => {
 		if (doScaleOnScrollOrZoom) {
 			if (event.touches.length === 2) {
-				initialDistance = getDistance(event.touches);
-			}
-		}
-	};
-	const handleTouchMove = (event) => {
-		if (doScaleOnScrollOrZoom) {
-			if (event.touches.length === 2) {
+				event.preventDefault();
 				const targetElement = scaleContext === 'container' ? containerRef : imageRef;
 				const rect = targetElement.getBoundingClientRect();
 				const touch1 = event.touches[0];
 				const touch2 = event.touches[1];
-				originX = (((touch1.clientX + touch2.clientX) / 2 - rect.left) / rect.width) * 100;
-				originY = (((touch1.clientY + touch2.clientY) / 2 - rect.top) / rect.height) * 100;
-
-				const currentDistance = getDistance(event.touches);
-				const scaleChange = currentDistance / initialDistance;
-				scale = Math.min(Math.max(scale * scaleChange, 1.0), 2.0);
-				initialDistance = currentDistance;
-
-				targetElement.style.transformOrigin = `${originX}% ${originY}%`;
-				targetElement.style.transform = `scale(${scale})`;
-				// update the scale state for other components to use
-				imageViewerScale.set(scale);
+				
+				initialDistance = getDistance(event.touches);
+				// Store the current scale and translation at the start of pinch gesture
+				baseScaleOnPinchStart = pendingScale !== null ? pendingScale : scale;
+				baseTranslateXOnPinchStart = pendingTranslateX !== null ? pendingTranslateX : translateX;
+				baseTranslateYOnPinchStart = pendingTranslateY !== null ? pendingTranslateY : translateY;
+				
+				// Calculate pinch center in pixels relative to element
+				const pinchCenterX = (touch1.clientX + touch2.clientX) / 2 - rect.left;
+				const pinchCenterY = (touch1.clientY + touch2.clientY) / 2 - rect.top;
+				lastPinchCenterX = pinchCenterX;
+				lastPinchCenterY = pinchCenterY;
 			}
 		}
 	};
+	
+	const handleTouchMove = (event) => {
+		if (doScaleOnScrollOrZoom) {
+			if (event.touches.length === 2) {
+				event.preventDefault();
+				const targetElement = scaleContext === 'container' ? containerRef : imageRef;
+				const rect = targetElement.getBoundingClientRect();
+				const touch1 = event.touches[0];
+				const touch2 = event.touches[1];
+				
+				const currentDistance = getDistance(event.touches);
+				const scaleChange = currentDistance / initialDistance;
+				
+				// Calculate new pinch center as percentage for transform-origin
+				const pinchCenterX = (touch1.clientX + touch2.clientX) / 2 - rect.left;
+				const pinchCenterY = (touch1.clientY + touch2.clientY) / 2 - rect.top;
+				const pinchCenterXPercent = (pinchCenterX / rect.width) * 100;
+				const pinchCenterYPercent = (pinchCenterY / rect.height) * 100;
+				
+				// Calculate direction vector from previous center to current center (for panning)
+				const centerDeltaX = pinchCenterX - lastPinchCenterX;
+				const centerDeltaY = pinchCenterY - lastPinchCenterY;
+				
+				// Calculate desired scale
+				const desiredScale = baseScaleOnPinchStart * scaleChange;
+				const isZoomingIn = scaleChange > 1.0;
+				
+				let newScale = scale;
+				let newTranslateX = translateX;
+				let newTranslateY = translateY;
+				let newOriginX = pinchCenterXPercent;
+				let newOriginY = pinchCenterYPercent;
+				
+				if (isZoomingIn) {
+					// Trying to zoom in
+					if (desiredScale <= maxScale) {
+						// Can still zoom - zoom into pinch center using transform-origin
+						newScale = Math.min(desiredScale, maxScale);
+						// Reset translate when zooming (transform-origin handles the zoom-into-point)
+						newTranslateX = 0;
+						newTranslateY = 0;
+					} else {
+						// At max zoom - pan in opposite direction of pinch center movement (traditional panning)
+						newScale = maxScale;
+						// Reverse the direction so swipe down = content goes up, swipe right = content goes left
+						newTranslateX = baseTranslateXOnPinchStart - centerDeltaX;
+						newTranslateY = baseTranslateYOnPinchStart - centerDeltaY;
+						// Keep origin at center when panning
+						newOriginX = 50;
+						newOriginY = 50;
+					}
+				} else {
+					// Zooming out
+					if (desiredScale >= 1.0) {
+						newScale = Math.max(desiredScale, 1.0);
+						// Reset translate when zooming out
+						newTranslateX = 0;
+						newTranslateY = 0;
+						// Keep origin at pinch center for zoom out
+					} else {
+						// At base scale - reset everything
+						newScale = 1.0;
+						newTranslateX = 0;
+						newTranslateY = 0;
+						newOriginX = 50;
+						newOriginY = 50;
+					}
+				}
+				
+				// Update last pinch center
+				lastPinchCenterX = pinchCenterX;
+				lastPinchCenterY = pinchCenterY;
+				
+				// Always update origin when zooming (not panning), otherwise only if scale/translate changed
+				const shouldUpdateOrigin = (isZoomingIn && desiredScale <= maxScale) || (!isZoomingIn && desiredScale >= 1.0);
+				if (newScale !== scale || newTranslateX !== translateX || newTranslateY !== translateY || shouldUpdateOrigin) {
+					scheduleTransform(
+						newScale !== scale ? newScale : null,
+						newTranslateX !== translateX ? newTranslateX : null,
+						newTranslateY !== translateY ? newTranslateY : null,
+						shouldUpdateOrigin ? newOriginX : null,
+						shouldUpdateOrigin ? newOriginY : null
+					);
+				}
+			}
+		}
+	};
+	
+	const handleTouchEnd = () => {
+		// Reset initial distance when pinch ends
+		initialDistance = 0;
+		baseScaleOnPinchStart = 1.0;
+		baseTranslateXOnPinchStart = 0;
+		baseTranslateYOnPinchStart = 0;
+	};
+	
 	const getDistance = (touches) => {
 		const [touch1, touch2] = touches;
 		const dx = touch2.clientX - touch1.clientX;
@@ -515,10 +730,16 @@
 		// set up event listeners
 		// we're not using Svelte directives here because the event listeners are conditional
 		if (doScaleOnScrollOrZoom) {
+			// Initialize transform origin to center and set initial transform
+			const targetElement = scaleContext === 'container' ? containerRef : imageRef;
+			targetElement.style.transformOrigin = '50% 50%';
+			targetElement.style.transform = `translate(0px, 0px) scale(1.0)`;
+			
 			containerRef.addEventListener('wheel', handleWheel, { passive: false });
-			containerRef.addEventListener('scroll', handleWheel, { passive: false });
 			containerRef.addEventListener('touchstart', handleTouchStart, { passive: false });
 			containerRef.addEventListener('touchmove', handleTouchMove, { passive: false });
+			containerRef.addEventListener('touchend', handleTouchEnd, { passive: true });
+			containerRef.addEventListener('touchcancel', handleTouchEnd, { passive: true });
 		}
 
 		// set up an observer to set the isVisible flag
@@ -543,10 +764,19 @@
 	});
 
 	onDestroy(() => {
-		containerRef.removeEventListener('wheel', handleWheel);
-		containerRef.removeEventListener('scroll', handleWheel);
-		containerRef.removeEventListener('touchstart', handleTouchStart);
-		containerRef.removeEventListener('touchmove', handleTouchMove);
+		if (animationFrameId !== null) {
+			cancelAnimationFrame(animationFrameId);
+		}
+		if (wheelEndTimeout !== null) {
+			clearTimeout(wheelEndTimeout);
+		}
+		if (doScaleOnScrollOrZoom && containerRef) {
+			containerRef.removeEventListener('wheel', handleWheel);
+			containerRef.removeEventListener('touchstart', handleTouchStart);
+			containerRef.removeEventListener('touchmove', handleTouchMove);
+			containerRef.removeEventListener('touchend', handleTouchEnd);
+			containerRef.removeEventListener('touchcancel', handleTouchEnd);
+		}
 	});
 
 	// REACTIVE BLOCKS
