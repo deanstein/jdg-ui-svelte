@@ -191,35 +191,41 @@
 
 	// Smooth update function using requestAnimationFrame
 	const applyTransform = () => {
-		if (pendingScale !== null || pendingTranslateX !== null || pendingTranslateY !== null || pendingOriginX !== null || pendingOriginY !== null) {
+		if (
+			pendingScale !== null ||
+			pendingTranslateX !== null ||
+			pendingTranslateY !== null ||
+			pendingOriginX !== null ||
+			pendingOriginY !== null
+		) {
 			const targetElement = scaleContext === 'container' ? containerRef : imageRef;
-			
+
 			// Update transform origin first (needed for zoom-into-point)
 			if (pendingOriginX !== null && pendingOriginY !== null) {
 				targetElement.style.transformOrigin = `${pendingOriginX}% ${pendingOriginY}%`;
 				pendingOriginX = null;
 				pendingOriginY = null;
 			}
-			
+
 			if (pendingScale !== null) {
 				scale = pendingScale;
 				pendingScale = null;
 			}
-			
+
 			if (pendingTranslateX !== null) {
 				translateX = pendingTranslateX;
 				pendingTranslateX = null;
 			}
-			
+
 			if (pendingTranslateY !== null) {
 				translateY = pendingTranslateY;
 				pendingTranslateY = null;
 			}
-			
+
 			// Apply both scale and translate together
 			targetElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
 			imageViewerScale.set(scale);
-			
+
 			animationFrameId = null;
 		}
 	};
@@ -230,7 +236,7 @@
 		if (newTranslateY !== null) pendingTranslateY = newTranslateY;
 		if (newOriginX !== null) pendingOriginX = newOriginX;
 		if (newOriginY !== null) pendingOriginY = newOriginY;
-		
+
 		if (animationFrameId === null) {
 			animationFrameId = requestAnimationFrame(applyTransform);
 		}
@@ -254,7 +260,7 @@
 			let newOriginX = cursorXPercent;
 			let newOriginY = cursorYPercent;
 			const isZoomingIn = event.deltaY < 0;
-			
+
 			if (isZoomingIn) {
 				// Trying to zoom in
 				if (scale < maxScale) {
@@ -302,7 +308,12 @@
 
 			// Always update origin when zooming (not panning), otherwise only if scale/translate changed
 			const shouldUpdateOrigin = (isZoomingIn && scale < maxScale) || (!isZoomingIn && scale > 1.0);
-			if (newScale !== scale || newTranslateX !== translateX || newTranslateY !== translateY || shouldUpdateOrigin) {
+			if (
+				newScale !== scale ||
+				newTranslateX !== translateX ||
+				newTranslateY !== translateY ||
+				shouldUpdateOrigin
+			) {
 				isZooming = true;
 				scheduleTransform(
 					newScale !== scale ? newScale : null,
@@ -332,13 +343,13 @@
 				const rect = targetElement.getBoundingClientRect();
 				const touch1 = event.touches[0];
 				const touch2 = event.touches[1];
-				
+
 				initialDistance = getDistance(event.touches);
 				// Store the current scale and translation at the start of pinch gesture
 				baseScaleOnPinchStart = pendingScale !== null ? pendingScale : scale;
 				baseTranslateXOnPinchStart = pendingTranslateX !== null ? pendingTranslateX : translateX;
 				baseTranslateYOnPinchStart = pendingTranslateY !== null ? pendingTranslateY : translateY;
-				
+
 				// Calculate pinch center in pixels relative to element
 				const pinchCenterX = (touch1.clientX + touch2.clientX) / 2 - rect.left;
 				const pinchCenterY = (touch1.clientY + touch2.clientY) / 2 - rect.top;
@@ -347,39 +358,39 @@
 			}
 		}
 	};
-	
+
 	const handleTouchMove = (event) => {
 		if (doScaleOnScrollOrZoom) {
 			if (event.touches.length === 2) {
-				event.preventDefault();
 				const targetElement = scaleContext === 'container' ? containerRef : imageRef;
 				const rect = targetElement.getBoundingClientRect();
+				event.preventDefault();
 				const touch1 = event.touches[0];
 				const touch2 = event.touches[1];
-				
+
 				const currentDistance = getDistance(event.touches);
 				const scaleChange = currentDistance / initialDistance;
-				
+
 				// Calculate new pinch center as percentage for transform-origin
 				const pinchCenterX = (touch1.clientX + touch2.clientX) / 2 - rect.left;
 				const pinchCenterY = (touch1.clientY + touch2.clientY) / 2 - rect.top;
 				const pinchCenterXPercent = (pinchCenterX / rect.width) * 100;
 				const pinchCenterYPercent = (pinchCenterY / rect.height) * 100;
-				
+
 				// Calculate direction vector from previous center to current center (for panning)
 				const centerDeltaX = pinchCenterX - lastPinchCenterX;
 				const centerDeltaY = pinchCenterY - lastPinchCenterY;
-				
+
 				// Calculate desired scale
 				const desiredScale = baseScaleOnPinchStart * scaleChange;
 				const isZoomingIn = scaleChange > 1.0;
-				
+
 				let newScale = scale;
 				let newTranslateX = translateX;
 				let newTranslateY = translateY;
 				let newOriginX = pinchCenterXPercent;
 				let newOriginY = pinchCenterYPercent;
-				
+
 				if (isZoomingIn) {
 					// Trying to zoom in
 					if (desiredScale <= maxScale) {
@@ -389,11 +400,12 @@
 						newTranslateX = 0;
 						newTranslateY = 0;
 					} else {
-						// At max zoom - pan in same direction as pinch center movement
+						// At max zoom - pan so the point under the pinch center stays under it
 						newScale = maxScale;
-						// Pan in the same direction as the gesture
+						// Pan in the same direction as the gesture (finger moves right, image moves right)
+						// This keeps the point under the pinch center fixed as the center moves
 						newTranslateX = baseTranslateXOnPinchStart + centerDeltaX;
-						newTranslateY = baseTranslateYOnPinchStart + centerDeltaY;
+						newTranslateY = baseTranslateYOnPinchStart - centerDeltaY;
 						// Keep origin at center when panning
 						newOriginX = 50;
 						newOriginY = 50;
@@ -415,14 +427,20 @@
 						newOriginY = 50;
 					}
 				}
-				
+
 				// Update last pinch center
 				lastPinchCenterX = pinchCenterX;
 				lastPinchCenterY = pinchCenterY;
-				
+
 				// Always update origin when zooming (not panning), otherwise only if scale/translate changed
-				const shouldUpdateOrigin = (isZoomingIn && desiredScale <= maxScale) || (!isZoomingIn && desiredScale >= 1.0);
-				if (newScale !== scale || newTranslateX !== translateX || newTranslateY !== translateY || shouldUpdateOrigin) {
+				const shouldUpdateOrigin =
+					(isZoomingIn && desiredScale <= maxScale) || (!isZoomingIn && desiredScale >= 1.0);
+				if (
+					newScale !== scale ||
+					newTranslateX !== translateX ||
+					newTranslateY !== translateY ||
+					shouldUpdateOrigin
+				) {
 					scheduleTransform(
 						newScale !== scale ? newScale : null,
 						newTranslateX !== translateX ? newTranslateX : null,
@@ -434,7 +452,7 @@
 			}
 		}
 	};
-	
+
 	const handleTouchEnd = () => {
 		// Reset initial distance when pinch ends
 		initialDistance = 0;
@@ -442,7 +460,7 @@
 		baseTranslateXOnPinchStart = 0;
 		baseTranslateYOnPinchStart = 0;
 	};
-	
+
 	const getDistance = (touches) => {
 		const [touch1, touch2] = touches;
 		const dx = touch2.clientX - touch1.clientX;
@@ -734,7 +752,7 @@
 			const targetElement = scaleContext === 'container' ? containerRef : imageRef;
 			targetElement.style.transformOrigin = '50% 50%';
 			targetElement.style.transform = `translate(0px, 0px) scale(1.0)`;
-			
+
 			containerRef.addEventListener('wheel', handleWheel, { passive: false });
 			containerRef.addEventListener('touchstart', handleTouchStart, { passive: false });
 			containerRef.addEventListener('touchmove', handleTouchMove, { passive: false });
