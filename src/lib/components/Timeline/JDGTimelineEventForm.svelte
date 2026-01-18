@@ -110,7 +110,8 @@
 	let previousType = null;
 
 	// Check if there's exactly one image
-	$: hasSingleImage = Array.isArray($localEventStore.images) && $localEventStore.images.length === 1;
+	$: hasSingleImage =
+		Array.isArray($localEventStore.images) && $localEventStore.images.length === 1;
 	// Get the single image metadata if there's exactly one image
 	$: singleImageMeta =
 		hasSingleImage && imageMetaRegistry && $localEventStore.images?.[0]

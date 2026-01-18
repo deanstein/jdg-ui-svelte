@@ -1,6 +1,6 @@
 <script>
 	import { css } from '@emotion/css';
-	
+
 	import JDGInputHint from './JDGInputHint.svelte';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
 
