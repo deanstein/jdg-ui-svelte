@@ -406,8 +406,8 @@
 
 	<!-- All fields from the schema -->
 	{#each renderFields as { key, def, isAdditional } (key)}
-		<!-- Source field only shows when editing or when it has content -->
-		{#if key !== 'source' || isEditing || $localEventStore.source}
+		<!-- Source field only shows when editing or when it has content, or when isMediaWrapper is checked and first media has source -->
+		{#if key !== 'source' || isEditing || $localEventStore.source || ($localEventStore.isMediaWrapper && firstImageMeta?.attribution)}
 			<JDGInputContainer label={def.label}>
 				{#if def.inputType === JDG_INPUT_TYPES.DATE}
 					<div class="date-with-checkbox">
