@@ -124,7 +124,7 @@
 	$: supportsImageWrapper =
 		$localEventStore?.type === jdgTimelineEventKeys.media ||
 		$localEventStore?.type === jdgTimelineEventKeys.article ||
-		$localEventStore?.isImageWrapper === true; // If isImageWrapper is true, we know the type supports it
+		$localEventStore?.isMediaWrapper === true; // If isMediaWrapper is true, we know the type supports it
 	// For media: require exactly 1 image, for article: require at least 1 image (or allow in edit mode to add images)
 	$: canUseImageWrapper =
 		supportsImageWrapper &&
@@ -136,20 +136,20 @@
 			? getImageMetaByKey(imageMetaRegistry, $localEventStore.images[0])
 			: null;
 
-	// Display values for description and source - use image data if isImageWrapper is true
+	// Display values for description and source - use image data if isMediaWrapper is true
 	// Otherwise use the stored values (which should be preserved in the database)
 	$: displayDescription =
-		$localEventStore.isImageWrapper && firstImageMeta?.caption
+		$localEventStore.isMediaWrapper && firstImageMeta?.caption
 			? firstImageMeta.caption
 			: $localEventStore.description ?? '';
 	$: displaySource =
-		$localEventStore.isImageWrapper && firstImageMeta?.attribution
+		$localEventStore.isMediaWrapper && firstImageMeta?.attribution
 			? firstImageMeta.attribution
 			: $localEventStore.source ?? '';
 
 	// Reactive computed values for checkbox visibility
-	// Checkbox should appear if type supports it, regardless of isImageWrapper value
-	// The isImageWrapper flag only controls whether the checkbox is checked, not visibility
+	// Checkbox should appear if type supports it, regardless of isMediaWrapper value
+	// The isMediaWrapper flag only controls whether the checkbox is checked, not visibility
 	// Only evaluate if store has been populated (type is defined)
 	$: isArticleType = $localEventStore?.type === jdgTimelineEventKeys.article;
 	$: isMediaType = $localEventStore?.type === jdgTimelineEventKeys.media;
@@ -157,7 +157,7 @@
 		$localEventStore?.type &&
 		((isArticleType && (hasImages || isEditing)) || (isMediaType && hasSingleImage));
 
-	// Checkbox only toggles isImageWrapper - display logic handles showing image data vs stored data
+	// Checkbox only toggles isMediaWrapper - display logic handles showing image data vs stored data
 	// We never modify the stored description/source values - they are preserved in the database
 
 	// Reset checkbox when in edit mode and conditions are no longer met
@@ -165,11 +165,11 @@
 	$: if (
 		isEditing &&
 		!canUseImageWrapper &&
-		$localEventStore.isImageWrapper &&
+		$localEventStore.isMediaWrapper &&
 		!supportsImageWrapper
 	) {
 		localEventStore.update((store) => {
-			return { ...store, isImageWrapper: false };
+			return { ...store, isMediaWrapper: false };
 		});
 	}
 
@@ -216,7 +216,7 @@
 	$: mergedSchema = { ...baseFieldSchema, ...contentSchema };
 
 	$: renderFields = Object.entries(mergedSchema)
-		.filter(([key]) => key !== 'isApprxDate' && key !== 'isImageWrapper')
+		.filter(([key]) => key !== 'isApprxDate' && key !== 'isMediaWrapper')
 		.map(([key, def]) => {
 			const isAdditional = key in contentSchema;
 			return { key, def, isAdditional };
@@ -371,13 +371,13 @@
 	{/if}
 
 	<!-- Checkbox to use image data for media (single image) or article (multiple images) events -->
-	<!-- Show if: isImageWrapper is true (always show if set) OR (type supports it AND conditions are met) -->
+	<!-- Show if: isMediaWrapper is true (always show if set) OR (type supports it AND conditions are met) -->
 	{#if shouldShowCheckbox}
 		<JDGInputContainer label="Media wrapper">
 			<JDGCheckbox
 				label={jdgTimelineEvent.isMediaWrapper.label}
 				hint="Optionally use description and source from the first media item in this event"
-				bind:isChecked={$localEventStore.isImageWrapper}
+				bind:isChecked={$localEventStore.isMediaWrapper}
 			/>
 		</JDGInputContainer>
 		{#if hasImages && !firstImageMeta && imageMetaRegistry && isEditing}
@@ -409,8 +409,8 @@
 					{#if isAdditional}
 						<JDGTextInput bind:inputValue={$localAdditionalStore[key]} isEnabled={isEditing} />
 					{:else if key === 'description'}
-						{#key $localEventStore.isImageWrapper}
-							{#if $localEventStore.isImageWrapper}
+						{#key $localEventStore.isMediaWrapper}
+							{#if $localEventStore.isMediaWrapper}
 								<JDGTextInput inputValue={displayDescription} isEnabled={false} />
 							{:else}
 								<JDGTextInput
@@ -420,8 +420,8 @@
 							{/if}
 						{/key}
 					{:else if key === 'source'}
-						{#key $localEventStore.isImageWrapper}
-							{#if $localEventStore.isImageWrapper}
+						{#key $localEventStore.isMediaWrapper}
+							{#if $localEventStore.isMediaWrapper}
 								<JDGTextInput inputValue={displaySource} isEnabled={false} />
 							{:else}
 								<JDGTextInput bind:inputValue={$localEventStore.source} isEnabled={isEditing} />
@@ -438,8 +438,8 @@
 							isEnabled={isEditing}
 						/>
 					{:else if key === 'source'}
-						{#key `${$localEventStore.isImageWrapper}-${displaySource}`}
-							{#if $localEventStore.isImageWrapper}
+						{#key `${$localEventStore.isMediaWrapper}-${displaySource}`}
+							{#if $localEventStore.isMediaWrapper}
 								<JDGCombobox
 									inputValue={displaySource}
 									options={def.options || []}
@@ -464,8 +464,8 @@
 					{#if isAdditional}
 						<JDGTextArea bind:inputValue={$localAdditionalStore[key]} isEnabled={isEditing} />
 					{:else if key === 'description'}
-						{#key `${$localEventStore.isImageWrapper}-${displayDescription}`}
-							{#if $localEventStore.isImageWrapper}
+						{#key `${$localEventStore.isMediaWrapper}-${displayDescription}`}
+							{#if $localEventStore.isMediaWrapper}
 								<JDGTextArea inputValue={displayDescription} isEnabled={false} />
 							{:else}
 								<JDGTextArea bind:inputValue={$localEventStore.description} isEnabled={isEditing} />

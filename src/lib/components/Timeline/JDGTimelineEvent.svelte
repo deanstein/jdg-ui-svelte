@@ -299,16 +299,16 @@
 		}
 	}
 
-	// Get the first image metadata if isImageWrapper is true
+	// Get the first image metadata if isMediaWrapper is true
 	$: firstImageMetaForDisplay =
-		upgradedEvent?.isImageWrapper &&
+		upgradedEvent?.isMediaWrapper &&
 		upgradedEvent?.images?.length > 0 &&
 		imageMetaRegistry &&
 		upgradedEvent.images[0]
 			? getImageMetaByKey(imageMetaRegistry, upgradedEvent.images[0])
 			: null;
 
-	// Use image caption for description if isImageWrapper is true, otherwise use event description
+	// Use image caption for description if isMediaWrapper is true, otherwise use event description
 	$: displayDescription =
 		firstImageMetaForDisplay?.caption || upgradedEvent?.description || 'Event description';
 

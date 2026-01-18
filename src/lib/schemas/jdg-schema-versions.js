@@ -1,7 +1,7 @@
 export const jdgSchemaVersion = '0.6.0';
 export const jdgSchemachanges = {
 	'v0.6.x': {
-		changes: ["Added 'isImageWrapper' to timeline-event schema"]
+		changes: ["Added 'isMediaWrapper' to timeline-event schema"]
 	},
 	'v0.5.x': {
 		changes: [
