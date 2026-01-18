@@ -633,7 +633,7 @@
 	>
 		<JDGBodyCopy paddingTop="0">
 			<JDGForm>
-				<JDGInputContainer label="Options flyout" description="Enable or disable all inputs here">
+				<JDGInputContainer label="Options flyout" hint="Enable or disable all inputs here">
 					<JDGFlyout
 						faIcon="fa-gear"
 						flyoutTitle="Form Options"
@@ -646,7 +646,7 @@
 				<JDGInputContainer label="Text input">
 					<JDGTextInput inputValue="This is a text input" isEnabled={areFormInputsEnabled} />
 				</JDGInputContainer>
-				<JDGInputContainer label="Text input with description" description="This is a description">
+				<JDGInputContainer label="Text input with description" hint="This is a description">
 					<JDGTextInput
 						inputValue="This is a text input with a description"
 						isEnabled={areFormInputsEnabled}
@@ -655,7 +655,7 @@
 				<JDGInputContainer label="Text area">
 					<JDGTextArea inputValue="This is a text area" isEnabled={areFormInputsEnabled} />
 				</JDGInputContainer>
-				<JDGInputContainer label="Text area with description" description="This is a description">
+				<JDGInputContainer label="Text area with description" hint="This is a description">
 					<JDGTextArea
 						inputValue="This is a text area with a description"
 						isEnabled={areFormInputsEnabled}
@@ -664,13 +664,13 @@
 				<JDGInputContainer label="Date input">
 					<JDGDatePicker isEnabled={areFormInputsEnabled} />
 				</JDGInputContainer>
-				<JDGInputContainer label="Date input with description" description="This is a description">
+				<JDGInputContainer label="Date input with description" hint="This is a description">
 					<JDGDatePicker isEnabled={areFormInputsEnabled} />
 				</JDGInputContainer>
 				<JDGInputContainer label="Checkbox input">
 					<JDGCheckbox label="Some checkable option" isEnabled={areFormInputsEnabled} />
 				</JDGInputContainer>
-				<JDGInputContainer label="Checkbox with description" description="This is a description">
+				<JDGInputContainer label="Checkbox with description" hint="This is a description">
 					<JDGCheckbox label="Some checkable option" isEnabled={areFormInputsEnabled} />
 				</JDGInputContainer>
 				<JDGInputContainer label="Select input">
@@ -682,7 +682,7 @@
 				</JDGInputContainer>
 				<JDGInputContainer
 					label="Select input with description"
-					description="This is a description"
+					hint="This is a description"
 				>
 					<JDGSelect
 						optionsGroup={exampleSelectOptions}
@@ -695,13 +695,13 @@
 				</JDGInputContainer>
 				<JDGInputContainer
 					label="Button input with description"
-					description="This is a description"
+					hint="This is a description"
 				>
 					<JDGButton label="Click me" onClickFunction={() => {}} isEnabled={areFormInputsEnabled} />
 				</JDGInputContainer>
 				<JDGInputContainer
 					label="Centered input"
-					description="Inputs can be centered within the container"
+					hint="Inputs can be centered within the container"
 					justification="center"
 				>
 					<JDGCheckbox

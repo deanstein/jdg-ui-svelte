@@ -619,7 +619,7 @@
 		<JDGBodyCopy textAlign="center" paddingTop="0" paddingBottom="0">
 			<JDGInputContainer
 				label="Preview Mode"
-				description="On hover or touch, displays an overlay that forces the timeline to launch in a modal"
+				hint="On hover or touch, displays an overlay that forces the timeline to launch in a modal"
 				justification="center"
 			>
 				<JDGCheckbox

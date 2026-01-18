@@ -4,8 +4,8 @@
 
 	// Primary label for input component
 	export let label = 'Some Fact or Field Name';
-	// Optional description
-	export let description = undefined;
+	// Optional description of the input
+	export let hint = undefined;
 	// Justification for all inputContainer content
 	export let justification = 'left';
 	// Whether the inputContainer should grow to fill available space
@@ -18,7 +18,7 @@
 
 	const labelContainercss = css`
 		justify-content: ${justification};
-		margin-bottom: ${description ? '' : '0.5svh'};
+		margin-bottom: ${hint ? '' : '0.5svh'};
 	`;
 
 	const labelCss = css`
@@ -39,10 +39,10 @@
 				{label}
 			</div>
 		</div>
-		{#if description}
+		{#if hint}
 			<div class="description-container">
 				<div class="description {descriptionCss}">
-					<i class="fa-solid fa-info-circle"></i>&nbsp;&nbsp;{description}
+					<i class="fa-solid fa-info-circle"></i>&nbsp;&nbsp;{hint}
 				</div>
 			</div>
 		{/if}
