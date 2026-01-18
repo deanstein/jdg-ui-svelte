@@ -150,10 +150,11 @@
 	// Reactive computed values for checkbox visibility
 	// Checkbox should appear if type supports it, regardless of isMediaWrapper value
 	// The isMediaWrapper flag only controls whether the checkbox is checked, not visibility
+	// Only show when editing and if type supports it
 	// Only evaluate if store has been populated (type is defined)
 	$: isArticleType = $localEventStore?.type === jdgTimelineEventKeys.article;
 	$: isMediaType = $localEventStore?.type === jdgTimelineEventKeys.media;
-	$: shouldShowCheckbox =
+	$: shouldShowCheckbox = isEditing &&
 		$localEventStore?.type &&
 		((isArticleType && (hasImages || isEditing)) || (isMediaType && hasSingleImage));
 
