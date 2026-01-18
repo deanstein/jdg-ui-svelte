@@ -31,7 +31,8 @@
 		formatAgeDisplayWithRounding,
 		getIsObjectInArray,
 		instantiateObject,
-		resolveImageMetaKeys
+		resolveImageMetaKeys,
+		getImageMetaByKey
 	} from '$lib/jdg-utils.js';
 
 	import {
@@ -107,6 +108,35 @@
 
 	// Track the previous type to detect actual type changes
 	let previousType = null;
+
+	// Check if there's exactly one image
+	$: hasSingleImage = Array.isArray($localEventStore.images) && $localEventStore.images.length === 1;
+	// Get the single image metadata if there's exactly one image
+	$: singleImageMeta =
+		hasSingleImage && imageMetaRegistry && $localEventStore.images?.[0]
+			? getImageMetaByKey(imageMetaRegistry, $localEventStore.images[0])
+			: null;
+	// Checkbox state for using image data
+	let useImageData = false;
+
+	// When checkbox is checked, update description and source from image
+	$: if (useImageData && singleImageMeta && isEditing) {
+		localEventStore.update((store) => {
+			const updates = {};
+			if (singleImageMeta.caption) {
+				updates.description = singleImageMeta.caption;
+			}
+			if (singleImageMeta.attribution) {
+				updates.source = singleImageMeta.attribution;
+			}
+			return { ...store, ...updates };
+		});
+	}
+
+	// Reset checkbox when image count changes (not exactly 1) or when exiting edit mode
+	$: if ((!hasSingleImage || !isEditing) && useImageData) {
+		useImageData = false;
+	}
 
 	// Sync when parent store changes
 	$: {
@@ -293,6 +323,27 @@
 		</JDGInputContainer>
 	{/if}
 
+	<!-- Checkbox to use image data when there's exactly one image, disables description and source fields -->
+	{#if Array.isArray($localEventStore.images) && $localEventStore.images.length === 1 && isEditing}
+		<JDGInputContainer
+			label={'Image data override'}
+			hint="Image data will populate event description and source"
+		>
+			<div class="use-image-data-checkbox">
+				<JDGCheckbox
+					label="Use image data"
+					bind:isChecked={useImageData}
+					isEnabled={!!singleImageMeta}
+				/>
+				{#if hasSingleImage && !singleImageMeta && imageMetaRegistry}
+					<div class="image-meta-loading-note">
+						Unable to load image metadata. Please ensure the image registry is available.
+					</div>
+				{/if}
+			</div>
+		</JDGInputContainer>
+	{/if}
+
 	<!-- All fields from the schema -->
 	{#each renderFields as { key, def, isAdditional } (key)}
 		<!-- Source field only shows when editing or when it has content -->
@@ -328,14 +379,17 @@
 						<JDGCombobox
 							bind:inputValue={$localEventStore[key]}
 							options={def.options || []}
-							isEnabled={isEditing}
+							isEnabled={isEditing && !(useImageData && key === 'source')}
 						/>
 					{/if}
 				{:else if def.inputType === JDG_INPUT_TYPES.TEXTAREA}
 					{#if isAdditional}
 						<JDGTextArea bind:inputValue={$localAdditionalStore[key]} isEnabled={isEditing} />
 					{:else}
-						<JDGTextArea bind:inputValue={$localEventStore[key]} isEnabled={isEditing} />
+						<JDGTextArea
+							bind:inputValue={$localEventStore[key]}
+							isEnabled={isEditing && !(useImageData && key === 'description')}
+						/>
 					{/if}
 				{:else if def.inputType === JDG_INPUT_TYPES.CHECKBOX}
 					{#if isAdditional}
