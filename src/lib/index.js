@@ -169,6 +169,9 @@ export { JDGImageViewerModal };
 import JDGInputContainer from './components/Input/JDGInputContainer.svelte';
 export { JDGInputContainer };
 
+import JDGInputHint from './components/Input/JDGInputHint.svelte';
+export { JDGInputHint };
+
 import JDGJumpTo from './components/Nav/JDGJumpTo.svelte';
 export { JDGJumpTo };
 
