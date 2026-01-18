@@ -46,6 +46,7 @@
 		JDGImageSelector,
 		JDGImageThumbnailGroup,
 		JDGInputContainer,
+		JDGMissingImageKeys,
 		JDGNotificationBanner,
 		JDGSelect,
 		JDGTextArea,
@@ -135,6 +136,21 @@
 		hasImages && imageMetaRegistry && $localEventStore.images?.[0]
 			? getImageMetaByKey(imageMetaRegistry, $localEventStore.images[0])
 			: null;
+
+	// Helper function to get missing image keys (for display in edit mode)
+	function getMissingImageKeys(imageKeys, registry) {
+		if (!isEditing || !registry || !Array.isArray(imageKeys)) return [];
+		return imageKeys.filter(key => typeof key === 'string' && !getImageMetaByKey(registry, key));
+	}
+
+	// Function to get image display data for a given field key
+	// Returns resolved images and missing image keys
+	function getImageDisplayData(fieldKey) {
+		const imageKeys = $localEventStore[fieldKey] || [];
+		const resolvedImages = resolveImageMetaKeys(imageKeys, imageMetaRegistry);
+		const missingImageKeys = getMissingImageKeys(imageKeys, imageMetaRegistry);
+		return { resolvedImages, missingImageKeys };
+	}
 
 	// Display values for description and source - use image data if isMediaWrapper is true
 	// Otherwise use the stored values (which should be preserved in the database)
@@ -499,19 +515,33 @@
 					<!-- Images are only stored at the top-level timeline event, never in additionalContent -->
 					<!-- Image display - keyed to update when selection changes -->
 					{#key $localEventStore[key]?.length}
-						{#if resolveImageMetaKeys($localEventStore[key] || [], imageMetaRegistry)?.length > 0}
-							<div class="image-list-display">
-								<JDGImageThumbnailGroup
-									imageMetaSet={resolveImageMetaKeys(
-										$localEventStore[key] || [],
-										imageMetaRegistry
-									)}
-									maxImageHeight={'30svh'}
-								/>
-							</div>
-							<div class="image-source-note">See each image for its source</div>
-						{:else if !isEditing}
-							<div class="no-images-message">{noImageMessage}</div>
+						{#if true}
+							{@const imageDisplayData = getImageDisplayData(key)}
+							{#if imageDisplayData.resolvedImages?.length > 0 || imageDisplayData.missingImageKeys.length > 0}
+								<div class="image-list-display">
+									{#if imageDisplayData.resolvedImages?.length > 0}
+										<JDGImageThumbnailGroup
+											imageMetaSet={imageDisplayData.resolvedImages}
+											maxImageHeight={'30svh'}
+										/>
+									{/if}
+									{#if imageDisplayData.missingImageKeys.length > 0 && isEditing}
+										<JDGMissingImageKeys
+											missingImageKeys={imageDisplayData.missingImageKeys}
+											onRemoveImage={(missingKey) => {
+												localEventStore.update((store) => {
+													const currentImages = store[key] || [];
+													const updatedImages = currentImages.filter(imgKey => imgKey !== missingKey);
+													return { ...store, [key]: updatedImages };
+												});
+											}}
+										/>
+									{/if}
+								</div>
+								<div class="image-source-note">See each image for its source</div>
+							{:else if !isEditing}
+								<div class="no-images-message">{noImageMessage}</div>
+							{/if}
 						{/if}
 					{/key}
 
