@@ -538,7 +538,6 @@
 										/>
 									{/if}
 								</div>
-								<div class="image-source-note">See each image for its source</div>
 							{:else if !isEditing}
 								<div class="no-images-message">{noImageMessage}</div>
 							{/if}
@@ -677,15 +676,6 @@
 
 	.image-list-display {
 		margin-bottom: 12px;
-	}
-
-	.image-source-note {
-		font-size: 0.85rem;
-		font-style: italic;
-		color: #666;
-		text-align: left;
-		margin-top: 8px;
-		margin-bottom: 8px;
 	}
 
 	.no-images-message {
