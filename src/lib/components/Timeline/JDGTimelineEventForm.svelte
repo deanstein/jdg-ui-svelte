@@ -325,23 +325,19 @@
 
 	<!-- Checkbox to use image data when there's exactly one image, disables description and source fields -->
 	{#if Array.isArray($localEventStore.images) && $localEventStore.images.length === 1 && isEditing}
-		<JDGInputContainer
-			label={'Image data override'}
-			hint="Image data will populate event description and source"
-		>
-			<div class="use-image-data-checkbox">
-				<JDGCheckbox
-					label="Use image data"
-					bind:isChecked={useImageData}
-					isEnabled={!!singleImageMeta}
-				/>
-				{#if hasSingleImage && !singleImageMeta && imageMetaRegistry}
-					<div class="image-meta-loading-note">
-						Unable to load image metadata. Please ensure the image registry is available.
-					</div>
-				{/if}
-			</div>
-		</JDGInputContainer>
+		<div class="use-image-data-checkbox">
+			<JDGCheckbox
+				label="Use image data?"
+				hint="Image data will populate event description and source"
+				bind:isChecked={useImageData}
+				isEnabled={!!singleImageMeta}
+			/>
+			{#if hasSingleImage && !singleImageMeta && imageMetaRegistry}
+				<div class="image-meta-loading-note">
+					Unable to load image metadata. Please ensure the image registry is available.
+				</div>
+			{/if}
+		</div>
 	{/if}
 
 	<!-- All fields from the schema -->
@@ -593,5 +589,9 @@
 		background-color: rgba(255, 255, 255, 0.5);
 		border-radius: 8px;
 		border: 2px solid rgba(200, 200, 200, 0.5);
+	}
+
+	.use-image-data-checkbox {
+		margin-bottom: 1svh;
 	}
 </style>

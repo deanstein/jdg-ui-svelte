@@ -1,5 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
+	
+	import JDGInputHint from './JDGInputHint.svelte';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
 
 	// Primary label for input component
@@ -24,11 +26,6 @@
 	const labelCss = css`
 		color: ${jdgColors.text};
 	`;
-
-	const descriptionCss = css`
-		color: ${jdgColors.textLight};
-		text-align: ${justification};
-	`;
 </script>
 
 <div class="jdg-input-container {inputContainerCss}">
@@ -39,13 +36,7 @@
 				{label}
 			</div>
 		</div>
-		{#if hint}
-			<div class="description-container">
-				<div class="description {descriptionCss}">
-					<i class="fa-solid fa-info-circle"></i>&nbsp;&nbsp;{hint}
-				</div>
-			</div>
-		{/if}
+		<JDGInputHint {hint} {justification} />
 	</div>
 	<!-- Slot for the actual input component -->
 	<slot />
@@ -68,12 +59,6 @@
 
 	.label {
 		font-size: 1.05rem;
-		line-height: normal;
-	}
-
-	.description {
-		font-size: 0.8rem;
-		margin-bottom: 0.5svh;
 		line-height: normal;
 	}
 
