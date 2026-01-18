@@ -137,7 +137,7 @@
 		availableWidthRef, isCaptionTooLong;
 		captionAttributionDynamicCss = css`
 			text-overflow: ${truncateText || availableWidth === 0 ? 'ellipsis' : 'clip'};
-			white-space: ${truncateText || availableWidth === 0 ? 'nowrap' : 'normal'};
+			white-space: ${truncateText || availableWidth === 0 ? 'nowrap' : 'pre-line'};
 		}`;
 	}
 
