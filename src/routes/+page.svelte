@@ -680,10 +680,7 @@
 						isEnabled={areFormInputsEnabled}
 					/>
 				</JDGInputContainer>
-				<JDGInputContainer
-					label="Select input with description"
-					hint="This is a description"
-				>
+				<JDGInputContainer label="Select input with description" hint="This is a description">
 					<JDGSelect
 						optionsGroup={exampleSelectOptions}
 						bind:inputValue={selectedColor}
@@ -693,10 +690,7 @@
 				<JDGInputContainer label="Button input">
 					<JDGButton label="Click me" onClickFunction={() => {}} isEnabled={areFormInputsEnabled} />
 				</JDGInputContainer>
-				<JDGInputContainer
-					label="Button input with description"
-					hint="This is a description"
-				>
+				<JDGInputContainer label="Button input with description" hint="This is a description">
 					<JDGButton label="Click me" onClickFunction={() => {}} isEnabled={areFormInputsEnabled} />
 				</JDGInputContainer>
 				<JDGInputContainer
