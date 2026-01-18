@@ -134,8 +134,11 @@
 		});
 	}
 
-	// Reset checkbox when image count changes (not exactly 1) or when exiting edit mode
-	$: if ((!hasSingleImage || !isEditing) && useImageData) {
+	// Reset checkbox when image count changes (not exactly 1), when exiting edit mode, or when event type is not 'media'
+	$: if (
+		(!hasSingleImage || !isEditing || $localEventStore.type !== jdgTimelineEventKeys.media) &&
+		useImageData
+	) {
 		useImageData = false;
 	}
 
@@ -324,21 +327,21 @@
 		</JDGInputContainer>
 	{/if}
 
-	<!-- Checkbox to use image data when there's exactly one image, disables description and source fields -->
-	{#if Array.isArray($localEventStore.images) && $localEventStore.images.length === 1 && isEditing}
-		<div class="use-image-data-checkbox">
+	<!-- Checkbox to use image data when there's exactly one image and event type is media, disables description and source fields -->
+	{#if Array.isArray($localEventStore.images) && $localEventStore.images.length === 1 && isEditing && $localEventStore.type === jdgTimelineEventKeys.media}
+		<JDGInputContainer label="Single image wrapper">
 			<JDGCheckbox
 				label="Use image data?"
-				hint="Image data will populate event description and source"
+				hint="Events with one image can optionally override event description and source with image data"
 				bind:isChecked={useImageData}
 				isEnabled={!!singleImageMeta}
 			/>
-			{#if hasSingleImage && !singleImageMeta && imageMetaRegistry}
-				<div class="image-meta-loading-note">
-					Unable to load image metadata. Please ensure the image registry is available.
-				</div>
-			{/if}
-		</div>
+		</JDGInputContainer>
+		{#if hasSingleImage && !singleImageMeta && imageMetaRegistry}
+			<div class="image-meta-loading-note">
+				Unable to load image metadata. Please ensure the image registry is available.
+			</div>
+		{/if}
 	{/if}
 
 	<!-- All fields from the schema -->
@@ -590,9 +593,5 @@
 		background-color: rgba(255, 255, 255, 0.5);
 		border-radius: 8px;
 		border: 2px solid rgba(200, 200, 200, 0.5);
-	}
-
-	.use-image-data-checkbox {
-		margin-bottom: 1svh;
 	}
 </style>
