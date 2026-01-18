@@ -589,26 +589,18 @@
 								});
 							}
 						: () => {
-								// Add the current draft to the host collection
+								// Add the current draft to the host collection (use draft, not local store)
 								draftTimelineHostCollection.update((currentValue) => {
 									addOrReplaceObjectByKeyValue(
 										currentValue[selectedHostCollectionKey],
 										'id',
-										$localTimelineHostStore.id,
-										$localTimelineHostStore
+										$draftTimelineHost.id,
+										$draftTimelineHost
 									);
 									return currentValue;
 								});
-								// Set the current draft to the local store
-								localTimelineHostStore.update((currentValue) => {
-									currentValue.name = $draftTimelineHostNameStore;
-									currentValue.inceptionDate = $draftTimelineHostInceptionDateStore;
-									currentValue.cessationDate = $draftTimelineHostCessationDateStore;
-									currentValue.avatarImage = $draftTimelineHost?.avatarImage || '';
-									currentValue.imageMetaRegistryRepo =
-										$draftTimelineHostImageMetaRegistryRepoNameStore || '';
-									return currentValue;
-								});
+								// Set the local store to match the draft (preserve all changes including timelineEvents)
+								localTimelineHostStore.set($draftTimelineHost);
 								draftTimelineHost.set(undefined);
 							}}
 				/>
