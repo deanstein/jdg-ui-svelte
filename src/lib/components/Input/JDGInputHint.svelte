@@ -4,6 +4,7 @@
 
 	// Optional hint text
 	export let hint = undefined;
+	export let showHintIcon = true;
 	// Justification for hint text alignment
 	export let justification = 'left';
 
@@ -16,7 +17,10 @@
 {#if hint}
 	<div class="description-container">
 		<div class="description {descriptionCss}">
-			<i class="fa-solid fa-info-circle"></i>&nbsp;&nbsp;{hint}
+			{#if showHintIcon}
+				<i class="fa-solid fa-info-circle"></i>&nbsp;&nbsp;
+			{/if}
+			{hint}
 		</div>
 	</div>
 {/if}

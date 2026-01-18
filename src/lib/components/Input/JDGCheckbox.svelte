@@ -43,7 +43,7 @@
 			</div>
 		{/if}
 	</div>
-	<JDGInputHint {hint} justification={justifyContent} />
+	<JDGInputHint {hint} justification={justifyContent} showHintIcon={false} />
 </div>
 
 <style>

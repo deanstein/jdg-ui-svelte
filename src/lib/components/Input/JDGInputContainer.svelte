@@ -8,6 +8,7 @@
 	export let label = 'Some Fact or Field Name';
 	// Optional description of the input
 	export let hint = undefined;
+	export let showHintIcon = true;
 	// Justification for all inputContainer content
 	export let justification = 'left';
 	// Whether the inputContainer should grow to fill available space
@@ -36,7 +37,7 @@
 				{label}
 			</div>
 		</div>
-		<JDGInputHint {hint} {justification} />
+		<JDGInputHint {hint} {justification} showHintIcon={showHintIcon} />
 	</div>
 	<!-- Slot for the actual input component -->
 	<slot />
