@@ -127,6 +127,9 @@ export { JDGImage };
 import JDGImageAvatar from './components/Image/JDGImageAvatar.svelte';
 export { JDGImageAvatar };
 
+import JDGMissingImageKeys from './components/Image/JDGMissingImageKeys.svelte';
+export { JDGMissingImageKeys };
+
 import JDGImageCaptionAttribution from './components/Image/JDGImageCaptionAttribution.svelte';
 export { JDGImageCaptionAttribution };
 
