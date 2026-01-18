@@ -17,7 +17,8 @@
 		resolveImageMetaKeys,
 		generateGradientPoints,
 		generateEventGradient,
-		constrainCorollaryColor
+		constrainCorollaryColor,
+		getImageMetaByKey
 	} from '$lib/jdg-utils.js';
 	import { upgradeTimelineEvent } from '$lib/jdg-timeline-management.js';
 
@@ -298,6 +299,19 @@
 		}
 	}
 
+	// Get the first image metadata if isImageWrapper is true
+	$: firstImageMetaForDisplay =
+		upgradedEvent?.isImageWrapper &&
+		upgradedEvent?.images?.length > 0 &&
+		imageMetaRegistry &&
+		upgradedEvent.images[0]
+			? getImageMetaByKey(imageMetaRegistry, upgradedEvent.images[0])
+			: null;
+
+	// Use image caption for description if isImageWrapper is true, otherwise use event description
+	$: displayDescription =
+		firstImageMetaForDisplay?.caption || upgradedEvent?.description || 'Event description';
+
 	// For approximate dates with month=01 and day=01, hide the date div entirely
 	$: hideDateDiv =
 		upgradedEvent?.isApprxDate &&
@@ -484,7 +498,7 @@
 		</div>
 		<div class="timeline-event-content {eventGradientCss}">
 			<div class="timeline-event-description {eventDescriptionCss} {eventDescriptionDynamicCss}">
-				{upgradedEvent?.description ? upgradedEvent?.description : 'Event description'}
+				{displayDescription}
 			</div>
 			{#if upgradedEvent?.images?.length > 0}
 				{@const resolvedImages = resolveImageMetaKeys(upgradedEvent.images, imageMetaRegistry)}
