@@ -1,5 +1,5 @@
 <script>
-	import { getContext, setContext } from 'svelte';
+	import { getContext, setContext, onDestroy } from 'svelte';
 	import { writable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
@@ -21,6 +21,7 @@
 		isTimelineEventModalEditable,
 		modalGradientColors,
 		repoName as currentRepoName,
+		showImageEditButtons,
 		showImageMetaModal,
 		showTimelineEventModal,
 		showImageViewerModal,
@@ -48,11 +49,13 @@
 		JDGComposeToolbar,
 		JDGFlyout,
 		JDGImageAvatar,
+		JDGInputContainer,
 		JDGModal,
 		JDGPortal,
 		JDGRandomGradient,
 		JDGSaveStateBanner,
 		JDGSlider,
+		JDGTextInput,
 		JDGTimelineEvent,
 		JDGTimelineEventModal
 	} from '$lib/index.js';
@@ -198,6 +201,14 @@
 	// Remember the last zoom value before unchecking, so we can restore it
 	let lastZoomValue = 0;
 
+	// Auto-scroll state (only available in admin mode)
+	let isAutoScrolling = false;
+	let autoScrollSpeed = 1; // Speed multiplier (0.1 to 6)
+	let autoScrollDelay = '2'; // Delay in seconds before starting scroll (as string for input)
+	let autoScrollAnimationFrame = null;
+	let autoScrollDelayTimeout = null;
+	let previousShowImageEditButtons = true; // Store the previous value to restore it
+
 	// EVENT GRADIENTS
 	// Number of gradient points per event (default: 3)
 	const gradientPointsCount = 3;
@@ -278,6 +289,124 @@
 		// Reset zoom to 0 when relative spacing is disabled (but we saved it in lastZoomValue)
 		timelineZoom = 0;
 	};
+
+	// Track last scroll position to detect manual scrolling
+	let lastScrollTop = 0;
+	let isProgrammaticScroll = false;
+	let userScrollTimeout = null;
+
+	// Handle manual scroll detection
+	const handleScroll = () => {
+		if (!scrollingCanvasDivRef || !isAutoScrolling) return;
+		// Ignore scroll events caused by programmatic scrolling
+		if (isProgrammaticScroll) return;
+		
+		const currentScrollTop = scrollingCanvasDivRef.scrollTop;
+		// If scroll position changed significantly, it might be manual
+		const scrollDelta = Math.abs(currentScrollTop - lastScrollTop);
+		if (scrollDelta > 5) {
+			// Clear any existing timeout
+			if (userScrollTimeout) {
+				clearTimeout(userScrollTimeout);
+			}
+			// Check after a short delay to confirm it was manual
+			userScrollTimeout = setTimeout(() => {
+				// If scroll position changed significantly and we're still auto-scrolling, stop it
+				const newScrollTop = scrollingCanvasDivRef?.scrollTop;
+				if (newScrollTop !== undefined && Math.abs(newScrollTop - lastScrollTop) > 5 && isAutoScrolling) {
+					stopAutoScroll();
+				}
+				userScrollTimeout = null;
+			}, 150);
+		}
+		lastScrollTop = currentScrollTop;
+	};
+
+	// Auto-scroll functions
+	const startAutoScroll = () => {
+		if (isAutoScrolling || !scrollingCanvasDivRef) return;
+		isAutoScrolling = true;
+		isProgrammaticScroll = false;
+		lastScrollTop = scrollingCanvasDivRef.scrollTop;
+		
+		// Hide image edit buttons while auto-scrolling
+		previousShowImageEditButtons = $showImageEditButtons;
+		showImageEditButtons.set(false);
+		
+		// Wait for the delay before starting to scroll
+		const delaySeconds = parseFloat(autoScrollDelay) || 0;
+		const delayMs = Math.max(0, delaySeconds) * 1000; // Convert seconds to milliseconds
+		autoScrollDelayTimeout = setTimeout(() => {
+			autoScrollDelayTimeout = null;
+			const baseSpeed = 0.5; // Base pixels per frame
+			const scroll = () => {
+				if (!isAutoScrolling || !scrollingCanvasDivRef) {
+					autoScrollAnimationFrame = null;
+					isProgrammaticScroll = false;
+					return;
+				}
+				const scrollAmount = baseSpeed * autoScrollSpeed;
+				const previousScrollTop = scrollingCanvasDivRef.scrollTop;
+				// Mark that we're about to do programmatic scrolling
+				isProgrammaticScroll = true;
+				scrollingCanvasDivRef.scrollTop += scrollAmount;
+				// Reset flag after a brief moment (allows scroll event to be ignored)
+				setTimeout(() => {
+					isProgrammaticScroll = false;
+				}, 10);
+				// Check if scroll actually happened (might be at bottom)
+				if (Math.abs(scrollingCanvasDivRef.scrollTop - previousScrollTop) < 0.1) {
+					// Can't scroll further, stop
+					stopAutoScroll();
+				} else {
+					lastScrollTop = scrollingCanvasDivRef.scrollTop;
+					// Check if we've reached the bottom
+					const maxScroll = scrollingCanvasDivRef.scrollHeight - scrollingCanvasDivRef.clientHeight;
+					if (scrollingCanvasDivRef.scrollTop >= maxScroll - 1) {
+						// Reached bottom, stop scrolling
+						stopAutoScroll();
+					} else {
+						autoScrollAnimationFrame = requestAnimationFrame(scroll);
+					}
+				}
+			};
+			autoScrollAnimationFrame = requestAnimationFrame(scroll);
+		}, delayMs);
+	};
+
+	const stopAutoScroll = () => {
+		isAutoScrolling = false;
+		isProgrammaticScroll = false;
+		// Restore image edit buttons
+		showImageEditButtons.set(previousShowImageEditButtons);
+		// Clear delay timeout if it exists
+		if (autoScrollDelayTimeout !== null) {
+			clearTimeout(autoScrollDelayTimeout);
+			autoScrollDelayTimeout = null;
+		}
+		// Clear animation frame if it exists
+		if (autoScrollAnimationFrame !== null) {
+			cancelAnimationFrame(autoScrollAnimationFrame);
+			autoScrollAnimationFrame = null;
+		}
+	};
+
+	const toggleAutoScroll = () => {
+		if (isAutoScrolling) {
+			stopAutoScroll();
+		} else {
+			startAutoScroll();
+		}
+	};
+
+	const onAutoScrollSpeedChange = (newValue) => {
+		autoScrollSpeed = newValue;
+	};
+
+	// Clean up animation frame on component destroy
+	onDestroy(() => {
+		stopAutoScroll();
+	});
 
 	// Track the last timelineHost ID to detect when it changes
 	let lastTimelineHostId = null;
@@ -662,7 +791,7 @@
 		<!-- Actions Bar -->
 		<div
 			class="timeline-actions-bar {timelineSupportingTextCss}"
-			style="position: relative; z-index: 1;"
+			style="position: relative; z-index: 10;"
 		>
 			<div class="timeline-event-count {timelineEventCountCss}">
 				Showing {timelineRowItems.length + (emptyStateEvent ? 1 : 0) + (todayEvent ? 1 : 0)} timeline
@@ -693,6 +822,38 @@
 						onChange={onZoomChange}
 						isEnabled={useRelativeSpacing}
 					/>
+					{#if $isAdminMode}
+						<div class="auto-scroll-section">
+							<div class="auto-scroll-title">Auto Scroll</div>
+							<JDGInputContainer label="Delay (seconds)">
+								<JDGTextInput
+									bind:inputValue={autoScrollDelay}
+									isEnabled={!isAutoScrolling}
+									placeholder="2"
+								/>
+							</JDGInputContainer>
+							<div class="auto-scroll-buttons">
+								<JDGButton
+									label={isAutoScrolling ? 'Pause' : 'Start'}
+									faIcon={isAutoScrolling ? 'fa-pause' : 'fa-play'}
+									onClickFunction={toggleAutoScroll}
+									fontSize="14px"
+									paddingLeftRight="12px"
+									paddingTopBottom="6px"
+									backgroundColor={isAutoScrolling ? jdgColors.cancel : jdgColors.active}
+								/>
+							</div>
+							<JDGSlider
+								label="Scroll speed"
+								bind:value={autoScrollSpeed}
+								min={0.1}
+								max={6}
+								step={0.1}
+								onChange={onAutoScrollSpeedChange}
+								isEnabled={true}
+							/>
+						</div>
+					{/if}
 				</div>
 			</JDGFlyout>
 		</div>
@@ -703,7 +864,7 @@
 					<div class="timeline-spine-line" />
 				</div>
 			</div>
-			<div class="timeline-scrolling-canvas" bind:this={scrollingCanvasDivRef}>
+			<div class="timeline-scrolling-canvas" bind:this={scrollingCanvasDivRef} on:scroll={handleScroll}>
 				<!-- The grid containing all timeline events -->
 				<div class="timeline-event-grid {timelineEventGridCss}">
 					<!-- If there are no events, make an empty state event at the top -->
@@ -942,5 +1103,24 @@
 		flex-direction: column;
 		gap: 16px;
 		padding: 8px 0;
+	}
+
+	.auto-scroll-section {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		padding-top: 8px;
+		border-top: 1px solid rgba(200, 200, 200, 0.5);
+	}
+
+	.auto-scroll-title {
+		font-weight: bold;
+		font-size: 1.05rem;
+		margin-bottom: 4px;
+	}
+
+	.auto-scroll-buttons {
+		display: flex;
+		justify-content: center;
 	}
 </style>
