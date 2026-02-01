@@ -12,10 +12,16 @@
     "attribution": "Author"
   },
   "cc_1": {
+    "id": "cdf1f86d-e6f1-4eea-a1c7-fe3b0cdbc8f7",
     "src": "https://res.cloudinary.com/jdg-main/image/upload/v1716959962/jdg-ui-svelte/history/CCP1_fgtgm4.jpg",
-    "alt": "The Blue Mall as seen in 1968.",
     "caption": "The Blue Mall as seen in 1968.",
-    "attribution": "Englewood Public Library"
+    "attribution": "Englewood Public Library",
+    "alt": "The Blue Mall as seen in 1968.",
+    "title": "",
+    "showBackgroundBlur": true,
+    "toolbarJustification": "right",
+    "version": "0.7.0",
+    "date": "1968-02-21"
   },
   "ccp_ouatacc_white": {
     "src": "https://res.cloudinary.com/jdg-main/image/upload/v1716959962/jdg-ui-svelte/ccp/ouatacc-white_sa1pne.png",
