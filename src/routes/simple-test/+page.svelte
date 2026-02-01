@@ -13,6 +13,12 @@
 <JDGContentContainer overlapWithHeader={false}>
 	<JDGContentBoxFloating>
 		<JDGImageTile
+			imageMeta={imageMetaRegistry.hst.fms_2000s_plan_additions}
+			showCaption={true}
+			showAttribution={true}
+			cropToFillContainer={false}
+		/>
+		<JDGImageTile
 			imageMeta={imageMetaRegistry.ccm._1967_blue_mall_interior_rendering}
 			showCaption={true}
 			showAttribution={true}
