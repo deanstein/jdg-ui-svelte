@@ -275,10 +275,31 @@
 	$: {
 		// Ensure the event is upgraded and updated if the input changes
 		upgradedEvent = upgradeTimelineEvent(timelineEvent);
+	}
 
-		// Update the age of the event
+	// Get the first image metadata if isMediaWrapper is true
+	$: firstImageMetaForDisplay =
+		upgradedEvent?.isMediaWrapper &&
+		upgradedEvent?.images?.length > 0 &&
+		imageMetaRegistry &&
+		upgradedEvent.images[0]
+			? getImageMetaByKey(imageMetaRegistry, upgradedEvent.images[0])
+			: null;
+
+	// Use image date and isApprxDate when isMediaWrapper, otherwise use event fields
+	$: effectiveDate =
+		upgradedEvent?.isMediaWrapper && firstImageMetaForDisplay?.date != null
+			? firstImageMetaForDisplay.date
+			: upgradedEvent?.date;
+	$: effectiveIsApprxDate =
+		upgradedEvent?.isMediaWrapper && firstImageMetaForDisplay?.isApprxDate != null
+			? firstImageMetaForDisplay.isApprxDate
+			: upgradedEvent?.isApprxDate ?? false;
+
+	$: {
+		// Update the age of the event from effective date (image date when isMediaWrapper)
 		if (upgradedEvent) {
-			eventDateCorrected = new Date(upgradedEvent.date);
+			eventDateCorrected = new Date(effectiveDate ?? upgradedEvent?.date ?? '');
 
 			const ageData = getYearsAndMonthsBetweenDates(timelineHost.inceptionDate, eventDateCorrected);
 			eventAge = ageData.years;
@@ -299,22 +320,13 @@
 		}
 	}
 
-	// Get the first image metadata if isMediaWrapper is true
-	$: firstImageMetaForDisplay =
-		upgradedEvent?.isMediaWrapper &&
-		upgradedEvent?.images?.length > 0 &&
-		imageMetaRegistry &&
-		upgradedEvent.images[0]
-			? getImageMetaByKey(imageMetaRegistry, upgradedEvent.images[0])
-			: null;
-
 	// Use image caption for description if isMediaWrapper is true, otherwise use event description
 	$: displayDescription =
 		firstImageMetaForDisplay?.caption || upgradedEvent?.description || 'Event description';
 
 	// For approximate dates with month=01 and day=01, hide the date div entirely
 	$: hideDateDiv =
-		upgradedEvent?.isApprxDate &&
+		effectiveIsApprxDate &&
 		eventDateCorrected?.getUTCMonth() === 0 &&
 		eventDateCorrected?.getUTCDate() === 1;
 
@@ -393,7 +405,7 @@
 				? eventDateCorrected?.getUTCFullYear()
 				: 'Year?'}
 		</div>
-		{#if upgradedEvent?.isApprxDate}
+		{#if effectiveIsApprxDate}
 			<div class="timeline-event-date-apprx">(apprx.)</div>
 		{/if}
 	</div>

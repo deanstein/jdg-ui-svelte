@@ -166,6 +166,10 @@
 		$localEventStore.isMediaWrapper && firstImageMeta?.date
 			? firstImageMeta.date
 			: $localEventStore.date ?? '';
+	$: displayIsApprxDate =
+		$localEventStore.isMediaWrapper && firstImageMeta?.isApprxDate != null
+			? firstImageMeta.isApprxDate
+			: $localEventStore.isApprxDate ?? false;
 
 	// Reactive computed values for checkbox visibility
 	// Checkbox should appear if type supports it, regardless of isMediaWrapper value
@@ -419,7 +423,7 @@
 						{#if isAdditional}
 							<JDGDatePicker bind:inputValue={$localAdditionalStore[key]} isEnabled={isEditing} />
 						{:else if key === 'date'}
-							{#key `${$localEventStore.isMediaWrapper}-${displayDate}`}
+							{#key `${$localEventStore.isMediaWrapper}-${displayDate}-${displayIsApprxDate}`}
 								{#if $localEventStore.isMediaWrapper}
 									<JDGDatePicker inputValue={displayDate} isEnabled={false} />
 								{:else}
@@ -429,11 +433,21 @@
 						{:else}
 							<JDGDatePicker bind:inputValue={$localEventStore[key]} isEnabled={isEditing} />
 						{/if}
-						<JDGCheckbox
-							label="Is approximate?"
-							bind:isChecked={$localEventStore.isApprxDate}
-							isEnabled={isEditing}
-						/>
+						{#key `${$localEventStore.isMediaWrapper}-${displayIsApprxDate}`}
+							{#if $localEventStore.isMediaWrapper}
+								<JDGCheckbox
+									label="Is approximate?"
+									isChecked={displayIsApprxDate}
+									isEnabled={false}
+								/>
+							{:else}
+								<JDGCheckbox
+									label="Is approximate?"
+									bind:isChecked={$localEventStore.isApprxDate}
+									isEnabled={isEditing}
+								/>
+							{/if}
+						{/key}
 					</div>
 				{:else if def.inputType === JDG_INPUT_TYPES.TEXT}
 					{#if isAdditional}

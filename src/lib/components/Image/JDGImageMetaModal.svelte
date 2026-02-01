@@ -1077,13 +1077,16 @@
 						</div>
 					{/if}
 					<JDGInputContainer label="Date">
-						<JDGDatePicker bind:inputValue={$draftImageMeta.date} />
+						<div class="input-with-checkbox">
+							<JDGDatePicker bind:inputValue={$draftImageMeta.date} />
+							<JDGCheckbox label="Is approximate?" bind:isChecked={$draftImageMeta.isApprxDate} />
+						</div>
 					</JDGInputContainer>
 					<JDGInputContainer label="Caption">
 						<JDGTextArea bind:inputValue={$draftImageMeta.caption} />
 					</JDGInputContainer>
 					<JDGInputContainer label="Alt">
-						<div style="display: flex; flex-direction: column; gap: 8px;">
+						<div class="input-with-checkbox">
 							<JDGTextArea bind:inputValue={$draftImageMeta.alt} isEnabled={!syncAltWithCaption} />
 							<JDGCheckbox bind:isChecked={syncAltWithCaption} label="Sync Alt with Caption" />
 						</div>
@@ -1157,6 +1160,12 @@
 
 	.check-usage-button-container {
 		margin-bottom: 10px;
+	}
+
+	.input-with-checkbox {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
 	}
 
 	.modal-column {

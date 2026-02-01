@@ -15,6 +15,8 @@ const jdgImageMeta = {
 	title: undefined,
 	// Date associated with the image (e.g. when it was taken or published)
 	date: undefined,
+	// Whether the date is approximate (e.g. year-only or estimated)
+	isApprxDate: false,
 	// An image can fill the rest of its container
 	// with a blurred copy of itself
 	// Set this to false for plans and diagrams
