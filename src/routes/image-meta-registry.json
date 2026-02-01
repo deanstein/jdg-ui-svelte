@@ -18,8 +18,8 @@
     "attribution": "Englewood Public Library",
     "alt": "The Blue Mall as seen in 1968.",
     "title": "",
-    "date": "1968-02-21",
-    "isApprxDate": false,
+    "date": "1968-02-01",
+    "isApprxDate": true,
     "showBackgroundBlur": true,
     "toolbarJustification": "right",
     "version": "0.7.1"
