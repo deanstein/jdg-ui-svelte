@@ -152,8 +152,7 @@
 		return { resolvedImages, missingImageKeys };
 	}
 
-	// Display values for description, source, and date - use image data if isMediaWrapper is true
-	// Otherwise use the stored values (which should be preserved in the database)
+	// Display values for description and source - use image data if isMediaWrapper is true
 	$: displayDescription =
 		$localEventStore.isMediaWrapper && firstImageMeta?.caption
 			? firstImageMeta.caption
@@ -162,11 +161,13 @@
 		$localEventStore.isMediaWrapper && firstImageMeta?.attribution
 			? firstImageMeta.attribution
 			: $localEventStore.source ?? '';
-	$: displayDate =
-		$localEventStore.isMediaWrapper && firstImageMeta?.date
+
+	// When event is a media wrapper, use image date/isApprxDate if they exist; otherwise use event values (same as JDGTimelineEvent)
+	$: effectiveDate =
+		$localEventStore.isMediaWrapper && firstImageMeta?.date != null
 			? firstImageMeta.date
 			: $localEventStore.date ?? '';
-	$: displayIsApprxDate =
+	$: effectiveIsApprxDate =
 		$localEventStore.isMediaWrapper && firstImageMeta?.isApprxDate != null
 			? firstImageMeta.isApprxDate
 			: $localEventStore.isApprxDate ?? false;
@@ -423,9 +424,9 @@
 						{#if isAdditional}
 							<JDGDatePicker bind:inputValue={$localAdditionalStore[key]} isEnabled={isEditing} />
 						{:else if key === 'date'}
-							{#key `${$localEventStore.isMediaWrapper}-${displayDate}-${displayIsApprxDate}`}
+							{#key `${$localEventStore.isMediaWrapper}-${effectiveDate}-${effectiveIsApprxDate}`}
 								{#if $localEventStore.isMediaWrapper}
-									<JDGDatePicker inputValue={displayDate} isEnabled={false} />
+									<JDGDatePicker inputValue={effectiveDate} isEnabled={false} />
 								{:else}
 									<JDGDatePicker bind:inputValue={$localEventStore.date} isEnabled={isEditing} />
 								{/if}
@@ -433,11 +434,11 @@
 						{:else}
 							<JDGDatePicker bind:inputValue={$localEventStore[key]} isEnabled={isEditing} />
 						{/if}
-						{#key `${$localEventStore.isMediaWrapper}-${displayIsApprxDate}`}
+						{#key `${$localEventStore.isMediaWrapper}-${effectiveIsApprxDate}`}
 							{#if $localEventStore.isMediaWrapper}
 								<JDGCheckbox
 									label="Is approximate?"
-									isChecked={displayIsApprxDate}
+									isChecked={effectiveIsApprxDate}
 									isEnabled={false}
 								/>
 							{:else}
