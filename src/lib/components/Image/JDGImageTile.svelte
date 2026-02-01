@@ -32,6 +32,7 @@
 	export let showHorizontalStripesOnHover = true;
 	export let showCaption = false;
 	export let showAttribution = false;
+	export let showDate = false;
 	export let recordAspectRatioInState = false;
 	export let showDebugOverlay = false;
 
@@ -147,6 +148,7 @@
 				{showBlurInUnfilledSpace}
 				showCaption={showCaption && !(showBlurInUnfilledSpace || cropToFillContainer)}
 				showAttribution={showAttribution && !(cropToFillContainer || showBlurInUnfilledSpace)}
+				{showDate}
 				{recordAspectRatioInState}
 				{showDebugOverlay}
 			/>
@@ -158,6 +160,7 @@
 				{imageMeta}
 				{showCaption}
 				{showAttribution}
+				{showDate}
 				backgroundColorRgba={setRgbaAlpha(jdgColors.imageLabelBackground, 1.0)}
 			/>
 		</div>

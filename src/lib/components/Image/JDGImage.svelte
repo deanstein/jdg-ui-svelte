@@ -79,6 +79,7 @@
 	export let showHoverEffect = false; // zoom image slightly on hover
 	export let showCaption = false;
 	export let showAttribution = false;
+	export let showDate = false;
 	export let showPlaceholderImage = true;
 	export let showLoadingSpinner = true;
 	export let alignLoadingSpinner = 'center';
@@ -1039,7 +1040,7 @@
 		<!-- caption and attribution -->
 		{#if (showCaption && imageMeta.caption) || (showAttribution && imageMeta.attribution)}
 			<div class="caption-attribution-wrapper {captionAttributionWrapperCssDynamic}">
-				<JDGImageCaptionAttribution {imageMeta} {showCaption} {showAttribution} />
+				<JDGImageCaptionAttribution {imageMeta} {showCaption} {showAttribution} {showDate} />
 			</div>
 		{/if}
 		<!-- show the spinner during loading if requested -->

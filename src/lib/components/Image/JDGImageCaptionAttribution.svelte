@@ -81,7 +81,8 @@
 		'December'
 	];
 
-	// Format date when showDate is true. Use "Circa" only when year-only (isApprx and month 01 and day 01).
+	// Format date when showDate is true. 
+	// Use "Circa" only when year-only (isApprx and month 01 and day 01).
 	$: formattedDateDisplay = showDate
 		? (() => {
 				const raw = imageMeta?.date;
@@ -252,7 +253,7 @@
 						</div>
 					</div>
 				{/if}
-				{#if formattedDateDisplay}
+				{#if showDate && formattedDateDisplay}
 					<div
 						class="caption-attribution-flex-container {captionAttributionDynamicCss} {attributionCss}"
 					>
