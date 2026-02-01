@@ -66,7 +66,10 @@
 		/>
 		<!-- only show caption/attribution if image is not scaled -->
 		{#if $imageViewerScale === 1.0 && (imageMeta.caption || imageMeta.attribution)}
-			<div class="image-caption-attribution-wrapper" style="width: {$imageViewerWidth}px">
+			<div
+				class="image-caption-attribution-wrapper"
+				style="width: {$imageViewerWidth}px; max-width: 100%;"
+			>
 				<JDGImageCaptionAttribution {imageMeta} truncateText={false} />
 			</div>
 		{/if}
@@ -88,5 +91,6 @@
 
 	.image-caption-attribution-wrapper {
 		position: relative;
+		box-sizing: border-box;
 	}
 </style>

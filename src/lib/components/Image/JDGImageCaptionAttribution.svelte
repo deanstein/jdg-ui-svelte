@@ -326,10 +326,11 @@
 
 	.caption-text,
 	.attribution-text {
+		box-sizing: border-box;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		width: 100%;
-		padding: 2px 0;
+		padding: 2px 0.5rem 2px 0.5rem;
 	}
 
 	.expand-collapse-button-container {
