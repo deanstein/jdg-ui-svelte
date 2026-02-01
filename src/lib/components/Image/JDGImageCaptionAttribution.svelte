@@ -81,8 +81,8 @@
 		'December'
 	];
 
-	// Format date when showDate is true. 
-	// Use "Circa" only when year-only (isApprx and month 01 and day 01).
+	// Format date when showDate is true
+	// Use "Circa" only when year-only (isApprx and month 01 and day 01)
 	$: formattedDateDisplay = showDate
 		? (() => {
 				const raw = imageMeta?.date;
@@ -307,7 +307,7 @@
 
 	.caption-attribution-grid-container {
 		display: grid;
-		align-items: flex-start;
+		align-items: center;
 		justify-content: center;
 		text-align: center;
 		gap: 0.05rem;
@@ -329,6 +329,7 @@
 		box-sizing: border-box;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		line-height: 1;
 		width: 100%;
 		padding: 2px 0.5rem 2px 0.5rem;
 	}
