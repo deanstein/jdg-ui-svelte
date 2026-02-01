@@ -43,6 +43,7 @@
 		JDGModal,
 		JDGNotificationBanner,
 		JDGSaveStateBanner,
+		JDGDatePicker,
 		JDGSelect,
 		JDGTextArea,
 		JDGTextInput
@@ -1089,6 +1090,9 @@
 					</JDGInputContainer>
 					<JDGInputContainer label="Title">
 						<JDGTextInput bind:inputValue={$draftImageMeta.title} />
+					</JDGInputContainer>
+					<JDGInputContainer label="Date">
+						<JDGDatePicker bind:inputValue={$draftImageMeta.date} />
 					</JDGInputContainer>
 					<JDGInputContainer label="Show background blur?">
 						<label>

@@ -13,6 +13,8 @@ const jdgImageMeta = {
 	alt: undefined,
 	// Shows a tooltip on hover
 	title: undefined,
+	// Date associated with the image (e.g. when it was taken or published)
+	date: undefined,
 	// An image can fill the rest of its container
 	// with a blurred copy of itself
 	// Set this to false for plans and diagrams
