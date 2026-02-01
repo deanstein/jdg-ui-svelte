@@ -12,6 +12,7 @@
 	export let imageMeta;
 	export let showCaption = true;
 	export let showAttribution = true;
+	export let showDate = true;
 	export let truncateText = true;
 	export let matchBodyCopyPadding = false; // if true, uses same padding as body copy (for full-width use only)
 	export let maxTextWidthPx = undefined; // useful for cases where caption/attribution is outside image but must match image width
@@ -65,7 +66,37 @@
 		return Math.abs(availableWidth - maxTextWidthPx) / 2;
 	};
 
-	const attributionPrefix = 'Image Source: ';
+	const fullMonthNames = [
+		'January',
+		'February',
+		'March',
+		'April',
+		'May',
+		'June',
+		'July',
+		'August',
+		'September',
+		'October',
+		'November',
+		'December'
+	];
+
+	// Format date when showDate is true. Use "Circa" only when year-only (isApprx and month 01 and day 01).
+	$: formattedDateDisplay = showDate
+		? (() => {
+				const raw = imageMeta?.date;
+				if (raw == null || raw === '') return '';
+				const d = new Date(raw);
+				if (isNaN(d.getTime())) return '';
+				const isApprx = !!imageMeta?.isApprxDate;
+				const month = d.getUTCMonth();
+				const day = d.getUTCDate();
+				const year = d.getUTCFullYear();
+				if (isApprx && month === 0 && day === 1) return `Circa ${year}`;
+				if (isApprx && day === 1) return `${fullMonthNames[month]} ${year}`;
+				return `${fullMonthNames[month]} ${day}, ${year}`;
+			})()
+		: '';
 
 	const captionAttributionContainerCss = css`
 		color: ${jdgColors.text};
@@ -201,7 +232,7 @@
 	}
 </script>
 
-{#if imageMeta.caption || imageMeta.imageAttribution}
+{#if imageMeta.caption || imageMeta.attribution || (showDate && formattedDateDisplay)}
 	<div bind:this={availableWidthRef} class="jdg-caption-attribution-available-width-ref">
 		<div
 			class="jdg-caption-attribution-container {captionAttributionContainerCss} {captionAttributionContainerDynamicCss} {textWidthSizingCss}"
@@ -221,12 +252,21 @@
 						</div>
 					</div>
 				{/if}
+				{#if formattedDateDisplay}
+					<div
+						class="caption-attribution-flex-container {captionAttributionDynamicCss} {attributionCss}"
+					>
+						<div class="attribution-text">
+							{formattedDateDisplay}
+						</div>
+					</div>
+				{/if}
 				{#if showAttribution && imageMeta.attribution}
 					<div
 						class="caption-attribution-flex-container {captionAttributionDynamicCss} {attributionCss}"
 					>
 						<div class="attribution-text">
-							{attributionPrefix + imageMeta.attribution}
+							{imageMeta.attribution}
 						</div>
 					</div>
 				{/if}
@@ -269,7 +309,7 @@
 		align-items: flex-start;
 		justify-content: center;
 		text-align: center;
-		gap: 0.2rem;
+		gap: 0.05rem;
 		width: 100%;
 		box-sizing: border-box;
 		flex: 1;
@@ -283,18 +323,12 @@
 		overflow: hidden;
 	}
 
-	.caption-text {
-		overflow: hidden;
-		text-overflow: ellipsis;
-		width: 100%;
-		padding: 3px 0 0 0;
-	}
-
+	.caption-text,
 	.attribution-text {
 		overflow: hidden;
 		text-overflow: ellipsis;
 		width: 100%;
-		padding: 0 0 3px 0;
+		padding: 2px 0;
 	}
 
 	.expand-collapse-button-container {
