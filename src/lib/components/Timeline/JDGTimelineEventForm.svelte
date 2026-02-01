@@ -152,7 +152,7 @@
 		return { resolvedImages, missingImageKeys };
 	}
 
-	// Display values for description and source - use image data if isMediaWrapper is true
+	// Display values for description, source, and date - use image data if isMediaWrapper is true
 	// Otherwise use the stored values (which should be preserved in the database)
 	$: displayDescription =
 		$localEventStore.isMediaWrapper && firstImageMeta?.caption
@@ -162,6 +162,10 @@
 		$localEventStore.isMediaWrapper && firstImageMeta?.attribution
 			? firstImageMeta.attribution
 			: $localEventStore.source ?? '';
+	$: displayDate =
+		$localEventStore.isMediaWrapper && firstImageMeta?.date
+			? firstImageMeta.date
+			: $localEventStore.date ?? '';
 
 	// Reactive computed values for checkbox visibility
 	// Checkbox should appear if type supports it, regardless of isMediaWrapper value
@@ -393,7 +397,7 @@
 		<JDGInputContainer label="Media wrapper">
 			<JDGCheckbox
 				label={jdgTimelineEvent.isMediaWrapper.label}
-				hint="Optionally use description and source from the first media item in this event"
+				hint="Optionally use date, description, and source from the media item in this event"
 				bind:isChecked={$localEventStore.isMediaWrapper}
 			/>
 		</JDGInputContainer>
@@ -413,6 +417,14 @@
 					<div class="date-with-checkbox">
 						{#if isAdditional}
 							<JDGDatePicker bind:inputValue={$localAdditionalStore[key]} isEnabled={isEditing} />
+						{:else if key === 'date'}
+							{#key `${$localEventStore.isMediaWrapper}-${displayDate}`}
+								{#if $localEventStore.isMediaWrapper}
+									<JDGDatePicker inputValue={displayDate} isEnabled={false} />
+								{:else}
+									<JDGDatePicker bind:inputValue={$localEventStore.date} isEnabled={isEditing} />
+								{/if}
+							{/key}
 						{:else}
 							<JDGDatePicker bind:inputValue={$localEventStore[key]} isEnabled={isEditing} />
 						{/if}
