@@ -20,7 +20,7 @@ const jdgTimelineEvent = {
 		label: 'Approximate date?',
 		inputType: JDG_INPUT_TYPES.CHECKBOX
 	},
-	// If true, this event will use the description and source 
+	// If true, this event will use the description and source
 	// from the first media item (images or in the future, videos)
 	isMediaWrapper: {
 		default: false,

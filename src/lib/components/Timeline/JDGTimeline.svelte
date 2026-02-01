@@ -300,7 +300,7 @@
 		if (!scrollingCanvasDivRef || !isAutoScrolling) return;
 		// Ignore scroll events caused by programmatic scrolling
 		if (isProgrammaticScroll) return;
-		
+
 		const currentScrollTop = scrollingCanvasDivRef.scrollTop;
 		// If scroll position changed significantly, it might be manual
 		const scrollDelta = Math.abs(currentScrollTop - lastScrollTop);
@@ -313,7 +313,11 @@
 			userScrollTimeout = setTimeout(() => {
 				// If scroll position changed significantly and we're still auto-scrolling, stop it
 				const newScrollTop = scrollingCanvasDivRef?.scrollTop;
-				if (newScrollTop !== undefined && Math.abs(newScrollTop - lastScrollTop) > 5 && isAutoScrolling) {
+				if (
+					newScrollTop !== undefined &&
+					Math.abs(newScrollTop - lastScrollTop) > 5 &&
+					isAutoScrolling
+				) {
 					stopAutoScroll();
 				}
 				userScrollTimeout = null;
@@ -328,11 +332,11 @@
 		isAutoScrolling = true;
 		isProgrammaticScroll = false;
 		lastScrollTop = scrollingCanvasDivRef.scrollTop;
-		
+
 		// Hide image edit buttons while auto-scrolling
 		previousShowImageEditButtons = $showImageEditButtons;
 		showImageEditButtons.set(false);
-		
+
 		// Wait for the delay before starting to scroll
 		const delaySeconds = parseFloat(autoScrollDelay) || 0;
 		const delayMs = Math.max(0, delaySeconds) * 1000; // Convert seconds to milliseconds
@@ -864,7 +868,11 @@
 					<div class="timeline-spine-line" />
 				</div>
 			</div>
-			<div class="timeline-scrolling-canvas" bind:this={scrollingCanvasDivRef} on:scroll={handleScroll}>
+			<div
+				class="timeline-scrolling-canvas"
+				bind:this={scrollingCanvasDivRef}
+				on:scroll={handleScroll}
+			>
 				<!-- The grid containing all timeline events -->
 				<div class="timeline-event-grid {timelineEventGridCss}">
 					<!-- If there are no events, make an empty state event at the top -->

@@ -37,7 +37,7 @@
 				{label}
 			</div>
 		</div>
-		<JDGInputHint {hint} {justification} showHintIcon={showHintIcon} />
+		<JDGInputHint {hint} {justification} {showHintIcon} />
 	</div>
 	<!-- Slot for the actual input component -->
 	<slot />

@@ -140,7 +140,7 @@
 	// Helper function to get missing image keys (for display in edit mode)
 	function getMissingImageKeys(imageKeys, registry) {
 		if (!isEditing || !registry || !Array.isArray(imageKeys)) return [];
-		return imageKeys.filter(key => typeof key === 'string' && !getImageMetaByKey(registry, key));
+		return imageKeys.filter((key) => typeof key === 'string' && !getImageMetaByKey(registry, key));
 	}
 
 	// Function to get image display data for a given field key
@@ -174,7 +174,8 @@
 	// Only evaluate if store has been populated (type is defined)
 	$: isArticleType = $localEventStore?.type === jdgTimelineEventKeys.article;
 	$: isMediaType = $localEventStore?.type === jdgTimelineEventKeys.media;
-	$: shouldShowCheckbox = isEditing &&
+	$: shouldShowCheckbox =
+		isEditing &&
 		$localEventStore?.type &&
 		((isArticleType && (hasImages || isEditing)) || (isMediaType && hasSingleImage));
 
@@ -543,7 +544,9 @@
 											onRemoveImage={(missingKey) => {
 												localEventStore.update((store) => {
 													const currentImages = store[key] || [];
-													const updatedImages = currentImages.filter(imgKey => imgKey !== missingKey);
+													const updatedImages = currentImages.filter(
+														(imgKey) => imgKey !== missingKey
+													);
 													return { ...store, [key]: updatedImages };
 												});
 											}}
