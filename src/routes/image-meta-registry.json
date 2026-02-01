@@ -19,10 +19,10 @@
     "alt": "The Blue Mall as seen in 1968.",
     "title": "",
     "date": "1968-02-21",
-    "isApprxDate": true,
+    "isApprxDate": false,
     "showBackgroundBlur": true,
     "toolbarJustification": "right",
-    "version": "0.8.0"
+    "version": "0.7.1"
   },
   "ccp_ouatacc_white": {
     "src": "https://res.cloudinary.com/jdg-main/image/upload/v1716959962/jdg-ui-svelte/ccp/ouatacc-white_sa1pne.png",
