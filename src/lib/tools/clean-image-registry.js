@@ -1,3 +1,9 @@
+/**
+ * One-time cleanup: rewrites JS files that use instantiateObject(...) or
+ * postProcessImageAttributes(...) by unwrapping those calls and leaving
+ * plain object literals, then tidying commas. Use when migrating image
+ * registry files to a simpler format; not needed for ongoing use.
+ */
 import fs from 'fs/promises';
 import path from 'path';
 

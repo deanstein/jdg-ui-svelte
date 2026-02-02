@@ -1,3 +1,9 @@
+/**
+ * One-time migration: reads the imageMetaRegistry object from
+ * image-meta-registry.js and writes it as pretty-printed JSON to
+ * image-meta-registry.json. Used when switching from JS to JSON for the
+ * image meta registry; not needed for ongoing use.
+ */
 import fs from 'fs';
 import path from 'path';
 import vm from 'vm';
