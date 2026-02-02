@@ -9,6 +9,7 @@ export const cfRouteWriteJsonFile = '/write-json-file';
 
 // JDG-GITHUB Cloudflare worker
 export const cfWorkerUrlJdgGithub = 'https://jdg-github.jdeangoldstein.workers.dev';
+export const cfRouteGetGithubAppToken = '/get-github-app-token';
 export const cfRouteDebugCors = '/debug-cors';
 export const cfRouteFetchPublicFile = '/fetch-public-file';
 export const cfRouteWritePublicJsFile = '/write-public-js-file';
