@@ -1,4 +1,5 @@
 <script>
+	import { goto } from '$app/navigation';
 	import { css } from '@emotion/css';
 
 	import { appAccentColors } from '$lib/stores/jdg-ui-store.js';
@@ -53,6 +54,25 @@
 
 	let isTestButtonEnabled = true;
 
+	let listOutput = '';
+	let listRunning = false;
+	async function runListVersions() {
+		listRunning = true;
+		listOutput = '';
+		try {
+			const res = await fetch('/api/list-package-versions');
+			const data = await res.json();
+			listOutput = Array.isArray(data.output) ? data.output.join('\n') : data.error ?? 'No output';
+			if (!res.ok && data.error) {
+				listOutput = (listOutput ? listOutput + '\n\n' : '') + 'Error: ' + data.error;
+			}
+		} catch (e) {
+			listOutput = 'Error: ' + (e?.message ?? String(e));
+		} finally {
+			listRunning = false;
+		}
+	}
+
 	// Example options for JDGSelect demonstration
 	const exampleSelectOptions = {
 		colors: {
@@ -102,11 +122,43 @@
 		</JDGContentBoxFloating>
 	</div>
 	<JDGJumpTo />
-	<JDGContentBoxFloating title="VERSIONS" animateWhenVisible={false}>
+	<JDGContentBoxFloating title="PACKAGES" animateWhenVisible={false}>
 		<JDGBodyCopy paddingTop="0" textAlign="center">
 			<JDGH3H4
-				h3String="VersionNpmPackage"
-				h4String="Gets the version of the given NPM package name"
+				h3String="All Package Versions"
+				h4String="List npm package versions and GitHub tags"
+			/>
+			<div>
+				<div class="repo-package-version-group">
+					<JDGButton
+						label={listRunning ? 'Listing…' : 'List package versions'}
+						faIcon="fa-list"
+						onClickFunction={runListVersions}
+						isEnabled={!listRunning}
+						paddingLeftRight="0.65rem"
+						paddingTopBottom="0.35rem"
+					/>
+					<JDGButton
+						label="Sync versions"
+						faIcon="fa-arrow-right"
+						onClickFunction={() => goto('/tools')}
+						isPrimary={false}
+						textColor={jdgColors.active}
+						backgroundColor={'transparent'}
+						backgroundColorHover={jdgColors.activeSecondary}
+						paddingLeftRight="0.5rem"
+						paddingTopBottom="0.25rem"
+					/>
+				</div>
+				{#if listOutput}
+					<pre class="list-output">{listOutput}</pre>
+				{/if}
+			</div></JDGBodyCopy
+		>
+		<JDGBodyCopy paddingTop="0" textAlign="center">
+			<JDGH3H4
+				h3String="Latest NPM Package Version"
+				h4String="JDGVersionNpmPackage gets the version of the given NPM package"
 			/>
 			<div class="repo-package-version-group">
 				JDG UI SVELTE
@@ -117,15 +169,8 @@
 		</JDGBodyCopy>
 		<JDGBodyCopy paddingTop="0" textAlign="center">
 			<JDGH3H4
-				h3String="NPM + GitHub Version Sync"
-				h4String="Backfill GitHub releases and tags to match published npm versions"
-			/>
-			<a href="/tools">Run sync and other tools →</a>
-		</JDGBodyCopy>
-		<JDGBodyCopy paddingTop="0" textAlign="center">
-			<JDGH3H4
-				h3String="VersionPackageJson"
-				h4String="Gets the version field of the package.json from a repo"
+				h3String="Latest Website Versions"
+				h4String="JDGVersionPackageJson gets the version field of the package.json from a repo"
 			/>
 			<div class="repo-package-version-group">
 				JDG WEBSITE
@@ -895,7 +940,12 @@
 	}
 
 	.repo-package-version-group {
-		padding: 15px 0 15px 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+		justify-content: center;
+		align-items: center;
+		padding: 20px 0 20px 0;
 		text-align: center;
 	}
 
@@ -904,5 +954,18 @@
 		line-height: 0.8rem;
 		text-align: center;
 		color: gray;
+	}
+
+	.list-output {
+		text-align: left;
+		white-space: pre-wrap;
+		word-break: break-word;
+		max-height: 400px;
+		overflow: auto;
+		font-size: 0.85rem;
+		background: var(--jdg-bg-secondary, #f5f5f5);
+		padding: 1rem;
+		border-radius: 6px;
+		margin: 0.5rem 0 0;
 	}
 </style>
