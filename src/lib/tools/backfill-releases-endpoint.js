@@ -1,6 +1,11 @@
 import { runBackfill } from '$lib/tools/backfill-releases.js';
 
-export async function POST({ request }) {
+/**
+ * Handle POST for backfill/release sync. Body: { dryRun?: boolean, limit?: number }.
+ * @param {Request} request
+ * @returns {Promise<Response>}
+ */
+export async function handleBackfillReleases(request) {
 	let dryRun = true;
 	let limit;
 	try {

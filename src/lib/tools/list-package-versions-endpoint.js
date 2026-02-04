@@ -1,7 +1,10 @@
 import { listPackageVersions } from '$lib/tools/backfill-releases.js';
 
-/** @type {import('./$types').RequestHandler} */
-export async function GET() {
+/**
+ * Handle GET for listing npm versions and GitHub tags.
+ * @returns {Promise<Response>}
+ */
+export async function handleListPackageVersions() {
 	const log = [];
 	try {
 		await listPackageVersions({ log });

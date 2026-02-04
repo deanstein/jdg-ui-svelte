@@ -60,7 +60,7 @@
 		listRunning = true;
 		listOutput = '';
 		try {
-			const res = await fetch('/api/list-package-versions');
+			const res = await fetch('/tools/list-package-versions');
 			const data = await res.json();
 			listOutput = Array.isArray(data.output) ? data.output.join('\n') : data.error ?? 'No output';
 			if (!res.ok && data.error) {

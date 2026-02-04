@@ -25,7 +25,7 @@
 		previewRunning = true;
 		syncOutput = '';
 		try {
-			const res = await fetch('/api/list-package-versions');
+			const res = await fetch('/tools/list-package-versions');
 			const data = await res.json();
 			syncOutput = Array.isArray(data.output) ? data.output.join('\n') : data.error ?? 'No output';
 			if (!res.ok && data.error) {
@@ -45,7 +45,7 @@
 		try {
 			const body = { dryRun: true };
 			if (limitTo10) body.limit = 10;
-			const res = await fetch('/api/backfill-releases', {
+			const res = await fetch('/tools/backfill-releases', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(body)
@@ -69,7 +69,7 @@
 		executeRunning = true;
 		syncOutput = '';
 		try {
-			const res = await fetch('/api/backfill-releases', {
+			const res = await fetch('/tools/backfill-releases', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ dryRun: false })
