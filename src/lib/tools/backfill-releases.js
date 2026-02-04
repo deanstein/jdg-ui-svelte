@@ -14,15 +14,23 @@ import {
 const PACKAGE_NAME = jdgUiSvelteRepoName;
 const REPO = `${jdgRepoOwner}/${jdgUiSvelteRepoName}`;
 
-// Cloudflare Worker endpoint for GitHub App token
-const CF_WORKER_TOKEN_URL = cfWorkerUrlJdgGithub + cfRouteGetGithubAppToken;
+// Cloudflare Worker endpoint for GitHub App token.
+// We send ?repoOwner=...&repoName=...; the Worker must read them from request.url (URLSearchParams).
+function getTokenUrl() {
+	const url = new URL(cfRouteGetGithubAppToken, cfWorkerUrlJdgGithub);
+	url.searchParams.set('repoOwner', jdgRepoOwner);
+	url.searchParams.set('repoName', jdgUiSvelteRepoName);
+	return url.toString();
+}
 
-// Always use Cloudflare Worker for token
 async function getGithubToken() {
-	const res = await fetch(CF_WORKER_TOKEN_URL);
+	const res = await fetch(getTokenUrl());
 
 	if (!res.ok) {
-		throw new Error(`Cloudflare Worker token request failed: ${res.status}`);
+		const text = await res.text();
+		throw new Error(
+			`Cloudflare Worker token request failed: ${res.status}${text ? ` - ${text}` : ''}`
+		);
 	}
 
 	const data = await res.json();
@@ -84,15 +92,18 @@ export async function listPackageVersions({ log: out = [] } = {}) {
 
 /**
  * Run the backfill. When log is provided, appends lines to it and returns it; otherwise uses console.
- * @param {{ dryRun: boolean, log?: string[] }} options
+ * @param {{ dryRun?: boolean, log?: string[], limit?: number }} [options] - limit: max versions to process (for testing)
  * @returns {Promise<string[]>} lines of output
  */
-export async function runBackfill({ dryRun = true, log: out = [] }) {
+export async function runBackfill({ dryRun = true, log: out = [], limit } = {}) {
 	const ln = (msg) => {
 		out.push(msg);
 	};
 
 	ln(`DRY RUN MODE: ${dryRun ? 'ON' : 'OFF'}`);
+	if (limit != null && limit > 0) {
+		ln(`Version limit: ${limit} (testing)`);
+	}
 	ln('Fetching GitHub App token from Cloudflare Worker…');
 
 	const token = await getGithubToken();
@@ -100,11 +111,26 @@ export async function runBackfill({ dryRun = true, log: out = [] }) {
 
 	ln(`Fetching versions for ${PACKAGE_NAME} from npm…`);
 	const npmData = await fetch(`https://registry.npmjs.org/${PACKAGE_NAME}`).then((r) => r.json());
-	const versions = Object.keys(npmData.versions);
+	let versions = Object.keys(npmData.versions);
 
 	ln(`Found ${versions.length} versions on npm`);
 
-	const existingTags = run('git tag').split('\n').filter(Boolean);
+	if (limit != null && limit > 0) {
+		versions = versions.slice(0, limit);
+		ln(`Processing first ${versions.length} versions (limit applied).`);
+	}
+
+	// Use GitHub API for existing tags so "Already tagged" reflects what's on GitHub, not local git
+	ln('Fetching existing tags from GitHub…');
+	const tagsRes = await fetch(`https://api.github.com/repos/${REPO}/tags`, {
+		headers: {
+			Authorization: `Bearer ${token}`,
+			Accept: 'application/vnd.github.v3+json'
+		}
+	});
+	const tagsData = tagsRes.ok ? await tagsRes.json() : [];
+	const existingTags = Array.isArray(tagsData) ? tagsData.map((t) => t.name) : [];
+	ln(`Found ${existingTags.length} existing tags on GitHub.`);
 
 	const commits = run('git log --pretty=format:%H -- package.json').split('\n').filter(Boolean);
 

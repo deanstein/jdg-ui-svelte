@@ -1,18 +1,21 @@
 import { runBackfill } from '$lib/tools/backfill-releases.js';
 
-/** @type {import('./$types').RequestHandler} */
 export async function POST({ request }) {
 	let dryRun = true;
+	let limit;
 	try {
 		const body = await request.json().catch(() => ({}));
 		dryRun = body.dryRun !== false;
+		if (body.limit != null && Number.isFinite(body.limit) && body.limit > 0) {
+			limit = Math.floor(body.limit);
+		}
 	} catch {
 		// keep default dryRun true
 	}
 
 	const log = [];
 	try {
-		await runBackfill({ dryRun, log });
+		await runBackfill({ dryRun, log, limit });
 		return new Response(JSON.stringify({ ok: true, output: log }), {
 			headers: { 'Content-Type': 'application/json' }
 		});

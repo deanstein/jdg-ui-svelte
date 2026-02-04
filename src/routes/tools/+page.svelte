@@ -2,21 +2,22 @@
 	import {
 		JDGBodyCopy,
 		JDGButton,
+		JDGCheckbox,
 		JDGContentBoxFloating,
 		JDGContentContainer
 	} from '$lib/index.js';
 
 	let syncOutput = '';
+	let limitTo10 = true;
 	let previewRunning = false;
 	let dryRunRunning = false;
 	let executeRunning = false;
-	let previewGenerated = false;
 	let dryRunCompleted = false;
-	$: previewButtonLabel = previewRunning ? 'Running…' : '1. Preview';
-	$: dryRunButtonLabel = dryRunRunning ? 'Running…' : '2. Dry run';
-	$: executeButtonLabel = executeRunning ? 'Running…' : '3. Execute';
+	$: listVersionsButtonLabel = previewRunning ? 'Running…' : '1. List versions';
+	$: previewSyncButtonLabel = dryRunRunning ? 'Running…' : '2. Preview sync';
+	$: executeSyncButtonLabel = executeRunning ? 'Running…' : '3. Execute sync';
 	$: anyRunning = previewRunning || dryRunRunning || executeRunning;
-	$: dryRunButtonEnabled = previewGenerated && !anyRunning;
+	$: dryRunButtonEnabled = !anyRunning;
 	$: executeButtonEnabled = dryRunCompleted && !anyRunning;
 
 	/** Step 1: List npm versions and GitHub tags only (no git, no token). */
@@ -29,8 +30,6 @@
 			syncOutput = Array.isArray(data.output) ? data.output.join('\n') : data.error ?? 'No output';
 			if (!res.ok && data.error) {
 				syncOutput = (syncOutput ? syncOutput + '\n\n' : '') + 'Error: ' + data.error;
-			} else {
-				previewGenerated = true;
 			}
 		} catch (e) {
 			syncOutput = 'Error: ' + (e?.message ?? String(e));
@@ -44,10 +43,12 @@
 		dryRunRunning = true;
 		syncOutput = '';
 		try {
+			const body = { dryRun: true };
+			if (limitTo10) body.limit = 10;
 			const res = await fetch('/api/backfill-releases', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ dryRun: true })
+				body: JSON.stringify(body)
 			});
 			const data = await res.json();
 			syncOutput = Array.isArray(data.output) ? data.output.join('\n') : data.error ?? 'No output';
@@ -93,36 +94,48 @@
 			<br />
 			Backfill GitHub releases and tags to match published npm versions.
 			<br />
-			<div class="sync-controls">
-				<JDGButton
-					label={previewButtonLabel}
-					faIcon="fa-eye"
-					onClickFunction={runPreviewSync}
+			<div class="sync-controls sync-options">
+				<JDGCheckbox
+					label="Limit to 10 versions (testing)"
+					bind:isChecked={limitTo10}
 					isEnabled={!anyRunning}
-					paddingLeftRight="0.65rem"
-					paddingTopBottom="0.35rem"
-				/>
-				<JDGButton
-					label={dryRunButtonLabel}
-					faIcon="fa-list-check"
-					onClickFunction={runDryRun}
-					isEnabled={dryRunButtonEnabled}
-					paddingLeftRight="0.65rem"
-					paddingTopBottom="0.35rem"
-				/>
-				<JDGButton
-					label={executeButtonLabel}
-					faIcon="fa-sync"
-					onClickFunction={runSyncExecute}
-					isEnabled={executeButtonEnabled}
-					paddingLeftRight="0.65rem"
-					paddingTopBottom="0.35rem"
 				/>
 			</div>
-			<p class="sync-hint">
-				1. Preview: list npm versions and GitHub tags. 2. Dry run: same as Execute but no changes.
-				3. Execute: create tags and releases.
-			</p>
+			<div class="sync-controls">
+				<div class="sync-step">
+					<JDGButton
+						label={listVersionsButtonLabel}
+						faIcon="fa-list"
+						onClickFunction={runPreviewSync}
+						isEnabled={!anyRunning}
+						paddingLeftRight="0.65rem"
+						paddingTopBottom="0.35rem"
+					/>
+					<p class="sync-hint">List npm versions and GitHub tags</p>
+				</div>
+				<div class="sync-step">
+					<JDGButton
+						label={previewSyncButtonLabel}
+						faIcon="fa-eye"
+						onClickFunction={runDryRun}
+						isEnabled={dryRunButtonEnabled}
+						paddingLeftRight="0.65rem"
+						paddingTopBottom="0.35rem"
+					/>
+					<p class="sync-hint">Preview changes that would be made</p>
+				</div>
+				<div class="sync-step">
+					<JDGButton
+						label={executeSyncButtonLabel}
+						faIcon="fa-sync"
+						onClickFunction={runSyncExecute}
+						isEnabled={executeButtonEnabled}
+						paddingLeftRight="0.65rem"
+						paddingTopBottom="0.35rem"
+					/>
+					<p class="sync-hint">Create tags and releases</p>
+				</div>
+			</div>
 			{#if syncOutput}
 				<pre class="sync-output">{syncOutput}</pre>
 			{/if}
@@ -153,16 +166,23 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 0.5rem;
-		flex-wrap: wrap;
-		justify-content: center;
+		gap: 1rem;
 		margin: 0.5rem 0 1rem;
+	}
+
+	.sync-step {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.25rem;
 	}
 
 	.sync-hint {
 		font-size: 0.85rem;
 		color: var(--jdg-text-secondary, #666);
-		margin: 0.25rem 0 0.5rem;
+		margin: 0;
+		text-align: center;
+		max-width: 18em;
 	}
 
 	.sync-output {
