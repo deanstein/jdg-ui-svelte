@@ -104,24 +104,29 @@
 	<JDGJumpTo />
 	<JDGContentBoxFloating title="VERSIONS" animateWhenVisible={false}>
 		<JDGBodyCopy paddingTop="0" textAlign="center">
-			<b>VersionNpmPackage</b>
-			<br />
-			Gets the version of the given NPM package name.
-			<br />
-			<br />
+			<JDGH3H4
+				h3String="VersionNpmPackage"
+				h4String="Gets the version of the given NPM package name"
+			/>
 			<div class="repo-package-version-group">
 				JDG UI SVELTE
 				<div class="repo-package-version">
 					<JDGVersionNpmPackage packageName={jdgUiSvelteRepoName} />
 				</div>
 			</div>
-			<br /><br />
-			<b>VersionPackageJson</b>
-			<br />
-			Gets the version field of the package.json from a repo.
-			<br />
-			Here's the version.json of JDG websites and projects:
-			<br /><br />
+		</JDGBodyCopy>
+		<JDGBodyCopy paddingTop="0" textAlign="center">
+			<JDGH3H4
+				h3String="NPM + GitHub Version Sync"
+				h4String="Backfill GitHub releases and tags to match published npm versions"
+			/>
+			<a href="/tools">Run sync and other tools →</a>
+		</JDGBodyCopy>
+		<JDGBodyCopy paddingTop="0" textAlign="center">
+			<JDGH3H4
+				h3String="VersionPackageJson"
+				h4String="Gets the version field of the package.json from a repo"
+			/>
 			<div class="repo-package-version-group">
 				JDG WEBSITE
 				<div class="repo-package-version">
