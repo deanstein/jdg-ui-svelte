@@ -67,8 +67,8 @@
 
 	const navItems = [
 		navItemHome,
-		navItemSimpleTest,
 		navItemTools,
+		navItemSimpleTest,
 		navItemCloudinaryTest,
 		navItemJdgTest,
 		navItemPmxTest,
