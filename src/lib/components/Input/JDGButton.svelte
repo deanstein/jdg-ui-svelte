@@ -30,20 +30,18 @@
 		return adjustColorForContrast(bgColor, textColor, 2.5);
 	};
 
-	const getDefaultBackgroundHoverColor = () => {
+	function getDefaultBackgroundHoverColor(bgColor) {
 		let bgColorHover;
 
 		// Don't check isEnabled here - the CSS hover style already handles the disabled state
-		// Checking it here causes the hover color to get "stuck" as disabled if the component
-		// mounts while disabled, even after isEnabled becomes true
-		if (backgroundColor === 'transparent') {
+		if (bgColor === 'transparent') {
 			bgColorHover = rgbToHex(darkenColor(hexToRgb(getDefaultBackgroundColor()), 0.2));
 		} else {
-			bgColorHover = darkenColor(backgroundColor, 0.2);
+			bgColorHover = darkenColor(bgColor, 0.2);
 		}
 
 		return adjustColorForContrast(bgColorHover, textColor, 2.5);
-	};
+	}
 
 	export let label = 'This is a button'; // set null if no label is desired
 	export let faClass = 'fa-solid fa-fw'; // fa-fw ensures consistent width for all icons
@@ -54,11 +52,23 @@
 	export let onClickFunction;
 	export let textColor = jdgColors.textDm;
 	export let textColorHover = jdgColors.textDm;
-	export let backgroundColor = getDefaultBackgroundColor();
+	export let backgroundColor = undefined;
 	export let doAdjustBackgroundColorForContrast = true;
 	export let contrastRatio = 2;
-	// hover color by default is a slightly darker version of the background color
-	export let backgroundColorHover = getDefaultBackgroundHoverColor();
+	export let backgroundColorHover = undefined;
+
+	// Recompute effectieBackgroundColor when isEnabled or isPrimary changes
+	let effectiveBackgroundColor;
+	$: {
+		isEnabled;
+		isPrimary;
+		effectiveBackgroundColor =
+			backgroundColor !== undefined ? backgroundColor : getDefaultBackgroundColor();
+	}
+	$: defaultHoverColor = getDefaultBackgroundHoverColor(effectiveBackgroundColor);
+	$: effectiveBackgroundHover =
+		backgroundColorHover !== undefined ? backgroundColorHover : defaultHoverColor;
+
 	export let fontSize = '1rem';
 	export let width = 'fit-content';
 	export let borderRadius = '1.5em';
@@ -71,34 +81,7 @@
 
 	let buttonCss = css``; // redeefined in the reactive block
 
-	// Track whether backgroundColorHover was explicitly passed by checking if it equals the default
-	// If not explicitly passed, compute it reactively based on the current backgroundColor
-	const defaultHoverColor = getDefaultBackgroundHoverColor();
-
 	$: {
-		// Compute effective hover color - if the default was used, recalculate based on current backgroundColor
-		// This handles cases where backgroundColor is passed by parent but backgroundColorHover is not
-		let effectiveHoverColor;
-		if (backgroundColorHover === defaultHoverColor) {
-			// backgroundColorHover wasn't explicitly passed, compute from current backgroundColor
-			if (backgroundColor === 'transparent') {
-				effectiveHoverColor = adjustColorForContrast(
-					rgbToHex(darkenColor(hexToRgb(jdgColors.active), 0.2)),
-					textColor,
-					2.5
-				);
-			} else {
-				effectiveHoverColor = adjustColorForContrast(
-					darkenColor(backgroundColor, 0.2),
-					textColor,
-					2.5
-				);
-			}
-		} else {
-			// backgroundColorHover was explicitly passed, use it as-is
-			effectiveHoverColor = backgroundColorHover;
-		}
-
 		buttonCss = css`
 			font-size: ${fontSize};
 			font-family: ${$appFontFamily};
@@ -115,12 +98,12 @@
 			color: ${textColor};
 			background-color: ${isEnabled
 				? doAdjustBackgroundColorForContrast
-					? adjustColorForContrast(backgroundColor, textColor, contrastRatio)
-					: backgroundColor
+					? adjustColorForContrast(effectiveBackgroundColor, textColor, contrastRatio)
+					: effectiveBackgroundColor
 				: jdgColors.disabled};
 			:hover {
 				color: ${textColorHover};
-				background-color: ${isEnabled ? effectiveHoverColor : jdgColors.disabled};
+				background-color: ${isEnabled ? effectiveBackgroundHover : jdgColors.disabled};
 			}
 			cursor: ${isEnabled ? 'pointer' : 'default'};
 			aspect-ratio: ${doForceSquareAspect ? '1' : ''};
