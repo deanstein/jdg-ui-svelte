@@ -61,9 +61,14 @@
 	navItemTimeline.label = 'TIMELINE TEST';
 	navItemTimeline.href = '/timeline-test';
 
+	const navItemTools = instantiateObject(jdgNavItem);
+	navItemTools.label = 'TOOLS';
+	navItemTools.href = '/tools';
+
 	const navItems = [
 		navItemHome,
 		navItemSimpleTest,
+		navItemTools,
 		navItemCloudinaryTest,
 		navItemJdgTest,
 		navItemPmxTest,

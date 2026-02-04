@@ -14,8 +14,8 @@ const content = fs.readFileSync(input, 'utf8');
 
 const match = content.match(/const\s+imageMetaRegistry\s*=\s*(\{[\s\S]*\})\s*;?/m);
 if (!match) {
-  console.error('Could not find imageMetaRegistry object in', input);
-  process.exit(1);
+	console.error('Could not find imageMetaRegistry object in', input);
+	process.exit(1);
 }
 
 const objSrc = match[1];
