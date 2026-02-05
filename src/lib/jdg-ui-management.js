@@ -5,16 +5,16 @@ import {
 	showTimelineEventModal,
 	isAdminMode,
 	postAdminLoginFunction
-} from './stores/jdg-ui-store.js';
-import { draftTimelineEvent } from './stores/jdg-temp-store.js';
+} from '$lib/stores/jdg-ui-store.js';
+import { draftTimelineEvent } from '$lib/stores/jdg-temp-store.js';
 
-import jdgTimelineEventTypes from './schemas/timeline/jdg-timeline-event-types.js';
+import jdgTimelineEventTypes from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 import jdgTimelineRowItem from '$lib/schemas/timeline/jdg-timeline-row-item.js';
 
 import { instantiateObject } from '$lib/jdg-utils.js';
 
 import { jdgBreakpoints, jdgQuantities, jdgSizes } from '$lib/jdg-shared-styles.js';
-import { getTimelineEventById, upgradeTimelineHost } from './jdg-timeline-management.js';
+import { getTimelineEventById, upgradeTimelineHost } from '$lib/jdg-timeline-management.js';
 
 //
 // ADMIN MODE

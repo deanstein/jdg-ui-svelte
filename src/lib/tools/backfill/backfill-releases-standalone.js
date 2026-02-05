@@ -1,44 +1,36 @@
 /**
- * One-time backfill: creates GitHub releases and tags at the commits that match
- * each published npm version, so release history aligns with the package.
- * Not needed for future releases, only for catching up existing versions.
+ * Standalone backfill logic for the CLI only. No imports from the rest of the app
+ * (no $lib, no jdg-persistence-management) so Node can run it without resolving SvelteKit aliases.
+ * Duplicated from backfill-releases.js; keep in sync if that file's runBackfill logic changes.
  */
 import { execSync } from 'node:child_process';
-import {
-	cfRouteGetGithubAppToken,
-	cfWorkerUrlJdgGithub,
-	jdgRepoOwner,
-	jdgUiSvelteRepoName
-} from '$lib/jdg-persistence-management.js';
 
-const PACKAGE_NAME = jdgUiSvelteRepoName;
-const REPO = `${jdgRepoOwner}/${jdgUiSvelteRepoName}`;
+const PACKAGE_NAME = 'jdg-ui-svelte';
+const REPO_OWNER = 'deanstein';
+const REPO_NAME = 'jdg-ui-svelte';
+const REPO = `${REPO_OWNER}/${REPO_NAME}`;
+const CF_WORKER_JDG_GITHUB = 'https://jdg-github.jdeangoldstein.workers.dev';
+const CF_ROUTE_GET_GITHUB_APP_TOKEN = '/get-github-app-token';
 
-// Cloudflare Worker endpoint for GitHub App token.
-// We send ?repoOwner=...&repoName=...; the Worker must read them from request.url (URLSearchParams).
 function getTokenUrl() {
-	const url = new URL(cfRouteGetGithubAppToken, cfWorkerUrlJdgGithub);
-	url.searchParams.set('repoOwner', jdgRepoOwner);
-	url.searchParams.set('repoName', jdgUiSvelteRepoName);
+	const url = new URL(CF_ROUTE_GET_GITHUB_APP_TOKEN, CF_WORKER_JDG_GITHUB);
+	url.searchParams.set('repoOwner', REPO_OWNER);
+	url.searchParams.set('repoName', REPO_NAME);
 	return url.toString();
 }
 
 async function getGithubToken() {
 	const res = await fetch(getTokenUrl());
-
 	if (!res.ok) {
 		const text = await res.text();
 		throw new Error(
 			`Cloudflare Worker token request failed: ${res.status}${text ? ` - ${text}` : ''}`
 		);
 	}
-
 	const data = await res.json();
-
 	if (!data.token) {
 		throw new Error('Cloudflare Worker did not return a token');
 	}
-
 	return data.token;
 }
 
@@ -47,58 +39,11 @@ function run(cmd) {
 }
 
 /**
- * List npm package versions and GitHub repo tags (no git, no token). For display only.
- * @param {{ log?: string[] }} options
+ * @param {{ dryRun?: boolean, log?: string[], limit?: number }} [options]
  * @returns {Promise<string[]>}
  */
-export async function listPackageVersions({ log: out = [] } = {}) {
-	const ln = (msg) => out.push(msg);
-
-	ln(`Package: ${PACKAGE_NAME}`);
-	ln(`Repo: ${REPO}`);
-	ln('');
-
-	ln('Fetching versions from npm…');
-	const npmData = await fetch(`https://registry.npmjs.org/${PACKAGE_NAME}`).then((r) => r.json());
-	const npmVersions = Object.keys(npmData.versions ?? {});
-	ln(`NPM versions (${npmVersions.length}):`);
-	if (npmVersions.length) {
-		ln(npmVersions.join(', '));
-	} else {
-		ln('(none)');
-	}
-	ln('');
-
-	ln('Fetching tags from GitHub…');
-	const tagsRes = await fetch(`https://api.github.com/repos/${REPO}/tags`, {
-		headers: { Accept: 'application/vnd.github.v3+json' }
-	});
-	if (!tagsRes.ok) {
-		ln(`GitHub API error: ${tagsRes.status} ${tagsRes.statusText}`);
-		return out;
-	}
-	const tagsData = await tagsRes.json();
-	const tagNames = (tagsData ?? []).map((t) => t.name);
-	ln(`GitHub tags (${tagNames.length}):`);
-	if (tagNames.length) {
-		ln(tagNames.join(', '));
-	} else {
-		ln('(none)');
-	}
-	ln('');
-	ln('Done.');
-	return out;
-}
-
-/**
- * Run the backfill. When log is provided, appends lines to it and returns it; otherwise uses console.
- * @param {{ dryRun?: boolean, log?: string[], limit?: number }} [options] - limit: max versions to process (for testing)
- * @returns {Promise<string[]>} lines of output
- */
 export async function runBackfill({ dryRun = true, log: out = [], limit } = {}) {
-	const ln = (msg) => {
-		out.push(msg);
-	};
+	const ln = (msg) => out.push(msg);
 
 	ln(`DRY RUN MODE: ${dryRun ? 'ON' : 'OFF'}`);
 	if (limit != null && limit > 0) {
@@ -120,7 +65,6 @@ export async function runBackfill({ dryRun = true, log: out = [], limit } = {}) 
 		ln(`Processing first ${versions.length} versions (limit applied).`);
 	}
 
-	// Use GitHub API for existing tags so "Already tagged" reflects what's on GitHub, not local git
 	ln('Fetching existing tags from GitHub…');
 	const tagsRes = await fetch(`https://api.github.com/repos/${REPO}/tags`, {
 		headers: {
@@ -133,7 +77,6 @@ export async function runBackfill({ dryRun = true, log: out = [], limit } = {}) 
 	ln(`Found ${existingTags.length} existing tags on GitHub.`);
 
 	const commits = run('git log --pretty=format:%H -- package.json').split('\n').filter(Boolean);
-
 	ln(`Found ${commits.length} commits that modified package.json`);
 
 	for (const version of versions) {
@@ -150,12 +93,10 @@ export async function runBackfill({ dryRun = true, log: out = [], limit } = {}) 
 		}
 
 		let matchingCommit = null;
-
 		for (const sha of commits) {
 			try {
 				const file = run(`git show ${sha}:package.json`);
 				const json = JSON.parse(file);
-
 				if (json.version === version) {
 					matchingCommit = sha;
 					break;
@@ -178,7 +119,6 @@ export async function runBackfill({ dryRun = true, log: out = [], limit } = {}) 
 			continue;
 		}
 
-		// REAL MODE BELOW
 		run(`git tag ${tag} ${matchingCommit}`);
 		run(`git push origin ${tag}`);
 
@@ -205,22 +145,4 @@ export async function runBackfill({ dryRun = true, log: out = [], limit } = {}) 
 	ln('');
 	ln('Backfill complete!');
 	return out;
-}
-
-// CLI entry: run with DRY_RUN from env and log to console
-async function main() {
-	const DRY_RUN = process.env.DRY_RUN === 'true';
-	const lines = await runBackfill({ dryRun: DRY_RUN, log: [] });
-	for (const line of lines) {
-		console.log(line);
-	}
-}
-
-// Only run main when executed directly (e.g. node backfill-releases.js)
-const isMain = typeof process !== 'undefined' && process.argv[1]?.includes('backfill-releases');
-if (isMain) {
-	main().catch((err) => {
-		console.error(err);
-		process.exit(1);
-	});
 }

@@ -14,7 +14,9 @@
 		"lint": "prettier --check . && eslint .",
 		"prettier": "prettier --write \"{,!(node_modules|public|dist)/**/}*.{js,svelte}\"",
 		"prettier:check": "prettier --check \"{,!(node_modules|public|dist)/**/}*.{js,svelte}\"",
-		"format": "prettier --write ."
+		"format": "prettier --write .",
+		"list-versions": "node src/lib/tools/list-versions/run-list-versions.js",
+		"backfill": "node src/lib/tools/backfill/run-backfill.js"
 	},
 
 	"exports": {

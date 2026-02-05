@@ -6,6 +6,7 @@
 	import { scrollToAnchor } from '$lib/jdg-utils.js';
 
 	import { jdgBreakpoints, jdgColors, jdgFonts } from '$lib/jdg-shared-styles.js';
+	import { listPackageVersions } from '$lib/tools/list-versions/list-package-versions-client.js';
 	import {
 		ccpWebsiteRepoName,
 		familyTreeRepoName,
@@ -60,12 +61,9 @@
 		listRunning = true;
 		listOutput = '';
 		try {
-			const res = await fetch('/tools/list-package-versions');
-			const data = await res.json();
-			listOutput = Array.isArray(data.output) ? data.output.join('\n') : data.error ?? 'No output';
-			if (!res.ok && data.error) {
-				listOutput = (listOutput ? listOutput + '\n\n' : '') + 'Error: ' + data.error;
-			}
+			const log = [];
+			await listPackageVersions({ log });
+			listOutput = log.join('\n');
 		} catch (e) {
 			listOutput = 'Error: ' + (e?.message ?? String(e));
 		} finally {

@@ -1,88 +1,25 @@
 <script>
+	import { listPackageVersions } from '$lib/tools/list-versions/list-package-versions-client.js';
 	import {
 		JDGBodyCopy,
 		JDGButton,
-		JDGCheckbox,
 		JDGContentBoxFloating,
 		JDGContentContainer
 	} from '$lib/index.js';
 
-	let syncOutput = '';
-	let limitTo10 = true;
-	let previewRunning = false;
-	let dryRunRunning = false;
-	let executeRunning = false;
-	let dryRunCompleted = false;
-	$: listVersionsButtonLabel = previewRunning ? 'Running…' : '1. List versions';
-	$: previewSyncButtonLabel = dryRunRunning ? 'Running…' : '2. Preview sync';
-	$: executeSyncButtonLabel = executeRunning ? 'Running…' : '3. Execute sync';
-	$: anyRunning = previewRunning || dryRunRunning || executeRunning;
-	$: dryRunButtonEnabled = !anyRunning;
-	$: executeButtonEnabled = dryRunCompleted && !anyRunning;
-
-	/** Step 1: List npm versions and GitHub tags only (no git, no token). */
-	async function runPreviewSync() {
-		previewRunning = true;
-		syncOutput = '';
+	let listOutput = '';
+	let listRunning = false;
+	async function runListVersions() {
+		listRunning = true;
+		listOutput = '';
 		try {
-			const res = await fetch('/tools/list-package-versions');
-			const data = await res.json();
-			syncOutput = Array.isArray(data.output) ? data.output.join('\n') : data.error ?? 'No output';
-			if (!res.ok && data.error) {
-				syncOutput = (syncOutput ? syncOutput + '\n\n' : '') + 'Error: ' + data.error;
-			}
+			const log = [];
+			await listPackageVersions({ log });
+			listOutput = log.join('\n');
 		} catch (e) {
-			syncOutput = 'Error: ' + (e?.message ?? String(e));
+			listOutput = 'Error: ' + (e?.message ?? String(e));
 		} finally {
-			previewRunning = false;
-		}
-	}
-
-	/** Step 2: Full backfill logic with dryRun=true – same APIs as Execute, but no tags/releases created. */
-	async function runDryRun() {
-		dryRunRunning = true;
-		syncOutput = '';
-		try {
-			const body = { dryRun: true };
-			if (limitTo10) body.limit = 10;
-			const res = await fetch('/tools/backfill-releases', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(body)
-			});
-			const data = await res.json();
-			syncOutput = Array.isArray(data.output) ? data.output.join('\n') : data.error ?? 'No output';
-			if (!res.ok && data.error) {
-				syncOutput = (syncOutput ? syncOutput + '\n\n' : '') + 'Error: ' + data.error;
-			} else {
-				dryRunCompleted = true;
-			}
-		} catch (e) {
-			syncOutput = 'Error: ' + (e?.message ?? String(e));
-		} finally {
-			dryRunRunning = false;
-		}
-	}
-
-	/** Step 3: Run backfill for real – creates tags and releases. */
-	async function runSyncExecute() {
-		executeRunning = true;
-		syncOutput = '';
-		try {
-			const res = await fetch('/tools/backfill-releases', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ dryRun: false })
-			});
-			const data = await res.json();
-			syncOutput = Array.isArray(data.output) ? data.output.join('\n') : data.error ?? 'No output';
-			if (!res.ok && data.error) {
-				syncOutput = (syncOutput ? syncOutput + '\n\n' : '') + 'Error: ' + data.error;
-			}
-		} catch (e) {
-			syncOutput = 'Error: ' + (e?.message ?? String(e));
-		} finally {
-			executeRunning = false;
+			listRunning = false;
 		}
 	}
 </script>
@@ -94,51 +31,41 @@
 			<br />
 			Backfill GitHub releases and tags to match published npm versions.
 			<br />
-			<div class="sync-controls sync-options">
-				<JDGCheckbox
-					label="Limit to 10 versions (testing)"
-					bind:isChecked={limitTo10}
-					isEnabled={!anyRunning}
-				/>
-			</div>
-			<div class="sync-controls">
+			Run these from the repo root (no env vars needed).
+			<br />
+			<div class="sync-instructions">
 				<div class="sync-step">
-					<JDGButton
-						label={listVersionsButtonLabel}
-						faIcon="fa-list"
-						onClickFunction={runPreviewSync}
-						isEnabled={!anyRunning}
-						paddingLeftRight="0.65rem"
-						paddingTopBottom="0.35rem"
-					/>
-					<p class="sync-hint">List npm versions and GitHub tags</p>
+					<p class="sync-step-title"><b>1. List versions</b></p>
+					<p class="sync-step-desc">npm package versions and GitHub tags (read-only):</p>
+					<div class="sync-step-actions">
+						<JDGButton
+							label={listRunning ? 'Running…' : 'List versions'}
+							faIcon="fa-list"
+							onClickFunction={runListVersions}
+							isEnabled={!listRunning}
+							paddingLeftRight="0.65rem"
+							paddingTopBottom="0.35rem"
+						/>
+						<div class="sync-step-or">or:<br /><code>yarn list-versions</code></div>
+					</div>
+					{#if listOutput}
+						<pre class="sync-output">{listOutput}</pre>
+					{/if}
 				</div>
 				<div class="sync-step">
-					<JDGButton
-						label={previewSyncButtonLabel}
-						faIcon="fa-eye"
-						onClickFunction={runDryRun}
-						isEnabled={dryRunButtonEnabled}
-						paddingLeftRight="0.65rem"
-						paddingTopBottom="0.35rem"
-					/>
-					<p class="sync-hint">Preview changes that would be made</p>
+					<p class="sync-step-title"><b>2. Preview sync</b></p>
+					<p class="sync-step-desc">
+						dry run, no tags/releases created. Optional <code>--limit 10</code> for testing:
+					</p>
+					<pre class="cli-block">yarn backfill
+yarn backfill -- --limit 10</pre>
 				</div>
 				<div class="sync-step">
-					<JDGButton
-						label={executeSyncButtonLabel}
-						faIcon="fa-sync"
-						onClickFunction={runSyncExecute}
-						isEnabled={executeButtonEnabled}
-						paddingLeftRight="0.65rem"
-						paddingTopBottom="0.35rem"
-					/>
-					<p class="sync-hint">Create tags and releases</p>
+					<p class="sync-step-title"><b>3. Execute sync</b></p>
+					<p class="sync-step-desc">create tags and releases for real:</p>
+					<pre class="cli-block">yarn backfill -- --execute</pre>
 				</div>
 			</div>
-			{#if syncOutput}
-				<pre class="sync-output">{syncOutput}</pre>
-			{/if}
 		</JDGBodyCopy>
 
 		<JDGBodyCopy paddingTop="1.5rem" textAlign="center">
@@ -162,29 +89,42 @@
 </JDGContentContainer>
 
 <style>
-	.sync-controls {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 1rem;
-		margin: 0.5rem 0 1rem;
-	}
-
-	.sync-step {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 0.25rem;
-	}
-
-	.sync-hint {
-		font-size: 0.85rem;
-		color: var(--jdg-text-secondary, #666);
-		margin: 0;
+	.sync-instructions {
 		text-align: center;
-		max-width: 18em;
+		max-width: 32em;
+		margin: 1rem auto;
 	}
-
+	.sync-step {
+		margin-top: 1rem;
+	}
+	.sync-step:first-child {
+		margin-top: 0;
+	}
+	.sync-step-title {
+		margin: 0;
+	}
+	.sync-step-desc {
+		margin: 0.25rem 0 0;
+		font-size: 0.95em;
+	}
+	.sync-step-actions {
+		display: flex;
+		flex-direction: column;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem 1rem;
+		margin-top: 0.5rem;
+	}
+	.sync-step-or {
+		font-size: 0.9em;
+		color: var(--jdg-text-secondary, #666);
+	}
+	.sync-step-or code {
+		background: var(--jdg-bg-secondary, #f5f5f5);
+		padding: 0.1rem 0.3rem;
+		border-radius: 4px;
+	}
 	.sync-output {
 		text-align: left;
 		white-space: pre-wrap;
@@ -195,6 +135,22 @@
 		background: var(--jdg-bg-secondary, #f5f5f5);
 		padding: 1rem;
 		border-radius: 6px;
-		margin: 0.5rem 0 0;
+		margin: 0.5rem auto 0;
+		display: block;
+		width: 100%;
+		max-width: 32em;
+		box-sizing: border-box;
+	}
+	.cli-block {
+		text-align: left;
+		background: var(--jdg-bg-secondary, #f5f5f5);
+		padding: 0.5rem 0.75rem;
+		border-radius: 6px;
+		font-size: 0.9rem;
+		overflow-x: auto;
+		margin: 0.5rem auto 0;
+		display: block;
+		width: fit-content;
+		min-width: 18em;
 	}
 </style>
