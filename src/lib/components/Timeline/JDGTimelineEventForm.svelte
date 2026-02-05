@@ -554,6 +554,27 @@
 										/>
 									{/if}
 									{#if imageDisplayData.missingImageKeys.length > 0 && isEditing}
+										<div class="missing-images-actions">
+											<JDGButton
+												label="Remove all dead references"
+												faIcon="fa-trash"
+												onClickFunction={() => {
+													localEventStore.update((store) => {
+														const currentImages = store[key] || [];
+														const missingSet = new Set(imageDisplayData.missingImageKeys);
+														const updatedImages = currentImages.filter(
+															(imgKey) => !missingSet.has(imgKey)
+														);
+														return { ...store, [key]: updatedImages };
+													});
+												}}
+												paddingLeftRight="12px"
+												paddingTopBottom="6px"
+												fontSize="13px"
+												backgroundColor={jdgColors.delete}
+												tooltip="Remove all image keys that are not in the registry from this event"
+											/>
+										</div>
 										<JDGMissingImageKeys
 											missingImageKeys={imageDisplayData.missingImageKeys}
 											onRemoveImage={(missingKey) => {
@@ -706,6 +727,10 @@
 
 	.image-list-display {
 		margin-bottom: 12px;
+	}
+
+	.missing-images-actions {
+		margin-bottom: 8px;
 	}
 
 	.no-images-message {
