@@ -5,18 +5,17 @@
 		imageMetaRegistryOptions,
 		jdgUiSvelteRepoName
 	} from '$lib/jdg-persistence-management.js';
-	import { JDGModal, JDGCheckbox, JDGSelect } from '$lib/index.js';
+	import { JDGModal, JDGCheckbox, JDGSelect, JDGImageRegistryGallery } from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
-	import JDGImageRegistryGallery from './JDGImageRegistryGallery.svelte';
 
 	// Whether to show captions (with checkbox toggle)
 	let showCaptions = true;
 
-	// Registry to show: default to current app repo (uiSvelte)
+	// Registry to show: default to current website's registry (repoName set by consuming app)
 	let selectedRepoName;
-	$: defaultRepo = $repoName ?? jdgUiSvelteRepoName;
-	$: if (selectedRepoName == null && defaultRepo) {
-		selectedRepoName = defaultRepo;
+	$: currentWebsiteRegistry = $repoName ?? jdgUiSvelteRepoName;
+	$: if (selectedRepoName == null && currentWebsiteRegistry) {
+		selectedRepoName = currentWebsiteRegistry;
 	}
 
 	const controlsContainerCss = css`
