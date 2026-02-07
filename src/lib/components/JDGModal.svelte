@@ -86,7 +86,7 @@
 	`;
 
 	const modalSubtitleCss = css`
-		font-size: ${jdgSizes.fontSizeFloatingContentBoxSubtitle};
+		font-size: 1vh;
 		color: ${jdgColors.text};
 	`;
 </script>
@@ -185,6 +185,7 @@
 		flex-shrink: 0;
 		width: -webkit-fill-available;
 		width: -moz-available;
+		padding-bottom: 10px;
 		border-radius: 10px 10px 0px 0px;
 		overflow: hidden;
 	}
