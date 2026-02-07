@@ -42,7 +42,10 @@
 	.gallery-content-wrapper {
 		display: flex;
 		flex-direction: column;
+		flex: 1;
+		min-height: 0;
 		box-sizing: border-box;
+		width: 100%;
 	}
 
 	.gallery-scroll-container {

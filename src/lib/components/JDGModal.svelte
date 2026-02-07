@@ -182,6 +182,7 @@
 
 	.modal-title-bar-container {
 		position: relative;
+		flex-shrink: 0;
 		width: -webkit-fill-available;
 		width: -moz-available;
 		border-radius: 10px 10px 0px 0px;
@@ -252,6 +253,7 @@
 
 	.modal-toolbar-slot {
 		display: flex;
+		flex-shrink: 0;
 		width: -webkit-fill-available;
 		width: -moz-available;
 		justify-content: right;
