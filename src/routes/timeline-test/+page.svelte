@@ -73,9 +73,6 @@
 	import JDGDatePicker from '$lib/components/Input/JDGDatePicker.svelte';
 	import jdgSaveStatus from '$lib/schemas/jdg-save-status.js';
 
-	// Ensure this page allows text selection
-	allowTextSelection.set(true);
-
 	// Set the age suffixes for timeline events
 	setContext(JDG_CONTEXTS.EVENT_AGE_SUFFIX_POSITIVE, 'after opening');
 	setContext(JDG_CONTEXTS.EVENT_AGE_SUFFIX_NEGATIVE, 'before opening');
@@ -326,6 +323,11 @@
 		localTimelineEventStore.set(instantiatedEvent);
 	}
 
+	// Set the desired save function so other components can call it
+	saveFunction.set(saveToRepo);
+	// Ensure this page allows text selection
+	allowTextSelection.set(true);
+
 	onMount(async () => {
 		/*** TIMELINE HOST COLLECTION ***/
 		// Get the available Building Data files from the repo
@@ -333,9 +335,6 @@
 		timelineHostFiles = await fetchJsonFileList(jdgRepoOwner, jdgBuildingDataRepoName);
 		// Set the initial default. [1] is the test file
 		selectedHostFileName = timelineHostFiles[1];
-
-		// Set the desired save function so other components can call it
-		saveFunction.set(saveToRepo);
 	});
 </script>
 
