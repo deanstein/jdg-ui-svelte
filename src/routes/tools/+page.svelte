@@ -55,15 +55,22 @@
 				<div class="sync-step">
 					<p class="sync-step-title"><b>2. Preview sync</b></p>
 					<p class="sync-step-desc">
-						dry run, no tags/releases created. Optional <code>--limit 10</code> for testing:
+						Dry run, no tags/releases created. <br />
+						Optional <code>--limit 10</code> to cap how many would be tagged:
 					</p>
 					<pre class="cli-block">yarn backfill
 yarn backfill -- --limit 10</pre>
 				</div>
 				<div class="sync-step">
 					<p class="sync-step-title"><b>3. Execute sync</b></p>
-					<p class="sync-step-desc">create tags and releases for real:</p>
-					<pre class="cli-block">yarn backfill -- --execute</pre>
+					<p class="sync-step-desc">
+						Create tags and releases for real.
+						<br />
+						With <code>--limit 10</code>, each run tags at most 10 that need it; next run continues
+						with the next batch:
+					</p>
+					<pre class="cli-block">yarn backfill -- --execute
+yarn backfill -- --execute --limit 10</pre>
 				</div>
 			</div>
 		</JDGBodyCopy>

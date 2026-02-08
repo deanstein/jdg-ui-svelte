@@ -39,7 +39,7 @@ function run(cmd) {
 }
 
 /**
- * @param {{ dryRun?: boolean, log?: string[], limit?: number }} [options]
+ * @param {{ dryRun?: boolean, log?: string[], limit?: number }} [options] - limit: max tags to create per run (only versions that need a tag); enables incremental runs
  * @returns {Promise<string[]>}
  */
 export async function runBackfill({ dryRun = true, log: out = [], limit } = {}) {
@@ -61,8 +61,7 @@ export async function runBackfill({ dryRun = true, log: out = [], limit } = {}) 
 	ln(`Found ${versions.length} versions on npm`);
 
 	if (limit != null && limit > 0) {
-		versions = versions.slice(0, limit);
-		ln(`Processing first ${versions.length} versions (limit applied).`);
+		ln(`Limit: tag at most ${limit} versions per run (only those that need a tag).`);
 	}
 
 	ln('Fetching existing tags from GitHub…');
@@ -79,7 +78,13 @@ export async function runBackfill({ dryRun = true, log: out = [], limit } = {}) 
 	const commits = run('git log --pretty=format:%H -- package.json').split('\n').filter(Boolean);
 	ln(`Found ${commits.length} commits that modified package.json`);
 
+	let taggedThisRun = 0;
 	for (const version of versions) {
+		if (limit != null && limit > 0 && taggedThisRun >= limit) {
+			ln('');
+			ln(`Reached limit of ${limit} tags this run; stopping.`);
+			break;
+		}
 		const tag = `v${version}`;
 
 		ln('');
@@ -116,10 +121,12 @@ export async function runBackfill({ dryRun = true, log: out = [], limit } = {}) 
 		if (dryRun) {
 			ln(`→ DRY RUN: Would create tag ${tag} at ${matchingCommit}`);
 			ln(`→ DRY RUN: Would create GitHub release for ${tag}`);
+			taggedThisRun += 1;
 			continue;
 		}
 
 		run(`git tag ${tag} ${matchingCommit}`);
+		taggedThisRun += 1;
 		run(`git push origin ${tag}`);
 
 		const res = await fetch(`https://api.github.com/repos/${REPO}/releases`, {
