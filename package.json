@@ -2,6 +2,8 @@
 	"name": "jdg-ui-svelte",
 	"version": "1.4.5",
 	"license": "MIT",
+	"repository": "github:deanstein/jdg-ui-svelte",
+	"homepage": "https://github.com/deanstein/jdg-ui-svelte#readme",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run package",
