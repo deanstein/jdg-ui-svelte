@@ -1,5 +1,6 @@
 <script>
 	import { listPackageVersions } from '$lib/tools/list-versions/list-package-versions-client.js';
+	import { allowTextSelection } from '$lib/stores/jdg-ui-store.js';
 	import {
 		JDGBodyCopy,
 		JDGButton,
@@ -22,6 +23,8 @@
 			listRunning = false;
 		}
 	}
+
+	allowTextSelection.set(true);
 </script>
 
 <JDGContentContainer overlapWithHeader={false}>
