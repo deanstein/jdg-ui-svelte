@@ -42,8 +42,17 @@ async function getGithubToken() {
 	return data.token;
 }
 
-function run(cmd) {
-	return execSync(cmd, { encoding: 'utf8' }).trim();
+function run(cmd, options = {}) {
+	return execSync(cmd, { encoding: 'utf8', ...options }).trim();
+}
+
+/** Run a command and capture stderr so it doesn't print (for expected failures, e.g. parent has no package.json). */
+function runQuiet(cmd) {
+	try {
+		return execSync(cmd, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }).trim();
+	} catch {
+		return null;
+	}
 }
 
 /**
@@ -131,6 +140,8 @@ export async function runBackfill({ dryRun = true, log: out = [], limit } = {}) 
 	const existingTags = Array.isArray(tagsData) ? tagsData.map((t) => t.name) : [];
 	ln(`Found ${existingTags.length} existing tags on GitHub.`);
 
+	// Commits that touched package.json (newest first). We tag the commit that *changes*
+	// the version field to this value (the version-bump commit), not a later commit that left it as-is.
 	const commits = run('git log --pretty=format:%H -- package.json').split('\n').filter(Boolean);
 
 	ln(`Found ${commits.length} commits that modified package.json`);
@@ -161,10 +172,17 @@ export async function runBackfill({ dryRun = true, log: out = [], limit } = {}) 
 				const file = run(`git show ${sha}:package.json`);
 				const json = JSON.parse(file);
 
-				if (json.version === version) {
-					matchingCommit = sha;
-					break;
+				if (json.version !== version) continue;
+				let parentVersion = null;
+				try {
+					const parentFile = runQuiet(`git show ${sha}~1:package.json`);
+					parentVersion = parentFile ? JSON.parse(parentFile).version : null;
+				} catch {
+					// no parent or parent has no package.json — this commit introduced the version
 				}
+				if (parentVersion === version) continue; // version was already there, not changed in this commit
+				matchingCommit = sha;
+				break;
 			} catch {
 				// ignore parse errors
 			}
@@ -175,7 +193,7 @@ export async function runBackfill({ dryRun = true, log: out = [], limit } = {}) 
 			continue;
 		}
 
-		ln(`→ Found commit: ${matchingCommit}`);
+		ln(`→ Found commit: ${matchingCommit} (commit that set package.json version to ${version})`);
 
 		if (dryRun) {
 			ln(`→ DRY RUN: Would create tag ${tag} at ${matchingCommit}`);
@@ -184,10 +202,24 @@ export async function runBackfill({ dryRun = true, log: out = [], limit } = {}) 
 			continue;
 		}
 
-		// REAL MODE BELOW
-		run(`git tag ${tag} ${matchingCommit}`);
+		// Create tag on GitHub via API (no local git tag or push)
+		const refRes = await fetch(`https://api.github.com/repos/${REPO}/git/refs`, {
+			method: 'POST',
+			headers: {
+				Authorization: `Bearer ${token}`,
+				Accept: 'application/vnd.github+json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ ref: `refs/tags/${tag}`, sha: matchingCommit })
+		});
+
+		if (!refRes.ok) {
+			const errBody = await refRes.text();
+			ln(`→ Failed to create tag ${tag}: ${refRes.status} ${errBody}`);
+			continue;
+		}
 		taggedThisRun += 1;
-		run(`git push origin ${tag}`);
+		ln(`→ Created tag ${tag} on GitHub`);
 
 		const res = await fetch(`https://api.github.com/repos/${REPO}/releases`, {
 			method: 'POST',
