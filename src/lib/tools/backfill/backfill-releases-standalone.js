@@ -47,6 +47,20 @@ function runQuiet(cmd) {
 	}
 }
 
+/** Fetch with retries on network failure (e.g. "other side closed"). Does not retry on 4xx/5xx. */
+async function fetchWithRetry(url, options, { retries = 3, delayMs = 2000 } = {}) {
+	let lastErr;
+	for (let attempt = 0; attempt <= retries; attempt++) {
+		try {
+			return await fetch(url, options);
+		} catch (err) {
+			lastErr = err;
+			if (attempt < retries) await new Promise((r) => setTimeout(r, delayMs));
+		}
+	}
+	throw lastErr;
+}
+
 /**
  * @param {{ dryRun?: boolean, log?: string[], limit?: number }} [options] - limit: max tags to create per run (only versions that need a tag); enables incremental runs
  * @returns {Promise<string[]>}
@@ -143,8 +157,8 @@ export async function runBackfill({ dryRun = true, log: out = [], limit } = {}) 
 			continue;
 		}
 
-		// Create tag on GitHub via API (no local git tag or push)
-		const refRes = await fetch(`https://api.github.com/repos/${REPO}/git/refs`, {
+		// Create tag on GitHub via API (no local git tag or push). Retry on transient network errors.
+		const refRes = await fetchWithRetry(`https://api.github.com/repos/${REPO}/git/refs`, {
 			method: 'POST',
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -162,7 +176,7 @@ export async function runBackfill({ dryRun = true, log: out = [], limit } = {}) 
 		taggedThisRun += 1;
 		ln(`→ Created tag ${tag} on GitHub`);
 
-		const res = await fetch(`https://api.github.com/repos/${REPO}/releases`, {
+		const releaseRes = await fetchWithRetry(`https://api.github.com/repos/${REPO}/releases`, {
 			method: 'POST',
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -173,13 +187,17 @@ export async function runBackfill({ dryRun = true, log: out = [], limit } = {}) 
 				name: tag,
 				generate_release_notes: true
 			})
-		}).then((r) => r.json());
+		});
+		const res = await releaseRes.json();
 
 		if (res.id) {
 			ln(`→ Created release ${tag}`);
 		} else {
 			ln(`→ Failed to create release for ${tag} ${JSON.stringify(res)}`);
 		}
+
+		// Throttle to reduce rate-limit risk (2 requests per version; delay before next)
+		if (!dryRun) await new Promise((r) => setTimeout(r, 1500));
 	}
 
 	ln('');
