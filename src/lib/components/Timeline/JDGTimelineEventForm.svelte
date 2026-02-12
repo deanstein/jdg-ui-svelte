@@ -509,7 +509,7 @@
 					{#if isAdditional}
 						<JDGTextArea bind:inputValue={$localAdditionalStore[key]} isEnabled={isEditing} />
 					{:else if key === 'description'}
-						{#key `${$localEventStore.isMediaWrapper}-${displayDescription}`}
+						{#key $localEventStore.isMediaWrapper}
 							{#if $localEventStore.isMediaWrapper}
 								<JDGTextArea inputValue={displayDescription} isEnabled={false} />
 							{:else}
