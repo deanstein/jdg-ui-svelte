@@ -547,13 +547,12 @@
       "version": "0.5.1"
     },
     "_1961_06_19_protestors": {
-      "id": "662d8638-9ee3-43fe-95e1-bf60780b4b4e",
-      "src": "https://res.cloudinary.com/jdg-main/image/upload/v1770873896/jdg-ui-svelte/ccm/1961-06-19-protestors.jpg",
-      "caption": "Protesters",
-      "attribution": "",
-      "alt": "Protesters",
+      "id": "73497767-162f-4a42-b2fa-ff71081d52e0",
+      "src": "https://res.cloudinary.com/jdg-main/image/upload/v1768198895/ccp-website/history/1961-06-19-protestors.jpg",
+      "caption": "William Urban and Mrs. Kass Nachazel display some of the 97 posters painted by youngsters at a picnic rally of the Northeast Englewood Citizens Committee to drum up support for the committee's fight against the proposed Cinderella City shopping center. \nEnglewood City Council will meet at 8pm Monday at the Englewood High School Field House to decide on rezoning for the area of the proposed center - the KLZ Radio Towers site on East Hampden Ave., just west of S. University Blvd.",
+      "attribution": "Denver Post - June 19, 1961",
+      "alt": "William Urban and Mrs. Kass Nachazel display some of the 97 posters painted by youngsters at a picnic rally of the Northeast Englewood Citizens Committee to drum up support for the committee's fight against the proposed Cinderella City shopping center. \nEnglewood City Council will meet at 8pm Monday at the Englewood High School Field House to decide on rezoning for the area of the proposed center - the KLZ Radio Towers site on East Hampden Ave., just west of S. University Blvd.",
       "title": "",
-      "isApprxDate": false,
       "showBackgroundBlur": true,
       "toolbarJustification": "right",
       "version": "0.7.1"
