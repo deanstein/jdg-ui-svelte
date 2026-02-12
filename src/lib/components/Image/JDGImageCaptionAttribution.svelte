@@ -173,6 +173,12 @@
 		}`;
 	}
 
+	// Line-height: 1 when collapsed (one line or Show more), 1.5 when expanded (Show less)
+	let captionLineHeightCss = css``;
+	$: captionLineHeightCss = css`
+		line-height: ${truncateText ? 1 : 1.5};
+	`;
+
 	// check for truncation when clientWidth changes
 	$: {
 		$clientWidth, availableWidthRef, captionTextRef, availableWidth;
@@ -248,7 +254,10 @@
 			<div class="caption-attribution-grid-container">
 				{#if showCaption && imageMeta.caption}
 					<div class="caption-attribution-flex-container {captionCss}">
-						<div bind:this={captionTextRef} class="caption-text {captionAttributionDynamicCss}">
+						<div
+							bind:this={captionTextRef}
+							class="caption-text {captionAttributionDynamicCss} {captionLineHeightCss}"
+						>
 							{imageMeta.caption}
 						</div>
 					</div>
@@ -329,10 +338,15 @@
 		box-sizing: border-box;
 		overflow: hidden;
 		text-overflow: ellipsis;
-		line-height: 1;
 		width: 100%;
 		padding: 2px 0.5rem 2px 0.5rem;
 	}
+
+	.attribution-text {
+		line-height: 1;
+	}
+
+	/* Caption line-height is set dynamically via captionLineHeightCss (1 when collapsed, 1.5 when expanded) */
 
 	.expand-collapse-button-container {
 		padding: 1px 0 0 0;
