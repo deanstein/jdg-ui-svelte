@@ -9,8 +9,27 @@
 
 	import { showImageDetailModal } from '$lib/jdg-state-management.js';
 
-	import { JDGTextInput, JDGButton, JDGImageTile, JDGLoadingSpinner } from '$lib/index.js';
+	import {
+		JDGTextInput,
+		JDGButton,
+		JDGImageTile,
+		JDGLoadingSpinner,
+		JDGFlyout,
+		JDGCheckbox,
+		JDGSelect
+	} from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
+
+	// Sort options for JDGSelect
+	const sortOptionsGroup = {
+		sort: {
+			label: 'Sort order',
+			'json-asc': { value: 'json-asc', label: 'By JSON (ascending)' },
+			'json-desc': { value: 'json-desc', label: 'By JSON (descending)' },
+			'date-asc': { value: 'date-asc', label: 'By date (oldest first)' },
+			'date-desc': { value: 'date-desc', label: 'By date (newest first)' }
+		}
+	};
 
 	// Get registry from context as fallback
 	const contextImageMetaRegistry = getContext(JDG_CONTEXTS.IMAGE_META_REGISTRY);
@@ -104,8 +123,21 @@
 	let loadMoreIndicator; // Reference for IntersectionObserver
 	let observer; // IntersectionObserver instance
 
+	// Sort mode: 'json-asc' | 'json-desc' | 'date-asc' | 'date-desc' (can be controlled by parent e.g. modal)
+	export let sortMode = 'json-desc';
+	let previousSortMode = sortMode;
+
+	// When false, Options flyout is hidden (parent provides it, e.g. in modal's header row)
+	export let showOptionsFlyout = true;
+
 	// Track if content is ready (prevents showing empty container during load/filter)
 	let isContentReady = false;
+
+	// Extract Cloudinary version (Unix timestamp) from src URL for date sorting
+	const getCloudinaryVersion = (img) => {
+		const match = img.src?.match(/\/v(\d+)\//);
+		return match ? parseInt(match[1], 10) : 0;
+	};
 
 	// Create a reactive set of selected image keys for fast lookup
 	// selectedImages is now an array of registry key strings
@@ -178,6 +210,21 @@
 	// Priority: fetchedRegistry (from remote repo) > imageMetaRegistry prop > context
 	$: registryToUse = fetchedRegistry || imageMetaRegistry || contextImageMetaRegistry;
 	$: allImages = flattenRegistry(registryToUse || {});
+
+	// Sort images based on sortMode
+	$: sortedImages = (() => {
+		const arr = [...allImages];
+		if (sortMode === 'json-asc') return arr;
+		if (sortMode === 'json-desc') return arr.reverse();
+		if (sortMode === 'date-asc') {
+			return arr.sort((a, b) => getCloudinaryVersion(a) - getCloudinaryVersion(b));
+		}
+		if (sortMode === 'date-desc') {
+			return arr.sort((a, b) => getCloudinaryVersion(b) - getCloudinaryVersion(a));
+		}
+		return arr;
+	})();
+
 	$: console.log(
 		'📷 Gallery using registry:',
 		fetchedRegistry ? 'fetched' : imageMetaRegistry ? 'prop' : 'context',
@@ -186,7 +233,7 @@
 	);
 
 	// Filter images based on search text
-	$: filteredImages = allImages.filter((img) => {
+	$: filteredImages = sortedImages.filter((img) => {
 		if (!filterText) return true;
 		const searchLower = filterText.toLowerCase();
 		const keyMatch = img.key.toLowerCase().includes(searchLower);
@@ -194,9 +241,10 @@
 		return keyMatch || captionMatch;
 	});
 
-	// Reset visible count and content ready state when filter actually changes
-	$: if (filterText !== previousFilterText) {
+	// Reset visible count and content ready state when filter or sort changes
+	$: if (filterText !== previousFilterText || sortMode !== previousSortMode) {
 		previousFilterText = filterText;
+		previousSortMode = sortMode;
 		visibleCount = imagesPerPage;
 		isContentReady = false;
 		// Wait a moment for images to start rendering before showing UI elements
@@ -325,11 +373,33 @@
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 		z-index: 3;
 	`;
+
+	const galleryOptionsControlsCss = css`
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		padding: 8px 0;
+		min-width: 200px;
+	`;
+
+	const sortSectionCss = css`
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		padding-top: 8px;
+		border-top: 1px solid rgba(200, 200, 200, 0.5);
+	`;
+
+	const sortSectionTitleCss = css`
+		font-weight: bold;
+		font-size: 1.05rem;
+		margin-bottom: 4px;
+	`;
 </script>
 
 <div class="jdg-image-gallery">
-	{#if showFilter}
-		<div class={filterContainerCss}>
+	<div class={filterContainerCss}>
+		{#if showFilter}
 			<div style="flex: 1;">
 				<JDGTextInput bind:inputValue={filterText} placeholder="Filter by name or caption..." />
 			</div>
@@ -343,8 +413,38 @@
 					backgroundColor={jdgColors.backgroundSubtle}
 				/>
 			{/if}
-		</div>
-	{/if}
+		{:else}
+			<div style="flex: 1;"></div>
+		{/if}
+		{#if showOptionsFlyout}
+			<JDGFlyout
+				tooltip="Gallery options"
+				flyoutTitle="Gallery Options"
+				flyoutPosition="bottom-left"
+			>
+				<div class={galleryOptionsControlsCss}>
+					<JDGCheckbox
+						isEnabled={true}
+						showLabel={true}
+						label="Show captions"
+						isChecked={showCaptions}
+						onCheckAction={() => (showCaptions = true)}
+						onUncheckAction={() => (showCaptions = false)}
+						labelFontSize="14px"
+					/>
+					<div class={sortSectionCss}>
+						<div class={sortSectionTitleCss}>Sort</div>
+						<JDGSelect
+							optionsGroup={sortOptionsGroup}
+							bind:inputValue={sortMode}
+							optionValueKey="value"
+							optionLabelKey="label"
+						/>
+					</div>
+				</div>
+			</JDGFlyout>
+		{/if}
+	</div>
 
 	<div
 		class={galleryContainerCss}
@@ -372,7 +472,7 @@
 				{filterText ? 'No images match your filter' : 'No images available'}
 			</div>
 		{:else}
-			{#key filterText}
+			{#key `${filterText}-${sortMode}`}
 				<div class={imageGridCss}>
 					{#each visibleImages as imageMeta (imageMeta.key)}
 						{@const selected = selectionEnabled && isImageSelected(imageMeta, selectedImageKeys)}

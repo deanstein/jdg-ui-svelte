@@ -5,12 +5,7 @@
 	import { getImageMetaRegistryLabel } from '$lib/jdg-persistence-management.js';
 	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
 
-	import {
-		JDGButton,
-		JDGCheckbox,
-		JDGImageRegistryGallery,
-		JDGNotificationBanner
-	} from '$lib/index.js';
+	import { JDGButton, JDGImageRegistryGallery, JDGNotificationBanner } from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
 
 	// The selected images array - bind to this from parent
@@ -101,7 +96,6 @@
 
 		<div class={headerCss}>
 			<div style="display: flex; align-items: center; gap: 12px;">
-				<JDGCheckbox label="Show captions" bind:isChecked={showCaptions} labelFontSize="14px" />
 				{#if !singleSelect}
 					<div class={infoCss}>
 						{selectedImages.length} image{selectedImages.length !== 1 ? 's' : ''} selected
@@ -123,7 +117,7 @@
 		<JDGImageRegistryGallery
 			{registryRepoName}
 			{imagesPerPage}
-			{showCaptions}
+			bind:showCaptions
 			{imageHeight}
 			{singleSelect}
 			selectionEnabled={isEnabled}
