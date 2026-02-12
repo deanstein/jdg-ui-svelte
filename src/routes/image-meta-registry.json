@@ -545,6 +545,18 @@
       "showBackgroundBlur": true,
       "toolbarJustification": "right",
       "version": "0.5.1"
+    },
+    "_1961_06_19_protestors": {
+      "id": "662d8638-9ee3-43fe-95e1-bf60780b4b4e",
+      "src": "https://res.cloudinary.com/jdg-main/image/upload/v1770873896/jdg-ui-svelte/ccm/1961-06-19-protestors.jpg",
+      "caption": "Protesters",
+      "attribution": "",
+      "alt": "Protesters",
+      "title": "",
+      "isApprxDate": false,
+      "showBackgroundBlur": true,
+      "toolbarJustification": "right",
+      "version": "0.7.1"
     }
   },
   "image_testing": {
