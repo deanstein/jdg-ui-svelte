@@ -17,7 +17,6 @@
 	import {
 		areObjectsEqual,
 		extractCloudinaryAssetpath,
-		getIsObjectInObject,
 		instantiateObject,
 		replaceCloudinaryAssetPath as replaceCloudinaryAssetPathInUrl,
 		upgradeImageMeta
@@ -790,7 +789,11 @@
 		// For existing images, find the registry key by looking up the src URL in the registry
 		// Do this BEFORE upgrade, since we need to find the original entry
 		if (currentMeta?.src && currentMeta.src.includes('cloudinary')) {
-			const foundKey = findRegistryKeyBySrc(registryToUse, currentMeta.src);
+			let foundKey = findRegistryKeyBySrc(registryToUse, currentMeta.src);
+			// Fallback: use key from caller (e.g. gallery's flattenRegistry) when lookup fails
+			if (!foundKey && typeof currentMeta.key === 'string') {
+				foundKey = currentMeta.key;
+			}
 			if (foundKey) {
 				registryKey = foundKey;
 				originalRegistryKey = foundKey; // Store so it doesn't change if filename changes
@@ -830,9 +833,7 @@
 </script>
 
 <JDGModal
-	title={getIsObjectInObject(effectiveRegistry, 'id', $draftImageMeta?.id)
-		? 'Edit Image Meta'
-		: 'New Image Meta'}
+	title={!isNewImage ? 'Edit Image Meta' : 'New Image Meta'}
 	subtitle={null}
 	onClickCloseButton={() => {
 		showImageMetaModal.set(false);
