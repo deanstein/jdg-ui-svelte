@@ -5,6 +5,10 @@
 	import JDG_CONTEXTS from '$lib/jdg-contexts.js';
 
 	import { imagesLoading, repoName as currentRepoName } from '$lib/stores/jdg-ui-store.js';
+	import {
+		draftTimelineImageMetaRegistry,
+		draftTimelineImageRegistryRepo
+	} from '$lib/stores/jdg-temp-store.js';
 	import { fetchImageMetaRegistry } from '$lib/jdg-persistence-management.js';
 
 	import { showImageDetailModal } from '$lib/jdg-state-management.js';
@@ -183,6 +187,12 @@
 		} else if (onClickImage) {
 			onClickImage(imageMeta);
 		} else {
+			// When viewing a different registry, set the registry context so ImageMetaModal
+			// can resolve the correct registry key and show "Edit" instead of "New"
+			if (fetchedRegistry && registryRepoName) {
+				draftTimelineImageMetaRegistry.set(fetchedRegistry);
+				draftTimelineImageRegistryRepo.set(registryRepoName);
+			}
 			showImageDetailModal(imageMeta);
 		}
 	};
