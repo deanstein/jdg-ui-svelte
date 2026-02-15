@@ -20,8 +20,7 @@
 		"format": "prettier --write .",
 		"list-versions": "node src/lib/tools/list-versions/run-list-versions.js",
 		"backfill": "node src/lib/tools/backfill/run-backfill.js",
-		"clean-image-registry": "node src/lib/tools/clean-image-registry.js",
-		"convert-image-registry-to-json": "node src/lib/tools/convert-image-registry-to-json.js"
+"convert-image-registry-to-json": "node src/lib/tools/convert-image-registry-to-json.js"
 	},
 	"exports": {
 		".": {
