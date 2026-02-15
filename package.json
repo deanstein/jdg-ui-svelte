@@ -1,6 +1,7 @@
 {
 	"name": "jdg-ui-svelte",
 	"version": "1.4.5",
+	"packageManager": "yarn@4.0.2",
 	"license": "MIT",
 	"repository": "github:deanstein/jdg-ui-svelte",
 	"homepage": "https://github.com/deanstein/jdg-ui-svelte#readme",
@@ -18,7 +19,9 @@
 		"prettier:check": "prettier --check \"{,!(node_modules|public|dist)/**/}*.{js,svelte}\"",
 		"format": "prettier --write .",
 		"list-versions": "node src/lib/tools/list-versions/run-list-versions.js",
-		"backfill": "node src/lib/tools/backfill/run-backfill.js"
+		"backfill": "node src/lib/tools/backfill/run-backfill.js",
+		"clean-image-registry": "node src/lib/tools/clean-image-registry.js",
+		"convert-image-registry-to-json": "node src/lib/tools/convert-image-registry-to-json.js"
 	},
 	"exports": {
 		".": {
