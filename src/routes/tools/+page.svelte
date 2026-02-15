@@ -5,7 +5,8 @@
 		JDGBodyCopy,
 		JDGButton,
 		JDGContentBoxFloating,
-		JDGContentContainer
+		JDGContentContainer,
+		JDGH3H4
 	} from '$lib/index.js';
 
 	let listOutput = '';
@@ -30,7 +31,7 @@
 <JDGContentContainer overlapWithHeader={false}>
 	<JDGContentBoxFloating title="TOOLS">
 		<JDGBodyCopy paddingTop="0" textAlign="center">
-			<b>NPM + GitHub Version Sync</b>
+			<JDGH3H4 h3String="NPM + GitHub Version Sync" />
 			<br />
 			Backfill GitHub releases and tags to match published npm versions.
 			<br />
@@ -79,10 +80,11 @@ yarn backfill --execute --limit 10</pre>
 		</JDGBodyCopy>
 
 		<JDGBodyCopy paddingTop="1.5rem" textAlign="center">
-			<b>Convert image registry to JSON</b>
+			<JDGH3H4 h3String="Convert image registry to JSON" />
 			<br />
 			One-time migration: reads the imageMetaRegistry object from a JS file and writes it as pretty-printed
-			JSON. Run from repo root. Defaults: <code>src/lib/image-meta-registry.js</code> → <code>src/lib/image-meta-registry.json</code>.
+			JSON. Run from repo root. Defaults: <code>src/lib/image-meta-registry.js</code> →
+			<code>src/lib/image-meta-registry.json</code>.
 			<pre class="cli-block">yarn convert-image-registry-to-json
 yarn convert-image-registry-to-json --input path/to/registry.js --output path/to/registry.json
 yarn convert-image-registry-to-json --help</pre>
