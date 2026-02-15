@@ -79,21 +79,13 @@ yarn backfill --execute --limit 10</pre>
 		</JDGBodyCopy>
 
 		<JDGBodyCopy paddingTop="1.5rem" textAlign="center">
-			<b>Clean image registry</b>
-			<br />
-			One-time cleanup script: rewrites JS files that use instantiateObject(...) or postProcessImageAttributes(...)
-			by unwrapping those calls and leaving plain object literals. Use when migrating image registry
-			files to a simpler format. Run from CLI (<code>src/lib/tools/clean-image-registry.js</code>);
-			no UI.
-		</JDGBodyCopy>
-
-		<JDGBodyCopy paddingTop="1rem" textAlign="center">
 			<b>Convert image registry to JSON</b>
 			<br />
-			One-time migration: reads the imageMetaRegistry from image-meta-registry.js and writes it as pretty-printed
-			JSON to image-meta-registry.json. Run from CLI (<code
-				>src/lib/tools/convert-image-registry-to-json.js</code
-			>); no UI.
+			One-time migration: reads the imageMetaRegistry object from a JS file and writes it as pretty-printed
+			JSON. Run from repo root. Defaults: <code>src/lib/image-meta-registry.js</code> → <code>src/lib/image-meta-registry.json</code>.
+			<pre class="cli-block">yarn convert-image-registry-to-json
+yarn convert-image-registry-to-json --input path/to/registry.js --output path/to/registry.json
+yarn convert-image-registry-to-json --help</pre>
 		</JDGBodyCopy>
 	</JDGContentBoxFloating>
 </JDGContentContainer>
