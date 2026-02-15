@@ -20,14 +20,12 @@
 		"list-versions": "node src/lib/tools/list-versions/run-list-versions.js",
 		"backfill": "node src/lib/tools/backfill/run-backfill.js"
 	},
-
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
 			"svelte": "./dist/index.js"
 		}
 	},
-
 	"files": [
 		"dist",
 		"!dist/**/*.test.*",
