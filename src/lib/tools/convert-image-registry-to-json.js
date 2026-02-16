@@ -3,6 +3,8 @@
  * (const imageMetaRegistry = { ... }) and writes it as pretty-printed JSON.
  * If the JS uses instantiateObject(...) or postProcessImageAttributes(...),
  * those are unwrapped in memory so the output is pure JSON (no function calls).
+ * If the output file already exists, the converted keys are merged into it
+ * (existing keys are kept; same keys are overwritten by the converted object).
  *
  * Run from repo root:
  *   yarn convert-image-registry-to-json
@@ -114,5 +116,24 @@ const sandbox = { result: null };
 vm.createContext(sandbox);
 vm.runInContext(script, sandbox);
 
-fs.writeFileSync(output, JSON.stringify(sandbox.result, null, 2) + '\n', 'utf8');
+let result = sandbox.result;
+if (typeof result !== 'object' || result === null) {
+	console.error('Converted value is not an object');
+	process.exit(1);
+}
+
+// If output already exists, merge: keep existing keys, add/overwrite with converted keys
+if (fs.existsSync(output)) {
+	try {
+		const existing = JSON.parse(fs.readFileSync(output, 'utf8'));
+		if (typeof existing === 'object' && existing !== null && !Array.isArray(existing)) {
+			result = { ...existing, ...result };
+			console.log('Merged with existing', output);
+		}
+	} catch (err) {
+		console.warn('Could not parse existing output file, overwriting:', err.message);
+	}
+}
+
+fs.writeFileSync(output, JSON.stringify(result, null, 2) + '\n', 'utf8');
 console.log('Wrote', output);
