@@ -59,10 +59,13 @@
 				<div class="sync-step">
 					<p class="sync-step-title"><b>2. Preview sync</b></p>
 					<p class="sync-step-desc">
-						Dry run, no tags/releases created. <br />
-						Optional <code>--limit 10</code> to cap how many would be tagged:
+						Dry run, no tags/releases created.
+						<br />
+						<code>--hard-limit 1</code> only considers the newest version (fast when only the latest is missing).
+						<code>--limit 10</code> caps how many would be tagged per run.
 					</p>
 					<pre class="cli-block">yarn backfill
+yarn backfill --hard-limit 1
 yarn backfill --limit 10</pre>
 				</div>
 				<div class="sync-step">
@@ -70,10 +73,11 @@ yarn backfill --limit 10</pre>
 					<p class="sync-step-desc">
 						Create tags and releases for real.
 						<br />
-						With <code>--limit 10</code>, each run tags at most 10 that need it; next run continues
-						with the next batch:
+						<code>--hard-limit 1</code> only considers the newest version.
+						<code>--limit 10</code> tags at most 10 that need it per run; next run continues with the next batch.
 					</p>
 					<pre class="cli-block">yarn backfill --execute
+yarn backfill --execute --hard-limit 1
 yarn backfill --execute --limit 10</pre>
 				</div>
 			</div>
