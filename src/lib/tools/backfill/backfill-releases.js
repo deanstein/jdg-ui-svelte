@@ -115,10 +115,12 @@ export async function listPackageVersions({ log: out = [] } = {}) {
 
 /**
  * Run the backfill. When log is provided, appends lines to it and returns it; otherwise uses console.
- * @param {{ dryRun?: boolean, log?: string[], limit?: number }} [options] - limit: max tags to create per run (only versions that need a tag); enables incremental runs
+ * @param {{ dryRun?: boolean, log?: string[], limit?: number, hardLimit?: number }} [options]
+ *   - limit: max tags to create per run (only versions that need a tag); enables incremental runs
+ *   - hardLimit: only consider the first N versions (newest first); use e.g. 1 to only check the latest
  * @returns {Promise<string[]>} lines of output
  */
-export async function runBackfill({ dryRun = true, log: out = [], limit } = {}) {
+export async function runBackfill({ dryRun = true, log: out = [], limit, hardLimit } = {}) {
 	const ln = (msg) => {
 		out.push(msg);
 	};
@@ -126,6 +128,9 @@ export async function runBackfill({ dryRun = true, log: out = [], limit } = {}) 
 	ln(`DRY RUN MODE: ${dryRun ? 'ON' : 'OFF'}`);
 	if (limit != null && limit > 0) {
 		ln(`Version limit: ${limit} (testing)`);
+	}
+	if (hardLimit != null && hardLimit > 0) {
+		ln(`Hard limit: only consider the first ${hardLimit} version(s) (newest first)`);
 	}
 	ln('Fetching GitHub App token from Cloudflare Worker…');
 
@@ -148,6 +153,10 @@ export async function runBackfill({ dryRun = true, log: out = [], limit } = {}) 
 	});
 	ln(`Found ${versions.length} versions on npm (newest first)`);
 
+	if (hardLimit != null && hardLimit > 0) {
+		versions = versions.slice(0, hardLimit);
+		ln(`Hard limit: considering only ${versions.length} version(s).`);
+	}
 	if (limit != null && limit > 0) {
 		ln(`Limit: tag at most ${limit} versions per run (only those that need a tag).`);
 	}
