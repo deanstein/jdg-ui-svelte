@@ -23,11 +23,26 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Create tag
+      - name: Find version-bump commit
+        id: find_commit
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          for commit in $(git log --pretty=format:%H -- package.json); do
+            cur=$(git show "$commit:package.json" 2>/dev/null | jq -r .version // empty)
+            [ "$cur" != "$VERSION" ] && continue
+            parent=$(git show "$commit^:package.json" 2>/dev/null | jq -r .version // empty)
+            [ "$parent" = "$VERSION" ] && continue
+            echo "sha=$commit" >> $GITHUB_OUTPUT
+            exit 0
+          done
+          echo "::error::No commit found where package.json version was set to $VERSION"
+          exit 1
+
+      - name: Create tag at version-bump commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag "v${{ github.event.inputs.version }}"
+          git tag "v${{ github.event.inputs.version }}" "${{ steps.find_commit.outputs.sha }}"
           git push origin "v${{ github.event.inputs.version }}"
 
       - name: Create GitHub Release
