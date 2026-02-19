@@ -27,24 +27,18 @@ It's a good idea to test the locally-built package in a locally-built website be
 
 ## In the `jdg-ui-svelte` repo
 
-First, create a link:
-```bash
-yarn link
-```
-> Only need to do this once, unless a link is already present from a while ago, in which case run ```yarn unlink``` 
-
-Then, build the `jdg-ui-svelte` package locally:
+Build the package locally (no link step needed in the package repo):
 ```bash
 yarn build
 ```
 > Repeat this step after every package change you want to test locally
 
 ## In the `consuming website` repo
-Link to the `jdg-ui-svelte` package:
+Link to the local `jdg-ui-svelte` package (run from consumer repo, pass path to this repo):
 ```bash
-yarn link jdg-ui-svelte
+yarn link /path/to/jdg-ui-svelte
 ```
-> Only need to do this once, unless a link is already present from a while ago, in which case run ```yarn unlink jdg-ui-svelte```
+Use the actual path to your `jdg-ui-svelte` clone (e.g. `../jdg-ui-svelte` if it’s a sibling folder). Add `--relative` to use a path relative to the consumer repo. Only need to do this once; to remove the link, run `yarn unlink /path/to/jdg-ui-svelte` or `yarn unlink jdg-ui-svelte`.
 
 Cancel any current ```yarn run dev``` command and re-run the dev server using ```--force```:
 ```bash
@@ -52,12 +46,12 @@ yarn run dev --force
 ```
 > Need to cancel the server and re-run using `--force` any time the UI package has changed locally
 
-To revert to using the official package (not the linked one), be sure to un-link:
+To revert to using the published package, unlink and reinstall:
 
 ```bash
 yarn unlink jdg-ui-svelte
+yarn install
 ```
-> After this, need to run ```yarn install --force```
 
 # Previewing
 
@@ -82,10 +76,12 @@ First, update the version in package.json by incrementing whichever field makes 
 
 Then:
 ```bash
-yarn publish
+yarn npm publish
 ```
+For scoped packages on the public registry, add `--access public` if needed.
 
 # Usage
 If the host app doesn't already have jdg-ui-svelte installed:
 ```bash
 yarn add jdg-ui-svelte@latest
+```
