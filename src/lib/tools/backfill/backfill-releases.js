@@ -135,8 +135,18 @@ export async function runBackfill({ dryRun = true, log: out = [], limit } = {}) 
 	ln(`Fetching versions for ${PACKAGE_NAME} from npm…`);
 	const npmData = await fetch(`https://registry.npmjs.org/${PACKAGE_NAME}`).then((r) => r.json());
 	let versions = Object.keys(npmData.versions);
-
-	ln(`Found ${versions.length} versions on npm`);
+	// Process newest first so we can backfill the latest release quickly without scanning older ones.
+	versions = versions.sort((a, b) => {
+		const pa = a.split('.').map((n) => parseInt(n, 10) || 0);
+		const pb = b.split('.').map((n) => parseInt(n, 10) || 0);
+		for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+			const va = pa[i] ?? 0;
+			const vb = pb[i] ?? 0;
+			if (va !== vb) return vb - va; // descending
+		}
+		return 0;
+	});
+	ln(`Found ${versions.length} versions on npm (newest first)`);
 
 	if (limit != null && limit > 0) {
 		ln(`Limit: tag at most ${limit} versions per run (only those that need a tag).`);
