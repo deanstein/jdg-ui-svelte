@@ -1,5 +1,5 @@
 # JDG SVELTE UI
-Svelte-based UI component library for JDG websites and apps. Features basic building blocks (layouts, images, buttons) as well as advanced composite elements (timeline, image galleries). All components are reactive and published as an npm package.
+Svelte-based UI component library for JDG websites and apps. Features basic building blocks (buttons, images, layouts) as well as advanced composite elements (timelines, image galleries). All components are reactive and published as an npm package.
 
 **Changelog:** [GitHub Releases](https://github.com/deanstein/jdg-ui-svelte/releases)
 
