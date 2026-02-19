@@ -1,8 +1,14 @@
 name: Sync npm publish to GitHub Release
 
+# Runs when you publish to npm and then trigger this workflow with the new version.
+# GitHub cannot see npmjs.com publishes, so run this manually after each npm publish.
 on:
-  registry_package:
-    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version just published to npm (e.g. 2.0.0)'
+        required: true
+        type: string
 
 jobs:
   create-release:
@@ -14,21 +20,21 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Extract version from npm event
-        id: get_version
-        run: echo "version=${{ github.event.registry_package.package.version }}" >> $GITHUB_OUTPUT
+        with:
+          fetch-depth: 0
 
       - name: Create tag
         run: |
-          git tag v${{ steps.get_version.outputs.version }}
-          git push origin v${{ steps.get_version.outputs.version }}
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag "v${{ github.event.inputs.version }}"
+          git push origin "v${{ github.event.inputs.version }}"
 
       - name: Create GitHub Release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ steps.get_version.outputs.version }}
-          release_name: v${{ steps.get_version.outputs.version }}
+          tag_name: v${{ github.event.inputs.version }}
+          name: v${{ github.event.inputs.version }}
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
