@@ -1,6 +1,6 @@
 /**
  * One-time migration: reads the imageMetaRegistry object from a JS file
- * (const imageMetaRegistry = { ... }) and writes it as pretty-printed JSON.
+ * (const imageAttributesCollection = { ... } or const imageMetaRegistry = { ... }) and writes it as pretty-printed JSON.
  * If the JS uses instantiateObject(...) or postProcessImageAttributes(...),
  * those are unwrapped in memory so the output is pure JSON (no function calls).
  * Legacy keys are normalized for output: imgSrc→src, imgAlt→alt, imgCaption→caption,
@@ -143,12 +143,18 @@ if (!fs.existsSync(input)) {
 	process.exit(1);
 }
 
+const REGISTRY_OBJECT_NAMES = ['imageAttributesCollection', 'imageMetaRegistry'];
+
 let content = fs.readFileSync(input, 'utf8');
 // Unwrap instantiateObject(...) and postProcessImageAttributes(...) so we get a plain object
 content = normalizeRegistryJs(content);
-const match = content.match(/const\s+imageMetaRegistry\s*=\s*(\{[\s\S]*\})\s*;?/m);
+let match = null;
+for (const name of REGISTRY_OBJECT_NAMES) {
+	match = content.match(new RegExp(`const\\s+${name}\\s*=\\s*(\\{[\\s\\S]*\\})\\s*;?`, 'm'));
+	if (match) break;
+}
 if (!match) {
-	console.error('Could not find imageMetaRegistry object in', input);
+	console.error('Could not find imageAttributesCollection or imageMetaRegistry object in', input);
 	process.exit(1);
 }
 
