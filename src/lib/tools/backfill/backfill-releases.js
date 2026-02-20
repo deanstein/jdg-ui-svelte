@@ -249,6 +249,12 @@ export async function runBackfill({ dryRun = true, log: out = [], limit, hardLim
 		if (!refRes.ok) {
 			const errBody = await refRes.text();
 			ln(`→ Failed to create tag ${tag}: ${refRes.status} ${errBody}`);
+			if (refRes.status === 403) {
+				const acceptedPerms = refRes.headers.get('X-Accepted-GitHub-Permissions');
+				const requiredPerms = refRes.headers.get('X-Required-Permission');
+				if (acceptedPerms) ln(`→ GitHub says required permission(s): ${acceptedPerms}`);
+				if (requiredPerms) ln(`→ GitHub X-Required-Permission: ${requiredPerms}`);
+			}
 			continue;
 		}
 		taggedThisRun += 1;
