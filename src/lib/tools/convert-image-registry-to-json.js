@@ -3,6 +3,8 @@
  * (const imageMetaRegistry = { ... }) and writes it as pretty-printed JSON.
  * If the JS uses instantiateObject(...) or postProcessImageAttributes(...),
  * those are unwrapped in memory so the output is pure JSON (no function calls).
+ * Legacy keys are normalized for output: imgSrc→src, imgAlt→alt, imgCaption→caption,
+ * imgAttribution→attribution.
  * If the output file already exists, the converted keys are merged into it
  * (existing keys are kept; same keys are overwritten by the converted object).
  *
@@ -76,6 +78,46 @@ function normalizeRegistryJs(content) {
 	return content;
 }
 
+/** Map legacy img* keys to canonical keys in the output JSON. */
+const KEY_RENAMES = {
+	imgSrc: 'src',
+	imgAlt: 'alt',
+	imgCaption: 'caption',
+	imgAttribution: 'attribution'
+};
+
+/** True only for leaf image-meta objects (have src/imgSrc). Ensures namespace objects (keys that contain nested registries) are recursed into so nesting is preserved. */
+function isImageMetaEntry(obj) {
+	if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return false;
+	return 'src' in obj || 'imgSrc' in obj;
+}
+
+/**
+ * Recursively normalize keys: rename img* to canonical names only on leaf image-meta objects.
+ * Handles both top-level image entries (registry = { id1: { imgSrc, ... }, id2: { ... } }) and
+ * nested namespaces (registry = { arch: { id1: { imgSrc, ... } }, exp: { ... } }); structure is preserved.
+ */
+function normalizeImageMetaKeys(obj) {
+	if (!obj || typeof obj !== 'object') return obj;
+	if (Array.isArray(obj)) return obj.map(normalizeImageMetaKeys);
+
+	if (isImageMetaEntry(obj)) {
+		const out = { ...obj };
+		for (const [oldKey, newKey] of Object.entries(KEY_RENAMES)) {
+			if (oldKey in out) {
+				out[newKey] = out[oldKey];
+				delete out[oldKey];
+			}
+		}
+		return out;
+	}
+
+	// Preserve nesting: recurse into namespace objects (registries keyed by category, etc.)
+	return Object.fromEntries(
+		Object.entries(obj).map(([key, value]) => [key, normalizeImageMetaKeys(value)])
+	);
+}
+
 const cwd = process.cwd();
 const args = process.argv.slice(2);
 
@@ -121,6 +163,8 @@ if (typeof result !== 'object' || result === null) {
 	console.error('Converted value is not an object');
 	process.exit(1);
 }
+
+result = normalizeImageMetaKeys(result);
 
 // If output already exists, merge: keep existing keys, add/overwrite with converted keys
 if (fs.existsSync(output)) {
