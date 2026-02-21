@@ -3,8 +3,8 @@
  * (const imageAttributesCollection = { ... } or const imageMetaRegistry = { ... }) and writes it as pretty-printed JSON.
  * If the JS uses instantiateObject(...) or postProcessImageAttributes(...),
  * those are unwrapped in memory so the output is pure JSON (no function calls).
- * Legacy keys are normalized for output: imgSrc→src, imgAlt→alt, imgCaption→caption,
- * imgAttribution→attribution.
+ * Legacy keys are normalized for output: imgSrc→src, imgAlt→alt, imgAttribution→attribution,
+ * imgCaption→caption, toolbarAlignment→toolbarJustification; doAllowBackgroundBlur and allowBackgroundBlur→showBackgroundBlur.
  * If the output file already exists, the converted keys are merged into it
  * (existing keys are kept; same keys are overwritten by the converted object).
  *
@@ -78,12 +78,15 @@ function normalizeRegistryJs(content) {
 	return content;
 }
 
-/** Map legacy img* keys to canonical keys in the output JSON. */
+/** Map legacy keys to canonical keys in the output JSON. */
 const KEY_RENAMES = {
 	imgSrc: 'src',
 	imgAlt: 'alt',
+	imgAttribution: 'attribution',
 	imgCaption: 'caption',
-	imgAttribution: 'attribution'
+	toolbarAlignment: 'toolbarJustification',
+	doAllowBackgroundBlur: 'showBackgroundBlur',
+	allowBackgroundBlur: 'showBackgroundBlur'
 };
 
 /** True only for leaf image-meta objects (have src/imgSrc). Ensures namespace objects (keys that contain nested registries) are recursed into so nesting is preserved. */
