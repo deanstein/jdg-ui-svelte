@@ -108,7 +108,7 @@
 			overlapWithHeader={true}
 			parallax
 		/>
-		<JDGContentBoxFloating animateWhenVisible={false} includeInJumpTo={false}>
+		<JDGContentBoxFloating animateWhenVisible={false}>
 			<JDGBodyCopy fontSizeMultiplier={1.15}>
 				<strong>JDG SVELTE UI</strong> is an in-progress UI framework by
 				<a href="./about">Joshua Dean Goldstein.</a>
