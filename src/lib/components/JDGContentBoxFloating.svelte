@@ -78,8 +78,8 @@
 	`;
 
 	onMount(() => {
-		// add the jumpToNavItems if requested
-		if (includeInJumpTo) {
+		// add the jumpToNavItems if requested (only when section has a title)
+		if (includeInJumpTo && title) {
 			addJumpToNavItem(
 				instantiateObject(jdgNavItem, {
 					label: title,
@@ -136,7 +136,7 @@
 	});
 
 	onDestroy(() => {
-		if (includeInJumpTo) {
+		if (includeInJumpTo && title) {
 			removeJumpToNavItem(
 				instantiateObject(jdgNavItem, {
 					label: title,
