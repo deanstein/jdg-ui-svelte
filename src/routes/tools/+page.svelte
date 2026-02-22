@@ -61,7 +61,8 @@
 					<p class="sync-step-desc">
 						Dry run, no tags/releases created.
 						<br />
-						<code>--hard-limit 1</code> only considers the newest version (fast when only the latest is missing).
+						<code>--hard-limit 1</code> only considers the newest version (fast when only the latest
+						is missing).
 						<code>--limit 10</code> caps how many would be tagged per run.
 					</p>
 					<pre class="cli-block">yarn backfill
@@ -74,7 +75,8 @@ yarn backfill --limit 10</pre>
 						Create tags and releases for real.
 						<br />
 						<code>--hard-limit 1</code> only considers the newest version.
-						<code>--limit 10</code> tags at most 10 that need it per run; next run continues with the next batch.
+						<code>--limit 10</code> tags at most 10 that need it per run; next run continues with the
+						next batch.
 					</p>
 					<pre class="cli-block">yarn backfill --execute
 yarn backfill --execute --hard-limit 1
