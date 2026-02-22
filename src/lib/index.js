@@ -1,33 +1,36 @@
 /*** CORE EXPORTS ***/
 
 // 🧠 Schemas
-export * from './schemas/jdg-image-meta.js';
-export * from './schemas/jdg-notification-types.js';
-export * from './schemas/jdg-nav-item.js';
+export { default as jdgImageMeta } from './schemas/jdg-image-meta.js';
+export { default as jdgNotificationTypes } from './schemas/jdg-notification-types.js';
+export { default as jdgNavItem } from './schemas/jdg-nav-item.js';
 // 🕰️ Timeline Schemas
-export * from './schemas/timeline/jdg-timeline-event.js';
-export * from './schemas/timeline/jdg-timeline-host.js';
-export * from './schemas/timeline/jdg-timeline-event-image.js';
-export * from './schemas/timeline/jdg-timeline-event-reference.js';
-export * from './schemas/timeline/jdg-timeline-event-types.js';
-export * from './schemas/timeline/jdg-timeline-row-item.js';
+export { default as jdgTimelineEvent } from './schemas/timeline/jdg-timeline-event.js';
+export { default as jdgTimelineHost } from './schemas/timeline/jdg-timeline-host.js';
+export { default as timelineEventImage } from './schemas/timeline/jdg-timeline-event-image.js';
+export { default as timelineEventReference } from './schemas/timeline/jdg-timeline-event-reference.js';
+export {
+	default as jdgTimelineEventTypes,
+	jdgTimelineEventKeys
+} from './schemas/timeline/jdg-timeline-event-types.js';
+export { default as jdgTimelineRowItem } from './schemas/timeline/jdg-timeline-row-item.js';
 
 // 🏪 Stores
 export * from './stores/jdg-ui-store.js';
-export * from './stores/jdg-shared-urls-store.js';
+export { default as jdgSharedUrlsStore } from './stores/jdg-shared-urls-store.js';
 
-// 🧩 Management & State
+// 🧩 Management & State (named exports — export * is correct)
 export * from './jdg-persistence-management.js';
 export * from './jdg-state-management.js';
 export * from './jdg-ui-management.js';
 
-// 🛠️ Utilities
+// 🛠️ Utilities (named exports)
 export * from './jdg-utils.js';
 
 // 🧵 Shared Assets
 export * from './jdg-shared-strings.js';
 export * from './jdg-shared-styles.js';
-export * from './jdg-image-meta-registry.js';
+export { default as getJdgImageMetaRegistry } from './jdg-image-meta-registry.js';
 
 /*** SVELTE EXPORTS ***/
 
