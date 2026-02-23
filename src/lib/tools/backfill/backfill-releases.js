@@ -117,7 +117,7 @@ export async function listPackageVersions({ log: out = [] } = {}) {
  * Run the backfill. When log is provided, appends lines to it and returns it; otherwise uses console.
  * @param {{ dryRun?: boolean, log?: string[], limit?: number, hardLimit?: number }} [options]
  *   - limit: max tags to create per run (only versions that need a tag); enables incremental runs
- *   - hardLimit: only consider the first N versions (newest first); use e.g. 1 to only check the latest
+ *   - hardLimit: only consider the newest N versions; use e.g. 1 to only check the latest
  * @returns {Promise<string[]>} lines of output
  */
 export async function runBackfill({ dryRun = true, log: out = [], limit, hardLimit } = {}) {
@@ -130,7 +130,7 @@ export async function runBackfill({ dryRun = true, log: out = [], limit, hardLim
 		ln(`Version limit: ${limit} (testing)`);
 	}
 	if (hardLimit != null && hardLimit > 0) {
-		ln(`Hard limit: only consider the first ${hardLimit} version(s) (newest first)`);
+		ln(`Hard limit: only consider the newest ${hardLimit} version(s)`);
 	}
 	ln('Fetching GitHub App token from Cloudflare Worker…');
 
@@ -140,22 +140,22 @@ export async function runBackfill({ dryRun = true, log: out = [], limit, hardLim
 	ln(`Fetching versions for ${PACKAGE_NAME} from npm…`);
 	const npmData = await fetch(`https://registry.npmjs.org/${PACKAGE_NAME}`).then((r) => r.json());
 	let versions = Object.keys(npmData.versions);
-	// Process newest first so we can backfill the latest release quickly without scanning older ones.
+	// Process oldest first so GitHub releases page shows chronological order (latest created last = shows first).
 	versions = versions.sort((a, b) => {
 		const pa = a.split('.').map((n) => parseInt(n, 10) || 0);
 		const pb = b.split('.').map((n) => parseInt(n, 10) || 0);
 		for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
 			const va = pa[i] ?? 0;
 			const vb = pb[i] ?? 0;
-			if (va !== vb) return vb - va; // descending
+			if (va !== vb) return va - vb; // ascending (oldest first)
 		}
 		return 0;
 	});
-	ln(`Found ${versions.length} versions on npm (newest first)`);
+	ln(`Found ${versions.length} versions on npm (oldest first)`);
 
 	if (hardLimit != null && hardLimit > 0) {
-		versions = versions.slice(0, hardLimit);
-		ln(`Hard limit: considering only ${versions.length} version(s).`);
+		versions = versions.slice(-hardLimit);
+		ln(`Hard limit: considering only the newest ${versions.length} version(s).`);
 	}
 	if (limit != null && limit > 0) {
 		ln(`Limit: tag at most ${limit} versions per run (only those that need a tag).`);
