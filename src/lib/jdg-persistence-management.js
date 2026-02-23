@@ -3,6 +3,7 @@ import { decrypt } from './jdg-utils.js';
 // JDG-ADMIN Cloudflare worker
 export const cfWorkerUrlAdmin = 'https://jdg-admin.jdeangoldstein.workers.dev';
 export const cfRouteCheckAdmin = '/check-admin';
+export const cfRouteVerifyAdmin = '/verify-admin';
 export const cfRouteListJsonFiles = '/list-json-files';
 export const cfRouteFetchFile = '/fetch-file';
 export const cfRouteWriteJsonFile = '/write-json-file';
@@ -148,6 +149,25 @@ export async function fetchIsAdmin(passphrase) {
 		}
 	} catch (err) {
 		console.error('Error checking admin passphrase:', err);
+		return null;
+	}
+}
+
+/** Verify admin JWT. Returns { isAdmin: true } if valid, null otherwise. */
+export async function fetchVerifyAdmin(token) {
+	if (!token) return null;
+	try {
+		const response = await fetch(cfWorkerUrlAdmin + cfRouteVerifyAdmin, {
+			headers: { Authorization: `Bearer ${token}` }
+		});
+		const contentType = response.headers.get('Content-Type');
+		if (contentType?.includes('application/json')) {
+			const data = await response.json();
+			return response.ok && data.isAdmin === true ? data : null;
+		}
+		return null;
+	} catch (err) {
+		console.error('Error verifying admin token:', err);
 		return null;
 	}
 }

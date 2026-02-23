@@ -3,9 +3,11 @@
 	import { css } from '@emotion/css';
 
 	import {
+		ADMIN_TOKEN_STORAGE_KEY,
 		isAdminMode,
 		showAdminLoginModal,
-		postAdminLoginFunction
+		postAdminLoginFunction,
+		tokenBasedAdminMode
 	} from '$lib/stores/jdg-ui-store.js';
 	import { adminFormPassphrase } from '$lib/stores/jdg-temp-store.js';
 	import { fetchIsAdmin } from '$lib/jdg-persistence-management.js';
@@ -33,13 +35,13 @@
 		const isAdminResponse = await fetchIsAdmin(get(adminFormPassphrase));
 
 		if (isAdminResponse.success && isAdminResponse.isAdmin) {
-			// set admin mode to true
-			// so no further logins are required
-			isAdminMode.set(true);
+			if (isAdminResponse.token && typeof sessionStorage !== 'undefined') {
+				sessionStorage.setItem(ADMIN_TOKEN_STORAGE_KEY, isAdminResponse.token);
+			}
+			tokenBasedAdminMode.set(true);
 			showAdminLoginModal.set(false);
 			showLoadingMessage = false;
 
-			// execute whatever action was invoked before this dialog was shown
 			const postLoginFunction = get(postAdminLoginFunction);
 			if (postLoginFunction) {
 				postLoginFunction();

@@ -1,7 +1,28 @@
-import { derived, writable } from 'svelte/store';
+import { derived, get, writable } from 'svelte/store';
 
 /*** ADMINISTRATION ***/
-export let isAdminMode = writable(false);
+// Admin state: either from consuming app (adminModeSource) or from package-owned token (tokenBasedAdminMode).
+// Consuming apps may set adminModeSource to their own store; otherwise package uses token from admin worker.
+export let adminModeSource = writable(null);
+/** Set by package when admin JWT is valid (login or verify-admin). Not for app use. */
+export let tokenBasedAdminMode = writable(false);
+/** sessionStorage key for admin JWT (package-only). */
+export const ADMIN_TOKEN_STORAGE_KEY = 'jdg-admin-token';
+export let isAdminMode = derived(
+	[adminModeSource, tokenBasedAdminMode],
+	([$src, tokenVal], set) => {
+		if (tokenVal) {
+			set(true);
+			return;
+		}
+		if (!$src || typeof $src.subscribe !== 'function') {
+			set(false);
+			return;
+		}
+		return $src.subscribe((v) => set(v || get(tokenBasedAdminMode)));
+	},
+	false
+);
 // Show an edit button on all images (admin mode only)
 export let showImageEditButtons = writable(true);
 export let showAdminLoginModal = writable(false);
@@ -84,6 +105,7 @@ export let devModalContent = writable('No data found in $devModalContent state.'
 const storeMap = {
 	// administration
 	isAdminMode,
+	tokenBasedAdminMode,
 	showAdminLoginModal,
 	postAdminLoginFunction,
 	repoName,

@@ -85,3 +85,12 @@ If the host app doesn't already have jdg-ui-svelte installed:
 ```bash
 yarn add jdg-ui-svelte@latest
 ```
+
+## Admin mode (token-based)
+
+Admin state cannot be spoofed from the client: it is either from a **server-issued JWT** (admin worker) or from an **app-provided store** (`adminModeSource`).
+
+**With the JDG Admin Worker that issues and verifies JWTs:** no app changes are required. The package stores the token on successful passphrase login, calls `/verify-admin` on load to restore admin state, and derives `isAdminMode` from that. Deploy the admin worker with a `JDG_ADMIN_JWT_SECRET` KV entry (used to sign the token).
+
+**Optional — app-owned admin state:**  
+If your app uses its own auth, set `adminModeSource` to your store (e.g. `adminModeSource.set(yourAdminStore)`). Admin is on when either the token is valid or your store is true. After login, the package still calls `postAdminLoginFunction` so your app can run custom logic.

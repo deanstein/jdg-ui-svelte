@@ -9,6 +9,8 @@
 	import jdgSharedUrlsStore from '$lib/stores/jdg-shared-urls-store.js';
 
 	import {
+		ADMIN_TOKEN_STORAGE_KEY,
+		adminModeSource,
 		appAccentColors,
 		appContainerRef as appContainerRefStore,
 		appFontFamily,
@@ -26,17 +28,20 @@
 		isMobileBreakpoint,
 		isScrolling,
 		scrollDirection,
+		tokenBasedAdminMode,
 		windowScrollPosition,
 		windowWidth,
 		appCssHyperlinkBar,
 		isTabletBreakpoint,
 		isAdminMode
 	} from '$lib/stores/jdg-ui-store.js';
+	import { get } from 'svelte/store';
 	import { draftImageMeta, draftTimelineHost } from '$lib/stores/jdg-temp-store.js';
 
 	import { getDistancePxToBottomOfHeader } from '$lib/jdg-ui-management.js';
 	import {
 		fetchJsonFromRepo,
+		fetchVerifyAdmin,
 		jdgRepoOwner,
 		jdgUiSvelteRepoName
 	} from '$lib/jdg-persistence-management.js';
@@ -203,10 +208,18 @@
 			jdgSharedUrlsStore.set({ ...jdgSharedUrlsStore, ...updatedSharedUrlsJson });
 		}
 
-		// If the app is running locally,
-		// set isAdminMode to true by default
-		if (window.location.hostname === 'localhost') {
-			isAdminMode.set(true);
+		// Restore admin state from stored JWT when app has not provided adminModeSource
+		if (get(adminModeSource) === null && typeof sessionStorage !== 'undefined') {
+			const token = sessionStorage.getItem(ADMIN_TOKEN_STORAGE_KEY);
+			if (token) {
+				const verified = await fetchVerifyAdmin(token);
+				if (verified?.isAdmin) {
+					tokenBasedAdminMode.set(true);
+				} else {
+					sessionStorage.removeItem(ADMIN_TOKEN_STORAGE_KEY);
+					tokenBasedAdminMode.set(false);
+				}
+			}
 		}
 	});
 
