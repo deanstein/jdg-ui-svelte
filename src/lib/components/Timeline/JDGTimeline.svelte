@@ -50,6 +50,7 @@
 		JDGFlyout,
 		JDGImageAvatar,
 		JDGInputContainer,
+		JDGLoadingSpinner,
 		JDGModal,
 		JDGPortal,
 		JDGRandomGradient,
@@ -87,6 +88,9 @@
 	// The duration of the preview overlay in milliseconds
 	export let previewOverlayDuration = 500;
 
+	/** When true, shows a loading overlay (e.g. while host or registry is loading). */
+	export let loading = false;
+
 	export let onClickInceptionEvent = () => {};
 	export let addClickAddEvent = () => {};
 	// Called when a new avatar is selected (passes the new image key)
@@ -95,6 +99,9 @@
 	// State for hover overlay and modal
 	let isHovering = false;
 	let showTimelineModal = false;
+
+	// Show loading overlay when parent sets loading or when registry fetch is in progress (so it ends when fetch completes or fails)
+	$: showLoadingOverlay = loading || registryFetchInProgress;
 
 	/*** Eventually needed, but not developed yet ***/
 	// export let onClickEventRefHost = () => {};
@@ -121,31 +128,42 @@
 	// Timeline image registry - either from context (same repo) or fetched (different repo)
 	let timelineImageMetaRegistry = undefined;
 	let lastFetchedRegistryRepoName = undefined;
+	let registryFetchInProgress = false;
 
 	async function loadTimelineImageMetaRegistry(registryRepoName) {
 		if (!registryRepoName) {
 			timelineImageMetaRegistry = undefined;
 			lastFetchedRegistryRepoName = undefined;
+			registryFetchInProgress = false;
 			return;
 		}
 
-		// If the timeline uses the same repo as the current website, use the already-loaded context registry
-		if (registryRepoName === $currentRepoName) {
+		// If the timeline uses the same repo as the current website, use the already-loaded context registry (or fetch if context is missing)
+		if (registryRepoName === $currentRepoName && contextImageMetaRegistry !== undefined) {
 			timelineImageMetaRegistry = contextImageMetaRegistry;
 			lastFetchedRegistryRepoName = registryRepoName;
+			registryFetchInProgress = false;
 			return;
 		}
 
 		if (registryRepoName === lastFetchedRegistryRepoName && timelineImageMetaRegistry) {
+			registryFetchInProgress = false;
 			return; // Already loaded
 		}
 		lastFetchedRegistryRepoName = registryRepoName;
+		registryFetchInProgress = true;
+		timelineImageMetaRegistry = undefined; // show loading and avoid showing stale registry for previous host
 		try {
-			// fetchImageMetaRegistry caches results, so this is efficient even for repeated calls
+			// Same-repo but no context: fetch. Different repo: fetch. fetchImageMetaRegistry caches results.
 			timelineImageMetaRegistry = await fetchImageMetaRegistry(registryRepoName);
 		} catch (err) {
 			console.error('Failed to fetch timeline registry:', err);
 			timelineImageMetaRegistry = undefined;
+		} finally {
+			// Only clear in-progress if this fetch is still the one we care about (host may have changed)
+			if (lastFetchedRegistryRepoName === registryRepoName) {
+				registryFetchInProgress = false;
+			}
 		}
 	}
 
@@ -734,210 +752,222 @@
 	role={previewOnly ? 'button' : 'region'}
 	tabindex={previewOnly ? 0 : undefined}
 >
-	<JDGSaveStateBanner scrollOnStatusChange={false} />
-	<!-- Hover overlay for previewOnly mode -->
-	{#if previewOnly && isHovering}
-		<div
-			class="timeline-hover-overlay"
-			transition:fade={{ duration: jdgDurations.default }}
-			on:click={openTimelineModal}
-			on:keydown={(e) => e.key === 'Enter' && openTimelineModal()}
-			role="button"
-			tabindex="0"
-		>
-			<JDGButton
-				onClickFunction={openTimelineModal}
-				label="Open timeline"
-				faIcon="fa-expand"
-				shadow={true}
-			/>
-		</div>
-	{/if}
-	<!-- Title Bar-->
-	{#if showTitleBar}
-		<div class="timeline-title-bar {timelineTitleBarCss}">
-			<!-- Avatar -->
-			<JDGImageAvatar
-				registryRepoName={timelineHost?.imageMetaRegistryRepo}
-				imageMeta={avatarImageMeta}
-				imageKey={timelineHost?.avatarImage || ''}
-				size={avatarHeight}
-				onClickFunction={onClickAvatar}
-				allowEditing={allowEditing && onAvatarChange !== undefined}
-				onImageSelect={onAvatarChange}
-			/>
-			<div class="timeline-title">
-				{timelineHost.name}
+	{#if showLoadingOverlay}
+		<div class="timeline-loading-overlay" aria-busy="true" aria-label="Loading timeline">
+			<div class="timeline-loading-content">
+				<JDGLoadingSpinner strokeColor={jdgColors.text} spinnerHeightPx={40} strokeWidthPx={3} />
+				<span class="timeline-loading-text">Loading…</span>
 			</div>
 		</div>
 	{/if}
-	<div bind:this={timelineContainerRef} class="timeline-container {timelineContainerCss}">
-		<!-- Background gradient -->
-		<div class="timeline-background-gradient">
-			<JDGRandomGradient
-				numberOfPoints={3}
-				edgeBufferRatio={0.1}
-				color1={timelineGradientColor1}
-				color2={timelineGradientColor2}
-				color3={timelineGradientColor3}
-			/>
-		</div>
-		<!-- ComposeToolbar if editing is allowed -->
-		{#if allowEditing}
-			<JDGComposeToolbar
-				parentRef={timelineWrapperRef}
-				composeButtonFaIcon={'fa-plus fa-fw'}
-				composeButtonTooltip={'Add a new event'}
-				onClickCompose={addClickAddEvent}
-				zIndex={10}
-			/>
-		{/if}
-		<!-- Actions Bar -->
-		<div
-			class="timeline-actions-bar {timelineSupportingTextCss}"
-			style="position: relative; z-index: 10;"
-		>
-			<div class="timeline-event-count {timelineEventCountCss}">
-				Showing {timelineRowItems.length + (emptyStateEvent ? 1 : 0) + (todayEvent ? 1 : 0)} timeline
-				events
-			</div>
-			<!-- Timeline Options Flyout -->
-			<JDGFlyout
-				tooltip="Timeline options"
-				flyoutTitle="Timeline Options"
-				flyoutPosition="bottom-left"
+	{#if timelineHost}
+		<JDGSaveStateBanner scrollOnStatusChange={false} />
+		<!-- Hover overlay for previewOnly mode -->
+		{#if previewOnly && isHovering}
+			<div
+				class="timeline-hover-overlay"
+				transition:fade={{ duration: jdgDurations.default }}
+				on:click={openTimelineModal}
+				on:keydown={(e) => e.key === 'Enter' && openTimelineModal()}
+				role="button"
+				tabindex="0"
 			>
-				<div class="timeline-options-controls">
-					<JDGCheckbox
-						isEnabled={true}
-						showLabel={true}
-						label="Relative spacing"
-						isChecked={useRelativeSpacing}
-						onCheckAction={onCheckRelativeSpacing}
-						onUncheckAction={onUncheckRelativeSpacing}
-						labelFontSize="14px"
-					/>
-					<JDGSlider
-						label="Spacing multiplier"
-						bind:value={timelineZoom}
-						min={0}
-						max={1}
-						step={0.01}
-						onChange={onZoomChange}
-						isEnabled={useRelativeSpacing}
-					/>
-					{#if $isAdminMode}
-						<div class="auto-scroll-section">
-							<div class="auto-scroll-title">Auto Scroll</div>
-							<JDGInputContainer label="Delay (seconds)">
-								<JDGTextInput
-									bind:inputValue={autoScrollDelay}
-									isEnabled={!isAutoScrolling}
-									placeholder="2"
-								/>
-							</JDGInputContainer>
-							<div class="auto-scroll-buttons">
-								<JDGButton
-									label={isAutoScrolling ? 'Pause' : 'Start'}
-									faIcon={isAutoScrolling ? 'fa-pause' : 'fa-play'}
-									onClickFunction={toggleAutoScroll}
-									fontSize="14px"
-									paddingLeftRight="12px"
-									paddingTopBottom="6px"
-									backgroundColor={isAutoScrolling ? jdgColors.cancel : jdgColors.active}
+				<JDGButton
+					onClickFunction={openTimelineModal}
+					label="Open timeline"
+					faIcon="fa-expand"
+					shadow={true}
+				/>
+			</div>
+		{/if}
+		<!-- Title Bar-->
+		{#if showTitleBar}
+			<div class="timeline-title-bar {timelineTitleBarCss}">
+				<!-- Avatar -->
+				<JDGImageAvatar
+					registryRepoName={timelineHost?.imageMetaRegistryRepo}
+					imageMeta={avatarImageMeta}
+					imageKey={timelineHost?.avatarImage || ''}
+					size={avatarHeight}
+					onClickFunction={onClickAvatar}
+					allowEditing={allowEditing && onAvatarChange !== undefined}
+					onImageSelect={onAvatarChange}
+				/>
+				<div class="timeline-title">
+					{timelineHost.name}
+				</div>
+			</div>
+		{/if}
+		<div bind:this={timelineContainerRef} class="timeline-container {timelineContainerCss}">
+			<!-- Background gradient -->
+			<div class="timeline-background-gradient">
+				<JDGRandomGradient
+					numberOfPoints={3}
+					edgeBufferRatio={0.1}
+					color1={timelineGradientColor1}
+					color2={timelineGradientColor2}
+					color3={timelineGradientColor3}
+				/>
+			</div>
+			<!-- ComposeToolbar if editing is allowed -->
+			{#if allowEditing}
+				<JDGComposeToolbar
+					parentRef={timelineWrapperRef}
+					composeButtonFaIcon={'fa-plus fa-fw'}
+					composeButtonTooltip={'Add a new event'}
+					onClickCompose={addClickAddEvent}
+					zIndex={10}
+				/>
+			{/if}
+			<!-- Actions Bar -->
+			<div
+				class="timeline-actions-bar {timelineSupportingTextCss}"
+				style="position: relative; z-index: 10;"
+			>
+				<div class="timeline-event-count {timelineEventCountCss}">
+					Showing {timelineRowItems.length + (emptyStateEvent ? 1 : 0) + (todayEvent ? 1 : 0)} timeline
+					events
+				</div>
+				<!-- Timeline Options Flyout -->
+				<JDGFlyout
+					tooltip="Timeline options"
+					flyoutTitle="Timeline Options"
+					flyoutPosition="bottom-left"
+				>
+					<div class="timeline-options-controls">
+						<JDGCheckbox
+							isEnabled={true}
+							showLabel={true}
+							label="Relative spacing"
+							isChecked={useRelativeSpacing}
+							onCheckAction={onCheckRelativeSpacing}
+							onUncheckAction={onUncheckRelativeSpacing}
+							labelFontSize="14px"
+						/>
+						<JDGSlider
+							label="Spacing multiplier"
+							bind:value={timelineZoom}
+							min={0}
+							max={1}
+							step={0.01}
+							onChange={onZoomChange}
+							isEnabled={useRelativeSpacing}
+						/>
+						{#if $isAdminMode}
+							<div class="auto-scroll-section">
+								<div class="auto-scroll-title">Auto Scroll</div>
+								<JDGInputContainer label="Delay (seconds)">
+									<JDGTextInput
+										bind:inputValue={autoScrollDelay}
+										isEnabled={!isAutoScrolling}
+										placeholder="2"
+									/>
+								</JDGInputContainer>
+								<div class="auto-scroll-buttons">
+									<JDGButton
+										label={isAutoScrolling ? 'Pause' : 'Start'}
+										faIcon={isAutoScrolling ? 'fa-pause' : 'fa-play'}
+										onClickFunction={toggleAutoScroll}
+										fontSize="14px"
+										paddingLeftRight="12px"
+										paddingTopBottom="6px"
+										backgroundColor={isAutoScrolling ? jdgColors.cancel : jdgColors.active}
+									/>
+								</div>
+								<JDGSlider
+									label="Scroll speed"
+									bind:value={autoScrollSpeed}
+									min={0.1}
+									max={6}
+									step={0.1}
+									onChange={onAutoScrollSpeedChange}
+									isEnabled={true}
 								/>
 							</div>
-							<JDGSlider
-								label="Scroll speed"
-								bind:value={autoScrollSpeed}
-								min={0.1}
-								max={6}
-								step={0.1}
-								onChange={onAutoScrollSpeedChange}
-								isEnabled={true}
-							/>
-						</div>
-					{/if}
-				</div>
-			</JDGFlyout>
-		</div>
-		<!-- Timeline: A collection of TimelineEvents shown chronologically -->
-		<div class="timeline-content-container" style="position: relative; z-index: 1;">
-			<div class="timeline-spine {spineContainerCss}">
-				<div class="timeline-spine-line-column {spineColumnCss}">
-					<div class="timeline-spine-line" />
-				</div>
+						{/if}
+					</div>
+				</JDGFlyout>
 			</div>
-			<div
-				class="timeline-scrolling-canvas"
-				bind:this={scrollingCanvasDivRef}
-				on:scroll={handleScroll}
-			>
-				<!-- The grid containing all timeline events -->
-				<div class="timeline-event-grid {timelineEventGridCss}">
-					<!-- If there are no events, make an empty state event at the top -->
-					{#if emptyStateEvent && eventColorPairs.length > 0}
-						<JDGTimelineEvent
-							{timelineHost}
-							timelineEvent={emptyStateEvent}
-							onClickTimelineEvent={isInteractive && allowEditing
-								? onClickInceptionEvent
-								: () => {}}
-							isInteractive={isInteractive && allowEditing && $isAdminMode}
-							rowIndex={0}
-							gradientColor1={eventColorPairs[0].backgroundColor}
-							gradientColor2={eventColorPairs[0].gradientMirrorColor}
-							{gradientPointsCount}
-						/>
-					{/if}
-					<!-- All timeline events saved to the host -->
-					{#each timelineRowItems as timelineRowItem, i}
-						{@const colorPairIndex = (emptyStateEvent ? 1 : 0) + i}
-						<!-- Use a key to ensure the UI reacts when these values change -->
-						{#key `${timelineHost.id}-${timelineRowItem.event.id}`}
+			<!-- Timeline: A collection of TimelineEvents shown chronologically -->
+			<div class="timeline-content-container" style="position: relative; z-index: 1;">
+				<div class="timeline-spine {spineContainerCss}">
+					<div class="timeline-spine-line-column {spineColumnCss}">
+						<div class="timeline-spine-line" />
+					</div>
+				</div>
+				<div
+					class="timeline-scrolling-canvas"
+					bind:this={scrollingCanvasDivRef}
+					on:scroll={handleScroll}
+				>
+					<!-- The grid containing all timeline events -->
+					<div class="timeline-event-grid {timelineEventGridCss}">
+						<!-- If there are no events, make an empty state event at the top -->
+						{#if emptyStateEvent && eventColorPairs.length > 0}
 							<JDGTimelineEvent
 								{timelineHost}
-								timelineEvent={timelineRowItem.event}
-								onClickTimelineEvent={() => {
-									draftTimelineEvent.set(timelineRowItem.event);
-									// Store the gradient colors for this event's modal
-									const colorPair = eventColorPairs[colorPairIndex];
-									if (colorPair) {
-										modalGradientColors.set({
-											color1: colorPair.backgroundColor,
-											color2: colorPair.gradientMirrorColor,
-											color3: colorPair.backgroundColor
-										});
-									}
-									showTimelineEventModal.set(true);
-									isTimelineEventModalEditable.set(allowEditing);
-									timelineEventModalInceptionDate.set(timelineHost.inceptionDate);
-								}}
-								rowIndex={timelineRowItem.index}
-								gradientColor1={eventColorPairs[colorPairIndex]?.backgroundColor}
-								gradientColor2={eventColorPairs[colorPairIndex]?.gradientMirrorColor}
-								eventReference={timelineRowItem.eventReference}
-								isInteractive={isInteractive || $isAdminMode}
+								timelineEvent={emptyStateEvent}
+								onClickTimelineEvent={isInteractive && allowEditing
+									? onClickInceptionEvent
+									: () => {}}
+								isInteractive={isInteractive && allowEditing && $isAdminMode}
+								rowIndex={0}
+								gradientColor1={eventColorPairs[0].backgroundColor}
+								gradientColor2={eventColorPairs[0].gradientMirrorColor}
 								{gradientPointsCount}
 							/>
-						{/key}
-					{/each}
-					<!-- Show the today event if there's no cessation date provided -->
-					{#if (timelineHost.cessationDate === '' || (!timelineHost?.cessationDate && todayEvent)) && eventColorPairs.length > 0}
-						{@const todayColorPairIndex = eventColorPairs.length - 1}
-						<JDGTimelineEvent
-							{timelineHost}
-							timelineEvent={todayEvent}
-							rowIndex={todayEventRowIndex}
-							gradientColor1={eventColorPairs[todayColorPairIndex].backgroundColor}
-							gradientColor2={eventColorPairs[todayColorPairIndex].gradientMirrorColor}
-							{gradientPointsCount}
-						/>
-					{/if}
+						{/if}
+						<!-- All timeline events saved to the host -->
+						{#each timelineRowItems as timelineRowItem, i}
+							{@const colorPairIndex = (emptyStateEvent ? 1 : 0) + i}
+							<!-- Use a key to ensure the UI reacts when these values change -->
+							{#key `${timelineHost.id}-${timelineRowItem.event.id}`}
+								<JDGTimelineEvent
+									{timelineHost}
+									timelineEvent={timelineRowItem.event}
+									onClickTimelineEvent={() => {
+										draftTimelineEvent.set(timelineRowItem.event);
+										// Store the gradient colors for this event's modal
+										const colorPair = eventColorPairs[colorPairIndex];
+										if (colorPair) {
+											modalGradientColors.set({
+												color1: colorPair.backgroundColor,
+												color2: colorPair.gradientMirrorColor,
+												color3: colorPair.backgroundColor
+											});
+										}
+										showTimelineEventModal.set(true);
+										isTimelineEventModalEditable.set(allowEditing);
+										timelineEventModalInceptionDate.set(timelineHost.inceptionDate);
+									}}
+									rowIndex={timelineRowItem.index}
+									gradientColor1={eventColorPairs[colorPairIndex]?.backgroundColor}
+									gradientColor2={eventColorPairs[colorPairIndex]?.gradientMirrorColor}
+									eventReference={timelineRowItem.eventReference}
+									isInteractive={isInteractive || $isAdminMode}
+									{gradientPointsCount}
+								/>
+							{/key}
+						{/each}
+						<!-- Show the today event if there's no cessation date provided -->
+						{#if (timelineHost.cessationDate === '' || (!timelineHost?.cessationDate && todayEvent)) && eventColorPairs.length > 0}
+							{@const todayColorPairIndex = eventColorPairs.length - 1}
+							<JDGTimelineEvent
+								{timelineHost}
+								timelineEvent={todayEvent}
+								rowIndex={todayEventRowIndex}
+								gradientColor1={eventColorPairs[todayColorPairIndex].backgroundColor}
+								gradientColor2={eventColorPairs[todayColorPairIndex].gradientMirrorColor}
+								{gradientPointsCount}
+							/>
+						{/if}
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	{:else if !showLoadingOverlay}
+		<p class="timeline-empty">No timeline data available.</p>
+	{/if}
 </div>
 
 <!-- Modal for full timeline view - portaled to JDGAppContainer for proper positioning -->
@@ -993,6 +1023,39 @@
 		overflow: hidden;
 	}
 
+	.timeline-loading-overlay {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgba(255, 255, 255, 0.9);
+		backdrop-filter: blur(4px);
+		z-index: 20;
+		border-radius: 10px;
+	}
+
+	.timeline-loading-content {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.timeline-loading-text {
+		font-size: 1rem;
+		color: var(--jdg-color-text, #2c2c2c);
+	}
+
+	.timeline-empty {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 200px;
+		margin: 0;
+		color: var(--jdg-color-text-secondary, #666);
+	}
+
 	.timeline-hover-overlay {
 		position: absolute;
 		top: 0;
@@ -1004,7 +1067,7 @@
 		justify-content: center;
 		background: rgba(255, 255, 255, 0.5);
 		backdrop-filter: blur(2px);
-		z-index: 10;
+		z-index: 20;
 		border-radius: 10px;
 		cursor: pointer;
 	}
