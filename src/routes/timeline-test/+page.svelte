@@ -323,6 +323,18 @@
 		localTimelineEventStore.set(instantiatedEvent);
 	}
 
+	/** Start editing the currently selected timeline host: set collection draft, upgrade and set host draft, then sync host into collection. */
+	function setToEditingStore() {
+		draftTimelineHostCollection.set(selectedHostCollection);
+		const upgradedHost = upgradeTimelineHost($localTimelineHostStore);
+		draftTimelineHost.set(instantiateObject(upgradedHost));
+		draftTimelineHostCollection.update((current) => {
+			const arr = current[selectedHostCollectionKey] ?? [];
+			addOrReplaceObjectByKeyValue(arr, 'id', $draftTimelineHost.id, $draftTimelineHost);
+			return { ...current, [selectedHostCollectionKey]: arr };
+		});
+	}
+
 	// Set the desired save function so other components can call it
 	saveFunction.set(saveToRepo);
 	// Ensure this page allows text selection
@@ -564,29 +576,7 @@
 					faIcon={$draftTimelineHost ? 'fa-floppy-disk' : 'fa-pen-to-square'}
 					backgroundColor={$draftTimelineHost ? jdgColors.done : jdgColors.active}
 					onClickFunction={$draftTimelineHost === undefined
-						? () => {
-								// Start editing a collection draft
-								draftTimelineHostCollection.set(selectedHostCollection);
-								// Start editing a host draft
-								// Upgrade the host first
-								const upgradedHost = upgradeTimelineHost($localTimelineHostStore);
-								// Use instantiateObject to prevent linking of the two stores
-								draftTimelineHost.set(instantiateObject(upgradedHost));
-								// Update the host in the collection
-								draftTimelineHostCollection.update((current) => {
-									const arr = current[selectedHostCollectionKey] ?? [];
-									addOrReplaceObjectByKeyValue(
-										arr,
-										'id',
-										$draftTimelineHost.id,
-										$draftTimelineHost
-									);
-									return {
-										...current,
-										[selectedHostCollectionKey]: arr
-									};
-								});
-							}
+						? setToEditingStore
 						: () => {
 								// Add the current draft to the host collection (use draft, not local store)
 								draftTimelineHostCollection.update((currentValue) => {
@@ -607,6 +597,29 @@
 		</JDGBodyCopy>
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title={'TIMELINE'} subtitle={'Resulting timeline from the host above'}>
+		<JDGBodyCopy textAlign="center" paddingTop="0">
+			<JDGInputContainer label="Select Host" justification="center">
+				<JDGSelect
+					bind:inputValue={$localTimelineHostStore}
+					optionsGroup={timelineHostOptionsGroup}
+					isEnabled={$draftTimelineHost === undefined}
+				/>
+			</JDGInputContainer>
+			<br />
+			<JDGInputContainer label="Start Editing" justification="center">
+				<JDGButton
+					isEnabled={$isAdminMode &&
+						$draftTimelineHost === undefined &&
+						$localTimelineHostStore !== undefined}
+					label="Set to Editing Store"
+					tooltip="Start editing this timeline host (admin mode required)"
+					faIcon="fa-pen-to-square"
+					backgroundColor={jdgColors.active}
+					onClickFunction={setToEditingStore}
+				/>
+			</JDGInputContainer>
+		</JDGBodyCopy>
+
 		<JDGBodyCopy textAlign="center" paddingTop="0" paddingBottom="0">
 			<JDGInputContainer
 				label="Preview Mode"
