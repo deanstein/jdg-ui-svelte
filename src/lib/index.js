@@ -19,6 +19,9 @@ export { default as jdgTimelineRowItem } from './schemas/timeline/jdg-timeline-r
 export * from './stores/jdg-ui-store.js';
 export { default as jdgSharedUrlsStore } from './stores/jdg-shared-urls-store.js';
 
+// 🔑 Context keys (for Svelte setContext/getContext)
+export { default as JDG_CONTEXTS } from './jdg-contexts.js';
+
 // 🧩 Management & State (named exports — export * is correct)
 export * from './jdg-persistence-management.js';
 export * from './jdg-state-management.js';
