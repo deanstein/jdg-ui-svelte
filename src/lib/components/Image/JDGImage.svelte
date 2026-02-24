@@ -32,13 +32,14 @@
 		removeImageLoading
 	} from '$lib/jdg-state-management.js';
 
+	import { instantiateObject, isUrlCloudinary, upgradeImageMeta } from '$lib/jdg-utils.js';
 	import {
-		addCloudinaryUrlHeight,
-		addCloudinaryUrlWidth,
-		isUrlCloudinary,
-		instantiateObject,
-		upgradeImageMeta
-	} from '$lib/jdg-utils.js';
+		CLOUDINARY_FIT_AUTO,
+		CLOUDINARY_FIT_CALCAUTOHEIGHT,
+		CLOUDINARY_FIT_MAXHEIGHT,
+		CLOUDINARY_FIT_MAXHEIGHT_DEFAULT,
+		getCloudinarySizedUrl
+	} from '$lib/jdg-ui-management.js';
 
 	import { jdgBreakpoints, jdgColors, jdgDurations, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import {
@@ -136,12 +137,11 @@
 	let isImageLoaded = false;
 	let isPlaceholderLoaded = false;
 
-	// FIT TYPES
-
-	const fitTypeMaxHeightDefault = 'MAXHEIGHT (DEFAULT)';
-	const fitTypeMaxHeight = 'MAXHEIGHT';
-	const fitTypeAuto = 'AUTO';
-	const fitTypeCalculatedAuto = 'CALCAUTOHEIGHT';
+	// FIT TYPES (from shared jdg-ui-management for Cloudinary URL logic)
+	const fitTypeMaxHeightDefault = CLOUDINARY_FIT_MAXHEIGHT_DEFAULT;
+	const fitTypeMaxHeight = CLOUDINARY_FIT_MAXHEIGHT;
+	const fitTypeAuto = CLOUDINARY_FIT_AUTO;
+	const fitTypeCalculatedAuto = CLOUDINARY_FIT_CALCAUTOHEIGHT;
 
 	// INTERSECTION OBSERVER
 
@@ -853,16 +853,16 @@
 		}
 	}
 
-	// update Cloudinary URLs
+	// update Cloudinary URLs (shared logic with jdg-ui-management.getCloudinarySizedUrl)
 	$: {
 		if (containerRef && isVisible) {
 			if (!lastKnownCloudinaryTransformationValue) {
 				lastKnownPreferredContainerHeight = getPreferredContainerHeight().type;
 			}
-			// get dimensions
 			const style = getComputedStyle(containerRef);
 			const containerHeight = style.getPropertyValue('height');
 			const containerWidth = style.getPropertyValue('width');
+			const containerHeightPx = parseInt(containerHeight, 10);
 			const imageAutoHeight = validContainerWidth / imageAspectRatio;
 			if (
 				isImageLoaded &&
@@ -874,83 +874,20 @@
 				if (showDebugMessagesInConsole) {
 					console.log(
 						'Image auto height: ' + imageAutoHeight,
-						'Container height: ' + parseInt(containerHeight)
+						'Container height: ' + containerHeightPx
 					);
 				}
-				// preferred container height is max height
-				if (
-					lastKnownPreferredContainerHeight === fitTypeMaxHeight ||
-					lastKnownPreferredContainerHeight === fitTypeMaxHeightDefault
-				) {
-					if (cropToFillContainer) {
-						// if the calculated image height is less than the container,
-						// specify Cloudinary URL width
-						if (imageAutoHeight >= parseInt(containerHeight)) {
-							const adjustedWidth = Math.ceil(
-								parseInt(containerWidth) * (useDevicePixelRatio ? devicePixelRatio : 1)
-							);
-							adjustedImgSrc = addCloudinaryUrlWidth(imageMeta.src, adjustedWidth);
-							if (showDebugMessagesInConsole) {
-								console.log(
-									'Specifying width in Cloudinary URL. Adjusted Cloudinary URL:',
-									adjustedImgSrc,
-									adjustedWidth
-								);
-							}
-							lastKnownCloudinaryTransformationValue = adjustedWidth;
-						}
-						// otherwise, specify Cloudinary URL height
-						else {
-							const adjustedHeight = Math.ceil(
-								getMaxHeightPxFromProp(maxHeight, containerRef) *
-									(useDevicePixelRatio ? devicePixelRatio : 1)
-							);
-							adjustedImgSrc = addCloudinaryUrlHeight(imageMeta.src, adjustedHeight);
-							if (showDebugMessagesInConsole) {
-								console.log(
-									'Specifying height in Cloudinary URL. Adjusted Cloudinary URL:',
-									adjustedImgSrc,
-									adjustedHeight
-								);
-							}
-							lastKnownCloudinaryTransformationValue = adjustedHeight;
-						}
-					}
-					// no fill container
-					else {
-						const adjustedHeight = Math.ceil(
-							getMaxHeightPxFromProp(maxHeight, containerRef) *
-								(useDevicePixelRatio ? devicePixelRatio : 1)
-						);
-						adjustedImgSrc = addCloudinaryUrlHeight(imageMeta.src, adjustedHeight);
-						if (showDebugMessagesInConsole) {
-							console.log(
-								'Specifying height in Cloudinary URL. Adjusted Cloudinary URL:',
-								adjustedHeight,
-								adjustedImgSrc
-							);
-						}
-						lastKnownCloudinaryTransformationValue = adjustedHeight;
-					}
-					// preferred container height is "image auto" or auto
-				} else if (
-					lastKnownPreferredContainerHeight === fitTypeCalculatedAuto ||
-					lastKnownPreferredContainerHeight === fitTypeAuto
-				) {
-					// simply fill the container height in this case
-					const adjustedHeight = Math.ceil(
-						parseInt(containerHeight) * (useDevicePixelRatio ? devicePixelRatio : 1)
-					);
-					adjustedImgSrc = addCloudinaryUrlHeight(imageMeta.src, adjustedHeight);
-					if (showDebugMessagesInConsole) {
-						console.log(
-							'Specifying height in Cloudinary URL. Adjusted Cloudinary URL (auto):',
-							adjustedHeight,
-							adjustedImgSrc
-						);
-					}
-					lastKnownCloudinaryTransformationValue = adjustedHeight;
-				}
+				adjustedImgSrc = getCloudinarySizedUrl({
+					src: imageMeta.src,
+					containerWidthPx: parseInt(containerWidth, 10),
+					containerHeightPx,
+					maxHeightPx: getMaxHeightPxFromProp(maxHeight, containerRef),
+					imageAspectRatio,
+					cropToFillContainer,
+					preferredHeightFitType: lastKnownPreferredContainerHeight,
+					devicePixelRatio: useDevicePixelRatio ? devicePixelRatio : 1
+				});
+				lastKnownCloudinaryTransformationValue = 1;
 			}
 		}
 	}

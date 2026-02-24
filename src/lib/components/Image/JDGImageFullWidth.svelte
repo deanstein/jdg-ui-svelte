@@ -1,11 +1,11 @@
 <script>
 	import { css } from '@emotion/css';
 	import jdgImageMeta from '$lib/schemas/jdg-image-meta.js';
+	import { getMaxHeightPxFromProp, instantiateObject } from '$lib/jdg-utils.js';
 	import {
-		addCloudinaryUrlHeight,
-		getMaxHeightPxFromProp,
-		instantiateObject
-	} from '$lib/jdg-utils.js';
+		CLOUDINARY_FIT_MAXHEIGHT,
+		getCloudinarySizedUrl
+	} from '$lib/jdg-ui-management.js';
 	import {
 		JDGAccentText,
 		JDGAnchorTag,
@@ -18,7 +18,8 @@
 	import {
 		appFontFamily,
 		isMobileBreakpoint,
-		isTabletBreakpoint
+		isTabletBreakpoint,
+		windowWidth
 	} from '$lib/stores/jdg-ui-store.js';
 
 	export let imageMeta = instantiateObject(jdgImageMeta);
@@ -43,6 +44,26 @@
 	let parallaxContainerRef;
 	let overlayContainerRef;
 	let imageOverlayWrapperRef;
+
+	// Same Cloudinary sizing as JDGImage (shared getCloudinarySizedUrl)
+	$: parallaxImageUrl = (() => {
+		$windowWidth;
+		if (!imageMeta?.src) return imageMeta.src;
+		if (!parallaxContainerRef) return imageMeta.src;
+		const cW = parallaxContainerRef.clientWidth;
+		const cH = getMaxHeightPxFromProp(maxHeight, parallaxContainerRef);
+		const dpr = typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1;
+		return getCloudinarySizedUrl({
+			src: imageMeta.src,
+			containerWidthPx: cW,
+			containerHeightPx: cH,
+			maxHeightPx: cH,
+			imageAspectRatio: undefined,
+			cropToFillContainer: true,
+			preferredHeightFitType: CLOUDINARY_FIT_MAXHEIGHT,
+			devicePixelRatio: dpr
+		});
+	})();
 
 	const imageOverlayCss = css`
 		background-color: ${overlayColorRgba};
@@ -85,10 +106,7 @@
 		>
 			<div
 				class="parallax-image"
-				style="background-image: url({addCloudinaryUrlHeight(
-					imageMeta.src,
-					getMaxHeightPxFromProp(maxHeight, parallaxContainerRef)
-				)}); height: {getMaxHeightPxFromProp(
+				style="background-image: url({parallaxImageUrl}); height: {getMaxHeightPxFromProp(
 					maxHeight,
 					parallaxContainerRef
 				)}px; background-position: {objectPosition};"

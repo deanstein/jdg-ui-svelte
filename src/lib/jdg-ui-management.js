@@ -11,7 +11,12 @@ import { draftTimelineEvent } from '$lib/stores/jdg-temp-store.js';
 import jdgTimelineEventTypes from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 import jdgTimelineRowItem from '$lib/schemas/timeline/jdg-timeline-row-item.js';
 
-import { instantiateObject } from '$lib/jdg-utils.js';
+import {
+	addCloudinaryUrlHeight,
+	addCloudinaryUrlWidth,
+	instantiateObject,
+	isUrlCloudinary
+} from '$lib/jdg-utils.js';
 
 import { jdgBreakpoints, jdgQuantities, jdgSizes } from '$lib/jdg-shared-styles.js';
 import { getTimelineEventById, upgradeTimelineHost } from '$lib/jdg-timeline-management.js';
@@ -82,6 +87,79 @@ export const getFullTextWidth = (element) => {
 	context.font = `${style.fontSize} ${style.fontFamily}`;
 	const metrics = context.measureText(element.textContent);
 	return metrics.width;
+};
+
+///
+/// IMAGE / CLOUDINARY SIZED URL
+///
+// Shared logic so JDGImage and parallax (e.g. JDGImageFullWidth) request the same Cloudinary size.
+// Fit types match JDGImage’s preferred container height behavior.
+export const CLOUDINARY_FIT_MAXHEIGHT = 'MAXHEIGHT';
+export const CLOUDINARY_FIT_MAXHEIGHT_DEFAULT = 'MAXHEIGHT (DEFAULT)';
+export const CLOUDINARY_FIT_AUTO = 'AUTO';
+export const CLOUDINARY_FIT_CALCAUTOHEIGHT = 'CALCAUTOHEIGHT';
+
+/**
+ * Returns the Cloudinary URL with width or height transformation for the requested size.
+ * Use from JDGImage and from parallax (or other consumers) so requests use the same sizing.
+ * @param {Object} options
+ * @param {string} options.src - Image URL
+ * @param {number|string} options.containerWidthPx - Rendered container width in CSS pixels
+ * @param {number|string} options.containerHeightPx - Rendered container height in CSS pixels
+ * @param {number|string} options.maxHeightPx - Max height in pixels (from maxHeight prop)
+ * @param {number} [options.imageAspectRatio] - Width/height of image. If omitted (e.g. parallax), width-based request is used for cover.
+ * @param {boolean} options.cropToFillContainer
+ * @param {string} options.preferredHeightFitType - One of CLOUDINARY_FIT_*
+ * @param {number} [options.devicePixelRatio=1]
+ * @returns {string} URL to use (transformed or original)
+ */
+export const getCloudinarySizedUrl = (options) => {
+	const {
+		src,
+		containerWidthPx,
+		containerHeightPx,
+		maxHeightPx,
+		imageAspectRatio,
+		cropToFillContainer,
+		preferredHeightFitType,
+		devicePixelRatio = 1
+	} = options;
+
+	if (!src || !isUrlCloudinary(src) || src.includes('.gif')) return src;
+	const cW = Number(containerWidthPx);
+	const cH = Number(containerHeightPx);
+	const maxH = Number(maxHeightPx);
+	if (!Number.isFinite(cW) || !Number.isFinite(cH) || cW <= 0 || cH <= 0) return src;
+
+	const fitMaxHeight =
+		preferredHeightFitType === CLOUDINARY_FIT_MAXHEIGHT ||
+		preferredHeightFitType === CLOUDINARY_FIT_MAXHEIGHT_DEFAULT;
+
+	if (fitMaxHeight) {
+		if (cropToFillContainer) {
+			// When aspect ratio unknown (e.g. parallax), use width so we don't over-fetch
+			const imageAutoHeight =
+				imageAspectRatio != null ? cW / imageAspectRatio : Number.POSITIVE_INFINITY;
+			if (imageAutoHeight >= cH) {
+				const adjustedWidth = Math.ceil(cW * devicePixelRatio);
+				return addCloudinaryUrlWidth(src, adjustedWidth);
+			}
+			const adjustedHeight = Math.ceil(maxH * devicePixelRatio);
+			return addCloudinaryUrlHeight(src, adjustedHeight);
+		}
+		const adjustedHeight = Math.ceil(maxH * devicePixelRatio);
+		return addCloudinaryUrlHeight(src, adjustedHeight);
+	}
+
+	if (
+		preferredHeightFitType === CLOUDINARY_FIT_AUTO ||
+		preferredHeightFitType === CLOUDINARY_FIT_CALCAUTOHEIGHT
+	) {
+		const adjustedHeight = Math.ceil(cH * devicePixelRatio);
+		return addCloudinaryUrlHeight(src, adjustedHeight);
+	}
+
+	return src;
 };
 
 ///
