@@ -1,20 +1,9 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import {
-		allowTextSelection,
-		showAdminLoginModal,
-		showDevModal,
-		showDevToolbarSticky,
-		showImageEditButtons,
-		showImageMetaModal,
-		showImageGalleryModal
-	} from '$lib/stores/jdg-ui-store.js';
+	import { jdgBreakpoints } from '$lib/jdg-shared-styles.js';
 
-	import { instantiateObject, JDGButton, JDGH3H4 } from '$lib/index.js';
-	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
-	import jdgImageMeta from '$lib/schemas/jdg-image-meta.js';
-	import { draftImageMeta } from '$lib/stores/jdg-temp-store.js';
+	export let title = undefined; // optional
 
 	const flexContainerCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
@@ -32,87 +21,11 @@
 </script>
 
 <div class="jdg-dev-toolbar-container">
-	<JDGH3H4 h3String="DEV TOOLBAR" />
+	{#if title}
+		<p class="toolbar-row-label">{title}</p>
+	{/if}
 	<div class="toolbar-button-flex-container {flexContainerCss}">
-		<JDGButton
-			onClickFunction={() => {
-				const newImageMeta = instantiateObject(jdgImageMeta);
-				draftImageMeta.set(newImageMeta);
-				showImageMetaModal.set(true);
-			}}
-			faIcon={'fa-upload'}
-			label={'Upload New Image'}
-			backgroundColor={jdgColors.buttonColor}
-			paddingTopBottom="5px"
-			paddingLeftRight="10px"
-			fontSize={jdgSizes.fontSizeBodyXSm}
-		/>
-		<JDGButton
-			onClickFunction={() => {
-				showImageGalleryModal.set(true);
-			}}
-			faIcon={'fa-images'}
-			label={'View Image Gallery'}
-			backgroundColor={jdgColors.buttonColor}
-			paddingTopBottom="5px"
-			paddingLeftRight="10px"
-			fontSize={jdgSizes.fontSizeBodyXSm}
-		/>
-		<JDGButton
-			onClickFunction={() => {
-				showImageEditButtons.set(!$showImageEditButtons);
-			}}
-			faIcon={$showImageEditButtons ? 'fa-eye-slash' : 'fa-pencil'}
-			label={$showImageEditButtons ? 'Hide Image Edit Buttons' : 'Show Image Edit Buttons'}
-			backgroundColor={jdgColors.activeSecondary}
-			paddingTopBottom="5px"
-			paddingLeftRight="10px"
-			fontSize={jdgSizes.fontSizeBodyXSm}
-		/>
-		<JDGButton
-			onClickFunction={() => {
-				showAdminLoginModal.set(!$showAdminLoginModal);
-			}}
-			faIcon={$showDevToolbarSticky ? 'fa-eye-slash' : 'fa-eye'}
-			label={$showAdminLoginModal ? 'Hide Admin Login' : 'Show Admin Login'}
-			backgroundColor={jdgColors.activeSecondary}
-			paddingTopBottom="5px"
-			paddingLeftRight="10px"
-			fontSize={jdgSizes.fontSizeBodyXSm}
-		/>
-		<JDGButton
-			onClickFunction={() => {
-				showDevToolbarSticky.set(!$showDevToolbarSticky);
-			}}
-			faIcon={$showDevToolbarSticky ? 'fa-eye-slash' : 'fa-eye'}
-			label={$showDevToolbarSticky ? 'Hide Sticky Dev Toolbar' : 'Show Sticky Dev Toolbar'}
-			backgroundColor={jdgColors.activeSecondary}
-			paddingTopBottom="5px"
-			paddingLeftRight="10px"
-			fontSize={jdgSizes.fontSizeBodyXSm}
-		/>
-		<JDGButton
-			onClickFunction={() => {
-				showDevModal.set(!$showDevModal);
-			}}
-			faIcon={$showDevModal ? 'fa-eye-slash' : 'fa-eye'}
-			label={$showDevModal ? 'Hide Dev Overlay' : 'Show Dev Overlay'}
-			backgroundColor={jdgColors.activeSecondary}
-			paddingTopBottom="5px"
-			paddingLeftRight="10px"
-			fontSize={jdgSizes.fontSizeBodyXSm}
-		/>
-		<JDGButton
-			onClickFunction={() => {
-				allowTextSelection.set(!$allowTextSelection);
-			}}
-			faIcon={$allowTextSelection ? 'fa-text-slash' : 'fa-arrow-pointer'}
-			label={$allowTextSelection ? 'Disallow Text Selection' : 'Allow Text Selection'}
-			backgroundColor={jdgColors.activeSecondary}
-			paddingTopBottom="5px"
-			paddingLeftRight="10px"
-			fontSize={jdgSizes.fontSizeBodyXSm}
-		/>
+		<slot />
 	</div>
 </div>
 
@@ -120,7 +33,14 @@
 	.jdg-dev-toolbar-container {
 		display: flex;
 		flex-direction: column;
-		gap: 10px;
+		gap: 6px;
+	}
+
+	.toolbar-row-label {
+		margin: 0;
+		font-size: var(--toolbar-label-font-size, 0.75rem);
+		font-weight: bold;
+		text-align: center;
 	}
 
 	.toolbar-button-flex-container {

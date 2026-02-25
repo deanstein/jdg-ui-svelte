@@ -1,10 +1,13 @@
 import { get } from 'svelte/store';
 
 import {
+	ADMIN_TOKEN_STORAGE_KEY,
 	showAdminLoginModal,
+	showDevTools,
 	showTimelineEventModal,
 	isAdminMode,
-	postAdminLoginFunction
+	postAdminLoginFunction,
+	tokenBasedAdminMode
 } from '$lib/stores/jdg-ui-store.js';
 import { draftTimelineEvent } from '$lib/stores/jdg-temp-store.js';
 
@@ -19,6 +22,20 @@ import { getTimelineEventById, upgradeTimelineHost } from '$lib/jdg-timeline-man
 //
 // ADMIN MODE
 //
+// Admin mode is started by the login flow, not a single function: the user clicks
+// "Start admin mode" (which opens the admin login modal), authenticates, and on
+// success the login handler stores the JWT in sessionStorage and sets
+// tokenBasedAdminMode. There is no startAdminMode() because "start" requires that
+// async flow; only "end" is a single local action.
+
+/** End admin mode: clear package-owned token from sessionStorage, set tokenBasedAdminMode to false, and close the dev tools panel. */
+export const endAdminMode = () => {
+	if (typeof sessionStorage !== 'undefined') {
+		sessionStorage.removeItem(ADMIN_TOKEN_STORAGE_KEY);
+	}
+	tokenBasedAdminMode.set(false);
+	showDevTools.set(false);
+};
 
 // wrapper for functions that require
 // adminMode to be checked or authenticated first

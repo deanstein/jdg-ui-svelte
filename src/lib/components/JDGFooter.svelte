@@ -7,10 +7,21 @@
 		appCssHyperlinkSimple,
 		clientWidth,
 		showDevTools,
-		showHeaderStripes
+		showHeaderStripes,
+		isAdminMode,
+		showAdminLoginModal,
+		showImageMetaModal,
+		showImageGalleryModal,
+		showImageEditButtons,
+		showDevToolbarSticky,
+		showDevModal,
+		allowTextSelection
 	} from '$lib/stores/jdg-ui-store.js';
+	import { draftImageMeta } from '$lib/stores/jdg-temp-store.js';
 
-	import { getBuildCode } from '$lib/jdg-utils.js';
+	import { getBuildCode, instantiateObject } from '$lib/jdg-utils.js';
+	import { endAdminMode } from '$lib/jdg-ui-management.js';
+	import jdgImageMeta from '$lib/schemas/jdg-image-meta.js';
 	import {
 		fetchLatestCommitUrl,
 		getCommitHistoryUrl,
@@ -207,7 +218,100 @@
 		<!-- all devTools -->
 		{#if $showDevTools}
 			<div class="dev-tools">
-				<JDGDevToolbar />
+				<JDGDevToolbar title="ADMIN MODE">
+					{#if $isAdminMode}
+						<JDGButton
+							onClickFunction={endAdminMode}
+							faIcon="fa-right-from-bracket"
+							label="End admin mode"
+							backgroundColor={jdgColors.activeSecondary}
+							paddingTopBottom="5px"
+							paddingLeftRight="10px"
+							fontSize={jdgSizes.fontSizeBodyXSm}
+						/>
+					{:else}
+						<JDGButton
+							onClickFunction={() => showAdminLoginModal.set(true)}
+							faIcon="fa-right-to-bracket"
+							label="Start admin mode"
+							backgroundColor={jdgColors.active}
+							paddingTopBottom="5px"
+							paddingLeftRight="10px"
+							fontSize={jdgSizes.fontSizeBodyXSm}
+						/>
+					{/if}
+				</JDGDevToolbar>
+				<JDGDevToolbar title="IMAGE TOOLS">
+					<JDGButton
+						onClickFunction={() => {
+							const newImageMeta = instantiateObject(jdgImageMeta);
+							draftImageMeta.set(newImageMeta);
+							showImageMetaModal.set(true);
+						}}
+						faIcon="fa-upload"
+						label="Upload New Image"
+						backgroundColor={jdgColors.active}
+						paddingTopBottom="5px"
+						paddingLeftRight="10px"
+						fontSize={jdgSizes.fontSizeBodyXSm}
+					/>
+					<JDGButton
+						onClickFunction={() => showImageGalleryModal.set(true)}
+						faIcon="fa-images"
+						label="View Image Gallery"
+						backgroundColor={jdgColors.active}
+						paddingTopBottom="5px"
+						paddingLeftRight="10px"
+						fontSize={jdgSizes.fontSizeBodyXSm}
+					/>
+					<JDGButton
+						onClickFunction={() => showImageEditButtons.set(!$showImageEditButtons)}
+						faIcon={$showImageEditButtons ? 'fa-eye-slash' : 'fa-pencil'}
+						label={$showImageEditButtons ? 'Hide Image Edit Buttons' : 'Show Image Edit Buttons'}
+						backgroundColor={jdgColors.activeSecondary}
+						paddingTopBottom="5px"
+						paddingLeftRight="10px"
+						fontSize={jdgSizes.fontSizeBodyXSm}
+					/>
+				</JDGDevToolbar>
+				<JDGDevToolbar title="GENERAL TOOLS">
+					<JDGButton
+						onClickFunction={() => showAdminLoginModal.set(!$showAdminLoginModal)}
+						faIcon={$showAdminLoginModal ? 'fa-eye-slash' : 'fa-right-to-bracket'}
+						label={$showAdminLoginModal ? 'Hide Admin Login' : 'Show Admin Login'}
+						backgroundColor={jdgColors.activeSecondary}
+						paddingTopBottom="5px"
+						paddingLeftRight="10px"
+						fontSize={jdgSizes.fontSizeBodyXSm}
+					/>
+					<JDGButton
+						onClickFunction={() => showDevToolbarSticky.set(!$showDevToolbarSticky)}
+						faIcon={$showDevToolbarSticky ? 'fa-eye-slash' : 'fa-eye'}
+						label={$showDevToolbarSticky ? 'Hide Sticky Dev Toolbar' : 'Show Sticky Dev Toolbar'}
+						backgroundColor={jdgColors.activeSecondary}
+						paddingTopBottom="5px"
+						paddingLeftRight="10px"
+						fontSize={jdgSizes.fontSizeBodyXSm}
+					/>
+					<JDGButton
+						onClickFunction={() => showDevModal.set(!$showDevModal)}
+						faIcon={$showDevModal ? 'fa-eye-slash' : 'fa-eye'}
+						label={$showDevModal ? 'Hide Dev Overlay' : 'Show Dev Overlay'}
+						backgroundColor={jdgColors.activeSecondary}
+						paddingTopBottom="5px"
+						paddingLeftRight="10px"
+						fontSize={jdgSizes.fontSizeBodyXSm}
+					/>
+					<JDGButton
+						onClickFunction={() => allowTextSelection.set(!$allowTextSelection)}
+						faIcon={$allowTextSelection ? 'fa-text-slash' : 'fa-arrow-pointer'}
+						label={$allowTextSelection ? 'Disallow Text Selection' : 'Allow Text Selection'}
+						backgroundColor={jdgColors.activeSecondary}
+						paddingTopBottom="5px"
+						paddingLeftRight="10px"
+						fontSize={jdgSizes.fontSizeBodyXSm}
+					/>
+				</JDGDevToolbar>
 				<JDGGridLayout>
 					<JDGStoreView store={allUiStoreValues} storeName="UI STORE" />
 					<JDGStoreView store={allTempStoreValues} storeName="TEMP STORE" />
@@ -244,5 +348,11 @@
 	.state-view {
 		word-wrap: break-word;
 		text-align: center;
+	}
+
+	.dev-tools {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
 	}
 </style>
