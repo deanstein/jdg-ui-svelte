@@ -61,6 +61,10 @@
 	navItemTimeline.label = 'TIMELINE TEST';
 	navItemTimeline.href = '/timeline-test';
 
+	const navItemTimelineCcp = instantiateObject(jdgNavItem);
+	navItemTimelineCcp.label = 'CCP TIMELINE TEST';
+	navItemTimelineCcp.href = '/timeline-test-ccp';
+
 	const navItemTools = instantiateObject(jdgNavItem);
 	navItemTools.label = 'TOOLS';
 	navItemTools.href = '/tools';
@@ -74,7 +78,8 @@
 		navItemPmxTest,
 		navItemPlaceholder,
 		navItemIframe,
-		navItemTimeline
+		navItemTimeline,
+		navItemTimelineCcp
 	];
 
 	// Get the app version from package.json
