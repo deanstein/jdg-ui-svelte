@@ -35,6 +35,7 @@
 	onClickCloseButton={() => {
 		$showTimelineEventModal = false;
 	}}
+	closeOnOverlayClick={!($isTimelineEventModalEditable || isNewEvent)}
 	backgroundColor={'rgba(235, 235, 235, 1)'}
 	gradientColor1={$modalGradientColors?.color1}
 	gradientColor2={$modalGradientColors?.color2}

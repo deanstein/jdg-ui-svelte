@@ -89,10 +89,24 @@
 		font-size: 1vh;
 		color: ${jdgColors.text};
 	`;
+
+	function handleBackdropClick() {
+		if (closeOnOverlayClick && typeof onClickCloseButton === 'function') {
+			onClickCloseButton();
+		}
+	}
 </script>
 
 <JDGOverlay onCloseFunction={onClickCloseButton} {closeOnOverlayClick}>
-	<div in:receive={{ key: showModal }} out:send={{ key: showModal }} class="modal-outer-container">
+	<div
+		in:receive={{ key: showModal }}
+		out:send={{ key: showModal }}
+		class="modal-outer-container"
+		on:click|self={handleBackdropClick}
+		on:keydown={(e) => e.key === 'Escape' && handleBackdropClick()}
+		role="presentation"
+		tabindex="-1"
+	>
 		<div class="modal-content-container {modalContentContainerCss}">
 			<!-- Background gradient if gradient colors are provided -->
 			{#if gradientColor1 && gradientColor2 && gradientColor3}
