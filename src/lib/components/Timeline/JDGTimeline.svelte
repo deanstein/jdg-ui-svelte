@@ -1040,10 +1040,13 @@
 		width: -moz-available;
 	}
 
-	/* When only the loading overlay is shown (e.g. no host yet), ensure wrapper has size so overlay is visible */
+	/* When loading overlay is shown: fill available space and stay visible regardless of host page layout */
 	.timeline-wrapper.loading-overlay-visible {
-		min-height: 200px;
+		align-self: stretch; /* override parent align-items: center so we fill width */
+		width: 100%;
+		min-width: 0;
 		flex: 1 1 0;
+		min-height: 200px !important; /* ensure overlay is visible even when host page sets min-height: 0 on wrapper */
 	}
 
 	/* Prevent internal timeline scrolling when in preview-only mode */
