@@ -547,7 +547,6 @@
 						backgroundColor={jdgColors.cancel}
 						onClickFunction={() => {
 							draftTimelineHost.set(undefined);
-							// Avatar will automatically reset via reactive derivation
 						}}
 					/>
 					<JDGButton
@@ -607,16 +606,27 @@
 			</JDGInputContainer>
 			<br />
 			<JDGInputContainer label="Start Editing" justification="center">
-				<JDGButton
-					isEnabled={$isAdminMode &&
-						$draftTimelineHost === undefined &&
-						$localTimelineHostStore !== undefined}
-					label="Set to Editing Store"
-					tooltip="Start editing this timeline host (admin mode required)"
-					faIcon="fa-pen-to-square"
-					backgroundColor={jdgColors.active}
-					onClickFunction={setToEditingStore}
-				/>
+				<div class="timeline-host-actions">
+					<JDGButton
+						isEnabled={$isAdminMode &&
+							$draftTimelineHost === undefined &&
+							$localTimelineHostStore !== undefined}
+						label="Set to Editing Store"
+						tooltip="Start editing this timeline host (admin mode required)"
+						faIcon="fa-pen-to-square"
+						backgroundColor={jdgColors.active}
+						onClickFunction={setToEditingStore}
+					/>
+					<JDGButton
+						isEnabled={$draftTimelineHost !== undefined}
+						label="Cancel"
+						faIcon="fa-circle-xmark"
+						backgroundColor={jdgColors.cancel}
+						onClickFunction={() => {
+							draftTimelineHost.set(undefined);
+						}}
+					/>
+				</div>
 			</JDGInputContainer>
 		</JDGBodyCopy>
 
@@ -735,5 +745,13 @@
 
 	.timeline-host-form {
 		padding: 20px;
+	}
+
+	.timeline-host-actions {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		gap: 0.5rem;
 	}
 </style>
