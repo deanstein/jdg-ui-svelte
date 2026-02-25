@@ -87,6 +87,11 @@
 	export let previewOnly = false;
 	// The duration of the preview overlay in milliseconds
 	export let previewOverlayDuration = 500;
+	// Set true when this instance is the one rendered inside the full-screen modal (do not set from outside; used by svelte:self)
+	export let isInModal = false;
+
+	// Effective preview mode (from parent prop; controls overlay and open-in-modal behavior)
+	$: effectivePreviewOnly = previewOnly;
 
 	/** When true, shows a loading overlay (e.g. while host or registry is loading). */
 	export let loading = false;
@@ -247,7 +252,7 @@
 
 	// Show the overlay
 	const showPreviewOverlay = () => {
-		if (previewOnly && !showTimelineModal) {
+		if (effectivePreviewOnly && !showTimelineModal) {
 			if (previewOverlayTimeout) {
 				clearTimeout(previewOverlayTimeout);
 				previewOverlayTimeout = null;
@@ -258,7 +263,7 @@
 
 	// Hide the overlay after a delay
 	const hidePreviewOverlayAfterDelay = () => {
-		if (previewOnly && isHovering) {
+		if (effectivePreviewOnly && isHovering) {
 			if (previewOverlayTimeout) {
 				clearTimeout(previewOverlayTimeout);
 			}
@@ -743,14 +748,14 @@
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <div
 	bind:this={timelineWrapperRef}
-	class="timeline-wrapper {previewOnly ? 'preview-only' : ''}"
+	class="timeline-wrapper {effectivePreviewOnly ? 'preview-only' : ''}"
 	on:mouseenter={showPreviewOverlay}
 	on:mouseleave={hidePreviewOverlayAfterDelay}
 	on:touchstart={showPreviewOverlay}
 	on:touchend={hidePreviewOverlayAfterDelay}
 	on:touchcancel={hidePreviewOverlayAfterDelay}
-	role={previewOnly ? 'button' : 'region'}
-	tabindex={previewOnly ? 0 : undefined}
+	role={effectivePreviewOnly ? 'button' : 'region'}
+	tabindex={effectivePreviewOnly ? 0 : undefined}
 >
 	{#if showLoadingOverlay}
 		<div class="timeline-loading-overlay" aria-busy="true" aria-label="Loading timeline">
@@ -763,7 +768,7 @@
 	{#if timelineHost}
 		<JDGSaveStateBanner scrollOnStatusChange={false} />
 		<!-- Hover overlay for previewOnly mode -->
-		{#if previewOnly && isHovering}
+		{#if effectivePreviewOnly && isHovering}
 			<div
 				class="timeline-hover-overlay"
 				transition:fade={{ duration: jdgDurations.default }}
@@ -835,6 +840,16 @@
 					flyoutPosition="bottom-left"
 				>
 					<div class="timeline-options-controls">
+						{#if !previewOnly && !isInModal}
+							<JDGButton
+								label="Open in full-screen"
+								faIcon="fa-expand"
+								onClickFunction={openTimelineModal}
+								fontSize="14px"
+								paddingLeftRight="12px"
+								paddingTopBottom="6px"
+							/>
+						{/if}
 						<JDGCheckbox
 							isEnabled={true}
 							showLabel={true}
@@ -993,6 +1008,7 @@
 					width="100%"
 					minHeight="70dvh"
 					maxHeight="75dvh"
+					isInModal={true}
 					{onClickInceptionEvent}
 					{addClickAddEvent}
 					{gradientPointsCount}
