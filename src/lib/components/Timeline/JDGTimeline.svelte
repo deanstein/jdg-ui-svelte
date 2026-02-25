@@ -597,6 +597,11 @@
 	// Keep emptyState and today events updated
 	// Include useRelativeSpacing and timelineZoom as dependencies to recalculate when changed
 	$: {
+		if (!timelineHost) {
+			emptyStateEvent = undefined;
+			todayEvent = undefined;
+			timelineRowItems = [];
+		} else {
 		// Use relative spacing if checkbox is checked
 		// Zoom only applies when relative spacing is enabled
 
@@ -663,6 +668,7 @@
 		}
 
 		timelineRowItems = rowItems;
+		}
 	}
 
 	// Compute the todayEvent row index based on spacing mode
@@ -679,7 +685,7 @@
 	$: {
 		// Generate a gradient of colors across all timeline events
 		timelineEventColors = generateGradient(
-			timelineHost?.timelineEvents?.length +
+			(timelineHost?.timelineEvents?.length ?? 0) +
 				(emptyStateEvent ? 1 : 0) +
 				(todayEvent ? 2 : 0) /* account for birth and death */,
 			jdgColors.timelineEventColorGradient1,
