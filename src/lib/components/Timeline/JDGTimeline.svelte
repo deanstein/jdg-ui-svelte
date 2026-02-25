@@ -71,7 +71,7 @@
 	// Timeline host contains events and event references
 	export let timelineHost;
 	// Optionally include contextual events
-	export let contextEvents = timelineHost.contextualEvents;
+	export let contextEvents = timelineHost?.contextualEvents;
 	// Whether to show the name of the timeline host at the top
 	export let showTitleBar = true;
 	// Whether the ComposeToolbar is shown
@@ -602,72 +602,72 @@
 			todayEvent = undefined;
 			timelineRowItems = [];
 		} else {
-		// Use relative spacing if checkbox is checked
-		// Zoom only applies when relative spacing is enabled
+			// Use relative spacing if checkbox is checked
+			// Zoom only applies when relative spacing is enabled
 
-		// Use whichever is earlier: the inception date or the earliest event date
-		// This handles cases where events (like planning) occur before the inception date
-		const earliestEvent = getEarliestTimelineEvent(timelineHost.timelineEvents);
-		let earliestOrInceptionDate;
-		if (!timelineHost?.inceptionDate || timelineHost.inceptionDate === '') {
-			// No inception date, use earliest event
-			earliestOrInceptionDate = earliestEvent?.date;
-		} else if (!earliestEvent?.date) {
-			// No events, use inception date
-			earliestOrInceptionDate = timelineHost.inceptionDate;
-		} else {
-			// Both exist - use whichever is earlier
-			const inceptionTime = new Date(timelineHost.inceptionDate).getTime();
-			const earliestEventTime = new Date(earliestEvent.date).getTime();
-			earliestOrInceptionDate =
-				earliestEventTime < inceptionTime ? earliestEvent.date : timelineHost.inceptionDate;
-		}
-
-		// If there are no timeline events,
-		// or if there's no event on the inception date,
-		// show an inception event
-		if (
-			timelineHost.timelineEvents.length === 0 ||
-			getNumDaysBetweenDates(timelineHost.inceptionDate, earliestEvent.date) > 0
-		) {
-			emptyStateEvent = instantiateTimelineEvent(jdgTimelineEventKeys.inception);
-			emptyStateEvent.date = timelineHost.inceptionDate;
-		} else {
-			emptyStateEvent = undefined;
-		}
-
-		// If there's no cessation date, show a Today event
-		if (timelineHost?.cessationDate === '' || !timelineHost?.cessationDate) {
-			todayEvent = instantiateTimelineEvent(jdgTimelineEventKeys.today);
-			todayEvent.type = jdgTimelineEventKeys.today;
-		} else {
-			todayEvent = undefined;
-		}
-
-		// Convert events to timeline row items
-		// When relative spacing is on AND zoom > 0, keep proportional indices for date-based spacing
-		// When off OR zoom is 0, use sequential indices for even distribution
-		const shouldUseRelativeSpacing = useRelativeSpacing && timelineZoom > 0;
-		let rowItems = updateTimelineRowItems(
-			generateTimelineRowItems(timelineHost, contextEvents, earliestOrInceptionDate),
-			!shouldUseRelativeSpacing // use sequential indices when NOT using relative spacing
-		);
-
-		// If using relative spacing with zoom > 0, scale the indices by zoom to multiply the spacing effect
-		// This makes items that are farther apart in time move even farther apart visually
-		if (shouldUseRelativeSpacing) {
-			// Scale indices: zoom 0 = no scaling, zoom 1 = full scaling
-			// Use a multiplier that increases spacing (e.g., 1 + zoom means 2x spacing at max zoom)
-			const spacingMultiplier = 1 + timelineZoom;
-			const firstIndex = rowItems.length > 0 ? rowItems[0].index : 1;
-			for (let i = 0; i < rowItems.length; i++) {
-				// Scale the index relative to the first index to preserve relative spacing
-				const relativeIndex = rowItems[i].index - firstIndex;
-				rowItems[i].index = firstIndex + Math.round(relativeIndex * spacingMultiplier);
+			// Use whichever is earlier: the inception date or the earliest event date
+			// This handles cases where events (like planning) occur before the inception date
+			const earliestEvent = getEarliestTimelineEvent(timelineHost.timelineEvents);
+			let earliestOrInceptionDate;
+			if (!timelineHost?.inceptionDate || timelineHost.inceptionDate === '') {
+				// No inception date, use earliest event
+				earliestOrInceptionDate = earliestEvent?.date;
+			} else if (!earliestEvent?.date) {
+				// No events, use inception date
+				earliestOrInceptionDate = timelineHost.inceptionDate;
+			} else {
+				// Both exist - use whichever is earlier
+				const inceptionTime = new Date(timelineHost.inceptionDate).getTime();
+				const earliestEventTime = new Date(earliestEvent.date).getTime();
+				earliestOrInceptionDate =
+					earliestEventTime < inceptionTime ? earliestEvent.date : timelineHost.inceptionDate;
 			}
-		}
 
-		timelineRowItems = rowItems;
+			// If there are no timeline events,
+			// or if there's no event on the inception date,
+			// show an inception event
+			if (
+				timelineHost.timelineEvents.length === 0 ||
+				getNumDaysBetweenDates(timelineHost.inceptionDate, earliestEvent.date) > 0
+			) {
+				emptyStateEvent = instantiateTimelineEvent(jdgTimelineEventKeys.inception);
+				emptyStateEvent.date = timelineHost.inceptionDate;
+			} else {
+				emptyStateEvent = undefined;
+			}
+
+			// If there's no cessation date, show a Today event
+			if (timelineHost?.cessationDate === '' || !timelineHost?.cessationDate) {
+				todayEvent = instantiateTimelineEvent(jdgTimelineEventKeys.today);
+				todayEvent.type = jdgTimelineEventKeys.today;
+			} else {
+				todayEvent = undefined;
+			}
+
+			// Convert events to timeline row items
+			// When relative spacing is on AND zoom > 0, keep proportional indices for date-based spacing
+			// When off OR zoom is 0, use sequential indices for even distribution
+			const shouldUseRelativeSpacing = useRelativeSpacing && timelineZoom > 0;
+			let rowItems = updateTimelineRowItems(
+				generateTimelineRowItems(timelineHost, contextEvents, earliestOrInceptionDate),
+				!shouldUseRelativeSpacing // use sequential indices when NOT using relative spacing
+			);
+
+			// If using relative spacing with zoom > 0, scale the indices by zoom to multiply the spacing effect
+			// This makes items that are farther apart in time move even farther apart visually
+			if (shouldUseRelativeSpacing) {
+				// Scale indices: zoom 0 = no scaling, zoom 1 = full scaling
+				// Use a multiplier that increases spacing (e.g., 1 + zoom means 2x spacing at max zoom)
+				const spacingMultiplier = 1 + timelineZoom;
+				const firstIndex = rowItems.length > 0 ? rowItems[0].index : 1;
+				for (let i = 0; i < rowItems.length; i++) {
+					// Scale the index relative to the first index to preserve relative spacing
+					const relativeIndex = rowItems[i].index - firstIndex;
+					rowItems[i].index = firstIndex + Math.round(relativeIndex * spacingMultiplier);
+				}
+			}
+
+			timelineRowItems = rowItems;
 		}
 	}
 
@@ -754,7 +754,7 @@
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <div
 	bind:this={timelineWrapperRef}
-	class="timeline-wrapper {effectivePreviewOnly ? 'preview-only' : ''}"
+	class="timeline-wrapper {effectivePreviewOnly ? 'preview-only' : ''} {showLoadingOverlay ? 'loading-overlay-visible' : ''}"
 	on:mouseenter={showPreviewOverlay}
 	on:mouseleave={hidePreviewOverlayAfterDelay}
 	on:touchstart={showPreviewOverlay}
@@ -1014,7 +1014,7 @@
 					width="100%"
 					minHeight="70dvh"
 					maxHeight="75dvh"
-					isInModal={true}
+					isInModal
 					{onClickInceptionEvent}
 					{addClickAddEvent}
 					{gradientPointsCount}
@@ -1038,6 +1038,12 @@
 		height: -webkit-fill-available;
 		width: -webkit-fill-available;
 		width: -moz-available;
+	}
+
+	/* When only the loading overlay is shown (e.g. no host yet), ensure wrapper has size so overlay is visible */
+	.timeline-wrapper.loading-overlay-visible {
+		min-height: 200px;
+		flex: 1 1 0;
 	}
 
 	/* Prevent internal timeline scrolling when in preview-only mode */
