@@ -855,6 +855,7 @@
 								paddingLeftRight="12px"
 								paddingTopBottom="6px"
 							/>
+							<div class="timeline-options-divider" />
 						{/if}
 						<JDGCheckbox
 							isEnabled={true}
@@ -875,6 +876,7 @@
 							isEnabled={useRelativeSpacing}
 						/>
 						{#if $isAdminMode}
+							<div class="timeline-options-divider" />
 							<div class="auto-scroll-section">
 								<div class="auto-scroll-title">Auto Scroll</div>
 								<JDGInputContainer label="Delay (seconds)">
