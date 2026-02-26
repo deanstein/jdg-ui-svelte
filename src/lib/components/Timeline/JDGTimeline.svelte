@@ -1053,18 +1053,28 @@
 <style>
 	.timeline-wrapper {
 		position: relative;
+		display: flex;
+		flex-direction: column;
 		height: -webkit-fill-available;
 		width: -webkit-fill-available;
 		width: -moz-available;
 	}
 
-	/* When loading overlay is shown: fill available space and stay visible regardless of host page layout */
+	/*
+	 * Only allow flex-shrinking to zero when NOT loading.
+	 * During loading the overlay is position:absolute and contributes
+	 * no intrinsic height, so min-height:0 would collapse the wrapper.
+	 */
+	.timeline-wrapper:not(.loading-overlay-visible) {
+		min-height: 0;
+	}
+
 	.timeline-wrapper.loading-overlay-visible {
-		align-self: stretch; /* override parent align-items: center so we fill width */
+		align-self: stretch;
 		width: 100%;
 		min-width: 0;
 		flex: 1 1 0;
-		min-height: 200px !important; /* ensure overlay is visible even when host page sets min-height: 0 on wrapper */
+		min-height: 200px;
 	}
 
 	/* Prevent internal timeline scrolling when in preview-only mode */
