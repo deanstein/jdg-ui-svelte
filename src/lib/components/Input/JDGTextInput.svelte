@@ -2,6 +2,7 @@
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
 	import { css } from '@emotion/css';
 
+	export let type = 'text';
 	export let isEnabled = true;
 	export let inputValue = '';
 	export let placeholder = undefined;
@@ -12,6 +13,10 @@
 	// empty function in case no function is passed to the input by the parent
 	export let useFunction = (element) => {};
 	export let onKeyUpFunction = (event) => {};
+
+	const applyType = (node) => {
+		node.type = type;
+	};
 
 	const textInputCss = css`
 		min-height: 1rem;
@@ -34,6 +39,7 @@
 		bind:value={inputValue}
 		on:input={onInputFunction}
 		on:keyup={onKeyUpFunction}
+		use:applyType
 		use:useFunction
 		class={textInputCss}
 		disabled={!isEnabled}
