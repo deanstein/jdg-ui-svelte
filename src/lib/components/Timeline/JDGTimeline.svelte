@@ -876,6 +876,7 @@
 							onCheckAction={onCheckRelativeSpacing}
 							onUncheckAction={onUncheckRelativeSpacing}
 							labelFontSize="14px"
+							checkboxBackgroundColor={jdgColors.activeSecondary}
 						/>
 						<JDGSlider
 							label="Spacing multiplier"
