@@ -21,22 +21,21 @@
 	setContext(JDG_CONTEXTS.EVENT_AGE_SUFFIX_POSITIVE, 'after opening');
 	setContext(JDG_CONTEXTS.EVENT_AGE_SUFFIX_NEGATIVE, 'before opening');
 
+	// undefined → loading spinner; null → no data; object → render timeline
 	const hostStore = writable(undefined);
-	let loading = true;
 
 	onMount(async () => {
-		try {
-			const files = await fetchJsonFileList(jdgRepoOwner, jdgBuildingDataRepoName);
-			if (files?.length) {
-				const data = await readJsonFileFromRepo(jdgRepoOwner, jdgBuildingDataRepoName, files[0]);
-				const hosts = data?.[buildingDataCollectionKey];
-				if (hosts?.length) {
-					hostStore.set(hosts[0]);
-				}
+		const files = await fetchJsonFileList(jdgRepoOwner, jdgBuildingDataRepoName);
+		if (files?.length) {
+			const data = await readJsonFileFromRepo(jdgRepoOwner, jdgBuildingDataRepoName, files[0]);
+			const hosts = data?.[buildingDataCollectionKey];
+			if (hosts?.length) {
+				hostStore.set(hosts[0]);
+				return;
 			}
-		} finally {
-			loading = false;
 		}
+		// Fetch completed but no valid host found
+		hostStore.set(null);
 	});
 </script>
 
@@ -44,19 +43,14 @@
 	<JDGContentBoxFloating title="Timeline Test" animateWhenVisible={false}>
 		<JDGBodyCopy paddingTop="0">This is a test of the timeline component.</JDGBodyCopy>
 		<div class="timeline-area">
-			{#if $hostStore !== undefined || loading}
-				<div class="timeline-slot">
-					<JDGTimeline
-						timelineHost={$hostStore}
-						{loading}
-						minHeight="0"
-						maxHeight="100%"
-						allowEditing={false}
-					/>
-				</div>
-			{:else}
-				<p class="timeline-empty">No timeline data available.</p>
-			{/if}
+			<div class="timeline-slot">
+				<JDGTimeline
+					timelineHost={$hostStore}
+					minHeight="0"
+					maxHeight="100%"
+					allowEditing={false}
+				/>
+			</div>
 		</div>
 	</JDGContentBoxFloating>
 </JDGContentContainer>
@@ -99,15 +93,5 @@
 
 	.timeline-slot :global(.timeline-wrapper:not(.loading-overlay-visible)) {
 		min-height: 0;
-	}
-
-	.timeline-empty {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		height: 70vh;
-		min-height: 300px;
-		margin: 0;
-		color: var(--jdg-color-text-secondary, #666);
 	}
 </style>

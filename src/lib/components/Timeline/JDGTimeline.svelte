@@ -68,7 +68,11 @@
 		jdgSizes
 	} from '$lib/jdg-shared-styles.js';
 
-	// Timeline host contains events and event references
+	// Timeline host contains events and event references.
+	// Three-state prop:
+	//   undefined (default) → data not yet available → shows loading spinner
+	//   null → explicitly no data → shows "No timeline data" message
+	//   object → timeline host data → renders the timeline
 	export let timelineHost;
 	// Optionally include contextual events
 	export let contextEvents = timelineHost?.contextualEvents;
@@ -93,9 +97,6 @@
 	// Effective preview mode (from parent prop; controls overlay and open-in-modal behavior)
 	$: effectivePreviewOnly = previewOnly;
 
-	/** When true, shows a loading overlay (e.g. while host or registry is loading). */
-	export let loading = false;
-
 	export let onClickInceptionEvent = () => {};
 	export let addClickAddEvent = () => {};
 	// Called when a new avatar is selected (passes the new image key)
@@ -105,8 +106,9 @@
 	let isHovering = false;
 	let showTimelineModal = false;
 
-	// Show loading overlay when parent sets loading or when registry fetch is in progress (so it ends when fetch completes or fails)
-	$: showLoadingOverlay = loading || registryFetchInProgress;
+	// Show loading overlay when timelineHost is undefined (not yet provided)
+	// or when the image registry fetch is in progress
+	$: showLoadingOverlay = timelineHost === undefined || registryFetchInProgress;
 
 	/*** Eventually needed, but not developed yet ***/
 	// export let onClickEventRefHost = () => {};
@@ -1004,7 +1006,7 @@
 				</div>
 			</div>
 		</div>
-	{:else if !showLoadingOverlay}
+	{:else if timelineHost === null}
 		<p class="timeline-empty">No timeline data available.</p>
 	{/if}
 </div>
