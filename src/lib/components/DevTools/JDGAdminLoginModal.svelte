@@ -69,7 +69,7 @@
 			<!-- only show form and button if not already in admin mode -->
 			{#if !$isAdminMode}
 				<JDGInputContainer label="Passphrase:" justification={'center'}>
-					<JDGTextInput onInputFunction={onPassphraseInput} />
+					<JDGTextInput type="password" onInputFunction={onPassphraseInput} />
 				</JDGInputContainer>
 
 				<JDGButton
