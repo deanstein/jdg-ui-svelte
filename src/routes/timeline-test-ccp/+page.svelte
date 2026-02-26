@@ -48,7 +48,7 @@
 				<div class="timeline-slot">
 					<JDGTimeline
 						timelineHost={$hostStore}
-						loading={loading}
+						{loading}
 						minHeight="0"
 						maxHeight="100%"
 						allowEditing={false}
