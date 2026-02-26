@@ -1206,7 +1206,14 @@
 		display: flex;
 		flex-direction: column;
 		gap: 16px;
-		padding: 8px 0;
+		padding: 16px 0;
+	}
+
+	.timeline-options-divider {
+		height: 0;
+		border: none;
+		border-top: 1px solid rgba(200, 200, 200, 0.5);
+		margin: 4px 0;
 	}
 
 	.auto-scroll-section {
