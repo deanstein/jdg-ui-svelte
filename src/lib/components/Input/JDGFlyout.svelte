@@ -9,6 +9,7 @@
 		jdgSizes
 	} from '$lib/jdg-shared-styles.js';
 
+	import { setRgbaAlpha } from '$lib/jdg-utils.js';
 	import JDGButton from '$lib/components/Input/JDGButton.svelte';
 
 	// Font Awesome icon class (e.g., 'fa-gear', 'fa-sliders')
@@ -17,12 +18,12 @@
 	// Button styling
 	export let buttonFontSize = '0.9rem';
 	export let buttonPadding = '0.4rem';
-	export let buttonBackgroundColor = jdgColors.activeSecondary;
+	export let buttonBackgroundColor = setRgbaAlpha(jdgColors.headerBackground, 0.7);
 	export let buttonTextColor = jdgColors.textDm;
 	export let tooltip = '';
 	// Flyout styling
-	export let flyoutBackgroundColor = 'rgba(255, 255, 255, 0.95)';
-	export let flyoutBorderRadius = '8px';
+	export let flyoutBackgroundColor = setRgbaAlpha(jdgColors.headerBackground, 0.7);
+	export let flyoutBorderRadius = '0px';
 	export let flyoutPadding = '0.75rem';
 	// Position: where the flyout appears relative to button
 	export let flyoutPosition = 'bottom-left'; // 'bottom-left', 'bottom-right', 'top-left', 'top-right'
@@ -94,6 +95,12 @@
 		}
 	`;
 
+	const flyoutTitleCss = css`
+		color: ${jdgColors.text};
+	`;
+
+	$: activeIcon = isOpen ? 'fa-xmark' : faIcon;
+
 	// Explicit square wrapper to bypass aspect-ratio issues on mobile
 	// Size = icon (approx 1em based on fontSize) + padding on both sides
 	$: buttonWrapperCss = css`
@@ -106,10 +113,11 @@
 	<div bind:this={buttonWrapperRef} class="jdg-flyout-button-wrapper {buttonWrapperCss}">
 		<JDGButton
 			label={null}
-			{faIcon}
+			faIcon={activeIcon}
 			{faClass}
 			onClickFunction={toggleFlyout}
 			backgroundColor={buttonBackgroundColor}
+			doAdjustBackgroundColorForContrast={false}
 			textColor={buttonTextColor}
 			fontSize={buttonFontSize}
 			paddingTopBottom="0"
@@ -128,7 +136,7 @@
 			role="menu"
 		>
 			{#if flyoutTitle}
-				<div class="jdg-flyout-title">{flyoutTitle}</div>
+				<div class="jdg-flyout-title {flyoutTitleCss}">{flyoutTitle}</div>
 			{/if}
 			<div class="jdg-flyout-content {flyoutContentCss}">
 				<slot />
@@ -153,9 +161,9 @@
 		overflow: hidden;
 	}
 
-	/* Ensure button fills the wrapper */
 	.jdg-flyout-button-wrapper :global(button) {
 		height: 100%;
+		backdrop-filter: blur(8px);
 	}
 
 	.jdg-flyout-panel {
@@ -167,10 +175,8 @@
 
 	.jdg-flyout-title {
 		font-weight: bold;
-		margin-bottom: 0.5rem;
-		padding-bottom: 0.4rem;
-		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 		white-space: nowrap;
+		padding: 2px 0;
 	}
 
 	.jdg-flyout-content {

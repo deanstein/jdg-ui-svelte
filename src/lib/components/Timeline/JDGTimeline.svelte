@@ -522,13 +522,8 @@
 		}
 	`;
 
-	$: timelineTitleBarBackgroundColor = (() => {
-		const c = lightenColor(timelineBackgroundColor, 0.03);
-		return typeof c === 'string' ? c : `rgb(${c.r}, ${c.g}, ${c.b})`;
-	})();
-
-	$: timelineTitleBarCss = css`
-		background-color: ${timelineTitleBarBackgroundColor};
+	const timelineTitleBarCss = css`
+		background-color: ${lightenColor(timelineBackgroundColor, 0.03)};
 	`;
 
 	const timelineEventCountCss = css`
@@ -765,7 +760,9 @@
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <div
 	bind:this={timelineWrapperRef}
-	class="timeline-wrapper {effectivePreviewOnly ? 'preview-only' : ''} {showLoadingOverlay ? 'loading-overlay-visible' : ''}"
+	class="timeline-wrapper {effectivePreviewOnly ? 'preview-only' : ''} {showLoadingOverlay
+		? 'loading-overlay-visible'
+		: ''}"
 	on:mouseenter={showPreviewOverlay}
 	on:mouseleave={hidePreviewOverlayAfterDelay}
 	on:touchstart={showPreviewOverlay}
@@ -853,12 +850,12 @@
 				<!-- Timeline Options Flyout -->
 				<JDGFlyout
 					tooltip="Timeline options"
-					flyoutTitle="Timeline Options"
+					flyoutTitle="VIEW OPTIONS"
 					flyoutPosition="bottom-left"
 					buttonBackgroundColor={jdgColors.activeSecondary}
-					flyoutBackgroundColor={timelineTitleBarBackgroundColor}
 				>
 					<div class="timeline-options-controls">
+						<div class="timeline-options-divider" />
 						{#if !previewOnly && !isInModal}
 							<JDGButton
 								label="Open in full-screen"
@@ -1224,13 +1221,13 @@
 		display: flex;
 		flex-direction: column;
 		gap: 16px;
-		padding: 16px 0;
+		padding: 8px 0 16px 0;
 	}
 
 	.timeline-options-divider {
 		height: 0;
 		border: none;
-		border-top: 1px solid rgba(200, 200, 200, 0.5);
+		border-top: 1px solid rgba(127, 124, 124, 0.767);
 		margin: 4px 0;
 	}
 
