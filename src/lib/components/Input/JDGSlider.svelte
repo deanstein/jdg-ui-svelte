@@ -13,6 +13,10 @@
 	export let onChange = (newValue) => {};
 	export let isEnabled = true;
 	export let sliderId = undefined;
+	/** Thumb/handle color */
+	export let handleColor = jdgColors.active;
+	/** Track/line color */
+	export let trackColor = '#ddd';
 
 	let uniqueId = `slider-${Math.random().toString(36).substr(2, 9)}`;
 	$: effectiveId = sliderId || uniqueId;
@@ -46,6 +50,7 @@
 		on:input={handleInput}
 		disabled={!isEnabled}
 		class="slider"
+		style="--slider-handle-color: {handleColor}; --slider-track-color: {trackColor}"
 	/>
 </div>
 
@@ -61,7 +66,7 @@
 		width: 100%;
 		height: 6px;
 		border-radius: 3px;
-		background: #ddd;
+		background: var(--slider-track-color, #ddd);
 		outline: none;
 		-webkit-appearance: none;
 		appearance: none;
@@ -79,7 +84,7 @@
 		width: 18px;
 		height: 18px;
 		border-radius: 50%;
-		background: #4a90e2;
+		background: var(--slider-handle-color, #4a90e2);
 		cursor: pointer;
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 		transition: box-shadow 0.2s ease;
@@ -93,7 +98,7 @@
 		width: 18px;
 		height: 18px;
 		border-radius: 50%;
-		background: #4a90e2;
+		background: var(--slider-handle-color, #4a90e2);
 		cursor: pointer;
 		border: none;
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);

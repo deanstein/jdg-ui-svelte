@@ -123,6 +123,12 @@
 	$: timelineGradientColor2 = timelineBackgroundColor; // current (middle)
 	$: timelineGradientColor3 = darkenColor(timelineBackgroundColor, 0.15); // darker
 
+	// Slider track color for options flyout (~30% darker than default #ddd)
+	$: optionsSliderTrackColor = (() => {
+		const c = darkenColor('#dddddd', 0.2);
+		return typeof c === 'string' ? c : `rgb(${c.r}, ${c.g}, ${c.b})`;
+	})();
+
 	// set up the inception and cessation events
 	let emptyStateEvent;
 	let todayEvent;
@@ -516,8 +522,13 @@
 		}
 	`;
 
-	const timelineTitleBarCss = css`
-		background-color: ${lightenColor(timelineBackgroundColor, 0.03)};
+	$: timelineTitleBarBackgroundColor = (() => {
+		const c = lightenColor(timelineBackgroundColor, 0.03);
+		return typeof c === 'string' ? c : `rgb(${c.r}, ${c.g}, ${c.b})`;
+	})();
+
+	$: timelineTitleBarCss = css`
+		background-color: ${timelineTitleBarBackgroundColor};
 	`;
 
 	const timelineEventCountCss = css`
@@ -844,6 +855,8 @@
 					tooltip="Timeline options"
 					flyoutTitle="Timeline Options"
 					flyoutPosition="bottom-left"
+					buttonBackgroundColor={jdgColors.activeSecondary}
+					flyoutBackgroundColor={timelineTitleBarBackgroundColor}
 				>
 					<div class="timeline-options-controls">
 						{#if !previewOnly && !isInModal}
@@ -854,6 +867,7 @@
 								fontSize="14px"
 								paddingLeftRight="12px"
 								paddingTopBottom="6px"
+								backgroundColor={jdgColors.activeSecondary}
 							/>
 							<div class="timeline-options-divider" />
 						{/if}
@@ -874,6 +888,8 @@
 							step={0.01}
 							onChange={onZoomChange}
 							isEnabled={useRelativeSpacing}
+							handleColor={jdgColors.activeSecondary}
+							trackColor={optionsSliderTrackColor}
 						/>
 						{#if $isAdminMode}
 							<div class="timeline-options-divider" />
@@ -905,6 +921,8 @@
 									step={0.1}
 									onChange={onAutoScrollSpeedChange}
 									isEnabled={true}
+									handleColor={jdgColors.activeSecondary}
+									trackColor={optionsSliderTrackColor}
 								/>
 							</div>
 						{/if}
