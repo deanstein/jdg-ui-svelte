@@ -355,6 +355,23 @@
 	$: if (!isEditing) {
 		isImageSelectorOpen = false;
 	}
+
+	// Format date string for read-only display (same general format as date picker: locale-friendly)
+	function formatDateForDisplay(dateStr) {
+		if (!dateStr) return '';
+		const d = new Date(dateStr + (dateStr.length === 10 ? 'T00:00:00' : ''));
+		return d.toString() === 'Invalid Date'
+			? dateStr
+			: d.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+	}
+
+	// Resolve combobox/select value to friendly label for read-only display
+	function getLabelForValue(value, options) {
+		if (!value) return '';
+		if (!options || !Array.isArray(options)) return value;
+		const option = options.find((opt) => opt.value === value);
+		return option ? option.label : value;
+	}
 </script>
 
 <JDGForm bind:containerRef={parentRef}>
@@ -421,103 +438,127 @@
 			<JDGInputContainer label={def.label}>
 				{#if def.inputType === JDG_INPUT_TYPES.DATE}
 					<div class="date-with-checkbox">
-						{#if isAdditional}
-							<JDGDatePicker bind:inputValue={$localAdditionalStore[key]} isEnabled={isEditing} />
-						{:else if key === 'date'}
-							{#key `${$localEventStore.isMediaWrapper}-${effectiveDate}-${effectiveIsApprxDate}`}
-								{#if $localEventStore.isMediaWrapper}
-									<JDGDatePicker inputValue={effectiveDate} isEnabled={false} />
-								{:else}
-									<JDGDatePicker bind:inputValue={$localEventStore.date} isEnabled={isEditing} />
-								{/if}
-							{/key}
-						{:else}
-							<JDGDatePicker bind:inputValue={$localEventStore[key]} isEnabled={isEditing} />
-						{/if}
-						{#key `${$localEventStore.isMediaWrapper}-${effectiveIsApprxDate}`}
-							{#if $localEventStore.isMediaWrapper}
-								<JDGCheckbox
-									label="Is approximate?"
-									isChecked={effectiveIsApprxDate}
-									isEnabled={false}
-								/>
+						{#if isEditing}
+							{#if isAdditional}
+								<JDGDatePicker bind:inputValue={$localAdditionalStore[key]} isEnabled={true} />
+							{:else if key === 'date'}
+								{#key `${$localEventStore.isMediaWrapper}-${effectiveDate}-${effectiveIsApprxDate}`}
+									{#if $localEventStore.isMediaWrapper}
+										<JDGDatePicker inputValue={effectiveDate} isEnabled={false} />
+									{:else}
+										<JDGDatePicker bind:inputValue={$localEventStore.date} isEnabled={true} />
+									{/if}
+								{/key}
 							{:else}
-								<JDGCheckbox
-									label="Is approximate?"
-									bind:isChecked={$localEventStore.isApprxDate}
-									isEnabled={isEditing}
-								/>
+								<JDGDatePicker bind:inputValue={$localEventStore[key]} isEnabled={true} />
 							{/if}
-						{/key}
+							{#if key === 'date'}
+								{#key `${$localEventStore.isMediaWrapper}-${effectiveIsApprxDate}`}
+									{#if $localEventStore.isMediaWrapper}
+										<JDGCheckbox
+											label="Is approximate?"
+											isChecked={effectiveIsApprxDate}
+											isEnabled={false}
+										/>
+									{:else}
+										<JDGCheckbox
+											label="Is approximate?"
+											bind:isChecked={$localEventStore.isApprxDate}
+											isEnabled={true}
+										/>
+									{/if}
+								{/key}
+							{/if}
+						{:else}
+							<!-- Read-only: simple text date readout -->
+							{#if isAdditional}
+								<span class="readout-text">{formatDateForDisplay($localAdditionalStore[key])}</span>
+							{:else if key === 'date'}
+								<span class="readout-text">{formatDateForDisplay(effectiveDate)}</span>
+								{#if effectiveIsApprxDate}
+									<span class="readout-approximate">(approximate)</span>
+								{/if}
+							{:else}
+								<span class="readout-text">{formatDateForDisplay($localEventStore[key])}</span>
+							{/if}
+						{/if}
 					</div>
 				{:else if def.inputType === JDG_INPUT_TYPES.TEXT}
-					{#if isAdditional}
-						<JDGTextInput bind:inputValue={$localAdditionalStore[key]} isEnabled={isEditing} />
-					{:else if key === 'description'}
-						{#key $localEventStore.isMediaWrapper}
-							{#if $localEventStore.isMediaWrapper}
-								<JDGTextInput inputValue={displayDescription} isEnabled={false} />
-							{:else}
-								<JDGTextInput
-									bind:inputValue={$localEventStore.description}
-									isEnabled={isEditing}
-								/>
-							{/if}
-						{/key}
-					{:else if key === 'source'}
-						{#key $localEventStore.isMediaWrapper}
-							{#if $localEventStore.isMediaWrapper}
-								<JDGTextInput inputValue={displaySource} isEnabled={false} />
-							{:else}
-								<JDGTextInput bind:inputValue={$localEventStore.source} isEnabled={isEditing} />
-							{/if}
-						{/key}
+					{#if isEditing}
+						{#if isAdditional}
+							<JDGTextInput bind:inputValue={$localAdditionalStore[key]} isEnabled={true} />
+						{:else if key === 'description'}
+							<JDGTextInput bind:inputValue={$localEventStore.description} isEnabled={true} />
+						{:else if key === 'source'}
+							<JDGTextInput bind:inputValue={$localEventStore.source} isEnabled={true} />
+						{:else}
+							<JDGTextInput bind:inputValue={$localEventStore[key]} isEnabled={true} />
+						{/if}
 					{:else}
-						<JDGTextInput bind:inputValue={$localEventStore[key]} isEnabled={isEditing} />
+						<!-- Read-only: simple text readout -->
+						{#if isAdditional}
+							<div class="readout-text readout-description">{$localAdditionalStore[key] || ''}</div>
+						{:else if key === 'description'}
+							<div class="readout-text readout-description">{displayDescription || ''}</div>
+						{:else if key === 'source'}
+							<div class="readout-text">{getLabelForValue(displaySource, def.options) || ''}</div>
+						{:else}
+							<div class="readout-text">{$localEventStore[key] || ''}</div>
+						{/if}
 					{/if}
 				{:else if def.inputType === JDG_INPUT_TYPES.COMBOBOX}
-					{#if isAdditional}
-						<JDGCombobox
-							bind:inputValue={$localAdditionalStore[key]}
-							options={def.options || []}
-							isEnabled={isEditing}
-						/>
-					{:else if key === 'source'}
-						{#key `${$localEventStore.isMediaWrapper}-${displaySource}`}
-							{#if $localEventStore.isMediaWrapper}
-								<JDGCombobox
-									inputValue={displaySource}
-									options={def.options || []}
-									isEnabled={false}
-								/>
-							{:else}
-								<JDGCombobox
-									bind:inputValue={$localEventStore.source}
-									options={def.options || []}
-									isEnabled={isEditing}
-								/>
-							{/if}
-						{/key}
+					{#if isEditing}
+						{#if isAdditional}
+							<JDGCombobox
+								bind:inputValue={$localAdditionalStore[key]}
+								options={def.options || []}
+								isEnabled={true}
+							/>
+						{:else if key === 'source'}
+							<JDGCombobox
+								bind:inputValue={$localEventStore.source}
+								options={def.options || []}
+								isEnabled={true}
+							/>
+						{:else}
+							<JDGCombobox
+								bind:inputValue={$localEventStore[key]}
+								options={def.options || []}
+								isEnabled={true}
+							/>
+						{/if}
 					{:else}
-						<JDGCombobox
-							bind:inputValue={$localEventStore[key]}
-							options={def.options || []}
-							isEnabled={isEditing}
-						/>
+						<!-- Read-only: simple text readout -->
+						{#if isAdditional}
+							<div class="readout-text">
+								{getLabelForValue($localAdditionalStore[key], def.options) || ''}
+							</div>
+						{:else if key === 'source'}
+							<div class="readout-text">{getLabelForValue(displaySource, def.options) || ''}</div>
+						{:else}
+							<div class="readout-text">
+								{getLabelForValue($localEventStore[key], def.options) || ''}
+							</div>
+						{/if}
 					{/if}
 				{:else if def.inputType === JDG_INPUT_TYPES.TEXTAREA}
-					{#if isAdditional}
-						<JDGTextArea bind:inputValue={$localAdditionalStore[key]} isEnabled={isEditing} />
-					{:else if key === 'description'}
-						{#key $localEventStore.isMediaWrapper}
-							{#if $localEventStore.isMediaWrapper}
-								<JDGTextArea inputValue={displayDescription} isEnabled={false} />
-							{:else}
-								<JDGTextArea bind:inputValue={$localEventStore.description} isEnabled={isEditing} />
-							{/if}
-						{/key}
+					{#if isEditing}
+						{#if isAdditional}
+							<JDGTextArea bind:inputValue={$localAdditionalStore[key]} isEnabled={true} />
+						{:else if key === 'description'}
+							<JDGTextArea bind:inputValue={$localEventStore.description} isEnabled={true} />
+						{:else}
+							<JDGTextArea bind:inputValue={$localEventStore[key]} isEnabled={true} />
+						{/if}
 					{:else}
-						<JDGTextArea bind:inputValue={$localEventStore[key]} isEnabled={isEditing} />
+						<!-- Read-only: simple text readout with pleasant line spacing -->
+						{#if isAdditional}
+							<div class="readout-text readout-description">{$localAdditionalStore[key] || ''}</div>
+						{:else if key === 'description'}
+							<div class="readout-text readout-description">{displayDescription || ''}</div>
+						{:else}
+							<div class="readout-text readout-description">{$localEventStore[key] || ''}</div>
+						{/if}
 					{/if}
 				{:else if def.inputType === JDG_INPUT_TYPES.CHECKBOX}
 					{#if isAdditional}
@@ -758,5 +799,24 @@
 		display: flex;
 		flex-direction: column;
 		gap: 5px;
+	}
+
+	.readout-text {
+		color: inherit;
+	}
+
+	.readout-approximate {
+		font-size: 0.85em;
+		color: #888;
+		display: block;
+		margin-top: -3px;
+	}
+
+	.readout-description {
+		line-height: 1.6;
+		white-space: pre-wrap;
+		max-height: 16em;
+		overflow-y: auto;
+		text-wrap: balance;
 	}
 </style>
