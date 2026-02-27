@@ -570,5 +570,18 @@
       "toolbarJustification": "right",
       "version": "0.5.1"
     }
+  },
+  "blue_mall_60s70s_1": {
+    "id": "c2957b74-8b2f-407b-80bb-05802321a3fa",
+    "src": "https://res.cloudinary.com/jdg-main/image/upload/v1772176212/ccp-website/blue-mall/blue-mall-60s70s-1.jpg",
+    "caption": "The mall centered around a block-wide court called Blue Mall, which featured a stunning 35-foot fountain.",
+    "attribution": "",
+    "alt": "The mall centered around a block-wide court called Blue Mall, which featured a stunning 35-foot fountain.",
+    "title": "",
+    "isApprxDate": false,
+    "showBackgroundBlur": true,
+    "toolbarJustification": "right",
+    "version": "0.7.1",
+    "key": "blue_mall_60s70s_1"
   }
 }
