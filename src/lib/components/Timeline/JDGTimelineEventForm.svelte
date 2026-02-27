@@ -753,4 +753,10 @@
 		border-radius: 8px;
 		border: 2px solid rgba(200, 200, 200, 0.5);
 	}
+
+	.date-with-checkbox {
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+	}
 </style>
