@@ -22,7 +22,7 @@
 	} from '$lib/jdg-utils.js';
 	import { upgradeTimelineEvent } from '$lib/jdg-timeline-management.js';
 
-	import { JDGButton, JDGImageThumbnailGroup } from '$lib/index.js';
+	import { JDGButton, JDGImageThumbnailGroup, JDGRandomGradient } from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let timelineHost;
@@ -177,6 +177,21 @@
 		}
 	`;
 
+	// Same width as year so (apprx.) is centered under the year/date block
+	const eventDateApprxCss = css`
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			width: ${jdgSizes.timelineEventYearWidthSm};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			width: ${jdgSizes.timelineEventYearWidthMd};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			width: ${jdgSizes.timelineEventYearWidthLg};
+		}
+	`;
+
 	const eventDescriptionCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: 0.7rem;
@@ -239,31 +254,33 @@
 		}
 	`;
 
-	// Generate gradient for this event
+	// Content uses deterministic gradient; title bar uses JDGRandomGradient when both colors set, else fallback
 	let eventGradientCss = css``;
+	let eventTitleBarGradientCss = css``;
+	$: hasTitleBarRandomGradient = !!(gradientColor1 && gradientColor2);
 	$: {
 		if (gradientColor1 && gradientPointsCount > 0 && gradientColor2) {
-			// Use event ID as seed for consistent randomness per event, or rowIndex as fallback
 			const seed = upgradedEvent?.id
 				? upgradedEvent.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
 				: (rowIndex || 0) * 1000;
 			const points = generateGradientPoints(gradientPointsCount, seed);
-
-			// Constrain the corollary color to not exceed max contrast (1.3 ratio)
-			// This ensures gradients are never between colors that are too different
 			const constrainedCorollary = constrainCorollaryColor(gradientColor1, gradientColor2, 1.3);
-
 			const gradientString = generateEventGradient(gradientColor1, constrainedCorollary, points);
 
 			eventGradientCss = css`
 				background: ${gradientString};
 				border-radius: 0px 0px ${eventBorderRadius} ${eventBorderRadius};
 			`;
+			// Title bar uses JDGRandomGradient in template when both colors set; no need to build same gradient here
+			eventTitleBarGradientCss = css``;
 		} else {
-			// Fallback to solid color
 			eventGradientCss = css`
 				background-color: ${gradientColor1};
 				border-radius: 0px 0px ${eventBorderRadius} ${eventBorderRadius};
+			`;
+			eventTitleBarGradientCss = css`
+				background-color: ${gradientColor1};
+				border-radius: ${eventBorderRadius} ${eventBorderRadius} 0px 0px;
 			`;
 		}
 	}
@@ -406,7 +423,7 @@
 				: 'Year?'}
 		</div>
 		{#if effectiveIsApprxDate}
-			<div class="timeline-event-date-apprx">(apprx.)</div>
+			<div class="timeline-event-date-apprx {eventDateApprxCss}">(apprx.)</div>
 		{/if}
 	</div>
 	<div class="timeline-event-node {eventNodeCss}" />
@@ -415,12 +432,27 @@
 		<div class="timeline-event-line {eventLineCss}" />
 	{/if}
 	<div class="timeline-event-content-outer-container {eventRowContainerCss}">
-		<div class="timeline-event-title-bar {eventTitleBarCss}">
-			<!-- event icon -->
-			<i
-				class="fa-solid {timelineEventTypes[upgradedEvent?.type]?.icon} {eventFaIconCss}"
-				title="{sentenceCaseLabel} event"
-			/>
+		<div class="timeline-event-title-bar-container">
+			{#if hasTitleBarRandomGradient}
+				<div class="timeline-event-title-bar-gradient">
+					<JDGRandomGradient
+						numberOfPoints={8}
+						edgeBufferRatio={0.1}
+						drawDebugBorders={false}
+						color1={gradientColor1}
+						color2={gradientColor2}
+						color3={gradientColor1}
+					/>
+				</div>
+			{/if}
+			<div
+				class="timeline-event-title-bar {hasTitleBarRandomGradient ? '' : eventTitleBarCss} {hasTitleBarRandomGradient ? '' : eventTitleBarGradientCss}"
+			>
+				<!-- event icon -->
+				<i
+					class="fa-solid {timelineEventTypes[upgradedEvent?.type]?.icon} {eventFaIconCss}"
+					title="{sentenceCaseLabel} event"
+				/>
 			<!-- hide age if this is the birth event or if there's no age to display -->
 			{#if upgradedEvent?.type !== timelineEventTypes.birth.type && eventAgeDisplay}
 				<div class="timeline-event-age {eventAgeCss}">
@@ -507,6 +539,7 @@
 					/>
 				{/if}
 			{/if}
+			</div>
 		</div>
 		<div class="timeline-event-content {eventGradientCss}">
 			<div class="timeline-event-description {eventDescriptionCss} {eventDescriptionDynamicCss}">
@@ -555,11 +588,10 @@
 
 	.timeline-event-date-apprx {
 		display: flex;
-		width: -webkit-fill-available;
-		width: -moz-available;
 		justify-content: center;
 		font-size: 10px;
 		padding-top: 3px;
+		box-sizing: border-box;
 	}
 
 	.timeline-event-node {
@@ -573,7 +605,26 @@
 		width: 2rem;
 	}
 
+	.timeline-event-title-bar-container {
+		position: relative;
+		overflow: hidden;
+		border-radius: 10px 10px 0px 0px;
+	}
+
+	.timeline-event-title-bar-gradient {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 0;
+		pointer-events: none;
+		overflow: hidden;
+	}
+
 	.timeline-event-title-bar {
+		position: relative;
+		z-index: 1;
 		display: flex;
 		flex-basis: 0;
 		flex-grow: 1;
