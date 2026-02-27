@@ -33,7 +33,7 @@
 		-webkit-appearance: none;
 		width: ${checkboxSize};
 		height: ${checkboxSize};
-		border: 2px solid ${jdgColors.textLight};
+		border: 2px solid ${jdgColors.activeSecondary};
 		border-radius: 3px;
 		background-color: white;
 		cursor: pointer;
@@ -58,8 +58,18 @@
 		}
 
 		&:disabled {
-			opacity: 0.5;
-			cursor: not-allowed;
+			background-color: white;
+			border-color: gainsboro;
+			cursor: default;
+		}
+
+		&:disabled:checked {
+			background-color: #e0e0e0;
+			border-color: #e0e0e0;
+		}
+
+		&:disabled:checked::after {
+			border-color: ${jdgColors.text};
 		}
 	`;
 
@@ -75,7 +85,10 @@
 <div class="checkbox-container">
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-	<label class="checkbox-wrapper {checkboxWrapperCss}" on:click|stopPropagation>
+	<label
+		class="checkbox-wrapper {checkboxWrapperCss} {!isEnabled ? 'checkbox-wrapper--disabled' : ''}"
+		on:click|stopPropagation
+	>
 		<input
 			type="checkbox"
 			bind:checked={isChecked}
@@ -103,6 +116,10 @@
 		gap: 0.35em;
 		cursor: pointer;
 		user-select: none;
+	}
+
+	.checkbox-wrapper--disabled {
+		cursor: default;
 	}
 
 	input {
