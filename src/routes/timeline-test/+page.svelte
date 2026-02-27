@@ -617,15 +617,16 @@
 						backgroundColor={jdgColors.active}
 						onClickFunction={setToEditingStore}
 					/>
-					<JDGButton
-						isEnabled={$draftTimelineHost !== undefined}
-						label="Cancel"
-						faIcon="fa-circle-xmark"
-						backgroundColor={jdgColors.cancel}
-						onClickFunction={() => {
-							draftTimelineHost.set(undefined);
-						}}
-					/>
+					{#if $draftTimelineHost !== undefined}
+						<JDGButton
+							label="Cancel"
+							faIcon="fa-circle-xmark"
+							backgroundColor={jdgColors.cancel}
+							onClickFunction={() => {
+								draftTimelineHost.set(undefined);
+							}}
+						/>
+					{/if}
 				</div>
 			</JDGInputContainer>
 		</JDGBodyCopy>
