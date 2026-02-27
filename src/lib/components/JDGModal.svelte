@@ -12,8 +12,8 @@
 	export let showModal = true;
 	export let onClickCloseButton = undefined;
 	export let closeOnOverlayClick = true;
-	export let title = 'This is a modal title';
-	export let subtitle = 'This is a modal subtitle';
+	export let title = undefined;
+	export let subtitle = undefined;
 	export let width = 'auto';
 	export let height = 'auto';
 	// Only applies to desktop/tablet
@@ -121,7 +121,7 @@
 					/>
 				</div>
 			{/if}
-			{#if title || onClickCloseButton}
+			{#if title || subtitle}
 				<div
 					class="modal-title-bar-container {modalTitleBarContainerCss}"
 					style="position: relative; z-index: 1;"
