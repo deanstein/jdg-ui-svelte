@@ -18,7 +18,8 @@
 		generateGradientPoints,
 		generateEventGradient,
 		constrainCorollaryColor,
-		getImageMetaByKey
+		getImageMetaByKey,
+		darkenColor
 	} from '$lib/jdg-utils.js';
 	import { upgradeTimelineEvent } from '$lib/jdg-timeline-management.js';
 
@@ -254,10 +255,12 @@
 		}
 	`;
 
-	// Content uses deterministic gradient; title bar uses JDGRandomGradient when both colors set, else fallback
+	// Content uses deterministic gradient; title bar uses JDGRandomGradient (darkened 0.05) when both colors set, else fallback
 	let eventGradientCss = css``;
 	let eventTitleBarGradientCss = css``;
 	$: hasTitleBarRandomGradient = !!(gradientColor1 && gradientColor2);
+	$: titleBarColor1 = gradientColor1 ? darkenColor(gradientColor1, 0.1) : null;
+	$: titleBarColor2 = gradientColor2 ? darkenColor(gradientColor2, 0.1) : null;
 	$: {
 		if (gradientColor1 && gradientPointsCount > 0 && gradientColor2) {
 			const seed = upgradedEvent?.id
@@ -271,7 +274,6 @@
 				background: ${gradientString};
 				border-radius: 0px 0px ${eventBorderRadius} ${eventBorderRadius};
 			`;
-			// Title bar uses JDGRandomGradient in template when both colors set; no need to build same gradient here
 			eventTitleBarGradientCss = css``;
 		} else {
 			eventGradientCss = css`
@@ -279,7 +281,9 @@
 				border-radius: 0px 0px ${eventBorderRadius} ${eventBorderRadius};
 			`;
 			eventTitleBarGradientCss = css`
-				background-color: ${gradientColor1};
+				background-color: ${gradientColor1
+					? darkenColor(gradientColor1, 0.05)
+					: jdgColors.activeSubtle};
 				border-radius: ${eventBorderRadius} ${eventBorderRadius} 0px 0px;
 			`;
 		}
@@ -439,106 +443,108 @@
 						numberOfPoints={8}
 						edgeBufferRatio={0.1}
 						drawDebugBorders={false}
-						color1={gradientColor1}
-						color2={gradientColor2}
-						color3={gradientColor1}
+						color1={titleBarColor1}
+						color2={titleBarColor2}
+						color3={titleBarColor1}
 					/>
 				</div>
 			{/if}
 			<div
-				class="timeline-event-title-bar {hasTitleBarRandomGradient ? '' : eventTitleBarCss} {hasTitleBarRandomGradient ? '' : eventTitleBarGradientCss}"
+				class="timeline-event-title-bar {hasTitleBarRandomGradient
+					? ''
+					: eventTitleBarCss} {hasTitleBarRandomGradient ? '' : eventTitleBarGradientCss}"
 			>
 				<!-- event icon -->
 				<i
 					class="fa-solid {timelineEventTypes[upgradedEvent?.type]?.icon} {eventFaIconCss}"
 					title="{sentenceCaseLabel} event"
 				/>
-			<!-- hide age if this is the birth event or if there's no age to display -->
-			{#if upgradedEvent?.type !== timelineEventTypes.birth.type && eventAgeDisplay}
-				<div class="timeline-event-age {eventAgeCss}">
-					{eventAgeDisplay}
-					{isEventAgePositive ? eventAgeSuffixPositive : eventAgeSuffixNegative}
-				</div>
-			{/if}
-			<!-- if this is a reference event, show the timeline host it's shared from -->
-			{#if upgradedEvent?.type === timelineEventTypes.reference}
-				<div>
-					<div class="timeline-event-reference-info">
+				<!-- hide age if this is the birth event or if there's no age to display -->
+				{#if upgradedEvent?.type !== timelineEventTypes.birth.type && eventAgeDisplay}
+					<div class="timeline-event-age {eventAgeCss}">
+						{eventAgeDisplay}
+						{isEventAgePositive ? eventAgeSuffixPositive : eventAgeSuffixNegative}
+					</div>
+				{/if}
+				<!-- if this is a reference event, show the timeline host it's shared from -->
+				{#if upgradedEvent?.type === timelineEventTypes.reference}
+					<div>
+						<div class="timeline-event-reference-info">
+							<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event from &nbsp; </i>
+							<JDGButton
+								onClickFunction={() => {
+									onClickEventRefHost();
+								}}
+								faIcon={'fa-circle-arrow-right'}
+								backgroundColor={jdgColors.activeSubtle}
+								paddingLeftRight="8px"
+								paddingTopBottom="2px"
+								fontSize="12px"
+								gap="6px"
+								label={eventReference?.name}
+								tooltip={'Go to ' + eventReference?.name}
+							/>
+						</div>
+					</div>
+				{/if}
+				<!-- if this event has associated people, show the first -->
+				{#if upgradedEvent?.associatedPeopleIds?.length > 0 && upgradedEvent?.type !== timelineEventTypes.reference}
+					<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event with &nbsp; </i>
+					<JDGButton
+						onClickFunction={() => {
+							onClickAssociatedHost(upgradedEvent.associatedPeopleIds[0]);
+						}}
+						faIcon={'fa-circle-arrow-right'}
+						backgroundColor={jdgColors.active}
+						paddingLeftRight="8px"
+						paddingTopBottom="2px"
+						fontSize="12px"
+						gap="6px"
+						label={timelineHost.name}
+						tooltip={'Go to ' + timelineHost.name}
+					/>
+					<!-- if more than one, show a label -->
+					{#if upgradedEvent?.additionalContent?.associatedPeopleIds?.length > 1}
+						&nbsp;and others
+					{/if}
+				{/if}
+				<!-- if this is a contextual event, treat it specifically -->
+				{#if upgradedEvent?.originType === timelineEventTypes.context}
+					<!-- child birth -->
+					{#if upgradedEvent?.type === timelineEventTypes.childBirth.type}
 						<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event from &nbsp; </i>
 						<JDGButton
 							onClickFunction={() => {
-								onClickEventRefHost();
+								onClickEventRefHost(timelineHost.id);
 							}}
-							faIcon={'fa-circle-arrow-right'}
+							faIcon={timelineEventTypes.childBirth.icon}
 							backgroundColor={jdgColors.activeSubtle}
 							paddingLeftRight="8px"
 							paddingTopBottom="2px"
 							fontSize="12px"
 							gap="6px"
-							label={eventReference?.name}
-							tooltip={'Go to ' + eventReference?.name}
+							label={timelineHost.name}
+							tooltip={timelineHost.name}
 						/>
-					</div>
-				</div>
-			{/if}
-			<!-- if this event has associated people, show the first -->
-			{#if upgradedEvent?.associatedPeopleIds?.length > 0 && upgradedEvent?.type !== timelineEventTypes.reference}
-				<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event with &nbsp; </i>
-				<JDGButton
-					onClickFunction={() => {
-						onClickAssociatedHost(upgradedEvent.associatedPeopleIds[0]);
-					}}
-					faIcon={'fa-circle-arrow-right'}
-					backgroundColor={jdgColors.active}
-					paddingLeftRight="8px"
-					paddingTopBottom="2px"
-					fontSize="12px"
-					gap="6px"
-					label={timelineHost.name}
-					tooltip={'Go to ' + timelineHost.name}
-				/>
-				<!-- if more than one, show a label -->
-				{#if upgradedEvent?.additionalContent?.associatedPeopleIds?.length > 1}
-					&nbsp;and others
+					{/if}
+					<!-- parent death -->
+					{#if upgradedEvent?.type === timelineEventTypes.parentDeath.type}
+						<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event from &nbsp; </i>
+						<JDGButton
+							onClickFunction={() => {
+								onClickEventRefHost(timelineHost.id);
+							}}
+							faIcon={timelineEventTypes.parentDeath.icon}
+							backgroundColor={jdgColors.activeSubtle}
+							paddingLeftRight="8px"
+							paddingTopBottom="2px"
+							fontSize="12px"
+							gap="6px"
+							label={timelineHost.name}
+							tooltip={timelineHost.name}
+						/>
+					{/if}
 				{/if}
-			{/if}
-			<!-- if this is a contextual event, treat it specifically -->
-			{#if upgradedEvent?.originType === timelineEventTypes.context}
-				<!-- child birth -->
-				{#if upgradedEvent?.type === timelineEventTypes.childBirth.type}
-					<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event from &nbsp; </i>
-					<JDGButton
-						onClickFunction={() => {
-							onClickEventRefHost(timelineHost.id);
-						}}
-						faIcon={timelineEventTypes.childBirth.icon}
-						backgroundColor={jdgColors.activeSubtle}
-						paddingLeftRight="8px"
-						paddingTopBottom="2px"
-						fontSize="12px"
-						gap="6px"
-						label={timelineHost.name}
-						tooltip={timelineHost.name}
-					/>
-				{/if}
-				<!-- parent death -->
-				{#if upgradedEvent?.type === timelineEventTypes.parentDeath.type}
-					<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event from &nbsp; </i>
-					<JDGButton
-						onClickFunction={() => {
-							onClickEventRefHost(timelineHost.id);
-						}}
-						faIcon={timelineEventTypes.parentDeath.icon}
-						backgroundColor={jdgColors.activeSubtle}
-						paddingLeftRight="8px"
-						paddingTopBottom="2px"
-						fontSize="12px"
-						gap="6px"
-						label={timelineHost.name}
-						tooltip={timelineHost.name}
-					/>
-				{/if}
-			{/if}
 			</div>
 		</div>
 		<div class="timeline-event-content {eventGradientCss}">
