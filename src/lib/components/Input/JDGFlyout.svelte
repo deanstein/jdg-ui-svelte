@@ -18,7 +18,7 @@
 	// Button styling
 	export let buttonFontSize = '0.9rem';
 	export let buttonPadding = '0.4rem';
-	export let buttonBackgroundColor = setRgbaAlpha(jdgColors.headerBackground, 0.7);
+	export let buttonBackgroundColor = jdgColors.activeSecondary;
 	export let buttonTextColor = jdgColors.textDm;
 	export let tooltip = '';
 	// Flyout styling
