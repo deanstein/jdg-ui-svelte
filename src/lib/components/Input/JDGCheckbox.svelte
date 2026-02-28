@@ -13,7 +13,7 @@
 	export let onCheckAction = () => {};
 	export let onUncheckAction = () => {};
 	export let hint = undefined;
-	export let checkboxBackgroundColor = jdgColors.active;
+	export let checkboxBackgroundColor = jdgColors.activeSecondary;
 	export let checkColor = 'white';
 
 	const checkboxSize = '1.3em';
