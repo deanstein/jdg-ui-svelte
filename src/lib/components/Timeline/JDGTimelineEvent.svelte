@@ -143,13 +143,13 @@
 		background-color: ${jdgColors.activeSubtle};
 		border-radius: ${dateBorderRadius} ${dateBorderRadius} 0 0;
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			font-size: 0.6rem;
+			font-size: 0.8rem;
 			width: ${jdgSizes.timelineEventYearWidthSm};
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-			font-size: 0.7rem;
+			font-size: 0.8rem;
 			width: ${jdgSizes.timelineEventYearWidthMd};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
@@ -163,13 +163,13 @@
 		background-color: ${jdgColors.activeSubtle};
 		border-radius: 0 0 ${dateBorderRadius} ${dateBorderRadius};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			font-size: 0.9rem;
+			font-size: 1.1rem;
 			width: ${jdgSizes.timelineEventYearWidthSm};
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-			font-size: 1.1rem;
+			font-size: 1.2rem;
 			width: ${jdgSizes.timelineEventYearWidthMd};
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
@@ -195,15 +195,15 @@
 
 	const eventDescriptionCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			font-size: 0.7rem;
+			font-size: 0.8rem;
 		}
 		@media (min-width: ${jdgBreakpoints.width[0].toString() +
 			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 			jdgBreakpoints.unit}) {
-			font-size: 0.8rem;
+			font-size: 0.9rem;
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			font-size: 0.9rem;
+			font-size: 1rem;
 		}
 	`;
 

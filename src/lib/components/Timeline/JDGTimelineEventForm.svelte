@@ -406,23 +406,33 @@
 		color: #999;
 		text-align: left;
 		margin-top: 4px;
-		font-size: 0.7rem;
+		font-size: 0.8rem;
 		@media (min-width: ${bp0}) and (max-width: ${bp1}) {
-			font-size: 0.8rem;
+			font-size: 0.9rem;
 		}
 		@media (min-width: ${bp1}) {
-			font-size: 0.9rem;
+			font-size: 1rem;
 		}
 	`;
 
 	const readoutTextCss = css`
 		color: inherit;
-		font-size: 0.7rem;
+		font-size: 0.8rem;
 		@media (min-width: ${bp0}) and (max-width: ${bp1}) {
-			font-size: 0.8rem;
+			font-size: 0.9rem;
 		}
 		@media (min-width: ${bp1}) {
+			font-size: 1rem;
+		}
+	`;
+
+	const readoutApproximateCss = css`
+		font-size: 0.8rem;
+		@media (min-width: ${bp0}) and (max-width: ${bp1}) {
 			font-size: 0.9rem;
+		}
+		@media (min-width: ${bp1}) {
+			font-size: 1rem;
 		}
 	`;
 </script>
@@ -438,7 +448,10 @@
 	<!-- Event type and age header -->
 	<div class="event-header">
 		<div class="event-header-age {eventHeaderViewCss}">
-			<i class="fa-solid {currentTypeIcon} {eventHeaderIconCss}" title="{sentenceCaseLabel} event" />
+			<i
+				class="fa-solid {currentTypeIcon} {eventHeaderIconCss}"
+				title="{sentenceCaseLabel} event"
+			/>
 			{#if !isGenericType}
 				<span class="event-header-type-label">{currentTypeLabel}</span>
 			{/if}
@@ -525,14 +538,16 @@
 						{:else}
 							<!-- Read-only: simple text date readout -->
 							{#if isAdditional}
-								<span class="{readoutTextCss}">{formatDateForDisplay($localAdditionalStore[key])}</span>
+								<span class={readoutTextCss}
+									>{formatDateForDisplay($localAdditionalStore[key])}</span
+								>
 							{:else if key === 'date'}
-								<span class="{readoutTextCss}">{formatDateForDisplay(effectiveDate)}</span>
+								<span class={readoutTextCss}>{formatDateForDisplay(effectiveDate)}</span>
 								{#if effectiveIsApprxDate}
-									<span class="readout-approximate">(approximate)</span>
+									<span class="readout-approximate {readoutApproximateCss}">(approximate)</span>
 								{/if}
 							{:else}
-								<span class="{readoutTextCss}">{formatDateForDisplay($localEventStore[key])}</span>
+								<span class={readoutTextCss}>{formatDateForDisplay($localEventStore[key])}</span>
 							{/if}
 						{/if}
 					</div>
@@ -550,13 +565,15 @@
 					{:else}
 						<!-- Read-only: simple text readout -->
 						{#if isAdditional}
-							<div class="readout-description {readoutTextCss}">{$localAdditionalStore[key] || ''}</div>
+							<div class="readout-description {readoutTextCss}">
+								{$localAdditionalStore[key] || ''}
+							</div>
 						{:else if key === 'description'}
 							<div class="readout-description {readoutTextCss}">{displayDescription || ''}</div>
 						{:else if key === 'source'}
-							<div class="{readoutTextCss}">{getLabelForValue(displaySource, def.options) || ''}</div>
+							<div class={readoutTextCss}>{getLabelForValue(displaySource, def.options) || ''}</div>
 						{:else}
-							<div class="{readoutTextCss}">{$localEventStore[key] || ''}</div>
+							<div class={readoutTextCss}>{$localEventStore[key] || ''}</div>
 						{/if}
 					{/if}
 				{:else if def.inputType === JDG_INPUT_TYPES.COMBOBOX}
@@ -583,13 +600,13 @@
 					{:else}
 						<!-- Read-only: simple text readout -->
 						{#if isAdditional}
-							<div class="{readoutTextCss}">
+							<div class={readoutTextCss}>
 								{getLabelForValue($localAdditionalStore[key], def.options) || ''}
 							</div>
 						{:else if key === 'source'}
-							<div class="{readoutTextCss}">{getLabelForValue(displaySource, def.options) || ''}</div>
+							<div class={readoutTextCss}>{getLabelForValue(displaySource, def.options) || ''}</div>
 						{:else}
-							<div class="{readoutTextCss}">
+							<div class={readoutTextCss}>
 								{getLabelForValue($localEventStore[key], def.options) || ''}
 							</div>
 						{/if}
@@ -606,7 +623,9 @@
 					{:else}
 						<!-- Read-only: simple text readout with pleasant line spacing -->
 						{#if isAdditional}
-							<div class="readout-description {readoutTextCss}">{$localAdditionalStore[key] || ''}</div>
+							<div class="readout-description {readoutTextCss}">
+								{$localAdditionalStore[key] || ''}
+							</div>
 						{:else if key === 'description'}
 							<div class="readout-description {readoutTextCss}">{displayDescription || ''}</div>
 						{:else}
@@ -836,7 +855,6 @@
 	}
 
 	.readout-approximate {
-		font-size: 0.85em;
 		color: #888;
 		display: block;
 		margin-top: -3px;
