@@ -3,6 +3,7 @@
 
 	import { getContext, onMount } from 'svelte';
 	import { get, writable } from 'svelte/store';
+	import { css } from '@emotion/css';
 
 	import JDG_CONTEXTS from '$lib/jdg-contexts.js';
 	import JDG_INPUT_TYPES from '$lib/schemas/jdg-input-types.js';
@@ -52,7 +53,7 @@
 		JDGTextArea,
 		JDGTextInput
 	} from '$lib/index.js';
-	import { jdgColors } from '$lib/jdg-shared-styles.js';
+	import { jdgColors, jdgBreakpoints } from '$lib/jdg-shared-styles.js';
 
 	// Read from and write to this store
 	export let eventStore = writable(instantiateObject(jdgTimelineEvent));
@@ -372,6 +373,58 @@
 		const option = options.find((opt) => opt.value === value);
 		return option ? option.label : value;
 	}
+
+	// Responsive styles using jdgBreakpoints (match JDGTimelineEvent eventAgeCss / eventFaIconCss / eventDescriptionCss)
+	const bp0 = jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit;
+	const bp1 = jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit;
+
+	const eventHeaderViewCss = css`
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		font-size: 0.7rem;
+		@media (min-width: ${bp0}) and (max-width: ${bp1}) {
+			font-size: 0.8rem;
+		}
+		@media (min-width: ${bp1}) {
+			font-size: 0.9rem;
+		}
+	`;
+
+	const eventHeaderIconCss = css`
+		font-size: 0.8rem;
+		@media (min-width: ${bp0}) and (max-width: ${bp1}) {
+			font-size: 0.9rem;
+		}
+		@media (min-width: ${bp1}) {
+			font-size: 1rem;
+		}
+	`;
+
+	const noImagesMessageCss = css`
+		font-style: italic;
+		color: #999;
+		text-align: left;
+		margin-top: 4px;
+		font-size: 0.7rem;
+		@media (min-width: ${bp0}) and (max-width: ${bp1}) {
+			font-size: 0.8rem;
+		}
+		@media (min-width: ${bp1}) {
+			font-size: 0.9rem;
+		}
+	`;
+
+	const readoutTextCss = css`
+		color: inherit;
+		font-size: 0.7rem;
+		@media (min-width: ${bp0}) and (max-width: ${bp1}) {
+			font-size: 0.8rem;
+		}
+		@media (min-width: ${bp1}) {
+			font-size: 0.9rem;
+		}
+	`;
 </script>
 
 <JDGForm bind:containerRef={parentRef}>
@@ -384,8 +437,8 @@
 
 	<!-- Event type and age header -->
 	<div class="event-header">
-		<div class="event-header-view event-header-age">
-			<i class="fa-solid {currentTypeIcon} event-header-icon" title="{sentenceCaseLabel} event" />
+		<div class="event-header-age {eventHeaderViewCss}">
+			<i class="fa-solid {currentTypeIcon} {eventHeaderIconCss}" title="{sentenceCaseLabel} event" />
 			{#if !isGenericType}
 				<span class="event-header-type-label">{currentTypeLabel}</span>
 			{/if}
@@ -472,14 +525,14 @@
 						{:else}
 							<!-- Read-only: simple text date readout -->
 							{#if isAdditional}
-								<span class="readout-text">{formatDateForDisplay($localAdditionalStore[key])}</span>
+								<span class="{readoutTextCss}">{formatDateForDisplay($localAdditionalStore[key])}</span>
 							{:else if key === 'date'}
-								<span class="readout-text">{formatDateForDisplay(effectiveDate)}</span>
+								<span class="{readoutTextCss}">{formatDateForDisplay(effectiveDate)}</span>
 								{#if effectiveIsApprxDate}
 									<span class="readout-approximate">(approximate)</span>
 								{/if}
 							{:else}
-								<span class="readout-text">{formatDateForDisplay($localEventStore[key])}</span>
+								<span class="{readoutTextCss}">{formatDateForDisplay($localEventStore[key])}</span>
 							{/if}
 						{/if}
 					</div>
@@ -497,13 +550,13 @@
 					{:else}
 						<!-- Read-only: simple text readout -->
 						{#if isAdditional}
-							<div class="readout-text readout-description">{$localAdditionalStore[key] || ''}</div>
+							<div class="readout-description {readoutTextCss}">{$localAdditionalStore[key] || ''}</div>
 						{:else if key === 'description'}
-							<div class="readout-text readout-description">{displayDescription || ''}</div>
+							<div class="readout-description {readoutTextCss}">{displayDescription || ''}</div>
 						{:else if key === 'source'}
-							<div class="readout-text">{getLabelForValue(displaySource, def.options) || ''}</div>
+							<div class="{readoutTextCss}">{getLabelForValue(displaySource, def.options) || ''}</div>
 						{:else}
-							<div class="readout-text">{$localEventStore[key] || ''}</div>
+							<div class="{readoutTextCss}">{$localEventStore[key] || ''}</div>
 						{/if}
 					{/if}
 				{:else if def.inputType === JDG_INPUT_TYPES.COMBOBOX}
@@ -530,13 +583,13 @@
 					{:else}
 						<!-- Read-only: simple text readout -->
 						{#if isAdditional}
-							<div class="readout-text">
+							<div class="{readoutTextCss}">
 								{getLabelForValue($localAdditionalStore[key], def.options) || ''}
 							</div>
 						{:else if key === 'source'}
-							<div class="readout-text">{getLabelForValue(displaySource, def.options) || ''}</div>
+							<div class="{readoutTextCss}">{getLabelForValue(displaySource, def.options) || ''}</div>
 						{:else}
-							<div class="readout-text">
+							<div class="{readoutTextCss}">
 								{getLabelForValue($localEventStore[key], def.options) || ''}
 							</div>
 						{/if}
@@ -553,11 +606,11 @@
 					{:else}
 						<!-- Read-only: simple text readout with pleasant line spacing -->
 						{#if isAdditional}
-							<div class="readout-text readout-description">{$localAdditionalStore[key] || ''}</div>
+							<div class="readout-description {readoutTextCss}">{$localAdditionalStore[key] || ''}</div>
 						{:else if key === 'description'}
-							<div class="readout-text readout-description">{displayDescription || ''}</div>
+							<div class="readout-description {readoutTextCss}">{displayDescription || ''}</div>
 						{:else}
-							<div class="readout-text readout-description">{$localEventStore[key] || ''}</div>
+							<div class="readout-description {readoutTextCss}">{$localEventStore[key] || ''}</div>
 						{/if}
 					{/if}
 				{:else if def.inputType === JDG_INPUT_TYPES.CHECKBOX}
@@ -631,7 +684,7 @@
 									{/if}
 								</div>
 							{:else if !isEditing}
-								<div class="no-images-message">{noImageMessage}</div>
+								<div class={noImagesMessageCss}>{noImageMessage}</div>
 							{/if}
 						{/if}
 					{/key}
@@ -737,17 +790,6 @@
 		width: 100%;
 	}
 
-	.event-header-view {
-		display: flex;
-		align-items: center;
-		gap: 10px;
-		font-size: 1.1rem;
-	}
-
-	.event-header-icon {
-		font-size: 1.2rem;
-	}
-
 	.event-header-type-label {
 		font-weight: 500;
 	}
@@ -759,7 +801,6 @@
 
 	.event-header-age {
 		color: #666;
-		font-size: 0.8rem;
 	}
 
 	.form-store-preview {
@@ -772,13 +813,6 @@
 
 	.missing-images-actions {
 		margin-bottom: 8px;
-	}
-
-	.no-images-message {
-		font-style: italic;
-		color: #999;
-		text-align: left;
-		margin-top: 4px;
 	}
 
 	.image-selector-actions {
@@ -799,10 +833,6 @@
 		display: flex;
 		flex-direction: column;
 		gap: 5px;
-	}
-
-	.readout-text {
-		color: inherit;
 	}
 
 	.readout-approximate {

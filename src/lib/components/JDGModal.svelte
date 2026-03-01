@@ -80,14 +80,36 @@
 		background-color: ${jdgColors.headerBackground};
 	`;
 
+	/* Title: small/medium/large by breakpoint, slightly bigger than body (site strategy) */
 	const modalTitleCss = css`
-		font-size: 1.5vh;
 		color: ${jdgColors.title};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			font-size: 1.1rem;
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			font-size: 1.25rem;
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			font-size: 1.4rem;
+		}
 	`;
 
+	/* Subtitle: same breakpoint strategy, one step down from title */
 	const modalSubtitleCss = css`
-		font-size: 1vh;
 		color: ${jdgColors.text};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			font-size: 0.9rem;
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			font-size: 1rem;
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			font-size: 1.05rem;
+		}
 	`;
 
 	function handleBackdropClick() {

@@ -2,7 +2,7 @@
 	import { css } from '@emotion/css';
 
 	import JDGInputHint from './JDGInputHint.svelte';
-	import { jdgColors } from '$lib/jdg-shared-styles.js';
+	import { jdgColors, jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	// Primary label for input component
 	export let label = 'Some Fact or Field Name';
@@ -24,8 +24,20 @@
 		margin-bottom: ${hint ? '' : '0.5svh'};
 	`;
 
+	/* Label: small/medium/large by breakpoint (matches site strategy) */
 	const labelCss = css`
 		color: ${jdgColors.text};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.fontSizeBodyXSm};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.fontSizeBodyMd};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.fontSizeBodyLg};
+		}
 	`;
 </script>
 
@@ -59,7 +71,6 @@
 	}
 
 	.label {
-		font-size: 1.05rem;
 		line-height: normal;
 	}
 
