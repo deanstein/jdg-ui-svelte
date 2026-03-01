@@ -25,7 +25,8 @@
 	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import sharedStrings from './shared-strings.js';
 
-	// Define the repo name
+	// Define the repo name for this app
+	// Gallery and image meta use this
 	repoName.set(jdgUiSvelteRepoName);
 
 	// Define the nav items in the header

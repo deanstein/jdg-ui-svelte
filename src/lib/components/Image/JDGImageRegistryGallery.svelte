@@ -1,5 +1,5 @@
 <script>
-	import { onMount, getContext } from 'svelte';
+	import { onMount, onDestroy, getContext } from 'svelte';
 	import { css } from '@emotion/css';
 
 	import JDG_CONTEXTS from '$lib/jdg-contexts.js';
@@ -7,7 +7,8 @@
 	import { imagesLoading, repoName as currentRepoName } from '$lib/stores/jdg-ui-store.js';
 	import {
 		draftTimelineImageMetaRegistry,
-		draftTimelineImageRegistryRepo
+		draftTimelineImageRegistryRepo,
+		selectedGalleryRegistryRepo
 	} from '$lib/stores/jdg-temp-store.js';
 	import { fetchImageMetaRegistry } from '$lib/jdg-persistence-management.js';
 
@@ -42,8 +43,8 @@
 	// If not provided, falls back to context
 	export let imageMetaRegistry = undefined;
 
-	// Optional: pass a repo name to fetch a remote registry
-	// This takes precedence over imageMetaRegistry prop if provided and different from current repo
+	// Optional: pass a repo name (e.g. from dropdown). When set, we fetch that repo's registry
+	// and use only it for the list so the list always matches the selection.
 	export let registryRepoName = undefined;
 
 	// Track the fetched registry from a remote repo
@@ -89,15 +90,23 @@
 		}
 	}
 
-	// Trigger fetch when registryRepoName changes and is different from current repo
-	$: if (registryRepoName && registryRepoName !== $currentRepoName) {
+	// When a repo is selected in the dropdown, always fetch that repo's registry so the list
+	// matches the selection. (Avoids showing context registry when it's for a different app.)
+	$: if (registryRepoName) {
 		loadRemoteRegistry(registryRepoName);
-	} else if (!registryRepoName || registryRepoName === $currentRepoName) {
-		// Reset fetched registry when using local/context registry
+	} else {
 		fetchedRegistry = undefined;
 		fetchError = null;
 		lastFetchedRepoName = undefined;
 	}
+
+	// So ImageMetaModal (sibling, not child) can show current selection when user changes dropdown
+	$: if (registryRepoName != null) {
+		selectedGalleryRegistryRepo.set(registryRepoName);
+	}
+	onDestroy(() => {
+		selectedGalleryRegistryRepo.set(undefined);
+	});
 
 	// Number of images per page
 	export let imagesPerPage = 24;
@@ -187,11 +196,15 @@
 		} else if (onClickImage) {
 			onClickImage(imageMeta);
 		} else {
-			// When viewing a different registry, set the registry context so ImageMetaModal
-			// can resolve the correct registry key and show "Edit" instead of "New"
+			// When opening the detail viewer, set registry context so ImageMetaModal
+			// (opened from the viewer's Edit button) shows the correct "Image Meta Registry" readout
+			// and can resolve the registry key. Always set repo when a registry is selected so the
+			// readout is correct even if fetch is still pending; set registry object when available for key lookup.
+			if (registryRepoName) {
+				draftTimelineImageRegistryRepo.set(registryRepoName);
+			}
 			if (fetchedRegistry && registryRepoName) {
 				draftTimelineImageMetaRegistry.set(fetchedRegistry);
-				draftTimelineImageRegistryRepo.set(registryRepoName);
 			}
 			showImageDetailModal(imageMeta);
 		}
@@ -217,8 +230,11 @@
 		return flat;
 	};
 
-	// Priority: fetchedRegistry (from remote repo) > imageMetaRegistry prop > context
-	$: registryToUse = fetchedRegistry || imageMetaRegistry || contextImageMetaRegistry;
+	// When a repo is selected in the dropdown, use only that repo's fetched registry so the list
+	// always matches the dropdown. When no repo is selected, use prop or context.
+	$: registryToUse = registryRepoName
+		? fetchedRegistry
+		: imageMetaRegistry || contextImageMetaRegistry;
 	$: allImages = flattenRegistry(registryToUse || {});
 
 	// Sort images based on sortMode

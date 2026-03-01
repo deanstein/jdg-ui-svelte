@@ -16,6 +16,8 @@ export let draftImageMeta = writable(undefined);
 // These override the default app registry/repo in JDGImageMetaModal
 export let draftTimelineImageMetaRegistry = writable(undefined);
 export let draftTimelineImageRegistryRepo = writable(undefined);
+// The image registry repo to use for the gallery
+export let selectedGalleryRegistryRepo = writable(undefined);
 
 /*** TIMELINE ***/
 export let draftTimelineHostCollection = writable(undefined);
@@ -34,6 +36,7 @@ const storeMap = {
 	draftImageMeta,
 	draftTimelineImageMetaRegistry,
 	draftTimelineImageRegistryRepo,
+	selectedGalleryRegistryRepo,
 	// timeline
 	draftTimelineHostCollection,
 	isTimelineHostDrafting,

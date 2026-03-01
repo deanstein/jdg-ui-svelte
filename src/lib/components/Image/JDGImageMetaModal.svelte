@@ -11,6 +11,7 @@
 		draftImageMeta,
 		draftTimelineImageMetaRegistry,
 		draftTimelineImageRegistryRepo,
+		selectedGalleryRegistryRepo,
 		saveStatus
 	} from '$lib/stores/jdg-temp-store.js';
 
@@ -100,14 +101,16 @@
 	}
 
 	// The effective registry repo:
-	// - For timeline images: use the timeline's registry repo
-	// - For new images: use the selected registry
-	// - For existing images: use the current website's repoName
-	$: effectiveRepoName = $draftTimelineImageRegistryRepo
-		? $draftTimelineImageRegistryRepo
-		: isNewImage
-			? selectedRegistryForNewImage
-			: $repoName;
+	// - Gallery open: use current dropdown (store) so readout updates when user changes selector
+	// - Timeline/gallery image: use draft store (set when opening image)
+	// - New images: use the selected registry; existing: use current website's repoName
+	$: effectiveRepoName = $selectedGalleryRegistryRepo
+		? $selectedGalleryRegistryRepo
+		: $draftTimelineImageRegistryRepo
+			? $draftTimelineImageRegistryRepo
+			: isNewImage
+				? selectedRegistryForNewImage
+				: $repoName;
 	$: registryLabel = getImageMetaRegistryLabel(effectiveRepoName);
 
 	// For new images: track intended path locally (don't set src until upload)
@@ -736,9 +739,10 @@
 			// Close the modal
 			showImageMetaModal.set(false);
 			draftImageMeta.set(undefined);
-			// Clear timeline-specific registry context
+			// Clear timeline/gallery registry context
 			draftTimelineImageMetaRegistry.set(undefined);
 			draftTimelineImageRegistryRepo.set(undefined);
+			selectedGalleryRegistryRepo.set(undefined);
 		} catch (err) {
 			console.error('❌ Delete error:', err.message);
 			saveStatus.set(jdgSaveStatus.saveFailed);
@@ -838,9 +842,10 @@
 	onClickCloseButton={() => {
 		showImageMetaModal.set(false);
 		draftImageMeta.set(undefined);
-		// Clear timeline-specific registry context
+		// Clear timeline/gallery registry context
 		draftTimelineImageMetaRegistry.set(undefined);
 		draftTimelineImageRegistryRepo.set(undefined);
+		selectedGalleryRegistryRepo.set(undefined);
 	}}
 	closeOnOverlayClick={false}
 	maxWidth="90vw"
@@ -922,9 +927,10 @@
 					onClickCancel={() => {
 						showImageMetaModal.set(false);
 						draftImageMeta.set(undefined);
-						// Clear timeline-specific registry context
+						// Clear timeline/gallery registry context
 						draftTimelineImageMetaRegistry.set(undefined);
 						draftTimelineImageRegistryRepo.set(undefined);
+						selectedGalleryRegistryRepo.set(undefined);
 						saveStatus.set(null);
 					}}
 					isEditActive={hasUnsavedChanges && effectiveRepoName}
