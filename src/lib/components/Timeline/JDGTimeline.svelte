@@ -12,8 +12,8 @@
 	import {
 		draftImageMeta,
 		draftTimelineEvent,
-		draftTimelineImageMetaRegistry,
-		draftTimelineImageRegistryRepo
+		draftImageMetaRegistry,
+		draftImageRegistryRepo
 	} from '$lib/stores/jdg-temp-store.js';
 	import {
 		imageViewerMeta,
@@ -210,8 +210,8 @@
 		if ($isAdminMode) {
 			draftImageMeta.set(avatarImageMeta);
 			// Set the timeline's registry context for the ImageMetaModal
-			draftTimelineImageMetaRegistry.set(timelineImageMetaRegistry);
-			draftTimelineImageRegistryRepo.set(timelineHost?.imageMetaRegistryRepo);
+			draftImageMetaRegistry.set(timelineImageMetaRegistry);
+			draftImageRegistryRepo.set(timelineHost?.imageMetaRegistryRepo);
 			showImageMetaModal.set(true);
 		} else {
 			imageViewerMeta.set(avatarImageMeta);

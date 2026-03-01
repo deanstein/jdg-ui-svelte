@@ -6,8 +6,8 @@
 
 	import { imagesLoading, repoName as currentRepoName } from '$lib/stores/jdg-ui-store.js';
 	import {
-		draftTimelineImageMetaRegistry,
-		draftTimelineImageRegistryRepo,
+		draftImageMetaRegistry,
+		draftImageRegistryRepo,
 		selectedGalleryRegistryRepo
 	} from '$lib/stores/jdg-temp-store.js';
 	import { fetchImageMetaRegistry } from '$lib/jdg-persistence-management.js';
@@ -201,10 +201,10 @@
 			// and can resolve the registry key. Always set repo when a registry is selected so the
 			// readout is correct even if fetch is still pending; set registry object when available for key lookup.
 			if (registryRepoName) {
-				draftTimelineImageRegistryRepo.set(registryRepoName);
+				draftImageRegistryRepo.set(registryRepoName);
 			}
 			if (fetchedRegistry && registryRepoName) {
-				draftTimelineImageMetaRegistry.set(fetchedRegistry);
+				draftImageMetaRegistry.set(fetchedRegistry);
 			}
 			showImageDetailModal(imageMeta);
 		}

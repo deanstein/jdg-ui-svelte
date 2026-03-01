@@ -12,10 +12,10 @@ export let saveFunction = writable(async () => {});
 /*** IMAGE ***/
 // Read and write source when editing an imageMeta
 export let draftImageMeta = writable(undefined);
-// When editing an image from a timeline, store the timeline's registry context
-// These override the default app registry/repo in JDGImageMetaModal
-export let draftTimelineImageMetaRegistry = writable(undefined);
-export let draftTimelineImageRegistryRepo = writable(undefined);
+// Registry/repo context for the image currently being edited in the modal.
+// Override the default app registry/repo in JDGImageMetaModal (set from timeline, gallery, or page context).
+export let draftImageMetaRegistry = writable(undefined);
+export let draftImageRegistryRepo = writable(undefined);
 // The image registry repo to use for the gallery
 export let selectedGalleryRegistryRepo = writable(undefined);
 
@@ -34,8 +34,8 @@ const storeMap = {
 	saveStatus,
 	// image meta editing
 	draftImageMeta,
-	draftTimelineImageMetaRegistry,
-	draftTimelineImageRegistryRepo,
+	draftImageMetaRegistry,
+	draftImageRegistryRepo,
 	selectedGalleryRegistryRepo,
 	// timeline
 	draftTimelineHostCollection,

@@ -9,8 +9,8 @@
 	import { repoName, showImageEditButtons, showImageMetaModal } from '$lib/stores/jdg-ui-store.js';
 	import {
 		draftImageMeta,
-		draftTimelineImageMetaRegistry,
-		draftTimelineImageRegistryRepo,
+		draftImageMetaRegistry,
+		draftImageRegistryRepo,
 		selectedGalleryRegistryRepo,
 		saveStatus
 	} from '$lib/stores/jdg-temp-store.js';
@@ -52,8 +52,8 @@
 
 	// Get the image meta registry from context (read-only)
 	const contextImageMetaRegistry = getContext(JDG_CONTEXTS.IMAGE_META_REGISTRY);
-	// Use timeline registry if set, otherwise fall back to context registry
-	$: effectiveRegistry = $draftTimelineImageMetaRegistry ?? contextImageMetaRegistry;
+	// Use draft registry if set (from timeline/gallery/page), otherwise fall back to context registry
+	$: effectiveRegistry = $draftImageMetaRegistry ?? contextImageMetaRegistry;
 
 	// Bind the hidden fileInput to a custom button for file picking
 	let fileInput;
@@ -106,8 +106,8 @@
 	// - New images: use the selected registry; existing: use current website's repoName
 	$: effectiveRepoName = $selectedGalleryRegistryRepo
 		? $selectedGalleryRegistryRepo
-		: $draftTimelineImageRegistryRepo
-			? $draftTimelineImageRegistryRepo
+		: $draftImageRegistryRepo
+			? $draftImageRegistryRepo
 			: isNewImage
 				? selectedRegistryForNewImage
 				: $repoName;
@@ -740,8 +740,8 @@
 			showImageMetaModal.set(false);
 			draftImageMeta.set(undefined);
 			// Clear timeline/gallery registry context
-			draftTimelineImageMetaRegistry.set(undefined);
-			draftTimelineImageRegistryRepo.set(undefined);
+			draftImageMetaRegistry.set(undefined);
+			draftImageRegistryRepo.set(undefined);
 			selectedGalleryRegistryRepo.set(undefined);
 		} catch (err) {
 			console.error('❌ Delete error:', err.message);
@@ -787,8 +787,8 @@
 
 		// Get the effective registry at mount time
 		// Must use get() to read current store value, not rely on reactive variable timing
-		const timelineRegistry = get(draftTimelineImageMetaRegistry);
-		const registryToUse = timelineRegistry ?? contextImageMetaRegistry;
+		const draftRegistry = get(draftImageMetaRegistry);
+		const registryToUse = draftRegistry ?? contextImageMetaRegistry;
 
 		// For existing images, find the registry key by looking up the src URL in the registry
 		// Do this BEFORE upgrade, since we need to find the original entry
@@ -843,8 +843,8 @@
 		showImageMetaModal.set(false);
 		draftImageMeta.set(undefined);
 		// Clear timeline/gallery registry context
-		draftTimelineImageMetaRegistry.set(undefined);
-		draftTimelineImageRegistryRepo.set(undefined);
+		draftImageMetaRegistry.set(undefined);
+		draftImageRegistryRepo.set(undefined);
 		selectedGalleryRegistryRepo.set(undefined);
 	}}
 	closeOnOverlayClick={false}
@@ -928,8 +928,8 @@
 						showImageMetaModal.set(false);
 						draftImageMeta.set(undefined);
 						// Clear timeline/gallery registry context
-						draftTimelineImageMetaRegistry.set(undefined);
-						draftTimelineImageRegistryRepo.set(undefined);
+						draftImageMetaRegistry.set(undefined);
+						draftImageRegistryRepo.set(undefined);
 						selectedGalleryRegistryRepo.set(undefined);
 						saveStatus.set(null);
 					}}

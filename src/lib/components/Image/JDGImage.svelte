@@ -52,8 +52,8 @@
 	import imagePlaceholder from '$lib/assets/raster/jdg-image-placeholder.png';
 	import {
 		draftImageMeta,
-		draftTimelineImageMetaRegistry,
-		draftTimelineImageRegistryRepo
+		draftImageMetaRegistry,
+		draftImageRegistryRepo
 	} from '$lib/stores/jdg-temp-store.js';
 
 	// Check if we're inside a Timeline context (for image editing)
@@ -982,14 +982,14 @@
 				<JDGButton
 					onClickFunction={() => {
 						draftImageMeta.set(imageMeta);
-						// If inside a Timeline context, set the draft stores so the modal
+						// If inside a Timeline context, set the draft registry/repo so the modal
 						// (which is outside the context tree) can use the timeline's registry
 						if (timelineRegistryContext && timelineRegistryRepoContext) {
 							const registry = get(timelineRegistryContext);
 							const repoName = get(timelineRegistryRepoContext);
 							if (registry && repoName) {
-								draftTimelineImageMetaRegistry.set(registry);
-								draftTimelineImageRegistryRepo.set(repoName);
+								draftImageMetaRegistry.set(registry);
+								draftImageRegistryRepo.set(repoName);
 							}
 						}
 						showImageMetaModal.set(true);
