@@ -15,6 +15,7 @@
 	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
 
 	import {
+		isAdminMode,
 		timelineEventModalInceptionDate,
 		showTimelineEventModal
 	} from '$lib/stores/jdg-ui-store.js';
@@ -438,9 +439,9 @@
 </script>
 
 <JDGForm bind:containerRef={parentRef}>
-	<!-- Image Meta Registry indicator (locked to timeline's registry) -->
+	<!-- Image Meta Registry indicator (locked to timeline's registry); admin only -->
 	<JDGNotificationBanner
-		showBanner={!!registryRepoName}
+		showBanner={!!registryRepoName && $isAdminMode}
 		notificationType={jdgNotificationTypes.information}
 		message={`Image Meta Registry: ${registryLabel}`}
 	/>
