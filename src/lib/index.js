@@ -253,6 +253,9 @@ export { JDGTimelineEvent };
 import JDGTimelineEventForm from './components/Timeline/JDGTimelineEventForm.svelte';
 export { JDGTimelineEventForm };
 
+import JDGTimelineEventFormCarousel from './components/Timeline/JDGTimelineEventFormCarousel.svelte';
+export { JDGTimelineEventFormCarousel };
+
 import JDGTimelineEventModal from './components/Timeline/JDGTimelineEventModal.svelte';
 export { JDGTimelineEventModal };
 
