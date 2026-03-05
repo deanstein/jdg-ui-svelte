@@ -22,6 +22,7 @@
 		darkenColor
 	} from '$lib/jdg-utils.js';
 	import { upgradeTimelineEvent } from '$lib/jdg-timeline-management.js';
+	import { getTimelineEventDateDisplayMode } from '$lib/jdg-utils.js';
 
 	import { JDGButton, JDGImageThumbnailGroup, JDGRandomGradient } from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
@@ -140,7 +141,6 @@
 
 	const eventDateCss = css`
 		color: ${jdgColors.text};
-		background-color: ${jdgColors.activeSubtle};
 		border-radius: ${dateBorderRadius} ${dateBorderRadius} 0 0;
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: 0.8rem;
@@ -160,7 +160,6 @@
 
 	const eventYearCss = css`
 		color: ${jdgColors.text};
-		background-color: ${jdgColors.activeSubtle};
 		border-radius: 0 0 ${dateBorderRadius} ${dateBorderRadius};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: 1.1rem;
@@ -345,11 +344,10 @@
 	$: displayDescription =
 		firstImageMetaForDisplay?.caption || upgradedEvent?.description || 'Event description';
 
-	// For approximate dates with month=01 and day=01, hide the date div entirely
-	$: hideDateDiv =
-		effectiveIsApprxDate &&
-		eventDateCorrected?.getUTCMonth() === 0 &&
-		eventDateCorrected?.getUTCDate() === 1;
+	// For approximate dates: Jan 1 → year only; other 1st → month only; else full (centralized in jdg-utils)
+	$: dateDisplayMode = getTimelineEventDateDisplayMode(eventDateCorrected, effectiveIsApprxDate);
+	$: hideDateDiv = dateDisplayMode === 'yearOnly';
+	$: showMonthOnly = dateDisplayMode === 'monthYearOnly';
 
 	// Dynamic CSS
 	let eventRowContainerCss = css``;
@@ -406,7 +404,7 @@
 			<div class="timeline-event-date {eventDateCss}">
 				<!-- Show month name with three letters like AUG -->
 				{#if eventDateCorrected?.toString() !== 'Invalid Date'}
-					{#if upgradedEvent?.isApprxDate && eventDateCorrected?.getUTCDate() === 1}
+					{#if showMonthOnly}
 						<!-- Approximate date with day=01: show only month -->
 						{monthNames[eventDateCorrected?.getUTCMonth()]}
 					{:else}

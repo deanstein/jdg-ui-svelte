@@ -1634,3 +1634,57 @@ export const scrollToAnchor = (anchorId, accountForHeader = false, additionalOff
 export const getIsWindowScrolledToBottom = () => {
 	return window.innerHeight + window.scrollY === document.body.offsetHeight;
 };
+
+///
+/// TIMELINE DATE UTILS
+/// Shared date display logic for timeline events: approximate dates Jan 1 → year only; other 1st → month + year; else full.
+///
+
+/** Parse a date string (ISO date-only or with time) to a Date. Date-only strings are treated as UTC midnight. */
+export function parseTimelineEventDate(dateStr) {
+	if (dateStr == null || dateStr === '') {
+		return { date: null, valid: false, utcMonth: 0, utcDate: 0, utcFullYear: 0 };
+	}
+	const normalized = typeof dateStr === 'string' && dateStr.length === 10 ? dateStr + 'T00:00:00.000Z' : dateStr;
+	const date = new Date(normalized);
+	const valid = date.toString() !== 'Invalid Date' && !Number.isNaN(date.getTime());
+	return {
+		date,
+		valid,
+		utcMonth: date.getUTCMonth(),
+		utcDate: date.getUTCDate(),
+		utcFullYear: date.getUTCFullYear()
+	};
+}
+
+/** Display mode for approximate dates: yearOnly (Jan 1), monthYearOnly (other 1st), or full. */
+export function getTimelineEventDateDisplayMode(date, isApprx) {
+	if (!date || !(date instanceof Date) || Number.isNaN(date.getTime())) return 'full';
+	if (!isApprx) return 'full';
+	const m = date.getUTCMonth();
+	const d = date.getUTCDate();
+	if (m === 0 && d === 1) return 'yearOnly';
+	if (d === 1) return 'monthYearOnly';
+	return 'full';
+}
+
+/**
+ * Format a timeline event date as a long, locale-friendly string for read-only display.
+ * @param {string} dateStr - ISO date string (e.g. '2026-06-01')
+ * @param {boolean} [isApprx=false] - whether the date is approximate (shortens Jan 1 → year, other 1st → month + year)
+ * @param {{ yearOnlyPrefix?: string }} [options] - optional prefix when showing year only (e.g. 'Circa ' for captions)
+ * @returns {string}
+ */
+export function formatTimelineEventDateLong(dateStr, isApprx = false, options = {}) {
+	const { yearOnlyPrefix = '' } = options;
+	const { date, valid } = parseTimelineEventDate(dateStr);
+	if (!valid || !date) return dateStr ?? '';
+	const mode = getTimelineEventDateDisplayMode(date, isApprx);
+	if (mode === 'yearOnly') {
+		return yearOnlyPrefix + date.toLocaleDateString(undefined, { year: 'numeric' });
+	}
+	if (mode === 'monthYearOnly') {
+		return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long' });
+	}
+	return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+}

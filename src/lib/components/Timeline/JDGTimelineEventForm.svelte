@@ -30,9 +30,10 @@
 	import {
 		addOrReplaceObjectByKeyValue,
 		deleteObjectByKeyValue,
-		getYearsAndMonthsBetweenDates,
+		formatTimelineEventDateLong,
 		formatAgeDisplayWithRounding,
 		getIsObjectInArray,
+		getYearsAndMonthsBetweenDates,
 		instantiateObject,
 		resolveImageMetaKeys,
 		getImageMetaByKey
@@ -358,15 +359,6 @@
 		isImageSelectorOpen = false;
 	}
 
-	// Format date string for read-only display (same general format as date picker: locale-friendly)
-	function formatDateForDisplay(dateStr) {
-		if (!dateStr) return '';
-		const d = new Date(dateStr + (dateStr.length === 10 ? 'T00:00:00' : ''));
-		return d.toString() === 'Invalid Date'
-			? dateStr
-			: d.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
-	}
-
 	// Resolve combobox/select value to friendly label for read-only display
 	function getLabelForValue(value, options) {
 		if (!value) return '';
@@ -540,15 +532,17 @@
 							<!-- Read-only: simple text date readout -->
 							{#if isAdditional}
 								<span class={readoutTextCss}
-									>{formatDateForDisplay($localAdditionalStore[key])}</span
+									>{formatTimelineEventDateLong($localAdditionalStore[key])}</span
 								>
 							{:else if key === 'date'}
-								<span class={readoutTextCss}>{formatDateForDisplay(effectiveDate)}</span>
+								<span class={readoutTextCss}
+									>{formatTimelineEventDateLong(effectiveDate, effectiveIsApprxDate)}</span
+								>
 								{#if effectiveIsApprxDate}
 									<span class="readout-approximate {readoutApproximateCss}">(approximate)</span>
 								{/if}
 							{:else}
-								<span class={readoutTextCss}>{formatDateForDisplay($localEventStore[key])}</span>
+								<span class={readoutTextCss}>{formatTimelineEventDateLong($localEventStore[key])}</span>
 							{/if}
 						{/if}
 					</div>

@@ -4,7 +4,7 @@
 
 	import { clientWidth } from '$lib/stores/jdg-ui-store.js';
 	import { getFullTextWidth } from '$lib/jdg-ui-management.js';
-	import { getMaxElementWidthPx, setRgbaAlpha } from '$lib/jdg-utils.js';
+	import { getMaxElementWidthPx, setRgbaAlpha, formatTimelineEventDateLong } from '$lib/jdg-utils.js';
 
 	import { JDGButton } from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
@@ -66,37 +66,11 @@
 		return Math.abs(availableWidth - maxTextWidthPx) / 2;
 	};
 
-	const fullMonthNames = [
-		'January',
-		'February',
-		'March',
-		'April',
-		'May',
-		'June',
-		'July',
-		'August',
-		'September',
-		'October',
-		'November',
-		'December'
-	];
-
-	// Format date when showDate is true
-	// Use "Circa" only when year-only (isApprx and month 01 and day 01)
+	// Format date when showDate is true (centralized timeline date display; "Circa" for year-only approximate)
 	$: formattedDateDisplay = showDate
-		? (() => {
-				const raw = imageMeta?.date;
-				if (raw == null || raw === '') return '';
-				const d = new Date(raw);
-				if (isNaN(d.getTime())) return '';
-				const isApprx = !!imageMeta?.isApprxDate;
-				const month = d.getUTCMonth();
-				const day = d.getUTCDate();
-				const year = d.getUTCFullYear();
-				if (isApprx && month === 0 && day === 1) return `Circa ${year}`;
-				if (isApprx && day === 1) return `${fullMonthNames[month]} ${year}`;
-				return `${fullMonthNames[month]} ${day}, ${year}`;
-			})()
+		? formatTimelineEventDateLong(imageMeta?.date ?? '', !!imageMeta?.isApprxDate, {
+				yearOnlyPrefix: 'Circa '
+		  })
 		: '';
 
 	const captionAttributionContainerCss = css`
