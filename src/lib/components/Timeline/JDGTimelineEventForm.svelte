@@ -94,8 +94,6 @@
 	$: registryRepoName = $draftTimelineHost?.imageMetaRegistryRepo;
 	$: registryLabel = getImageMetaRegistryLabel(registryRepoName);
 
-	const noImageMessage = 'No images in this event';
-
 	// Get the timeline's image registry from context (set by parent JDGTimeline)
 	const timelineImageRegistryStore = getContext(JDG_CONTEXTS.TIMELINE_IMAGE_REGISTRY);
 	$: imageMetaRegistry = $timelineImageRegistryStore;
@@ -394,20 +392,6 @@
 		}
 	`;
 
-	const noImagesMessageCss = css`
-		font-style: italic;
-		color: #999;
-		text-align: left;
-		margin-top: 4px;
-		font-size: 0.8rem;
-		@media (min-width: ${bp0}) and (max-width: ${bp1}) {
-			font-size: 0.9rem;
-		}
-		@media (min-width: ${bp1}) {
-			font-size: 1rem;
-		}
-	`;
-
 	const readoutTextCss = css`
 		color: inherit;
 		font-size: 0.8rem;
@@ -493,7 +477,8 @@
 	<!-- All fields from the schema -->
 	{#each renderFields as { key, def, isAdditional } (key)}
 		<!-- Source field only shows when editing or when it has content, or when isMediaWrapper is checked and first media has source -->
-		{#if key !== 'source' || isEditing || $localEventStore.source || ($localEventStore.isMediaWrapper && firstImageMeta?.attribution)}
+		<!-- Images field only shows when editing or when the event has at least one image -->
+		{#if (key !== 'source' || isEditing || $localEventStore.source || ($localEventStore.isMediaWrapper && firstImageMeta?.attribution)) && (key !== 'images' || isEditing || hasImages)}
 			<JDGInputContainer label={def.label}>
 				{#if def.inputType === JDG_INPUT_TYPES.DATE}
 					<div class="date-with-checkbox">
@@ -699,8 +684,6 @@
 										/>
 									{/if}
 								</div>
-							{:else if !isEditing}
-								<div class={noImagesMessageCss}>{noImageMessage}</div>
 							{/if}
 						{/if}
 					{/key}
