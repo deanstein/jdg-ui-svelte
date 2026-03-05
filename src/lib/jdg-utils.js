@@ -1676,16 +1676,25 @@ export function getTimelineEventDateDisplayMode(date, isApprx) {
  * @param {{ yearOnlyPrefix?: string }} [options] - optional prefix when showing year only (e.g. 'Circa ' for captions)
  * @returns {string}
  */
+const UTC_DATE_OPTS = { timeZone: 'UTC' };
+
 export function formatTimelineEventDateLong(dateStr, isApprx = false, options = {}) {
 	const { yearOnlyPrefix = '' } = options;
 	const { date, valid } = parseTimelineEventDate(dateStr);
 	if (!valid || !date) return dateStr ?? '';
 	const mode = getTimelineEventDateDisplayMode(date, isApprx);
+	// Format in UTC so the displayed month/year match getUTCMonth/getUTCDate (e.g. Aug 1 UTC stays August in all timezones)
+	const baseOpts = { ...UTC_DATE_OPTS };
 	if (mode === 'yearOnly') {
-		return yearOnlyPrefix + date.toLocaleDateString(undefined, { year: 'numeric' });
+		return yearOnlyPrefix + date.toLocaleDateString(undefined, { ...baseOpts, year: 'numeric' });
 	}
 	if (mode === 'monthYearOnly') {
-		return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long' });
+		return date.toLocaleDateString(undefined, { ...baseOpts, year: 'numeric', month: 'long' });
 	}
-	return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+	return date.toLocaleDateString(undefined, {
+		...baseOpts,
+		year: 'numeric',
+		month: 'long',
+		day: 'numeric'
+	});
 }
