@@ -420,12 +420,12 @@
 	`;
 
 	const readoutApproximateCss = css`
-		font-size: 0.8rem;
+		font-size: 0.75rem;
 		@media (min-width: ${bp0}) and (max-width: ${bp1}) {
-			font-size: 0.9rem;
+			font-size: 0.75rem;
 		}
 		@media (min-width: ${bp1}) {
-			font-size: 1rem;
+			font-size: 0.8rem;
 		}
 	`;
 </script>
