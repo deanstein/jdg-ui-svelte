@@ -86,6 +86,9 @@ export let showImageGalleryModal = writable(false);
 
 /*** TIMELINE EVENT MODAL ***/
 export let showTimelineEventModal = writable(false);
+// Carousel nav (prev/next) 
+// { goPrev, goNext, canGoPrev, canGoNext } | null
+export let carouselNav = writable(null);
 export let isTimelineEventModalEditable = writable(false);
 export let timelineEventModalInceptionDate = writable(undefined);
 
@@ -139,6 +142,8 @@ const storeMap = {
 	imageViewerWidth,
 	imageViewerScale,
 	showImageGalleryModal,
+	// carousels
+	carouselNav,
 	// timeline
 	showTimelineEventModal,
 	isTimelineEventModalEditable,

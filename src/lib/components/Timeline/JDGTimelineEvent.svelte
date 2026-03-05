@@ -596,6 +596,7 @@
 		font-size: 10px;
 		padding-top: 3px;
 		box-sizing: border-box;
+		color: #5d5d5d;
 	}
 
 	.timeline-event-node {

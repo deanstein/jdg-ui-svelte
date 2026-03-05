@@ -542,7 +542,9 @@
 									<span class="readout-approximate {readoutApproximateCss}">(approximate)</span>
 								{/if}
 							{:else}
-								<span class={readoutTextCss}>{formatTimelineEventDateLong($localEventStore[key])}</span>
+								<span class={readoutTextCss}
+									>{formatTimelineEventDateLong($localEventStore[key])}</span
+								>
 							{/if}
 						{/if}
 					</div>

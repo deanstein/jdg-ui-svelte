@@ -55,6 +55,7 @@
 	minWidth="30vw"
 	maxWidth="80vw"
 	overflow="auto"
+	showCarouselNav={true}
 >
 	<div slot="modal-content-slot" class="modal-content-wrapper">
 		<JDGTimelineEventFormCarousel

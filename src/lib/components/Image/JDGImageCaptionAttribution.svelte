@@ -4,7 +4,11 @@
 
 	import { clientWidth } from '$lib/stores/jdg-ui-store.js';
 	import { getFullTextWidth } from '$lib/jdg-ui-management.js';
-	import { getMaxElementWidthPx, setRgbaAlpha, formatTimelineEventDateLong } from '$lib/jdg-utils.js';
+	import {
+		getMaxElementWidthPx,
+		setRgbaAlpha,
+		formatTimelineEventDateLong
+	} from '$lib/jdg-utils.js';
 
 	import { JDGButton } from '$lib/index.js';
 	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
@@ -70,7 +74,7 @@
 	$: formattedDateDisplay = showDate
 		? formatTimelineEventDateLong(imageMeta?.date ?? '', !!imageMeta?.isApprxDate, {
 				yearOnlyPrefix: 'Circa '
-		  })
+			})
 		: '';
 
 	const captionAttributionContainerCss = css`

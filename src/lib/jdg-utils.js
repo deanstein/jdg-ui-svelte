@@ -1645,7 +1645,8 @@ export function parseTimelineEventDate(dateStr) {
 	if (dateStr == null || dateStr === '') {
 		return { date: null, valid: false, utcMonth: 0, utcDate: 0, utcFullYear: 0 };
 	}
-	const normalized = typeof dateStr === 'string' && dateStr.length === 10 ? dateStr + 'T00:00:00.000Z' : dateStr;
+	const normalized =
+		typeof dateStr === 'string' && dateStr.length === 10 ? dateStr + 'T00:00:00.000Z' : dateStr;
 	const date = new Date(normalized);
 	const valid = date.toString() !== 'Invalid Date' && !Number.isNaN(date.getTime());
 	return {

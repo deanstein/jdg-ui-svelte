@@ -5,7 +5,7 @@
 	import { setRgbaAlpha } from '$lib/jdg-utils.js';
 
 	import { jdgColors, jdgSizes, jdgBreakpoints } from '$lib/index.js';
-	import { JDGOverlay, JDGRandomGradient } from '$lib/index.js';
+	import { JDGOverlay, JDGRandomGradient, JDGCarouselNavButtons } from '$lib/index.js';
 	import { jdgDurations } from '$lib/index.js';
 	import { drawCrossfade } from '$lib/jdg-graphics-factory.js';
 
@@ -31,6 +31,8 @@
 	export let gradientColor1 = undefined;
 	export let gradientColor2 = undefined;
 	export let gradientColor3 = undefined;
+	// When true, prev/next carousel nav buttons are shown at the left/right edges of the modal (driven by carouselNav)
+	export let showCarouselNav = false;
 
 	// Minimum padding around content when it maximizes available space
 	const minPadding = '20px';
@@ -124,66 +126,82 @@
 		in:receive={{ key: showModal }}
 		out:send={{ key: showModal }}
 		class="modal-outer-container"
+		class:modal-outer-container-with-nav={showCarouselNav}
 		on:click|self={handleBackdropClick}
 		on:keydown={(e) => e.key === 'Escape' && handleBackdropClick()}
 		role="presentation"
 		tabindex="-1"
 	>
-		<div class="modal-content-container {modalContentContainerCss}">
-			<!-- Background gradient if gradient colors are provided -->
-			{#if gradientColor1 && gradientColor2 && gradientColor3}
-				<div class="modal-background-gradient">
-					<JDGRandomGradient
-						numberOfPoints={10}
-						edgeBufferRatio={0.1}
-						drawDebugBorders={false}
-						color1={gradientColor1}
-						color2={gradientColor2}
-						color3={gradientColor3}
-					/>
-				</div>
-			{/if}
-			{#if title || subtitle}
-				<div
-					class="modal-title-bar-container {modalTitleBarContainerCss}"
-					style="position: relative; z-index: 1;"
-				>
-					<!-- Title bar gradient if gradient colors are provided -->
-					{#if gradientColor1 && gradientColor2 && gradientColor3}
-						<div class="modal-title-bar-gradient">
-							<JDGRandomGradient
-								numberOfPoints={8}
-								edgeBufferRatio={0.1}
-								drawDebugBorders={false}
-								color1={gradientColor1}
-								color2={gradientColor2}
-								color3={gradientColor3}
-							/>
+		{#if showCarouselNav}
+			<div class="modal-outer-edge modal-outer-edge-left">
+				<JDGCarouselNavButtons side="prev" />
+			</div>
+		{/if}
+		<div class="modal-outer-center">
+			<div class="modal-content-container {modalContentContainerCss}">
+				<!-- Background gradient if gradient colors are provided -->
+				{#if gradientColor1 && gradientColor2 && gradientColor3}
+					<div class="modal-background-gradient">
+						<JDGRandomGradient
+							numberOfPoints={10}
+							edgeBufferRatio={0.1}
+							drawDebugBorders={false}
+							color1={gradientColor1}
+							color2={gradientColor2}
+							color3={gradientColor3}
+						/>
+					</div>
+				{/if}
+				{#if title || subtitle}
+					<div
+						class="modal-title-bar-container {modalTitleBarContainerCss}"
+						style="position: relative; z-index: 1;"
+					>
+						<!-- Title bar gradient if gradient colors are provided -->
+						{#if gradientColor1 && gradientColor2 && gradientColor3}
+							<div class="modal-title-bar-gradient">
+								<JDGRandomGradient
+									numberOfPoints={8}
+									edgeBufferRatio={0.1}
+									drawDebugBorders={false}
+									color1={gradientColor1}
+									color2={gradientColor2}
+									color3={gradientColor3}
+								/>
+							</div>
+						{/if}
+						<div class="modal-title-container" style="position: relative; z-index: 1;">
+							{#if title}
+								<div class="modal-title {modalTitleCss}">
+									{title}
+								</div>
+							{/if}
 						</div>
-					{/if}
-					<div class="modal-title-container" style="position: relative; z-index: 1;">
-						{#if title}
-							<div class="modal-title {modalTitleCss}">
-								{title}
+						{#if subtitle}
+							<div class="modal-subtitle-container" style="position: relative; z-index: 1;">
+								<div class="modal-subtitle {modalSubtitleCss}">
+									{subtitle}
+								</div>
 							</div>
 						{/if}
 					</div>
-					{#if subtitle}
-						<div class="modal-subtitle-container" style="position: relative; z-index: 1;">
-							<div class="modal-subtitle {modalSubtitleCss}">
-								{subtitle}
-							</div>
-						</div>
-					{/if}
+				{/if}
+				<div
+					class="modal-content-slot {modalContentSlotCss}"
+					style="position: relative; z-index: 1;"
+				>
+					<slot name="modal-content-slot" />
 				</div>
-			{/if}
-			<div class="modal-content-slot {modalContentSlotCss}" style="position: relative; z-index: 1;">
-				<slot name="modal-content-slot" />
-			</div>
-			<div class="modal-toolbar-slot" style="position: relative; z-index: 1;">
-				<slot name="modal-toolbar-slot" />
+				<div class="modal-toolbar-slot" style="position: relative; z-index: 1;">
+					<slot name="modal-toolbar-slot" />
+				</div>
 			</div>
 		</div>
+		{#if showCarouselNav}
+			<div class="modal-outer-edge modal-outer-edge-right">
+				<JDGCarouselNavButtons side="next" />
+			</div>
+		{/if}
 	</div>
 </JDGOverlay>
 
@@ -194,6 +212,28 @@
 		align-items: center;
 		width: 100%;
 		max-height: 100%;
+	}
+
+	.modal-outer-container-with-nav {
+		flex-direction: row;
+		justify-content: stretch;
+	}
+
+	.modal-outer-center {
+		flex: 0 0 auto;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		max-height: 100%;
+	}
+
+	/* Edge columns grow to fill space between screen and modal; buttons centered in that space */
+	.modal-outer-edge {
+		flex: 1 1 auto;
+		min-width: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.modal-content-container {

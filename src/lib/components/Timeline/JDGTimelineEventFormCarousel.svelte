@@ -1,7 +1,9 @@
 <script>
 	import { get } from 'svelte/store';
+	import { onDestroy } from 'svelte';
 	import { css } from '@emotion/css';
-	import { JDGButton, JDGTimelineEventForm } from '$lib/index.js';
+	import { carouselNav } from '$lib/stores/jdg-ui-store.js';
+	import { JDGTimelineEventForm } from '$lib/index.js';
 
 	export let events = [];
 	export let eventStore;
@@ -10,26 +12,12 @@
 	export let isEditable = false;
 	export let isEditing = false;
 
-	// Single source of truth for arrow button/column width; used for column width and form side padding
-	export let arrowColumnWidth = '4rem';
-
 	$: carouselStyles = css`
-		--carousel-arrow-column-width: ${arrowColumnWidth};
 		display: flex;
 		flex-direction: row;
 		align-items: stretch;
 		width: 100%;
 		min-height: 0;
-
-		.arrow-column {
-			flex-shrink: 0;
-			width: ${arrowColumnWidth};
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			min-width: 0;
-			overflow: visible;
-		}
 
 		.form-container {
 			flex: 1 1 auto;
@@ -62,38 +50,22 @@
 		const nextEvent = events[currentIndex + 1];
 		if (nextEvent) eventStore.set(nextEvent);
 	}
+
+	// Drive the global carousel nav store so JDGModal can show prev/next at its edges
+	$: carouselNav.set({
+		goPrev,
+		goNext,
+		canGoPrev,
+		canGoNext
+	});
+
+	onDestroy(() => {
+		carouselNav.set(null);
+	});
 </script>
 
 <div class={carouselStyles}>
-	<div class="arrow-column arrow-column-left">
-		<JDGButton
-			label={null}
-			faIcon="fa-chevron-left"
-			onClickFunction={goPrev}
-			isEnabled={canGoPrev}
-			isPrimary={false}
-			doForceSquareAspect={true}
-			tooltip="Previous event"
-			paddingLeftRight="10px"
-			paddingTopBottom="10px"
-		/>
-	</div>
-
 	<div class="form-container">
-		<JDGTimelineEventForm {eventStore} {isEditable} {isEditing}/>
-	</div>
-
-	<div class="arrow-column arrow-column-right">
-		<JDGButton
-			label={null}
-			faIcon="fa-chevron-right"
-			onClickFunction={goNext}
-			isEnabled={canGoNext}
-			isPrimary={false}
-			doForceSquareAspect={true}
-			tooltip="Next event"
-			paddingLeftRight="10px"
-			paddingTopBottom="10px"
-		/>
+		<JDGTimelineEventForm {eventStore} {isEditable} {isEditing} />
 	</div>
 </div>
