@@ -12,6 +12,8 @@
 	import {
 		draftImageMeta,
 		draftTimelineEvent,
+		draftTimelineHost,
+		timelineEventsOrdered,
 		draftImageMetaRegistry,
 		draftImageRegistryRepo
 	} from '$lib/stores/jdg-temp-store.js';
@@ -967,7 +969,9 @@
 									{timelineHost}
 									timelineEvent={timelineRowItem.event}
 									onClickTimelineEvent={() => {
+										draftTimelineHost.set(timelineHost);
 										draftTimelineEvent.set(timelineRowItem.event);
+										timelineEventsOrdered.set(timelineRowItems.map((r) => r.event));
 										// Store the gradient colors for this event's modal
 										const colorPair = eventColorPairs[colorPairIndex];
 										if (colorPair) {

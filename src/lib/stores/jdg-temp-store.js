@@ -25,6 +25,8 @@ export let isTimelineHostDrafting = writable(false);
 export let draftTimelineHost = writable(undefined); // the timeline host being edited
 export let isTimelineEventDrafting = writable(false);
 export let draftTimelineEvent = writable(); // the timeline event being edited
+// Chronological order of events as computed by the Timeline (from timelineRowItems); used by carousel
+export let timelineEventsOrdered = writable([]);
 
 // Create a combined store to display in footer dev tools
 const storeMap = {
@@ -42,7 +44,8 @@ const storeMap = {
 	isTimelineHostDrafting,
 	draftTimelineHost,
 	isTimelineEventDrafting,
-	draftTimelineEvent
+	draftTimelineEvent,
+	timelineEventsOrdered
 };
 const tempStoreEntries = Object.entries(storeMap);
 // derived store containing all ui state values

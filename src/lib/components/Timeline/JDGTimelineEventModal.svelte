@@ -1,5 +1,9 @@
 <script>
-	import { draftTimelineEvent, draftTimelineHost } from '$lib/stores/jdg-temp-store.js';
+	import {
+		draftTimelineEvent,
+		draftTimelineHost,
+		timelineEventsOrdered
+	} from '$lib/stores/jdg-temp-store.js';
 	import {
 		modalGradientColors,
 		showTimelineEventModal,
@@ -8,7 +12,7 @@
 
 	import { getIsObjectInArray } from '$lib/jdg-utils.js';
 
-	import { JDGModal, JDGTimelineEventForm } from '$lib/index.js';
+	import { JDGModal, JDGTimelineEventFormCarousel } from '$lib/index.js';
 
 	let isNewEvent;
 
@@ -23,6 +27,13 @@
 			isNewEvent = true;
 		}
 	}
+
+	// Carousel events in chronological order when opened from Timeline; fallback to host's raw list otherwise
+	$: orderedEvents =
+		($timelineEventsOrdered?.length ?? 0) > 0
+			? $timelineEventsOrdered
+			: $draftTimelineHost?.timelineEvents ?? [];
+	$: carouselEvents = isNewEvent ? [...orderedEvents, $draftTimelineEvent] : orderedEvents;
 </script>
 
 <JDGModal
@@ -40,12 +51,14 @@
 	gradientColor1={$modalGradientColors?.color1}
 	gradientColor2={$modalGradientColors?.color2}
 	gradientColor3={$modalGradientColors?.color3}
+	width="80vw"
 	minWidth="30vw"
 	maxWidth="80vw"
 	overflow="auto"
 >
 	<div slot="modal-content-slot" class="modal-content-wrapper">
-		<JDGTimelineEventForm
+		<JDGTimelineEventFormCarousel
+			events={carouselEvents}
 			eventStore={draftTimelineEvent}
 			isEditable={$isTimelineEventModalEditable || isNewEvent}
 			isEditing={$isTimelineEventModalEditable || isNewEvent}
@@ -56,6 +69,7 @@
 <style>
 	.modal-content-wrapper {
 		width: 100%;
+		align-self: stretch;
 		box-sizing: border-box;
 	}
 </style>
