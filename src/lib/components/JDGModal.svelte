@@ -212,6 +212,11 @@
 		align-items: center;
 		width: 100%;
 		max-height: 100%;
+		outline: none;
+	}
+	.modal-outer-container:focus,
+	.modal-outer-container:focus-visible {
+		outline: none;
 	}
 
 	.modal-outer-container-with-nav {

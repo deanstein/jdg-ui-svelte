@@ -113,4 +113,8 @@
 		justify-content: space-between;
 		width: 100%;
 	}
+	.carousel-nav-buttons :global(button:focus),
+	.carousel-nav-buttons :global(button:focus-visible) {
+		outline: none;
+	}
 </style>
