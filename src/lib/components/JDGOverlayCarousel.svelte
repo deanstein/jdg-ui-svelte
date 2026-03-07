@@ -40,6 +40,14 @@
 		if (!isInsideScrollableElement(e.target)) e.preventDefault();
 	}
 
+	function handleContentClick(e) {
+		if (!closeOnOverlayClick || typeof onCloseFunction !== 'function') return;
+		// Only close when clicking backdrop: not the modal (center) and not the nav buttons.
+		if (e.target.closest('.jdg-overlay-carousel-center')) return;
+		if (e.target.closest('.jdg-overlay-carousel-buttons')) return;
+		onCloseFunction();
+	}
+
 	let keydownHandler;
 	let touchStartX;
 	let touchStartY;
@@ -242,7 +250,7 @@
 		class="jdg-overlay-content {overlayContentCss}"
 		role="button"
 		tabindex="0"
-		on:click|self={closeOnOverlayClick ? onCloseFunction : () => {}}
+		on:click={handleContentClick}
 		on:keypress={() => {}}
 	>
 		{#if showMobileHint}
