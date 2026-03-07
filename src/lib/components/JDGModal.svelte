@@ -127,7 +127,12 @@
 		out:send={{ key: showModal }}
 		class="modal-outer-container"
 		on:click|stopPropagation
-		on:keydown={(e) => { if (e.key === 'Escape') { const fn = onClickCloseButton; if (typeof fn === 'function') fn(); } }}
+		on:keydown={(e) => {
+			if (e.key === 'Escape') {
+				const fn = onClickCloseButton;
+				if (typeof fn === 'function') fn();
+			}
+		}}
 		role="presentation"
 		tabindex="-1"
 	>
