@@ -205,6 +205,9 @@ export { JDGNotificationBanner };
 import JDGOverlay from './components/JDGOverlay.svelte';
 export { JDGOverlay };
 
+import JDGOverlayCarousel from './components/JDGOverlayCarousel.svelte';
+export { JDGOverlayCarousel };
+
 import JDGPortal from './components/JDGPortal.svelte';
 export { JDGPortal };
 
