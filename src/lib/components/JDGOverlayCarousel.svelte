@@ -12,18 +12,18 @@
 	import JDGCloseIcon from '$lib/assets/svg/JDGCloseIcon.svelte';
 	import { jdgBreakpoints, jdgColors, jdgDurations, jdgSizes } from '$lib/jdg-shared-styles.js';
 
-	const SWIPE_THRESHOLD_PX = 50;
-	const WHEEL_SWIPE_THRESHOLD = 30;
-	const WHEEL_NAV_COOLDOWN_MS = 400;
-
-	let lastWheelNavTime = 0;
-
 	/** Same as JDGOverlay – overlay shell (backdrop, close, etc.) plus carousel nav (buttons / mobile hint). */
 	export let colorRgba = 'rgba(255, 255, 255, 1.0)';
 	export let showTitleBar = true;
 	export let onCloseFunction = () => {};
 	export let closeOnOverlayClick = true;
 	export let useBlur = true;
+
+	const SWIPE_THRESHOLD_PX = 50;
+	const WHEEL_SWIPE_THRESHOLD = 30;
+	const WHEEL_NAV_COOLDOWN_MS = 400;
+
+	let lastWheelNavTime = 0;
 
 	let overlayRef;
 
