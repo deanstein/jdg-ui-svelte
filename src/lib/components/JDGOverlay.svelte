@@ -17,7 +17,8 @@
 	// Blur may degrade performance
 	export let useBlur = true;
 
-	let overlayRef;
+	/** Optional: bind from parent when needing a ref to the overlay root. */
+	export let overlayRef = undefined;
 
 	// Check if an element or any of its ancestors (up to the overlay) is scrollable
 	function isInsideScrollableElement(target) {

@@ -1,18 +1,16 @@
 <script>
-	import { get } from 'svelte/store';
 	import { onMount, onDestroy } from 'svelte';
+	import { get } from 'svelte/store';
 	import { css } from '@emotion/css';
-	import { fade } from 'svelte/transition';
 
 	import { isMobileBreakpoint } from '$lib/stores/jdg-ui-store.js';
-	import { carouselNav, highestZIndex } from '$lib/stores/jdg-ui-store.js';
-	import { getHighestZIndex } from '$lib/jdg-state-management.js';
+	import { carouselNav } from '$lib/stores/jdg-ui-store.js';
 
+	import JDGOverlay from '$lib/components/JDGOverlay.svelte';
 	import JDGButton from '$lib/components/Input/JDGButton.svelte';
-	import JDGCloseIcon from '$lib/assets/svg/JDGCloseIcon.svelte';
-	import { jdgBreakpoints, jdgColors, jdgDurations, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 
-	/** Same as JDGOverlay – overlay shell (backdrop, close, etc.) plus carousel nav (buttons / mobile hint). */
+	/** Wrapper around JDGOverlay that adds carousel nav (prev/next buttons, wheel/key/touch). Pass-through props match JDGOverlay. */
 	export let colorRgba = 'rgba(255, 255, 255, 1.0)';
 	export let showTitleBar = true;
 	export let onCloseFunction = () => {};
@@ -25,33 +23,6 @@
 
 	let lastWheelNavTime = 0;
 
-	let overlayRef;
-
-	function isInsideScrollableElement(target) {
-		let el = target;
-		while (el && el !== overlayRef) {
-			const style = window.getComputedStyle(el);
-			const overflowY = style.overflowY;
-			const isScrollable = overflowY === 'auto' || overflowY === 'scroll';
-			const hasOverflow = el.scrollHeight > el.clientHeight;
-			if (isScrollable && hasOverflow) return true;
-			el = el.parentElement;
-		}
-		return false;
-	}
-
-	function preventScroll(e) {
-		if (!isInsideScrollableElement(e.target)) e.preventDefault();
-	}
-
-	function handleContentClick(e) {
-		if (!closeOnOverlayClick || typeof onCloseFunction !== 'function') return;
-		// Only close when clicking backdrop: not the modal (center) and not the nav buttons.
-		if (e.target.closest('.jdg-overlay-carousel-center')) return;
-		if (e.target.closest('.jdg-overlay-carousel-buttons')) return;
-		onCloseFunction();
-	}
-
 	let keydownHandler;
 	let wheelHandler;
 	let touchStartX;
@@ -60,8 +31,6 @@
 	let touchStartHandler;
 
 	onMount(() => {
-		highestZIndex.set(getHighestZIndex() + 1);
-
 		wheelHandler = (e) => {
 			const nav = get(carouselNav);
 			const deltaX = e.deltaX ?? 0;
@@ -127,62 +96,6 @@
 		if (touchEndHandler) document.removeEventListener('touchend', touchEndHandler);
 	});
 
-	const overlayCss = css`
-		z-index: ${getHighestZIndex()};
-		background-color: ${colorRgba};
-		backdrop-filter: ${useBlur ? `blur(${jdgSizes.blurSizeMedium})` : ''};
-	`;
-
-	const closeButtonCss = css`
-		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			width: ${jdgSizes.navMobileIconHeightSm};
-			height: ${jdgSizes.navMobileIconHeightSm};
-		}
-		@media (min-width: ${jdgBreakpoints.width[0].toString() +
-			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
-			jdgBreakpoints.unit}) {
-			width: ${jdgSizes.navMobileIconHeightMd};
-			height: ${jdgSizes.navMobileIconHeightMd};
-		}
-		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			width: ${jdgSizes.navMobileIconHeightLg};
-			height: ${jdgSizes.navMobileIconHeightLg};
-		}
-	`;
-
-	const overlayTitleBarCss = css`
-		padding-left: ${jdgSizes.headerSidePadding};
-		padding-right: ${jdgSizes.headerSidePadding};
-		padding-top: ${jdgSizes.headerTopBottomPadding};
-		padding-bottom: ${jdgSizes.headerTopBottomPadding};
-		background-color: ${jdgColors.headerBackground};
-		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			height: ${jdgSizes.headerHeightSm};
-		}
-		@media (min-width: ${jdgBreakpoints.width[0].toString() +
-			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
-			jdgBreakpoints.unit}) {
-			height: ${jdgSizes.headerHeightMd};
-		}
-		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			height: ${jdgSizes.headerHeightLg};
-		}
-	`;
-
-	const overlayContentCss = css`
-		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			max-height: calc(100dvh - ${jdgSizes.headerHeightSm});
-		}
-		@media (min-width: ${jdgBreakpoints.width[0].toString() +
-			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
-			jdgBreakpoints.unit}) {
-			max-height: calc(100dvh - ${jdgSizes.headerHeightMd});
-		}
-		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			max-height: calc(100dvh - ${jdgSizes.headerHeightLg});
-		}
-	`;
-
 	const overlayContentRowCss = css`
 		display: flex;
 		flex-direction: row;
@@ -237,135 +150,64 @@
 		: '';
 </script>
 
-<div
-	bind:this={overlayRef}
-	class="jdg-overlay {overlayCss}"
-	on:click|self={onCloseFunction}
-	on:keypress|self={() => {}}
-	on:wheel={preventScroll}
-	on:touchmove={preventScroll}
-	role="button"
-	tabindex="0"
-	transition:fade={{ duration: jdgDurations.default }}
+<JDGOverlay
+	{colorRgba}
+	{showTitleBar}
+	{onCloseFunction}
+	{closeOnOverlayClick}
+	{useBlur}
 >
-	{#if showTitleBar}
-		<div
-			class="jdg-overlay-title-bar {overlayTitleBarCss}"
-			on:click|self={closeOnOverlayClick ? onCloseFunction : () => {}}
-			on:keypress={() => {}}
-			role="button"
-			tabindex="0"
-		>
-			<div
-				class="jdg-overlay-close-button {closeButtonCss}"
-				role="button"
-				tabindex="0"
-				on:click={onCloseFunction}
-				on:keypress={() => {}}
-			>
-				<div class="jdg-highlight-container">
-					<span class="jdg-highlight no-initial-highlight" style="display: flex;">
-						<JDGCloseIcon />
-					</span>
-				</div>
-			</div>
+	{#if showMobileHint}
+		<div class="jdg-overlay-carousel-hint {carouselHintCss}" aria-hidden="true">
+			{hintText}
 		</div>
 	{/if}
-	<div
-		class="jdg-overlay-content {overlayContentCss}"
-		role="button"
-		tabindex="0"
-		on:click={handleContentClick}
-		on:keypress={() => {}}
-	>
-		{#if showMobileHint}
-			<div class="jdg-overlay-carousel-hint {carouselHintCss}" aria-hidden="true">
-				{hintText}
+	<div class="jdg-overlay-carousel-row {overlayContentRowCss}">
+		{#if !$isMobileBreakpoint && $carouselNav}
+			<div
+				class="jdg-overlay-carousel-edge jdg-overlay-carousel-edge-left {overlayCarouselEdgeCss}"
+			>
+				<div class="jdg-overlay-carousel-buttons">
+					<JDGButton
+						label={null}
+						faIcon="fa-chevron-left"
+						onClickFunction={$carouselNav.goPrev}
+						isEnabled={$carouselNav.canGoPrev}
+						isPrimary={false}
+						doForceSquareAspect={true}
+						tooltip="Previous"
+						paddingLeftRight="10px"
+						paddingTopBottom="10px"
+					/>
+				</div>
 			</div>
 		{/if}
-		<div class="jdg-overlay-carousel-row {overlayContentRowCss}">
-			{#if !$isMobileBreakpoint && $carouselNav}
-				<div
-					class="jdg-overlay-carousel-edge jdg-overlay-carousel-edge-left {overlayCarouselEdgeCss}"
-				>
-					<div class="jdg-overlay-carousel-buttons">
-						<JDGButton
-							label={null}
-							faIcon="fa-chevron-left"
-							onClickFunction={$carouselNav.goPrev}
-							isEnabled={$carouselNav.canGoPrev}
-							isPrimary={false}
-							doForceSquareAspect={true}
-							tooltip="Previous"
-							paddingLeftRight="10px"
-							paddingTopBottom="10px"
-						/>
-					</div>
-				</div>
-			{/if}
-			<div class="jdg-overlay-carousel-center {overlayCarouselCenterCss}">
-				<slot />
-			</div>
-			{#if !$isMobileBreakpoint && $carouselNav}
-				<div
-					class="jdg-overlay-carousel-edge jdg-overlay-carousel-edge-right {overlayCarouselEdgeCss}"
-				>
-					<div class="jdg-overlay-carousel-buttons">
-						<JDGButton
-							label={null}
-							faIcon="fa-chevron-right"
-							onClickFunction={$carouselNav.goNext}
-							isEnabled={$carouselNav.canGoNext}
-							isPrimary={false}
-							doForceSquareAspect={true}
-							tooltip="Next"
-							paddingLeftRight="10px"
-							paddingTopBottom="10px"
-						/>
-					</div>
-				</div>
-			{/if}
+		<div class="jdg-overlay-carousel-center {overlayCarouselCenterCss}">
+			<slot />
 		</div>
+		{#if !$isMobileBreakpoint && $carouselNav}
+			<div
+				class="jdg-overlay-carousel-edge jdg-overlay-carousel-edge-right {overlayCarouselEdgeCss}"
+			>
+				<div class="jdg-overlay-carousel-buttons">
+					<JDGButton
+						label={null}
+						faIcon="fa-chevron-right"
+						onClickFunction={$carouselNav.goNext}
+						isEnabled={$carouselNav.canGoNext}
+						isPrimary={false}
+						doForceSquareAspect={true}
+						tooltip="Next"
+						paddingLeftRight="10px"
+						paddingTopBottom="10px"
+					/>
+				</div>
+			</div>
+		{/if}
 	</div>
-</div>
+</JDGOverlay>
 
 <style>
-	.jdg-overlay {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.jdg-overlay-content {
-		display: flex;
-		gap: 20px;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		flex-grow: 1;
-		box-sizing: border-box;
-		width: 100%;
-	}
-
-	.jdg-overlay-title-bar {
-		display: flex;
-		box-sizing: border-box;
-		align-items: center;
-		justify-content: end;
-		width: 100%;
-	}
-
-	.jdg-overlay-close-button {
-		cursor: pointer;
-		z-index: 1;
-	}
-
 	.jdg-overlay-carousel-buttons {
 		display: flex;
 		align-items: center;
