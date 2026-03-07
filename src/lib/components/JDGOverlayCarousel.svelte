@@ -13,6 +13,10 @@
 	import { jdgBreakpoints, jdgColors, jdgDurations, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	const SWIPE_THRESHOLD_PX = 50;
+	const WHEEL_SWIPE_THRESHOLD = 30;
+	const WHEEL_NAV_COOLDOWN_MS = 400;
+
+	let lastWheelNavTime = 0;
 
 	/** Same as JDGOverlay – overlay shell (backdrop, close, etc.) plus carousel nav (buttons / mobile hint). */
 	export let colorRgba = 'rgba(255, 255, 255, 1.0)';
@@ -49,6 +53,7 @@
 	}
 
 	let keydownHandler;
+	let wheelHandler;
 	let touchStartX;
 	let touchStartY;
 	let touchEndHandler;
@@ -56,6 +61,25 @@
 
 	onMount(() => {
 		highestZIndex.set(getHighestZIndex() + 1);
+
+		wheelHandler = (e) => {
+			const nav = get(carouselNav);
+			const deltaX = e.deltaX ?? 0;
+			const deltaY = e.deltaY ?? 0;
+			if (!nav || Math.abs(deltaX) <= Math.abs(deltaY) || Math.abs(deltaX) < WHEEL_SWIPE_THRESHOLD) return;
+			const now = Date.now();
+			if (now - lastWheelNavTime < WHEEL_NAV_COOLDOWN_MS) {
+				e.preventDefault();
+				e.stopPropagation();
+				return;
+			}
+			e.preventDefault();
+			e.stopPropagation();
+			lastWheelNavTime = now;
+			if (deltaX > 0 && nav.canGoNext) nav.goNext();
+			else if (deltaX < 0 && nav.canGoPrev) nav.goPrev();
+		};
+		window.addEventListener('wheel', wheelHandler, { capture: true, passive: false });
 
 		keydownHandler = (e) => {
 			if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
@@ -97,6 +121,7 @@
 	});
 
 	onDestroy(() => {
+		if (wheelHandler) window.removeEventListener('wheel', wheelHandler, { capture: true });
 		if (keydownHandler) window.removeEventListener('keydown', keydownHandler, true);
 		if (touchStartHandler) document.removeEventListener('touchstart', touchStartHandler);
 		if (touchEndHandler) document.removeEventListener('touchend', touchEndHandler);
