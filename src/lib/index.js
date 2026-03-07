@@ -88,9 +88,6 @@ export { JDGContentBoxFloating };
 import JDGContentContainer from './components/JDGContentContainer.svelte';
 export { JDGContentContainer };
 
-import JDGCarouselNavButtons from './components/JDGCarouselNavButtons.svelte';
-export { JDGCarouselNavButtons };
-
 import JDGDatePicker from './components/Input/JDGDatePicker.svelte';
 export { JDGDatePicker };
 
