@@ -86,8 +86,8 @@ export let showImageGalleryModal = writable(false);
 
 /*** TIMELINE EVENT MODAL ***/
 export let showTimelineEventModal = writable(false);
-// Carousel nav (prev/next)
-// { goPrev, goNext, canGoPrev, canGoNext } | null
+// Carousel nav (prev/next). Optional currentIndex (1-based) and totalCount for mobile hint e.g. "< 1 of 94 >"
+// { goPrev, goNext, canGoPrev, canGoNext, currentIndex?, totalCount? } | null
 export let carouselNav = writable(null);
 export let isTimelineEventModalEditable = writable(false);
 export let timelineEventModalInceptionDate = writable(undefined);

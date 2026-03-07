@@ -12,7 +12,7 @@
 
 	import { getIsObjectInArray } from '$lib/jdg-utils.js';
 
-	import { JDGModal, JDGTimelineEventFormCarousel } from '$lib/index.js';
+	import { JDGModal, JDGOverlay, JDGOverlayCarousel, JDGTimelineEventFormCarousel } from '$lib/index.js';
 
 	let isNewEvent;
 
@@ -36,36 +36,44 @@
 	$: carouselEvents = isNewEvent ? [...orderedEvents, $draftTimelineEvent] : orderedEvents;
 </script>
 
-<JDGModal
-	title={isNewEvent
-		? 'New Timeline Event'
-		: $isTimelineEventModalEditable
-			? 'Edit Timeline Event'
-			: 'Timeline Event'}
-	subtitle={null}
-	onClickCloseButton={() => {
+<JDGOverlay
+	onCloseFunction={() => {
 		$showTimelineEventModal = false;
 	}}
 	closeOnOverlayClick={!($isTimelineEventModalEditable || isNewEvent)}
-	backgroundColor={'rgba(235, 235, 235, 1)'}
-	gradientColor1={$modalGradientColors?.color1}
-	gradientColor2={$modalGradientColors?.color2}
-	gradientColor3={$modalGradientColors?.color3}
-	width="80vw"
-	minWidth="30vw"
-	maxWidth="80vw"
-	overflow="auto"
-	showCarouselNav={true}
 >
-	<div slot="modal-content-slot" class="modal-content-wrapper">
-		<JDGTimelineEventFormCarousel
-			events={carouselEvents}
-			eventStore={draftTimelineEvent}
-			isEditable={$isTimelineEventModalEditable || isNewEvent}
-			isEditing={$isTimelineEventModalEditable || isNewEvent}
-		/>
-	</div>
-</JDGModal>
+	<JDGOverlayCarousel>
+		<JDGModal
+			contentOnly={true}
+			title={isNewEvent
+				? 'New Timeline Event'
+				: $isTimelineEventModalEditable
+					? 'Edit Timeline Event'
+					: 'Timeline Event'}
+			subtitle={null}
+			onClickCloseButton={() => {
+				$showTimelineEventModal = false;
+			}}
+			backgroundColor={'rgba(235, 235, 235, 1)'}
+			gradientColor1={$modalGradientColors?.color1}
+			gradientColor2={$modalGradientColors?.color2}
+			gradientColor3={$modalGradientColors?.color3}
+			width="80vw"
+			minWidth="30vw"
+			maxWidth="80vw"
+			overflow="auto"
+		>
+			<div slot="modal-content-slot" class="modal-content-wrapper">
+				<JDGTimelineEventFormCarousel
+					events={carouselEvents}
+					eventStore={draftTimelineEvent}
+					isEditable={$isTimelineEventModalEditable || isNewEvent}
+					isEditing={$isTimelineEventModalEditable || isNewEvent}
+				/>
+			</div>
+		</JDGModal>
+	</JDGOverlayCarousel>
+</JDGOverlay>
 
 <style>
 	.modal-content-wrapper {

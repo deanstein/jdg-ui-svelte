@@ -51,13 +51,33 @@
 		if (nextEvent) eventStore.set(nextEvent);
 	}
 
-	// Drive the global carousel nav store so JDGModal can show prev/next at its edges
-	$: carouselNav.set({
-		goPrev,
-		goNext,
+	// Drive the global carousel nav store. Only set when nav state actually changes to avoid
+	// infinite loop: setting the store re-renders JDGOverlayCarousel (parent), which re-renders
+	// this component, which would set the store again.
+	let lastNavPayload = null;
+	$: payload = {
+		currentIndex: currentIndex + 1,
+		totalCount: Array.isArray(events) ? events.length : 0,
 		canGoPrev,
 		canGoNext
-	});
+	};
+	$: if (
+		lastNavPayload === null ||
+		lastNavPayload.currentIndex !== payload.currentIndex ||
+		lastNavPayload.totalCount !== payload.totalCount ||
+		lastNavPayload.canGoPrev !== payload.canGoPrev ||
+		lastNavPayload.canGoNext !== payload.canGoNext
+	) {
+		lastNavPayload = payload;
+		carouselNav.set({
+			goPrev,
+			goNext,
+			canGoPrev: payload.canGoPrev,
+			canGoNext: payload.canGoNext,
+			currentIndex: payload.currentIndex,
+			totalCount: payload.totalCount
+		});
+	}
 
 	onDestroy(() => {
 		carouselNav.set(null);
