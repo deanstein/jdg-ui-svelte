@@ -11,8 +11,14 @@
 {#if isLoading}
 	<div class="jdg-loading-overlay-container">
 		<JDGOverlay showTitleBar={false} closeOnOverlayClick={false}>
-			<img src={loadingIconSrc} class="jdg-loading-overlay-icon" alt="Loading..." />
-			<JDGLoadingSpinner strokeColor={loadingSpinnerColor} spinnerHeightPx={25} strokeWidthPx={3} />
+			<div class="jdg-loading-overlay-flex">
+				<img src={loadingIconSrc} class="jdg-loading-overlay-icon" alt="Loading..." />
+				<JDGLoadingSpinner
+					strokeColor={loadingSpinnerColor}
+					spinnerHeightPx={25}
+					strokeWidthPx={3}
+				/>
+			</div>
 		</JDGOverlay>
 	</div>
 {/if}
@@ -24,6 +30,14 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+	}
+
+	.jdg-loading-overlay-flex {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+		gap: 20px;
 	}
 
 	.jdg-loading-overlay-icon {
