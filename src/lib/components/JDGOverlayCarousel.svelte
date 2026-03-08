@@ -76,7 +76,8 @@
 			const nav = get(carouselNav);
 			const deltaX = e.deltaX ?? 0;
 			const deltaY = e.deltaY ?? 0;
-			if (!nav || Math.abs(deltaX) <= Math.abs(deltaY) || Math.abs(deltaX) < WHEEL_SWIPE_THRESHOLD) return;
+			if (!nav || Math.abs(deltaX) <= Math.abs(deltaY) || Math.abs(deltaX) < WHEEL_SWIPE_THRESHOLD)
+				return;
 			const now = Date.now();
 			if (now - lastWheelNavTime < WHEEL_NAV_COOLDOWN_MS) {
 				e.preventDefault();
@@ -157,8 +158,8 @@
 
 	const overlayCarouselCenterAlignCss = css`
 		@media (min-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-		display: flex;	
-		align-items: center;
+			display: flex;
+			align-items: center;
 		}
 	`;
 
@@ -187,13 +188,7 @@
 		$carouselNav.totalCount != null;
 </script>
 
-<JDGOverlay
-	{colorRgba}
-	{showTitleBar}
-	{onCloseFunction}
-	{closeOnOverlayClick}
-	{useBlur}
->
+<JDGOverlay {colorRgba} {showTitleBar} {onCloseFunction} {closeOnOverlayClick} {useBlur}>
 	<div
 		class="jdg-overlay-carousel-content"
 		role="button"
@@ -214,50 +209,50 @@
 			</div>
 		{/if}
 		<div class="jdg-overlay-carousel-row">
-		{#if !$isMobileBreakpoint && $carouselNav}
-			<div class="jdg-overlay-carousel-edge jdg-overlay-carousel-edge-left">
-				<div class="jdg-overlay-carousel-buttons">
-					<JDGButton
-						label={null}
-						faIcon="fa-chevron-left"
-						onClickFunction={handleGoPrev}
-						isEnabled={$carouselNav.canGoPrev}
-						isPrimary={false}
-						doForceSquareAspect={true}
-						tooltip="Previous"
-						paddingLeftRight="10px"
-						paddingTopBottom="10px"
-					/>
+			{#if !$isMobileBreakpoint && $carouselNav}
+				<div class="jdg-overlay-carousel-edge jdg-overlay-carousel-edge-left">
+					<div class="jdg-overlay-carousel-buttons">
+						<JDGButton
+							label={null}
+							faIcon="fa-chevron-left"
+							onClickFunction={handleGoPrev}
+							isEnabled={$carouselNav.canGoPrev}
+							isPrimary={false}
+							doForceSquareAspect={true}
+							tooltip="Previous"
+							paddingLeftRight="10px"
+							paddingTopBottom="10px"
+						/>
+					</div>
+				</div>
+			{/if}
+			<div class="jdg-overlay-carousel-center {overlayCarouselCenterAlignCss}">
+				<div
+					class="jdg-overlay-carousel-slot-wrapper"
+					class:jdg-overlay-carousel-slot-slide-next={slotAnimating === 'next'}
+					class:jdg-overlay-carousel-slot-slide-prev={slotAnimating === 'prev'}
+					style="--jdg-carousel-slide-offset: {SLIDE_OFFSET_PX}px"
+				>
+					<slot />
 				</div>
 			</div>
-		{/if}
-		<div class="jdg-overlay-carousel-center {overlayCarouselCenterAlignCss}">
-			<div
-				class="jdg-overlay-carousel-slot-wrapper"
-				class:jdg-overlay-carousel-slot-slide-next={slotAnimating === 'next'}
-				class:jdg-overlay-carousel-slot-slide-prev={slotAnimating === 'prev'}
-				style="--jdg-carousel-slide-offset: {SLIDE_OFFSET_PX}px"
-			>
-				<slot />
-			</div>
-		</div>
-		{#if !$isMobileBreakpoint && $carouselNav}
-			<div class="jdg-overlay-carousel-edge jdg-overlay-carousel-edge-right">
-				<div class="jdg-overlay-carousel-buttons">
-					<JDGButton
-						label={null}
-						faIcon="fa-chevron-right"
-						onClickFunction={handleGoNext}
-						isEnabled={$carouselNav.canGoNext}
-						isPrimary={false}
-						doForceSquareAspect={true}
-						tooltip="Next"
-						paddingLeftRight="10px"
-						paddingTopBottom="10px"
-					/>
+			{#if !$isMobileBreakpoint && $carouselNav}
+				<div class="jdg-overlay-carousel-edge jdg-overlay-carousel-edge-right">
+					<div class="jdg-overlay-carousel-buttons">
+						<JDGButton
+							label={null}
+							faIcon="fa-chevron-right"
+							onClickFunction={handleGoNext}
+							isEnabled={$carouselNav.canGoNext}
+							isPrimary={false}
+							doForceSquareAspect={true}
+							tooltip="Next"
+							paddingLeftRight="10px"
+							paddingTopBottom="10px"
+						/>
+					</div>
 				</div>
-			</div>
-		{/if}
+			{/if}
 		</div>
 	</div>
 </JDGOverlay>

@@ -799,7 +799,12 @@
 	// When the event modal is open and the current event changes, scroll the timeline in the background
 	// (no scroll on close — timeline is already in position from the last event change)
 	// Use $store so Svelte re-runs this when draftTimelineEvent / draftTimelineHost change (e.g. carousel nav)
-	$: if ($showTimelineEventModal && timelineHost && $draftTimelineHost?.id === timelineHost.id && $draftTimelineEvent) {
+	$: if (
+		$showTimelineEventModal &&
+		timelineHost &&
+		$draftTimelineHost?.id === timelineHost.id &&
+		$draftTimelineEvent
+	) {
 		tick().then(scrollToEventInTimeline);
 	}
 </script>
