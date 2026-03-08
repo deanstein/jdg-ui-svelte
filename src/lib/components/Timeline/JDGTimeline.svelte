@@ -1,5 +1,5 @@
 <script>
-	import { getContext, setContext, onDestroy } from 'svelte';
+	import { getContext, setContext, onDestroy, tick } from 'svelte';
 	import { writable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
@@ -17,6 +17,7 @@
 		draftImageMetaRegistry,
 		draftImageRegistryRepo
 	} from '$lib/stores/jdg-temp-store.js';
+	import { get } from 'svelte/store';
 	import {
 		imageViewerMeta,
 		isAdminMode,
@@ -759,6 +760,48 @@
 			eventColorPairs = pairs;
 		}
 	}
+
+	// Scroll the timeline to the event currently shown in the TimelineEventModal (when modal is open or just closed)
+	function scrollToEventInTimeline() {
+		if (!scrollingCanvasDivRef || !timelineHost) return;
+		const draftEvent = get(draftTimelineEvent);
+		const draftHost = get(draftTimelineHost);
+		if (!draftEvent || draftHost?.id !== timelineHost.id) return;
+
+		let scrollIdToFind = null;
+		if (draftEvent.type === jdgTimelineEventKeys.inception) {
+			scrollIdToFind = 'inception';
+		} else if (draftEvent.type === jdgTimelineEventKeys.today) {
+			scrollIdToFind = 'today';
+		} else {
+			const idx = timelineRowItems.findIndex(
+				(r) => r.event === draftEvent || (r.event.id && r.event.id === draftEvent.id)
+			);
+			if (idx >= 0) {
+				const ev = timelineRowItems[idx].event;
+				scrollIdToFind = ev.id || `idx-${idx}`;
+			}
+		}
+		if (scrollIdToFind == null) return;
+
+		const el = scrollingCanvasDivRef.querySelector(
+			`[data-timeline-scroll-id="${CSS.escape(String(scrollIdToFind))}"]`
+		);
+		if (el) {
+			isProgrammaticScroll = true;
+			el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+			setTimeout(() => {
+				isProgrammaticScroll = false;
+			}, 400);
+		}
+	}
+
+	// When the event modal is open and the current event changes, scroll the timeline in the background
+	// (no scroll on close — timeline is already in position from the last event change)
+	// Use $store so Svelte re-runs this when draftTimelineEvent / draftTimelineHost change (e.g. carousel nav)
+	$: if ($showTimelineEventModal && timelineHost && $draftTimelineHost?.id === timelineHost.id && $draftTimelineEvent) {
+		tick().then(scrollToEventInTimeline);
+	}
 </script>
 
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
@@ -950,6 +993,7 @@
 							<JDGTimelineEvent
 								{timelineHost}
 								timelineEvent={emptyStateEvent}
+								scrollId="inception"
 								onClickTimelineEvent={isInteractive && allowEditing
 									? onClickInceptionEvent
 									: () => {}}
@@ -968,6 +1012,7 @@
 								<JDGTimelineEvent
 									{timelineHost}
 									timelineEvent={timelineRowItem.event}
+									scrollId={timelineRowItem.event.id || `idx-${i}`}
 									onClickTimelineEvent={() => {
 										draftTimelineHost.set(timelineHost);
 										draftTimelineEvent.set(timelineRowItem.event);
@@ -1000,6 +1045,7 @@
 							<JDGTimelineEvent
 								{timelineHost}
 								timelineEvent={todayEvent}
+								scrollId="today"
 								rowIndex={todayEventRowIndex}
 								gradientColor1={eventColorPairs[todayColorPairIndex].backgroundColor}
 								gradientColor2={eventColorPairs[todayColorPairIndex].gradientMirrorColor}

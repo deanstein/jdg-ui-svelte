@@ -47,6 +47,8 @@
 	export let rowIndex;
 	// Number of gradient points to use
 	export let gradientPointsCount = 3;
+	// Optional stable id for scroll-into-view (e.g. event.id or 'inception' / 'today')
+	export let scrollId = undefined;
 
 	// Get age suffixes from context (set by parent components)
 	// Falls back to default values if context not available
@@ -394,6 +396,7 @@
 	class="timeline-event-row {eventRowCss} {eventRowDynamicCss}"
 	role="button"
 	tabindex="0"
+	data-timeline-scroll-id={scrollId}
 	on:click={onClickTimelineEvent}
 	on:keydown={onClickTimelineEvent}
 	bind:this={eventRowDivRef}
