@@ -2,6 +2,7 @@
 	import { css } from '@emotion/css';
 
 	import { isMobileBreakpoint } from '$lib/stores/jdg-ui-store.js';
+	import { carouselHintHeightPx } from '$lib/stores/jdg-ui-store.js';
 	import { setRgbaAlpha } from '$lib/jdg-utils.js';
 
 	import { jdgColors, jdgSizes, jdgBreakpoints } from '$lib/index.js';
@@ -56,10 +57,12 @@
 			height: ${$isMobileBreakpoint && maximizeWidthOnMobile ? '90dvh' : height};
 			min-width: ${!$isMobileBreakpoint && minWidth ? minWidth : 'auto'};
 			max-width: ${!$isMobileBreakpoint && maxWidth ? maxWidth : 'none'};
-			/* Constrain max-height to available viewport minus overlay header */
+			/* Constrain max-height so header stays visible and (when contentOnly on mobile) hint + bottom visible */
 			/* Use dvh (dynamic viewport height) to handle iOS browser chrome appearing/disappearing */
 			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-				max-height: calc(100dvh - ${jdgSizes.headerHeightSm} - ${minPadding});
+				max-height: ${contentOnly
+					? `calc(100dvh - ${jdgSizes.headerHeightSm} - ${minPadding} - ${$carouselHintHeightPx}px)`
+					: `calc(100dvh - ${jdgSizes.headerHeightSm} - ${minPadding})`};
 			}
 			@media (min-width: ${jdgBreakpoints.width[0].toString() +
 				jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +

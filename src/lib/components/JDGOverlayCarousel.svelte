@@ -1,14 +1,12 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
 	import { get } from 'svelte/store';
-	import { css } from '@emotion/css';
 
 	import { isMobileBreakpoint } from '$lib/stores/jdg-ui-store.js';
-	import { carouselNav } from '$lib/stores/jdg-ui-store.js';
+	import { carouselNav, carouselHintHeightPx } from '$lib/stores/jdg-ui-store.js';
 
 	import JDGOverlay from '$lib/components/JDGOverlay.svelte';
 	import JDGButton from '$lib/components/Input/JDGButton.svelte';
-	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	/** Wrapper around JDGOverlay that adds carousel nav (prev/next buttons, wheel/key/touch). Pass-through props match JDGOverlay. */
 	export let colorRgba = 'rgba(255, 255, 255, 1.0)';
@@ -29,8 +27,19 @@
 	let touchStartY;
 	let touchEndHandler;
 	let touchStartHandler;
+	let hintRef;
+	let resizeObserver;
+	let observedHintEl = null;
 
 	onMount(() => {
+		resizeObserver = new ResizeObserver((entries) => {
+			const entry = entries[0];
+			if (entry?.target) {
+				const height = entry.target.getBoundingClientRect().height;
+				carouselHintHeightPx.set(Math.ceil(height));
+			}
+		});
+
 		wheelHandler = (e) => {
 			const nav = get(carouselNav);
 			const deltaX = e.deltaX ?? 0;
@@ -89,56 +98,26 @@
 		document.addEventListener('touchend', touchEndHandler);
 	});
 
+	$: if (showMobileHint && hintRef && resizeObserver && observedHintEl !== hintRef) {
+		if (observedHintEl) resizeObserver.unobserve(observedHintEl);
+		observedHintEl = hintRef;
+		resizeObserver.observe(hintRef);
+	}
+	$: if (!showMobileHint) {
+		if (observedHintEl && resizeObserver) {
+			resizeObserver.unobserve(observedHintEl);
+			observedHintEl = null;
+		}
+		carouselHintHeightPx.set(0);
+	}
+
 	onDestroy(() => {
+		if (resizeObserver && observedHintEl) resizeObserver.unobserve(observedHintEl);
 		if (wheelHandler) window.removeEventListener('wheel', wheelHandler, { capture: true });
 		if (keydownHandler) window.removeEventListener('keydown', keydownHandler, true);
 		if (touchStartHandler) document.removeEventListener('touchstart', touchStartHandler);
 		if (touchEndHandler) document.removeEventListener('touchend', touchEndHandler);
 	});
-
-	const overlayContentRowCss = css`
-		display: flex;
-		flex-direction: row;
-		justify-content: stretch;
-		align-items: center;
-		flex: 1 1 auto;
-		min-height: 0;
-		width: 100%;
-		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			justify-content: center;
-		}
-	`;
-
-	const overlayCarouselCenterCss = css`
-		flex: 0 0 auto;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		max-height: 100%;
-	`;
-
-	const overlayCarouselEdgeCss = css`
-		flex: 1 1 auto;
-		min-width: 0;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	`;
-
-	const carouselHintCss = css`
-		flex-shrink: 0;
-		width: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: 6px 12px;
-		color: ${jdgColors.textLight};
-		font-size: ${jdgSizes.fontSizeBodyXSm};
-		box-sizing: border-box;
-		@media (min-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			display: none;
-		}
-	`;
 
 	$: showMobileHint =
 		$isMobileBreakpoint &&
@@ -158,15 +137,13 @@
 	{useBlur}
 >
 	{#if showMobileHint}
-		<div class="jdg-overlay-carousel-hint {carouselHintCss}" aria-hidden="true">
+		<div bind:this={hintRef} class="jdg-overlay-carousel-hint" aria-hidden="true">
 			{hintText}
 		</div>
 	{/if}
-	<div class="jdg-overlay-carousel-row {overlayContentRowCss}">
+	<div class="jdg-overlay-carousel-row">
 		{#if !$isMobileBreakpoint && $carouselNav}
-			<div
-				class="jdg-overlay-carousel-edge jdg-overlay-carousel-edge-left {overlayCarouselEdgeCss}"
-			>
+			<div class="jdg-overlay-carousel-edge jdg-overlay-carousel-edge-left">
 				<div class="jdg-overlay-carousel-buttons">
 					<JDGButton
 						label={null}
@@ -182,13 +159,11 @@
 				</div>
 			</div>
 		{/if}
-		<div class="jdg-overlay-carousel-center {overlayCarouselCenterCss}">
+		<div class="jdg-overlay-carousel-center">
 			<slot />
 		</div>
 		{#if !$isMobileBreakpoint && $carouselNav}
-			<div
-				class="jdg-overlay-carousel-edge jdg-overlay-carousel-edge-right {overlayCarouselEdgeCss}"
-			>
+			<div class="jdg-overlay-carousel-edge jdg-overlay-carousel-edge-right">
 				<div class="jdg-overlay-carousel-buttons">
 					<JDGButton
 						label={null}
@@ -208,6 +183,49 @@
 </JDGOverlay>
 
 <style>
+	/* hint: color/font/breakpoint match jdgColors.textLight, jdgSizes.fontSizeBodyXSm, jdgBreakpoints.width[0] */
+	.jdg-overlay-carousel-hint {
+		flex-shrink: 0;
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 8px;
+		color: #737373;
+		font-size: 0.75rem;
+		box-sizing: border-box;
+	}
+	@media (min-width: 768px) {
+		.jdg-overlay-carousel-hint {
+			display: none;
+		}
+	}
+	.jdg-overlay-carousel-row {
+		display: flex;
+		flex-direction: row;
+		justify-content: stretch;
+		flex: 1 1 auto;
+		min-height: 0;
+		width: 100%;
+	}
+	/* matches jdgBreakpoints.width[0] */
+	@media (max-width: 768px) {
+		.jdg-overlay-carousel-row {
+			justify-content: center;
+		}
+	}
+	.jdg-overlay-carousel-center {
+		flex: 0 0 auto;
+		justify-content: center;
+		max-height: 100%;
+	}
+	.jdg-overlay-carousel-edge {
+		flex: 1 1 auto;
+		min-width: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
 	.jdg-overlay-carousel-buttons {
 		display: flex;
 		align-items: center;

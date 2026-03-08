@@ -165,7 +165,6 @@
 
 	.jdg-overlay-content {
 		display: flex;
-		gap: 20px;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
