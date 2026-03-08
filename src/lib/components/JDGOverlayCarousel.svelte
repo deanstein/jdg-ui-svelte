@@ -1,9 +1,11 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
 	import { get } from 'svelte/store';
+	import { css } from '@emotion/css';
 
 	import { isMobileBreakpoint } from '$lib/stores/jdg-ui-store.js';
 	import { carouselNav, carouselHintHeightPx } from '$lib/stores/jdg-ui-store.js';
+	import { jdgBreakpoints } from '$lib/jdg-shared-styles.js';
 
 	import JDGOverlay from '$lib/components/JDGOverlay.svelte';
 	import JDGButton from '$lib/components/Input/JDGButton.svelte';
@@ -111,6 +113,13 @@
 		carouselHintHeightPx.set(0);
 	}
 
+	const overlayCarouselCenterAlignCss = css`
+		@media (min-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+		display: flex;	
+		align-items: center;
+		}
+	`;
+
 	onDestroy(() => {
 		if (resizeObserver && observedHintEl) resizeObserver.unobserve(observedHintEl);
 		if (wheelHandler) window.removeEventListener('wheel', wheelHandler, { capture: true });
@@ -124,9 +133,6 @@
 		$carouselNav &&
 		$carouselNav.currentIndex != null &&
 		$carouselNav.totalCount != null;
-	$: hintText = showMobileHint
-		? `< ${$carouselNav.currentIndex} of ${$carouselNav.totalCount} >`
-		: '';
 </script>
 
 <JDGOverlay
@@ -138,7 +144,9 @@
 >
 	{#if showMobileHint}
 		<div bind:this={hintRef} class="jdg-overlay-carousel-hint" aria-hidden="true">
-			{hintText}
+			<i class="fa-solid fa-angle-left"></i>
+			<span>{$carouselNav.currentIndex} of {$carouselNav.totalCount}</span>
+			<i class="fa-solid fa-angle-right"></i>
 		</div>
 	{/if}
 	<div class="jdg-overlay-carousel-row">
@@ -159,7 +167,7 @@
 				</div>
 			</div>
 		{/if}
-		<div class="jdg-overlay-carousel-center">
+		<div class="jdg-overlay-carousel-center {overlayCarouselCenterAlignCss}">
 			<slot />
 		</div>
 		{#if !$isMobileBreakpoint && $carouselNav}
@@ -190,6 +198,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		gap: 6px;
 		padding: 8px;
 		color: #737373;
 		font-size: 0.75rem;
