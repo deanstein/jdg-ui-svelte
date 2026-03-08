@@ -311,6 +311,7 @@
 		z-index: 0;
 		pointer-events: none;
 		overflow: hidden;
+		background-color: white;
 	}
 
 	.modal-title-bar-container {

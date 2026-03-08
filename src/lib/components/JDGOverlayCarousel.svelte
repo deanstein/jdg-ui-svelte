@@ -11,7 +11,7 @@
 	import JDGButton from '$lib/components/Input/JDGButton.svelte';
 
 	/** Wrapper around JDGOverlay that adds carousel nav (prev/next buttons, wheel/key/touch). Pass-through props match JDGOverlay. */
-	export let colorRgba = 'rgba(255, 255, 255, 1.0)';
+	export let colorRgba = 'rgba(255, 255, 255, 0.6)';
 	export let showTitleBar = true;
 	export let onCloseFunction = () => {};
 	export let closeOnOverlayClick = true;
