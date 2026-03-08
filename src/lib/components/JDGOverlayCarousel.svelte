@@ -1,5 +1,5 @@
 <script>
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy, tick } from 'svelte';
 	import { get } from 'svelte/store';
 	import { css } from '@emotion/css';
 
@@ -33,6 +33,34 @@
 	let resizeObserver;
 	let observedHintEl = null;
 
+	// Content-change animation: trigger from nav action so it runs when arrows/key/wheel/touch change slide
+	let slotAnimating = false;
+	let slotAnimationTimeout = null;
+
+	async function runSlotAnimation() {
+		if (slotAnimationTimeout) clearTimeout(slotAnimationTimeout);
+		slotAnimating = false;
+		await tick();
+		slotAnimating = true;
+		slotAnimationTimeout = setTimeout(() => {
+			slotAnimating = false;
+			slotAnimationTimeout = null;
+		}, 320);
+	}
+
+	function handleGoPrev() {
+		if ($carouselNav?.canGoPrev) {
+			$carouselNav.goPrev();
+			runSlotAnimation();
+		}
+	}
+	function handleGoNext() {
+		if ($carouselNav?.canGoNext) {
+			$carouselNav.goNext();
+			runSlotAnimation();
+		}
+	}
+
 	onMount(() => {
 		resizeObserver = new ResizeObserver((entries) => {
 			const entry = entries[0];
@@ -56,8 +84,13 @@
 			e.preventDefault();
 			e.stopPropagation();
 			lastWheelNavTime = now;
-			if (deltaX > 0 && nav.canGoNext) nav.goNext();
-			else if (deltaX < 0 && nav.canGoPrev) nav.goPrev();
+			if (deltaX > 0 && nav.canGoNext) {
+				nav.goNext();
+				runSlotAnimation();
+			} else if (deltaX < 0 && nav.canGoPrev) {
+				nav.goPrev();
+				runSlotAnimation();
+			}
 		};
 		window.addEventListener('wheel', wheelHandler, { capture: true, passive: false });
 
@@ -69,10 +102,12 @@
 				e.preventDefault();
 				e.stopPropagation();
 				nav.goPrev();
+				runSlotAnimation();
 			} else if (e.key === 'ArrowRight' && nav.canGoNext) {
 				e.preventDefault();
 				e.stopPropagation();
 				nav.goNext();
+				runSlotAnimation();
 			}
 		};
 		window.addEventListener('keydown', keydownHandler, true);
@@ -92,8 +127,13 @@
 			const deltaX = endX - touchStartX;
 			const deltaY = endY - touchStartY;
 			if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) >= SWIPE_THRESHOLD_PX) {
-				if (deltaX > 0 && nav.canGoPrev) nav.goPrev();
-				else if (deltaX < 0 && nav.canGoNext) nav.goNext();
+				if (deltaX > 0 && nav.canGoPrev) {
+					nav.goPrev();
+					runSlotAnimation();
+				} else if (deltaX < 0 && nav.canGoNext) {
+					nav.goNext();
+					runSlotAnimation();
+				}
 			}
 		};
 		document.addEventListener('touchstart', touchStartHandler);
@@ -130,6 +170,7 @@
 	}
 
 	onDestroy(() => {
+		if (slotAnimationTimeout) clearTimeout(slotAnimationTimeout);
 		if (resizeObserver && observedHintEl) resizeObserver.unobserve(observedHintEl);
 		if (wheelHandler) window.removeEventListener('wheel', wheelHandler, { capture: true });
 		if (keydownHandler) window.removeEventListener('keydown', keydownHandler, true);
@@ -177,7 +218,7 @@
 					<JDGButton
 						label={null}
 						faIcon="fa-chevron-left"
-						onClickFunction={$carouselNav.goPrev}
+						onClickFunction={handleGoPrev}
 						isEnabled={$carouselNav.canGoPrev}
 						isPrimary={false}
 						doForceSquareAspect={true}
@@ -189,7 +230,12 @@
 			</div>
 		{/if}
 		<div class="jdg-overlay-carousel-center {overlayCarouselCenterAlignCss}">
-			<slot />
+			<div
+				class="jdg-overlay-carousel-slot-wrapper"
+				class:jdg-overlay-carousel-slot-animate={slotAnimating}
+			>
+				<slot />
+			</div>
 		</div>
 		{#if !$isMobileBreakpoint && $carouselNav}
 			<div class="jdg-overlay-carousel-edge jdg-overlay-carousel-edge-right">
@@ -197,7 +243,7 @@
 					<JDGButton
 						label={null}
 						faIcon="fa-chevron-right"
-						onClickFunction={$carouselNav.goNext}
+						onClickFunction={handleGoNext}
 						isEnabled={$carouselNav.canGoNext}
 						isPrimary={false}
 						doForceSquareAspect={true}
@@ -256,6 +302,26 @@
 		flex: 0 0 auto;
 		justify-content: center;
 		max-height: 100%;
+	}
+	.jdg-overlay-carousel-slot-wrapper {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		max-height: 100%;
+	}
+	.jdg-overlay-carousel-slot-wrapper.jdg-overlay-carousel-slot-animate {
+		animation: jdg-overlay-carousel-slot-in 0.3s ease-out forwards;
+		will-change: opacity, transform;
+	}
+	@keyframes jdg-overlay-carousel-slot-in {
+		from {
+			opacity: 0;
+			transform: scale(0.97);
+		}
+		to {
+			opacity: 1;
+			transform: scale(1);
+		}
 	}
 	.jdg-overlay-carousel-edge {
 		flex: 1 1 auto;
