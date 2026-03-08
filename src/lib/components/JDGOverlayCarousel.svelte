@@ -120,6 +120,15 @@
 		}
 	`;
 
+	function handleContentClick(e) {
+		if (!closeOnOverlayClick || typeof onCloseFunction !== 'function') return;
+		if (e.target.closest('.jdg-overlay-carousel-buttons')) return;
+		const center = e.target.closest('.jdg-overlay-carousel-center');
+		// Only skip close when click is on the actual slot content (modal), not the center’s empty area above/beside it
+		if (center?.firstElementChild && center.firstElementChild.contains(e.target)) return;
+		onCloseFunction();
+	}
+
 	onDestroy(() => {
 		if (resizeObserver && observedHintEl) resizeObserver.unobserve(observedHintEl);
 		if (wheelHandler) window.removeEventListener('wheel', wheelHandler, { capture: true });
@@ -142,14 +151,26 @@
 	{closeOnOverlayClick}
 	{useBlur}
 >
-	{#if showMobileHint}
-		<div bind:this={hintRef} class="jdg-overlay-carousel-hint" aria-hidden="true">
-			<i class="fa-solid fa-angle-left"></i>
-			<span>{$carouselNav.currentIndex} of {$carouselNav.totalCount}</span>
-			<i class="fa-solid fa-angle-right"></i>
-		</div>
-	{/if}
-	<div class="jdg-overlay-carousel-row">
+	<div
+		class="jdg-overlay-carousel-content"
+		role="button"
+		tabindex="0"
+		on:click={handleContentClick}
+		on:keydown={(e) => {
+			if (e.key === 'Enter' || e.key === ' ') {
+				e.preventDefault();
+				handleContentClick(e);
+			}
+		}}
+	>
+		{#if showMobileHint}
+			<div bind:this={hintRef} class="jdg-overlay-carousel-hint" aria-hidden="true">
+				<i class="fa-solid fa-angle-left"></i>
+				<span>{$carouselNav.currentIndex} of {$carouselNav.totalCount}</span>
+				<i class="fa-solid fa-angle-right"></i>
+			</div>
+		{/if}
+		<div class="jdg-overlay-carousel-row">
 		{#if !$isMobileBreakpoint && $carouselNav}
 			<div class="jdg-overlay-carousel-edge jdg-overlay-carousel-edge-left">
 				<div class="jdg-overlay-carousel-buttons">
@@ -187,10 +208,18 @@
 				</div>
 			</div>
 		{/if}
+		</div>
 	</div>
 </JDGOverlay>
 
 <style>
+	.jdg-overlay-carousel-content {
+		display: flex;
+		flex-direction: column;
+		flex: 1 1 auto;
+		min-height: 0;
+		width: 100%;
+	}
 	/* hint: color/font/breakpoint match jdgColors.textLight, jdgSizes.fontSizeBodyXSm, jdgBreakpoints.width[0] */
 	.jdg-overlay-carousel-hint {
 		flex-shrink: 0;
