@@ -33,31 +33,33 @@
 	let resizeObserver;
 	let observedHintEl = null;
 
-	// Content-change animation: trigger from nav action so it runs when arrows/key/wheel/touch change slide
-	let slotAnimating = false;
+	// Content-change animation: direction-aware slide (next = in from right, prev = in from left)
+	let slotAnimating = ''; // '' | 'next' | 'prev'
 	let slotAnimationTimeout = null;
+	const SLIDE_OFFSET_PX = 36;
+	const SLIDE_DURATION_MS = 280;
 
-	async function runSlotAnimation() {
+	async function runSlotAnimation(direction) {
 		if (slotAnimationTimeout) clearTimeout(slotAnimationTimeout);
-		slotAnimating = false;
+		slotAnimating = '';
 		await tick();
-		slotAnimating = true;
+		slotAnimating = direction;
 		slotAnimationTimeout = setTimeout(() => {
-			slotAnimating = false;
+			slotAnimating = '';
 			slotAnimationTimeout = null;
-		}, 320);
+		}, SLIDE_DURATION_MS + 40);
 	}
 
 	function handleGoPrev() {
 		if ($carouselNav?.canGoPrev) {
 			$carouselNav.goPrev();
-			runSlotAnimation();
+			runSlotAnimation('prev');
 		}
 	}
 	function handleGoNext() {
 		if ($carouselNav?.canGoNext) {
 			$carouselNav.goNext();
-			runSlotAnimation();
+			runSlotAnimation('next');
 		}
 	}
 
@@ -86,10 +88,10 @@
 			lastWheelNavTime = now;
 			if (deltaX > 0 && nav.canGoNext) {
 				nav.goNext();
-				runSlotAnimation();
+				runSlotAnimation('next');
 			} else if (deltaX < 0 && nav.canGoPrev) {
 				nav.goPrev();
-				runSlotAnimation();
+				runSlotAnimation('prev');
 			}
 		};
 		window.addEventListener('wheel', wheelHandler, { capture: true, passive: false });
@@ -102,12 +104,12 @@
 				e.preventDefault();
 				e.stopPropagation();
 				nav.goPrev();
-				runSlotAnimation();
+				runSlotAnimation('prev');
 			} else if (e.key === 'ArrowRight' && nav.canGoNext) {
 				e.preventDefault();
 				e.stopPropagation();
 				nav.goNext();
-				runSlotAnimation();
+				runSlotAnimation('next');
 			}
 		};
 		window.addEventListener('keydown', keydownHandler, true);
@@ -129,10 +131,10 @@
 			if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) >= SWIPE_THRESHOLD_PX) {
 				if (deltaX > 0 && nav.canGoPrev) {
 					nav.goPrev();
-					runSlotAnimation();
+					runSlotAnimation('prev');
 				} else if (deltaX < 0 && nav.canGoNext) {
 					nav.goNext();
-					runSlotAnimation();
+					runSlotAnimation('next');
 				}
 			}
 		};
@@ -232,7 +234,9 @@
 		<div class="jdg-overlay-carousel-center {overlayCarouselCenterAlignCss}">
 			<div
 				class="jdg-overlay-carousel-slot-wrapper"
-				class:jdg-overlay-carousel-slot-animate={slotAnimating}
+				class:jdg-overlay-carousel-slot-slide-next={slotAnimating === 'next'}
+				class:jdg-overlay-carousel-slot-slide-prev={slotAnimating === 'prev'}
+				style="--jdg-carousel-slide-offset: {SLIDE_OFFSET_PX}px"
 			>
 				<slot />
 			</div>
@@ -309,18 +313,32 @@
 		justify-content: center;
 		max-height: 100%;
 	}
-	.jdg-overlay-carousel-slot-wrapper.jdg-overlay-carousel-slot-animate {
-		animation: jdg-overlay-carousel-slot-in 0.3s ease-out forwards;
-		will-change: opacity, transform;
+	.jdg-overlay-carousel-slot-wrapper.jdg-overlay-carousel-slot-slide-next {
+		animation: jdg-overlay-carousel-slide-from-right 0.28s ease-out forwards;
+		will-change: transform, opacity;
 	}
-	@keyframes jdg-overlay-carousel-slot-in {
+	.jdg-overlay-carousel-slot-wrapper.jdg-overlay-carousel-slot-slide-prev {
+		animation: jdg-overlay-carousel-slide-from-left 0.28s ease-out forwards;
+		will-change: transform, opacity;
+	}
+	@keyframes jdg-overlay-carousel-slide-from-right {
 		from {
-			opacity: 0;
-			transform: scale(0.97);
+			opacity: 0.7;
+			transform: translateX(var(--jdg-carousel-slide-offset, 36px));
 		}
 		to {
 			opacity: 1;
-			transform: scale(1);
+			transform: translateX(0);
+		}
+	}
+	@keyframes jdg-overlay-carousel-slide-from-left {
+		from {
+			opacity: 0.7;
+			transform: translateX(calc(-1 * var(--jdg-carousel-slide-offset, 36px)));
+		}
+		to {
+			opacity: 1;
+			transform: translateX(0);
 		}
 	}
 	.jdg-overlay-carousel-edge {
