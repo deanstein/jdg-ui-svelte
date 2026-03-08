@@ -581,7 +581,18 @@
     "isApprxDate": false,
     "showBackgroundBlur": true,
     "toolbarJustification": "right",
-    "version": "0.7.1",
-    "key": "blue_mall_60s70s_1"
+    "version": "0.7.1"
+  },
+  "invalid": {
+    "id": "invalid",
+    "src": "https://res.cloudinary.com/jdg-main/image/upload/v1772176212/ccp-website/invalid.jpg",
+    "caption": "This is intentionally an invalid URL.",
+    "attribution": "",
+    "alt": "This is intentionally an invalid URL.",
+    "title": "",
+    "isApprxDate": false,
+    "showBackgroundBlur": true,
+    "toolbarJustification": "right",
+    "version": "0.7.1"
   }
 }

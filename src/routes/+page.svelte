@@ -358,6 +358,24 @@
 			showCaption={true}
 			showAttribution={true}
 		/>
+		<JDGBodyCopy textAlign="center" paddingBottom="0">
+			<b>NO IMAGE REGISTRY ENTRY</b>
+		</JDGBodyCopy>
+		<JDGImageTile
+			imageMeta={imageMetaRegistry.undefined}
+			cropToFillContainer={false}
+			showCaption={true}
+			showAttribution={true}
+		/>
+		<JDGBodyCopy textAlign="center" paddingBottom="0">
+			<b>INVALID URL</b>
+		</JDGBodyCopy>
+		<JDGImageTile
+			imageMeta={imageMetaRegistry.invalid}
+			cropToFillContainer={false}
+			showCaption={true}
+			showAttribution={true}
+		/>
 		<JDGBodyCopy textAlign="center" paddingBottom="0"><b>IMAGE FULL WIDTH</b></JDGBodyCopy>
 		<JDGImageFullWidth
 			imageMeta={imageMetaRegistry.aerial_60s70s_1}
