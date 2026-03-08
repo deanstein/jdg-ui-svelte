@@ -1016,11 +1016,13 @@
 			on:error={onImageError}
 			on:click={onImageClick}
 			class={`image ${imageCssStatic} ${imageAnimationCss}`}
-			src={showPlaceholderImage
-				? (isImageLoaded || isPlaceholderLoaded) && isVisible
-					? adjustedImgSrc
-					: imagePlaceholder
-				: adjustedImgSrc}
+			src={showImageError
+				? imagePlaceholder
+				: showPlaceholderImage
+					? (isImageLoaded || isPlaceholderLoaded) && isVisible
+						? adjustedImgSrc
+						: imagePlaceholder
+					: adjustedImgSrc}
 			alt={imageMeta.alt}
 		/>
 		<!-- only show blurred image behind if showBlurInUnfilledSpace is true -->
@@ -1131,15 +1133,17 @@
 
 	.image-error-overlay {
 		position: absolute;
-		width: 100%;
-		height: 100%;
+		inset: 0;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background-color: red;
+		background-color: rgba(180, 40, 40, 0.55);
 		color: white;
 		box-sizing: border-box;
-		padding: 20px;
+		padding: 1.5rem;
+		text-align: center;
+		overflow: auto;
+		word-break: break-word;
 	}
 
 	.caption-attribution-wrapper {
