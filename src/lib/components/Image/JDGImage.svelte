@@ -543,17 +543,22 @@
 				preferredHeight = maxHeight;
 				preferredHeightFitType = fitTypeMaxHeight;
 			}
-
-			// if we're not cropping or showing blur,
-			// and we're not on mobile breakpoint, height is always maxHeight
-			if (
+			// when not cropping: avoid empty bars for wide/short images by using
+			// the fitted image height when it's less than maxHeight
+			else if (
 				!cropToFillContainer &&
 				!showBlurInUnfilledSpace &&
-				!$isMobileBreakpoint &&
-				!useAutoHeightOnMobile
+				Number.isFinite(imageCalcAutoHeight) &&
+				imageCalcAutoHeight > 0
 			) {
-				preferredHeight = maxHeight;
-				preferredHeightFitType = fitTypeMaxHeight;
+				const maxHeightPx = getMaxHeightPxFromProp(maxHeight, containerRef);
+				if (imageCalcAutoHeight <= maxHeightPx) {
+					preferredHeight = `${imageCalcAutoHeight.toString()}px`;
+					preferredHeightFitType = fitTypeCalculatedAuto;
+				} else {
+					preferredHeight = maxHeight;
+					preferredHeightFitType = fitTypeMaxHeight;
+				}
 			}
 
 			// if we're on mobile breakpoint and useCompactHeight is true,
