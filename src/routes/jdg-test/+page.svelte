@@ -15,20 +15,24 @@
 	const imageHeightLg = 350;
 	const imageHeightSm = 250;
 	let currentImageHeight = 0;
+	let heroOverlapMultiplier = 0.9;
 	const imageHeightBreakpointHandler = () => {
 		breakpointHandler(
 			// breakpoint 0
 			() => {
 				// force the mobile nav on
 				currentImageHeight = imageHeightSm;
+				heroOverlapMultiplier = 0.5;
 			},
 			// breakpoint 1
 			() => {
 				currentImageHeight = imageHeightSm;
+				heroOverlapMultiplier = 0.5;
 			},
 			// breakpoint 2
 			() => {
 				currentImageHeight = imageHeightLg;
+				heroOverlapMultiplier = 0.9;
 			}
 		);
 	};
@@ -50,7 +54,7 @@
 </JDGContentContainer>
 <JDGContentContainer paddingTop="0">
 	<JDGContentBoxFloating animateWhenVisible={false} paddingTop="0px">
-		<div class="hero-image-overlap" style={`margin-top: -${currentImageHeight / 2}px;`}>
+		<div class="hero-image-overlap" style={`margin-top: -${currentImageHeight * heroOverlapMultiplier}px;`}>
 			<JDGGridLayout>
 				<JDGImageTile
 					imageMeta={imageMetaRegistry.exp.corporate_showroom_corner}
