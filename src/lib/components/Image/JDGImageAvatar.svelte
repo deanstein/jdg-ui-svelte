@@ -76,11 +76,13 @@
 			on:click={onClickFunction}
 			on:keydown={handleKeydown}
 		>
-			{#key imageMeta?.src}
-				{#if imageMeta?.src}
-					<JDGImage {imageMeta} maxHeight={size} maxWidth={size} cropToFillContainer={true} />
-				{/if}
-			{/key}
+			<div class="jdg-image-avatar-inner">
+				{#key imageMeta?.src}
+					{#if imageMeta?.src}
+						<JDGImage {imageMeta} maxHeight={size} maxWidth={size} cropToFillContainer={true} />
+					{/if}
+				{/key}
+			</div>
 		</div>
 		{#if allowEditing}
 			<div class="edit-button">
@@ -134,6 +136,26 @@
 		border-radius: 50%;
 		cursor: pointer;
 		box-sizing: border-box;
+	}
+
+	/* Force the image to fill the frame so JDGImage doesn't letterbox. */
+	.jdg-image-avatar-inner {
+		width: 100%;
+		height: 100%;
+		min-width: 0;
+		min-height: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	/* Override JDGImage's self-sized container so it fills the avatar (square or pill).
+	   This makes the image always cover the full area with object-fit: cover. */
+	.jdg-image-avatar-inner :global(.jdg-image-container) {
+		width: 100% !important;
+		height: 100% !important;
+		min-width: 0;
+		min-height: 0;
 	}
 
 	.edit-button {
