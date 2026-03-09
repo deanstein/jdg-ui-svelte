@@ -11,7 +11,7 @@
 	import JDGButton from '$lib/components/Input/JDGButton.svelte';
 
 	/** Wrapper around JDGOverlay that adds carousel nav (prev/next buttons, wheel/key/touch). Pass-through props match JDGOverlay. */
-	export let colorRgba = 'rgba(255, 255, 255, 0.6)';
+	export let colorRgba = 'rgba(255, 255, 255, 0.8)';
 	export let showTitleBar = true;
 	export let onCloseFunction = () => {};
 	export let closeOnOverlayClick = true;
@@ -168,7 +168,8 @@
 		if (e.target.closest('.jdg-overlay-carousel-buttons')) return;
 		const center = e.target.closest('.jdg-overlay-carousel-center');
 		// Only skip close when click is on the actual slot content (modal), not the center’s empty area above/beside it
-		if (center?.firstElementChild && center.firstElementChild.contains(e.target)) return;
+		const slotWrapper = center?.querySelector('.jdg-overlay-carousel-slot-wrapper');
+		if (slotWrapper?.contains(e.target)) return;
 		onCloseFunction();
 	}
 
@@ -183,6 +184,12 @@
 
 	$: showMobileHint =
 		$isMobileBreakpoint &&
+		$carouselNav &&
+		$carouselNav.currentIndex != null &&
+		$carouselNav.totalCount != null;
+
+	// Count above slot: same on mobile and desktop
+	$: showCountHint =
 		$carouselNav &&
 		$carouselNav.currentIndex != null &&
 		$carouselNav.totalCount != null;
@@ -201,13 +208,6 @@
 			}
 		}}
 	>
-		{#if showMobileHint}
-			<div bind:this={hintRef} class="jdg-overlay-carousel-hint" aria-hidden="true">
-				<i class="fa-solid fa-angle-left"></i>
-				<span>{$carouselNav.currentIndex} of {$carouselNav.totalCount}</span>
-				<i class="fa-solid fa-angle-right"></i>
-			</div>
-		{/if}
 		<div class="jdg-overlay-carousel-row">
 			{#if !$isMobileBreakpoint && $carouselNav}
 				<div class="jdg-overlay-carousel-edge jdg-overlay-carousel-edge-left">
@@ -227,6 +227,21 @@
 				</div>
 			{/if}
 			<div class="jdg-overlay-carousel-center {overlayCarouselCenterAlignCss}">
+				{#if showCountHint}
+					<div
+						bind:this={hintRef}
+						class="jdg-overlay-carousel-hint jdg-overlay-carousel-hint-above-slot"
+						aria-hidden="true"
+					>
+						{#if $isMobileBreakpoint}
+							<i class="fa-solid fa-angle-left"></i>
+						{/if}
+						<span>{$carouselNav.currentIndex} of {$carouselNav.totalCount}</span>
+						{#if $isMobileBreakpoint}
+							<i class="fa-solid fa-angle-right"></i>
+						{/if}
+					</div>
+				{/if}
 				<div
 					class="jdg-overlay-carousel-slot-wrapper"
 					class:jdg-overlay-carousel-slot-slide-next={slotAnimating === 'next'}
@@ -278,9 +293,16 @@
 		font-size: 0.75rem;
 		box-sizing: border-box;
 	}
+	/* Hide only the top-of-overlay hint on desktop; keep the above-slot hint visible */
 	@media (min-width: 768px) {
-		.jdg-overlay-carousel-hint {
+		.jdg-overlay-carousel-hint:not(.jdg-overlay-carousel-hint-above-slot) {
 			display: none;
+		}
+	}
+	/* Desktop: count only, no gap needed; mobile keeps base gap for arrows */
+	@media (min-width: 768px) {
+		.jdg-overlay-carousel-hint-above-slot {
+			gap: 0;
 		}
 	}
 	.jdg-overlay-carousel-row {
@@ -290,6 +312,7 @@
 		flex: 1 1 auto;
 		min-height: 0;
 		width: 100%;
+		margin-bottom: 10px;
 	}
 	/* matches jdgBreakpoints.width[0] */
 	@media (max-width: 768px) {
@@ -298,15 +321,51 @@
 		}
 	}
 	.jdg-overlay-carousel-center {
+		display: flex;
+		flex-direction: column;
 		flex: 0 0 auto;
-		justify-content: center;
+		align-items: center;
 		max-height: 100%;
 	}
 	.jdg-overlay-carousel-slot-wrapper {
 		display: flex;
+		flex-direction: column;
+		flex: 1 1 auto;
+		min-height: 0;
 		align-items: center;
-		justify-content: center;
+		justify-content: flex-start;
 		max-height: 100%;
+	}
+	/* Desktop/tablet: slot wrapper content-sized; center column vertically centers hint + modal */
+	@media (min-width: 768px) {
+		.jdg-overlay-carousel-center {
+			justify-content: center;
+		}
+		.jdg-overlay-carousel-slot-wrapper {
+			flex: 0 0 auto;
+		}
+	}
+	/* Mobile only: slot content (e.g. modal) at top and grows to fill — no gap above or below */
+	@media (max-width: 768px) {
+		.jdg-overlay-carousel-slot-wrapper > :global(*) {
+			flex: 1 1 auto;
+			min-height: 0;
+			align-self: stretch;
+			align-items: stretch;
+			justify-content: center;
+		}
+		.jdg-overlay-carousel-slot-wrapper > :global(*) > :global(*) {
+			flex: 1 1 auto;
+			min-height: 0;
+			align-items: stretch;
+			justify-content: center;
+		}
+		.jdg-overlay-carousel-slot-wrapper > :global(*) > :global(*) > :global(*) {
+			flex: 1 1 auto;
+			min-height: 0;
+			align-self: stretch;
+			max-height: 100%;
+		}
 	}
 	.jdg-overlay-carousel-slot-wrapper.jdg-overlay-carousel-slot-slide-next {
 		animation: jdg-overlay-carousel-slide-from-right 0.28s ease-out forwards;
