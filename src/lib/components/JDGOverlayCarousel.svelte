@@ -190,9 +190,7 @@
 
 	// Count above slot: same on mobile and desktop
 	$: showCountHint =
-		$carouselNav &&
-		$carouselNav.currentIndex != null &&
-		$carouselNav.totalCount != null;
+		$carouselNav && $carouselNav.currentIndex != null && $carouselNav.totalCount != null;
 </script>
 
 <JDGOverlay {colorRgba} {showTitleBar} {onCloseFunction} {closeOnOverlayClick} {useBlur}>
