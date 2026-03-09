@@ -452,6 +452,9 @@
 		<JDGBodyCopy textAlign="center" paddingBottom="0" paddingTop="0">
 			<b>2 ITEMS</b>
 		</JDGBodyCopy>
+		<JDGBodyCopy textAlign="center" paddingBottom="0">
+			ImageTiles<br />CROPPING ALLOWED
+		</JDGBodyCopy>
 		<JDGGridLayout>
 			<JDGImageTile
 				imageMeta={imageMetaRegistry.hst.ehs_1920_broadway_northeast}
@@ -462,6 +465,24 @@
 				showCaption={true}
 			/>
 		</JDGGridLayout>
+		<JDGBodyCopy textAlign="center" paddingBottom="0">
+			ImageTiles<br />NO CROPPING
+		</JDGBodyCopy>
+		<JDGGridLayout>
+			<JDGImageTile
+				imageMeta={imageMetaRegistry.hst.ehs_1920_broadway_northeast}
+				cropToFillContainer={false}
+				showCaption={true}
+			/>
+			<JDGImageTile
+				imageMeta={imageMetaRegistry.hst.fms_2013_broadway_northeast}
+				cropToFillContainer={false}
+				showCaption={true}
+			/>
+		</JDGGridLayout>
+		<JDGBodyCopy textAlign="center" paddingBottom="0">
+			ImageCompare with ImageTile<br />NO CROPPING so heights may differ
+		</JDGBodyCopy>
 		<JDGGridLayout>
 			<JDGImageCompare
 				imageMeta1={imageMetaRegistry.ccp_blue_mall_60s70s_1}
