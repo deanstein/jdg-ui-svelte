@@ -265,7 +265,39 @@
 		<JDGBodyCopy textAlign="center">
 			<b>IMAGE TILE</b>
 			<br />
-			No fill container, show blur, show caption/attribution
+			CROPPING ALLOWED
+			<br /><br />
+			<JDGImageTile
+				imageMeta={imageMetaRegistry.hst.ehs_1920_broadway_northeast}
+				showCaption={true}
+			/>
+			<br />
+			<JDGImageTile
+				imageMeta={imageMetaRegistry.hst.fms_2013_broadway_northeast}
+				showCaption={true}
+			/>
+		</JDGBodyCopy>
+		<JDGBodyCopy textAlign="center">
+			<b>IMAGE TILE</b>
+			<br />
+			NO CROPPING
+			<br /><br />
+			<JDGImageTile
+				imageMeta={imageMetaRegistry.hst.ehs_1920_broadway_northeast}
+				showCaption={true}
+				cropToFillContainer={false}
+			/>
+			<br />
+			<JDGImageTile
+				imageMeta={imageMetaRegistry.hst.fms_2013_broadway_northeast}
+				showCaption={true}
+				cropToFillContainer={false}
+			/>
+		</JDGBodyCopy>
+		<JDGBodyCopy textAlign="center">
+			<b>IMAGE TILE</b>
+			<br />
+			NO CROPPING, show blur, show caption/attribution
 			<br />
 			Inside BodyCopy
 			<br /><br />
@@ -280,7 +312,7 @@
 		<JDGBodyCopy textAlign="center">
 			<b>IMAGE TILE</b>
 			<br />
-			No fill container, no blur in unfilled space
+			NO CROPPING, no blur in unfilled space
 			<br />
 			Inside BodyCopy
 			<br /><br />
@@ -294,7 +326,7 @@
 		<JDGBodyCopy textAlign="center" paddingBottom="0">
 			<b>IMAGE TILE</b>
 			<br />
-			No fill container, no blur in unfilled space, no caption/attr
+			NO CROPPING, no blur in unfilled space, no caption/attr
 			<br />
 			Clicking goes to "./about"
 		</JDGBodyCopy>
