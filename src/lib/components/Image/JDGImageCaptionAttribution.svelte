@@ -219,15 +219,18 @@
 
 {#if imageMeta.caption || imageMeta.attribution || (showDate && formattedDateDisplay)}
 	<div bind:this={availableWidthRef} class="jdg-caption-attribution-available-width-ref">
+		<!-- svelte-ignore a11y-no-noninteractive-tabindex -- role and tabindex are only set when isCaptionTooLong (expand/collapse is available) -->
 		<div
 			class="jdg-caption-attribution-container {captionAttributionContainerCss} {captionAttributionContainerDynamicCss} {textWidthSizingCss}"
 			on:click|stopPropagation={(event) => {
 				event.stopPropagation();
-				toggleCaptionTruncation();
+				if (isCaptionTooLong) {
+					toggleCaptionTruncation();
+				}
 			}}
 			on:keypress={() => {}}
-			role="button"
-			tabindex="0"
+			role={isCaptionTooLong ? 'button' : undefined}
+			tabindex={isCaptionTooLong ? 0 : undefined}
 		>
 			<div class="caption-attribution-grid-container">
 				{#if showCaption && imageMeta.caption}
