@@ -54,7 +54,10 @@
 </JDGContentContainer>
 <JDGContentContainer paddingTop="0">
 	<JDGContentBoxFloating animateWhenVisible={false} paddingTop="0px">
-		<div class="hero-image-overlap" style={`margin-top: -${currentImageHeight * heroOverlapMultiplier}px;`}>
+		<div
+			class="hero-image-overlap"
+			style={`margin-top: -${currentImageHeight * heroOverlapMultiplier}px;`}
+		>
 			<JDGGridLayout>
 				<JDGImageTile
 					imageMeta={imageMetaRegistry.exp.corporate_showroom_corner}
