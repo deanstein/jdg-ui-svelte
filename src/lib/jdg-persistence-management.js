@@ -538,9 +538,14 @@ export const writeImageMetaEntryToRepo = async (repoName, registryKey, imageMeta
 			throw new Error(`Registry file not found in any expected location`);
 		}
 
-		// Filter out undefined/null values, keep everything else from the schema
+		// Filter out undefined/null and runtime-only fields (e.g. key from gallery's flattenRegistry)
 		const cleanImageMeta = Object.fromEntries(
-			Object.entries(imageMeta).filter(([_, value]) => value !== undefined && value !== null)
+			Object.entries(imageMeta).filter(
+				([k, value]) =>
+					value !== undefined &&
+					value !== null &&
+					k !== 'key' // key is registry lookup helper, not part of persisted schema
+			)
 		);
 
 		// Handle both top-level and nested keys
