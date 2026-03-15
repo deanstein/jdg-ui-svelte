@@ -605,7 +605,6 @@
     "isApprxDate": false,
     "showBackgroundBlur": true,
     "toolbarJustification": "right",
-    "version": "0.7.1",
-    "key": "ccp_watermark"
+    "version": "0.7.1"
   }
 }
