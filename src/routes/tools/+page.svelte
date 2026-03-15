@@ -63,7 +63,7 @@
 
 	let fileInput;
 	let images = /** @type {{ id: string; file: File; objectUrl: string }[]} */ ([]);
-	let watermarkType = 'text'; // 'image' | 'text'
+	let watermarkType = 'image'; // 'image' | 'text'
 	let watermarkUrl = defaultWatermarkUrl;
 	let watermarkText = 'The Cinderella City Project';
 	let watermarkTextSize = 2;
@@ -72,13 +72,51 @@
 	let opacity = 0.4;
 	let blendMode = 'normal';
 	let verticalPlacement = 'bottom';
-	let horizontalPlacement = 'left';
+	let horizontalPlacement = 'center';
 	let paddingPx = 24;
+	let watermarkImageSize = 10;
+	let watermarkImageSizeUnit = '%'; // 'px' | '%'
 	let selectedId = null;
 	let dragActive = false;
 	let watermarkImgEl = null;
+	let previewBaseRef = null;
+	let previewImageHeight = 600; // fallback until we measure
+	let resizeObserver = null;
 
 	$: selectedImage = images.find((img) => img.id === selectedId) ?? images[0] ?? null;
+	// Reset when image changes so we recalc when new image is measured
+	$: selectedImage && (previewImageHeight = 600);
+
+	function updatePreviewImageHeight() {
+		if (previewBaseRef) {
+			const h = previewBaseRef.getBoundingClientRect().height;
+			if (h > 0) previewImageHeight = h;
+		}
+	}
+
+	function handlePreviewImageLoad() {
+		// Read height after layout: load fires before layout is final, so defer
+		requestAnimationFrame(() => {
+			requestAnimationFrame(() => {
+				updatePreviewImageHeight();
+				// Keep height in sync when preview resizes (e.g. window resize)
+				if (previewBaseRef && resizeObserver) resizeObserver.disconnect();
+				if (previewBaseRef) {
+					resizeObserver = new ResizeObserver(updatePreviewImageHeight);
+					resizeObserver.observe(previewBaseRef);
+				}
+			});
+		});
+	}
+
+	// Image preview: when unit is %, use % of actual displayed preview image height
+	$: imagePreviewMaxSize =
+		watermarkImageSizeUnit === '%'
+			? `${((previewImageHeight || 600) * watermarkImageSize) / 100}px`
+			: `${watermarkImageSize}px`;
+
+	// Reactive so placement/opacity/padding changes update the preview immediately
+	$: watermarkWrapperStyle = getWatermarkWrapperStyle();
 
 	// For preview, % is interpreted relative to 600px preview height so it matches export scale
 	$: textPreviewFontSize =
@@ -167,15 +205,19 @@
 		canvas.height = h;
 		ctx.drawImage(sourceImg, 0, 0);
 
-		const maxWmWidth = Math.floor(w * 0.3);
-		const maxWmHeight = Math.floor(h * 0.2);
+		// % = logo height is that % of image height; px = logo fits in that many px (longer side)
+		const maxLogoHeight =
+			watermarkImageSizeUnit === '%'
+				? Math.floor(h * (watermarkImageSize / 100))
+				: Math.min(watermarkImageSize, Math.min(w, h));
 		let wmW = watermarkImg.naturalWidth;
 		let wmH = watermarkImg.naturalHeight;
-		if (wmW > maxWmWidth || wmH > maxWmHeight) {
-			const scale = Math.min(maxWmWidth / wmW, maxWmHeight / wmH);
-			wmW = Math.floor(wmW * scale);
-			wmH = Math.floor(wmH * scale);
-		}
+		const scale =
+			watermarkImageSizeUnit === '%'
+				? maxLogoHeight / wmH
+				: Math.min(1, maxLogoHeight / Math.max(wmW, wmH));
+		wmW = Math.floor(wmW * scale);
+		wmH = Math.floor(wmH * scale);
 
 		let x = paddingPx;
 		if (horizontalPlacement === 'center') x = (w - wmW) / 2;
@@ -254,9 +296,9 @@
 			} else {
 				drawTextWatermarkedCanvas(sourceImg, canvas);
 			}
-			const name = item.file.name.replace(/\.[^/.]+$/, '') || 'image';
+			const baseName = item.file.name.replace(/\.[^/.]+$/, '') || 'image';
 			const a = document.createElement('a');
-			a.download = `watermarked-${name}.png`;
+			a.download = `${baseName}_watermark.png`;
 			a.href = canvas.toDataURL('image/png');
 			a.click();
 		} catch (e) {
@@ -277,6 +319,7 @@
 	}
 
 	onDestroy(() => {
+		resizeObserver?.disconnect();
 		images.forEach((img) => URL.revokeObjectURL(img.objectUrl));
 	});
 </script>
@@ -379,6 +422,24 @@ yarn convert-image-registry-to-json --help</pre>
 						bind:value={watermarkUrl}
 						placeholder="https://res.cloudinary.com/..."
 					/>
+				</JDGInputContainer>
+				<JDGInputContainer label="Logo size">
+					<div class="size-row">
+						<input
+							type="number"
+							class="number-input"
+							min="1"
+							max={watermarkImageSizeUnit === '%' ? 100 : 800}
+							bind:value={watermarkImageSize}
+						/>
+						<select class="select-input size-unit" bind:value={watermarkImageSizeUnit}>
+							<option value="%">%</option>
+							<option value="px">px</option>
+						</select>
+					</div>
+					{#if watermarkImageSizeUnit === '%'}
+						<span class="size-hint">% of image height</span>
+					{/if}
 				</JDGInputContainer>
 				<JDGInputContainer label="Blend mode">
 					<select class="select-input" bind:value={blendMode}>
@@ -520,13 +581,19 @@ yarn convert-image-registry-to-json --help</pre>
 			{#if selectedImage}
 				<div class="preview-wrapper">
 					<div class="preview-inner" style="position: relative;">
-						<img class="preview-base" src={selectedImage.objectUrl} alt="Preview" />
+						<img
+							class="preview-base"
+							bind:this={previewBaseRef}
+							src={selectedImage.objectUrl}
+							alt="Preview"
+							on:load={handlePreviewImageLoad}
+						/>
 						{#if watermarkType === 'image' && watermarkUrl}
-							<div class="watermark-wrapper" style={getWatermarkWrapperStyle()}>
+							<div class="watermark-wrapper" style={watermarkWrapperStyle}>
 								<img
 									bind:this={watermarkImgEl}
 									class="watermark-img"
-									style="opacity: {opacity}; mix-blend-mode: {blendMode}; max-width: 30%; max-height: 20%; object-fit: contain;"
+									style="opacity: {opacity}; mix-blend-mode: {blendMode}; max-height: {imagePreviewMaxSize}; {watermarkImageSizeUnit === '%' ? 'max-width: none;' : 'max-width: ' + imagePreviewMaxSize + ';'} object-fit: contain;"
 									src={watermarkUrl}
 									alt="Watermark"
 								/>
@@ -534,7 +601,7 @@ yarn convert-image-registry-to-json --help</pre>
 						{:else if watermarkType === 'text' && watermarkText}
 							<div
 								class="watermark-wrapper watermark-text-preview"
-								style={getWatermarkWrapperStyle()}
+								style={watermarkWrapperStyle}
 							>
 								<span
 									class="watermark-text"
@@ -645,6 +712,12 @@ yarn convert-image-registry-to-json --help</pre>
 	}
 	.size-unit {
 		width: 4rem;
+	}
+	.size-hint {
+		display: block;
+		font-size: 0.85rem;
+		color: #666;
+		margin-top: 0.25rem;
 	}
 	.watermark-text-preview {
 		white-space: nowrap;
