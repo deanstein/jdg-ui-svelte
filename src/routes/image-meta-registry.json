@@ -594,5 +594,17 @@
     "showBackgroundBlur": true,
     "toolbarJustification": "right",
     "version": "0.7.1"
+  },
+  "ccp_watermark": {
+    "id": "f7cae9f3-69b5-48b1-8410-ac145dcc03ea",
+    "src": "https://res.cloudinary.com/jdg-main/image/upload/v1773553456/jdg-ui-svelte/ccp-watermark.png",
+    "caption": "The Cinderella City Project",
+    "attribution": "",
+    "alt": "The Cinderella City Project",
+    "title": "",
+    "isApprxDate": false,
+    "showBackgroundBlur": true,
+    "toolbarJustification": "right",
+    "version": "0.7.1"
   }
 }
