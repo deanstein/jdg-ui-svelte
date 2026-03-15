@@ -51,20 +51,40 @@
 		{ value: 'multiply', label: 'Multiply' },
 		{ value: 'screen', label: 'Screen' }
 	];
+	const WATERMARK_FONTS = [
+		{ value: 'REM', label: 'REM' },
+		{ value: 'Righteous', label: 'Righteous' },
+		{ value: 'Arial', label: 'Arial' },
+		{ value: 'Helvetica', label: 'Helvetica' },
+		{ value: 'Georgia', label: 'Georgia' },
+		{ value: 'Times New Roman', label: 'Times New Roman' },
+		{ value: 'system-ui', label: 'System UI' }
+	];
 
 	let fileInput;
 	let images = /** @type {{ id: string; file: File; objectUrl: string }[]} */ ([]);
+	let watermarkType = 'text'; // 'image' | 'text'
 	let watermarkUrl = defaultWatermarkUrl;
-	let opacity = 0.7;
+	let watermarkText = 'The Cinderella City Project';
+	let watermarkTextSize = 2;
+	let watermarkTextSizeUnit = '%'; // 'px' | '%'
+	let watermarkTextFont = 'Righteous';
+	let opacity = 0.4;
 	let blendMode = 'normal';
 	let verticalPlacement = 'bottom';
-	let horizontalPlacement = 'center';
+	let horizontalPlacement = 'left';
 	let paddingPx = 24;
 	let selectedId = null;
 	let dragActive = false;
 	let watermarkImgEl = null;
 
 	$: selectedImage = images.find((img) => img.id === selectedId) ?? images[0] ?? null;
+
+	// For preview, % is interpreted relative to 600px preview height so it matches export scale
+	$: textPreviewFontSize =
+		watermarkTextSizeUnit === '%'
+			? `${(600 * watermarkTextSize) / 100}px`
+			: `${watermarkTextSize}px`;
 
 	function addFiles(fileList) {
 		if (!fileList?.length) return;
@@ -172,6 +192,42 @@
 		ctx.globalCompositeOperation = 'source-over';
 	}
 
+	function drawTextWatermarkedCanvas(sourceImg, canvas) {
+		const ctx = canvas.getContext('2d');
+		if (!ctx || !watermarkText.trim()) return;
+		const w = sourceImg.naturalWidth;
+		const h = sourceImg.naturalHeight;
+		canvas.width = w;
+		canvas.height = h;
+		ctx.drawImage(sourceImg, 0, 0);
+
+		const fontSizePx =
+			watermarkTextSizeUnit === '%' ? Math.round((h * watermarkTextSize) / 100) : watermarkTextSize;
+		ctx.font = `${fontSizePx}px ${watermarkTextFont}`;
+		ctx.textAlign =
+			horizontalPlacement === 'center'
+				? 'center'
+				: horizontalPlacement === 'right'
+					? 'right'
+					: 'left';
+		ctx.textBaseline =
+			verticalPlacement === 'center' ? 'middle' : verticalPlacement === 'bottom' ? 'bottom' : 'top';
+		ctx.fillStyle = 'rgba(255, 255, 255, ' + opacity + ')';
+		ctx.strokeStyle = 'rgba(0, 0, 0, ' + opacity * 0.5 + ')';
+		ctx.lineWidth = Math.max(1, Math.floor(fontSizePx / 20));
+
+		let x = paddingPx;
+		if (horizontalPlacement === 'center') x = w / 2;
+		else if (horizontalPlacement === 'right') x = w - paddingPx;
+
+		let y = paddingPx;
+		if (verticalPlacement === 'center') y = h / 2;
+		else if (verticalPlacement === 'bottom') y = h - paddingPx;
+
+		ctx.strokeText(watermarkText, x, y);
+		ctx.fillText(watermarkText, x, y);
+	}
+
 	function loadImage(src, crossOrigin = false) {
 		return new Promise((resolve, reject) => {
 			const img = new Image();
@@ -182,13 +238,22 @@
 		});
 	}
 
+	function hasWatermark() {
+		if (watermarkType === 'image') return !!watermarkUrl;
+		return !!watermarkText.trim();
+	}
+
 	async function downloadOne(item) {
-		if (!item || !watermarkUrl) return;
+		if (!item || !hasWatermark()) return;
 		try {
 			const sourceImg = await loadImage(item.objectUrl);
-			const watermarkImg = await loadImage(watermarkUrl, true);
 			const canvas = document.createElement('canvas');
-			drawWatermarkedCanvas(sourceImg, watermarkImg, canvas);
+			if (watermarkType === 'image') {
+				const watermarkImg = await loadImage(watermarkUrl, true);
+				drawWatermarkedCanvas(sourceImg, watermarkImg, canvas);
+			} else {
+				drawTextWatermarkedCanvas(sourceImg, canvas);
+			}
 			const name = item.file.name.replace(/\.[^/.]+$/, '') || 'image';
 			const a = document.createElement('a');
 			a.download = `watermarked-${name}.png`;
@@ -196,12 +261,16 @@
 			a.click();
 		} catch (e) {
 			console.error(e);
-			alert('Download failed. If the watermark is from another domain, it may be blocked by CORS.');
+			alert(
+				watermarkType === 'image'
+					? 'Download failed. If the watermark is from another domain, it may be blocked by CORS.'
+					: 'Download failed.'
+			);
 		}
 	}
 
 	async function downloadAll() {
-		if (!images.length || !watermarkUrl) return;
+		if (!images.length || !hasWatermark()) return;
 		for (const item of images) {
 			await downloadOne(item);
 		}
@@ -289,14 +358,68 @@ yarn convert-image-registry-to-json --help</pre>
 		</JDGBodyCopy>
 
 		<div class="watermark-options">
-			<JDGInputContainer label="Watermark image URL">
-				<input
-					type="url"
-					class="text-input"
-					bind:value={watermarkUrl}
-					placeholder="https://res.cloudinary.com/..."
-				/>
+			<JDGInputContainer label="Watermark type">
+				<div class="radio-group">
+					<label class="radio-label">
+						<input type="radio" name="watermarkType" value="image" bind:group={watermarkType} />
+						Image
+					</label>
+					<label class="radio-label">
+						<input type="radio" name="watermarkType" value="text" bind:group={watermarkType} />
+						Text
+					</label>
+				</div>
 			</JDGInputContainer>
+
+			{#if watermarkType === 'image'}
+				<JDGInputContainer label="Watermark image URL">
+					<input
+						type="url"
+						class="text-input"
+						bind:value={watermarkUrl}
+						placeholder="https://res.cloudinary.com/..."
+					/>
+				</JDGInputContainer>
+				<JDGInputContainer label="Blend mode">
+					<select class="select-input" bind:value={blendMode}>
+						{#each BLEND_OPTIONS as opt}
+							<option value={opt.value}>{opt.label}</option>
+						{/each}
+					</select>
+				</JDGInputContainer>
+			{:else}
+				<JDGInputContainer label="Watermark text">
+					<input
+						type="text"
+						class="text-input"
+						bind:value={watermarkText}
+						placeholder="e.g. © Your Name"
+					/>
+				</JDGInputContainer>
+				<JDGInputContainer label="Text size">
+					<div class="size-row">
+						<input
+							type="number"
+							class="number-input"
+							min="1"
+							max={watermarkTextSizeUnit === '%' ? 100 : 200}
+							bind:value={watermarkTextSize}
+						/>
+						<select class="select-input size-unit" bind:value={watermarkTextSizeUnit}>
+							<option value="px">px</option>
+							<option value="%">%</option>
+						</select>
+					</div>
+				</JDGInputContainer>
+				<JDGInputContainer label="Font">
+					<select class="select-input" bind:value={watermarkTextFont}>
+						{#each WATERMARK_FONTS as opt}
+							<option value={opt.value}>{opt.label}</option>
+						{/each}
+					</select>
+				</JDGInputContainer>
+			{/if}
+
 			<JDGInputContainer label="Opacity">
 				<input
 					type="range"
@@ -307,13 +430,6 @@ yarn convert-image-registry-to-json --help</pre>
 					bind:value={opacity}
 				/>
 				<span class="range-value">{Math.round(opacity * 100)}%</span>
-			</JDGInputContainer>
-			<JDGInputContainer label="Blend mode">
-				<select class="select-input" bind:value={blendMode}>
-					{#each BLEND_OPTIONS as opt}
-						<option value={opt.value}>{opt.label}</option>
-					{/each}
-				</select>
 			</JDGInputContainer>
 			<div class="row-inputs">
 				<JDGInputContainer label="Vertical">
@@ -364,14 +480,14 @@ yarn convert-image-registry-to-json --help</pre>
 					label="Download current"
 					faIcon="fa-download"
 					onClickFunction={() => downloadOne(selectedImage)}
-					isEnabled={!!selectedImage && !!watermarkUrl}
+					isEnabled={!!selectedImage && hasWatermark()}
 					isPrimary={true}
 				/>
 				<JDGButton
 					label="Download all"
 					faIcon="fa-download"
 					onClickFunction={downloadAll}
-					isEnabled={!!watermarkUrl}
+					isEnabled={hasWatermark()}
 					isPrimary={false}
 				/>
 				<JDGButton
@@ -405,7 +521,7 @@ yarn convert-image-registry-to-json --help</pre>
 				<div class="preview-wrapper">
 					<div class="preview-inner" style="position: relative;">
 						<img class="preview-base" src={selectedImage.objectUrl} alt="Preview" />
-						{#if watermarkUrl}
+						{#if watermarkType === 'image' && watermarkUrl}
 							<div class="watermark-wrapper" style={getWatermarkWrapperStyle()}>
 								<img
 									bind:this={watermarkImgEl}
@@ -414,6 +530,18 @@ yarn convert-image-registry-to-json --help</pre>
 									src={watermarkUrl}
 									alt="Watermark"
 								/>
+							</div>
+						{:else if watermarkType === 'text' && watermarkText}
+							<div
+								class="watermark-wrapper watermark-text-preview"
+								style={getWatermarkWrapperStyle()}
+							>
+								<span
+									class="watermark-text"
+									style="opacity: {opacity}; font-family: {watermarkTextFont}; font-size: {textPreviewFontSize}; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.5);"
+								>
+									{watermarkText}
+								</span>
 							</div>
 						{/if}
 					</div>
@@ -494,6 +622,35 @@ yarn convert-image-registry-to-json --help</pre>
 		flex-direction: column;
 		gap: 0;
 		margin-bottom: 1rem;
+	}
+	.radio-group {
+		display: flex;
+		gap: 1rem;
+		align-items: center;
+	}
+	.radio-label {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		cursor: pointer;
+		font-weight: normal;
+	}
+	.size-row {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+	.size-row .number-input {
+		width: 5rem;
+	}
+	.size-unit {
+		width: 4rem;
+	}
+	.watermark-text-preview {
+		white-space: nowrap;
+	}
+	.watermark-text {
+		white-space: nowrap;
 	}
 	.row-inputs {
 		display: flex;
@@ -598,16 +755,28 @@ yarn convert-image-registry-to-json --help</pre>
 
 	.preview-wrapper {
 		margin-top: 1rem;
+		height: 600px;
 		max-width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: #f0f0f0;
 	}
 	.preview-inner {
-		display: inline-block;
+		position: relative;
+		max-height: 100%;
 		max-width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 	.preview-base {
 		display: block;
+		max-height: 600px;
 		max-width: 100%;
+		width: auto;
 		height: auto;
+		object-fit: contain;
 	}
 	.watermark-wrapper {
 		position: absolute;
