@@ -63,7 +63,7 @@
 
 	let fileInput;
 	let images = /** @type {{ id: string; file: File; objectUrl: string }[]} */ ([]);
-	let watermarkType = 'image'; // 'image' | 'text'
+	let watermarkType = 'text'; // 'image' | 'text'
 	let watermarkUrl = defaultWatermarkUrl;
 	let watermarkText = 'The Cinderella City Project';
 	let watermarkTextSize = 2;
@@ -73,8 +73,8 @@
 	let blendMode = 'normal';
 	let improveContrast = true; // dark shadow/halo so logo reads on light and dark areas
 	let verticalPlacement = 'bottom';
-	let horizontalPlacement = 'center';
-	let paddingPx = 24;
+	let horizontalPlacement = 'left';
+	let paddingPx = 12;
 	let watermarkImageSize = 10;
 	let watermarkImageSizeUnit = '%'; // 'px' | '%'
 	let selectedId = null;
@@ -179,11 +179,23 @@
 
 	function getWatermarkWrapperStyle() {
 		const pad = `${paddingPx}px`;
+		const align =
+			verticalPlacement === 'top'
+				? 'flex-start'
+				: verticalPlacement === 'bottom'
+					? 'flex-end'
+					: 'center';
+		const justify =
+			horizontalPlacement === 'left'
+				? 'flex-start'
+				: horizontalPlacement === 'right'
+					? 'flex-end'
+					: 'center';
 		const parts = [
 			'position: absolute',
 			'display: flex',
-			'align-items: center',
-			'justify-content: center',
+			`align-items: ${align}`,
+			`justify-content: ${justify}`,
 			'pointer-events: none'
 		];
 		if (verticalPlacement === 'top') parts.push(`top: ${pad}`);
@@ -743,6 +755,8 @@ yarn convert-image-registry-to-json --help</pre>
 	}
 	.watermark-text {
 		white-space: nowrap;
+		line-height: 1;
+		display: block;
 	}
 	.row-inputs {
 		display: flex;
