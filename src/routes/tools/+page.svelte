@@ -71,6 +71,7 @@
 	let watermarkTextFont = 'Righteous';
 	let opacity = 0.4;
 	let blendMode = 'normal';
+	let improveContrast = true; // dark shadow/halo so logo reads on light and dark areas
 	let verticalPlacement = 'bottom';
 	let horizontalPlacement = 'center';
 	let paddingPx = 24;
@@ -117,6 +118,7 @@
 
 	// Reactive so placement/opacity/padding changes update the preview immediately
 	$: watermarkWrapperStyle = getWatermarkWrapperStyle();
+	$: watermarkImgFilter = improveContrast ? 'drop-shadow(0 0 6px rgba(0,0,0,0.75))' : 'none';
 
 	// For preview, % is interpreted relative to 600px preview height so it matches export scale
 	$: textPreviewFontSize =
@@ -227,11 +229,22 @@
 		if (verticalPlacement === 'center') y = (h - wmH) / 2;
 		else if (verticalPlacement === 'bottom') y = h - wmH - paddingPx;
 
+		ctx.save();
+		if (improveContrast) {
+			// Dark halo so white logo stays readable on both light and dark backgrounds
+			const shadowBlur = Math.max(2, Math.floor(wmH / 15));
+			ctx.shadowColor = 'rgba(0, 0, 0, 0.75)';
+			ctx.shadowBlur = shadowBlur;
+			ctx.shadowOffsetX = 0;
+			ctx.shadowOffsetY = 0;
+			ctx.drawImage(watermarkImg, x, y, wmW, wmH);
+			ctx.shadowColor = 'transparent';
+			ctx.shadowBlur = 0;
+		}
 		ctx.globalAlpha = opacity;
 		ctx.globalCompositeOperation = blendMode;
 		ctx.drawImage(watermarkImg, x, y, wmW, wmH);
-		ctx.globalAlpha = 1;
-		ctx.globalCompositeOperation = 'source-over';
+		ctx.restore();
 	}
 
 	function drawTextWatermarkedCanvas(sourceImg, canvas) {
@@ -448,6 +461,12 @@ yarn convert-image-registry-to-json --help</pre>
 						{/each}
 					</select>
 				</JDGInputContainer>
+				<JDGInputContainer label="Improve contrast">
+					<label class="radio-label">
+						<input type="checkbox" bind:checked={improveContrast} />
+						Add dark outline so logo reads on any background
+					</label>
+				</JDGInputContainer>
 			{:else}
 				<JDGInputContainer label="Watermark text">
 					<input
@@ -593,7 +612,7 @@ yarn convert-image-registry-to-json --help</pre>
 								<img
 									bind:this={watermarkImgEl}
 									class="watermark-img"
-									style="opacity: {opacity}; mix-blend-mode: {blendMode}; max-height: {imagePreviewMaxSize}; {watermarkImageSizeUnit === '%' ? 'max-width: none;' : 'max-width: ' + imagePreviewMaxSize + ';'} object-fit: contain;"
+									style="opacity: {opacity}; mix-blend-mode: {blendMode}; filter: {watermarkImgFilter}; max-height: {imagePreviewMaxSize}; {watermarkImageSizeUnit === '%' ? 'max-width: none;' : 'max-width: ' + imagePreviewMaxSize + ';'} object-fit: contain;"
 									src={watermarkUrl}
 									alt="Watermark"
 								/>
