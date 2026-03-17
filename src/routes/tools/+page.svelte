@@ -9,7 +9,6 @@
 		JDGButton,
 		JDGContentBoxFloating,
 		JDGContentContainer,
-		JDGH3H4,
 		JDGInputContainer,
 		JDGJumpTo
 	} from '$lib/index.js';
@@ -64,10 +63,10 @@
 
 	let fileInput;
 	let images = /** @type {{ id: string; file: File; objectUrl: string }[]} */ ([]);
-	let watermarkType = 'image'; // 'image' | 'text'
+	let watermarkType = 'image'; // 'image' | 'text' | 'image+text'
 	let watermarkUrl = defaultWatermarkUrl;
 	let watermarkText = 'The Cinderella City Project';
-	let watermarkTextSize = 2;
+	let watermarkTextSize = 1.8;
 	let watermarkTextSizeUnit = '%'; // 'px' | '%'
 	let watermarkTextFont = 'Righteous';
 	let opacity = 0.4;
@@ -78,6 +77,8 @@
 	let paddingPx = 12;
 	let watermarkImageSize = 3;
 	let watermarkImageSizeUnit = '%'; // 'px' | '%'
+	let watermarkDivider = ' | ';
+	let comboGapPx = 8; // padding between logo, divider, and text for Image + text
 	let selectedId = null;
 	let dragActive = false;
 	let watermarkImgEl = null;
@@ -314,6 +315,90 @@
 		ctx.fillText(watermarkText, x, y);
 	}
 
+	function drawImageTextWatermarkedCanvas(sourceImg, watermarkImg, canvas) {
+		const ctx = canvas.getContext('2d');
+		if (!ctx || !watermarkUrl || !watermarkText.trim()) return;
+		const w = sourceImg.naturalWidth;
+		const h = sourceImg.naturalHeight;
+		canvas.width = w;
+		canvas.height = h;
+		ctx.drawImage(sourceImg, 0, 0);
+
+		const minSide = Math.min(w, h);
+		const effectivePadding = Math.max(2, Math.round((paddingPx * minSide) / 600));
+		const effectiveComboGap = Math.max(2, Math.round((comboGapPx * minSide) / 600));
+
+		// Logo size (same as image-only)
+		const maxLogoHeight =
+			watermarkImageSizeUnit === '%'
+				? Math.floor(h * (watermarkImageSize / 100))
+				: Math.min(watermarkImageSize, Math.min(w, h));
+		let wmW = watermarkImg.naturalWidth;
+		let wmH = watermarkImg.naturalHeight;
+		const scale =
+			watermarkImageSizeUnit === '%'
+				? maxLogoHeight / wmH
+				: Math.min(1, maxLogoHeight / Math.max(wmW, wmH));
+		wmW = Math.floor(wmW * scale);
+		wmH = Math.floor(wmH * scale);
+
+		const fontSizePx =
+			watermarkTextSizeUnit === '%' ? Math.round((h * watermarkTextSize) / 100) : watermarkTextSize;
+		ctx.font = `${fontSizePx}px ${watermarkTextFont}`;
+		const dividerWidth = ctx.measureText(watermarkDivider).width;
+		const textWidth = ctx.measureText(watermarkText).width;
+		const rowWidth = wmW + effectiveComboGap + dividerWidth + effectiveComboGap + textWidth;
+		const rowHeight = Math.max(wmH, fontSizePx * 1.2);
+
+		let startX = effectivePadding;
+		if (horizontalPlacement === 'center') startX = (w - rowWidth) / 2;
+		else if (horizontalPlacement === 'right') startX = w - rowWidth - effectivePadding;
+
+		let startY = effectivePadding;
+		if (verticalPlacement === 'center') startY = (h - rowHeight) / 2;
+		else if (verticalPlacement === 'bottom') startY = h - rowHeight - effectivePadding;
+
+		const logoY = startY + (rowHeight - wmH) / 2;
+		// Use the logo's vertical center so image and text sit on the same horizontal line
+		const centerY = logoY + wmH / 2;
+
+		ctx.imageSmoothingEnabled = true;
+		ctx.imageSmoothingQuality = 'high';
+		const alpha = Number(opacity);
+		const safeAlpha = Number.isFinite(alpha) ? Math.max(0, Math.min(1, alpha)) : 0.4;
+
+		// Draw logo (shadow only then logo at opacity)
+		ctx.save();
+		if (improveContrast) {
+			ctx.shadowColor = 'rgba(0, 0, 0, 0.75)';
+			ctx.shadowBlur = Math.max(2, Math.floor(wmH / 15));
+			ctx.shadowOffsetX = 0;
+			ctx.shadowOffsetY = 0;
+			ctx.globalAlpha = 0;
+			ctx.drawImage(watermarkImg, startX, logoY, wmW, wmH);
+			ctx.shadowColor = 'transparent';
+			ctx.shadowBlur = 0;
+		}
+		ctx.globalAlpha = safeAlpha;
+		ctx.globalCompositeOperation = blendMode === 'normal' ? 'source-over' : blendMode;
+		ctx.drawImage(watermarkImg, startX, logoY, wmW, wmH);
+		ctx.restore();
+
+		// Draw divider and text (same style as text-only watermark)
+		ctx.font = `${fontSizePx}px ${watermarkTextFont}`;
+		ctx.textAlign = 'left';
+		ctx.textBaseline = 'middle';
+		ctx.fillStyle = 'rgba(255, 255, 255, ' + safeAlpha + ')';
+		ctx.strokeStyle = 'rgba(0, 0, 0, ' + safeAlpha * 0.5 + ')';
+		ctx.lineWidth = Math.max(1, Math.floor(fontSizePx / 20));
+		const dividerX = startX + wmW + effectiveComboGap;
+		const textX = dividerX + dividerWidth + effectiveComboGap;
+		ctx.strokeText(watermarkDivider, dividerX, centerY);
+		ctx.fillText(watermarkDivider, dividerX, centerY);
+		ctx.strokeText(watermarkText, textX, centerY);
+		ctx.fillText(watermarkText, textX, centerY);
+	}
+
 	function loadImage(src, crossOrigin = false) {
 		return new Promise((resolve, reject) => {
 			const img = new Image();
@@ -326,6 +411,7 @@
 
 	function hasWatermark() {
 		if (watermarkType === 'image') return !!watermarkUrl;
+		if (watermarkType === 'image+text') return !!watermarkUrl && !!watermarkText.trim();
 		return !!watermarkText.trim();
 	}
 
@@ -335,12 +421,17 @@
 			const sourceImg = await loadImage(item.objectUrl);
 			const canvas = document.createElement('canvas');
 			if (watermarkType === 'image') {
-				// Request high-res watermark from Cloudinary so scaling down stays crisp (avoids pixelation on small exports)
 				const wmUrl = isUrlCloudinary(watermarkUrl)
 					? addCloudinaryUrlWidth(watermarkUrl, 800)
 					: watermarkUrl;
 				const watermarkImg = await loadImage(wmUrl, true);
 				drawWatermarkedCanvas(sourceImg, watermarkImg, canvas);
+			} else if (watermarkType === 'image+text') {
+				const wmUrl = isUrlCloudinary(watermarkUrl)
+					? addCloudinaryUrlWidth(watermarkUrl, 800)
+					: watermarkUrl;
+				const watermarkImg = await loadImage(wmUrl, true);
+				drawImageTextWatermarkedCanvas(sourceImg, watermarkImg, canvas);
 			} else {
 				drawTextWatermarkedCanvas(sourceImg, canvas);
 			}
@@ -352,7 +443,7 @@
 		} catch (e) {
 			console.error(e);
 			alert(
-				watermarkType === 'image'
+				watermarkType === 'image' || watermarkType === 'image+text'
 					? 'Download failed. If the watermark is from another domain, it may be blocked by CORS.'
 					: 'Download failed.'
 			);
@@ -459,6 +550,10 @@ yarn convert-image-registry-to-json --help</pre>
 						<input type="radio" name="watermarkType" value="text" bind:group={watermarkType} />
 						Text
 					</label>
+					<label class="radio-label">
+						<input type="radio" name="watermarkType" value="image+text" bind:group={watermarkType} />
+						Image + text
+					</label>
 				</div>
 			</JDGInputContainer>
 
@@ -492,6 +587,80 @@ yarn convert-image-registry-to-json --help</pre>
 				<JDGInputContainer label="Blend mode">
 					<select class="select-input" bind:value={blendMode}>
 						{#each BLEND_OPTIONS as opt}
+							<option value={opt.value}>{opt.label}</option>
+						{/each}
+					</select>
+				</JDGInputContainer>
+				<JDGInputContainer label="Improve contrast">
+					<label class="radio-label">
+						<input type="checkbox" bind:checked={improveContrast} />
+						Add dark outline so logo reads on any background
+					</label>
+				</JDGInputContainer>
+			{:else if watermarkType === 'image+text'}
+				<JDGInputContainer label="Watermark image URL">
+					<input
+						type="url"
+						class="text-input"
+						bind:value={watermarkUrl}
+						placeholder="https://res.cloudinary.com/..."
+					/>
+				</JDGInputContainer>
+				<JDGInputContainer label="Logo size">
+					<div class="size-row">
+						<input
+							type="number"
+							class="number-input"
+							min="1"
+							max={watermarkImageSizeUnit === '%' ? 100 : 800}
+							bind:value={watermarkImageSize}
+						/>
+						<select class="select-input size-unit" bind:value={watermarkImageSizeUnit}>
+							<option value="%">%</option>
+							<option value="px">px</option>
+						</select>
+					</div>
+					{#if watermarkImageSizeUnit === '%'}
+						<span class="size-hint">% of image height</span>
+					{/if}
+				</JDGInputContainer>
+				<JDGInputContainer label="Divider">
+					<input
+						type="text"
+						class="text-input divider-input"
+						bind:value={watermarkDivider}
+						placeholder=" | "
+					/>
+				</JDGInputContainer>
+				<JDGInputContainer label="Gap between logo, divider, and text (px)">
+					<input type="number" class="number-input" min="0" max="60" bind:value={comboGapPx} />
+				</JDGInputContainer>
+				<JDGInputContainer label="Watermark text">
+					<input
+						type="text"
+						class="text-input"
+						bind:value={watermarkText}
+						placeholder="e.g. The Cinderella City Project"
+					/>
+				</JDGInputContainer>
+				<JDGInputContainer label="Text size">
+					<div class="size-row">
+						<input
+							type="number"
+							class="number-input"
+							min="1"
+							max={watermarkTextSizeUnit === '%' ? 100 : 200}
+							bind:value={watermarkTextSize}
+						/>
+						<select class="select-input size-unit" bind:value={watermarkTextSizeUnit}>
+							<option value="px">px</option>
+							<option value="%">%</option>
+						</select>
+					</div>
+				</JDGInputContainer>
+				<JDGInputContainer label="Font">
+					<select class="select-input" bind:value={watermarkTextFont}>
+						{#each WATERMARK_FONTS as opt}
 							<option value={opt.value}>{opt.label}</option>
 						{/each}
 					</select>
@@ -664,6 +833,32 @@ yarn convert-image-registry-to-json --help</pre>
 									{watermarkText}
 								</span>
 							</div>
+						{:else if watermarkType === 'image+text' && watermarkUrl && watermarkText}
+							<div
+								class="watermark-wrapper watermark-combo-preview"
+								style={watermarkWrapperStyle}
+							>
+								<img
+									class="watermark-combo-logo"
+									style="opacity: {opacity}; mix-blend-mode: {blendMode}; filter: {watermarkImgFilter}; max-height: {imagePreviewMaxSize}; {watermarkImageSizeUnit === '%' ? 'max-width: none;' : 'max-width: ' + imagePreviewMaxSize + ';'} object-fit: contain;"
+									src={watermarkUrl}
+									alt=""
+								/>
+								<span class="watermark-combo-gap" style="width: {comboGapPx}px;"></span>
+								<span
+									class="watermark-text"
+									style="opacity: {opacity}; font-family: {watermarkTextFont}; font-size: {textPreviewFontSize}; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.5);"
+								>
+									{watermarkDivider}
+								</span>
+								<span class="watermark-combo-gap" style="width: {comboGapPx}px;"></span>
+								<span
+									class="watermark-text"
+									style="opacity: {opacity}; font-family: {watermarkTextFont}; font-size: {textPreviewFontSize}; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.5);"
+								>
+									{watermarkText}
+								</span>
+							</div>
 						{/if}
 					</div>
 				</div>
@@ -775,6 +970,24 @@ yarn convert-image-registry-to-json --help</pre>
 	}
 	.watermark-text-preview {
 		white-space: nowrap;
+	}
+	.watermark-combo-preview {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		white-space: nowrap;
+	}
+	.watermark-combo-preview .watermark-text {
+		align-self: center;
+	}
+	.watermark-combo-logo {
+		display: block;
+		height: auto;
+		vertical-align: middle;
+		align-self: center;
+	}
+	.watermark-combo-gap {
+		flex-shrink: 0;
 	}
 	.watermark-text {
 		white-space: nowrap;
