@@ -3,6 +3,7 @@
 	import { listPackageVersions } from '$lib/tools/list-versions/list-package-versions-client.js';
 	import { allowTextSelection } from '$lib/stores/jdg-ui-store.js';
 	import imageMetaRegistry from '../image-meta-registry.js';
+	import { addCloudinaryUrlWidth, isUrlCloudinary } from '$lib/jdg-utils.js';
 	import {
 		JDGBodyCopy,
 		JDGButton,
@@ -219,6 +220,10 @@
 		canvas.height = h;
 		ctx.drawImage(sourceImg, 0, 0);
 
+		// Scale padding with image size so it matches preview (preview short side ~600px)
+		const minSide = Math.min(w, h);
+		const effectivePadding = Math.max(2, Math.round((paddingPx * minSide) / 600));
+
 		// % = logo height is that % of image height; px = logo fits in that many px (longer side)
 		const maxLogoHeight =
 			watermarkImageSizeUnit === '%'
@@ -233,28 +238,36 @@
 		wmW = Math.floor(wmW * scale);
 		wmH = Math.floor(wmH * scale);
 
-		let x = paddingPx;
+		let x = effectivePadding;
 		if (horizontalPlacement === 'center') x = (w - wmW) / 2;
-		else if (horizontalPlacement === 'right') x = w - wmW - paddingPx;
+		else if (horizontalPlacement === 'right') x = w - wmW - effectivePadding;
 
-		let y = paddingPx;
+		let y = effectivePadding;
 		if (verticalPlacement === 'center') y = (h - wmH) / 2;
-		else if (verticalPlacement === 'bottom') y = h - wmH - paddingPx;
+		else if (verticalPlacement === 'bottom') y = h - wmH - effectivePadding;
 
+		// High-quality scaling when drawing the logo (avoids pixelation)
+		ctx.imageSmoothingEnabled = true;
+		ctx.imageSmoothingQuality = 'high';
+
+		const alpha = Number(opacity);
 		ctx.save();
 		if (improveContrast) {
-			// Dark halo so white logo stays readable on both light and dark backgrounds
+			// Draw shadow only: use alpha 0 so the shape is invisible but the shadow still renders
 			const shadowBlur = Math.max(2, Math.floor(wmH / 15));
 			ctx.shadowColor = 'rgba(0, 0, 0, 0.75)';
 			ctx.shadowBlur = shadowBlur;
 			ctx.shadowOffsetX = 0;
 			ctx.shadowOffsetY = 0;
+			ctx.globalAlpha = 0;
 			ctx.drawImage(watermarkImg, x, y, wmW, wmH);
 			ctx.shadowColor = 'transparent';
 			ctx.shadowBlur = 0;
 		}
-		ctx.globalAlpha = opacity;
-		ctx.globalCompositeOperation = blendMode;
+		// Now draw the logo once at the user's opacity (no previous full-opacity draw under it)
+		ctx.globalAlpha = Number.isFinite(alpha) ? Math.max(0, Math.min(1, alpha)) : 0.4;
+		// Canvas uses 'source-over' for normal blending; 'normal' is CSS-only and would be ignored
+		ctx.globalCompositeOperation = blendMode === 'normal' ? 'source-over' : blendMode;
 		ctx.drawImage(watermarkImg, x, y, wmW, wmH);
 		ctx.restore();
 	}
@@ -268,6 +281,10 @@
 		canvas.height = h;
 		ctx.drawImage(sourceImg, 0, 0);
 
+		// Scale padding with image size so it matches preview (preview short side ~600px)
+		const minSide = Math.min(w, h);
+		const effectivePadding = Math.max(2, Math.round((paddingPx * minSide) / 600));
+
 		const fontSizePx =
 			watermarkTextSizeUnit === '%' ? Math.round((h * watermarkTextSize) / 100) : watermarkTextSize;
 		ctx.font = `${fontSizePx}px ${watermarkTextFont}`;
@@ -279,17 +296,19 @@
 					: 'left';
 		ctx.textBaseline =
 			verticalPlacement === 'center' ? 'middle' : verticalPlacement === 'bottom' ? 'bottom' : 'top';
-		ctx.fillStyle = 'rgba(255, 255, 255, ' + opacity + ')';
-		ctx.strokeStyle = 'rgba(0, 0, 0, ' + opacity * 0.5 + ')';
+		const alpha = Number(opacity);
+		const safeAlpha = Number.isFinite(alpha) ? Math.max(0, Math.min(1, alpha)) : 0.4;
+		ctx.fillStyle = 'rgba(255, 255, 255, ' + safeAlpha + ')';
+		ctx.strokeStyle = 'rgba(0, 0, 0, ' + safeAlpha * 0.5 + ')';
 		ctx.lineWidth = Math.max(1, Math.floor(fontSizePx / 20));
 
-		let x = paddingPx;
+		let x = effectivePadding;
 		if (horizontalPlacement === 'center') x = w / 2;
-		else if (horizontalPlacement === 'right') x = w - paddingPx;
+		else if (horizontalPlacement === 'right') x = w - effectivePadding;
 
-		let y = paddingPx;
+		let y = effectivePadding;
 		if (verticalPlacement === 'center') y = h / 2;
-		else if (verticalPlacement === 'bottom') y = h - paddingPx;
+		else if (verticalPlacement === 'bottom') y = h - effectivePadding;
 
 		ctx.strokeText(watermarkText, x, y);
 		ctx.fillText(watermarkText, x, y);
@@ -316,7 +335,11 @@
 			const sourceImg = await loadImage(item.objectUrl);
 			const canvas = document.createElement('canvas');
 			if (watermarkType === 'image') {
-				const watermarkImg = await loadImage(watermarkUrl, true);
+				// Request high-res watermark from Cloudinary so scaling down stays crisp (avoids pixelation on small exports)
+				const wmUrl = isUrlCloudinary(watermarkUrl)
+					? addCloudinaryUrlWidth(watermarkUrl, 800)
+					: watermarkUrl;
+				const watermarkImg = await loadImage(wmUrl, true);
 				drawWatermarkedCanvas(sourceImg, watermarkImg, canvas);
 			} else {
 				drawTextWatermarkedCanvas(sourceImg, canvas);
