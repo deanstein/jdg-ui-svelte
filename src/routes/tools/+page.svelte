@@ -63,7 +63,7 @@
 
 	let fileInput;
 	let images = /** @type {{ id: string; file: File; objectUrl: string }[]} */ ([]);
-	let watermarkType = 'text'; // 'image' | 'text'
+	let watermarkType = 'image'; // 'image' | 'text'
 	let watermarkUrl = defaultWatermarkUrl;
 	let watermarkText = 'The Cinderella City Project';
 	let watermarkTextSize = 2;
@@ -75,7 +75,7 @@
 	let verticalPlacement = 'bottom';
 	let horizontalPlacement = 'left';
 	let paddingPx = 12;
-	let watermarkImageSize = 10;
+	let watermarkImageSize = 3;
 	let watermarkImageSizeUnit = '%'; // 'px' | '%'
 	let selectedId = null;
 	let dragActive = false;
