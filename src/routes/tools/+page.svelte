@@ -52,6 +52,11 @@
 		{ value: 'multiply', label: 'Multiply' },
 		{ value: 'screen', label: 'Screen' }
 	];
+	/** Preview + export: upscale photos smaller than this (short side px) for crisp watermarks. */
+	const WATERMARK_MIN_SHORT_SIDE = 600;
+	/** After upscale, clamp so one edge does not exceed this (memory / browser limits). */
+	const WATERMARK_EXPORT_MAX_LONG_SIDE = 10000;
+
 	const WATERMARK_FONTS = [
 		{ value: 'REM', label: 'REM' },
 		{ value: 'Righteous', label: 'Righteous' },
@@ -95,11 +100,27 @@
 	let watermarkImgEl = null;
 	let previewBaseRef = null;
 	let previewImageHeight = 600; // fallback until we measure
+	let previewNaturalDims = { w: 0, h: 0 };
 	let resizeObserver = null;
 
 	$: selectedImage = images.find((img) => img.id === selectedId) ?? images[0] ?? null;
+	$: selectedId, (previewNaturalDims = { w: 0, h: 0 });
 	// Reset when image changes so we recalc when new image is measured
 	$: selectedImage && (previewImageHeight = 600);
+
+	$: previewBaseDisplayStyle = (() => {
+		const nw = previewNaturalDims.w;
+		const nh = previewNaturalDims.h;
+		if (!nw || !nh) {
+			return `max-height: ${WATERMARK_MIN_SHORT_SIDE}px; max-width: 100%; width: auto; height: auto;`;
+		}
+		const minSide = Math.min(nw, nh);
+		if (minSide >= WATERMARK_MIN_SHORT_SIDE) {
+			return `max-height: ${WATERMARK_MIN_SHORT_SIDE}px; max-width: 100%; width: auto; height: auto;`;
+		}
+		const scale = WATERMARK_MIN_SHORT_SIDE / minSide;
+		return `width: ${Math.round(nw * scale)}px; height: ${Math.round(nh * scale)}px; max-width: none; max-height: none;`;
+	})();
 
 	function updatePreviewImageHeight() {
 		if (previewBaseRef) {
@@ -109,6 +130,12 @@
 	}
 
 	function handlePreviewImageLoad() {
+		if (previewBaseRef) {
+			previewNaturalDims = {
+				w: previewBaseRef.naturalWidth,
+				h: previewBaseRef.naturalHeight
+			};
+		}
 		// Read height after layout: load fires before layout is final, so defer
 		requestAnimationFrame(() => {
 			requestAnimationFrame(() => {
@@ -209,6 +236,39 @@
 		e.target.value = '';
 	}
 
+	function sourcePixelSize(img) {
+		const w = img.naturalWidth || img.width;
+		const h = img.naturalHeight || img.height;
+		return { w, h };
+	}
+
+	/**
+	 * Canvas drawn at least WATERMARK_MIN_SHORT_SIDE on the short side (same basis as preview).
+	 */
+	function upscaledSourceForExport(sourceImg) {
+		const { w, h } = sourcePixelSize(sourceImg);
+		if (!w || !h) return sourceImg;
+		const minSide = Math.min(w, h);
+		if (minSide >= WATERMARK_MIN_SHORT_SIDE) return sourceImg;
+		let outW = Math.max(1, Math.round((w * WATERMARK_MIN_SHORT_SIDE) / minSide));
+		let outH = Math.max(1, Math.round((h * WATERMARK_MIN_SHORT_SIDE) / minSide));
+		const longSide = Math.max(outW, outH);
+		if (longSide > WATERMARK_EXPORT_MAX_LONG_SIDE) {
+			const r = WATERMARK_EXPORT_MAX_LONG_SIDE / longSide;
+			outW = Math.max(1, Math.round(outW * r));
+			outH = Math.max(1, Math.round(outH * r));
+		}
+		const c = document.createElement('canvas');
+		c.width = outW;
+		c.height = outH;
+		const x = c.getContext('2d');
+		if (!x) return sourceImg;
+		x.imageSmoothingEnabled = true;
+		x.imageSmoothingQuality = 'high';
+		x.drawImage(sourceImg, 0, 0, outW, outH);
+		return c;
+	}
+
 	function getWatermarkWrapperStyle() {
 		const pad = `${paddingPx}px`;
 		const align =
@@ -245,15 +305,17 @@
 	function drawWatermarkedCanvas(sourceImg, watermarkImg, canvas) {
 		const ctx = canvas.getContext('2d');
 		if (!ctx) return;
-		const w = sourceImg.naturalWidth;
-		const h = sourceImg.naturalHeight;
+		const { w, h } = sourcePixelSize(sourceImg);
 		canvas.width = w;
 		canvas.height = h;
 		ctx.drawImage(sourceImg, 0, 0);
 
 		// Scale padding with image size so it matches preview (preview short side ~600px)
 		const minSide = Math.min(w, h);
-		const effectivePadding = Math.max(2, Math.round((paddingPx * minSide) / 600));
+		const effectivePadding = Math.max(
+			2,
+			Math.round((paddingPx * minSide) / WATERMARK_MIN_SHORT_SIDE)
+		);
 
 		// Logo sized by height only; width follows aspect ratio (wide marks stay readable)
 		const targetLogoH =
@@ -282,10 +344,10 @@
 		ctx.save();
 		if (logoOutline) {
 			const minSide = Math.min(w, h);
-			ctx.shadowBlur = Math.max(0.5, (logoShadowBlur * minSide) / 600);
+			ctx.shadowBlur = Math.max(0.5, (logoShadowBlur * minSide) / WATERMARK_MIN_SHORT_SIDE);
 			ctx.shadowColor = `rgba(0, 0, 0, ${logoShadowOpacity / 100})`;
-			ctx.shadowOffsetX = (logoShadowOffsetX * minSide) / 600;
-			ctx.shadowOffsetY = (logoShadowOffsetY * minSide) / 600;
+			ctx.shadowOffsetX = (logoShadowOffsetX * minSide) / WATERMARK_MIN_SHORT_SIDE;
+			ctx.shadowOffsetY = (logoShadowOffsetY * minSide) / WATERMARK_MIN_SHORT_SIDE;
 			ctx.globalAlpha = 0;
 			ctx.drawImage(watermarkImg, x, y, wmW, wmH);
 			ctx.shadowColor = 'transparent';
@@ -305,10 +367,10 @@
 	function drawTextShadowPass(ctx, minSide, drawTexts) {
 		if (!textOutline) return;
 		ctx.save();
-		ctx.shadowBlur = Math.max(0.5, (textShadowBlur * minSide) / 600);
+		ctx.shadowBlur = Math.max(0.5, (textShadowBlur * minSide) / WATERMARK_MIN_SHORT_SIDE);
 		ctx.shadowColor = `rgba(0, 0, 0, ${textShadowOpacity / 100})`;
-		ctx.shadowOffsetX = (textShadowOffsetX * minSide) / 600;
-		ctx.shadowOffsetY = (textShadowOffsetY * minSide) / 600;
+		ctx.shadowOffsetX = (textShadowOffsetX * minSide) / WATERMARK_MIN_SHORT_SIDE;
+		ctx.shadowOffsetY = (textShadowOffsetY * minSide) / WATERMARK_MIN_SHORT_SIDE;
 		ctx.globalAlpha = 0;
 		ctx.fillStyle = '#ffffff';
 		drawTexts();
@@ -318,15 +380,14 @@
 	function drawTextWatermarkedCanvas(sourceImg, canvas) {
 		const ctx = canvas.getContext('2d');
 		if (!ctx || !watermarkText.trim()) return;
-		const w = sourceImg.naturalWidth;
-		const h = sourceImg.naturalHeight;
+		const { w, h } = sourcePixelSize(sourceImg);
 		canvas.width = w;
 		canvas.height = h;
 		ctx.drawImage(sourceImg, 0, 0);
 
 		// Scale padding with image size so it matches preview (preview short side ~600px)
 		const minSide = Math.min(w, h);
-		const effectivePadding = Math.max(2, Math.round((paddingPx * minSide) / 600));
+		const effectivePadding = Math.max(2, Math.round((paddingPx * minSide) / WATERMARK_MIN_SHORT_SIDE));
 
 		const fontSizePx =
 			watermarkTextSizeUnit === '%' ? Math.round((h * watermarkTextSize) / 100) : watermarkTextSize;
@@ -358,15 +419,14 @@
 	function drawImageTextWatermarkedCanvas(sourceImg, watermarkImg, canvas) {
 		const ctx = canvas.getContext('2d');
 		if (!ctx || !watermarkUrl || !watermarkText.trim()) return;
-		const w = sourceImg.naturalWidth;
-		const h = sourceImg.naturalHeight;
+		const { w, h } = sourcePixelSize(sourceImg);
 		canvas.width = w;
 		canvas.height = h;
 		ctx.drawImage(sourceImg, 0, 0);
 
 		const minSide = Math.min(w, h);
-		const effectivePadding = Math.max(2, Math.round((paddingPx * minSide) / 600));
-		const effectiveComboGap = Math.max(2, Math.round((comboGapPx * minSide) / 600));
+		const effectivePadding = Math.max(2, Math.round((paddingPx * minSide) / WATERMARK_MIN_SHORT_SIDE));
+		const effectiveComboGap = Math.max(2, Math.round((comboGapPx * minSide) / WATERMARK_MIN_SHORT_SIDE));
 
 		// Logo sized by height only (same as image-only export)
 		const targetLogoH =
@@ -408,10 +468,10 @@
 		ctx.save();
 		if (logoOutline) {
 			const minSideCombo = Math.min(w, h);
-			ctx.shadowBlur = Math.max(0.5, (logoShadowBlur * minSideCombo) / 600);
+			ctx.shadowBlur = Math.max(0.5, (logoShadowBlur * minSideCombo) / WATERMARK_MIN_SHORT_SIDE);
 			ctx.shadowColor = `rgba(0, 0, 0, ${logoShadowOpacity / 100})`;
-			ctx.shadowOffsetX = (logoShadowOffsetX * minSideCombo) / 600;
-			ctx.shadowOffsetY = (logoShadowOffsetY * minSideCombo) / 600;
+			ctx.shadowOffsetX = (logoShadowOffsetX * minSideCombo) / WATERMARK_MIN_SHORT_SIDE;
+			ctx.shadowOffsetY = (logoShadowOffsetY * minSideCombo) / WATERMARK_MIN_SHORT_SIDE;
 			ctx.globalAlpha = 0;
 			ctx.drawImage(watermarkImg, startX, logoY, wmW, wmH);
 			ctx.shadowColor = 'transparent';
@@ -459,21 +519,22 @@
 		if (!item || !hasWatermark()) return;
 		try {
 			const sourceImg = await loadImage(item.objectUrl);
+			const sourceForDraw = upscaledSourceForExport(sourceImg);
 			const canvas = document.createElement('canvas');
 			if (watermarkType === 'image') {
 				const wmUrl = isUrlCloudinary(watermarkUrl)
 					? addCloudinaryUrlWidth(watermarkUrl, 800)
 					: watermarkUrl;
 				const watermarkImg = await loadImage(wmUrl, true);
-				drawWatermarkedCanvas(sourceImg, watermarkImg, canvas);
+				drawWatermarkedCanvas(sourceForDraw, watermarkImg, canvas);
 			} else if (watermarkType === 'image+text') {
 				const wmUrl = isUrlCloudinary(watermarkUrl)
 					? addCloudinaryUrlWidth(watermarkUrl, 800)
 					: watermarkUrl;
 				const watermarkImg = await loadImage(wmUrl, true);
-				drawImageTextWatermarkedCanvas(sourceImg, watermarkImg, canvas);
+				drawImageTextWatermarkedCanvas(sourceForDraw, watermarkImg, canvas);
 			} else {
-				drawTextWatermarkedCanvas(sourceImg, canvas);
+				drawTextWatermarkedCanvas(sourceForDraw, canvas);
 			}
 			const baseName = item.file.name.replace(/\.[^/.]+$/, '') || 'image';
 			const a = document.createElement('a');
@@ -1111,6 +1172,7 @@ yarn convert-image-registry-to-json --help</pre>
 							bind:this={previewBaseRef}
 							src={selectedImage.objectUrl}
 							alt="Preview"
+							style={previewBaseDisplayStyle}
 							on:load={handlePreviewImageLoad}
 						/>
 						{#if watermarkType === 'image' && watermarkUrl}
