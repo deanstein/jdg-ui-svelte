@@ -138,12 +138,18 @@
 
 	$: logoShadowA = logoShadowOpacity / 100;
 	$: watermarkImgFilter = logoOutline
-		? `drop-shadow(${scaleRefPx(logoShadowOffsetX)}px ${scaleRefPx(logoShadowOffsetY)}px ${Math.max(0.5, scaleRefPx(logoShadowBlur))}px rgba(0,0,0,${logoShadowA}))`
+		? `drop-shadow(${scaleRefPx(logoShadowOffsetX)}px ${scaleRefPx(logoShadowOffsetY)}px ${Math.max(
+				0.5,
+				scaleRefPx(logoShadowBlur)
+			)}px rgba(0,0,0,${logoShadowA}))`
 		: 'none';
 
 	$: textShadowA = textShadowOpacity / 100;
 	$: textWatermarkFilter = textOutline
-		? `drop-shadow(${scaleRefPx(textShadowOffsetX)}px ${scaleRefPx(textShadowOffsetY)}px ${Math.max(0.5, scaleRefPx(textShadowBlur))}px rgba(0,0,0,${textShadowA}))`
+		? `drop-shadow(${scaleRefPx(textShadowOffsetX)}px ${scaleRefPx(textShadowOffsetY)}px ${Math.max(
+				0.5,
+				scaleRefPx(textShadowBlur)
+			)}px rgba(0,0,0,${textShadowA}))`
 		: 'none';
 
 	// Text % matches displayed image height (same basis as logo %) so preview stays proportional
@@ -585,7 +591,12 @@ yarn convert-image-registry-to-json --help</pre>
 						Text
 					</label>
 					<label class="radio-label">
-						<input type="radio" name="watermarkType" value="image+text" bind:group={watermarkType} />
+						<input
+							type="radio"
+							name="watermarkType"
+							value="image+text"
+							bind:group={watermarkType}
+						/>
 						Image + text
 					</label>
 				</div>
@@ -1059,40 +1070,37 @@ yarn convert-image-registry-to-json --help</pre>
 					faIcon="fa-download"
 					onClickFunction={() => downloadOne(selectedImage)}
 					isEnabled={!!selectedImage && hasWatermark()}
-					isPrimary={true}
+					isPrimary={false}
 				/>
 				<JDGButton
 					label="Download all"
 					faIcon="fa-download"
 					onClickFunction={downloadAll}
 					isEnabled={hasWatermark()}
-					isPrimary={false}
-				/>
-				<JDGButton
-					label="Clear all"
-					faIcon="fa-trash"
-					onClickFunction={clearAll}
-					isPrimary={false}
+					isPrimary={true}
 				/>
 			</div>
 
-			<div class="thumb-strip">
-				{#each images as img (img.id)}
-					<button
-						class="thumb"
-						class:selected={selectedId === img.id}
-						type="button"
-						on:click|stopPropagation={() => (selectedId = img.id)}
-					>
-						<img src={img.objectUrl} alt="" />
+			<div class="thumb-strip-row">
+				<div class="thumb-strip">
+					{#each images as img (img.id)}
 						<button
-							class="thumb-remove"
+							class="thumb"
+							class:selected={selectedId === img.id}
 							type="button"
-							aria-label="Remove"
-							on:click|stopPropagation={() => removeImage(img.id)}>×</button
+							on:click|stopPropagation={() => (selectedId = img.id)}
 						>
-					</button>
-				{/each}
+							<img src={img.objectUrl} alt="" />
+							<button
+								class="thumb-remove"
+								type="button"
+								aria-label="Remove"
+								on:click|stopPropagation={() => removeImage(img.id)}>×</button
+							>
+						</button>
+					{/each}
+				</div>
+				<button type="button" class="thumb-strip-clear-all" on:click={clearAll}> Clear all </button>
 			</div>
 
 			{#if selectedImage}
@@ -1116,10 +1124,7 @@ yarn convert-image-registry-to-json --help</pre>
 								/>
 							</div>
 						{:else if watermarkType === 'text' && watermarkText}
-							<div
-								class="watermark-wrapper watermark-text-preview"
-								style={watermarkWrapperStyle}
-							>
+							<div class="watermark-wrapper watermark-text-preview" style={watermarkWrapperStyle}>
 								<span
 									class="watermark-text"
 									style="opacity: {opacity}; font-family: {watermarkTextFont}; font-size: {textPreviewFontSize}; color: white; filter: {textWatermarkFilter};"
@@ -1128,10 +1133,7 @@ yarn convert-image-registry-to-json --help</pre>
 								</span>
 							</div>
 						{:else if watermarkType === 'image+text' && watermarkUrl && watermarkText}
-							<div
-								class="watermark-wrapper watermark-combo-preview"
-								style={watermarkWrapperStyle}
-							>
+							<div class="watermark-wrapper watermark-combo-preview" style={watermarkWrapperStyle}>
 								<img
 									class="watermark-combo-logo"
 									style="opacity: {opacity}; mix-blend-mode: {blendMode}; filter: {watermarkImgFilter}; max-height: {imagePreviewMaxSize}; max-width: none; width: auto; height: auto; object-fit: contain;"
@@ -1341,11 +1343,35 @@ yarn convert-image-registry-to-json --help</pre>
 		margin-bottom: 0.75rem;
 	}
 
+	.thumb-strip-row {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.75rem;
+		margin-bottom: 1rem;
+	}
 	.thumb-strip {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.5rem;
-		margin-bottom: 1rem;
+		flex: 1;
+		min-width: 0;
+	}
+	.thumb-strip-clear-all {
+		flex-shrink: 0;
+		font-size: 0.75rem;
+		padding: 0.35rem 0.65rem;
+		line-height: 1.2;
+		border: 1px solid #bbb;
+		border-radius: 4px;
+		background: #f5f5f5;
+		color: #555;
+		cursor: pointer;
+	}
+	.thumb-strip-clear-all:hover {
+		background: #e8e8e8;
+		border-color: #999;
+		color: #333;
 	}
 	.thumb {
 		position: relative;
