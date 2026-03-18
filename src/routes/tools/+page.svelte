@@ -146,10 +146,10 @@
 		? `drop-shadow(${scaleRefPx(textShadowOffsetX)}px ${scaleRefPx(textShadowOffsetY)}px ${Math.max(0.5, scaleRefPx(textShadowBlur))}px rgba(0,0,0,${textShadowA}))`
 		: 'none';
 
-	// For preview, % is interpreted relative to 600px preview height so it matches export scale
+	// Text % matches displayed image height (same basis as logo %) so preview stays proportional
 	$: textPreviewFontSize =
 		watermarkTextSizeUnit === '%'
-			? `${(600 * watermarkTextSize) / 100}px`
+			? `${((previewImageHeight || 600) * watermarkTextSize) / 100}px`
 			: `${watermarkTextSize}px`;
 
 	function addFiles(fileList) {
@@ -249,17 +249,14 @@
 		const minSide = Math.min(w, h);
 		const effectivePadding = Math.max(2, Math.round((paddingPx * minSide) / 600));
 
-		// % = logo height is that % of image height; px = logo fits in that many px (longer side)
-		const maxLogoHeight =
+		// Logo sized by height only; width follows aspect ratio (wide marks stay readable)
+		const targetLogoH =
 			watermarkImageSizeUnit === '%'
 				? Math.floor(h * (watermarkImageSize / 100))
-				: Math.min(watermarkImageSize, Math.min(w, h));
+				: Math.min(watermarkImageSize, h);
 		let wmW = watermarkImg.naturalWidth;
 		let wmH = watermarkImg.naturalHeight;
-		const scale =
-			watermarkImageSizeUnit === '%'
-				? maxLogoHeight / wmH
-				: Math.min(1, maxLogoHeight / Math.max(wmW, wmH));
+		const scale = wmH > 0 ? targetLogoH / wmH : 1;
 		wmW = Math.floor(wmW * scale);
 		wmH = Math.floor(wmH * scale);
 
@@ -365,17 +362,14 @@
 		const effectivePadding = Math.max(2, Math.round((paddingPx * minSide) / 600));
 		const effectiveComboGap = Math.max(2, Math.round((comboGapPx * minSide) / 600));
 
-		// Logo size (same as image-only)
-		const maxLogoHeight =
+		// Logo sized by height only (same as image-only export)
+		const targetLogoH =
 			watermarkImageSizeUnit === '%'
 				? Math.floor(h * (watermarkImageSize / 100))
-				: Math.min(watermarkImageSize, Math.min(w, h));
+				: Math.min(watermarkImageSize, h);
 		let wmW = watermarkImg.naturalWidth;
 		let wmH = watermarkImg.naturalHeight;
-		const scale =
-			watermarkImageSizeUnit === '%'
-				? maxLogoHeight / wmH
-				: Math.min(1, maxLogoHeight / Math.max(wmW, wmH));
+		const scale = wmH > 0 ? targetLogoH / wmH : 1;
 		wmW = Math.floor(wmW * scale);
 		wmH = Math.floor(wmH * scale);
 
@@ -622,6 +616,8 @@ yarn convert-image-registry-to-json --help</pre>
 					</div>
 					{#if watermarkImageSizeUnit === '%'}
 						<span class="size-hint">% of image height</span>
+					{:else}
+						<span class="size-hint">Target logo height; width follows aspect ratio</span>
 					{/if}
 				</JDGInputContainer>
 				<JDGInputContainer label="Blend mode">
@@ -722,6 +718,8 @@ yarn convert-image-registry-to-json --help</pre>
 					</div>
 					{#if watermarkImageSizeUnit === '%'}
 						<span class="size-hint">% of image height</span>
+					{:else}
+						<span class="size-hint">Target logo height; width follows aspect ratio</span>
 					{/if}
 				</JDGInputContainer>
 				<JDGInputContainer label="Blend mode">
@@ -1112,7 +1110,7 @@ yarn convert-image-registry-to-json --help</pre>
 								<img
 									bind:this={watermarkImgEl}
 									class="watermark-img"
-									style="opacity: {opacity}; mix-blend-mode: {blendMode}; filter: {watermarkImgFilter}; max-height: {imagePreviewMaxSize}; {watermarkImageSizeUnit === '%' ? 'max-width: none;' : 'max-width: ' + imagePreviewMaxSize + ';'} object-fit: contain;"
+									style="opacity: {opacity}; mix-blend-mode: {blendMode}; filter: {watermarkImgFilter}; max-height: {imagePreviewMaxSize}; max-width: none; width: auto; height: auto; object-fit: contain;"
 									src={watermarkUrl}
 									alt="Watermark"
 								/>
@@ -1136,7 +1134,7 @@ yarn convert-image-registry-to-json --help</pre>
 							>
 								<img
 									class="watermark-combo-logo"
-									style="opacity: {opacity}; mix-blend-mode: {blendMode}; filter: {watermarkImgFilter}; max-height: {imagePreviewMaxSize}; {watermarkImageSizeUnit === '%' ? 'max-width: none;' : 'max-width: ' + imagePreviewMaxSize + ';'} object-fit: contain;"
+									style="opacity: {opacity}; mix-blend-mode: {blendMode}; filter: {watermarkImgFilter}; max-height: {imagePreviewMaxSize}; max-width: none; width: auto; height: auto; object-fit: contain;"
 									src={watermarkUrl}
 									alt=""
 								/>
