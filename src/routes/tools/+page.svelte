@@ -75,17 +75,20 @@
 	let watermarkTextSize = 1.5;
 	let watermarkTextSizeUnit = '%'; // 'px' | '%'
 	let watermarkTextFont = 'REM';
-	let opacity = 0.4;
+	let logoOpacity = 0.6;
+	let textOpacity = 0.5;
 	let blendMode = 'normal';
 	let logoOutline = true;
 	let logoShadowBlur = 4; // px at ~600px reference; scales with export
-	let logoShadowOpacity = 100; // 0–100
+	let logoShadowOpacity = 60; // 0–100
 	let logoShadowOffsetX = 0; // px at reference
 	let logoShadowOffsetY = 0;
+	/** 1 = single soft shadow; 2–3 = stacked (reads stronger on flat / one-color PNGs). */
+	let logoShadowLayers = 2;
 	/** Text drop shadow (same canvas/CSS behavior as logo, independent knobs). */
 	let textOutline = true;
 	let textShadowBlur = 4;
-	let textShadowOpacity = 40;
+	let textShadowOpacity = 60;
 	let textShadowOffsetX = 0;
 	let textShadowOffsetY = 0;
 	let verticalPlacement = 'bottom';
@@ -94,7 +97,7 @@
 	let watermarkImageSize = 3;
 	let watermarkImageSizeUnit = '%'; // 'px' | '%'
 	let watermarkDivider = ' | ';
-	let comboGapPx = 8; // padding between logo, divider, and text for Image + text
+	let comboGapPx = 5; // padding between logo, divider, and text for Image + text
 	let selectedId = null;
 	let dragActive = false;
 	let watermarkImgEl = null;
@@ -164,20 +167,40 @@
 	}
 
 	$: logoShadowA = logoShadowOpacity / 100;
-	$: watermarkImgFilter = logoOutline
-		? `drop-shadow(${scaleRefPx(logoShadowOffsetX)}px ${scaleRefPx(logoShadowOffsetY)}px ${Math.max(
-				0.5,
-				scaleRefPx(logoShadowBlur)
-			)}px rgba(0,0,0,${logoShadowA}))`
-		: 'none';
+	function buildLogoImgDropShadowFilter() {
+		const ox = scaleRefPx(logoShadowOffsetX);
+		const oy = scaleRefPx(logoShadowOffsetY);
+		const b = Math.max(0.5, scaleRefPx(logoShadowBlur));
+		const a = logoShadowA;
+		if (logoShadowLayers <= 1) {
+			return `drop-shadow(${ox}px ${oy}px ${b}px rgba(0,0,0,${a}))`;
+		}
+		if (logoShadowLayers === 2) {
+			return [
+				`drop-shadow(${ox}px ${oy}px ${Math.max(0.5, b * 0.32)}px rgba(0,0,0,${Math.min(1, a * 1.2)}))`,
+				`drop-shadow(${ox}px ${oy}px ${b}px rgba(0,0,0,${a * 0.78}))`
+			].join(' ');
+		}
+		return [
+			`drop-shadow(${ox}px ${oy}px ${Math.max(0.5, b * 0.26)}px rgba(0,0,0,${Math.min(1, a * 1.25)}))`,
+			`drop-shadow(${ox}px ${oy}px ${Math.max(0.7, b * 0.52)}px rgba(0,0,0,${a * 0.92}))`,
+			`drop-shadow(${ox}px ${oy}px ${Math.max(1, b * 1.2)}px rgba(0,0,0,${a * 0.42}))`
+		].join(' ');
+	}
+	// No filter when shadow opacity 0 — drop-shadow(..., rgba(0,0,0,0)) still paints a halo in some browsers.
+	$: watermarkImgFilter =
+		logoOutline && Number(logoOpacity) > 0 && logoShadowOpacity > 0
+			? buildLogoImgDropShadowFilter()
+			: 'none';
 
 	$: textShadowA = textShadowOpacity / 100;
-	$: textWatermarkFilter = textOutline
-		? `drop-shadow(${scaleRefPx(textShadowOffsetX)}px ${scaleRefPx(textShadowOffsetY)}px ${Math.max(
-				0.5,
-				scaleRefPx(textShadowBlur)
-			)}px rgba(0,0,0,${textShadowA}))`
-		: 'none';
+	$: textWatermarkFilter =
+		textOutline && Number(textOpacity) > 0 && textShadowOpacity > 0
+			? `drop-shadow(${scaleRefPx(textShadowOffsetX)}px ${scaleRefPx(textShadowOffsetY)}px ${Math.max(
+					0.5,
+					scaleRefPx(textShadowBlur)
+				)}px rgba(0,0,0,${textShadowA}))`
+			: 'none';
 
 	// Text % matches displayed image height (same basis as logo %) so preview stays proportional
 	$: textPreviewFontSize =
@@ -269,6 +292,42 @@
 		return c;
 	}
 
+	/** Canvas: stack shadow passes. Shadow alpha × watermarkOpacity so export matches Opacity slider. */
+	function drawLogoShadowPassesCanvas(ctx, minSide, img, ix, iy, iw, ih, watermarkOpacity) {
+		if (!logoOutline || logoShadowOpacity <= 0) return;
+		const ref = WATERMARK_MIN_SHORT_SIDE;
+		const ox = (logoShadowOffsetX * minSide) / ref;
+		const oy = (logoShadowOffsetY * minSide) / ref;
+		const baseBlur = (logoShadowBlur * minSide) / ref;
+		const baseA = logoShadowOpacity / 100;
+		const o = Math.max(0, Math.min(1, watermarkOpacity));
+		const layers =
+			logoShadowLayers <= 1
+				? [{ blur: Math.max(0.5, baseBlur), alpha: baseA * o }]
+				: logoShadowLayers === 2
+					? [
+							{ blur: Math.max(0.5, baseBlur * 0.32), alpha: Math.min(1, baseA * 1.2) * o },
+							{ blur: Math.max(1, baseBlur), alpha: baseA * 0.78 * o }
+						]
+					: [
+							{ blur: Math.max(0.5, baseBlur * 0.26), alpha: Math.min(1, baseA * 1.25) * o },
+							{ blur: Math.max(0.7, baseBlur * 0.52), alpha: baseA * 0.92 * o },
+							{ blur: Math.max(1, baseBlur * 1.2), alpha: baseA * 0.42 * o }
+						];
+		for (const L of layers) {
+			ctx.shadowBlur = L.blur;
+			ctx.shadowColor = `rgba(0, 0, 0, ${L.alpha})`;
+			ctx.shadowOffsetX = ox;
+			ctx.shadowOffsetY = oy;
+			ctx.globalAlpha = 0;
+			ctx.drawImage(img, ix, iy, iw, ih);
+		}
+		ctx.shadowColor = 'transparent';
+		ctx.shadowBlur = 0;
+		ctx.shadowOffsetX = 0;
+		ctx.shadowOffsetY = 0;
+	}
+
 	function getWatermarkWrapperStyle() {
 		const pad = `${paddingPx}px`;
 		const align =
@@ -340,23 +399,15 @@
 		ctx.imageSmoothingEnabled = true;
 		ctx.imageSmoothingQuality = 'high';
 
-		const alpha = Number(opacity);
+		const fillA = Number.isFinite(Number(logoOpacity))
+			? Math.max(0, Math.min(1, Number(logoOpacity)))
+			: 0.4;
 		ctx.save();
 		if (logoOutline) {
-			const minSide = Math.min(w, h);
-			ctx.shadowBlur = Math.max(0.5, (logoShadowBlur * minSide) / WATERMARK_MIN_SHORT_SIDE);
-			ctx.shadowColor = `rgba(0, 0, 0, ${logoShadowOpacity / 100})`;
-			ctx.shadowOffsetX = (logoShadowOffsetX * minSide) / WATERMARK_MIN_SHORT_SIDE;
-			ctx.shadowOffsetY = (logoShadowOffsetY * minSide) / WATERMARK_MIN_SHORT_SIDE;
-			ctx.globalAlpha = 0;
-			ctx.drawImage(watermarkImg, x, y, wmW, wmH);
-			ctx.shadowColor = 'transparent';
-			ctx.shadowBlur = 0;
-			ctx.shadowOffsetX = 0;
-			ctx.shadowOffsetY = 0;
+			drawLogoShadowPassesCanvas(ctx, Math.min(w, h), watermarkImg, x, y, wmW, wmH, fillA);
 		}
 		// Now draw the logo once at the user's opacity (no previous full-opacity draw under it)
-		ctx.globalAlpha = Number.isFinite(alpha) ? Math.max(0, Math.min(1, alpha)) : 0.4;
+		ctx.globalAlpha = fillA;
 		// Canvas uses 'source-over' for normal blending; 'normal' is CSS-only and would be ignored
 		ctx.globalCompositeOperation = blendMode === 'normal' ? 'source-over' : blendMode;
 		ctx.drawImage(watermarkImg, x, y, wmW, wmH);
@@ -364,11 +415,12 @@
 	}
 
 	/** Same soft drop shadow as logo: invisible fill so only shadow renders. */
-	function drawTextShadowPass(ctx, minSide, drawTexts) {
-		if (!textOutline) return;
+	function drawTextShadowPass(ctx, minSide, drawTexts, textFillOpacity = 1) {
+		if (!textOutline || textShadowOpacity <= 0) return;
+		const o = Math.max(0, Math.min(1, textFillOpacity));
 		ctx.save();
 		ctx.shadowBlur = Math.max(0.5, (textShadowBlur * minSide) / WATERMARK_MIN_SHORT_SIDE);
-		ctx.shadowColor = `rgba(0, 0, 0, ${textShadowOpacity / 100})`;
+		ctx.shadowColor = `rgba(0, 0, 0, ${(textShadowOpacity / 100) * o})`;
 		ctx.shadowOffsetX = (textShadowOffsetX * minSide) / WATERMARK_MIN_SHORT_SIDE;
 		ctx.shadowOffsetY = (textShadowOffsetY * minSide) / WATERMARK_MIN_SHORT_SIDE;
 		ctx.globalAlpha = 0;
@@ -400,8 +452,9 @@
 					: 'left';
 		ctx.textBaseline =
 			verticalPlacement === 'center' ? 'middle' : verticalPlacement === 'bottom' ? 'bottom' : 'top';
-		const alpha = Number(opacity);
-		const safeAlpha = Number.isFinite(alpha) ? Math.max(0, Math.min(1, alpha)) : 0.4;
+		const safeAlpha = Number.isFinite(Number(textOpacity))
+			? Math.max(0, Math.min(1, Number(textOpacity)))
+			: 0.4;
 
 		let x = effectivePadding;
 		if (horizontalPlacement === 'center') x = w / 2;
@@ -411,7 +464,7 @@
 		if (verticalPlacement === 'center') y = h / 2;
 		else if (verticalPlacement === 'bottom') y = h - effectivePadding;
 
-		drawTextShadowPass(ctx, minSide, () => ctx.fillText(watermarkText, x, y));
+		drawTextShadowPass(ctx, minSide, () => ctx.fillText(watermarkText, x, y), safeAlpha);
 		ctx.fillStyle = 'rgba(255, 255, 255, ' + safeAlpha + ')';
 		ctx.fillText(watermarkText, x, y);
 	}
@@ -461,25 +514,19 @@
 
 		ctx.imageSmoothingEnabled = true;
 		ctx.imageSmoothingQuality = 'high';
-		const alpha = Number(opacity);
-		const safeAlpha = Number.isFinite(alpha) ? Math.max(0, Math.min(1, alpha)) : 0.4;
+		const logoA = Number.isFinite(Number(logoOpacity))
+			? Math.max(0, Math.min(1, Number(logoOpacity)))
+			: 0.4;
+		const textA = Number.isFinite(Number(textOpacity))
+			? Math.max(0, Math.min(1, Number(textOpacity)))
+			: 0.4;
 
 		// Draw logo (shadow only then logo at opacity)
 		ctx.save();
 		if (logoOutline) {
-			const minSideCombo = Math.min(w, h);
-			ctx.shadowBlur = Math.max(0.5, (logoShadowBlur * minSideCombo) / WATERMARK_MIN_SHORT_SIDE);
-			ctx.shadowColor = `rgba(0, 0, 0, ${logoShadowOpacity / 100})`;
-			ctx.shadowOffsetX = (logoShadowOffsetX * minSideCombo) / WATERMARK_MIN_SHORT_SIDE;
-			ctx.shadowOffsetY = (logoShadowOffsetY * minSideCombo) / WATERMARK_MIN_SHORT_SIDE;
-			ctx.globalAlpha = 0;
-			ctx.drawImage(watermarkImg, startX, logoY, wmW, wmH);
-			ctx.shadowColor = 'transparent';
-			ctx.shadowBlur = 0;
-			ctx.shadowOffsetX = 0;
-			ctx.shadowOffsetY = 0;
+			drawLogoShadowPassesCanvas(ctx, Math.min(w, h), watermarkImg, startX, logoY, wmW, wmH, logoA);
 		}
-		ctx.globalAlpha = safeAlpha;
+		ctx.globalAlpha = logoA;
 		ctx.globalCompositeOperation = blendMode === 'normal' ? 'source-over' : blendMode;
 		ctx.drawImage(watermarkImg, startX, logoY, wmW, wmH);
 		ctx.restore();
@@ -490,11 +537,16 @@
 		ctx.textBaseline = 'middle';
 		const dividerX = startX + wmW + effectiveComboGap;
 		const textX = dividerX + dividerWidth + effectiveComboGap;
-		drawTextShadowPass(ctx, minSide, () => {
-			ctx.fillText(watermarkDivider, dividerX, centerY);
-			ctx.fillText(watermarkText, textX, centerY);
-		});
-		ctx.fillStyle = 'rgba(255, 255, 255, ' + safeAlpha + ')';
+		drawTextShadowPass(
+			ctx,
+			minSide,
+			() => {
+				ctx.fillText(watermarkDivider, dividerX, centerY);
+				ctx.fillText(watermarkText, textX, centerY);
+			},
+			textA
+		);
+		ctx.fillStyle = 'rgba(255, 255, 255, ' + textA + ')';
 		ctx.fillText(watermarkDivider, dividerX, centerY);
 		ctx.fillText(watermarkText, textX, centerY);
 	}
@@ -637,7 +689,7 @@ yarn convert-image-registry-to-json --help</pre>
 	<JDGContentBoxFloating title="Apply Watermark to Images">
 		<JDGBodyCopy paddingTop="0">
 			Drag and drop images or use the drop zone to add files. Set your watermark URL (e.g.
-			Cloudinary), opacity, blend mode, and placement. Download a single image or all at once.
+			Cloudinary), logo/text opacity, blend mode, and placement. Download a single image or all at once.
 		</JDGBodyCopy>
 
 		<div class="watermark-options">
@@ -664,6 +716,17 @@ yarn convert-image-registry-to-json --help</pre>
 			</JDGInputContainer>
 
 			{#if watermarkType === 'image'}
+				<JDGInputContainer label="Logo opacity">
+					<input
+						type="range"
+						class="range-input"
+						min="0"
+						max="1"
+						step="0.05"
+						bind:value={logoOpacity}
+					/>
+					<span class="range-value">{Math.round(logoOpacity * 100)}%</span>
+				</JDGInputContainer>
 				<JDGInputContainer label="Watermark image URL">
 					<input
 						type="url"
@@ -734,6 +797,19 @@ yarn convert-image-registry-to-json --help</pre>
 						/>
 						<span class="range-value">{logoShadowOpacity}%</span>
 					</JDGInputContainer>
+					<JDGInputContainer label="Shadow layers">
+						<input
+							type="range"
+							class="range-input"
+							min="1"
+							max="3"
+							step="1"
+							bind:value={logoShadowLayers}
+						/>
+						<span class="range-value">{logoShadowLayers}</span>
+						<span class="size-hint"
+							>Stacked halos: stronger on flat / one-color PNGs. 3 = max edge.</span>
+					</JDGInputContainer>
 					<div class="row-inputs">
 						<JDGInputContainer label="Offset X">
 							<input
@@ -766,6 +842,17 @@ yarn convert-image-registry-to-json --help</pre>
 					paddingTop="0.5rem"
 					paddingBottom="0.85rem"
 				/>
+				<JDGInputContainer label="Logo opacity">
+					<input
+						type="range"
+						class="range-input"
+						min="0"
+						max="1"
+						step="0.05"
+						bind:value={logoOpacity}
+					/>
+					<span class="range-value">{Math.round(logoOpacity * 100)}%</span>
+				</JDGInputContainer>
 				<JDGInputContainer label="Watermark image URL">
 					<input
 						type="url"
@@ -837,6 +924,19 @@ yarn convert-image-registry-to-json --help</pre>
 						/>
 						<span class="range-value">{logoShadowOpacity}%</span>
 					</JDGInputContainer>
+					<JDGInputContainer label="Shadow layers">
+						<input
+							type="range"
+							class="range-input"
+							min="1"
+							max="3"
+							step="1"
+							bind:value={logoShadowLayers}
+						/>
+						<span class="range-value">{logoShadowLayers}</span>
+						<span class="size-hint"
+							>Stacked halos: stronger on flat / one-color PNGs. 3 = max edge.</span>
+					</JDGInputContainer>
 					<div class="row-inputs">
 						<JDGInputContainer label="Offset X">
 							<input
@@ -869,6 +969,17 @@ yarn convert-image-registry-to-json --help</pre>
 					paddingTop="1rem"
 					paddingBottom="0.85rem"
 				/>
+				<JDGInputContainer label="Text opacity">
+					<input
+						type="range"
+						class="range-input"
+						min="0"
+						max="1"
+						step="0.05"
+						bind:value={textOpacity}
+					/>
+					<span class="range-value">{Math.round(textOpacity * 100)}%</span>
+				</JDGInputContainer>
 				<JDGInputContainer label="Watermark text">
 					<input
 						type="text"
@@ -972,6 +1083,17 @@ yarn convert-image-registry-to-json --help</pre>
 					</div>
 				{/if}
 			{:else}
+				<JDGInputContainer label="Text opacity">
+					<input
+						type="range"
+						class="range-input"
+						min="0"
+						max="1"
+						step="0.05"
+						bind:value={textOpacity}
+					/>
+					<span class="range-value">{Math.round(textOpacity * 100)}%</span>
+				</JDGInputContainer>
 				<JDGInputContainer label="Watermark text">
 					<input
 						type="text"
@@ -1065,22 +1187,11 @@ yarn convert-image-registry-to-json --help</pre>
 			{/if}
 
 			<JDGH3H4
-				h3String="Placement & opacity"
-				h4String="Applies to all watermark types"
+				h3String="Placement"
+				h4String="Position on the photo"
 				paddingTop="1rem"
 				paddingBottom="0.85rem"
 			/>
-			<JDGInputContainer label="Opacity">
-				<input
-					type="range"
-					class="range-input"
-					min="0.1"
-					max="1"
-					step="0.05"
-					bind:value={opacity}
-				/>
-				<span class="range-value">{Math.round(opacity * 100)}%</span>
-			</JDGInputContainer>
 			<div class="row-inputs">
 				<JDGInputContainer label="Vertical">
 					<select class="select-input" bind:value={verticalPlacement}>
@@ -1180,7 +1291,7 @@ yarn convert-image-registry-to-json --help</pre>
 								<img
 									bind:this={watermarkImgEl}
 									class="watermark-img"
-									style="opacity: {opacity}; mix-blend-mode: {blendMode}; filter: {watermarkImgFilter}; max-height: {imagePreviewMaxSize}; max-width: none; width: auto; height: auto; object-fit: contain;"
+									style="opacity: {logoOpacity}; mix-blend-mode: {blendMode}; filter: {watermarkImgFilter}; max-height: {imagePreviewMaxSize}; max-width: none; width: auto; height: auto; object-fit: contain;"
 									src={watermarkUrl}
 									alt="Watermark"
 								/>
@@ -1189,7 +1300,7 @@ yarn convert-image-registry-to-json --help</pre>
 							<div class="watermark-wrapper watermark-text-preview" style={watermarkWrapperStyle}>
 								<span
 									class="watermark-text"
-									style="opacity: {opacity}; font-family: {watermarkTextFont}; font-size: {textPreviewFontSize}; color: white; filter: {textWatermarkFilter};"
+									style="opacity: {textOpacity}; font-family: {watermarkTextFont}; font-size: {textPreviewFontSize}; color: white; filter: {textWatermarkFilter};"
 								>
 									{watermarkText}
 								</span>
@@ -1198,21 +1309,21 @@ yarn convert-image-registry-to-json --help</pre>
 							<div class="watermark-wrapper watermark-combo-preview" style={watermarkWrapperStyle}>
 								<img
 									class="watermark-combo-logo"
-									style="opacity: {opacity}; mix-blend-mode: {blendMode}; filter: {watermarkImgFilter}; max-height: {imagePreviewMaxSize}; max-width: none; width: auto; height: auto; object-fit: contain;"
+									style="opacity: {logoOpacity}; mix-blend-mode: {blendMode}; filter: {watermarkImgFilter}; max-height: {imagePreviewMaxSize}; max-width: none; width: auto; height: auto; object-fit: contain;"
 									src={watermarkUrl}
 									alt=""
 								/>
 								<span class="watermark-combo-gap" style="width: {comboGapPx}px;"></span>
 								<span
 									class="watermark-text"
-									style="opacity: {opacity}; font-family: {watermarkTextFont}; font-size: {textPreviewFontSize}; color: white; filter: {textWatermarkFilter};"
+									style="opacity: {textOpacity}; font-family: {watermarkTextFont}; font-size: {textPreviewFontSize}; color: white; filter: {textWatermarkFilter};"
 								>
 									{watermarkDivider}
 								</span>
 								<span class="watermark-combo-gap" style="width: {comboGapPx}px;"></span>
 								<span
 									class="watermark-text"
-									style="opacity: {opacity}; font-family: {watermarkTextFont}; font-size: {textPreviewFontSize}; color: white; filter: {textWatermarkFilter};"
+									style="opacity: {textOpacity}; font-family: {watermarkTextFont}; font-size: {textPreviewFontSize}; color: white; filter: {textWatermarkFilter};"
 								>
 									{watermarkText}
 								</span>
