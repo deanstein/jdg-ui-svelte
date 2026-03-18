@@ -1389,22 +1389,25 @@ yarn convert-image-registry-to-json --help</pre>
 		background: #c00;
 	}
 
+	/* Height follows the image — avoids a tall gray band below short photos (watermark
+	   is pinned to the image; fixed 600px made bottom-to-frame look larger than left). */
 	.preview-wrapper {
 		margin-top: 1rem;
-		height: 600px;
 		max-width: 100%;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		background: #f0f0f0;
+		padding: 6px;
+		box-sizing: border-box;
 	}
 	.preview-inner {
 		position: relative;
-		max-height: 100%;
 		max-width: 100%;
-		display: flex;
+		display: inline-flex;
 		align-items: center;
 		justify-content: center;
+		line-height: 0;
 	}
 	.preview-base {
 		display: block;
