@@ -9,6 +9,7 @@
 		JDGButton,
 		JDGContentBoxFloating,
 		JDGContentContainer,
+		JDGH3H4,
 		JDGInputContainer,
 		JDGJumpTo
 	} from '$lib/index.js';
@@ -63,15 +64,25 @@
 
 	let fileInput;
 	let images = /** @type {{ id: string; file: File; objectUrl: string }[]} */ ([]);
-	let watermarkType = 'image'; // 'image' | 'text' | 'image+text'
+	let watermarkType = 'image+text'; // 'image' | 'text' | 'image+text'
 	let watermarkUrl = defaultWatermarkUrl;
-	let watermarkText = 'The Cinderella City Project';
-	let watermarkTextSize = 1.8;
+	let watermarkText = 'Englewood Public Library';
+	let watermarkTextSize = 1.5;
 	let watermarkTextSizeUnit = '%'; // 'px' | '%'
-	let watermarkTextFont = 'Righteous';
+	let watermarkTextFont = 'REM';
 	let opacity = 0.4;
 	let blendMode = 'normal';
-	let improveContrast = true; // dark shadow/halo so logo reads on light and dark areas
+	let logoOutline = true;
+	let logoShadowBlur = 4; // px at ~600px reference; scales with export
+	let logoShadowOpacity = 100; // 0–100
+	let logoShadowOffsetX = 0; // px at reference
+	let logoShadowOffsetY = 0;
+	/** Text drop shadow (same canvas/CSS behavior as logo, independent knobs). */
+	let textOutline = true;
+	let textShadowBlur = 4;
+	let textShadowOpacity = 40;
+	let textShadowOffsetX = 0;
+	let textShadowOffsetY = 0;
 	let verticalPlacement = 'bottom';
 	let horizontalPlacement = 'left';
 	let paddingPx = 12;
@@ -120,7 +131,20 @@
 
 	// Reactive so placement/opacity/padding changes update the preview immediately
 	$: watermarkWrapperStyle = getWatermarkWrapperStyle();
-	$: watermarkImgFilter = improveContrast ? 'drop-shadow(0 0 6px rgba(0,0,0,0.75))' : 'none';
+	function scaleRefPx(px, ref = 600) {
+		const side = previewImageHeight || 600;
+		return Math.max(0.25, (px * side) / ref);
+	}
+
+	$: logoShadowA = logoShadowOpacity / 100;
+	$: watermarkImgFilter = logoOutline
+		? `drop-shadow(${scaleRefPx(logoShadowOffsetX)}px ${scaleRefPx(logoShadowOffsetY)}px ${Math.max(0.5, scaleRefPx(logoShadowBlur))}px rgba(0,0,0,${logoShadowA}))`
+		: 'none';
+
+	$: textShadowA = textShadowOpacity / 100;
+	$: textWatermarkFilter = textOutline
+		? `drop-shadow(${scaleRefPx(textShadowOffsetX)}px ${scaleRefPx(textShadowOffsetY)}px ${Math.max(0.5, scaleRefPx(textShadowBlur))}px rgba(0,0,0,${textShadowA}))`
+		: 'none';
 
 	// For preview, % is interpreted relative to 600px preview height so it matches export scale
 	$: textPreviewFontSize =
@@ -253,23 +277,38 @@
 
 		const alpha = Number(opacity);
 		ctx.save();
-		if (improveContrast) {
-			// Draw shadow only: use alpha 0 so the shape is invisible but the shadow still renders
-			const shadowBlur = Math.max(2, Math.floor(wmH / 15));
-			ctx.shadowColor = 'rgba(0, 0, 0, 0.75)';
-			ctx.shadowBlur = shadowBlur;
-			ctx.shadowOffsetX = 0;
-			ctx.shadowOffsetY = 0;
+		if (logoOutline) {
+			const minSide = Math.min(w, h);
+			ctx.shadowBlur = Math.max(0.5, (logoShadowBlur * minSide) / 600);
+			ctx.shadowColor = `rgba(0, 0, 0, ${logoShadowOpacity / 100})`;
+			ctx.shadowOffsetX = (logoShadowOffsetX * minSide) / 600;
+			ctx.shadowOffsetY = (logoShadowOffsetY * minSide) / 600;
 			ctx.globalAlpha = 0;
 			ctx.drawImage(watermarkImg, x, y, wmW, wmH);
 			ctx.shadowColor = 'transparent';
 			ctx.shadowBlur = 0;
+			ctx.shadowOffsetX = 0;
+			ctx.shadowOffsetY = 0;
 		}
 		// Now draw the logo once at the user's opacity (no previous full-opacity draw under it)
 		ctx.globalAlpha = Number.isFinite(alpha) ? Math.max(0, Math.min(1, alpha)) : 0.4;
 		// Canvas uses 'source-over' for normal blending; 'normal' is CSS-only and would be ignored
 		ctx.globalCompositeOperation = blendMode === 'normal' ? 'source-over' : blendMode;
 		ctx.drawImage(watermarkImg, x, y, wmW, wmH);
+		ctx.restore();
+	}
+
+	/** Same soft drop shadow as logo: invisible fill so only shadow renders. */
+	function drawTextShadowPass(ctx, minSide, drawTexts) {
+		if (!textOutline) return;
+		ctx.save();
+		ctx.shadowBlur = Math.max(0.5, (textShadowBlur * minSide) / 600);
+		ctx.shadowColor = `rgba(0, 0, 0, ${textShadowOpacity / 100})`;
+		ctx.shadowOffsetX = (textShadowOffsetX * minSide) / 600;
+		ctx.shadowOffsetY = (textShadowOffsetY * minSide) / 600;
+		ctx.globalAlpha = 0;
+		ctx.fillStyle = '#ffffff';
+		drawTexts();
 		ctx.restore();
 	}
 
@@ -299,9 +338,6 @@
 			verticalPlacement === 'center' ? 'middle' : verticalPlacement === 'bottom' ? 'bottom' : 'top';
 		const alpha = Number(opacity);
 		const safeAlpha = Number.isFinite(alpha) ? Math.max(0, Math.min(1, alpha)) : 0.4;
-		ctx.fillStyle = 'rgba(255, 255, 255, ' + safeAlpha + ')';
-		ctx.strokeStyle = 'rgba(0, 0, 0, ' + safeAlpha * 0.5 + ')';
-		ctx.lineWidth = Math.max(1, Math.floor(fontSizePx / 20));
 
 		let x = effectivePadding;
 		if (horizontalPlacement === 'center') x = w / 2;
@@ -311,7 +347,8 @@
 		if (verticalPlacement === 'center') y = h / 2;
 		else if (verticalPlacement === 'bottom') y = h - effectivePadding;
 
-		ctx.strokeText(watermarkText, x, y);
+		drawTextShadowPass(ctx, minSide, () => ctx.fillText(watermarkText, x, y));
+		ctx.fillStyle = 'rgba(255, 255, 255, ' + safeAlpha + ')';
 		ctx.fillText(watermarkText, x, y);
 	}
 
@@ -369,15 +406,18 @@
 
 		// Draw logo (shadow only then logo at opacity)
 		ctx.save();
-		if (improveContrast) {
-			ctx.shadowColor = 'rgba(0, 0, 0, 0.75)';
-			ctx.shadowBlur = Math.max(2, Math.floor(wmH / 15));
-			ctx.shadowOffsetX = 0;
-			ctx.shadowOffsetY = 0;
+		if (logoOutline) {
+			const minSideCombo = Math.min(w, h);
+			ctx.shadowBlur = Math.max(0.5, (logoShadowBlur * minSideCombo) / 600);
+			ctx.shadowColor = `rgba(0, 0, 0, ${logoShadowOpacity / 100})`;
+			ctx.shadowOffsetX = (logoShadowOffsetX * minSideCombo) / 600;
+			ctx.shadowOffsetY = (logoShadowOffsetY * minSideCombo) / 600;
 			ctx.globalAlpha = 0;
 			ctx.drawImage(watermarkImg, startX, logoY, wmW, wmH);
 			ctx.shadowColor = 'transparent';
 			ctx.shadowBlur = 0;
+			ctx.shadowOffsetX = 0;
+			ctx.shadowOffsetY = 0;
 		}
 		ctx.globalAlpha = safeAlpha;
 		ctx.globalCompositeOperation = blendMode === 'normal' ? 'source-over' : blendMode;
@@ -388,14 +428,14 @@
 		ctx.font = `${fontSizePx}px ${watermarkTextFont}`;
 		ctx.textAlign = 'left';
 		ctx.textBaseline = 'middle';
-		ctx.fillStyle = 'rgba(255, 255, 255, ' + safeAlpha + ')';
-		ctx.strokeStyle = 'rgba(0, 0, 0, ' + safeAlpha * 0.5 + ')';
-		ctx.lineWidth = Math.max(1, Math.floor(fontSizePx / 20));
 		const dividerX = startX + wmW + effectiveComboGap;
 		const textX = dividerX + dividerWidth + effectiveComboGap;
-		ctx.strokeText(watermarkDivider, dividerX, centerY);
+		drawTextShadowPass(ctx, minSide, () => {
+			ctx.fillText(watermarkDivider, dividerX, centerY);
+			ctx.fillText(watermarkText, textX, centerY);
+		});
+		ctx.fillStyle = 'rgba(255, 255, 255, ' + safeAlpha + ')';
 		ctx.fillText(watermarkDivider, dividerX, centerY);
-		ctx.strokeText(watermarkText, textX, centerY);
 		ctx.fillText(watermarkText, textX, centerY);
 	}
 
@@ -591,13 +631,73 @@ yarn convert-image-registry-to-json --help</pre>
 						{/each}
 					</select>
 				</JDGInputContainer>
-				<JDGInputContainer label="Improve contrast">
+				<JDGH3H4
+					h3String="Logo shadow"
+					h4String="Drop shadow around the mark"
+					paddingTop="0.5rem"
+					paddingBottom="0.85rem"
+				/>
+				<JDGInputContainer label="Enable logo outline">
 					<label class="radio-label">
-						<input type="checkbox" bind:checked={improveContrast} />
-						Add dark outline so logo reads on any background
+						<input type="checkbox" bind:checked={logoOutline} />
+						Drop shadow (reads as outline on light photos)
 					</label>
 				</JDGInputContainer>
+				{#if logoOutline}
+					<JDGInputContainer label="Blur / spread (ref. 600px edge)">
+						<input
+							type="range"
+							class="range-input"
+							min="0"
+							max="28"
+							step="0.5"
+							bind:value={logoShadowBlur}
+						/>
+						<span class="range-value">{logoShadowBlur}px</span>
+					</JDGInputContainer>
+					<JDGInputContainer label="Shadow opacity">
+						<input
+							type="range"
+							class="range-input"
+							min="0"
+							max="100"
+							step="1"
+							bind:value={logoShadowOpacity}
+						/>
+						<span class="range-value">{logoShadowOpacity}%</span>
+					</JDGInputContainer>
+					<div class="row-inputs">
+						<JDGInputContainer label="Offset X">
+							<input
+								type="range"
+								class="range-input"
+								min="-20"
+								max="20"
+								step="1"
+								bind:value={logoShadowOffsetX}
+							/>
+							<span class="range-value">{logoShadowOffsetX}px</span>
+						</JDGInputContainer>
+						<JDGInputContainer label="Offset Y">
+							<input
+								type="range"
+								class="range-input"
+								min="-20"
+								max="20"
+								step="1"
+								bind:value={logoShadowOffsetY}
+							/>
+							<span class="range-value">{logoShadowOffsetY}px</span>
+						</JDGInputContainer>
+					</div>
+				{/if}
 			{:else if watermarkType === 'image+text'}
+				<JDGH3H4
+					h3String="Logo"
+					h4String="Image URL, size, and blend"
+					paddingTop="0.5rem"
+					paddingBottom="0.85rem"
+				/>
 				<JDGInputContainer label="Watermark image URL">
 					<input
 						type="url"
@@ -624,17 +724,81 @@ yarn convert-image-registry-to-json --help</pre>
 						<span class="size-hint">% of image height</span>
 					{/if}
 				</JDGInputContainer>
-				<JDGInputContainer label="Divider">
-					<input
-						type="text"
-						class="text-input divider-input"
-						bind:value={watermarkDivider}
-						placeholder=" | "
-					/>
+				<JDGInputContainer label="Blend mode">
+					<select class="select-input" bind:value={blendMode}>
+						{#each BLEND_OPTIONS as opt}
+							<option value={opt.value}>{opt.label}</option>
+						{/each}
+					</select>
 				</JDGInputContainer>
-				<JDGInputContainer label="Gap between logo, divider, and text (px)">
-					<input type="number" class="number-input" min="0" max="60" bind:value={comboGapPx} />
+
+				<JDGH3H4
+					h3String="Logo shadow"
+					h4String="Drop shadow around the logo"
+					paddingTop="0.75rem"
+					paddingBottom="0.85rem"
+				/>
+				<JDGInputContainer label="Enable logo outline">
+					<label class="radio-label">
+						<input type="checkbox" bind:checked={logoOutline} />
+						Drop shadow around the logo
+					</label>
 				</JDGInputContainer>
+				{#if logoOutline}
+					<JDGInputContainer label="Blur / spread (scales with image)">
+						<input
+							type="range"
+							class="range-input"
+							min="0"
+							max="28"
+							step="0.5"
+							bind:value={logoShadowBlur}
+						/>
+						<span class="range-value">{logoShadowBlur}px</span>
+					</JDGInputContainer>
+					<JDGInputContainer label="Shadow opacity">
+						<input
+							type="range"
+							class="range-input"
+							min="0"
+							max="100"
+							step="1"
+							bind:value={logoShadowOpacity}
+						/>
+						<span class="range-value">{logoShadowOpacity}%</span>
+					</JDGInputContainer>
+					<div class="row-inputs">
+						<JDGInputContainer label="Offset X">
+							<input
+								type="range"
+								class="range-input"
+								min="-20"
+								max="20"
+								step="1"
+								bind:value={logoShadowOffsetX}
+							/>
+							<span class="range-value">{logoShadowOffsetX}px</span>
+						</JDGInputContainer>
+						<JDGInputContainer label="Offset Y">
+							<input
+								type="range"
+								class="range-input"
+								min="-20"
+								max="20"
+								step="1"
+								bind:value={logoShadowOffsetY}
+							/>
+							<span class="range-value">{logoShadowOffsetY}px</span>
+						</JDGInputContainer>
+					</div>
+				{/if}
+
+				<JDGH3H4
+					h3String="Text & divider"
+					h4String="Copy, typography, spacing"
+					paddingTop="1rem"
+					paddingBottom="0.85rem"
+				/>
 				<JDGInputContainer label="Watermark text">
 					<input
 						type="text"
@@ -665,12 +829,78 @@ yarn convert-image-registry-to-json --help</pre>
 						{/each}
 					</select>
 				</JDGInputContainer>
-				<JDGInputContainer label="Improve contrast">
+				<JDGInputContainer label="Divider">
+					<input
+						type="text"
+						class="text-input divider-input"
+						bind:value={watermarkDivider}
+						placeholder=" | "
+					/>
+				</JDGInputContainer>
+				<JDGInputContainer label="Gap between logo, divider, and text (px)">
+					<input type="number" class="number-input" min="0" max="60" bind:value={comboGapPx} />
+				</JDGInputContainer>
+
+				<JDGH3H4
+					h3String="Text shadow"
+					h4String="Independent from logo contrast"
+					paddingTop="0.75rem"
+					paddingBottom="0.85rem"
+				/>
+				<JDGInputContainer label="Enable text shadow">
 					<label class="radio-label">
-						<input type="checkbox" bind:checked={improveContrast} />
-						Add dark outline so logo reads on any background
+						<input type="checkbox" bind:checked={textOutline} />
+						Drop shadow behind divider and text
 					</label>
 				</JDGInputContainer>
+				{#if textOutline}
+					<JDGInputContainer label="Blur / spread (scales with image)">
+						<input
+							type="range"
+							class="range-input"
+							min="0"
+							max="28"
+							step="0.5"
+							bind:value={textShadowBlur}
+						/>
+						<span class="range-value">{textShadowBlur}px</span>
+					</JDGInputContainer>
+					<JDGInputContainer label="Shadow opacity">
+						<input
+							type="range"
+							class="range-input"
+							min="0"
+							max="100"
+							step="1"
+							bind:value={textShadowOpacity}
+						/>
+						<span class="range-value">{textShadowOpacity}%</span>
+					</JDGInputContainer>
+					<div class="row-inputs">
+						<JDGInputContainer label="Offset X">
+							<input
+								type="range"
+								class="range-input"
+								min="-20"
+								max="20"
+								step="1"
+								bind:value={textShadowOffsetX}
+							/>
+							<span class="range-value">{textShadowOffsetX}px</span>
+						</JDGInputContainer>
+						<JDGInputContainer label="Offset Y">
+							<input
+								type="range"
+								class="range-input"
+								min="-20"
+								max="20"
+								step="1"
+								bind:value={textShadowOffsetY}
+							/>
+							<span class="range-value">{textShadowOffsetY}px</span>
+						</JDGInputContainer>
+					</div>
+				{/if}
 			{:else}
 				<JDGInputContainer label="Watermark text">
 					<input
@@ -702,8 +932,74 @@ yarn convert-image-registry-to-json --help</pre>
 						{/each}
 					</select>
 				</JDGInputContainer>
+				<JDGH3H4
+					h3String="Text shadow"
+					h4String="Drop shadow behind text"
+					paddingTop="0.5rem"
+					paddingBottom="0.85rem"
+				/>
+				<JDGInputContainer label="Enable text shadow">
+					<label class="radio-label">
+						<input type="checkbox" bind:checked={textOutline} />
+						Soft drop shadow behind text
+					</label>
+				</JDGInputContainer>
+				{#if textOutline}
+					<JDGInputContainer label="Blur / spread (ref. 600px edge)">
+						<input
+							type="range"
+							class="range-input"
+							min="0"
+							max="28"
+							step="0.5"
+							bind:value={textShadowBlur}
+						/>
+						<span class="range-value">{textShadowBlur}px</span>
+					</JDGInputContainer>
+					<JDGInputContainer label="Shadow opacity">
+						<input
+							type="range"
+							class="range-input"
+							min="0"
+							max="100"
+							step="1"
+							bind:value={textShadowOpacity}
+						/>
+						<span class="range-value">{textShadowOpacity}%</span>
+					</JDGInputContainer>
+					<div class="row-inputs">
+						<JDGInputContainer label="Offset X">
+							<input
+								type="range"
+								class="range-input"
+								min="-20"
+								max="20"
+								step="1"
+								bind:value={textShadowOffsetX}
+							/>
+							<span class="range-value">{textShadowOffsetX}px</span>
+						</JDGInputContainer>
+						<JDGInputContainer label="Offset Y">
+							<input
+								type="range"
+								class="range-input"
+								min="-20"
+								max="20"
+								step="1"
+								bind:value={textShadowOffsetY}
+							/>
+							<span class="range-value">{textShadowOffsetY}px</span>
+						</JDGInputContainer>
+					</div>
+				{/if}
 			{/if}
 
+			<JDGH3H4
+				h3String="Placement & opacity"
+				h4String="Applies to all watermark types"
+				paddingTop="1rem"
+				paddingBottom="0.85rem"
+			/>
 			<JDGInputContainer label="Opacity">
 				<input
 					type="range"
@@ -828,7 +1124,7 @@ yarn convert-image-registry-to-json --help</pre>
 							>
 								<span
 									class="watermark-text"
-									style="opacity: {opacity}; font-family: {watermarkTextFont}; font-size: {textPreviewFontSize}; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.5);"
+									style="opacity: {opacity}; font-family: {watermarkTextFont}; font-size: {textPreviewFontSize}; color: white; filter: {textWatermarkFilter};"
 								>
 									{watermarkText}
 								</span>
@@ -847,14 +1143,14 @@ yarn convert-image-registry-to-json --help</pre>
 								<span class="watermark-combo-gap" style="width: {comboGapPx}px;"></span>
 								<span
 									class="watermark-text"
-									style="opacity: {opacity}; font-family: {watermarkTextFont}; font-size: {textPreviewFontSize}; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.5);"
+									style="opacity: {opacity}; font-family: {watermarkTextFont}; font-size: {textPreviewFontSize}; color: white; filter: {textWatermarkFilter};"
 								>
 									{watermarkDivider}
 								</span>
 								<span class="watermark-combo-gap" style="width: {comboGapPx}px;"></span>
 								<span
 									class="watermark-text"
-									style="opacity: {opacity}; font-family: {watermarkTextFont}; font-size: {textPreviewFontSize}; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.5);"
+									style="opacity: {opacity}; font-family: {watermarkTextFont}; font-size: {textPreviewFontSize}; color: white; filter: {textWatermarkFilter};"
 								>
 									{watermarkText}
 								</span>
