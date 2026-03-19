@@ -122,7 +122,9 @@
 			return `max-height: ${WATERMARK_MIN_SHORT_SIDE}px; max-width: 100%; width: auto; height: auto;`;
 		}
 		const scale = WATERMARK_MIN_SHORT_SIDE / minSide;
-		return `width: ${Math.round(nw * scale)}px; height: ${Math.round(nh * scale)}px; max-width: none; max-height: none;`;
+		return `width: ${Math.round(nw * scale)}px; height: ${Math.round(
+			nh * scale
+		)}px; max-width: none; max-height: none;`;
 	})();
 
 	function updatePreviewImageHeight() {
@@ -177,12 +179,18 @@
 		}
 		if (logoShadowLayers === 2) {
 			return [
-				`drop-shadow(${ox}px ${oy}px ${Math.max(0.5, b * 0.32)}px rgba(0,0,0,${Math.min(1, a * 1.2)}))`,
+				`drop-shadow(${ox}px ${oy}px ${Math.max(0.5, b * 0.32)}px rgba(0,0,0,${Math.min(
+					1,
+					a * 1.2
+				)}))`,
 				`drop-shadow(${ox}px ${oy}px ${b}px rgba(0,0,0,${a * 0.78}))`
 			].join(' ');
 		}
 		return [
-			`drop-shadow(${ox}px ${oy}px ${Math.max(0.5, b * 0.26)}px rgba(0,0,0,${Math.min(1, a * 1.25)}))`,
+			`drop-shadow(${ox}px ${oy}px ${Math.max(0.5, b * 0.26)}px rgba(0,0,0,${Math.min(
+				1,
+				a * 1.25
+			)}))`,
 			`drop-shadow(${ox}px ${oy}px ${Math.max(0.7, b * 0.52)}px rgba(0,0,0,${a * 0.92}))`,
 			`drop-shadow(${ox}px ${oy}px ${Math.max(1, b * 1.2)}px rgba(0,0,0,${a * 0.42}))`
 		].join(' ');
@@ -196,10 +204,9 @@
 	$: textShadowA = textShadowOpacity / 100;
 	$: textWatermarkFilter =
 		textOutline && Number(textOpacity) > 0 && textShadowOpacity > 0
-			? `drop-shadow(${scaleRefPx(textShadowOffsetX)}px ${scaleRefPx(textShadowOffsetY)}px ${Math.max(
-					0.5,
-					scaleRefPx(textShadowBlur)
-				)}px rgba(0,0,0,${textShadowA}))`
+			? `drop-shadow(${scaleRefPx(textShadowOffsetX)}px ${scaleRefPx(
+					textShadowOffsetY
+				)}px ${Math.max(0.5, scaleRefPx(textShadowBlur))}px rgba(0,0,0,${textShadowA}))`
 			: 'none';
 
 	// Text % matches displayed image height (same basis as logo %) so preview stays proportional
@@ -439,7 +446,10 @@
 
 		// Scale padding with image size so it matches preview (preview short side ~600px)
 		const minSide = Math.min(w, h);
-		const effectivePadding = Math.max(2, Math.round((paddingPx * minSide) / WATERMARK_MIN_SHORT_SIDE));
+		const effectivePadding = Math.max(
+			2,
+			Math.round((paddingPx * minSide) / WATERMARK_MIN_SHORT_SIDE)
+		);
 
 		const fontSizePx =
 			watermarkTextSizeUnit === '%' ? Math.round((h * watermarkTextSize) / 100) : watermarkTextSize;
@@ -478,8 +488,14 @@
 		ctx.drawImage(sourceImg, 0, 0);
 
 		const minSide = Math.min(w, h);
-		const effectivePadding = Math.max(2, Math.round((paddingPx * minSide) / WATERMARK_MIN_SHORT_SIDE));
-		const effectiveComboGap = Math.max(2, Math.round((comboGapPx * minSide) / WATERMARK_MIN_SHORT_SIDE));
+		const effectivePadding = Math.max(
+			2,
+			Math.round((paddingPx * minSide) / WATERMARK_MIN_SHORT_SIDE)
+		);
+		const effectiveComboGap = Math.max(
+			2,
+			Math.round((comboGapPx * minSide) / WATERMARK_MIN_SHORT_SIDE)
+		);
 
 		// Logo sized by height only (same as image-only export)
 		const targetLogoH =
@@ -689,7 +705,8 @@ yarn convert-image-registry-to-json --help</pre>
 	<JDGContentBoxFloating title="Apply Watermark to Images">
 		<JDGBodyCopy paddingTop="0">
 			Drag and drop images or use the drop zone to add files. Set your watermark URL (e.g.
-			Cloudinary), logo/text opacity, blend mode, and placement. Download a single image or all at once.
+			Cloudinary), logo/text opacity, blend mode, and placement. Download a single image or all at
+			once.
 		</JDGBodyCopy>
 
 		<div class="watermark-options">
@@ -808,7 +825,8 @@ yarn convert-image-registry-to-json --help</pre>
 						/>
 						<span class="range-value">{logoShadowLayers}</span>
 						<span class="size-hint"
-							>Stacked halos: stronger on flat / one-color PNGs. 3 = max edge.</span>
+							>Stacked halos: stronger on flat / one-color PNGs. 3 = max edge.</span
+						>
 					</JDGInputContainer>
 					<div class="row-inputs">
 						<JDGInputContainer label="Offset X">
@@ -935,7 +953,8 @@ yarn convert-image-registry-to-json --help</pre>
 						/>
 						<span class="range-value">{logoShadowLayers}</span>
 						<span class="size-hint"
-							>Stacked halos: stronger on flat / one-color PNGs. 3 = max edge.</span>
+							>Stacked halos: stronger on flat / one-color PNGs. 3 = max edge.</span
+						>
 					</JDGInputContainer>
 					<div class="row-inputs">
 						<JDGInputContainer label="Offset X">

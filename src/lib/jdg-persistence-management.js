@@ -541,10 +541,7 @@ export const writeImageMetaEntryToRepo = async (repoName, registryKey, imageMeta
 		// Filter out undefined/null and runtime-only fields (e.g. key from gallery's flattenRegistry)
 		const cleanImageMeta = Object.fromEntries(
 			Object.entries(imageMeta).filter(
-				([k, value]) =>
-					value !== undefined &&
-					value !== null &&
-					k !== 'key' // key is registry lookup helper, not part of persisted schema
+				([k, value]) => value !== undefined && value !== null && k !== 'key' // key is registry lookup helper, not part of persisted schema
 			)
 		);
 
