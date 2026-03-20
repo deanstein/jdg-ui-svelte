@@ -235,6 +235,25 @@
 	// Remember the last zoom value before unchecking, so we can restore it
 	let lastZoomValue = 0;
 
+	// Filter events by description (substring, case-insensitive)
+	let eventDescriptionFilter = '';
+	$: eventDescriptionFilterTrimmed = eventDescriptionFilter.trim();
+	/** When filtering, force sequential / even layout (ignore relative spacing UI). */
+	$: relativeSpacingLayoutActive =
+		useRelativeSpacing && timelineZoom > 0 && !eventDescriptionFilterTrimmed;
+
+	function getTimelineEventDescriptionText(event) {
+		if (!event) return '';
+		const d = event.description;
+		return typeof d === 'string' ? d : '';
+	}
+
+	function eventDescriptionFilterMatches(event, trimmedFilter) {
+		if (!trimmedFilter) return true;
+		const text = getTimelineEventDescriptionText(event).toLowerCase();
+		return text.includes(trimmedFilter.toLowerCase());
+	}
+
 	// Auto-scroll state (only available in admin mode)
 	let isAutoScrolling = false;
 	let autoScrollSpeed = 1; // Speed multiplier (0.1 to 6)
@@ -497,6 +516,7 @@
 	$: currentTimelineHostId = timelineHost?.id;
 	$: if (timelineHost && currentTimelineHostId !== lastTimelineHostId) {
 		lastTimelineHostId = currentTimelineHostId;
+		eventDescriptionFilter = '';
 		const calculatedZoom = calculateDefaultZoom();
 		if (calculatedZoom !== undefined) {
 			const newZoom = Math.min(0.9, Math.max(0, calculatedZoom));
@@ -587,9 +607,9 @@
 		const staticGap = 20;
 		const baseRelativeGap = rowHeightEmptyPx; // 3px
 
-		if (!useRelativeSpacing || timelineZoom === 0) {
+		if (!relativeSpacingLayoutActive) {
 			// Static spacing: fixed gap, space-between alignment
-			// This happens when checkbox is unchecked OR slider is at 0
+			// Checkbox off, zoom at 0, or description filter active
 			timelineEventGridCss = css`
 				row-gap: ${staticGap}px;
 				align-content: space-between;
@@ -606,7 +626,7 @@
 	}
 
 	// Keep emptyState and today events updated
-	// Include useRelativeSpacing and timelineZoom as dependencies to recalculate when changed
+	// Include spacing mode, zoom, and filter as dependencies to recalculate when changed
 	$: {
 		if (!timelineHost) {
 			emptyStateEvent = undefined;
@@ -656,17 +676,16 @@
 			}
 
 			// Convert events to timeline row items
-			// When relative spacing is on AND zoom > 0, keep proportional indices for date-based spacing
-			// When off OR zoom is 0, use sequential indices for even distribution
-			const shouldUseRelativeSpacing = useRelativeSpacing && timelineZoom > 0;
+			// When relative spacing is on AND zoom > 0 (and not filtering), keep proportional indices
+			// Otherwise use sequential indices for even distribution
 			let rowItems = updateTimelineRowItems(
 				generateTimelineRowItems(timelineHost, contextEvents, earliestOrInceptionDate),
-				!shouldUseRelativeSpacing // use sequential indices when NOT using relative spacing
+				!relativeSpacingLayoutActive // use sequential indices when NOT using relative spacing
 			);
 
 			// If using relative spacing with zoom > 0, scale the indices by zoom to multiply the spacing effect
 			// This makes items that are farther apart in time move even farther apart visually
-			if (shouldUseRelativeSpacing) {
+			if (relativeSpacingLayoutActive) {
 				// Scale indices: zoom 0 = no scaling, zoom 1 = full scaling
 				// Use a multiplier that increases spacing (e.g., 1 + zoom means 2x spacing at max zoom)
 				const spacingMultiplier = 1 + timelineZoom;
@@ -682,13 +701,34 @@
 		}
 	}
 
+	$: visibleTimelineRowItems = eventDescriptionFilterTrimmed
+		? timelineRowItems.filter((r) =>
+				eventDescriptionFilterMatches(r.event, eventDescriptionFilterTrimmed)
+			)
+		: timelineRowItems;
+	$: showFilteredInception =
+		!!emptyStateEvent &&
+		(!eventDescriptionFilterTrimmed ||
+			eventDescriptionFilterMatches(emptyStateEvent, eventDescriptionFilterTrimmed));
+	$: hasTodayBand =
+		todayEvent && (timelineHost?.cessationDate === '' || !timelineHost?.cessationDate);
+	$: showFilteredToday =
+		hasTodayBand &&
+		(!eventDescriptionFilterTrimmed ||
+			eventDescriptionFilterMatches(todayEvent, eventDescriptionFilterTrimmed));
+	$: totalTimelineEventSlots =
+		timelineRowItems.length + (emptyStateEvent ? 1 : 0) + (hasTodayBand ? 1 : 0);
+	$: visibleTimelineEventCount =
+		visibleTimelineRowItems.length +
+		(showFilteredInception ? 1 : 0) +
+		(showFilteredToday ? 1 : 0);
+
 	// Compute the todayEvent row index based on spacing mode
 	// Sequential mode: place after all events
 	// Relative mode: place at the end of the proportional grid (row 1001)
 	let todayEventRowIndex;
 	$: {
-		const shouldUseRelativeSpacing = useRelativeSpacing && timelineZoom > 0;
-		todayEventRowIndex = shouldUseRelativeSpacing
+		todayEventRowIndex = relativeSpacingLayoutActive
 			? jdgQuantities.initialTimelineRowCount + 1
 			: timelineRowItems.length + (emptyStateEvent ? 1 : 0) + 1;
 	}
@@ -896,8 +936,22 @@
 				style="position: relative; z-index: 10;"
 			>
 				<div class="timeline-event-count {timelineEventCountCss}">
-					Showing {timelineRowItems.length + (emptyStateEvent ? 1 : 0) + (todayEvent ? 1 : 0)} timeline
-					events
+					{#if eventDescriptionFilterTrimmed}
+						Showing {visibleTimelineEventCount} of {totalTimelineEventSlots} timeline events
+					{:else}
+						Showing {totalTimelineEventSlots} timeline events
+					{/if}
+				</div>
+				<div class="timeline-description-filter">
+					<JDGTextInput
+						bind:inputValue={eventDescriptionFilter}
+						borderRadius="9999px"
+						inputPadding="5px 12px"
+						leadingFaIcon="fa-magnifying-glass"
+						showClearButton={true}
+						fontSizeOverride="14px"
+						ariaLabel="Filter timeline events by description"
+					/>
 				</div>
 				<!-- Timeline Options Flyout -->
 				<JDGFlyout
@@ -921,7 +975,7 @@
 							<div class="timeline-options-divider" />
 						{/if}
 						<JDGCheckbox
-							isEnabled={true}
+							isEnabled={!eventDescriptionFilterTrimmed}
 							showLabel={true}
 							label="Relative spacing"
 							isChecked={useRelativeSpacing}
@@ -937,7 +991,7 @@
 							max={1}
 							step={0.01}
 							onChange={onZoomChange}
-							isEnabled={useRelativeSpacing}
+							isEnabled={useRelativeSpacing && !eventDescriptionFilterTrimmed}
 							handleColor={jdgColors.activeSecondary}
 							trackColor={optionsSliderTrackColor}
 						/>
@@ -994,7 +1048,7 @@
 					<!-- The grid containing all timeline events -->
 					<div class="timeline-event-grid {timelineEventGridCss}">
 						<!-- If there are no events, make an empty state event at the top -->
-						{#if emptyStateEvent && eventColorPairs.length > 0}
+						{#if emptyStateEvent && showFilteredInception && eventColorPairs.length > 0}
 							<JDGTimelineEvent
 								{timelineHost}
 								timelineEvent={emptyStateEvent}
@@ -1010,14 +1064,15 @@
 							/>
 						{/if}
 						<!-- All timeline events saved to the host -->
-						{#each timelineRowItems as timelineRowItem, i}
-							{@const colorPairIndex = (emptyStateEvent ? 1 : 0) + i}
+						{#each visibleTimelineRowItems as timelineRowItem, i}
+							{@const fullIndex = timelineRowItems.indexOf(timelineRowItem)}
+							{@const colorPairIndex = (emptyStateEvent ? 1 : 0) + fullIndex}
 							<!-- Use a key to ensure the UI reacts when these values change -->
 							{#key `${timelineHost.id}-${timelineRowItem.event.id}`}
 								<JDGTimelineEvent
 									{timelineHost}
 									timelineEvent={timelineRowItem.event}
-									scrollId={timelineRowItem.event.id || `idx-${i}`}
+									scrollId={timelineRowItem.event.id || `idx-${fullIndex}`}
 									onClickTimelineEvent={() => {
 										draftTimelineHost.set(timelineHost);
 										draftTimelineEvent.set(timelineRowItem.event);
@@ -1045,7 +1100,7 @@
 							{/key}
 						{/each}
 						<!-- Show the today event if there's no cessation date provided -->
-						{#if (timelineHost.cessationDate === '' || (!timelineHost?.cessationDate && todayEvent)) && eventColorPairs.length > 0}
+						{#if showFilteredToday && eventColorPairs.length > 0}
 							{@const todayColorPairIndex = eventColorPairs.length - 1}
 							<JDGTimelineEvent
 								{timelineHost}
@@ -1236,6 +1291,14 @@
 		display: flex;
 		flex-grow: 1;
 		align-items: center;
+		min-width: 0;
+	}
+
+	.timeline-description-filter {
+		flex: 0 1 11rem;
+		min-width: 7rem;
+		max-width: 14rem;
+		align-self: center;
 	}
 
 	.timeline-content-container {
