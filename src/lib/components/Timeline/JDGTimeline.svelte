@@ -1091,7 +1091,7 @@
 				<!-- Event type visibility (between search and view options) -->
 				<JDGFlyout
 					tooltip="Show or hide event types"
-					faIcon="fa-layer-group"
+					faIcon="fa-tag"
 					flyoutTitle="EVENT TYPES"
 					flyoutPosition="bottom-left"
 					buttonBackgroundColor={jdgColors.activeSecondary}
