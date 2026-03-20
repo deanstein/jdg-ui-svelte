@@ -182,7 +182,7 @@
 	.jdg-flyout-title {
 		font-weight: bold;
 		white-space: nowrap;
-		padding: 2px 0;
+		padding: 2px 0 10px 0;
 	}
 
 	.jdg-flyout-content {

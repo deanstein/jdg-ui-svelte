@@ -6,7 +6,9 @@
 
 	import JDG_CONTEXTS from '$lib/jdg-contexts.js';
 
-	import { jdgTimelineEventKeys } from '$lib/schemas/timeline/jdg-timeline-event-types.js';
+	import timelineEventTypes, {
+		jdgTimelineEventKeys
+	} from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 	import getJdgImageMetaRegistry from '$lib/jdg-image-meta-registry.js';
 
 	import {
@@ -71,12 +73,34 @@
 		jdgSizes
 	} from '$lib/jdg-shared-styles.js';
 
+	/** Same normalization as {@link JDGTimelineEventForm} (array or object of allowed keys). */
+	function normalizeEventTypeKeys(keys) {
+		const k = keys ?? jdgTimelineEventKeys;
+		if (Array.isArray(k)) {
+			return Object.fromEntries(k.map((key) => [key, key]));
+		}
+		return k;
+	}
+
+	/** Selectable (non-contextual) types allowed by context/prop — matches event form type dropdown. */
+	function visibleMapForSelectableKeys(effectiveKeys) {
+		return Object.fromEntries(
+			Object.keys(timelineEventTypes)
+				.filter((key) => effectiveKeys[key] && !timelineEventTypes[key]?.isContextual)
+				.map((typeKey) => [typeKey, true])
+		);
+	}
+
+	const contextEventTypeKeys = getContext(JDG_CONTEXTS.TIMELINE_EVENT_TYPE_KEYS);
+
 	// Timeline host contains events and event references.
 	// Three-state prop:
 	//   undefined (default) → data not yet available → shows loading spinner
 	//   null → explicitly no data → shows "No timeline data" message
 	//   object → timeline host data → renders the timeline
 	export let timelineHost;
+	// Allowed event type keys for this timeline (fallback when TIMELINE_EVENT_TYPE_KEYS context is unset); mirrors JDGTimelineEventForm
+	export let eventTypeKeys = jdgTimelineEventKeys;
 	// Optionally include contextual events
 	export let contextEvents = timelineHost?.contextualEvents;
 	// Whether to show the name of the timeline host at the top
@@ -254,6 +278,30 @@
 		return text.includes(trimmedFilter.toLowerCase());
 	}
 
+	$: effectiveEventTypeKeys = normalizeEventTypeKeys(contextEventTypeKeys ?? eventTypeKeys);
+
+	$: selectableEventTypeKeysSorted = Object.keys(timelineEventTypes)
+		.filter((key) => effectiveEventTypeKeys[key] && !timelineEventTypes[key]?.isContextual)
+		.sort((a, b) => timelineEventTypes[a].label.localeCompare(timelineEventTypes[b].label));
+
+	// Which selectable event types are shown (toggled in visibility flyout); contextual row types are not listed and stay visible
+	let visibleTimelineEventTypes = visibleMapForSelectableKeys(
+		normalizeEventTypeKeys(contextEventTypeKeys ?? eventTypeKeys)
+	);
+
+	/** User-driven only — avoid JDGCheckbox here (its reactive sync + new inline handlers per row causes an infinite loop). */
+	function setTimelineEventTypeVisible(typeKey, checked) {
+		visibleTimelineEventTypes = { ...visibleTimelineEventTypes, [typeKey]: checked };
+	}
+
+	function setAllSelectableInTimelineTypesVisible(keys, checked) {
+		const next = { ...visibleTimelineEventTypes };
+		for (const key of keys) {
+			next[key] = checked;
+		}
+		visibleTimelineEventTypes = next;
+	}
+
 	// Auto-scroll state (only available in admin mode)
 	let isAutoScrolling = false;
 	let autoScrollSpeed = 1; // Speed multiplier (0.1 to 6)
@@ -272,6 +320,36 @@
 	// Row items are converted from the activePerson's raw event data
 	// each row item is an object with the index and the event content
 	let timelineRowItems = [];
+
+	$: eventTypeCountsInTimeline = (() => {
+		const counts = {};
+		for (const r of timelineRowItems) {
+			const t = r.event?.type;
+			if (typeof t === 'string') {
+				counts[t] = (counts[t] || 0) + 1;
+			}
+		}
+		return counts;
+	})();
+
+	$: selectableEventTypeKeysInTimelineSorted = selectableEventTypeKeysSorted.filter(
+		(key) => (eventTypeCountsInTimeline[key] || 0) > 0
+	);
+
+	let eventTypesFlyoutMasterInput;
+
+	$: eventTypesFlyoutMasterChecked =
+		selectableEventTypeKeysInTimelineSorted.length > 0 &&
+		selectableEventTypeKeysInTimelineSorted.every((k) => visibleTimelineEventTypes[k] !== false);
+
+	$: eventTypesFlyoutMasterIndeterminate =
+		selectableEventTypeKeysInTimelineSorted.length > 0 &&
+		!selectableEventTypeKeysInTimelineSorted.every((k) => visibleTimelineEventTypes[k] !== false) &&
+		!selectableEventTypeKeysInTimelineSorted.every((k) => visibleTimelineEventTypes[k] === false);
+
+	$: if (eventTypesFlyoutMasterInput) {
+		eventTypesFlyoutMasterInput.indeterminate = eventTypesFlyoutMasterIndeterminate;
+	}
 
 	// Timeline events will each have a slightly different color
 	// along a gradient defined here
@@ -517,6 +595,7 @@
 	$: if (timelineHost && currentTimelineHostId !== lastTimelineHostId) {
 		lastTimelineHostId = currentTimelineHostId;
 		eventDescriptionFilter = '';
+		visibleTimelineEventTypes = visibleMapForSelectableKeys(effectiveEventTypeKeys);
 		const calculatedZoom = calculateDefaultZoom();
 		if (calculatedZoom !== undefined) {
 			const newZoom = Math.min(0.9, Math.max(0, calculatedZoom));
@@ -568,6 +647,51 @@
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 			font-size: ${jdgSizes.fontSizeBodySm};
 		}
+	`;
+
+	const eventTypeFilterRowCss = css`
+		display: flex;
+		align-items: center;
+		gap: 0.35em;
+		cursor: pointer;
+		user-select: none;
+	`;
+
+	const eventTypeFilterCheckboxCss = css`
+		appearance: none;
+		-webkit-appearance: none;
+		width: 1.3em;
+		height: 1.3em;
+		margin: 0;
+		border: 2px solid ${jdgColors.activeSecondary};
+		border-radius: 3px;
+		background-color: white;
+		cursor: pointer;
+		position: relative;
+		flex-shrink: 0;
+
+		&:checked {
+			background-color: ${jdgColors.activeSecondary};
+			border-color: ${jdgColors.activeSecondary};
+		}
+
+		&:checked::after {
+			content: '';
+			position: absolute;
+			left: 50%;
+			top: 45%;
+			width: 30%;
+			height: 55%;
+			border: solid white;
+			border-width: 0 2.5px 2.5px 0;
+			transform: translate(-50%, -50%) rotate(45deg);
+		}
+	`;
+
+	const eventTypeFilterLabelCss = css`
+		font-size: 14px;
+		line-height: normal;
+		color: ${jdgColors.text};
 	`;
 
 	// Timeline spine styling
@@ -701,19 +825,30 @@
 		}
 	}
 
-	$: visibleTimelineRowItems = eventDescriptionFilterTrimmed
-		? timelineRowItems.filter((r) =>
-				eventDescriptionFilterMatches(r.event, eventDescriptionFilterTrimmed)
-			)
-		: timelineRowItems;
+	// Read visibleTimelineEventTypes here (not only inside a helper) so Svelte invalidates when checkboxes change
+	$: visibleTimelineRowItems = timelineRowItems.filter((r) => {
+		const t = r.event?.type;
+		if (typeof t === 'string' && visibleTimelineEventTypes[t] === false) return false;
+		if (
+			eventDescriptionFilterTrimmed &&
+			!eventDescriptionFilterMatches(r.event, eventDescriptionFilterTrimmed)
+		) {
+			return false;
+		}
+		return true;
+	});
 	$: showFilteredInception =
 		!!emptyStateEvent &&
+		(typeof emptyStateEvent.type !== 'string' ||
+			visibleTimelineEventTypes[emptyStateEvent.type] !== false) &&
 		(!eventDescriptionFilterTrimmed ||
 			eventDescriptionFilterMatches(emptyStateEvent, eventDescriptionFilterTrimmed));
 	$: hasTodayBand =
 		todayEvent && (timelineHost?.cessationDate === '' || !timelineHost?.cessationDate);
 	$: showFilteredToday =
 		hasTodayBand &&
+		(typeof todayEvent.type !== 'string' ||
+			visibleTimelineEventTypes[todayEvent.type] !== false) &&
 		(!eventDescriptionFilterTrimmed ||
 			eventDescriptionFilterMatches(todayEvent, eventDescriptionFilterTrimmed));
 	$: totalTimelineEventSlots =
@@ -953,6 +1088,52 @@
 						ariaLabel="Filter timeline events by description"
 					/>
 				</div>
+				<!-- Event type visibility (between search and view options) -->
+				<JDGFlyout
+					tooltip="Show or hide event types"
+					faIcon="fa-layer-group"
+					flyoutTitle="EVENT TYPES"
+					flyoutPosition="bottom-left"
+					buttonBackgroundColor={jdgColors.activeSecondary}
+				>
+					<div class="timeline-event-type-filter-list">
+						{#if selectableEventTypeKeysInTimelineSorted.length === 0}
+							<span class="timeline-event-type-filter-empty {eventTypeFilterLabelCss}">
+								No selectable event types in this timeline yet.
+							</span>
+						{:else}
+							<label class={eventTypeFilterRowCss}>
+								<input
+									bind:this={eventTypesFlyoutMasterInput}
+									type="checkbox"
+									class={eventTypeFilterCheckboxCss}
+									checked={eventTypesFlyoutMasterChecked}
+									on:change={(e) =>
+										setAllSelectableInTimelineTypesVisible(
+											selectableEventTypeKeysInTimelineSorted,
+											e.currentTarget.checked
+										)}
+								/>
+								<span class={eventTypeFilterLabelCss}>All</span>
+							</label>
+							<div class="timeline-event-type-filter-divider" />
+							{#each selectableEventTypeKeysInTimelineSorted as typeKey (typeKey)}
+								<label class={eventTypeFilterRowCss}>
+									<input
+										type="checkbox"
+										class={eventTypeFilterCheckboxCss}
+										checked={visibleTimelineEventTypes[typeKey] !== false}
+										on:change={(e) =>
+											setTimelineEventTypeVisible(typeKey, e.currentTarget.checked)}
+									/>
+									<span class={eventTypeFilterLabelCss}>
+										{timelineEventTypes[typeKey].label} ({eventTypeCountsInTimeline[typeKey]})
+									</span>
+								</label>
+							{/each}
+						{/if}
+					</div>
+				</JDGFlyout>
 				<!-- Timeline Options Flyout -->
 				<JDGFlyout
 					tooltip="Timeline options"
@@ -961,7 +1142,6 @@
 					buttonBackgroundColor={jdgColors.activeSecondary}
 				>
 					<div class="timeline-options-controls">
-						<div class="timeline-options-divider" />
 						{#if !previewOnly && !isInModal}
 							<JDGButton
 								label="Open in full-screen"
@@ -1141,6 +1321,7 @@
 					{showTitleBar}
 					{allowEditing}
 					{isInteractive}
+					{eventTypeKeys}
 					width="100%"
 					minHeight="70dvh"
 					maxHeight="75dvh"
@@ -1379,5 +1560,27 @@
 	.auto-scroll-buttons {
 		display: flex;
 		justify-content: center;
+	}
+
+	.timeline-event-type-filter-list {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		max-height: min(60vh, 420px);
+		overflow-y: auto;
+		padding-right: 4px;
+	}
+
+	.timeline-event-type-filter-divider {
+		height: 0;
+		border: none;
+		border-top: 1px solid rgba(127, 124, 124, 0.45);
+		margin: 2px 0 4px 0;
+	}
+
+	.timeline-event-type-filter-empty {
+		opacity: 0.75;
+		font-style: italic;
+		padding: 4px 0;
 	}
 </style>

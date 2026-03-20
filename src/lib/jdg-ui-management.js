@@ -11,7 +11,7 @@ import {
 } from '$lib/stores/jdg-ui-store.js';
 import { draftTimelineEvent } from '$lib/stores/jdg-temp-store.js';
 
-import jdgTimelineEventTypes from '$lib/schemas/timeline/jdg-timeline-event-types.js';
+import { jdgTimelineEventKeys } from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 import jdgTimelineRowItem from '$lib/schemas/timeline/jdg-timeline-row-item.js';
 
 import { instantiateObject } from '$lib/jdg-utils.js';
@@ -210,8 +210,8 @@ export const generateTimelineRowItems = (timelineHost, contextualEvents, incepti
 				upgradedTimelineHost.timelineEventReferences[i].eventId
 			)
 		);
-		// mark the event as a reference origin type
-		eventFromReference.type = jdgTimelineEventTypes.reference;
+		// mark the event as a reference origin type (string key, not the type-definition object)
+		eventFromReference.type = jdgTimelineEventKeys.reference;
 		// get the index this item belongs to
 		const rowIndex = getClosestTimelineRowByDate(
 			inceptionDate,
