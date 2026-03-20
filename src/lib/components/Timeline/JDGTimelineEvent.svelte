@@ -591,6 +591,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		line-height: 1;
 	}
 
 	.timeline-event-date-apprx {

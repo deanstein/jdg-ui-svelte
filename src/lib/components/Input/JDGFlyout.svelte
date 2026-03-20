@@ -97,6 +97,12 @@
 
 	const flyoutTitleCss = css`
 		color: ${jdgColors.text};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			font-size: 0.65rem;
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			font-size: 0.8rem;
+		}
 	`;
 
 	$: activeIcon = isOpen ? 'fa-xmark' : faIcon;
