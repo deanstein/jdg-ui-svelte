@@ -824,7 +824,9 @@
 		saveStatus.set(jdgSaveStatus.saving);
 
 		try {
-			console.log(`🗑️ Removing registry entry "${registryKey}" from ${currentRepoName} only (Cloudinary unchanged)...`);
+			console.log(
+				`🗑️ Removing registry entry "${registryKey}" from ${currentRepoName} only (Cloudinary unchanged)...`
+			);
 			const deleteResult = await deleteImageMetaEntryFromRepo(currentRepoName, registryKey);
 
 			if (!deleteResult) {
@@ -1242,7 +1244,11 @@
 		<div slot="modal-content-slot" class="registry-only-blocked-modal">
 			<p class="registry-only-blocked-text">{registryOnlyBlockedModalText}</p>
 			<div class="registry-only-blocked-actions">
-				<JDGButton label="Got it" onClickFunction={closeRegistryOnlyBlockedModal} isPrimary={true} />
+				<JDGButton
+					label="Got it"
+					onClickFunction={closeRegistryOnlyBlockedModal}
+					isPrimary={true}
+				/>
 			</div>
 		</div>
 	</JDGModal>

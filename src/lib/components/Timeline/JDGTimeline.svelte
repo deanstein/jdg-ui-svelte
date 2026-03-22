@@ -847,16 +847,13 @@
 		todayEvent && (timelineHost?.cessationDate === '' || !timelineHost?.cessationDate);
 	$: showFilteredToday =
 		hasTodayBand &&
-		(typeof todayEvent.type !== 'string' ||
-			visibleTimelineEventTypes[todayEvent.type] !== false) &&
+		(typeof todayEvent.type !== 'string' || visibleTimelineEventTypes[todayEvent.type] !== false) &&
 		(!eventDescriptionFilterTrimmed ||
 			eventDescriptionFilterMatches(todayEvent, eventDescriptionFilterTrimmed));
 	$: totalTimelineEventSlots =
 		timelineRowItems.length + (emptyStateEvent ? 1 : 0) + (hasTodayBand ? 1 : 0);
 	$: visibleTimelineEventCount =
-		visibleTimelineRowItems.length +
-		(showFilteredInception ? 1 : 0) +
-		(showFilteredToday ? 1 : 0);
+		visibleTimelineRowItems.length + (showFilteredInception ? 1 : 0) + (showFilteredToday ? 1 : 0);
 
 	// Compute the todayEvent row index based on spacing mode
 	// Sequential mode: place after all events
@@ -1123,8 +1120,7 @@
 										type="checkbox"
 										class={eventTypeFilterCheckboxCss}
 										checked={visibleTimelineEventTypes[typeKey] !== false}
-										on:change={(e) =>
-											setTimelineEventTypeVisible(typeKey, e.currentTarget.checked)}
+										on:change={(e) => setTimelineEventTypeVisible(typeKey, e.currentTarget.checked)}
 									/>
 									<span class={eventTypeFilterLabelCss}>
 										{timelineEventTypes[typeKey].label} ({eventTypeCountsInTimeline[typeKey]})
