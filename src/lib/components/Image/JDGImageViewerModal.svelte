@@ -42,13 +42,16 @@
 	onCloseFunction={() => {
 		hideImageDetailModal();
 	}}
-	closeOnOverlayClick={true}
+	closeOnOverlayClick={$imageViewerScale <= 1}
 	colorRgba="rgba(255, 255, 255, 0.6)"
 >
 	<div
 		class="image-and-caption-wrapper {imageAndCaptionWrapperCss}"
 		transition:scale
-		on:click={hideImageDetailModal}
+		on:click|self={() => {
+			if ($imageViewerScale > 1) return;
+			hideImageDetailModal();
+		}}
 		role="button"
 		tabindex="0"
 		on:keypress={() => {}}

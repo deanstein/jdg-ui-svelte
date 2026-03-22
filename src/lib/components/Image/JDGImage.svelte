@@ -163,6 +163,12 @@
 	// FUNCTIONS
 
 	const onImageClick = (event) => {
+		if (suppressNextImageClick) {
+			suppressNextImageClick = false;
+			event.stopPropagation();
+			event.preventDefault();
+			return;
+		}
 		if (stopEventPropagation) {
 			event.stopPropagation();
 		}
@@ -189,6 +195,44 @@
 	let pendingOriginY = null;
 	let isZooming = false;
 	let wheelEndTimeout = null;
+
+	// click-drag / single-finger pan when zoomed (image viewer modal)
+	const pointerPanThresholdPx = 5;
+	let suppressNextImageClick = false;
+	let isPointerPanning = false;
+	let pointerPanStartX = 0;
+	let pointerPanStartY = 0;
+	let pointerPanStartTranslateX = 0;
+	let pointerPanStartTranslateY = 0;
+	let pointerPanDidMove = false;
+	let isTouchPanning = false;
+	let lastTouchPanX = 0;
+	let lastTouchPanY = 0;
+	let touchPanDidMove = false;
+
+	const getPanBounds = (s) => {
+		const el = scaleContext === 'container' ? containerRef : imageRef;
+		if (!el) {
+			return { maxX: 0, maxY: 0 };
+		}
+		const uw = el.offsetWidth;
+		const uh = el.offsetHeight;
+		const maxX = Math.max(0, (uw * (s - 1)) / 2);
+		const maxY = Math.max(0, (uh * (s - 1)) / 2);
+		return { maxX, maxY };
+	};
+
+	const clampPan = (tx, ty, s) => {
+		const { maxX, maxY } = getPanBounds(s);
+		return {
+			x: Math.max(-maxX, Math.min(maxX, tx)),
+			y: Math.max(-maxY, Math.min(maxY, ty))
+		};
+	};
+
+	const currentTranslateX = () => (pendingTranslateX !== null ? pendingTranslateX : translateX);
+	const currentTranslateY = () => (pendingTranslateY !== null ? pendingTranslateY : translateY);
+	const currentScale = () => (pendingScale !== null ? pendingScale : scale);
 
 	// Smooth update function using requestAnimationFrame
 	const applyTransform = () => {
@@ -336,9 +380,63 @@
 		}
 	};
 
+	const handlePointerDown = (event) => {
+		if (!doScaleOnScrollOrZoom || currentScale() <= 1) {
+			return;
+		}
+		// Touch uses handleTouchMove (single-finger) so it does not fight pinch / double firing
+		if (event.pointerType === 'touch') {
+			return;
+		}
+		if (event.pointerType === 'mouse' && event.button !== 0) {
+			return;
+		}
+		isPointerPanning = true;
+		pointerPanDidMove = false;
+		pointerPanStartX = event.clientX;
+		pointerPanStartY = event.clientY;
+		pointerPanStartTranslateX = currentTranslateX();
+		pointerPanStartTranslateY = currentTranslateY();
+		event.currentTarget.setPointerCapture(event.pointerId);
+		event.preventDefault();
+	};
+
+	const handlePointerMove = (event) => {
+		if (!doScaleOnScrollOrZoom || !isPointerPanning || currentScale() <= 1) {
+			return;
+		}
+		const dx = event.clientX - pointerPanStartX;
+		const dy = event.clientY - pointerPanStartY;
+		if (Math.abs(dx) > pointerPanThresholdPx || Math.abs(dy) > pointerPanThresholdPx) {
+			pointerPanDidMove = true;
+		}
+		const s = currentScale();
+		const clamped = clampPan(pointerPanStartTranslateX + dx, pointerPanStartTranslateY + dy, s);
+		// Preserve transform-origin from zoom (avoid jumping to 50% on first pan frame)
+		scheduleTransform(null, clamped.x, clamped.y, null, null);
+		event.preventDefault();
+	};
+
+	const handlePointerUp = (event) => {
+		if (!isPointerPanning) {
+			return;
+		}
+		isPointerPanning = false;
+		if (pointerPanDidMove) {
+			suppressNextImageClick = true;
+		}
+		pointerPanDidMove = false;
+		try {
+			event.currentTarget.releasePointerCapture(event.pointerId);
+		} catch {
+			// ignore
+		}
+	};
+
 	const handleTouchStart = (event) => {
 		if (doScaleOnScrollOrZoom) {
 			if (event.touches.length === 2) {
+				isTouchPanning = false;
 				event.preventDefault();
 				const targetElement = scaleContext === 'container' ? containerRef : imageRef;
 				const rect = targetElement.getBoundingClientRect();
@@ -356,13 +454,34 @@
 				const pinchCenterY = (touch1.clientY + touch2.clientY) / 2 - rect.top;
 				lastPinchCenterX = pinchCenterX;
 				lastPinchCenterY = pinchCenterY;
+			} else if (event.touches.length === 1 && currentScale() > 1) {
+				isTouchPanning = true;
+				touchPanDidMove = false;
+				lastTouchPanX = event.touches[0].clientX;
+				lastTouchPanY = event.touches[0].clientY;
 			}
 		}
 	};
 
 	const handleTouchMove = (event) => {
 		if (doScaleOnScrollOrZoom) {
+			if (event.touches.length === 1 && isTouchPanning && currentScale() > 1) {
+				event.preventDefault();
+				const t = event.touches[0];
+				const dx = t.clientX - lastTouchPanX;
+				const dy = t.clientY - lastTouchPanY;
+				lastTouchPanX = t.clientX;
+				lastTouchPanY = t.clientY;
+				if (Math.abs(dx) > pointerPanThresholdPx || Math.abs(dy) > pointerPanThresholdPx) {
+					touchPanDidMove = true;
+				}
+				const s = currentScale();
+				const clamped = clampPan(currentTranslateX() + dx, currentTranslateY() + dy, s);
+				scheduleTransform(null, clamped.x, clamped.y, null, null);
+				return;
+			}
 			if (event.touches.length === 2) {
+				isTouchPanning = false;
 				const targetElement = scaleContext === 'container' ? containerRef : imageRef;
 				const rect = targetElement.getBoundingClientRect();
 				event.preventDefault();
@@ -454,7 +573,16 @@
 		}
 	};
 
-	const handleTouchEnd = () => {
+	const handleTouchEnd = (event) => {
+		if (doScaleOnScrollOrZoom) {
+			if (touchPanDidMove) {
+				suppressNextImageClick = true;
+				touchPanDidMove = false;
+			}
+			if (event.touches.length === 0) {
+				isTouchPanning = false;
+			}
+		}
 		// Reset initial distance when pinch ends
 		initialDistance = 0;
 		baseScaleOnPinchStart = 1.0;
@@ -978,6 +1106,16 @@
 	transition:transition={{ duration: jdgDurations.fadeIn }}
 	bind:this={containerRef}
 	class="jdg-image-container {imageContainerCssDynamic}"
+	style:cursor={doScaleOnScrollOrZoom && $imageViewerScale > 1
+		? isPointerPanning
+			? 'grabbing'
+			: 'grab'
+		: undefined}
+	style:touch-action={doScaleOnScrollOrZoom && $imageViewerScale > 1 ? 'none' : undefined}
+	on:pointerdown={handlePointerDown}
+	on:pointermove={handlePointerMove}
+	on:pointerup={handlePointerUp}
+	on:pointercancel={handlePointerUp}
 >
 	<!-- Only load the image if it's visible -->
 	{#if isVisible}
