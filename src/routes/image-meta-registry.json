@@ -606,20 +606,5 @@
     "showBackgroundBlur": true,
     "toolbarJustification": "right",
     "version": "0.7.1"
-  },
-  "articles": {
-    "_1960_08_14_RMN_huge_shopping_center": {
-      "id": "84c83635-3ee4-4776-8626-0c64706ce064",
-      "src": "https://res.cloudinary.com/jdg-main/image/upload/v1774138013/ccp-website/articles/1960-08-14-RMN-huge-shopping-center.jpg",
-      "caption": "Huge shopping center planned for KLZ site",
-      "attribution": "Rocky Mountain News",
-      "alt": "Huge shopping center planned for KLZ site",
-      "title": "",
-      "date": "1960-08-14",
-      "isApprxDate": false,
-      "showBackgroundBlur": false,
-      "toolbarJustification": "right",
-      "version": "0.7.1"
-    }
   }
 }
