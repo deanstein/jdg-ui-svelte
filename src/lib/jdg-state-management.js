@@ -10,11 +10,7 @@ import {
 	showDevTools,
 	imagesLoading
 } from './stores/jdg-ui-store.js';
-import {
-	draftImageMetaRegistry,
-	draftImageRegistryRepo,
-	selectedGalleryRegistryRepo
-} from './stores/jdg-temp-store.js';
+import { draftImageMetaRegistry, draftImageRegistryRepo } from './stores/jdg-temp-store.js';
 import { jdgSizes } from './jdg-shared-styles.js';
 
 //
@@ -107,7 +103,6 @@ export const hideImageDetailModal = () => {
 	// Clear registry context set by gallery when viewing a different registry
 	draftImageMetaRegistry.set(undefined);
 	draftImageRegistryRepo.set(undefined);
-	selectedGalleryRegistryRepo.set(undefined);
 };
 
 //

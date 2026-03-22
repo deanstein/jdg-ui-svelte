@@ -23,6 +23,7 @@
 		upgradeImageMeta
 	} from '$lib/jdg-utils.js';
 	import {
+		allImageMetaRegistryRepoNames,
 		deleteCloudinaryImage,
 		deleteImageMetaEntryFromRepo,
 		getImageMetaRegistryLabel,
@@ -100,6 +101,16 @@
 		selectedRegistryForNewImage = $repoName;
 	}
 
+	$: registryRepoFromCloudinaryPath =
+		!isNewImage && $draftImageMeta?.src
+			? (() => {
+					const p = extractCloudinaryAssetpath($draftImageMeta.src);
+					if (!p) return undefined;
+					const root = p.split('/')[0];
+					return allImageMetaRegistryRepoNames.includes(root) ? root : undefined;
+				})()
+			: undefined;
+
 	// The effective registry repo:
 	// - Gallery open: use current dropdown (store) so readout updates when user changes selector
 	// - Timeline/gallery image: use draft store (set when opening image)
@@ -110,7 +121,7 @@
 			? $draftImageRegistryRepo
 			: isNewImage
 				? selectedRegistryForNewImage
-				: $repoName;
+				: registryRepoFromCloudinaryPath ?? $repoName;
 	$: registryLabel = getImageMetaRegistryLabel(effectiveRepoName);
 
 	// For new images: track intended path locally (don't set src until upload)
