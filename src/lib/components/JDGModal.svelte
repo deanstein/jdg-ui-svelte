@@ -57,7 +57,7 @@
 			height: ${$isMobileBreakpoint && maximizeWidthOnMobile ? '90dvh' : height};
 			min-width: ${!$isMobileBreakpoint && minWidth ? minWidth : 'auto'};
 			max-width: ${!$isMobileBreakpoint && maxWidth ? maxWidth : 'none'};
-			/* Constrain max-height so header stays visible and (when contentOnly on mobile) hint + bottom visible */
+			/* Constrain max-height so header stays visible and (when contentOnly + carousel) hint row + bottom visible */
 			/* Use dvh (dynamic viewport height) to handle iOS browser chrome appearing/disappearing */
 			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 				max-height: ${contentOnly
@@ -67,10 +67,14 @@
 			@media (min-width: ${jdgBreakpoints.width[0].toString() +
 				jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 				jdgBreakpoints.unit}) {
-				max-height: calc(100dvh - ${jdgSizes.headerHeightMd} - ${minPadding});
+				max-height: ${contentOnly
+					? `calc(100dvh - ${jdgSizes.headerHeightMd} - ${minPadding} - ${$carouselHintHeightPx}px)`
+					: `calc(100dvh - ${jdgSizes.headerHeightMd} - ${minPadding})`};
 			}
 			@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-				max-height: calc(100dvh - ${jdgSizes.headerHeightLg} - ${minPadding});
+				max-height: ${contentOnly
+					? `calc(100dvh - ${jdgSizes.headerHeightLg} - ${minPadding} - ${$carouselHintHeightPx}px)`
+					: `calc(100dvh - ${jdgSizes.headerHeightLg} - ${minPadding})`};
 			}
 			background-color: ${bgColor};
 		`;

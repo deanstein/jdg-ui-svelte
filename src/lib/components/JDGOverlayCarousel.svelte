@@ -143,12 +143,13 @@
 		document.addEventListener('touchend', touchEndHandler);
 	});
 
-	$: if (showMobileHint && hintRef && resizeObserver && observedHintEl !== hintRef) {
+	// Reserve vertical space for the "N of M" row on all breakpoints (desktop shows count-only hint too).
+	$: if (showCountHint && hintRef && resizeObserver && observedHintEl !== hintRef) {
 		if (observedHintEl) resizeObserver.unobserve(observedHintEl);
 		observedHintEl = hintRef;
 		resizeObserver.observe(hintRef);
 	}
-	$: if (!showMobileHint) {
+	$: if (!showCountHint) {
 		if (observedHintEl && resizeObserver) {
 			resizeObserver.unobserve(observedHintEl);
 			observedHintEl = null;

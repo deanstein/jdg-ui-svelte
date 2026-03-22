@@ -89,7 +89,7 @@ export let showTimelineEventModal = writable(false);
 // Carousel nav (prev/next). Optional currentIndex (1-based) and totalCount for mobile hint e.g. "< 1 of 94 >"
 // { goPrev, goNext, canGoPrev, canGoNext, currentIndex?, totalCount? } | null
 export let carouselNav = writable(null);
-/** Measured height (px) of the carousel mobile hint row; used by modal contentOnly to reserve space. Set by JDGOverlayCarousel. */
+/** Measured height (px) of the carousel "N of M" hint row; used by modal contentOnly to reserve space. Set by JDGOverlayCarousel. */
 export let carouselHintHeightPx = writable(0);
 export let isTimelineEventModalEditable = writable(false);
 export let timelineEventModalInceptionDate = writable(undefined);
