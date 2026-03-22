@@ -73,26 +73,6 @@
 		jdgSizes
 	} from '$lib/jdg-shared-styles.js';
 
-	/** Same normalization as {@link JDGTimelineEventForm} (array or object of allowed keys). */
-	function normalizeEventTypeKeys(keys) {
-		const k = keys ?? jdgTimelineEventKeys;
-		if (Array.isArray(k)) {
-			return Object.fromEntries(k.map((key) => [key, key]));
-		}
-		return k;
-	}
-
-	/** Selectable (non-contextual) types allowed by context/prop — matches event form type dropdown. */
-	function visibleMapForSelectableKeys(effectiveKeys) {
-		return Object.fromEntries(
-			Object.keys(timelineEventTypes)
-				.filter((key) => effectiveKeys[key] && !timelineEventTypes[key]?.isContextual)
-				.map((typeKey) => [typeKey, true])
-		);
-	}
-
-	const contextEventTypeKeys = getContext(JDG_CONTEXTS.TIMELINE_EVENT_TYPE_KEYS);
-
 	// Timeline host contains events and event references.
 	// Three-state prop:
 	//   undefined (default) → data not yet available → shows loading spinner
@@ -128,6 +108,26 @@
 	export let addClickAddEvent = () => {};
 	// Called when a new avatar is selected (passes the new image key)
 	export let onAvatarChange = undefined;
+
+		/** Same normalization as {@link JDGTimelineEventForm} (array or object of allowed keys). */
+		function normalizeEventTypeKeys(keys) {
+		const k = keys ?? jdgTimelineEventKeys;
+		if (Array.isArray(k)) {
+			return Object.fromEntries(k.map((key) => [key, key]));
+		}
+		return k;
+	}
+
+	/** Selectable (non-contextual) types allowed by context/prop — matches event form type dropdown. */
+	function visibleMapForSelectableKeys(effectiveKeys) {
+		return Object.fromEntries(
+			Object.keys(timelineEventTypes)
+				.filter((key) => effectiveKeys[key] && !timelineEventTypes[key]?.isContextual)
+				.map((typeKey) => [typeKey, true])
+		);
+	}
+
+	const contextEventTypeKeys = getContext(JDG_CONTEXTS.TIMELINE_EVENT_TYPE_KEYS);
 
 	// State for hover overlay and modal
 	let isHovering = false;
@@ -608,6 +608,10 @@
 
 	// DYNAMIC STYLES
 
+	const timelineWrapperCss = css`
+		width: ${width};
+	`;
+
 	const timelineContainerCss = css`
 		width: ${width};
 		min-height: ${minHeight};
@@ -984,7 +988,7 @@
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <div
 	bind:this={timelineWrapperRef}
-	class="timeline-wrapper {effectivePreviewOnly ? 'preview-only' : ''} {showLoadingOverlay
+	class="timeline-wrapper {timelineWrapperCss} {effectivePreviewOnly ? 'preview-only' : ''} {showLoadingOverlay
 		? 'loading-overlay-visible'
 		: ''}"
 	on:mouseenter={showPreviewOverlay}
@@ -1344,9 +1348,11 @@
 		position: relative;
 		display: flex;
 		flex-direction: column;
+		/* Parents like JDGContentBoxFloating use flex column + align-items:center — children shrink to
+		   content width on the cross axis. Stretch so the timeline uses the full content width. */
+		align-self: stretch;
+		min-width: 0;
 		height: -webkit-fill-available;
-		width: -webkit-fill-available;
-		width: -moz-available;
 	}
 
 	/*
@@ -1360,7 +1366,6 @@
 
 	.timeline-wrapper.loading-overlay-visible {
 		align-self: stretch;
-		width: 100%;
 		min-width: 0;
 		flex: 1 1 0;
 		min-height: 200px;
