@@ -1298,6 +1298,27 @@
 		</div>
 	{:else if timelineHost === null}
 		<p class="timeline-empty">No timeline data available.</p>
+	{:else}
+		<!-- timelineHost === undefined: same title bar + container box model as loaded state so total
+		     height is from real CSS (min/max on .timeline-container), not a guessed rem reserve. -->
+		{#if showTitleBar}
+			<div
+				class="timeline-title-bar {timelineTitleBarCss} timeline-title-bar--host-pending"
+				aria-hidden="true"
+			>
+				<div
+					class="timeline-title-bar-placeholder-avatar"
+					style:width={avatarHeight}
+					style:height={avatarHeight}
+				></div>
+				<!-- Ensure title bar still takes up height during loading -->
+				<div class="timeline-title">&#8203;</div>
+			</div>
+		{/if}
+		<div
+			class="timeline-container {timelineContainerCss} timeline-container--host-pending"
+			aria-hidden="true"
+		></div>
 	{/if}
 </div>
 
@@ -1367,8 +1388,6 @@
 	.timeline-wrapper.loading-overlay-visible {
 		align-self: stretch;
 		min-width: 0;
-		flex: 1 1 0;
-		min-height: 200px;
 	}
 
 	/* Prevent internal timeline scrolling when in preview-only mode */
@@ -1439,6 +1458,19 @@
 		border-radius: 10px 10px 0 0;
 		margin-bottom: -10px;
 		gap: 10px;
+	}
+
+	.timeline-title-bar--host-pending {
+		pointer-events: none;
+	}
+
+	.timeline-title-bar-placeholder-avatar {
+		flex-shrink: 0;
+		visibility: hidden;
+	}
+
+	.timeline-container--host-pending {
+		pointer-events: none;
 	}
 
 	.timeline-container {
