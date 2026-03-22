@@ -45,56 +45,11 @@
 			>Standalone timeline as it would appear on the Cinderella City Project website.
 			<br /><br />To edit, go to <a href="/timeline-test">Timeline Test</a>.
 		</JDGBodyCopy>
-		<div class="timeline-area">
-			<div class="timeline-slot">
-				<JDGTimeline
-					timelineHost={$hostStore}
-					minHeight="0"
-					maxHeight="100%"
-					allowEditing={false}
-				/>
-			</div>
-		</div>
+		<JDGTimeline
+			timelineHost={$hostStore}
+			minHeight="70vh"
+			maxHeight="70vh"
+			allowEditing={false}
+		/>
 	</JDGContentBoxFloating>
 </JDGContentContainer>
-
-<style>
-	.timeline-area {
-		position: relative;
-		align-self: stretch; /* override parent align-items: center so we fill width */
-		width: 100%;
-		/* Fixed height so timeline + title bar stay inside the content box */
-		height: 70vh;
-		min-height: 300px;
-		max-height: 70vh;
-		overflow: hidden;
-		display: flex;
-		flex-direction: column;
-	}
-
-	/* Force the timeline component to fit: flex shrink + min-height 0 so it can’t overflow */
-	.timeline-slot {
-		flex: 1 1 0;
-		min-height: 0;
-		overflow: hidden;
-		display: flex;
-		flex-direction: column;
-	}
-
-	/* Timeline root (.timeline-wrapper) must fill the slot so maxHeight="100%" works */
-	.timeline-slot :global(.timeline-wrapper) {
-		height: 100%;
-		display: flex;
-		flex-direction: column;
-	}
-	/* Allow wrapper to shrink when timeline content is present; loading state is handled by Timeline */
-
-	.timeline-slot :global(.timeline-container) {
-		flex: 1 1 0;
-		min-height: 0;
-	}
-
-	.timeline-slot :global(.timeline-wrapper:not(.loading-overlay-visible)) {
-		min-height: 0;
-	}
-</style>
