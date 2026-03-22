@@ -40,8 +40,11 @@
 </script>
 
 <JDGContentContainer overlapWithHeader={false}>
-	<JDGContentBoxFloating title="Timeline Test" animateWhenVisible={false}>
-		<JDGBodyCopy paddingTop="0">This is a test of the timeline component.</JDGBodyCopy>
+	<JDGContentBoxFloating title="Cin City Timeline Test" animateWhenVisible={false}>
+		<JDGBodyCopy textAlign="center" textWrap="balance" paddingTop="0"
+			>Standalone timeline as it would appear on the Cinderella City Project website.
+			<br /><br />To edit, go to <a href="/timeline-test">Timeline Test</a>.
+		</JDGBodyCopy>
 		<div class="timeline-area">
 			<div class="timeline-slot">
 				<JDGTimeline
