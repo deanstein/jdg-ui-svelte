@@ -1,6 +1,10 @@
 <script>
 	import { goto } from '$app/navigation';
+	import { onMount, setContext } from 'svelte';
+	import { writable } from 'svelte/store';
 	import { css } from '@emotion/css';
+
+	import JDG_CONTEXTS from '$lib/jdg-contexts.js';
 
 	import { appAccentColors } from '$lib/stores/jdg-ui-store.js';
 	import { scrollToAnchor } from '$lib/jdg-utils.js';
@@ -13,7 +17,11 @@
 		jdgRepoOwner,
 		jdgUiSvelteRepoName,
 		jdgWebsiteRepoName,
-		pmx3dWebsiteRepoName
+		pmx3dWebsiteRepoName,
+		buildingDataCollectionKey,
+		fetchJsonFileList,
+		jdgBuildingDataRepoName,
+		readJsonFileFromRepo
 	} from '$lib/jdg-persistence-management.js';
 	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
 
@@ -48,10 +56,37 @@
 		JDGSelect,
 		JDGTextArea,
 		JDGTextInput,
+		JDGTimeline,
 		JDGUpNext,
 		JDGVersionNpmPackage,
 		JDGVersionPackageJson
 	} from '$lib/index.js';
+
+	// Age-display wording for timeline
+	setContext(JDG_CONTEXTS.EVENT_AGE_SUFFIX_POSITIVE, 'after opening');
+	setContext(JDG_CONTEXTS.EVENT_AGE_SUFFIX_NEGATIVE, 'before opening');
+
+	// undefined → loading; null → no data; object → render (same pattern as timeline-test-ccp)
+	const ccpMallTimelineHostStore = writable(undefined);
+
+	onMount(async () => {
+		const files = await fetchJsonFileList(jdgRepoOwner, jdgBuildingDataRepoName);
+		// [1] is the sample building-data file used on Timeline Test (see timeline-test +page)
+		if (files?.length > 1) {
+			const data = await readJsonFileFromRepo(
+				jdgRepoOwner,
+				jdgBuildingDataRepoName,
+				files[1]
+			);
+			const hosts = data?.[buildingDataCollectionKey];
+			const host = hosts?.find((h) => h.name === 'Cinderella City Mall');
+			if (host) {
+				ccpMallTimelineHostStore.set(host);
+				return;
+			}
+		}
+		ccpMallTimelineHostStore.set(null);
+	});
 
 	let isTestButtonEnabled = true;
 
@@ -955,6 +990,17 @@
 		<JDGBodyCopy paddingTop="0">
 			Displays a colorful rectangle containing an imageTile and description text.
 		</JDGBodyCopy>
+	</JDGContentBoxFloating>
+	<JDGContentBoxFloating title="TIMELINE" animateWhenVisible={false}>
+		<JDGBodyCopy textAlign="center" textWrap="balance" paddingTop="0">
+			To edit, go to <a href="/timeline-test">Timeline Test</a>.
+		</JDGBodyCopy>
+		<JDGTimeline
+			timelineHost={$ccpMallTimelineHostStore}
+			minHeight="0"
+			maxHeight="70vh"
+			allowEditing={false}
+		/>
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="NICE TO MEET YOU">
 		<JDGBodyCopy textAlign="center" textWrap="balance" paddingTop="0">
