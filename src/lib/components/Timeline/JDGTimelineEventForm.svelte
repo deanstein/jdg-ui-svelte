@@ -486,7 +486,8 @@
 							{#if isAdditional}
 								<JDGDatePicker bind:inputValue={$localAdditionalStore[key]} isEnabled={true} />
 							{:else if key === 'date'}
-								{#key `${$localEventStore.isMediaWrapper}-${effectiveDate}-${effectiveIsApprxDate}`}
+								<!-- Key must not include the live date (or other values that change while typing): remounting would steal focus. Only isMediaWrapper swaps disabled+image date vs editable store date. -->
+								{#key $localEventStore.isMediaWrapper}
 									{#if $localEventStore.isMediaWrapper}
 										<JDGDatePicker inputValue={effectiveDate} isEnabled={false} />
 									{:else}
