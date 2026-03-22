@@ -19,6 +19,7 @@
 		areObjectsEqual,
 		extractCloudinaryAssetpath,
 		instantiateObject,
+		lightenColor,
 		replaceCloudinaryAssetPath as replaceCloudinaryAssetPathInUrl,
 		upgradeImageMeta
 	} from '$lib/jdg-utils.js';
@@ -51,6 +52,9 @@
 	} from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
 
+	// Softer red than full delete — same hue family as trash, for “registry row only”
+	const registryOnlyRemoveButtonColor = lightenColor(jdgColors.delete, 0.42);
+
 	// Get the image meta registry from context (read-only)
 	const contextImageMetaRegistry = getContext(JDG_CONTEXTS.IMAGE_META_REGISTRY);
 	// Use draft registry if set (from timeline/gallery/page), otherwise fall back to context registry
@@ -81,8 +85,17 @@
 	// Should Alt field sync with Caption field?
 	let syncAltWithCaption = true;
 
-	// Track if we're currently checking URL usage in other repos
+	// Track if we're currently checking URL usage in other repos (on demand for delete flows)
 	let isCheckingUsage = false;
+
+	// "Remove registry entry only" blocked (orphan or verify failure) — shown in a small modal, not alerts
+	let showRegistryOnlyBlockedModal = false;
+	let registryOnlyBlockedModalText = '';
+
+	const closeRegistryOnlyBlockedModal = () => {
+		showRegistryOnlyBlockedModal = false;
+		registryOnlyBlockedModalText = '';
+	};
 
 	// Record the original showImageEditButtons value
 	// because we turn this off when this modal shows
@@ -676,7 +689,7 @@
 
 		// Confirm deletion
 		const confirmDelete = confirm(
-			'⚠️ Are you sure you want to delete this image?\n\nThis will:\n• Delete the image from Cloudinary\n• Remove it from the registry\n\nThis action cannot be undone.'
+			'⚠️ Are you sure you want to delete this image?\n\nThis will:\n• Delete the image from Cloudinary\n• Remove it from this registry\n\nThis action cannot be undone.'
 		);
 		if (!confirmDelete) {
 			return;
@@ -694,7 +707,7 @@
 			if (reposWithUrl.length > 0) {
 				const repoList = reposWithUrl.map((r) => r.repoName).join('\n   • ');
 				const confirmProceed = confirm(
-					`⚠️ This image URL is also used in ${reposWithUrl.length} other repo(s):\n\n   • ${repoList}\n\nDeleting will remove the image from Cloudinary, which will break these references.\n\nContinue anyway?`
+					`⚠️ This image URL is also used in ${reposWithUrl.length} other repo(s):\n\n   • ${repoList}\n\nDeleting will remove the image from Cloudinary, which will break these references.\n\nCancel here and use “Remove from this registry only” if you only want to drop this site’s entry and keep the file.\n\nContinue with full delete anyway?`
 				);
 				if (!confirmProceed) {
 					isCheckingUsage = false;
@@ -759,6 +772,79 @@
 			saveStatus.set(jdgSaveStatus.saveFailed);
 			setTimeout(() => saveStatus.set(undefined), 3000);
 			alert(`Error deleting image: ${err.message}`);
+		}
+	};
+
+	// Remove only this repo's registry entry; Cloudinary unchanged. Checked on click so other repos still reference this URL.
+	const onClickRemoveFromRegistryEntryOnly = async () => {
+		if (isNewImage) {
+			return;
+		}
+
+		const currentSrc = $draftImageMeta?.src;
+		if (!currentSrc || !currentSrc.includes('cloudinary')) {
+			alert('No valid Cloudinary URL.');
+			return;
+		}
+
+		const currentRepoName = effectiveRepoName;
+		if (!currentRepoName) {
+			alert('No image registry repo selected. Cannot remove entry.');
+			return;
+		}
+
+		isCheckingUsage = true;
+		let reposWithUrl = [];
+		try {
+			const usageResults = await getImageMetaSrcUsageInRepos(currentSrc, currentRepoName);
+			reposWithUrl = usageResults.filter((r) => r.found);
+			if (reposWithUrl.length === 0) {
+				isCheckingUsage = false;
+				registryOnlyBlockedModalText =
+					'Removing this registry entry would leave the file in Cloudinary with no other image meta registry still referencing it — an orphan.\n\nTo delete the image entirely, use the red trash button (Cloudinary + this registry).';
+				showRegistryOnlyBlockedModal = true;
+				return;
+			}
+		} catch (err) {
+			isCheckingUsage = false;
+			registryOnlyBlockedModalText = `Could not verify other registries (${err.message}). Try again in a moment. To remove the image file from Cloudinary, use the red trash button.`;
+			showRegistryOnlyBlockedModal = true;
+			return;
+		}
+		isCheckingUsage = false;
+
+		const repoList = reposWithUrl.map((r) => r.repoName).join('\n   • ');
+		const confirmRemove = confirm(
+			`Remove only this registry entry from ${currentRepoName}?\n\nThe image file stays in Cloudinary. It remains referenced in:\n   • ${repoList}\n\nThis does not delete the image.`
+		);
+		if (!confirmRemove) {
+			return;
+		}
+
+		saveStatus.set(jdgSaveStatus.saving);
+
+		try {
+			console.log(`🗑️ Removing registry entry "${registryKey}" from ${currentRepoName} only (Cloudinary unchanged)...`);
+			const deleteResult = await deleteImageMetaEntryFromRepo(currentRepoName, registryKey);
+
+			if (!deleteResult) {
+				throw new Error('Failed to delete entry from registry');
+			}
+
+			console.log('✅ Registry entry removed (image left in Cloudinary)');
+
+			saveStatus.set(jdgSaveStatus.saveSuccessRebuilding);
+
+			showImageMetaModal.set(false);
+			draftImageMeta.set(undefined);
+			draftImageMetaRegistry.set(undefined);
+			draftImageRegistryRepo.set(undefined);
+			selectedGalleryRegistryRepo.set(undefined);
+		} catch (err) {
+			console.error('❌ Remove registry entry error:', err.message);
+			saveStatus.set(jdgSaveStatus.saveFailed);
+			setTimeout(() => saveStatus.set(undefined), 3000);
+			alert(`Error: ${err.message}`);
 		}
 	};
 
@@ -974,6 +1060,18 @@
 						tooltip={hasFileSelected ? 'Upload image' : 'Select new image'}
 						doForceSquareAspect
 					/>
+					{#if !isNewImage}
+						<JDGButton
+							onClickFunction={onClickRemoveFromRegistryEntryOnly}
+							faIcon="fa-solid fa-file-circle-minus"
+							label={null}
+							paddingLeftRight={'8px'}
+							paddingTopBottom={'8px'}
+							backgroundColor={registryOnlyRemoveButtonColor}
+							tooltip="Remove only this registry entry (keeps Cloudinary). Blocked if no other registry references this URL."
+							doForceSquareAspect
+						/>
+					{/if}
 					<JDGButton
 						onClickFunction={onClickDeleteImage}
 						faIcon="fa-solid fa-trash"
@@ -981,7 +1079,7 @@
 						paddingLeftRight={'8px'}
 						paddingTopBottom={'8px'}
 						backgroundColor={jdgColors.delete}
-						tooltip="Delete image"
+						tooltip="Delete from Cloudinary and this registry"
 						doForceSquareAspect
 					/>
 				</div>
@@ -1134,6 +1232,22 @@
 	</div>
 </JDGModal>
 
+{#if showRegistryOnlyBlockedModal}
+	<JDGModal
+		title="Can't remove registry entry only"
+		onClickCloseButton={closeRegistryOnlyBlockedModal}
+		closeOnOverlayClick={true}
+		maxWidth="min(420px, 92vw)"
+	>
+		<div slot="modal-content-slot" class="registry-only-blocked-modal">
+			<p class="registry-only-blocked-text">{registryOnlyBlockedModalText}</p>
+			<div class="registry-only-blocked-actions">
+				<JDGButton label="Got it" onClickFunction={closeRegistryOnlyBlockedModal} isPrimary={true} />
+			</div>
+		</div>
+	</JDGModal>
+{/if}
+
 <style>
 	.image-meta-modal-scrollable {
 		position: relative;
@@ -1163,11 +1277,14 @@
 		position: absolute;
 		display: flex;
 		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: center;
 		gap: 10px;
 		bottom: 10px;
 		left: 50%;
 		transform: translateX(-50%);
 		z-index: 10;
+		max-width: calc(100% - 20px);
 	}
 
 	.image-src-string {
@@ -1194,5 +1311,26 @@
 		min-width: 0; /* Allow shrinking */
 		max-width: 100%; /* Prevent expanding beyond parent */
 		overflow: hidden; /* Clip overflowing content */
+	}
+
+	.registry-only-blocked-modal {
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+		gap: 16px;
+		width: 100%;
+		box-sizing: border-box;
+	}
+
+	.registry-only-blocked-text {
+		margin: 0;
+		white-space: pre-wrap;
+		font-size: 0.95rem;
+		line-height: 1.45;
+	}
+
+	.registry-only-blocked-actions {
+		display: flex;
+		justify-content: flex-end;
 	}
 </style>
