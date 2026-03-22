@@ -1254,7 +1254,15 @@
 									timelineEvent={timelineRowItem.event}
 									scrollId={timelineRowItem.event.id || `idx-${fullIndex}`}
 									onClickTimelineEvent={() => {
-										draftTimelineHost.set(timelineHost);
+										// Only promote the host into the global draft store when this timeline is in an
+										// editing context (allowEditing). Otherwise every event click would set
+										// draftTimelineHost — e.g. timeline-test uses allowEditing={$draftTimelineHost}
+										// and would treat the host as "in draft" after the first click even when the user
+										// never used "Set to Editing Store". Carousel still works via timelineEventsOrdered +
+										// draftTimelineEvent; image registry comes from timeline context.
+										if (allowEditing) {
+											draftTimelineHost.set(timelineHost);
+										}
 										draftTimelineEvent.set(timelineRowItem.event);
 										timelineEventsOrdered.set(timelineRowItems.map((r) => r.event));
 										// Store the gradient colors for this event's modal
