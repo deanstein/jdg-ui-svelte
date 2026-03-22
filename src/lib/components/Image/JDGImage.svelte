@@ -162,6 +162,33 @@
 
 	// FUNCTIONS
 
+	/** For object-fit:contain, true if the click lies on the drawn image (not letterbox). */
+	const isClickInsideObjectFitContainImage = (event, imgEl) => {
+		if (!imgEl?.naturalWidth) return true;
+		const nw = imgEl.naturalWidth;
+		const nh = imgEl.naturalHeight;
+		const cw = imgEl.clientWidth;
+		const ch = imgEl.clientHeight;
+		if (cw <= 0 || ch <= 0) return true;
+		const ir = nw / nh;
+		const br = cw / ch;
+		let rw;
+		let rh;
+		if (ir > br) {
+			rw = cw;
+			rh = cw / ir;
+		} else {
+			rh = ch;
+			rw = ch * ir;
+		}
+		const ox = (cw - rw) / 2;
+		const oy = (ch - rh) / 2;
+		const rect = imgEl.getBoundingClientRect();
+		const x = event.clientX - rect.left;
+		const y = event.clientY - rect.top;
+		return x >= ox && x <= ox + rw && y >= oy && y <= oy + rh;
+	};
+
 	const onImageClick = (event) => {
 		if (suppressNextImageClick) {
 			suppressNextImageClick = false;
@@ -170,7 +197,10 @@
 			return;
 		}
 		if (stopEventPropagation) {
-			event.stopPropagation();
+			// Letterbox (contain + blur) still hits the <img>; only stop when click is on real pixels so parent can dismiss.
+			if (cropToFillContainer || isClickInsideObjectFitContainImage(event, imageRef)) {
+				event.stopPropagation();
+			}
 		}
 	};
 
