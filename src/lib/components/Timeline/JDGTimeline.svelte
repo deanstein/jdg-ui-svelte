@@ -641,10 +641,6 @@
 		background-color: ${lightenColor(timelineBackgroundColor, 0.03)};
 	`;
 
-	const timelineEventCountCss = css`
-		margin-left: ${jdgSizes.nTimelineEventGapSize / 2 + jdgSizes.timelineUnit};
-	`;
-
 	// font sizing for number of events, timeline options
 	const timelineSupportingTextCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
@@ -1170,32 +1166,33 @@
 				class="timeline-actions-bar {timelineSupportingTextCss}"
 				style="position: relative; z-index: 10;"
 			>
-				<div class="timeline-event-count {timelineEventCountCss}">
+				<div class="timeline-event-count">
 					{#if eventDescriptionFilterTrimmed}
-						Showing {visibleTimelineEventCount} of {totalTimelineEventSlots} timeline events
+						{visibleTimelineEventCount} of {totalTimelineEventSlots} timeline event{totalTimelineEventSlots === 1 ? '' : 's'}
 					{:else}
-						Showing {totalTimelineEventSlots} timeline events
+						{totalTimelineEventSlots} timeline event{totalTimelineEventSlots === 1 ? '' : 's'}
 					{/if}
 				</div>
-				<div class="timeline-description-filter">
-					<JDGTextInput
-						bind:inputValue={eventDescriptionFilter}
-						borderRadius="9999px"
-						inputPadding="5px 12px"
-						leadingFaIcon="fa-magnifying-glass"
-						showClearButton={true}
-						fontSizeOverride="14px"
-						ariaLabel="Filter timeline events by description"
-					/>
-				</div>
-				<!-- Event type visibility (between search and view options) -->
-				<JDGFlyout
-					tooltip="Show or hide event types"
-					faIcon="fa-tag"
-					flyoutTitle="EVENT TYPES"
-					flyoutPosition="bottom-left"
-					buttonBackgroundColor={jdgColors.activeSecondary}
-				>
+				<div class="timeline-actions-bar-tools">
+					<div class="timeline-description-filter">
+						<JDGTextInput
+							bind:inputValue={eventDescriptionFilter}
+							borderRadius="9999px"
+							inputPadding="5px 12px"
+							leadingFaIcon="fa-magnifying-glass"
+							showClearButton={true}
+							fontSizeOverride="14px"
+							ariaLabel="Filter timeline events by description"
+						/>
+					</div>
+					<!-- Event type visibility (between search and view options) -->
+					<JDGFlyout
+						tooltip="Show or hide event types"
+						faIcon="fa-tag"
+						flyoutTitle="EVENT TYPES"
+						flyoutPosition="bottom-left"
+						buttonBackgroundColor={jdgColors.activeSecondary}
+					>
 					<div class="timeline-event-type-filter-list">
 						{#if selectableEventTypeKeysInTimelineSorted.length === 0}
 							<span class="timeline-event-type-filter-empty {eventTypeFilterLabelCss}">
@@ -1232,14 +1229,14 @@
 							{/each}
 						{/if}
 					</div>
-				</JDGFlyout>
-				<!-- Timeline Options Flyout -->
-				<JDGFlyout
-					tooltip="Timeline options"
-					flyoutTitle="VIEW OPTIONS"
-					flyoutPosition="bottom-left"
-					buttonBackgroundColor={jdgColors.activeSecondary}
-				>
+					</JDGFlyout>
+					<!-- Timeline Options Flyout -->
+					<JDGFlyout
+						tooltip="Timeline options"
+						flyoutTitle="VIEW OPTIONS"
+						flyoutPosition="bottom-left"
+						buttonBackgroundColor={jdgColors.activeSecondary}
+					>
 					<div class="timeline-options-controls">
 						{#if !previewOnly && !isInModal}
 							<JDGButton
@@ -1310,7 +1307,8 @@
 							</div>
 						{/if}
 					</div>
-				</JDGFlyout>
+					</JDGFlyout>
+				</div>
 			</div>
 			<!-- Timeline: A collection of TimelineEvents shown chronologically -->
 			<div class="timeline-content-container" style="position: relative; z-index: 1;">
@@ -1677,22 +1675,29 @@
 
 	.timeline-actions-bar {
 		display: flex;
-		justify-content: right;
-		column-gap: 0.5rem;
+		flex-direction: column;
+		align-items: stretch;
+		gap: 0.5rem;
 	}
 
 	.timeline-event-count {
+		width: 100%;
+		text-align: center;
+	}
+
+	.timeline-actions-bar-tools {
 		display: flex;
-		flex-grow: 1;
+		flex-wrap: wrap;
+		justify-content: center;
 		align-items: center;
-		min-width: 0;
+		gap: 0.5rem;
+		width: 100%;
 	}
 
 	.timeline-description-filter {
 		flex: 0 1 11rem;
 		min-width: 7rem;
 		max-width: 14rem;
-		align-self: center;
 	}
 
 	.timeline-content-container {
