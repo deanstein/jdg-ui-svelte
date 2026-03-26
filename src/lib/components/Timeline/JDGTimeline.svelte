@@ -44,6 +44,7 @@
 	import { instantiateTimelineEvent } from '$lib/jdg-timeline-management.js';
 	import {
 		generateTimelineRowItems,
+		getDecadeStartYearFromTimelineEvent,
 		getEarliestTimelineEvent,
 		updateTimelineRowItems
 	} from '$lib/jdg-ui-management.js';
@@ -100,6 +101,12 @@
 	export let previewOverlayDuration = 500;
 	// Set true when this instance is the one rendered inside the full-screen modal (do not set from outside; used by svelte:self)
 	export let isInModal = false;
+	// Insert decade labels (e.g. 1960s) when the calendar decade changes between visible rows
+	export let showDecadeHeadings = true;
+	// Decade labels: `none` uses neutral gray; site palettes tint the label
+	export let decadeHeadingAccentPalette = 'none';
+	/** @type {'start' | 'center' | 'end'} — text alignment inside the year column (matches event years) */
+	export let decadeHeadingJustify = 'center';
 
 	// Effective preview mode (from parent prop; controls overlay and open-in-modal behavior)
 	$: effectivePreviewOnly = previewOnly;
@@ -109,8 +116,8 @@
 	// Called when a new avatar is selected (passes the new image key)
 	export let onAvatarChange = undefined;
 
-		/** Same normalization as {@link JDGTimelineEventForm} (array or object of allowed keys). */
-		function normalizeEventTypeKeys(keys) {
+	/** Same normalization as {@link JDGTimelineEventForm} (array or object of allowed keys). */
+	function normalizeEventTypeKeys(keys) {
 		const k = keys ?? jdgTimelineEventKeys;
 		if (Array.isArray(k)) {
 			return Object.fromEntries(k.map((key) => [key, key]));
@@ -698,6 +705,98 @@
 		color: ${jdgColors.text};
 	`;
 
+	const decadeHeadingPaletteKeys = {
+		ccp: 'accentColorsCCP',
+		ccpRose: 'accentColorsCCPRose',
+		jdg: 'accentColorsJDG',
+		pmx: 'accentColorsPMX'
+	};
+
+	/** Padding matches {@link JDGTimelineEvent} `eventRowCss`; column width matches `.timeline-event-year`. */
+	const timelineDecadeRowCss = css`
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		width: 100%;
+		box-sizing: border-box;
+		user-select: none;
+		-webkit-user-select: none;
+		cursor: default;
+		padding-top: 0.35rem;
+		padding-bottom: 0.15rem;
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			padding-left: ${jdgSizes.nTimelineEventGapSize / 4 + jdgSizes.timelineUnit};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			padding-left: ${jdgSizes.nTimelineEventGapSize / 4 + jdgSizes.timelineUnit};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			padding-left: ${jdgSizes.nTimelineEventGapSize / 2 + jdgSizes.timelineUnit};
+		}
+	`;
+
+	const timelineDecadeYearColumnCss = css`
+		flex-shrink: 0;
+		box-sizing: border-box;
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			width: ${jdgSizes.timelineEventYearWidthSm};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			width: ${jdgSizes.timelineEventYearWidthMd};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			width: ${jdgSizes.timelineEventYearWidthLg};
+		}
+	`;
+
+	$: decadeHeadingPaletteName = decadeHeadingPaletteKeys[decadeHeadingAccentPalette];
+	$: decadeHeadingPaletteTriple =
+		decadeHeadingPaletteName && jdgColors[decadeHeadingPaletteName]
+			? jdgColors[decadeHeadingPaletteName]
+			: null;
+
+	$: decadeHeadingLabelColor =
+		decadeHeadingAccentPalette !== 'none' &&
+		Array.isArray(decadeHeadingPaletteTriple) &&
+		decadeHeadingPaletteTriple.length >= 3
+			? lightenColor(decadeHeadingPaletteTriple[2], 0.48)
+			: lightenColor(jdgColors.textLight, 0.35);
+
+	let timelineDecadeLabelCss = css``;
+	$: {
+		const textAlign =
+			decadeHeadingJustify === 'center'
+				? 'center'
+				: decadeHeadingJustify === 'end'
+					? 'right'
+					: 'left';
+		timelineDecadeLabelCss = css`
+			font-weight: 600;
+			letter-spacing: 0.04em;
+			line-height: 1.15;
+			margin: 0;
+			width: 100%;
+			box-sizing: border-box;
+			color: ${decadeHeadingLabelColor};
+			text-align: ${textAlign};
+			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+				font-size: 1.15rem;
+			}
+			@media (min-width: ${jdgBreakpoints.width[0].toString() +
+				jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+				jdgBreakpoints.unit}) {
+				font-size: 1.4rem;
+			}
+			@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+				font-size: 1.65rem;
+			}
+		`;
+	}
+
 	// Timeline spine styling
 	let spineContainerCss = css`
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
@@ -988,9 +1087,9 @@
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <div
 	bind:this={timelineWrapperRef}
-	class="timeline-wrapper {timelineWrapperCss} {effectivePreviewOnly ? 'preview-only' : ''} {showLoadingOverlay
-		? 'loading-overlay-visible'
-		: ''}"
+	class="timeline-wrapper {timelineWrapperCss} {effectivePreviewOnly
+		? 'preview-only'
+		: ''} {showLoadingOverlay ? 'loading-overlay-visible' : ''}"
 	on:mouseenter={showPreviewOverlay}
 	on:mouseleave={hidePreviewOverlayAfterDelay}
 	on:touchstart={showPreviewOverlay}
@@ -1229,76 +1328,146 @@
 					<div class="timeline-event-grid {timelineEventGridCss}">
 						<!-- If there are no events, make an empty state event at the top -->
 						{#if emptyStateEvent && showFilteredInception && eventColorPairs.length > 0}
-							<JDGTimelineEvent
-								{timelineHost}
-								timelineEvent={emptyStateEvent}
-								scrollId="inception"
-								onClickTimelineEvent={isInteractive && allowEditing
-									? onClickInceptionEvent
-									: () => {}}
-								isInteractive={isInteractive && allowEditing && $isAdminMode}
-								rowIndex={0}
-								gradientColor1={eventColorPairs[0].backgroundColor}
-								gradientColor2={eventColorPairs[0].gradientMirrorColor}
-								{gradientPointsCount}
-							/>
+							<div class="timeline-grid-row-slot" style:grid-row={0}>
+								{#if showDecadeHeadings}
+									{@const inceptionDecade = getDecadeStartYearFromTimelineEvent(emptyStateEvent)}
+									{#if inceptionDecade !== null}
+										<div
+											class="timeline-decade-heading {timelineDecadeRowCss}"
+											role="group"
+											aria-label={`${inceptionDecade}s`}
+										>
+											<div class="timeline-decade-heading__year {timelineDecadeYearColumnCss}">
+												<p class="timeline-decade-heading__label {timelineDecadeLabelCss}">
+													{inceptionDecade}s
+												</p>
+											</div>
+										</div>
+									{/if}
+								{/if}
+								<JDGTimelineEvent
+									{timelineHost}
+									timelineEvent={emptyStateEvent}
+									scrollId="inception"
+									onClickTimelineEvent={isInteractive && allowEditing
+										? onClickInceptionEvent
+										: () => {}}
+									isInteractive={isInteractive && allowEditing && $isAdminMode}
+									rowIndex={0}
+									gradientColor1={eventColorPairs[0].backgroundColor}
+									gradientColor2={eventColorPairs[0].gradientMirrorColor}
+									{gradientPointsCount}
+								/>
+							</div>
 						{/if}
 						<!-- All timeline events saved to the host -->
 						{#each visibleTimelineRowItems as timelineRowItem, i}
 							{@const fullIndex = timelineRowItems.indexOf(timelineRowItem)}
 							{@const colorPairIndex = (emptyStateEvent ? 1 : 0) + fullIndex}
-							<!-- Use a key to ensure the UI reacts when these values change -->
-							{#key `${timelineHost.id}-${timelineRowItem.event.id}`}
-								<JDGTimelineEvent
-									{timelineHost}
-									timelineEvent={timelineRowItem.event}
-									scrollId={timelineRowItem.event.id || `idx-${fullIndex}`}
-									onClickTimelineEvent={() => {
-										// Only promote the host into the global draft store when this timeline is in an
-										// editing context (allowEditing). Otherwise every event click would set
-										// draftTimelineHost — e.g. timeline-test uses allowEditing={$draftTimelineHost}
-										// and would treat the host as "in draft" after the first click even when the user
-										// never used "Set to Editing Store". Carousel still works via timelineEventsOrdered +
-										// draftTimelineEvent; image registry comes from timeline context.
-										if (allowEditing) {
-											draftTimelineHost.set(timelineHost);
-										}
-										draftTimelineEvent.set(timelineRowItem.event);
-										timelineEventsOrdered.set(timelineRowItems.map((r) => r.event));
-										// Store the gradient colors for this event's modal
-										const colorPair = eventColorPairs[colorPairIndex];
-										if (colorPair) {
-											modalGradientColors.set({
-												color1: colorPair.backgroundColor,
-												color2: colorPair.gradientMirrorColor,
-												color3: colorPair.backgroundColor
-											});
-										}
-										showTimelineEventModal.set(true);
-										isTimelineEventModalEditable.set(allowEditing);
-										timelineEventModalInceptionDate.set(timelineHost.inceptionDate);
-									}}
-									rowIndex={timelineRowItem.index}
-									gradientColor1={eventColorPairs[colorPairIndex]?.backgroundColor}
-									gradientColor2={eventColorPairs[colorPairIndex]?.gradientMirrorColor}
-									eventReference={timelineRowItem.eventReference}
-									isInteractive={isInteractive || $isAdminMode}
-									{gradientPointsCount}
-								/>
-							{/key}
+							{@const prevEventForDecade =
+								i > 0
+									? visibleTimelineRowItems[i - 1].event
+									: showFilteredInception && emptyStateEvent
+										? emptyStateEvent
+										: null}
+							{@const rowDecade = getDecadeStartYearFromTimelineEvent(timelineRowItem.event)}
+							{@const prevRowDecade = prevEventForDecade
+								? getDecadeStartYearFromTimelineEvent(prevEventForDecade)
+								: null}
+							<div class="timeline-grid-row-slot" style:grid-row={timelineRowItem.index}>
+								<!-- Use a key to ensure the UI reacts when these values change -->
+								{#key `${timelineHost.id}-${timelineRowItem.event.id}`}
+									{#if showDecadeHeadings && rowDecade !== null && rowDecade !== prevRowDecade}
+										<div
+											class="timeline-decade-heading {timelineDecadeRowCss}"
+											role="group"
+											aria-label={`${rowDecade}s`}
+										>
+											<div class="timeline-decade-heading__year {timelineDecadeYearColumnCss}">
+												<p class="timeline-decade-heading__label {timelineDecadeLabelCss}">
+													{rowDecade}s
+												</p>
+											</div>
+										</div>
+									{/if}
+									<JDGTimelineEvent
+										{timelineHost}
+										timelineEvent={timelineRowItem.event}
+										scrollId={timelineRowItem.event.id || `idx-${fullIndex}`}
+										onClickTimelineEvent={() => {
+											// Only promote the host into the global draft store when this timeline is in an
+											// editing context (allowEditing). Otherwise every event click would set
+											// draftTimelineHost — e.g. timeline-test uses allowEditing={$draftTimelineHost}
+											// and would treat the host as "in draft" after the first click even when the user
+											// never used "Set to Editing Store". Carousel still works via timelineEventsOrdered +
+											// draftTimelineEvent; image registry comes from timeline context.
+											if (allowEditing) {
+												draftTimelineHost.set(timelineHost);
+											}
+											draftTimelineEvent.set(timelineRowItem.event);
+											timelineEventsOrdered.set(timelineRowItems.map((r) => r.event));
+											// Store the gradient colors for this event's modal
+											const colorPair = eventColorPairs[colorPairIndex];
+											if (colorPair) {
+												modalGradientColors.set({
+													color1: colorPair.backgroundColor,
+													color2: colorPair.gradientMirrorColor,
+													color3: colorPair.backgroundColor
+												});
+											}
+											showTimelineEventModal.set(true);
+											isTimelineEventModalEditable.set(allowEditing);
+											timelineEventModalInceptionDate.set(timelineHost.inceptionDate);
+										}}
+										rowIndex={timelineRowItem.index}
+										gradientColor1={eventColorPairs[colorPairIndex]?.backgroundColor}
+										gradientColor2={eventColorPairs[colorPairIndex]?.gradientMirrorColor}
+										eventReference={timelineRowItem.eventReference}
+										isInteractive={isInteractive || $isAdminMode}
+										{gradientPointsCount}
+									/>
+								{/key}
+							</div>
 						{/each}
 						<!-- Show the today event if there's no cessation date provided -->
 						{#if showFilteredToday && eventColorPairs.length > 0}
 							{@const todayColorPairIndex = eventColorPairs.length - 1}
-							<JDGTimelineEvent
-								{timelineHost}
-								timelineEvent={todayEvent}
-								scrollId="today"
-								rowIndex={todayEventRowIndex}
-								gradientColor1={eventColorPairs[todayColorPairIndex].backgroundColor}
-								gradientColor2={eventColorPairs[todayColorPairIndex].gradientMirrorColor}
-								{gradientPointsCount}
-							/>
+							<div class="timeline-grid-row-slot" style:grid-row={todayEventRowIndex}>
+								{#if showDecadeHeadings}
+									{@const prevEventBeforeToday =
+										visibleTimelineRowItems.length > 0
+											? visibleTimelineRowItems[visibleTimelineRowItems.length - 1].event
+											: showFilteredInception && emptyStateEvent
+												? emptyStateEvent
+												: null}
+									{@const todayDecade = getDecadeStartYearFromTimelineEvent(todayEvent)}
+									{@const prevDecadeBeforeToday = prevEventBeforeToday
+										? getDecadeStartYearFromTimelineEvent(prevEventBeforeToday)
+										: null}
+									{#if todayDecade !== null && todayDecade !== prevDecadeBeforeToday}
+										<div
+											class="timeline-decade-heading {timelineDecadeRowCss}"
+											role="group"
+											aria-label={`${todayDecade}s`}
+										>
+											<div class="timeline-decade-heading__year {timelineDecadeYearColumnCss}">
+												<p class="timeline-decade-heading__label {timelineDecadeLabelCss}">
+													{todayDecade}s
+												</p>
+											</div>
+										</div>
+									{/if}
+								{/if}
+								<JDGTimelineEvent
+									{timelineHost}
+									timelineEvent={todayEvent}
+									scrollId="today"
+									rowIndex={todayEventRowIndex}
+									gradientColor1={eventColorPairs[todayColorPairIndex].backgroundColor}
+									gradientColor2={eventColorPairs[todayColorPairIndex].gradientMirrorColor}
+									{gradientPointsCount}
+								/>
+							</div>
 						{/if}
 					</div>
 				</div>
@@ -1351,6 +1520,9 @@
 					{allowEditing}
 					{isInteractive}
 					{eventTypeKeys}
+					{showDecadeHeadings}
+					{decadeHeadingAccentPalette}
+					{decadeHeadingJustify}
 					width="100%"
 					minHeight="70dvh"
 					maxHeight="75dvh"
@@ -1549,6 +1721,14 @@
 		grid-template-columns: 1fr;
 		flex-grow: 1;
 		/* align-content is set dynamically based on timelineZoom */
+	}
+
+	/* One grid row per slot: optional decade heading + event share the same grid-row */
+	.timeline-grid-row-slot {
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+		min-width: 0;
 	}
 
 	.timeline-spine {
