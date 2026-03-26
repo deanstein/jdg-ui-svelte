@@ -73,11 +73,7 @@
 		const files = await fetchJsonFileList(jdgRepoOwner, jdgBuildingDataRepoName);
 		// [1] is the sample building-data file used on Timeline Test (see timeline-test +page)
 		if (files?.length > 1) {
-			const data = await readJsonFileFromRepo(
-				jdgRepoOwner,
-				jdgBuildingDataRepoName,
-				files[1]
-			);
+			const data = await readJsonFileFromRepo(jdgRepoOwner, jdgBuildingDataRepoName, files[1]);
 			const hosts = data?.[buildingDataCollectionKey];
 			const host = hosts?.find((h) => h.name === 'Cinderella City Mall');
 			if (host) {

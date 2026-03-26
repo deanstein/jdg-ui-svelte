@@ -281,3 +281,34 @@ export const updateTimelineRowItems = (rowItems, useSequentialIndices = true) =>
 	}
 	return sortedRowItems;
 };
+
+/** Raw date string from a timeline row event (regular, reference, contextual, etc.). */
+export const getChronologicalDateStringFromTimelineEvent = (event) => {
+	if (!event || typeof event !== 'object') return null;
+	if (event.type === jdgTimelineEventKeys.today) {
+		try {
+			return new Date().toISOString().slice(0, 10);
+		} catch {
+			return null;
+		}
+	}
+	const raw = event.date ?? event.eventDate;
+	if (raw == null || raw === '') return null;
+	if (typeof raw !== 'string') return null;
+	if (Number.isNaN(Date.parse(raw))) return null;
+	return raw;
+};
+
+/**
+ * Decade start year (e.g. 1962 → 1960), or null if the event has no usable date.
+ * Uses UTC calendar year so it matches {@link JDGTimelineEvent} year display (getUTCFullYear).
+ */
+export const getDecadeStartYearFromTimelineEvent = (event) => {
+	const raw = getChronologicalDateStringFromTimelineEvent(event);
+	if (!raw) return null;
+	const d = new Date(raw);
+	if (Number.isNaN(d.getTime())) return null;
+	const y = d.getUTCFullYear();
+	if (Number.isNaN(y)) return null;
+	return Math.floor(y / 10) * 10;
+};
