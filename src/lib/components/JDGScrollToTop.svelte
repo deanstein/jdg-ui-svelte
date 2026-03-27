@@ -47,8 +47,10 @@
 				jdgBreakpoints.unit}) {
 				bottom: ${jdgSizes.nContentBoxFloatingMarginMd.toString() +
 				jdgSizes.contentBoxFloatingMarginUnit};
-				right: ${(2 * jdgSizes.nContentBoxFloatingMarginMd).toString() +
-					jdgSizes.contentBoxFloatingMarginUnit} - ${calculatedButtonWidth / 2};
+				right: calc(
+					${(2 * jdgSizes.nContentBoxFloatingMarginMd).toString() +
+						jdgSizes.contentBoxFloatingMarginUnit} - ${calculatedButtonWidth / 2}px
+				);
 			}
 			@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 				bottom: calc(
