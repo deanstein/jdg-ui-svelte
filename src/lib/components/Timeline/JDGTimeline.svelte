@@ -1168,7 +1168,10 @@
 			>
 				<div class="timeline-event-count">
 					{#if eventDescriptionFilterTrimmed}
-						{visibleTimelineEventCount} of {totalTimelineEventSlots} timeline event{totalTimelineEventSlots === 1 ? '' : 's'}
+						{visibleTimelineEventCount} of {totalTimelineEventSlots} timeline event{totalTimelineEventSlots ===
+						1
+							? ''
+							: 's'}
 					{:else}
 						{totalTimelineEventSlots} timeline event{totalTimelineEventSlots === 1 ? '' : 's'}
 					{/if}
@@ -1193,42 +1196,43 @@
 						flyoutPosition="bottom-left"
 						buttonBackgroundColor={jdgColors.activeSecondary}
 					>
-					<div class="timeline-event-type-filter-list">
-						{#if selectableEventTypeKeysInTimelineSorted.length === 0}
-							<span class="timeline-event-type-filter-empty {eventTypeFilterLabelCss}">
-								No selectable event types in this timeline yet.
-							</span>
-						{:else}
-							<label class={eventTypeFilterRowCss}>
-								<input
-									bind:this={eventTypesFlyoutMasterInput}
-									type="checkbox"
-									class={eventTypeFilterCheckboxCss}
-									checked={eventTypesFlyoutMasterChecked}
-									on:change={(e) =>
-										setAllSelectableInTimelineTypesVisible(
-											selectableEventTypeKeysInTimelineSorted,
-											e.currentTarget.checked
-										)}
-								/>
-								<span class={eventTypeFilterLabelCss}>All</span>
-							</label>
-							<div class="timeline-event-type-filter-divider" />
-							{#each selectableEventTypeKeysInTimelineSorted as typeKey (typeKey)}
+						<div class="timeline-event-type-filter-list">
+							{#if selectableEventTypeKeysInTimelineSorted.length === 0}
+								<span class="timeline-event-type-filter-empty {eventTypeFilterLabelCss}">
+									No selectable event types in this timeline yet.
+								</span>
+							{:else}
 								<label class={eventTypeFilterRowCss}>
 									<input
+										bind:this={eventTypesFlyoutMasterInput}
 										type="checkbox"
 										class={eventTypeFilterCheckboxCss}
-										checked={visibleTimelineEventTypes[typeKey] !== false}
-										on:change={(e) => setTimelineEventTypeVisible(typeKey, e.currentTarget.checked)}
+										checked={eventTypesFlyoutMasterChecked}
+										on:change={(e) =>
+											setAllSelectableInTimelineTypesVisible(
+												selectableEventTypeKeysInTimelineSorted,
+												e.currentTarget.checked
+											)}
 									/>
-									<span class={eventTypeFilterLabelCss}>
-										{timelineEventTypes[typeKey].label} ({eventTypeCountsInTimeline[typeKey]})
-									</span>
+									<span class={eventTypeFilterLabelCss}>All</span>
 								</label>
-							{/each}
-						{/if}
-					</div>
+								<div class="timeline-event-type-filter-divider" />
+								{#each selectableEventTypeKeysInTimelineSorted as typeKey (typeKey)}
+									<label class={eventTypeFilterRowCss}>
+										<input
+											type="checkbox"
+											class={eventTypeFilterCheckboxCss}
+											checked={visibleTimelineEventTypes[typeKey] !== false}
+											on:change={(e) =>
+												setTimelineEventTypeVisible(typeKey, e.currentTarget.checked)}
+										/>
+										<span class={eventTypeFilterLabelCss}>
+											{timelineEventTypes[typeKey].label} ({eventTypeCountsInTimeline[typeKey]})
+										</span>
+									</label>
+								{/each}
+							{/if}
+						</div>
 					</JDGFlyout>
 					<!-- Timeline Options Flyout -->
 					<JDGFlyout
@@ -1237,76 +1241,76 @@
 						flyoutPosition="bottom-left"
 						buttonBackgroundColor={jdgColors.activeSecondary}
 					>
-					<div class="timeline-options-controls">
-						{#if !previewOnly && !isInModal}
-							<JDGButton
-								label="Open in full-screen"
-								faIcon="fa-expand"
-								onClickFunction={openTimelineModal}
-								fontSize="14px"
-								paddingLeftRight="12px"
-								paddingTopBottom="6px"
-								backgroundColor={jdgColors.activeSecondary}
+						<div class="timeline-options-controls">
+							{#if !previewOnly && !isInModal}
+								<JDGButton
+									label="Open in full-screen"
+									faIcon="fa-expand"
+									onClickFunction={openTimelineModal}
+									fontSize="14px"
+									paddingLeftRight="12px"
+									paddingTopBottom="6px"
+									backgroundColor={jdgColors.activeSecondary}
+								/>
+								<div class="timeline-options-divider" />
+							{/if}
+							<JDGCheckbox
+								isEnabled={!eventDescriptionFilterTrimmed}
+								showLabel={true}
+								label="Relative spacing"
+								isChecked={useRelativeSpacing}
+								onCheckAction={onCheckRelativeSpacing}
+								onUncheckAction={onUncheckRelativeSpacing}
+								labelFontSize="14px"
+								checkboxBackgroundColor={jdgColors.activeSecondary}
 							/>
-							<div class="timeline-options-divider" />
-						{/if}
-						<JDGCheckbox
-							isEnabled={!eventDescriptionFilterTrimmed}
-							showLabel={true}
-							label="Relative spacing"
-							isChecked={useRelativeSpacing}
-							onCheckAction={onCheckRelativeSpacing}
-							onUncheckAction={onUncheckRelativeSpacing}
-							labelFontSize="14px"
-							checkboxBackgroundColor={jdgColors.activeSecondary}
-						/>
-						<JDGSlider
-							label="Spacing multiplier"
-							bind:value={timelineZoom}
-							min={0}
-							max={1}
-							step={0.01}
-							onChange={onZoomChange}
-							isEnabled={useRelativeSpacing && !eventDescriptionFilterTrimmed}
-							handleColor={jdgColors.activeSecondary}
-							trackColor={optionsSliderTrackColor}
-						/>
-						{#if $isAdminMode}
-							<div class="timeline-options-divider" />
-							<div class="auto-scroll-section">
-								<div class="auto-scroll-title">Auto Scroll</div>
-								<JDGInputContainer label="Delay (seconds)">
-									<JDGTextInput
-										bind:inputValue={autoScrollDelay}
-										isEnabled={!isAutoScrolling}
-										placeholder="2"
-									/>
-								</JDGInputContainer>
-								<div class="auto-scroll-buttons">
-									<JDGButton
-										label={isAutoScrolling ? 'Pause' : 'Start'}
-										faIcon={isAutoScrolling ? 'fa-pause' : 'fa-play'}
-										onClickFunction={toggleAutoScroll}
-										fontSize="14px"
-										paddingLeftRight="12px"
-										paddingTopBottom="6px"
-										backgroundColor={isAutoScrolling ? jdgColors.cancel : jdgColors.active}
+							<JDGSlider
+								label="Spacing multiplier"
+								bind:value={timelineZoom}
+								min={0}
+								max={1}
+								step={0.01}
+								onChange={onZoomChange}
+								isEnabled={useRelativeSpacing && !eventDescriptionFilterTrimmed}
+								handleColor={jdgColors.activeSecondary}
+								trackColor={optionsSliderTrackColor}
+							/>
+							{#if $isAdminMode}
+								<div class="timeline-options-divider" />
+								<div class="auto-scroll-section">
+									<div class="auto-scroll-title">Auto Scroll</div>
+									<JDGInputContainer label="Delay (seconds)">
+										<JDGTextInput
+											bind:inputValue={autoScrollDelay}
+											isEnabled={!isAutoScrolling}
+											placeholder="2"
+										/>
+									</JDGInputContainer>
+									<div class="auto-scroll-buttons">
+										<JDGButton
+											label={isAutoScrolling ? 'Pause' : 'Start'}
+											faIcon={isAutoScrolling ? 'fa-pause' : 'fa-play'}
+											onClickFunction={toggleAutoScroll}
+											fontSize="14px"
+											paddingLeftRight="12px"
+											paddingTopBottom="6px"
+											backgroundColor={isAutoScrolling ? jdgColors.cancel : jdgColors.active}
+										/>
+									</div>
+									<JDGSlider
+										label="Scroll speed"
+										bind:value={autoScrollSpeed}
+										min={0.1}
+										max={6}
+										step={0.1}
+										onChange={onAutoScrollSpeedChange}
+										isEnabled={true}
+										handleColor={jdgColors.activeSecondary}
+										trackColor={optionsSliderTrackColor}
 									/>
 								</div>
-								<JDGSlider
-									label="Scroll speed"
-									bind:value={autoScrollSpeed}
-									min={0.1}
-									max={6}
-									step={0.1}
-									onChange={onAutoScrollSpeedChange}
-									isEnabled={true}
-									handleColor={jdgColors.activeSecondary}
-									trackColor={optionsSliderTrackColor}
-								/>
-							</div>
-						{/if}
-					</div>
+							{/if}
+						</div>
 					</JDGFlyout>
 				</div>
 			</div>
@@ -1674,24 +1678,62 @@
 	}
 
 	.timeline-actions-bar {
+		position: relative;
 		display: flex;
-		flex-direction: column;
-		align-items: stretch;
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		align-items: center;
 		gap: 0.5rem;
 	}
 
+	/* True horizontal center of the parent; does not shift when the right-side tools change width */
 	.timeline-event-count {
-		width: 100%;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		max-width: 100%;
+		padding: 0 0.5rem;
+		box-sizing: border-box;
 		text-align: center;
+		pointer-events: none;
 	}
 
 	.timeline-actions-bar-tools {
+		position: relative;
+		z-index: 1;
 		display: flex;
 		flex-wrap: wrap;
-		justify-content: center;
+		justify-content: flex-end;
 		align-items: center;
 		gap: 0.5rem;
-		width: 100%;
+		margin-left: auto;
+	}
+
+	/* Below jdgBreakpoints.width[0]: stack label, then toolbar (no overlay / true center) */
+	@media (max-width: 768px) {
+		.timeline-actions-bar {
+			flex-direction: column;
+			align-items: stretch;
+			justify-content: flex-start;
+		}
+
+		.timeline-event-count {
+			position: static;
+			left: auto;
+			top: auto;
+			transform: none;
+			width: 100%;
+			padding: 0;
+			pointer-events: auto;
+		}
+
+		.timeline-actions-bar-tools {
+			margin-left: 0;
+			width: 100%;
+			justify-content: center;
+		}
 	}
 
 	.timeline-description-filter {
