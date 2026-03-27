@@ -50,6 +50,7 @@
 		getImageMetaByKey,
 		instantiateObject
 	} from '$lib/jdg-utils.js';
+	import { requireAdminMode } from '$lib/jdg-ui-management.js';
 
 	import {
 		JDGBodyCopy,
@@ -429,17 +430,21 @@
 					/>
 				{/if}
 				<JDGButton
-					isEnabled={$isAdminMode}
+					isEnabled={true}
 					label={$draftTimelineHostCollection ? 'Save to Repo' : 'Set to Editing Store'}
 					faIcon={$draftTimelineHostCollection ? 'fa-floppy-disk' : 'fa-pen-to-square'}
 					tooltip={'Start editing this timeline host collection (admin mode required)'}
 					backgroundColor={$draftTimelineHostCollection ? jdgColors.done : jdgColors.active}
 					onClickFunction={$draftTimelineHostCollection === undefined
 						? () => {
-								draftTimelineHostCollection.set(selectedHostCollection);
+								requireAdminMode(() => {
+									draftTimelineHostCollection.set(selectedHostCollection);
+								});
 							}
 						: async () => {
-								saveToRepo();
+								requireAdminMode(() => {
+									saveToRepo();
+								});
 							}}
 				/>
 			</JDGModalActionsBar>
@@ -569,27 +574,29 @@
 					/>
 				{/if}
 				<JDGButton
-					isEnabled={$isAdminMode}
+					isEnabled={true}
 					label={$draftTimelineHost ? 'Update in Host Collection' : 'Set to Editing Store'}
 					tooltip={'Start editing this timeline host (admin mode required)'}
 					faIcon={$draftTimelineHost ? 'fa-floppy-disk' : 'fa-pen-to-square'}
 					backgroundColor={$draftTimelineHost ? jdgColors.done : jdgColors.active}
 					onClickFunction={$draftTimelineHost === undefined
-						? setToEditingStore
+						? () => requireAdminMode(setToEditingStore)
 						: () => {
-								// Add the current draft to the host collection (use draft, not local store)
-								draftTimelineHostCollection.update((currentValue) => {
-									addOrReplaceObjectByKeyValue(
-										currentValue[selectedHostCollectionKey],
-										'id',
-										$draftTimelineHost.id,
-										$draftTimelineHost
-									);
-									return currentValue;
+								requireAdminMode(() => {
+									// Add the current draft to the host collection (use draft, not local store)
+									draftTimelineHostCollection.update((currentValue) => {
+										addOrReplaceObjectByKeyValue(
+											currentValue[selectedHostCollectionKey],
+											'id',
+											$draftTimelineHost.id,
+											$draftTimelineHost
+										);
+										return currentValue;
+									});
+									// Set the local store to match the draft (preserve all changes including timelineEvents)
+									localTimelineHostStore.set($draftTimelineHost);
+									draftTimelineHost.set(undefined);
 								});
-								// Set the local store to match the draft (preserve all changes including timelineEvents)
-								localTimelineHostStore.set($draftTimelineHost);
-								draftTimelineHost.set(undefined);
 							}}
 				/>
 			</JDGModalActionsBar>
@@ -608,14 +615,12 @@
 			<JDGInputContainer label="Start Editing" justification="center">
 				<div class="timeline-host-actions">
 					<JDGButton
-						isEnabled={$isAdminMode &&
-							$draftTimelineHost === undefined &&
-							$localTimelineHostStore !== undefined}
+						isEnabled={$draftTimelineHost === undefined && $localTimelineHostStore !== undefined}
 						label="Set to Editing Store"
 						tooltip="Start editing this timeline host (admin mode required)"
 						faIcon="fa-pen-to-square"
 						backgroundColor={jdgColors.active}
-						onClickFunction={setToEditingStore}
+						onClickFunction={() => requireAdminMode(setToEditingStore)}
 					/>
 					{#if $draftTimelineHost !== undefined}
 						<JDGButton
