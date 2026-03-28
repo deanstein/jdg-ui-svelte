@@ -92,8 +92,8 @@
 	export let isInteractive = true;
 	// Width and height for timeline interface
 	export let width = '100%';
-	export let minHeight = '50svh';
-	export let maxHeight = '50svh';
+	export let minHeight = '70svh';
+	export let maxHeight = '70svh';
 	// When true, this timeline is a preview
 	// with a button to open it in a modal for a better experience
 	export let previewOnly = false;
