@@ -19,6 +19,20 @@
 		flex-grow: ${grow ? 1 : 'auto'};
 	`;
 
+	const responsiveFontCss = css`
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.fontSizeBodyXSm};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.fontSizeBodySm};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.fontSizeBodySm};
+		}
+	`;
+
 	const labelContainercss = css`
 		justify-content: ${justification};
 		margin-bottom: ${hint ? '' : '0.5svh'};
@@ -27,21 +41,11 @@
 	/* Label: small/medium/large by breakpoint (matches site strategy) */
 	const labelCss = css`
 		color: ${jdgColors.text};
-		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			font-size: ${jdgSizes.fontSizeBodyXSm};
-		}
-		@media (min-width: ${jdgBreakpoints.width[0].toString() +
-			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
-			jdgBreakpoints.unit}) {
-			font-size: ${jdgSizes.fontSizeBodyMd};
-		}
-		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			font-size: ${jdgSizes.fontSizeBodyLg};
-		}
+		font-size: inherit;
 	`;
 </script>
 
-<div class="jdg-input-container {inputContainerCss}">
+<div class="jdg-input-container {inputContainerCss} {responsiveFontCss}">
 	<!-- Title and optional description for input component-->
 	<div class="label-and-description-container">
 		<div class="label-container {labelContainercss}">
@@ -64,10 +68,6 @@
 		min-width: 0; /* Allow container to shrink in flex layouts */
 		max-width: 100%; /* Prevent expanding beyond parent */
 		margin-bottom: 1svh;
-	}
-
-	.label-and-description-container {
-		margin-bottom: 0.5svh;
 	}
 
 	.label {
