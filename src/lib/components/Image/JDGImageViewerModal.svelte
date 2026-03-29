@@ -72,7 +72,6 @@
 			<div
 				class="image-caption-attribution-wrapper"
 				style="width: {$imageViewerWidth}px; max-width: 100%;"
-				on:click|stopPropagation
 			>
 				<JDGImageCaptionAttribution {imageMeta} truncateText={false} />
 			</div>
