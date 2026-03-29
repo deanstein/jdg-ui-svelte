@@ -23,6 +23,7 @@
 	import {
 		imageViewerMeta,
 		isAdminMode,
+		isMobileBreakpoint,
 		isTimelineEventModalEditable,
 		modalGradientColors,
 		repoName as currentRepoName,
@@ -433,9 +434,53 @@
 	let isProgrammaticScroll = false;
 	let userScrollTimeout = null;
 
-	// Handle manual scroll detection
+	/** Smallest width breakpoint ($isMobileBreakpoint): hide the actions bar while scrolling down; show on scroll up / at top. */
+	let mobileActionsBarVisible = true;
+	let lastScrollTopForMobileActionsBar = 0;
+	let wasAtSmallestBreakpoint = false;
+
+	$: {
+		if (!$isMobileBreakpoint) {
+			mobileActionsBarVisible = true;
+			wasAtSmallestBreakpoint = false;
+		} else if (!wasAtSmallestBreakpoint) {
+			wasAtSmallestBreakpoint = true;
+			if (scrollingCanvasDivRef) {
+				lastScrollTopForMobileActionsBar = scrollingCanvasDivRef.scrollTop;
+			}
+		}
+	}
+
+	function updateMobileActionsBarFromScroll() {
+		if (!scrollingCanvasDivRef) return;
+		if (!$isMobileBreakpoint) {
+			mobileActionsBarVisible = true;
+			return;
+		}
+
+		const st = scrollingCanvasDivRef.scrollTop;
+		const delta = st - lastScrollTopForMobileActionsBar;
+		const threshold = 6;
+
+		if (!isProgrammaticScroll) {
+			if (st <= threshold) {
+				mobileActionsBarVisible = true;
+			} else if (delta > threshold) {
+				mobileActionsBarVisible = false;
+			} else if (delta < -threshold) {
+				mobileActionsBarVisible = true;
+			}
+		}
+		lastScrollTopForMobileActionsBar = st;
+	}
+
+	// Handle manual scroll detection (auto-scroll) + mobile actions bar visibility
 	const handleScroll = () => {
-		if (!scrollingCanvasDivRef || !isAutoScrolling) return;
+		if (!scrollingCanvasDivRef) return;
+
+		updateMobileActionsBarFromScroll();
+
+		if (!isAutoScrolling) return;
 		// Ignore scroll events caused by programmatic scrolling
 		if (isProgrammaticScroll) return;
 
@@ -602,6 +647,7 @@
 	$: if (timelineHost && currentTimelineHostId !== lastTimelineHostId) {
 		lastTimelineHostId = currentTimelineHostId;
 		eventDescriptionFilter = '';
+		mobileActionsBarVisible = true;
 		visibleTimelineEventTypes = visibleMapForSelectableKeys(effectiveEventTypeKeys);
 		const calculatedZoom = calculateDefaultZoom();
 		if (calculatedZoom !== undefined) {
@@ -653,6 +699,32 @@
 		}
 		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
 			font-size: ${jdgSizes.fontSizeBodySm};
+		}
+	`;
+
+	/** Mobile-only: collapse the actions bar when scrolling down inside the timeline canvas */
+	const timelineActionsBarMobileScrollCss = css`
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			min-height: 0;
+			flex-shrink: 0;
+			transition:
+				max-height 0.32s ease,
+				opacity 0.22s ease,
+				margin-bottom 0.32s ease;
+			max-height: 28rem;
+			opacity: 1;
+		}
+	`;
+
+	const timelineActionsBarMobileScrollHiddenCss = css`
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			max-height: 0 !important;
+			min-height: 0 !important;
+			opacity: 0;
+			margin-bottom: -0.5rem !important;
+			overflow: hidden;
+			pointer-events: none;
+			gap: 0 !important;
 		}
 	`;
 
@@ -1163,7 +1235,10 @@
 			{/if}
 			<!-- Actions Bar -->
 			<div
-				class="timeline-actions-bar {timelineSupportingTextCss}"
+				class="timeline-actions-bar {timelineSupportingTextCss} {timelineActionsBarMobileScrollCss} {!mobileActionsBarVisible &&
+				$isMobileBreakpoint
+					? timelineActionsBarMobileScrollHiddenCss
+					: ''}"
 				style="position: relative; z-index: 10;"
 			>
 				<div class="timeline-event-count">
@@ -1181,10 +1256,8 @@
 						<JDGTextInput
 							bind:inputValue={eventDescriptionFilter}
 							borderRadius="9999px"
-							inputPadding="5px 12px"
 							leadingFaIcon="fa-magnifying-glass"
 							showClearButton={true}
-							fontSizeOverride="14px"
 							ariaLabel="Filter timeline events by description"
 						/>
 					</div>
