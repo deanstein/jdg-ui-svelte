@@ -1,14 +1,30 @@
 <script>
 	import { css } from '@emotion/css';
-	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let isEnabled = true;
 	export let inputValue = undefined;
 	export let onInputFunction = undefined;
 
-	let datePickerCss = css`
-		font-size: ${jdgSizes.fontSizeBodySm};
+	$: datePickerCss = css`
 		color: ${jdgColors.text};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.inputFontSizeMobile};
+			padding: ${jdgSizes.inputPaddingMobileTablet};
+			min-height: ${jdgSizes.inputMinHeightMobile};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.inputFontSizeTablet};
+			padding: ${jdgSizes.inputPaddingMobileTablet};
+			min-height: ${jdgSizes.inputMinHeightDesktop};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.inputFontSizeDesktop};
+			padding: ${jdgSizes.inputPaddingDesktop};
+			min-height: ${jdgSizes.inputMinHeightDesktop};
+		}
 		border: 2px solid ${jdgColors.activeSecondary};
 		:hover {
 			border: 2px solid ${jdgColors.active};
@@ -34,10 +50,11 @@
 		display: flex;
 	}
 
-	input {
+	.date-picker {
+		box-sizing: border-box;
 		width: 100%;
 		outline: none;
-		padding: 4px;
+		line-height: 1.25;
 		font-family: sans-serif;
 	}
 

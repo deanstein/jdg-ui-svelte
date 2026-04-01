@@ -247,6 +247,37 @@ export const jdgSizes = {
 	get headerSidePadding() {
 		return this.nHeaderSidePadding.toString() + this.headerSidePaddingUnit;
 	},
+
+	/* Shared input + JDGButton sizing: use with @media (jdgBreakpoints) in Emotion */
+	inputPaddingUnit: 'px',
+	nInputPaddingMobileTablet: 5,
+	get inputPaddingMobileTablet() {
+		return this.nInputPaddingMobileTablet.toString() + this.inputPaddingUnit;
+	},
+	nInputPaddingDesktop: 6,
+	get inputPaddingDesktop() {
+		return this.nInputPaddingDesktop.toString() + this.inputPaddingUnit;
+	},
+	nInputFontSizeTablet: 0.8125,
+	get inputFontSizeMobile() {
+		return this.fontSizeBodyXSm;
+	},
+	get inputFontSizeTablet() {
+		return this.nInputFontSizeTablet.toString() + this.fontUnit;
+	},
+	nInputFontSizeDesktop: 0.875,
+	get inputFontSizeDesktop() {
+		return this.nInputFontSizeDesktop.toString() + this.fontUnit;
+	},
+	nInputMinHeightMobile: 1.45,
+	nInputMinHeightDesktop: 1.5,
+	get inputMinHeightMobile() {
+		return this.nInputMinHeightMobile.toString() + this.fontUnit;
+	},
+	get inputMinHeightDesktop() {
+		return this.nInputMinHeightDesktop.toString() + this.fontUnit;
+	},
+
 	/* don't update aspect ratio if change is below this threshold */
 	imageAspectRatioUpdateThreshold: 0.01,
 

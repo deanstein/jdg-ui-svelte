@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	// required format: { optionGroup: {option: { value: "someValue", label: "Some Label" } } }
 	export let optionsGroup;
@@ -11,15 +11,38 @@
 	export let isEnabled = true;
 	export let textAlignOverride = undefined;
 
-	const selectCss = css`
-		font-size: ${jdgSizes.fontSizeBodySm};
+	$: selectCss = css`
 		text-align: ${textAlignOverride ? textAlignOverride : 'left'};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.inputFontSizeMobile};
+			padding: ${jdgSizes.inputPaddingMobileTablet};
+			min-height: ${jdgSizes.inputMinHeightMobile};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.inputFontSizeTablet};
+			padding: ${jdgSizes.inputPaddingMobileTablet};
+			min-height: ${jdgSizes.inputMinHeightDesktop};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.inputFontSizeDesktop};
+			padding: ${jdgSizes.inputPaddingDesktop};
+			min-height: ${jdgSizes.inputMinHeightDesktop};
+		}
 		border: 2px solid ${jdgColors.activeSecondary};
-		:hover {
+		:hover:not(:disabled) {
 			border: 2px solid ${jdgColors.active};
 		}
-		:focus {
+		:focus:not(:disabled) {
 			border: 2px solid ${jdgColors.active};
+		}
+		&:disabled {
+			border: 2px solid gainsboro;
+		}
+		&:disabled:hover,
+		&:disabled:focus {
+			border-color: gainsboro;
 		}
 	`;
 </script>
@@ -55,17 +78,18 @@
 	}
 
 	select {
+		box-sizing: border-box;
+		line-height: 1.25;
 		height: auto;
 		width: 100%;
 		outline: none;
-		padding: 4px;
 	}
+
 	select:disabled {
 		opacity: 1;
 		background-color: white;
-		-webkit-appearance: none; /* for webkit-based browsers */
-		-moz-appearance: none; /* for Firefox */
-		border: 2px solid transparent;
+		-webkit-appearance: none;
+		-moz-appearance: none;
 		appearance: none;
 	}
 

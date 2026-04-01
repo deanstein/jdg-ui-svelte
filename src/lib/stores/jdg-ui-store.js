@@ -34,6 +34,14 @@ export let repoName = writable(undefined);
 /*** BREAKPOINTS ***/
 export let isMobileBreakpoint = writable(false);
 export let isTabletBreakpoint = writable(false);
+export const isDesktopBreakpoint = derived(
+	[isMobileBreakpoint, isTabletBreakpoint],
+	(mobileAndTablet) => {
+		const isMobile = mobileAndTablet[0];
+		const isTablet = mobileAndTablet[1];
+		return !isMobile && !isTablet;
+	}
+);
 
 /*** SIZES ***/
 export let clientWidth = writable(0); // window minus scrollbar
@@ -117,6 +125,7 @@ const storeMap = {
 	// breakpoints
 	isMobileBreakpoint,
 	isTabletBreakpoint,
+	isDesktopBreakpoint,
 	// font, colors, settings
 	appFontFamily,
 	appAccentColors,

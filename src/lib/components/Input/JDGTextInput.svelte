@@ -1,6 +1,7 @@
 <script>
-	import { jdgColors } from '$lib/jdg-shared-styles.js';
 	import { css } from '@emotion/css';
+
+	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let type = 'text';
 	export let isEnabled = true;
@@ -21,8 +22,6 @@
 	/** Renders a clear control when the value is non-empty. */
 	export let showClearButton = false;
 	export let ariaLabel = undefined;
-	/** CSS `padding` shorthand for the `<input>` (default `4px`). */
-	export let inputPadding = undefined;
 
 	const applyType = (node) => {
 		node.type = type;
@@ -33,25 +32,54 @@
 			? borderRadius
 			: '0';
 
-	$: pad =
-		inputPadding !== undefined && inputPadding !== null && String(inputPadding).trim() !== ''
-			? inputPadding
-			: '4px';
-
-	$: textInputCss = css`
-		min-height: 1rem;
-		padding: ${pad};
-		color: ${fontColorOverride ? fontColorOverride : jdgColors.text};
-		font-size: ${fontSizeOverride ? fontSizeOverride : '1rem'};
-		text-align: ${textAlignOverride ? textAlignOverride : 'left'};
+	/** Border, uniform padding, and min-height on the shell so icon/clear do not need extra input padding. */
+	$: fieldShellCss = css`
 		border-radius: ${radius};
-		border: 2px solid ${jdgColors.activeSecondary};
-		:hover {
-			border: 2px solid ${jdgColors.active};
+		border: 2px solid ${isEnabled ? jdgColors.activeSecondary : 'gainsboro'};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			padding: ${jdgSizes.inputPaddingMobileTablet};
+			min-height: ${jdgSizes.inputMinHeightMobile};
 		}
-		:focus {
-			border: 2px solid ${jdgColors.active};
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			padding: ${jdgSizes.inputPaddingMobileTablet};
+			min-height: ${jdgSizes.inputMinHeightDesktop};
 		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			padding: ${jdgSizes.inputPaddingDesktop};
+			min-height: ${jdgSizes.inputMinHeightDesktop};
+		}
+		${isEnabled
+			? `
+			&:hover {
+				border-color: ${jdgColors.active};
+			}
+			&:focus-within {
+				border-color: ${jdgColors.active};
+			}
+		`
+			: ''}
+	`;
+
+	$: innerInputCss = css`
+		color: ${fontColorOverride ? fontColorOverride : jdgColors.text};
+		text-align: ${textAlignOverride ? textAlignOverride : 'left'};
+		${fontSizeOverride
+			? `font-size: ${fontSizeOverride};`
+			: `
+			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+				font-size: ${jdgSizes.inputFontSizeMobile};
+			}
+			@media (min-width: ${jdgBreakpoints.width[0].toString() +
+				jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+				jdgBreakpoints.unit}) {
+				font-size: ${jdgSizes.inputFontSizeTablet};
+			}
+			@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+				font-size: ${jdgSizes.inputFontSizeDesktop};
+			}
+		`}
 	`;
 
 	$: showClear = showClearButton && isEnabled && inputValue.length > 0;
@@ -63,9 +91,7 @@
 </script>
 
 <div
-	class="input-container"
-	class:has-leading-icon={hasLeading}
-	class:has-clear-button={showClear}
+	class="text-input-shell input-container {fieldShellCss}"
 	style="--jdg-text-input-adornment: {jdgColors.text}; --jdg-text-input-focus: {jdgColors.active};"
 >
 	{#if hasLeading}
@@ -80,7 +106,7 @@
 		on:keyup={onKeyUpFunction}
 		use:applyType
 		use:useFunction
-		class={textInputCss}
+		class="text-input-field {innerInputCss}"
 		disabled={!isEnabled}
 		placeholder={placeholder ?? undefined}
 		aria-label={ariaLabel}
@@ -93,47 +119,48 @@
 </div>
 
 <style>
-	.input-container {
+	.text-input-shell {
 		display: flex;
-		position: relative;
+		flex-direction: row;
 		align-items: center;
-		width: 100%;
-	}
-
-	input {
-		width: 100%;
-		min-width: -webkit-fill-available;
-		min-width: -moz-available;
-		outline: none;
 		box-sizing: border-box;
+		width: 100%;
+		min-width: 0;
+		gap: 0.35rem;
+		background-color: white;
 	}
 
-	.input-container.has-leading-icon input {
-		padding-left: 2rem;
+	.text-input-field {
+		flex: 1 1 auto;
+		min-width: 0;
+		width: 100%;
+		margin: 0;
+		padding: 0;
+		border: none;
+		outline: none;
+		background: transparent;
+		line-height: 1.25;
 	}
 
-	.input-container.has-clear-button input {
-		padding-right: 2rem;
+	.text-input-field:disabled {
+		background-color: transparent;
+		-webkit-text-fill-color: inherit;
+		-webkit-opacity: 1;
+		opacity: 1;
 	}
 
 	.input-leading-icon {
-		position: absolute;
-		left: 0.5rem;
-		top: 50%;
-		transform: translateY(-50%);
-		pointer-events: none;
+		flex-shrink: 0;
 		display: flex;
 		align-items: center;
 		color: var(--jdg-text-input-adornment, #323232);
 		opacity: 0.55;
 		font-size: 0.9em;
+		pointer-events: none;
 	}
 
 	.input-clear {
-		position: absolute;
-		right: 0.35rem;
-		top: 50%;
-		transform: translateY(-50%);
+		flex-shrink: 0;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -157,14 +184,5 @@
 	.input-clear:focus-visible {
 		outline: 2px solid var(--jdg-text-input-focus, #0b84cb);
 		outline-offset: 1px;
-	}
-
-	input:disabled {
-		background-color: white;
-		border: 2px solid gainsboro;
-		/* Prevent iOS Safari from overriding color on disabled inputs */
-		-webkit-text-fill-color: inherit;
-		-webkit-opacity: 1;
-		opacity: 1;
 	}
 </style>

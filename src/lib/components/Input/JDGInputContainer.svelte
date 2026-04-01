@@ -14,7 +14,7 @@
 	// Whether the inputContainer should grow to fill available space
 	export let grow = false;
 
-	const inputContainerCss = css`
+	$: inputContainerCss = css`
 		justify-content: ${justification};
 		flex-grow: ${grow ? 1 : 'auto'};
 	`;
@@ -33,7 +33,7 @@
 		}
 	`;
 
-	const labelContainercss = css`
+	$: labelContainercss = css`
 		justify-content: ${justification};
 		margin-bottom: ${hint ? '' : '0.5svh'};
 	`;
@@ -67,7 +67,7 @@
 		width: 100%;
 		min-width: 0; /* Allow container to shrink in flex layouts */
 		max-width: 100%; /* Prevent expanding beyond parent */
-		margin-bottom: 1svh;
+		margin-bottom: 1.2svh;
 	}
 
 	.label {

@@ -1,9 +1,14 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { appFontFamily, isMobileBreakpoint } from '$lib/stores/jdg-ui-store.js';
+	import { appFontFamily } from '$lib/stores/jdg-ui-store.js';
 
-	import { jdgColors, jdgBoxShadowStandard } from '$lib/jdg-shared-styles.js';
+	import {
+		jdgBoxShadowStandard,
+		jdgBreakpoints,
+		jdgColors,
+		jdgSizes
+	} from '$lib/jdg-shared-styles.js';
 	import {
 		adjustColorForContrast,
 		darkenColor,
@@ -57,7 +62,7 @@
 	export let contrastRatio = 2;
 	export let backgroundColorHover = undefined;
 
-	// Recompute effectieBackgroundColor when isEnabled or isPrimary changes
+	// Recompute effectiveBackgroundColor when isEnabled or isPrimary changes
 	let effectiveBackgroundColor;
 	$: {
 		isEnabled;
@@ -69,31 +74,103 @@
 	$: effectiveBackgroundHover =
 		backgroundColorHover !== undefined ? backgroundColorHover : defaultHoverColor;
 
-	export let fontSize = '1rem';
+	/** When unset, uses `jdgSizes.inputFontSize*` with `jdgBreakpoints` in Emotion `@media` rules. */
+	export let fontSize = undefined;
 	export let width = 'fit-content';
 	export let borderRadius = '1.5em';
-	export let paddingTopBottom = '10px';
-	export let paddingLeftRight = '20px';
+	/** When unset, uses `jdgSizes.inputPadding*` with `jdgBreakpoints` in Emotion `@media` rules. */
+	export let paddingTopBottom = undefined;
+	export let paddingLeftRight = undefined;
 	export let doForceSquareAspect = false;
 	export let gap = '8px';
 	export let tooltip = undefined;
 	export let shadow = false;
 
-	let buttonCss = css``; // redeefined in the reactive block
+	let buttonCss = css``; // redefined in the reactive block
 
 	$: {
+		const bp0 = jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit;
+		const bp1 = jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit;
+		const pMT = jdgSizes.inputPaddingMobileTablet;
+		const pD = jdgSizes.inputPaddingDesktop;
+
+		const hasCustomFont =
+			fontSize !== undefined && fontSize !== null && String(fontSize).trim() !== '';
+		const fontBlock = hasCustomFont
+			? `font-size: ${fontSize};`
+			: `
+			@media (max-width: ${bp0}) { font-size: ${jdgSizes.inputFontSizeMobile}; }
+			@media (min-width: ${bp0}) and (max-width: ${bp1}) { font-size: ${jdgSizes.inputFontSizeTablet}; }
+			@media (min-width: ${bp1}) { font-size: ${jdgSizes.inputFontSizeDesktop}; }
+		`;
+
+		const hasPTB = paddingTopBottom !== undefined && paddingTopBottom !== null;
+		const hasPLR = paddingLeftRight !== undefined && paddingLeftRight !== null;
+		let paddingBlock;
+		if (hasPTB && hasPLR) {
+			paddingBlock = `padding: ${paddingTopBottom} ${paddingLeftRight} ${paddingTopBottom} ${paddingLeftRight};`;
+		} else if (hasPTB && !hasPLR) {
+			paddingBlock = `
+				padding-top: ${paddingTopBottom};
+				padding-bottom: ${paddingTopBottom};
+				@media (max-width: ${bp0}) {
+					padding-left: ${pMT};
+					padding-right: ${pMT};
+				}
+				@media (min-width: ${bp0}) and (max-width: ${bp1}) {
+					padding-left: ${pMT};
+					padding-right: ${pMT};
+				}
+				@media (min-width: ${bp1}) {
+					padding-left: ${pD};
+					padding-right: ${pD};
+				}
+			`;
+		} else if (!hasPTB && hasPLR) {
+			paddingBlock = `
+				padding-left: ${paddingLeftRight};
+				padding-right: ${paddingLeftRight};
+				@media (max-width: ${bp0}) {
+					padding-top: ${pMT};
+					padding-bottom: ${pMT};
+				}
+				@media (min-width: ${bp0}) and (max-width: ${bp1}) {
+					padding-top: ${pMT};
+					padding-bottom: ${pMT};
+				}
+				@media (min-width: ${bp1}) {
+					padding-top: ${pD};
+					padding-bottom: ${pD};
+				}
+			`;
+		} else {
+			paddingBlock = `
+				@media (max-width: ${bp0}) {
+					padding: ${pMT};
+				}
+				@media (min-width: ${bp0}) and (max-width: ${bp1}) {
+					padding: ${pMT};
+				}
+				@media (min-width: ${bp1}) {
+					padding: ${pD};
+				}
+			`;
+		}
+
+		const widthBlock =
+			width !== 'fit-content'
+				? `width: ${width};`
+				: `
+			width: fit-content;
+			@media (max-width: ${bp0}) { width: 100%; }
+		`;
+
 		buttonCss = css`
-			font-size: ${fontSize};
+			${fontBlock}
 			font-family: ${$appFontFamily};
-			width: ${
-				width == 'fit-content'
-					? 'fit-content'
-					: $isMobileBreakpoint
-						? '100%'
-						: width /* button is 100% width on smallest breakpoint */
-			};
+			${widthBlock}
 			border-radius: ${doForceSquareAspect ? '50%' : borderRadius};
-			padding: ${`${paddingTopBottom} ${paddingLeftRight} ${paddingTopBottom} ${paddingLeftRight}`};
+			${paddingBlock}
 			gap: ${gap};
 			color: ${textColor};
 			background-color: ${isEnabled
@@ -105,7 +182,6 @@
 				color: ${textColorHover};
 				background-color: ${isEnabled ? effectiveBackgroundHover : jdgColors.disabled};
 			}
-			cursor: ${isEnabled ? 'pointer' : 'default'};
 			aspect-ratio: ${doForceSquareAspect ? '1' : ''};
 		`;
 	}
@@ -137,6 +213,14 @@
 		outline: none;
 		font-weight: bold;
 		text-wrap: balance;
+	}
+
+	.jdg-button:not(:disabled) {
+		cursor: pointer;
+	}
+
+	.jdg-button:disabled {
+		cursor: default;
 	}
 
 	.jdg-button-icon {

@@ -1,10 +1,10 @@
 <script>
 	import { css } from '@emotion/css';
-	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let isEnabled = true;
-	export let inputValue = ''; // Stores the value (key) or custom string
-	export let options = []; // Array of { value, label }
+	export let inputValue = '';
+	export let options = [];
 	export let placeholder = 'Type or select...';
 	export let fontColorOverride = undefined;
 	export let fontSizeOverride = undefined;
@@ -30,7 +30,7 @@
 		return option ? option.value : label;
 	}
 
-	// Initialize displayValue from inputValue on mount
+	// Initialize displayValue from inputValue when not actively typing
 	$: if (!isUserTyping) {
 		displayValue = getLabelForValue(inputValue);
 	}
@@ -102,17 +102,58 @@
 		}
 	}
 
-	const inputCss = css`
-		min-height: 1rem;
+	$: inputCss = css`
 		color: ${fontColorOverride ? fontColorOverride : jdgColors.text};
-		font-size: ${fontSizeOverride ? fontSizeOverride : '1rem'};
 		text-align: ${textAlignOverride ? textAlignOverride : 'left'};
+		${fontSizeOverride
+			? `font-size: ${fontSizeOverride};`
+			: `
+			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+				font-size: ${jdgSizes.inputFontSizeMobile};
+			}
+			@media (min-width: ${jdgBreakpoints.width[0].toString() +
+				jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+				jdgBreakpoints.unit}) {
+				font-size: ${jdgSizes.inputFontSizeTablet};
+			}
+			@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+				font-size: ${jdgSizes.inputFontSizeDesktop};
+			}
+		`}
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			padding: ${jdgSizes.inputPaddingMobileTablet};
+			min-height: ${jdgSizes.inputMinHeightMobile};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			padding: ${jdgSizes.inputPaddingMobileTablet};
+			min-height: ${jdgSizes.inputMinHeightDesktop};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			padding: ${jdgSizes.inputPaddingDesktop};
+			min-height: ${jdgSizes.inputMinHeightDesktop};
+		}
 		border: 2px solid ${jdgColors.activeSecondary};
-		:hover {
+		:hover:not(:disabled) {
 			border: 2px solid ${jdgColors.active};
 		}
-		:focus {
+		:focus:not(:disabled) {
 			border: 2px solid ${jdgColors.active};
+		}
+	`;
+
+	const comboboxDropdownCss = css`
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.inputFontSizeMobile};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.inputFontSizeTablet};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.inputFontSizeDesktop};
 		}
 	`;
 </script>
@@ -126,12 +167,12 @@
 		on:focus={handleFocus}
 		on:blur={handleBlur}
 		on:keydown={handleKeydown}
-		class={inputCss}
+		class="jdg-combobox-input {inputCss}"
 		disabled={!isEnabled}
 		{placeholder}
 	/>
 	{#if showDropdown && filteredOptions.length > 0 && isEnabled}
-		<ul class="dropdown">
+		<ul class="dropdown {comboboxDropdownCss}">
 			{#each filteredOptions as option, index}
 				<li
 					role="option"
@@ -165,17 +206,16 @@
 		position: relative;
 	}
 
-	input {
-		width: 100%;
+	.jdg-combobox-input {
 		box-sizing: border-box;
+		width: 100%;
 		outline: none;
-		padding: 4px;
+		line-height: 1.25;
 	}
 
 	input:disabled {
 		background-color: white;
 		border: 2px solid gainsboro;
-		/* Prevent iOS Safari from overriding color on disabled inputs */
 		-webkit-text-fill-color: inherit;
 		-webkit-opacity: 1;
 		opacity: 1;

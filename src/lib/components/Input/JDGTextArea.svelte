@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { jdgColors } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let isEnabled = true;
 	export let inputValue = '';
@@ -14,11 +14,24 @@
 
 	let textArea;
 
-	const textInputCss = css`
-		border: 2px solid ${jdgColors.active};
+	$: textAreaCss = css`
 		resize: ${resizable};
 		min-height: ${minHeight};
 		color: ${jdgColors.text};
+		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.inputFontSizeMobile};
+			padding: ${jdgSizes.inputPaddingMobileTablet};
+		}
+		@media (min-width: ${jdgBreakpoints.width[0].toString() +
+			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+			jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.inputFontSizeTablet};
+			padding: ${jdgSizes.inputPaddingMobileTablet};
+		}
+		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+			font-size: ${jdgSizes.inputFontSizeDesktop};
+			padding: ${jdgSizes.inputPaddingDesktop};
+		}
 		border: 2px solid ${jdgColors.activeSecondary};
 		:hover {
 			border: 2px solid ${jdgColors.active};
@@ -44,7 +57,7 @@
 		bind:value={inputValue}
 		bind:this={textArea}
 		use:useFunction
-		class={textInputCss}
+		class="jdg-textarea-field {textAreaCss}"
 		disabled={!isEnabled}
 		on:blur={() => autoGrow(textArea)}
 		on:input={() => autoGrow(textArea)}
@@ -57,18 +70,18 @@
 		height: 100%;
 	}
 
-	textarea {
-		height: min-content;
+	.jdg-textarea-field {
+		box-sizing: border-box;
 		width: 100%;
+		height: min-content;
 		outline: none;
-		padding: 4px;
 		max-width: 100%;
+		line-height: 1.25;
 	}
 
-	textarea:disabled {
+	.jdg-textarea-field:disabled {
 		background-color: white;
 		border: 2px solid gainsboro;
-		/* Prevent iOS Safari from overriding color on disabled inputs */
 		-webkit-opacity: 1;
 		opacity: 1;
 	}
