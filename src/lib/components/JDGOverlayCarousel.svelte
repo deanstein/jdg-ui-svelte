@@ -164,6 +164,14 @@
 		}
 	`;
 
+	/** Space/Enter on the carousel shell activate overlay click-to-close; skip when focus is in real controls. */
+	function isCarouselKeyboardTargetInteractive(target) {
+		if (!target || !(target instanceof Element)) return false;
+		return !!target.closest(
+			'input, textarea, select, button, a[href], [contenteditable="true"]'
+		);
+	}
+
 	function handleContentClick(e) {
 		if (!closeOnOverlayClick || typeof onCloseFunction !== 'function') return;
 		if (e.target.closest('.jdg-overlay-carousel-buttons')) return;
@@ -201,10 +209,10 @@
 		tabindex="0"
 		on:click={handleContentClick}
 		on:keydown={(e) => {
-			if (e.key === 'Enter' || e.key === ' ') {
-				e.preventDefault();
-				handleContentClick(e);
-			}
+			if (e.key !== 'Enter' && e.key !== ' ') return;
+			if (isCarouselKeyboardTargetInteractive(e.target)) return;
+			e.preventDefault();
+			handleContentClick(e);
 		}}
 	>
 		<div class="jdg-overlay-carousel-row">
