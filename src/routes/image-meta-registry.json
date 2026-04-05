@@ -429,16 +429,6 @@
       "caption": "A composite image of two different time periods of a mid-century modern shopping center, powered by Unity."
     }
   },
-  "products_0": {
-    "src": "https://res.cloudinary.com/jdg-main/image/upload/v1720834651/jdg-website/products/products-0.jpg",
-    "alt": "Products",
-    "caption": "Products"
-  },
-  "software_0": {
-    "src": "https://res.cloudinary.com/jdg-main/image/upload/v1720834658/jdg-website/software/software-0.jpg",
-    "alt": "Software",
-    "caption": "Software"
-  },
   "ecc_existing_north": {
     "src": "https://res.cloudinary.com/jdg-main/image/upload/v1739673653/ccp-website/save-civic-center/ecc-existing-north.jpg",
     "caption": "The Englewood Civic Center's north side faces into plaza where it formerly attached to Cinderella City Mall.",
