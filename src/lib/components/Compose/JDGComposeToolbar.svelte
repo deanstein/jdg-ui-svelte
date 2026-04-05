@@ -14,6 +14,7 @@
 	export let onClickDone = undefined; // if provided, show done
 	export let doneButtonLabel = 'Done';
 	export let doneButtonTooltip = 'Done';
+	export let doneButtonEnabled = true;
 	export let onClickCancel = undefined; // if provided, show cancel
 	export let cancelButtonLabel = 'Cancel';
 	export let cancelButtonTooltip = 'Cancel';
@@ -127,6 +128,7 @@
 					buttonType={composeButtonTypes.confirm.type}
 					label={doneButtonLabel}
 					tooltip={doneButtonTooltip}
+					isEnabled={doneButtonEnabled}
 				/>
 			{/if}
 		{/if}

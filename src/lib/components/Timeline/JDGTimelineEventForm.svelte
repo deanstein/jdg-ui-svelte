@@ -35,6 +35,7 @@
 		getIsObjectInArray,
 		getYearsAndMonthsBetweenDates,
 		instantiateObject,
+		parseTimelineEventDate,
 		resolveImageMetaKeys,
 		getImageMetaByKey
 	} from '$lib/jdg-utils.js';
@@ -173,17 +174,27 @@
 			? firstImageMeta.isApprxDate
 			: $localEventStore.isApprxDate ?? false;
 
+	$: eventPrimaryDateValid = parseTimelineEventDate(effectiveDate).valid;
+	$: doneButtonEnabled = eventPrimaryDateValid;
+	$: doneButtonTooltip = eventPrimaryDateValid
+		? 'Done'
+		: 'Enter a valid event date before saving.';
+
 	// Reactive computed values for checkbox visibility
-	// Checkbox should appear if type supports it, regardless of isMediaWrapper value
-	// The isMediaWrapper flag only controls whether the checkbox is checked, not visibility
-	// Only show when editing and if type supports it
-	// Only evaluate if store has been populated (type is defined)
+	// Article: show while editing (can enable before images). Media / other types: show once there is media.
+	// Generic (default for new events) previously had no checkbox until type was switched to Media — fixed by
+	// showing for any non-contextual type with at least one image (plus article/media rules above).
 	$: isArticleType = $localEventStore?.type === jdgTimelineEventKeys.article;
 	$: isMediaType = $localEventStore?.type === jdgTimelineEventKeys.media;
+	$: isTimelineEventTypeContextual =
+		jdgTimelineEventTypes[$localEventStore?.type]?.isContextual === true;
 	$: shouldShowCheckbox =
 		isEditing &&
 		$localEventStore?.type &&
-		((isArticleType && (hasImages || isEditing)) || (isMediaType && hasSingleImage));
+		!isTimelineEventTypeContextual &&
+		((isArticleType && (hasImages || isEditing)) ||
+			(isMediaType && hasImages) ||
+			(!isArticleType && !isMediaType && hasImages));
 
 	// Checkbox only toggles isMediaWrapper - display logic handles showing image data vs stored data
 	// We never modify the stored description/source values - they are preserved in the database
@@ -422,6 +433,51 @@
 		message={`Image Meta Registry: ${registryLabel}`}
 	/>
 
+	{#if isEditable}
+		<JDGComposeToolbar
+			{parentRef}
+			justification="center"
+			isEditActive={isEditing}
+			composeButtonTooltip="Edit"
+			onClickCompose={() => {
+				isEditing = true;
+			}}
+			doneButtonEnabled={doneButtonEnabled}
+			doneButtonTooltip={doneButtonTooltip}
+			onClickDone={() => {
+				if (!parseTimelineEventDate(effectiveDate).valid) return;
+				saveToStore();
+				showTimelineEventModal.set(false);
+			}}
+			onClickCancel={() => {
+				if (isNewEvent) {
+					showTimelineEventModal.set(false);
+				} else {
+					isEditing = false;
+					showTimelineEventModal.set(false);
+					// Reset the stores
+					localEventStore.set($eventStore);
+					localAdditionalStore.set($eventStore.additionalContent);
+					localEventStore.update((currentValue) => ({
+						...currentValue,
+						type: $eventStore.type
+					}));
+				}
+			}}
+			onClickDelete={isNewEvent
+				? undefined
+				: () => {
+						// Delete this event from the draft host
+						draftTimelineHost.update((currentValue) => {
+							deleteObjectByKeyValue(currentValue.timelineEvents, 'id', $localEventStore.id);
+							return currentValue;
+						});
+						isEditing = false;
+						showTimelineEventModal.set(false);
+					}}
+		/>
+	{/if}
+
 	<!-- Event type and age header -->
 	<div class="event-header">
 		<div class="event-header-age {eventHeaderViewCss}">
@@ -457,8 +513,7 @@
 		</JDGInputContainer>
 	{/if}
 
-	<!-- Checkbox to use image data for media (single image) or article (multiple images) events -->
-	<!-- Show if: isMediaWrapper is true (always show if set) OR (type supports it AND conditions are met) -->
+	<!-- Checkbox to use image data from the first attached image (media/article/generic/etc. when rules below apply) -->
 	{#if shouldShowCheckbox}
 		<JDGInputContainer label="Media wrapper">
 			<JDGCheckbox
@@ -539,7 +594,13 @@
 						{#if isAdditional}
 							<JDGTextInput bind:inputValue={$localAdditionalStore[key]} isEnabled={true} />
 						{:else if key === 'description'}
-							<JDGTextInput bind:inputValue={$localEventStore.description} isEnabled={true} />
+							{#key $localEventStore.isMediaWrapper}
+								{#if $localEventStore.isMediaWrapper}
+									<JDGTextInput inputValue={displayDescription} isEnabled={false} />
+								{:else}
+									<JDGTextInput bind:inputValue={$localEventStore.description} isEnabled={true} />
+								{/if}
+							{/key}
 						{:else if key === 'source'}
 							<JDGTextInput bind:inputValue={$localEventStore.source} isEnabled={true} />
 						{:else}
@@ -599,7 +660,13 @@
 						{#if isAdditional}
 							<JDGTextArea bind:inputValue={$localAdditionalStore[key]} isEnabled={true} />
 						{:else if key === 'description'}
-							<JDGTextArea bind:inputValue={$localEventStore.description} isEnabled={true} />
+							{#key $localEventStore.isMediaWrapper}
+								{#if $localEventStore.isMediaWrapper}
+									<JDGTextArea inputValue={displayDescription} isEnabled={false} />
+								{:else}
+									<JDGTextArea bind:inputValue={$localEventStore.description} isEnabled={true} />
+								{/if}
+							{/key}
 						{:else}
 							<JDGTextArea bind:inputValue={$localEventStore[key]} isEnabled={true} />
 						{/if}
@@ -733,46 +800,6 @@
 			</JDGInputContainer>
 		{/if}
 	{/each}
-	{#if isEditable}
-		<JDGComposeToolbar
-			{parentRef}
-			isEditActive={isEditing}
-			composeButtonTooltip="Edit"
-			onClickCompose={() => {
-				isEditing = true;
-			}}
-			onClickDone={() => {
-				saveToStore();
-				showTimelineEventModal.set(false);
-			}}
-			onClickCancel={() => {
-				if (isNewEvent) {
-					showTimelineEventModal.set(false);
-				} else {
-					isEditing = false;
-					showTimelineEventModal.set(false);
-					// Reset the stores
-					localEventStore.set($eventStore);
-					localAdditionalStore.set($eventStore.additionalContent);
-					localEventStore.update((currentValue) => ({
-						...currentValue,
-						type: $eventStore.type
-					}));
-				}
-			}}
-			onClickDelete={isNewEvent
-				? undefined
-				: () => {
-						// Delete this event from the draft host
-						draftTimelineHost.update((currentValue) => {
-							deleteObjectByKeyValue(currentValue.timelineEvents, 'id', $localEventStore.id);
-							return currentValue;
-						});
-						isEditing = false;
-						showTimelineEventModal.set(false);
-					}}
-		/>
-	{/if}
 </JDGForm>
 {#if showLocalStore}
 	<div class="form-store-preview">

@@ -9,6 +9,7 @@
 	export let faIcon = undefined;
 	export let label = null;
 	export let tooltip = undefined;
+	export let isEnabled = true;
 	export let buttonType = composeButtonTypes.edit.type;
 
 	let isCircular =
@@ -23,6 +24,7 @@
 
 <div class="compose-button {composeButtonCss}">
 	<JDGButton
+		{isEnabled}
 		{onClickFunction}
 		label={buttonType === composeButtonTypes.add.type || buttonType === composeButtonTypes.edit.type
 			? null
