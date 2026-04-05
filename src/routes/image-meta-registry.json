@@ -606,20 +606,5 @@
     "showBackgroundBlur": true,
     "toolbarJustification": "right",
     "version": "0.7.1"
-  },
-  "articles": {
-    "_1960_12_14_DP_area_planners_reject": {
-      "id": "d2e25a67-c26b-4a5b-8e57-67117536da8d",
-      "src": "https://res.cloudinary.com/jdg-main/image/upload/v1775355730/jdg-ui-svelte/articles/1960-12-14-DP-area-planners-reject.jpg",
-      "caption": "",
-      "attribution": "Denver Post",
-      "alt": "",
-      "title": "",
-      "isApprxDate": false,
-      "showBackgroundBlur": true,
-      "toolbarJustification": "right",
-      "version": "0.7.1",
-      "date": "1960-12-14"
-    }
   }
 }
