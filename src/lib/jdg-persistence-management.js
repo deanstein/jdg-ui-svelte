@@ -632,15 +632,16 @@ export const deleteImageMetaEntryFromRepo = async (repoName, registryKey) => {
 	}
 };
 
-// Delete an image from Cloudinary via Cloudflare worker
-export const deleteCloudinaryImage = async (assetPath, fileName) => {
+// Delete an image from Cloudinary via Cloudflare worker.
+// Uses POST + full image URL query param (worker contract) so browser CORS matches Allow-Methods (GET, POST, OPTIONS).
+export const deleteCloudinaryImage = async (cloudinaryImageUrl) => {
 	try {
-		const url = `${cfWorkerUrlJdgCloudinary}${cfRouteDeleteImage}?folder=${encodeURIComponent(
-			assetPath
-		)}&fileName=${encodeURIComponent(fileName)}`;
+		const url = `${cfWorkerUrlJdgCloudinary}${cfRouteDeleteImage}?url=${encodeURIComponent(
+			cloudinaryImageUrl
+		)}`;
 
 		const response = await fetch(url, {
-			method: 'DELETE'
+			method: 'POST'
 		});
 
 		const data = await response.json();
@@ -648,7 +649,7 @@ export const deleteCloudinaryImage = async (assetPath, fileName) => {
 			throw new Error(data.error || 'Delete failed');
 		}
 
-		console.log('✅ Delete complete:', assetPath + '/' + fileName);
+		console.log('✅ Delete complete:', cloudinaryImageUrl);
 		return data;
 	} catch (err) {
 		console.error('❌ Delete error:', err.message);

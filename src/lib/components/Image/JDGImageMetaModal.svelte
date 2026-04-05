@@ -412,14 +412,9 @@
 
 			// Step 2: Delete old image if path changed
 			if (hasPathChanged) {
-				// Parse original path into folder and filename
-				const origPathParts = originalFullPath.split('/');
-				const origFileName = origPathParts.pop();
-				const origFolderPath = origPathParts.join('/');
-
 				console.log(`🗑️ Deleting old image at "${originalFullPath}" because path changed...`);
 				try {
-					await deleteCloudinaryImage(origFolderPath, origFileName);
+					await deleteCloudinaryImage(originalSrc);
 				} catch (deleteErr) {
 					console.warn(
 						'⚠️ Failed to delete old image (may not exist or already deleted):',
@@ -730,19 +725,14 @@
 		isCheckingUsage = false;
 
 		try {
-			// Step 1: Delete from Cloudinary
+			// Step 1: Delete from Cloudinary (worker expects full URL, POST for CORS)
 			const assetPath = extractCloudinaryAssetpath(currentSrc);
 			if (!assetPath) {
 				throw new Error('Could not determine asset path from URL');
 			}
 
-			// Parse path into folder and filename
-			const pathParts = assetPath.split('/');
-			const fileName = pathParts.pop();
-			const folderPath = pathParts.join('/');
-
 			console.log(`🗑️ Deleting image from Cloudinary at "${assetPath}"...`);
-			await deleteCloudinaryImage(folderPath, fileName);
+			await deleteCloudinaryImage(currentSrc);
 
 			// Step 2: Delete from registry in current repo
 			if (!currentRepoName) {
