@@ -1067,7 +1067,7 @@
 						label={null}
 						paddingLeftRight={'8px'}
 						paddingTopBottom={'8px'}
-						backgroundColor={jdgColors.active}
+						backgroundColor={hasFileSelected ? jdgColors.done : jdgColors.active}
 						tooltip={hasFileSelected ? 'Upload image' : 'Select new image'}
 						doForceSquareAspect
 					/>
