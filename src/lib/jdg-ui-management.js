@@ -312,3 +312,17 @@ export const getDecadeStartYearFromTimelineEvent = (event) => {
 	if (Number.isNaN(y)) return null;
 	return Math.floor(y / 10) * 10;
 };
+
+/**
+ * UTC calendar year for the event (e.g. 1960), or null if no usable date.
+ * Matches {@link JDGTimelineEvent} year display (getUTCFullYear).
+ */
+export const getYearFromTimelineEvent = (event) => {
+	const raw = getChronologicalDateStringFromTimelineEvent(event);
+	if (!raw) return null;
+	const d = new Date(raw);
+	if (Number.isNaN(d.getTime())) return null;
+	const y = d.getUTCFullYear();
+	if (Number.isNaN(y)) return null;
+	return y;
+};

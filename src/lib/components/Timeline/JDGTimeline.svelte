@@ -47,6 +47,7 @@
 		generateTimelineRowItems,
 		getDecadeStartYearFromTimelineEvent,
 		getEarliestTimelineEvent,
+		getYearFromTimelineEvent,
 		updateTimelineRowItems
 	} from '$lib/jdg-ui-management.js';
 
@@ -102,8 +103,9 @@
 	export let previewOverlayDuration = 500;
 	// Set true when this instance is the one rendered inside the full-screen modal (do not set from outside; used by svelte:self)
 	export let isInModal = false;
-	// Insert decade labels (e.g. 1960s) when the calendar decade changes between visible rows
-	export let showDecadeHeadings = true;
+	// Decade / year column headings (e.g. 1960s, 1960); set from parent
+	export let showDecadeHeadings = false;
+	export let showYearHeadings = true;
 	// Decade labels: `none` uses neutral gray; site palettes tint the label
 	export let decadeHeadingAccentPalette = 'none';
 	/** @type {'start' | 'center' | 'end'} — text alignment inside the year column (matches event years) */
@@ -790,8 +792,8 @@
 		user-select: none;
 		-webkit-user-select: none;
 		cursor: default;
-		padding-top: 0.35rem;
-		padding-bottom: 0.15rem;
+		padding-top: 1rem;
+		padding-bottom: 1rem;
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			padding-left: ${jdgSizes.nTimelineEventGapSize / 4 + jdgSizes.timelineUnit};
 		}
@@ -851,6 +853,39 @@
 			box-sizing: border-box;
 			color: ${decadeHeadingLabelColor};
 			text-align: ${textAlign};
+			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+				font-size: 1.15rem;
+			}
+			@media (min-width: ${jdgBreakpoints.width[0].toString() +
+				jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+				jdgBreakpoints.unit}) {
+				font-size: 1.4rem;
+			}
+			@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+				font-size: 1.65rem;
+			}
+		`;
+	}
+
+	let timelineYearHeadingLabelCss = css``;
+	$: {
+		const textAlign =
+			decadeHeadingJustify === 'center'
+				? 'center'
+				: decadeHeadingJustify === 'end'
+					? 'right'
+					: 'left';
+		timelineYearHeadingLabelCss = css`
+			font-weight: 800;
+			letter-spacing: 0.04em;
+			line-height: 1.15;
+			margin: 0;
+			width: 100%;
+			box-sizing: border-box;
+			color: ${decadeHeadingLabelColor};
+			text-align: ${textAlign};
+			text-decoration: underline;
+			text-underline-offset: 0.5rem;
 			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 				font-size: 1.15rem;
 			}
@@ -1420,6 +1455,22 @@
 										</div>
 									{/if}
 								{/if}
+								{#if showYearHeadings}
+									{@const inceptionYear = getYearFromTimelineEvent(emptyStateEvent)}
+									{#if inceptionYear !== null}
+										<div
+											class="timeline-decade-heading {timelineDecadeRowCss}"
+											role="group"
+											aria-label={String(inceptionYear)}
+										>
+											<div class="timeline-decade-heading__year {timelineDecadeYearColumnCss}">
+												<p class="timeline-decade-heading__label {timelineYearHeadingLabelCss}">
+													{inceptionYear}
+												</p>
+											</div>
+										</div>
+									{/if}
+								{/if}
 								<JDGTimelineEvent
 									{timelineHost}
 									timelineEvent={emptyStateEvent}
@@ -1439,15 +1490,19 @@
 						{#each visibleTimelineRowItems as timelineRowItem, i}
 							{@const fullIndex = timelineRowItems.indexOf(timelineRowItem)}
 							{@const colorPairIndex = (emptyStateEvent ? 1 : 0) + fullIndex}
-							{@const prevEventForDecade =
+							{@const prevChronoEvent =
 								i > 0
 									? visibleTimelineRowItems[i - 1].event
 									: showFilteredInception && emptyStateEvent
 										? emptyStateEvent
 										: null}
 							{@const rowDecade = getDecadeStartYearFromTimelineEvent(timelineRowItem.event)}
-							{@const prevRowDecade = prevEventForDecade
-								? getDecadeStartYearFromTimelineEvent(prevEventForDecade)
+							{@const prevRowDecade = prevChronoEvent
+								? getDecadeStartYearFromTimelineEvent(prevChronoEvent)
+								: null}
+							{@const rowYear = getYearFromTimelineEvent(timelineRowItem.event)}
+							{@const prevRowYear = prevChronoEvent
+								? getYearFromTimelineEvent(prevChronoEvent)
 								: null}
 							<div class="timeline-grid-row-slot" style:grid-row={timelineRowItem.index}>
 								<!-- Use a key to ensure the UI reacts when these values change -->
@@ -1461,6 +1516,19 @@
 											<div class="timeline-decade-heading__year {timelineDecadeYearColumnCss}">
 												<p class="timeline-decade-heading__label {timelineDecadeLabelCss}">
 													{rowDecade}s
+												</p>
+											</div>
+										</div>
+									{/if}
+									{#if showYearHeadings && rowYear !== null && rowYear !== prevRowYear}
+										<div
+											class="timeline-decade-heading {timelineDecadeRowCss}"
+											role="group"
+											aria-label={String(rowYear)}
+										>
+											<div class="timeline-decade-heading__year {timelineDecadeYearColumnCss}">
+												<p class="timeline-decade-heading__label {timelineYearHeadingLabelCss}">
+													{rowYear}
 												</p>
 											</div>
 										</div>
@@ -1507,14 +1575,14 @@
 						<!-- Show the today event if there's no cessation date provided -->
 						{#if showFilteredToday && eventColorPairs.length > 0}
 							{@const todayColorPairIndex = eventColorPairs.length - 1}
+							{@const prevEventBeforeToday =
+								visibleTimelineRowItems.length > 0
+									? visibleTimelineRowItems[visibleTimelineRowItems.length - 1].event
+									: showFilteredInception && emptyStateEvent
+										? emptyStateEvent
+										: null}
 							<div class="timeline-grid-row-slot" style:grid-row={todayEventRowIndex}>
 								{#if showDecadeHeadings}
-									{@const prevEventBeforeToday =
-										visibleTimelineRowItems.length > 0
-											? visibleTimelineRowItems[visibleTimelineRowItems.length - 1].event
-											: showFilteredInception && emptyStateEvent
-												? emptyStateEvent
-												: null}
 									{@const todayDecade = getDecadeStartYearFromTimelineEvent(todayEvent)}
 									{@const prevDecadeBeforeToday = prevEventBeforeToday
 										? getDecadeStartYearFromTimelineEvent(prevEventBeforeToday)
@@ -1528,6 +1596,25 @@
 											<div class="timeline-decade-heading__year {timelineDecadeYearColumnCss}">
 												<p class="timeline-decade-heading__label {timelineDecadeLabelCss}">
 													{todayDecade}s
+												</p>
+											</div>
+										</div>
+									{/if}
+								{/if}
+								{#if showYearHeadings}
+									{@const todayYear = getYearFromTimelineEvent(todayEvent)}
+									{@const prevYearBeforeToday = prevEventBeforeToday
+										? getYearFromTimelineEvent(prevEventBeforeToday)
+										: null}
+									{#if todayYear !== null && todayYear !== prevYearBeforeToday}
+										<div
+											class="timeline-decade-heading {timelineDecadeRowCss}"
+											role="group"
+											aria-label={String(todayYear)}
+										>
+											<div class="timeline-decade-heading__year {timelineDecadeYearColumnCss}">
+												<p class="timeline-decade-heading__label {timelineYearHeadingLabelCss}">
+													{todayYear}
 												</p>
 											</div>
 										</div>
@@ -1596,6 +1683,7 @@
 					{isInteractive}
 					{eventTypeKeys}
 					{showDecadeHeadings}
+					{showYearHeadings}
 					{decadeHeadingAccentPalette}
 					{decadeHeadingJustify}
 					width="100%"
@@ -1843,7 +1931,7 @@
 		/* align-content is set dynamically based on timelineZoom */
 	}
 
-	/* One grid row per slot: optional decade heading + event share the same grid-row */
+	/* One grid row per slot: optional decade/year headings + event share the same grid-row */
 	.timeline-grid-row-slot {
 		display: flex;
 		flex-direction: column;
