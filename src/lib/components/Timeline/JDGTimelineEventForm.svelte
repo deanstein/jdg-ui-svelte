@@ -262,17 +262,40 @@
 		});
 
 	function saveToStore() {
-		eventStore.set({
-			...$localEventStore,
-			additionalContent: { ...$localAdditionalStore }
-		});
+		const store = get(localEventStore);
+		const registry = get(timelineImageRegistryStore);
+		const imgKeys = store.images;
+		const firstMeta =
+			Array.isArray(imgKeys) &&
+			imgKeys.length > 0 &&
+			registry &&
+			typeof imgKeys[0] === 'string'
+				? getImageMetaByKey(registry, imgKeys[0])
+				: null;
+
+		let payload = {
+			...store,
+			additionalContent: { ...get(localAdditionalStore) }
+		};
+
+		// Timeline layout (generateTimelineRowItems) only reads event.date — not image meta. When using a media
+		// wrapper, persist the image's date onto the event so the row gets a valid grid index and appears on the timeline.
+		if (payload.isMediaWrapper && firstMeta?.date != null && String(firstMeta.date).trim() !== '') {
+			payload = {
+				...payload,
+				date: firstMeta.date,
+				...(firstMeta.isApprxDate != null ? { isApprxDate: firstMeta.isApprxDate } : {})
+			};
+		}
+
+		eventStore.set(payload);
 
 		// Update the timeline host draft
 		draftTimelineHost.update((currentValue) => {
 			addOrReplaceObjectByKeyValue(
 				currentValue.timelineEvents,
 				'id',
-				get(localEventStore).id,
+				payload.id,
 				get(eventStore)
 			);
 			return currentValue;

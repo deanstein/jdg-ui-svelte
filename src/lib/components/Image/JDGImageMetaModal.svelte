@@ -103,8 +103,10 @@
 
 	// The default path for new images
 	const newImagePath = 'jdg-ui-svelte/image-testing/new-image.jpg';
-	// Track if this is a new image (no src with Cloudinary URL)
-	$: isNewImage = !originalDraftMeta?.src || !originalDraftMeta.src.includes('cloudinary');
+	// Track if this is a new image (no src with Cloudinary URL).
+	// Must use $draftImageMeta — originalDraftMeta is only set in onMount, so using it here
+	// briefly treats every open as "new" and assigns the default new-image registry key.
+	$: isNewImage = !$draftImageMeta?.src || !$draftImageMeta.src.includes('cloudinary');
 
 	// For new images: user can select which registry to upload to (local variable)
 	// For existing images: always use the current website's repoName
@@ -493,23 +495,40 @@
 	};
 
 	// Helper function to find registry key by src URL (handles nested structures)
-	const findRegistryKeyBySrc = (registry, targetSrc, parentKey = '') => {
-		for (const [key, value] of Object.entries(registry)) {
-			const fullKey = parentKey ? `${parentKey}.${key}` : key;
+	const findRegistryKeyBySrc = (registry, targetSrc) => {
+		const normalizedTarget =
+			targetSrc &&
+			typeof targetSrc === 'string' &&
+			targetSrc.includes('cloudinary')
+				? extractCloudinaryAssetpath(targetSrc)
+				: null;
 
-			if (value && typeof value === 'object') {
-				// Check if this entry has a src that matches
-				if (value.src === targetSrc) {
-					return fullKey;
+		const walk = (node, parentKey) => {
+			for (const [key, value] of Object.entries(node)) {
+				const fullKey = parentKey ? `${parentKey}.${key}` : key;
+
+				if (!value || typeof value !== 'object') continue;
+
+				if (value.src) {
+					if (value.src === targetSrc) return fullKey;
+					// Same asset can appear with different Cloudinary transform segments in the URL
+					if (
+						normalizedTarget &&
+						value.src.includes('cloudinary')
+					) {
+						const entryPath = extractCloudinaryAssetpath(value.src);
+						if (entryPath && entryPath === normalizedTarget) return fullKey;
+					}
+					continue;
 				}
-				// Recurse into nested objects (but not if it has a src - that means it's an image entry)
-				if (!value.src) {
-					const found = findRegistryKeyBySrc(value, targetSrc, fullKey);
-					if (found) return found;
-				}
+
+				const found = walk(value, fullKey);
+				if (found) return found;
 			}
-		}
-		return null;
+			return null;
+		};
+
+		return walk(registry, '');
 	};
 
 	// Check if the current image URL is used in other repos
