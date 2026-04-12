@@ -54,6 +54,7 @@
 	// Drive the global carousel nav store. Only set when nav state actually changes to avoid
 	// infinite loop: setting the store re-renders JDGOverlayCarousel (parent), which re-renders
 	// this component, which would set the store again.
+	// While editing, clear nav so overlay does not advance (arrows, swipe, wheel).
 	let lastNavPayload = null;
 	$: payload = {
 		currentIndex: currentIndex + 1,
@@ -61,7 +62,10 @@
 		canGoPrev,
 		canGoNext
 	};
-	$: if (
+	$: if (isEditing) {
+		lastNavPayload = null;
+		carouselNav.set(null);
+	} else if (
 		lastNavPayload === null ||
 		lastNavPayload.currentIndex !== payload.currentIndex ||
 		lastNavPayload.totalCount !== payload.totalCount ||

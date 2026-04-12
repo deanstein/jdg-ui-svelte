@@ -14,7 +14,7 @@
 
 	import { JDGModal, JDGOverlayCarousel, JDGTimelineEventFormCarousel } from '$lib/index.js';
 
-	let isNewEvent;
+	let isNewEvent = false;
 
 	$: {
 		// Determine if this is a new event or not

@@ -215,7 +215,10 @@
 			handleContentClick(e);
 		}}
 	>
-		<div class="jdg-overlay-carousel-row">
+		<div
+			class="jdg-overlay-carousel-row"
+			class:jdg-overlay-carousel-row--single-slot={!$carouselNav}
+		>
 			{#if !$isMobileBreakpoint && $carouselNav}
 				<div class="jdg-overlay-carousel-edge jdg-overlay-carousel-edge-left">
 					<div class="jdg-overlay-carousel-buttons">
@@ -324,6 +327,12 @@
 	/* matches jdgBreakpoints.width[0] */
 	@media (max-width: 768px) {
 		.jdg-overlay-carousel-row {
+			justify-content: center;
+		}
+	}
+	/* No side nav columns (e.g. carousel disabled): center the slot instead of flex-start under stretch */
+	@media (min-width: 768px) {
+		.jdg-overlay-carousel-row--single-slot {
 			justify-content: center;
 		}
 	}
