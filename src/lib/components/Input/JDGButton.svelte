@@ -18,6 +18,33 @@
 		setHexColorSaturation
 	} from '$lib/jdg-utils.js';
 
+	const PADDING_LR_TB_RATIO = 2;
+
+	export let label = 'This is a button'; // set null if no label is desired
+	export let faClass = 'fa-solid fa-fw'; // fa-fw ensures consistent width for all icons
+	export let faIcon = 'fa-circle-info'; // set null if no icon is desired
+	export let iconSrc = null; // path to SVG/PNG image (takes priority over faIcon if set)
+	export let isEnabled = true;
+	export let isPrimary = true;
+	export let onClickFunction;
+	export let textColor = jdgColors.textDm;
+	export let textColorHover = jdgColors.textDm;
+	export let backgroundColor = undefined;
+	export let doAdjustBackgroundColorForContrast = true;
+	export let contrastRatio = 2;
+	export let backgroundColorHover = undefined;
+	/** When unset, uses `jdgSizes.inputFontSize*` with `jdgBreakpoints` in Emotion `@media` rules. */
+	export let fontSize = undefined;
+	export let width = 'fit-content';
+	export let borderRadius = '1.5em';
+	/** When unset, vertical padding uses `jdgSizes.inputPadding*`; horizontal follows `PADDING_LR_TO_TB_RATIO`. */
+	export let paddingTopBottom = undefined;
+	export let paddingLeftRight = undefined;
+	export let doForceSquareAspect = false;
+	export let gap = '8px';
+	export let tooltip = undefined;
+	export let shadow = false;
+
 	const getDefaultBackgroundColor = () => {
 		let bgColor;
 
@@ -48,20 +75,6 @@
 		return adjustColorForContrast(bgColorHover, textColor, 2.5);
 	}
 
-	export let label = 'This is a button'; // set null if no label is desired
-	export let faClass = 'fa-solid fa-fw'; // fa-fw ensures consistent width for all icons
-	export let faIcon = 'fa-circle-info'; // set null if no icon is desired
-	export let iconSrc = null; // path to SVG/PNG image (takes priority over faIcon if set)
-	export let isEnabled = true;
-	export let isPrimary = true;
-	export let onClickFunction;
-	export let textColor = jdgColors.textDm;
-	export let textColorHover = jdgColors.textDm;
-	export let backgroundColor = undefined;
-	export let doAdjustBackgroundColorForContrast = true;
-	export let contrastRatio = 2;
-	export let backgroundColorHover = undefined;
-
 	// Recompute effectiveBackgroundColor when isEnabled or isPrimary changes
 	let effectiveBackgroundColor;
 	$: {
@@ -74,18 +87,6 @@
 	$: effectiveBackgroundHover =
 		backgroundColorHover !== undefined ? backgroundColorHover : defaultHoverColor;
 
-	/** When unset, uses `jdgSizes.inputFontSize*` with `jdgBreakpoints` in Emotion `@media` rules. */
-	export let fontSize = undefined;
-	export let width = 'fit-content';
-	export let borderRadius = '1.5em';
-	/** When unset, uses `jdgSizes.inputPadding*` with `jdgBreakpoints` in Emotion `@media` rules. */
-	export let paddingTopBottom = undefined;
-	export let paddingLeftRight = undefined;
-	export let doForceSquareAspect = false;
-	export let gap = '8px';
-	export let tooltip = undefined;
-	export let shadow = false;
-
 	let buttonCss = css``; // redefined in the reactive block
 
 	$: {
@@ -93,6 +94,9 @@
 		const bp1 = jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit;
 		const pMT = jdgSizes.inputPaddingMobileTablet;
 		const pD = jdgSizes.inputPaddingDesktop;
+		const padUnit = jdgSizes.inputPaddingUnit;
+		const pLR_MT = jdgSizes.nInputPaddingMobileTablet * PADDING_LR_TB_RATIO + padUnit;
+		const pLR_D = jdgSizes.nInputPaddingDesktop * PADDING_LR_TB_RATIO + padUnit;
 
 		const hasCustomFont =
 			fontSize !== undefined && fontSize !== null && String(fontSize).trim() !== '';
@@ -113,18 +117,8 @@
 			paddingBlock = `
 				padding-top: ${paddingTopBottom};
 				padding-bottom: ${paddingTopBottom};
-				@media (max-width: ${bp0}) {
-					padding-left: ${pMT};
-					padding-right: ${pMT};
-				}
-				@media (min-width: ${bp0}) and (max-width: ${bp1}) {
-					padding-left: ${pMT};
-					padding-right: ${pMT};
-				}
-				@media (min-width: ${bp1}) {
-					padding-left: ${pD};
-					padding-right: ${pD};
-				}
+				padding-left: calc(${PADDING_LR_TB_RATIO} * ${paddingTopBottom});
+				padding-right: calc(${PADDING_LR_TB_RATIO} * ${paddingTopBottom});
 			`;
 		} else if (!hasPTB && hasPLR) {
 			paddingBlock = `
@@ -146,13 +140,13 @@
 		} else {
 			paddingBlock = `
 				@media (max-width: ${bp0}) {
-					padding: ${pMT};
+					padding: ${pMT} ${pLR_MT};
 				}
 				@media (min-width: ${bp0}) and (max-width: ${bp1}) {
-					padding: ${pMT};
+					padding: ${pMT} ${pLR_MT};
 				}
 				@media (min-width: ${bp1}) {
-					padding: ${pD};
+					padding: ${pD} ${pLR_D};
 				}
 			`;
 		}
