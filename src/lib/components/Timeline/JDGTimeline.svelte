@@ -119,6 +119,15 @@
 	// Called when a new avatar is selected (passes the new image key)
 	export let onAvatarChange = undefined;
 
+	/** Four-digit years → two lines (e.g. 19 / 78); otherwise null for a single-line label. */
+	function splitYearHeadingForDisplay(year) {
+		if (typeof year !== 'number' || !Number.isFinite(year)) return null;
+		const y = Math.trunc(year);
+		if (y < 1000 || y > 9999) return null;
+		const s = String(y);
+		return [s.slice(0, 2), s.slice(2)];
+	}
+
 	/** Same normalization as {@link JDGTimelineEventForm} (array or object of allowed keys). */
 	function normalizeEventTypeKeys(keys) {
 		const k = keys ?? jdgTimelineEventKeys;
@@ -877,28 +886,36 @@
 					: 'left';
 		timelineYearHeadingLabelCss = css`
 			font-weight: 800;
-			letter-spacing: 0.04em;
+			letter-spacing: 0.03em;
 			line-height: 1.15;
 			margin: 0;
 			width: 100%;
 			box-sizing: border-box;
 			color: ${decadeHeadingLabelColor};
 			text-align: ${textAlign};
-			text-decoration: underline;
-			text-underline-offset: 0.5rem;
 			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-				font-size: 1.15rem;
+				font-size: 1.65rem;
 			}
 			@media (min-width: ${jdgBreakpoints.width[0].toString() +
 				jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 				jdgBreakpoints.unit}) {
-				font-size: 1.4rem;
+				font-size: 2rem;
 			}
 			@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-				font-size: 1.65rem;
+				font-size: 2.35rem;
 			}
 		`;
 	}
+
+	const timelineYearHeadingStackFirstCss = css`
+		display: block;
+		line-height: 0.82;
+	`;
+	const timelineYearHeadingStackSecondCss = css`
+		display: block;
+		line-height: 0.82;
+		margin-top: -0.05em;
+	`;
 
 	// Timeline spine styling
 	let spineContainerCss = css`
@@ -1458,6 +1475,7 @@
 								{#if showYearHeadings}
 									{@const inceptionYear = getYearFromTimelineEvent(emptyStateEvent)}
 									{#if inceptionYear !== null}
+										{@const inceptionYearPair = splitYearHeadingForDisplay(inceptionYear)}
 										<div
 											class="timeline-decade-heading {timelineDecadeRowCss}"
 											role="group"
@@ -1465,7 +1483,12 @@
 										>
 											<div class="timeline-decade-heading__year {timelineDecadeYearColumnCss}">
 												<p class="timeline-decade-heading__label {timelineYearHeadingLabelCss}">
-													{inceptionYear}
+													{#if inceptionYearPair}
+														<span class={timelineYearHeadingStackFirstCss}>{inceptionYearPair[0]}</span><span
+															class={timelineYearHeadingStackSecondCss}>{inceptionYearPair[1]}</span>
+													{:else}
+														{inceptionYear}
+													{/if}
 												</p>
 											</div>
 										</div>
@@ -1521,6 +1544,7 @@
 										</div>
 									{/if}
 									{#if showYearHeadings && rowYear !== null && rowYear !== prevRowYear}
+										{@const rowYearPair = splitYearHeadingForDisplay(rowYear)}
 										<div
 											class="timeline-decade-heading {timelineDecadeRowCss}"
 											role="group"
@@ -1528,7 +1552,12 @@
 										>
 											<div class="timeline-decade-heading__year {timelineDecadeYearColumnCss}">
 												<p class="timeline-decade-heading__label {timelineYearHeadingLabelCss}">
-													{rowYear}
+													{#if rowYearPair}
+														<span class={timelineYearHeadingStackFirstCss}>{rowYearPair[0]}</span><span
+															class={timelineYearHeadingStackSecondCss}>{rowYearPair[1]}</span>
+													{:else}
+														{rowYear}
+													{/if}
 												</p>
 											</div>
 										</div>
@@ -1540,7 +1569,7 @@
 										onClickTimelineEvent={() => {
 											// Only promote the host into the global draft store when this timeline is in an
 											// editing context (allowEditing). Otherwise every event click would set
-											// draftTimelineHost — e.g. timeline-test uses allowEditing={$draftTimelineHost}
+											// draftTimelineHost — e.g. /timeline uses allowEditing={$draftTimelineHost}
 											// and would treat the host as "in draft" after the first click even when the user
 											// never used "Set to Editing Store". Carousel still works via timelineEventsOrdered +
 											// draftTimelineEvent; image registry comes from timeline context.
@@ -1607,6 +1636,7 @@
 										? getYearFromTimelineEvent(prevEventBeforeToday)
 										: null}
 									{#if todayYear !== null && todayYear !== prevYearBeforeToday}
+										{@const todayYearPair = splitYearHeadingForDisplay(todayYear)}
 										<div
 											class="timeline-decade-heading {timelineDecadeRowCss}"
 											role="group"
@@ -1614,7 +1644,12 @@
 										>
 											<div class="timeline-decade-heading__year {timelineDecadeYearColumnCss}">
 												<p class="timeline-decade-heading__label {timelineYearHeadingLabelCss}">
-													{todayYear}
+													{#if todayYearPair}
+														<span class={timelineYearHeadingStackFirstCss}>{todayYearPair[0]}</span><span
+															class={timelineYearHeadingStackSecondCss}>{todayYearPair[1]}</span>
+													{:else}
+														{todayYear}
+													{/if}
 												</p>
 											</div>
 										</div>
