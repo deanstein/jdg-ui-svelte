@@ -93,11 +93,15 @@
 	let textShadowOffsetY = 0;
 	let verticalPlacement = 'bottom';
 	let horizontalPlacement = 'left';
-	let paddingPx = 12;
+	/** Inset from image edge; % is of image height (same basis as logo/text size). */
+	let paddingSize = 1.25;
+	let paddingSizeUnit = '%'; // 'px' | '%'
 	let watermarkImageSize = 3;
 	let watermarkImageSizeUnit = '%'; // 'px' | '%'
 	let watermarkDivider = ' | ';
 	let comboGapPx = 5; // padding between logo, divider, and text for Image + text
+	/** Inline style for the preview overlay; kept in sync via reactive block below. */
+	let watermarkWrapperStyle = '';
 	let selectedId = null;
 	let dragActive = false;
 	let watermarkImgEl = null;
@@ -161,8 +165,16 @@
 			? `${((previewImageHeight || 600) * watermarkImageSize) / 100}px`
 			: `${watermarkImageSize}px`;
 
-	// Reactive so placement/opacity/padding changes update the preview immediately
-	$: watermarkWrapperStyle = getWatermarkWrapperStyle();
+	// Placement + padding: depend on these reads so the preview updates as you type (not only
+	// when vars happen to appear syntactically outside getWatermarkWrapperStyle).
+	$: {
+		paddingSize;
+		paddingSizeUnit;
+		previewImageHeight;
+		verticalPlacement;
+		horizontalPlacement;
+		watermarkWrapperStyle = getWatermarkWrapperStyle();
+	}
 	function scaleRefPx(px, ref = 600) {
 		const side = previewImageHeight || 600;
 		return Math.max(0.25, (px * side) / ref);
@@ -335,8 +347,20 @@
 		ctx.shadowOffsetY = 0;
 	}
 
+	/** Same pixel inset on horizontal and vertical axes from placement (preview or full-res `h`). */
+	function getPaddingPxFromImageHeight(imageHeightPx) {
+		const hPx = Number(imageHeightPx);
+		if (!Number.isFinite(hPx) || hPx <= 0) return 0;
+		const raw = Number(paddingSize);
+		const n = Number.isFinite(raw) ? raw : 0;
+		if (paddingSizeUnit === '%') {
+			return Math.max(0, Math.round((hPx * n) / 100));
+		}
+		return Math.max(0, Math.round(n));
+	}
+
 	function getWatermarkWrapperStyle() {
-		const pad = `${paddingPx}px`;
+		const pad = `${getPaddingPxFromImageHeight(previewImageHeight || 600)}px`;
 		const align =
 			verticalPlacement === 'top'
 				? 'flex-start'
@@ -376,12 +400,8 @@
 		canvas.height = h;
 		ctx.drawImage(sourceImg, 0, 0);
 
-		// Scale padding with image size so it matches preview (preview short side ~600px)
 		const minSide = Math.min(w, h);
-		const effectivePadding = Math.max(
-			2,
-			Math.round((paddingPx * minSide) / WATERMARK_MIN_SHORT_SIDE)
-		);
+		const effectivePadding = getPaddingPxFromImageHeight(h);
 
 		// Logo sized by height only; width follows aspect ratio (wide marks stay readable)
 		const targetLogoH =
@@ -444,12 +464,8 @@
 		canvas.height = h;
 		ctx.drawImage(sourceImg, 0, 0);
 
-		// Scale padding with image size so it matches preview (preview short side ~600px)
 		const minSide = Math.min(w, h);
-		const effectivePadding = Math.max(
-			2,
-			Math.round((paddingPx * minSide) / WATERMARK_MIN_SHORT_SIDE)
-		);
+		const effectivePadding = getPaddingPxFromImageHeight(h);
 
 		const fontSizePx =
 			watermarkTextSizeUnit === '%' ? Math.round((h * watermarkTextSize) / 100) : watermarkTextSize;
@@ -488,10 +504,7 @@
 		ctx.drawImage(sourceImg, 0, 0);
 
 		const minSide = Math.min(w, h);
-		const effectivePadding = Math.max(
-			2,
-			Math.round((paddingPx * minSide) / WATERMARK_MIN_SHORT_SIDE)
-		);
+		const effectivePadding = getPaddingPxFromImageHeight(h);
 		const effectiveComboGap = Math.max(
 			2,
 			Math.round((comboGapPx * minSide) / WATERMARK_MIN_SHORT_SIDE)
@@ -765,10 +778,11 @@ yarn convert-image-registry-to-json --help</pre>
 							<option value="%">%</option>
 							<option value="px">px</option>
 						</select>
+						{#if watermarkImageSizeUnit === '%'}
+							<span class="size-suffix">of image height</span>
+						{/if}
 					</div>
-					{#if watermarkImageSizeUnit === '%'}
-						<span class="size-hint">% of image height</span>
-					{:else}
+					{#if watermarkImageSizeUnit === 'px'}
 						<span class="size-hint">Target logo height; width follows aspect ratio</span>
 					{/if}
 				</JDGInputContainer>
@@ -892,10 +906,11 @@ yarn convert-image-registry-to-json --help</pre>
 							<option value="%">%</option>
 							<option value="px">px</option>
 						</select>
+						{#if watermarkImageSizeUnit === '%'}
+							<span class="size-suffix">of image height</span>
+						{/if}
 					</div>
-					{#if watermarkImageSizeUnit === '%'}
-						<span class="size-hint">% of image height</span>
-					{:else}
+					{#if watermarkImageSizeUnit === 'px'}
 						<span class="size-hint">Target logo height; width follows aspect ratio</span>
 					{/if}
 				</JDGInputContainer>
@@ -1020,6 +1035,9 @@ yarn convert-image-registry-to-json --help</pre>
 							<option value="px">px</option>
 							<option value="%">%</option>
 						</select>
+						{#if watermarkTextSizeUnit === '%'}
+							<span class="size-suffix">of image height</span>
+						{/if}
 					</div>
 				</JDGInputContainer>
 				<JDGInputContainer label="Font">
@@ -1134,6 +1152,9 @@ yarn convert-image-registry-to-json --help</pre>
 							<option value="px">px</option>
 							<option value="%">%</option>
 						</select>
+						{#if watermarkTextSizeUnit === '%'}
+							<span class="size-suffix">of image height</span>
+						{/if}
 					</div>
 				</JDGInputContainer>
 				<JDGInputContainer label="Font">
@@ -1226,10 +1247,28 @@ yarn convert-image-registry-to-json --help</pre>
 						{/each}
 					</select>
 				</JDGInputContainer>
-				<JDGInputContainer label="Padding (px)">
-					<input type="number" class="number-input" min="0" max="200" bind:value={paddingPx} />
-				</JDGInputContainer>
 			</div>
+			<JDGInputContainer label="Inset from image edge">
+				<div class="size-row">
+					<input
+						type="number"
+						class="number-input"
+						min="0"
+						max={paddingSizeUnit === '%' ? 50 : 400}
+						bind:value={paddingSize}
+					/>
+					<select class="select-input size-unit" bind:value={paddingSizeUnit}>
+						<option value="%">%</option>
+						<option value="px">px</option>
+					</select>
+					{#if paddingSizeUnit === '%'}
+						<span class="size-suffix">of image height</span>
+					{/if}
+				</div>
+				{#if paddingSizeUnit === 'px'}
+					<span class="size-hint">Same pixel distance from the image boundary on both axes</span>
+				{/if}
+			</JDGInputContainer>
 		</div>
 
 		<div
@@ -1446,6 +1485,12 @@ yarn convert-image-registry-to-json --help</pre>
 	}
 	.size-row .number-input {
 		width: 5rem;
+	}
+	.size-suffix {
+		font-size: 0.9rem;
+		color: #555;
+		white-space: nowrap;
+		align-self: center;
 	}
 	.size-unit {
 		width: 4rem;
