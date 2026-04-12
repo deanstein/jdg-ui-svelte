@@ -13,7 +13,7 @@
 </script>
 
 <JDGContentContainer>
-	<JDGContentBoxFloating title="CLOUDINARY TEST">
+	<JDGContentBoxFloating title="CLOUDINARY">
 		<JDGBodyCopy paddingTop="0">Test out Cloudinary optimization and resizing here.</JDGBodyCopy>
 
 		{#if false}

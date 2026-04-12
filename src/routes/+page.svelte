@@ -66,12 +66,12 @@
 	setContext(JDG_CONTEXTS.EVENT_AGE_SUFFIX_POSITIVE, 'after opening');
 	setContext(JDG_CONTEXTS.EVENT_AGE_SUFFIX_NEGATIVE, 'before opening');
 
-	// undefined → loading; null → no data; object → render (same pattern as timeline-test-ccp)
+	// undefined → loading; null → no data; object → render (same pattern as ccp-timeline)
 	const ccpMallTimelineHostStore = writable(undefined);
 
 	onMount(async () => {
 		const files = await fetchJsonFileList(jdgRepoOwner, jdgBuildingDataRepoName);
-		// [1] is the sample building-data file used on Timeline Test (see timeline-test +page)
+		// [1] is the sample building-data file used on Timeline (see timeline +page)
 		if (files?.length > 1) {
 			const data = await readJsonFileFromRepo(jdgRepoOwner, jdgBuildingDataRepoName, files[1]);
 			const hosts = data?.[buildingDataCollectionKey];
@@ -989,7 +989,7 @@
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="TIMELINE" animateWhenVisible={false}>
 		<JDGBodyCopy textAlign="center" textWrap="balance" paddingTop="0">
-			To edit, go to <a href="/timeline-test">Timeline Test</a>.
+			To edit, go to <a href="/timeline">Timeline</a>.
 		</JDGBodyCopy>
 		<JDGTimeline
 			timelineHost={$ccpMallTimelineHostStore}

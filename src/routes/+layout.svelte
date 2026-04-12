@@ -34,17 +34,13 @@
 	navItemHome.label = 'HOME';
 	navItemHome.href = '/';
 
-	const navItemPlaceholder = instantiateObject(jdgNavItem);
-	navItemPlaceholder.label = 'PLACEHOLDER TEST';
-	navItemPlaceholder.href = '/jdg-test';
-
 	const navItemSimpleTest = instantiateObject(jdgNavItem);
 	navItemSimpleTest.label = 'SIMPLE TEST';
 	navItemSimpleTest.href = '/simple-test';
 
-	const navItemCloudinaryTest = instantiateObject(jdgNavItem);
-	navItemCloudinaryTest.label = 'CLOUDINARY TEST';
-	navItemCloudinaryTest.href = '/cloudinary-test';
+	const navItemCloudinary = instantiateObject(jdgNavItem);
+	navItemCloudinary.label = 'CLOUDINARY';
+	navItemCloudinary.href = '/cloudinary';
 
 	const navItemJdgTest = instantiateObject(jdgNavItem);
 	navItemJdgTest.label = 'JDG TEST';
@@ -55,16 +51,16 @@
 	navItemPmxTest.href = '/pmx-test';
 
 	const navItemIframe = instantiateObject(jdgNavItem);
-	navItemIframe.label = 'IFRAME TEST';
-	navItemIframe.href = '/iframe-test';
+	navItemIframe.label = 'IFRAME';
+	navItemIframe.href = '/iframe';
 
 	const navItemTimeline = instantiateObject(jdgNavItem);
-	navItemTimeline.label = 'TIMELINE TEST';
-	navItemTimeline.href = '/timeline-test';
+	navItemTimeline.label = 'TIMELINE';
+	navItemTimeline.href = '/timeline';
 
 	const navItemTimelineCcp = instantiateObject(jdgNavItem);
-	navItemTimelineCcp.label = 'CCP TIMELINE TEST';
-	navItemTimelineCcp.href = '/timeline-test-ccp';
+	navItemTimelineCcp.label = 'CCP TIMELINE';
+	navItemTimelineCcp.href = '/ccp-timeline';
 
 	const navItemTools = instantiateObject(jdgNavItem);
 	navItemTools.label = 'TOOLS';
@@ -73,14 +69,13 @@
 	const navItems = [
 		navItemHome,
 		navItemTools,
-		navItemSimpleTest,
-		navItemCloudinaryTest,
-		navItemJdgTest,
-		navItemPmxTest,
-		navItemPlaceholder,
+		navItemCloudinary,
 		navItemIframe,
 		navItemTimeline,
-		navItemTimelineCcp
+		navItemTimelineCcp,
+		navItemJdgTest,
+		navItemPmxTest,
+		navItemSimpleTest
 	];
 
 	// Get the app version from package.json
