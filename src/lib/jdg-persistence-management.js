@@ -514,6 +514,16 @@ export const replaceUrlAcrossRepos = async (oldUrl, newUrl, excludeRepoName = nu
 	return { updated, failed };
 };
 
+/** True when `obj` is a persisted image-meta leaf (not a namespace object). */
+function isImageMetaRegistryLeaf(obj) {
+	return (
+		obj &&
+		typeof obj === 'object' &&
+		!Array.isArray(obj) &&
+		('src' in obj || 'imgSrc' in obj)
+	);
+}
+
 // Write a single image meta entry to the registry
 export const writeImageMetaEntryToRepo = async (repoName, registryKey, imageMeta) => {
 	try {
@@ -545,20 +555,24 @@ export const writeImageMetaEntryToRepo = async (repoName, registryKey, imageMeta
 			)
 		);
 
-		// Handle both top-level and nested keys
-		const keyParts = registryKey.split('.');
-		const isNested = keyParts.length > 1;
-
-		if (isNested) {
-			const parentKey = keyParts[0];
-			const childKey = keyParts.slice(1).join('.');
-
-			if (!registryData[parentKey]) {
-				registryData[parentKey] = {};
-			}
-			registryData[parentKey][childKey] = cleanImageMeta;
+		const keyParts = registryKey.split('.').filter(Boolean);
+		if (keyParts.length === 0) {
+			throw new Error('Invalid registry key (empty path)');
+		}
+		if (keyParts.length === 1) {
+			registryData[keyParts[0]] = cleanImageMeta;
 		} else {
-			registryData[registryKey] = cleanImageMeta;
+			let current = registryData;
+			for (let i = 0; i < keyParts.length - 1; i++) {
+				const k = keyParts[i];
+				let next = current[k];
+				if (!next || typeof next !== 'object' || Array.isArray(next) || isImageMetaRegistryLeaf(next)) {
+					next = {};
+					current[k] = next;
+				}
+				current = current[k];
+			}
+			current[keyParts[keyParts.length - 1]] = cleanImageMeta;
 		}
 
 		// Write JSON file back
@@ -594,33 +608,48 @@ export const deleteImageMetaEntryFromRepo = async (repoName, registryKey) => {
 			throw new Error(`Registry file not found in any expected location`);
 		}
 
-		// Handle both top-level and nested keys
-		const keyParts = registryKey.split('.');
-		const isNested = keyParts.length > 1;
-
-		if (isNested) {
-			const parentKey = keyParts[0];
-			const childKey = keyParts.slice(1).join('.');
-
-			if (!registryData[parentKey]) {
-				throw new Error(`Parent key "${parentKey}" not found`);
+		const keyParts = registryKey.split('.').filter(Boolean);
+		if (keyParts.length === 0) {
+			throw new Error('Invalid registry key (empty path)');
+		}
+		if (keyParts.length === 1) {
+			const k = keyParts[0];
+			if (!(k in registryData)) {
+				throw new Error(`Registry key "${k}" not found`);
 			}
-
-			if (!(childKey in registryData[parentKey])) {
-				throw new Error(`Child key "${childKey}" not found in parent "${parentKey}"`);
-			}
-
-			delete registryData[parentKey][childKey];
-
-			// If parent is now empty, remove the entire parent object
-			if (Object.keys(registryData[parentKey]).length === 0) {
-				delete registryData[parentKey];
-			}
+			delete registryData[k];
 		} else {
-			if (!(registryKey in registryData)) {
-				throw new Error(`Registry key "${registryKey}" not found`);
+			let current = registryData;
+			const stack = [];
+			for (let i = 0; i < keyParts.length - 1; i++) {
+				const k = keyParts[i];
+				if (!current[k] || typeof current[k] !== 'object') {
+					throw new Error(`Registry path segment "${k}" not found`);
+				}
+				stack.push({ parent: current, key: k });
+				current = current[k];
 			}
-			delete registryData[registryKey];
+			const leafKey = keyParts[keyParts.length - 1];
+			if (!(leafKey in current)) {
+				throw new Error(`Registry key "${leafKey}" not found at path end`);
+			}
+			delete current[leafKey];
+
+			for (let i = stack.length - 1; i >= 0; i--) {
+				const { parent, key } = stack[i];
+				const node = parent[key];
+				if (node === undefined) {
+					continue;
+				}
+				if (typeof node !== 'object' || Array.isArray(node) || isImageMetaRegistryLeaf(node)) {
+					break;
+				}
+				if (Object.keys(node).length === 0) {
+					delete parent[key];
+				} else {
+					break;
+				}
+			}
 		}
 
 		// Write JSON file back

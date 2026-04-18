@@ -121,6 +121,71 @@ function normalizeImageMetaKeys(obj) {
 	);
 }
 
+function bothRegistryNamespaces(a, b) {
+	return (
+		a &&
+		typeof a === 'object' &&
+		!Array.isArray(a) &&
+		!isImageMetaEntry(a) &&
+		b &&
+		typeof b === 'object' &&
+		!Array.isArray(b) &&
+		!isImageMetaEntry(b)
+	);
+}
+
+/** Merge one registry value under `key`, combining namespace objects instead of overwriting. */
+function mergeRegistryNamespaceKey(target, key, value) {
+	if (!(key in target)) {
+		target[key] = value;
+		return;
+	}
+	const existing = target[key];
+	if (bothRegistryNamespaces(existing, value)) {
+		for (const [childKey, childVal] of Object.entries(value)) {
+			mergeRegistryNamespaceKey(existing, childKey, childVal);
+		}
+	} else {
+		target[key] = value;
+	}
+}
+
+/** Place `value` at target[p0][p1]...[pn-1][pn], creating plain objects along the path. */
+function deepSetDottedPath(target, parts, value) {
+	if (parts.length === 1) {
+		mergeRegistryNamespaceKey(target, parts[0], value);
+		return;
+	}
+	const [head, ...rest] = parts;
+	let next = target[head];
+	if (!next || typeof next !== 'object' || Array.isArray(next) || isImageMetaEntry(next)) {
+		next = {};
+		target[head] = next;
+	}
+	deepSetDottedPath(next, rest, value);
+}
+
+/**
+ * Turn flat keys like "exhibit.theater_1" into nested objects so registry.root.a.b works
+ * in JS (matches fully nested keys elsewhere in the JSON).
+ */
+function expandDottedRegistryKeys(obj) {
+	if (!obj || typeof obj !== 'object') return obj;
+	if (Array.isArray(obj)) return obj.map(expandDottedRegistryKeys);
+	if (isImageMetaEntry(obj)) return obj;
+
+	const entries = Object.entries(obj).map(([k, v]) => [k, expandDottedRegistryKeys(v)]);
+	const out = {};
+	for (const [k, v] of entries) {
+		if (k.includes('.')) {
+			deepSetDottedPath(out, k.split('.'), v);
+		} else {
+			mergeRegistryNamespaceKey(out, k, v);
+		}
+	}
+	return out;
+}
+
 const cwd = process.cwd();
 const args = process.argv.slice(2);
 
@@ -187,6 +252,8 @@ if (fs.existsSync(output)) {
 		console.warn('Could not parse existing output file, overwriting:', err.message);
 	}
 }
+
+result = expandDottedRegistryKeys(result);
 
 fs.writeFileSync(output, JSON.stringify(result, null, 2) + '\n', 'utf8');
 console.log('Wrote', output);
