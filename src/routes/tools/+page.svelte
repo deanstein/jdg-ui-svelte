@@ -96,7 +96,7 @@
 	/** Inset from image edge; % is of image height (same basis as logo/text size). */
 	let paddingSize = 1.25;
 	let paddingSizeUnit = '%'; // 'px' | '%'
-	let watermarkImageSize = 3;
+	let watermarkImageSize = 2.25;
 	let watermarkImageSizeUnit = '%'; // 'px' | '%'
 	let watermarkDivider = ' | ';
 	let comboGapPx = 5; // padding between logo, divider, and text for Image + text
@@ -772,6 +772,7 @@ yarn convert-image-registry-to-json --help</pre>
 							class="number-input"
 							min="1"
 							max={watermarkImageSizeUnit === '%' ? 100 : 800}
+							step={watermarkImageSizeUnit === '%' ? 0.01 : 1}
 							bind:value={watermarkImageSize}
 						/>
 						<select class="select-input size-unit" bind:value={watermarkImageSizeUnit}>
@@ -900,6 +901,7 @@ yarn convert-image-registry-to-json --help</pre>
 							class="number-input"
 							min="1"
 							max={watermarkImageSizeUnit === '%' ? 100 : 800}
+							step={watermarkImageSizeUnit === '%' ? 0.01 : 1}
 							bind:value={watermarkImageSize}
 						/>
 						<select class="select-input size-unit" bind:value={watermarkImageSizeUnit}>
