@@ -29,7 +29,7 @@
 	let showCaptions = true;
 
 	// Sort mode for gallery
-	let sortMode = 'json-desc';
+	let sortMode = 'date-desc';
 
 	// Registry to show: default to current website's registry (repoName set by consuming app)
 	let selectedRepoName;

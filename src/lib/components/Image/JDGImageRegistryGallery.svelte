@@ -137,7 +137,7 @@
 	let observer; // IntersectionObserver instance
 
 	// Sort mode: 'json-asc' | 'json-desc' | 'date-asc' | 'date-desc' (can be controlled by parent e.g. modal)
-	export let sortMode = 'json-desc';
+	export let sortMode = 'date-desc';
 	let previousSortMode = sortMode;
 
 	// When false, Options flyout is hidden (parent provides it, e.g. in modal's header row)
