@@ -23,11 +23,10 @@
 		justify-content: center;
 		width: 100%;
 
-		/* Allow flex items to shrink and constrain content overflow */
+		/* min-width: 0 so flex items can shrink; no overflow:hidden — it clips descendants' box-shadow (e.g. tiles) */
 		> * {
 			min-width: 0;
 			max-width: 100%;
-			overflow: hidden;
 		}
 
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
