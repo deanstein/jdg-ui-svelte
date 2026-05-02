@@ -111,9 +111,9 @@
 			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 				font-size: ${jdgSizes.inputFontSizeMobile};
 			}
-			@media (min-width: ${jdgBreakpoints.width[0].toString() +
-				jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
-				jdgBreakpoints.unit}) {
+			@media (min-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) and (max-width: ${
+				jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit
+			}) {
 				font-size: ${jdgSizes.inputFontSizeTablet};
 			}
 			@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {

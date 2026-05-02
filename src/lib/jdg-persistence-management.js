@@ -516,12 +516,7 @@ export const replaceUrlAcrossRepos = async (oldUrl, newUrl, excludeRepoName = nu
 
 /** True when `obj` is a persisted image-meta leaf (not a namespace object). */
 function isImageMetaRegistryLeaf(obj) {
-	return (
-		obj &&
-		typeof obj === 'object' &&
-		!Array.isArray(obj) &&
-		('src' in obj || 'imgSrc' in obj)
-	);
+	return obj && typeof obj === 'object' && !Array.isArray(obj) && ('src' in obj || 'imgSrc' in obj);
 }
 
 // Write a single image meta entry to the registry
@@ -566,7 +561,12 @@ export const writeImageMetaEntryToRepo = async (repoName, registryKey, imageMeta
 			for (let i = 0; i < keyParts.length - 1; i++) {
 				const k = keyParts[i];
 				let next = current[k];
-				if (!next || typeof next !== 'object' || Array.isArray(next) || isImageMetaRegistryLeaf(next)) {
+				if (
+					!next ||
+					typeof next !== 'object' ||
+					Array.isArray(next) ||
+					isImageMetaRegistryLeaf(next)
+				) {
 					next = {};
 					current[k] = next;
 				}

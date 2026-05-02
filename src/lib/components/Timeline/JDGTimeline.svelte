@@ -1484,8 +1484,11 @@
 											<div class="timeline-decade-heading__year {timelineDecadeYearColumnCss}">
 												<p class="timeline-decade-heading__label {timelineYearHeadingLabelCss}">
 													{#if inceptionYearPair}
-														<span class={timelineYearHeadingStackFirstCss}>{inceptionYearPair[0]}</span><span
-															class={timelineYearHeadingStackSecondCss}>{inceptionYearPair[1]}</span>
+														<span class={timelineYearHeadingStackFirstCss}
+															>{inceptionYearPair[0]}</span
+														><span class={timelineYearHeadingStackSecondCss}
+															>{inceptionYearPair[1]}</span
+														>
 													{:else}
 														{inceptionYear}
 													{/if}
@@ -1553,8 +1556,8 @@
 											<div class="timeline-decade-heading__year {timelineDecadeYearColumnCss}">
 												<p class="timeline-decade-heading__label {timelineYearHeadingLabelCss}">
 													{#if rowYearPair}
-														<span class={timelineYearHeadingStackFirstCss}>{rowYearPair[0]}</span><span
-															class={timelineYearHeadingStackSecondCss}>{rowYearPair[1]}</span>
+														<span class={timelineYearHeadingStackFirstCss}>{rowYearPair[0]}</span
+														><span class={timelineYearHeadingStackSecondCss}>{rowYearPair[1]}</span>
 													{:else}
 														{rowYear}
 													{/if}
@@ -1645,8 +1648,10 @@
 											<div class="timeline-decade-heading__year {timelineDecadeYearColumnCss}">
 												<p class="timeline-decade-heading__label {timelineYearHeadingLabelCss}">
 													{#if todayYearPair}
-														<span class={timelineYearHeadingStackFirstCss}>{todayYearPair[0]}</span><span
-															class={timelineYearHeadingStackSecondCss}>{todayYearPair[1]}</span>
+														<span class={timelineYearHeadingStackFirstCss}>{todayYearPair[0]}</span
+														><span class={timelineYearHeadingStackSecondCss}
+															>{todayYearPair[1]}</span
+														>
 													{:else}
 														{todayYear}
 													{/if}

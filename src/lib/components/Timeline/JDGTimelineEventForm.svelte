@@ -176,9 +176,7 @@
 
 	$: eventPrimaryDateValid = parseTimelineEventDate(effectiveDate).valid;
 	$: doneButtonEnabled = eventPrimaryDateValid;
-	$: doneButtonTooltip = eventPrimaryDateValid
-		? 'Done'
-		: 'Enter a valid event date before saving.';
+	$: doneButtonTooltip = eventPrimaryDateValid ? 'Done' : 'Enter a valid event date before saving.';
 
 	// Reactive computed values for checkbox visibility
 	// Article: show while editing (can enable before images). Media / other types: show once there is media.
@@ -266,10 +264,7 @@
 		const registry = get(timelineImageRegistryStore);
 		const imgKeys = store.images;
 		const firstMeta =
-			Array.isArray(imgKeys) &&
-			imgKeys.length > 0 &&
-			registry &&
-			typeof imgKeys[0] === 'string'
+			Array.isArray(imgKeys) && imgKeys.length > 0 && registry && typeof imgKeys[0] === 'string'
 				? getImageMetaByKey(registry, imgKeys[0])
 				: null;
 
@@ -292,12 +287,7 @@
 
 		// Update the timeline host draft
 		draftTimelineHost.update((currentValue) => {
-			addOrReplaceObjectByKeyValue(
-				currentValue.timelineEvents,
-				'id',
-				payload.id,
-				get(eventStore)
-			);
+			addOrReplaceObjectByKeyValue(currentValue.timelineEvents, 'id', payload.id, get(eventStore));
 			return currentValue;
 		});
 	}
@@ -465,8 +455,8 @@
 			onClickCompose={() => {
 				isEditing = true;
 			}}
-			doneButtonEnabled={doneButtonEnabled}
-			doneButtonTooltip={doneButtonTooltip}
+			{doneButtonEnabled}
+			{doneButtonTooltip}
 			onClickDone={() => {
 				if (!parseTimelineEventDate(effectiveDate).valid) return;
 				saveToStore();

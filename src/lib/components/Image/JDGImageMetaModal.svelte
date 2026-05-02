@@ -497,9 +497,7 @@
 	// Helper function to find registry key by src URL (handles nested structures)
 	const findRegistryKeyBySrc = (registry, targetSrc) => {
 		const normalizedTarget =
-			targetSrc &&
-			typeof targetSrc === 'string' &&
-			targetSrc.includes('cloudinary')
+			targetSrc && typeof targetSrc === 'string' && targetSrc.includes('cloudinary')
 				? extractCloudinaryAssetpath(targetSrc)
 				: null;
 
@@ -512,10 +510,7 @@
 				if (value.src) {
 					if (value.src === targetSrc) return fullKey;
 					// Same asset can appear with different Cloudinary transform segments in the URL
-					if (
-						normalizedTarget &&
-						value.src.includes('cloudinary')
-					) {
+					if (normalizedTarget && value.src.includes('cloudinary')) {
 						const entryPath = extractCloudinaryAssetpath(value.src);
 						if (entryPath && entryPath === normalizedTarget) return fullKey;
 					}

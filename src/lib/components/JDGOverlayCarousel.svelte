@@ -167,9 +167,7 @@
 	/** Space/Enter on the carousel shell activate overlay click-to-close; skip when focus is in real controls. */
 	function isCarouselKeyboardTargetInteractive(target) {
 		if (!target || !(target instanceof Element)) return false;
-		return !!target.closest(
-			'input, textarea, select, button, a[href], [contenteditable="true"]'
-		);
+		return !!target.closest('input, textarea, select, button, a[href], [contenteditable="true"]');
 	}
 
 	function handleContentClick(e) {
