@@ -34,6 +34,12 @@
 			? $timelineEventsOrdered
 			: $draftTimelineHost?.timelineEvents ?? [];
 	$: carouselEvents = isNewEvent ? [...orderedEvents, $draftTimelineEvent] : orderedEvents;
+
+	// Narrower modal while editing so full-width inputs feel proportional (view mode stays gallery-wide).
+	$: isModalEditingLayout = $isTimelineEventModalEditable || isNewEvent;
+	$: modalWidth = isModalEditingLayout ? 'min(42rem, 92vw)' : '80vw';
+	$: modalMaxWidth = modalWidth;
+	$: modalMinWidth = isModalEditingLayout ? 'min(17rem, 88vw)' : '30vw';
 </script>
 
 <JDGOverlayCarousel
@@ -57,9 +63,9 @@
 		gradientColor1={$modalGradientColors?.color1}
 		gradientColor2={$modalGradientColors?.color2}
 		gradientColor3={$modalGradientColors?.color3}
-		width="80vw"
-		minWidth="30vw"
-		maxWidth="80vw"
+		width={modalWidth}
+		minWidth={modalMinWidth}
+		maxWidth={modalMaxWidth}
 		overflow="auto"
 	>
 		<div slot="modal-content-slot" class="modal-content-wrapper">
