@@ -52,10 +52,17 @@
     "caption": "Cinderella City's Gold Mall as it appeared in the 1980s and 1990s"
   },
   "lakeside_1": {
+    "id": "5f677562-bbf4-47a7-9512-67c6a7ab009e",
     "src": "https://res.cloudinary.com/jdg-main/image/upload/v1716959966/jdg-ui-svelte/history/lakeside-1_kcrblc.jpg",
-    "alt": "Lakeside Mall in 1956.",
     "caption": "Lakeside Mall in 1956. And a ton of other words to test a very long caption. Keep going. How long of a caption can we make? Possibly this long. Actually we need an even longer caption if you can believe it!",
-    "attribution": "Denver Public Library"
+    "attribution": "Denver Public Library",
+    "alt": "Lakeside Mall in 1956. And a ton of other words to test a very long caption. Keep going. How long of a caption can we make? Possibly this long. Actually we need an even longer caption if you can believe it!",
+    "title": "",
+    "isApprxDate": true,
+    "showBackgroundBlur": true,
+    "toolbarJustification": "right",
+    "version": "0.7.1",
+    "date": "1956-01-01"
   },
   "rose_mall_60s70s_1": {
     "src": "https://res.cloudinary.com/jdg-main/image/upload/v1716959963/jdg-ui-svelte/history/rose-mall-60s70s-1_ncv9le.jpg",
