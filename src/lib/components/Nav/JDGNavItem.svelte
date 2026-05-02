@@ -6,6 +6,8 @@
 
 	export let navItem;
 	export let onClickFunction = () => {};
+	/** When true, shows the persistent underline bar (same as hover) */
+	export let active = false;
 	export let nLetterSpacing = 5;
 	export let letterSpacingUnit = 'px';
 	export let marginBottom = '0';
@@ -16,13 +18,17 @@
 		padding-left: ${(nLetterSpacing / 2).toString() + letterSpacingUnit};
 		margin-bottom: ${marginBottom};
 	`;
+
+	$: hrefResolved =
+		navItem?.href?.startsWith('#') || navItem?.href?.startsWith('.')
+			? convertStringToAnchorTag(navItem?.href)
+			: navItem?.href;
 </script>
 
 <a
-	class="jdg-nav-item no-initial-highlight {navItemCss}"
-	href={navItem?.href?.startsWith('#') || navItem?.href?.startsWith('.')
-		? convertStringToAnchorTag(navItem?.href)
-		: navItem?.href}
+	class="jdg-nav-item no-initial-highlight {active ? 'jdg-nav-current' : ''} {navItemCss}"
+	href={hrefResolved}
+	aria-current={active ? (hrefResolved?.startsWith('#') ? 'location' : 'page') : undefined}
 	on:click={() => {
 		onClickFunction();
 	}}>{navItem?.label}</a

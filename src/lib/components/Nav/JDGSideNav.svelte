@@ -1,10 +1,12 @@
 <script>
+	import { page } from '$app/stores';
 	import { css } from '@emotion/css';
 	import { slide } from 'svelte/transition';
 
 	import { showNavSidebar } from '$lib/stores/jdg-ui-store.js';
 
 	import { setRgbaAlpha } from '$lib/index.js';
+	import { convertStringToAnchorTag } from '$lib/jdg-utils.js';
 
 	import { JDGNavItem } from '$lib/index.js';
 	import { jdgColors, jdgDurations, jdgSizes } from '$lib/jdg-shared-styles.js';
@@ -41,6 +43,38 @@
 	} else {
 		blurCss = css``;
 	}
+
+	function navItemIsCurrent(navItem, url) {
+		const raw = navItem?.href;
+		if (raw == null || raw === '') return false;
+
+		const resolved =
+			raw.startsWith('#') || raw.startsWith('.')
+				? convertStringToAnchorTag(raw)
+				: raw;
+
+		if (resolved.startsWith('#')) {
+			return url.hash === resolved;
+		}
+
+		let pathToCompare = resolved;
+		try {
+			if (/^https?:\/\//i.test(resolved)) {
+				const linkUrl = new URL(resolved);
+				if (linkUrl.origin !== url.origin) return false;
+				pathToCompare = linkUrl.pathname;
+			}
+		} catch {
+			return false;
+		}
+
+		const norm = (p) => {
+			const s = p.split('#')[0].split('?')[0];
+			return s.replace(/\/$/, '') || '/';
+		};
+
+		return norm(url.pathname) === norm(pathToCompare);
+	}
 </script>
 
 {#if $showNavSidebar}
@@ -67,6 +101,7 @@
 							<div class="jdg-nav-sidebar-item">
 								<JDGNavItem
 									{navItem}
+									active={navItemIsCurrent(navItem, $page.url)}
 									onClickFunction={() => {
 										showNavSidebar.set(!$showNavSidebar);
 									}}

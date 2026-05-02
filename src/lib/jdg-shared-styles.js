@@ -366,6 +366,11 @@ export const jdgLinkStyleBar = css`
 		line-height: 1; /* don't inherit possible parent line height */
 	}
 
+	/* ::before uses z-index: -1; isolate keeps it visible (flex nav items + header stacking) */
+	a.no-initial-highlight {
+		isolation: isolate;
+	}
+
 	.jdg-highlight-container {
 		position: relative;
 		display: flex;
@@ -456,6 +461,33 @@ export const jdgLinkStyleBar = css`
 
 	a.no-initial-highlight:hover::before,
 	.jdg-highlight-container:hover .jdg-highlight.no-initial-highlight::before {
+		animation: slide-up 0.5s forwards;
+	}
+
+	/*
+	 * Sidebar “current route” bar only — scoped so header/desktop nav is unaffected.
+	 * Resting state beats generic :hover (higher specificity), so replay needs its own :hover rule.
+	 */
+	.jdg-nav-sidebar-container a.jdg-nav-current.no-initial-highlight::before {
+		height: 10px;
+		animation: none;
+	}
+
+	.jdg-nav-sidebar-container a.jdg-nav-current.no-initial-highlight:hover::before {
+		animation: slide-up 0.5s forwards;
+	}
+
+	/*
+	 * Header desktop nav: higher specificity so slide-up wins over a:hover::before (slide-right)
+	 * and any other equal-weight rules; mirrors sidebar current-route behavior when active is set.
+	 */
+	nav.desktop-nav-container.jdg-letter-spacing-title a.jdg-nav-current.no-initial-highlight::before {
+		height: 10px;
+		animation: none;
+	}
+
+	nav.desktop-nav-container.jdg-letter-spacing-title a.jdg-nav-current.no-initial-highlight:hover::before,
+	nav.desktop-nav-container.jdg-letter-spacing-title a.no-initial-highlight:hover::before {
 		animation: slide-up 0.5s forwards;
 	}
 `;
