@@ -151,13 +151,7 @@
 			`;
 		}
 
-		const widthBlock =
-			width !== 'fit-content'
-				? `width: ${width};`
-				: `
-			width: fit-content;
-			@media (max-width: ${bp0}) { width: 100%; }
-		`;
+		const widthBlock = width !== 'fit-content' ? `width: ${width};` : `width: fit-content;`;
 
 		buttonCss = css`
 			${fontBlock}
