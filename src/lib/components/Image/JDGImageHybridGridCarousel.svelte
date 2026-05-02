@@ -15,6 +15,7 @@
 	export let showBlurInUnfilledSpace = false;
 	export let showCaption = true;
 	export let showAttribution = true;
+	export let showDate = true;
 	// carousel props
 	export let fullWidthCarouselOnMobile = true;
 	// image + grid layout props
@@ -28,10 +29,10 @@
 		<!-- carousel can be full-width or not -->
 		{#if fullWidthCarouselOnMobile}
 			<JDGFullWidthContainer>
-				<JDGImageCarousel {imageMetaSet} {showCaption} {showAttribution}></JDGImageCarousel>
+				<JDGImageCarousel {imageMetaSet} {showCaption} {showAttribution} {showDate} />
 			</JDGFullWidthContainer>
 		{:else}
-			<JDGImageCarousel {imageMetaSet} {showCaption} {showAttribution}></JDGImageCarousel>
+			<JDGImageCarousel {imageMetaSet} {showCaption} {showAttribution} {showDate} />
 		{/if}
 		<!-- all other breakpoints use the grid layout with image tiles -->
 	{:else}
@@ -44,6 +45,7 @@
 					{showBlurInUnfilledSpace}
 					{showCaption}
 					{showAttribution}
+					{showDate}
 					{useAutoHeightOnMobile}
 				/>
 			{/each}

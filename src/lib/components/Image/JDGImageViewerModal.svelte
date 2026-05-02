@@ -67,13 +67,13 @@
 			isForImageDetailOverlay={true}
 			doScaleOnScrollOrZoom={true}
 		/>
-		<!-- only show caption/attribution if image is not scaled -->
-		{#if $imageViewerScale === 1.0 && (imageMeta.caption || imageMeta.attribution)}
+		<!-- only show caption/attribution/date if image is not scaled -->
+		{#if $imageViewerScale === 1.0 && (imageMeta.caption || imageMeta.attribution || imageMeta.date)}
 			<div
 				class="image-caption-attribution-wrapper"
 				style="width: {$imageViewerWidth}px; max-width: 100%;"
 			>
-				<JDGImageCaptionAttribution {imageMeta} truncateText={false} />
+				<JDGImageCaptionAttribution {imageMeta} showDate={true} truncateText={false} />
 			</div>
 		{/if}
 	</div>

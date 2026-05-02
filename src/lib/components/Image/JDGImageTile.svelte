@@ -154,7 +154,7 @@
 			/>
 		</div>
 	</a>
-	{#if (showCaption || showAttribution) && (cropToFillContainer || showBlurInUnfilledSpace)}
+	{#if (showCaption || showAttribution || showDate) && (cropToFillContainer || showBlurInUnfilledSpace)}
 		<div class="image-caption-attribution-wrapper">
 			<JDGImageCaptionAttribution
 				{imageMeta}

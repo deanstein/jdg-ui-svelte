@@ -17,6 +17,7 @@
 	export let useFullWidthAnimation = false; // used for screen recording
 	export let showBlurInUnfilledSpace = true;
 	export let maxHeight = 'auto';
+	export let showDate = false;
 
 	let imageCompareWrapperRef;
 	let imageCompareContainerRef;
@@ -200,7 +201,7 @@
 		<div class="slider" style="left: {$sliderPositionStore}%;"></div>
 		{#if caption}
 			<div style="width: 100%;">
-				<JDGImageCaptionAttribution imageMeta={newImageMeta} />
+				<JDGImageCaptionAttribution imageMeta={newImageMeta} {showDate} />
 			</div>
 		{/if}
 	</div>

@@ -16,7 +16,7 @@
 	export let imageMeta;
 	export let showCaption = true;
 	export let showAttribution = true;
-	export let showDate = true;
+	export let showDate = false;
 	export let truncateText = true;
 	export let matchBodyCopyPadding = false; // if true, uses same padding as body copy (for full-width use only)
 	export let maxTextWidthPx = undefined; // useful for cases where caption/attribution is outside image but must match image width
@@ -217,7 +217,7 @@
 	}
 </script>
 
-{#if imageMeta.caption || imageMeta.attribution || (showDate && formattedDateDisplay)}
+{#if (showCaption && imageMeta.caption) || (showAttribution && imageMeta.attribution) || (showDate && formattedDateDisplay)}
 	<div bind:this={availableWidthRef} class="jdg-caption-attribution-available-width-ref">
 		<!-- svelte-ignore a11y-no-noninteractive-tabindex -- role and tabindex are only set when isCaptionTooLong (expand/collapse is available) -->
 		<div

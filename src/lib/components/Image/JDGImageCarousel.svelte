@@ -22,6 +22,7 @@
 	export let imageMetaSet; // all images shown in thumbnail collection
 	export let showCaption = true;
 	export let showAttribution = true;
+	export let showDate = true;
 	export let maxHeight = '50vh';
 	export let activeThumbnailColor = $appAccentColors[0];
 	export let autoAdvance = true; // if true, auto advance through images at given interval
@@ -351,10 +352,13 @@
 			/>
 		</div>
 	</div>
-	{#if (showCaption && activeImageMeta.caption) || (showAttribution && activeImageMeta.attribution)}
+	{#if (showCaption && activeImageMeta.caption) || (showAttribution && activeImageMeta.attribution) || (showDate && activeImageMeta.date)}
 		<div class="caption-attribution-wrapper {dynamicThumbnailContainerWidthCss}">
 			<JDGImageCaptionAttribution
 				imageMeta={activeImageMeta}
+				{showCaption}
+				{showAttribution}
+				{showDate}
 				backgroundColorRgba={activeImageMeta.showBackgroundBlur
 					? jdgColors.imageLabelBackground
 					: 'rgba(0, 0, 0, 0)'}
