@@ -31,6 +31,7 @@
 		tokenBasedAdminMode,
 		windowScrollPosition,
 		windowWidth,
+		windowHeight,
 		appCssHyperlinkBar,
 		isTabletBreakpoint,
 		isAdminMode
@@ -119,6 +120,7 @@
 		if (currentWidth !== lastKnownWidth) {
 			lastKnownWidth = currentWidth;
 			windowWidth.set(currentWidth);
+			windowHeight.set(window.innerHeight);
 			clientWidth.set(appContainerRef?.clientWidth);
 			headerHeightPx.set(getDistancePxToBottomOfHeader($showHeaderStripesStore));
 			isMobileBreakpoint.set(appContainerRef?.clientWidth <= jdgBreakpoints.width[0]);
@@ -169,14 +171,16 @@
 	`;
 
 	onMount(async () => {
-		// Call onPageResize() once for initialization
-		setTimeout(onPageResize, 0);
-
 		// Set the app container element reference for JDGPortal to use
 		appContainerRefStore.set(appContainerRef);
 
-		await tick(); // Delay until layout and all children are loaded
+		await tick(); // layout so clientWidth / breakpoints are meaningful
+
+		onPageResize(); // windowWidth + windowHeight before slot mounts
+
 		isAppLoaded = true;
+
+		await tick();
 
 		// Use the text selection prop to set the state initially
 		allowTextSelectionStore.set(allowTextSelection);
@@ -197,7 +201,6 @@
 		setUpdatedHyperlinkStyleSimple(linkColorSimple);
 
 		// Set the shared url store once by fetching the json
-		// Note: This must be below the setTimeout above
 		const updatedSharedUrlsJson = await fetchJsonFromRepo(
 			jdgRepoOwner,
 			jdgUiSvelteRepoName,

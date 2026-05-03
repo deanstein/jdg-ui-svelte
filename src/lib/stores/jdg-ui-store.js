@@ -46,6 +46,7 @@ export const isDesktopBreakpoint = derived(
 /*** SIZES ***/
 export let clientWidth = writable(0); // window minus scrollbar
 export let windowWidth = writable(0); // full window width, including scrollbar
+export let windowHeight = writable(0); // snapshot from innerHeight when width updates (see JDGAppContainer)
 
 /*** FONTS, COLORS, SETTINGS ***/
 export let appAccentColors = writable([]);
@@ -162,6 +163,7 @@ const storeMap = {
 	// quantities
 	clientWidth,
 	windowWidth,
+	windowHeight,
 	highestZIndex,
 	// deletion
 	showDeleteModal,
