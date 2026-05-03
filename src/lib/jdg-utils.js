@@ -1,5 +1,8 @@
 import CryptoJS from 'crypto-js';
+import { get } from 'svelte/store';
 import { v4 as uuidv4 } from 'uuid';
+
+import { windowHeight as windowHeightStore } from './stores/jdg-ui-store.js';
 import {
 	jdgRepoOwner,
 	fetchLatestBuildDate,
@@ -843,41 +846,51 @@ export const doesStringContainVh = (string) => {
 	return contains;
 };
 
-// converts either a number (assuming vh)
-// or a string containing 'vh' (including svh, dvh, lvh) to pixels
-// based on the current window/viewport height
-export const convertVhToPixels = (vhValue) => {
-	// if no window, can't calculate equivalent pixels
+// Converts a number (plain vh) or a string containing 'vh' (svh, dvh, lvh, etc.) to pixels.
+// Uses jdg-ui-store windowHeight when set (>0); otherwise falls back to live layout metrics per unit.
+// asCssLength: when true, returns a px string for vh-like inputs and passes through empty / non-vh lengths unchanged (for style props).
+export const convertVhToPixels = (value, asCssLength = false) => {
+	if (asCssLength && (value === '' || value === undefined || value === null)) {
+		return value;
+	}
 	if (typeof window === 'undefined') {
-		return vhValue;
+		return value;
 	}
-	// only handle raw numbers or strings containing 'vh'
-	if (isFinite(vhValue) || doesStringContainVh(vhValue)) {
-		const numericValue = parseFloat(vhValue);
-		const valueStr = String(vhValue).toLowerCase();
 
-		// Determine the correct viewport height based on the unit
-		let viewportHeight;
-		if (valueStr.includes('svh')) {
-			// Small viewport height - when browser chrome is visible
-			viewportHeight = Math.min(window.innerHeight, document.documentElement.clientHeight);
-		} else if (valueStr.includes('lvh')) {
-			// Large viewport height - when browser chrome is hidden
-			viewportHeight = Math.max(window.innerHeight, document.documentElement.clientHeight);
-		} else if (valueStr.includes('dvh')) {
-			// Dynamic viewport height - current actual viewport
-			viewportHeight = document.documentElement.clientHeight;
-		} else {
-			// Default vh - use window.innerHeight
-			viewportHeight = window.innerHeight;
-		}
+	const isVhLike =
+		typeof value === 'number' ||
+		(typeof value === 'string' && doesStringContainVh(value));
 
-		return (numericValue / 100) * viewportHeight;
+	if (asCssLength && !isVhLike) {
+		return value;
 	}
-	// otherwise, pass the value through and do nothing
-	else {
-		return vhValue;
+	if (!isVhLike) {
+		return value;
 	}
+
+	const numericValue = parseFloat(String(value));
+	const valueStr = String(value).toLowerCase();
+
+	const storedH = get(windowHeightStore);
+	let viewportHeight;
+	if (typeof storedH === 'number' && storedH > 0) {
+		viewportHeight = storedH;
+	} else if (valueStr.includes('svh')) {
+		viewportHeight = Math.min(window.innerHeight, document.documentElement.clientHeight);
+	} else if (valueStr.includes('lvh')) {
+		viewportHeight = Math.max(window.innerHeight, document.documentElement.clientHeight);
+	} else if (valueStr.includes('dvh')) {
+		viewportHeight = document.documentElement.clientHeight;
+	} else {
+		viewportHeight = window.innerHeight;
+	}
+
+	const px = (numericValue / 100) * viewportHeight;
+
+	if (asCssLength) {
+		return `${px}px`;
+	}
+	return px;
 };
 
 export const convertPixelsToVh = (pixelValue) => {

@@ -74,9 +74,6 @@
 	import JDGDatePicker from '$lib/components/Input/JDGDatePicker.svelte';
 	import jdgSaveStatus from '$lib/schemas/jdg-save-status.js';
 
-	/** JSON preview scroll areas: rem stays stable when iOS/Edge toolbar changes layout viewport (svh can still track it). */
-	const timelineScrollBoxMaxHeight = '28rem';
-
 	// Set the age suffixes for timeline events
 	setContext(JDG_CONTEXTS.EVENT_AGE_SUFFIX_POSITIVE, 'after opening');
 	setContext(JDG_CONTEXTS.EVENT_AGE_SUFFIX_NEGATIVE, 'before opening');
@@ -227,7 +224,7 @@
 	let draftTimelineHostImageMetaRegistryRepoNameStore = writable();
 
 	// Show timeline as preview only?
-	let previewOnly = false;
+	let previewOnly = true;
 
 	// Create Select options,
 	// including the new host and hosts from the selected collection
@@ -386,7 +383,7 @@
 
 		<JDGGridLayout>
 			<JDGInputContainer label="Timeline Host Collection from Repo">
-				<JDGScrollBox maxHeight={timelineScrollBoxMaxHeight}>
+				<JDGScrollBox>
 					{#if selectedHostCollection && selectedHostCollectionKey}
 						<pre>{JSON.stringify(selectedHostCollection[selectedHostCollectionKey], null, 2)}</pre>
 					{/if}
@@ -394,7 +391,7 @@
 			</JDGInputContainer>
 			<JDGInputContainer label="Timeline Host Collection Draft">
 				{#if $draftTimelineHostCollection}
-					<JDGScrollBox maxHeight={timelineScrollBoxMaxHeight}>
+					<JDGScrollBox>
 						<pre>{JSON.stringify(
 								$draftTimelineHostCollection[selectedHostCollectionKey],
 								null,
@@ -472,7 +469,7 @@
 			<div class="tri-column-demo-left-right">
 				<div>
 					<JDGH3H4 h3String="Timeline Host Schema" h4String="As local store" paddingBottom="15px" />
-					<JDGScrollBox maxHeight={timelineScrollBoxMaxHeight}>
+					<JDGScrollBox>
 						<pre>{JSON.stringify($localTimelineHostStore, null, 2)}</pre>
 					</JDGScrollBox>
 				</div>
@@ -539,7 +536,7 @@
 		{#if $draftTimelineHost !== undefined}
 			<JDGH3H4 h3String={'Draft Timeline Host Store'} />
 			<JDGBodyCopy>
-				<JDGScrollBox maxHeight={timelineScrollBoxMaxHeight}>
+				<JDGScrollBox>
 					<pre>
 				{JSON.stringify($draftTimelineHost, null, 2)}
 			</pre>
@@ -697,7 +694,7 @@
 					/>
 				</JDGInputContainer>
 				<div class="timeline-event-schema-preview">
-					<JDGScrollBox maxHeight={timelineScrollBoxMaxHeight}>
+					<JDGScrollBox>
 						<pre>{JSON.stringify($localTimelineEventStore, null, 2)}</pre>
 					</JDGScrollBox>
 				</div>

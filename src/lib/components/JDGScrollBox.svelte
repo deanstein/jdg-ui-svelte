@@ -1,12 +1,23 @@
 <script>
+	import { onMount } from 'svelte';
 	import { css } from '@emotion/css';
+
+	import { convertVhToPixels } from '$lib/jdg-utils.js';
 
 	export let minHeight = '';
 	export let maxHeight = '50svh';
 
-	const scrollBoxContainer = css`
-		min-height: ${minHeight};
-		max-height: ${maxHeight};
+	let appliedMinHeight = minHeight;
+	let appliedMaxHeight = maxHeight;
+
+	onMount(() => {
+		appliedMaxHeight = convertVhToPixels(maxHeight, true);
+		appliedMinHeight = convertVhToPixels(minHeight, true);
+	});
+
+	$: scrollBoxContainer = css`
+		min-height: ${appliedMinHeight};
+		max-height: ${appliedMaxHeight};
 	`;
 </script>
 
