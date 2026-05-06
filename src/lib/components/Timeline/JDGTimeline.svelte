@@ -1,5 +1,5 @@
 <script>
-	import { getContext, setContext, onDestroy, tick } from 'svelte';
+	import { getContext, setContext, onDestroy, afterUpdate, tick } from 'svelte';
 	import { writable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
@@ -268,6 +268,16 @@
 	let timelineWrapperRef;
 	let timelineContainerRef;
 	let scrollingCanvasDivRef;
+	let actionsBarRef;
+
+	afterUpdate(() => {
+		if (actionsBarRef && scrollingCanvasDivRef && get(isMobileBreakpoint)) {
+			const h = actionsBarRef.offsetHeight;
+			if (h > 0) {
+				scrollingCanvasDivRef.style.setProperty('--timeline-actions-bar-h', `${h}px`);
+			}
+		}
+	});
 
 	// Whether relative spacing is enabled
 	let useRelativeSpacing = false;
@@ -448,11 +458,13 @@
 	/** Smallest width breakpoint ($isMobileBreakpoint): hide the actions bar while scrolling down; show on scroll up / at top. */
 	let mobileActionsBarVisible = true;
 	let lastScrollTopForMobileActionsBar = 0;
+	let mobileBarScrollDelta = 0;
 	let wasAtSmallestBreakpoint = false;
 
 	$: {
 		if (!$isMobileBreakpoint) {
 			mobileActionsBarVisible = true;
+			mobileBarScrollDelta = 0;
 			wasAtSmallestBreakpoint = false;
 		} else if (!wasAtSmallestBreakpoint) {
 			wasAtSmallestBreakpoint = true;
@@ -471,18 +483,25 @@
 
 		const st = scrollingCanvasDivRef.scrollTop;
 		const delta = st - lastScrollTopForMobileActionsBar;
-		const threshold = 6;
-
-		if (!isProgrammaticScroll) {
-			if (st <= threshold) {
-				mobileActionsBarVisible = true;
-			} else if (delta > threshold) {
-				mobileActionsBarVisible = false;
-			} else if (delta < -threshold) {
-				mobileActionsBarVisible = true;
-			}
-		}
 		lastScrollTopForMobileActionsBar = st;
+
+		if (isProgrammaticScroll || delta === 0) return;
+
+		if (st <= 10) {
+			mobileActionsBarVisible = true;
+			mobileBarScrollDelta = 0;
+			return;
+		}
+
+		mobileBarScrollDelta += delta;
+
+		if (mobileBarScrollDelta > 8) {
+			mobileActionsBarVisible = false;
+			mobileBarScrollDelta = 0;
+		} else if (mobileBarScrollDelta < -4) {
+			mobileActionsBarVisible = true;
+			mobileBarScrollDelta = 0;
+		}
 	}
 
 	// Handle manual scroll detection (auto-scroll) + mobile actions bar visibility
@@ -713,30 +732,9 @@
 		}
 	`;
 
-	/** Mobile-only: collapse the actions bar when scrolling down inside the timeline canvas */
-	const timelineActionsBarMobileScrollCss = css`
-		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			min-height: 0;
-			flex-shrink: 0;
-			transition:
-				max-height 0.32s ease,
-				opacity 0.22s ease,
-				margin-bottom 0.32s ease;
-			max-height: 28rem;
-			opacity: 1;
-		}
-	`;
-
 	const timelineActionsBarMobileScrollHiddenCss = css`
-		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			max-height: 0 !important;
-			min-height: 0 !important;
-			opacity: 0;
-			margin-bottom: -0.5rem !important;
-			overflow: hidden;
-			pointer-events: none;
-			gap: 0 !important;
-		}
+		opacity: 0 !important;
+		pointer-events: none !important;
 	`;
 
 	const eventTypeFilterRowCss = css`
@@ -1287,11 +1285,10 @@
 			{/if}
 			<!-- Actions Bar -->
 			<div
-				class="timeline-actions-bar {timelineSupportingTextCss} {timelineActionsBarMobileScrollCss} {!mobileActionsBarVisible &&
-				$isMobileBreakpoint
+				bind:this={actionsBarRef}
+				class="timeline-actions-bar {timelineSupportingTextCss} {!mobileActionsBarVisible && $isMobileBreakpoint
 					? timelineActionsBarMobileScrollHiddenCss
 					: ''}"
-				style="position: relative; z-index: 10;"
 			>
 				<div class="timeline-event-count">
 					{#if eventDescriptionFilterTrimmed}
@@ -1880,6 +1877,7 @@
 
 	.timeline-actions-bar {
 		position: relative;
+		z-index: 10;
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
@@ -1912,12 +1910,21 @@
 		margin-left: auto;
 	}
 
-	/* Below jdgBreakpoints.width[0]: stack label, then toolbar (no overlay / true center) */
 	@media (max-width: 768px) {
 		.timeline-actions-bar {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
 			flex-direction: column;
 			align-items: stretch;
 			justify-content: flex-start;
+			background: rgba(225, 225, 225, 0.92);
+			backdrop-filter: blur(6px);
+			-webkit-backdrop-filter: blur(6px);
+			border-radius: 0 0 8px 8px;
+			padding: 0.35rem;
+			transition: opacity 0.2s ease;
 		}
 
 		.timeline-event-count {
@@ -1934,6 +1941,11 @@
 			margin-left: 0;
 			width: 100%;
 			justify-content: center;
+		}
+
+		.timeline-scrolling-canvas {
+			scroll-padding-top: var(--timeline-actions-bar-h, 4.5rem);
+			padding-top: var(--timeline-actions-bar-h, 4.5rem);
 		}
 	}
 
