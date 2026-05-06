@@ -1753,7 +1753,6 @@
 		   content width on the cross axis. Stretch so the timeline uses the full content width. */
 		align-self: stretch;
 		min-width: 0;
-		height: -webkit-fill-available;
 	}
 
 	/*
