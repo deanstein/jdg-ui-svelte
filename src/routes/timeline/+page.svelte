@@ -224,7 +224,7 @@
 	let draftTimelineHostImageMetaRegistryRepoNameStore = writable();
 
 	// Show timeline as preview only?
-	let previewOnly = true;
+	let previewMode = true;
 
 	// Create Select options,
 	// including the new host and hosts from the selected collection
@@ -644,7 +644,7 @@
 			>
 				<JDGCheckbox
 					label="Enable Preview Mode"
-					bind:isChecked={previewOnly}
+					bind:isChecked={previewMode}
 					justifyContent="center"
 				/>
 			</JDGInputContainer>
@@ -674,7 +674,7 @@
 					draftTimelineHost.set({ ...$draftTimelineHost, avatarImage: newKey });
 				}
 			}}
-			{previewOnly}
+			previewModeTouch={previewMode}
 			minHeight={'70svh'}
 		/>
 	</JDGContentBoxFloating>

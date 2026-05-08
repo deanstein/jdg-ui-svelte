@@ -23,6 +23,7 @@
 	import {
 		imageViewerMeta,
 		isAdminMode,
+		isDesktopBreakpoint,
 		isMobileBreakpoint,
 		isTimelineEventModalEditable,
 		modalGradientColors,
@@ -96,9 +97,11 @@
 	export let width = '100%';
 	export let minHeight = '70svh';
 	export let maxHeight = '70svh';
-	// When true, this timeline is a preview
+	// When true, show a blurred overlay
 	// with a button to open it in a modal for a better experience
-	export let previewOnly = false;
+	export let previewMode = false;
+	// Like previewMode, but only on mobile and tablet
+	export let previewModeTouch = false;
 	// The duration of the preview overlay in milliseconds
 	export let previewOverlayDuration = 500;
 	// Set true when this instance is the one rendered inside the full-screen modal (do not set from outside; used by svelte:self)
@@ -111,8 +114,8 @@
 	/** @type {'start' | 'center' | 'end'} — text alignment inside the year column (matches event years) */
 	export let decadeHeadingJustify = 'center';
 
-	// Effective preview mode (from parent prop; controls overlay and open-in-modal behavior)
-	$: effectivePreviewOnly = previewOnly;
+	// Effective preview mode (from parent props; controls overlay and open-in-modal behavior)
+	$: effectivePreviewOnly = previewMode || (previewModeTouch && !$isDesktopBreakpoint);
 
 	export let onClickInceptionEvent = () => {};
 	export let addClickAddEvent = () => {};
@@ -1226,7 +1229,7 @@
 	{/if}
 	{#if timelineHost}
 		<JDGSaveStateBanner scrollOnStatusChange={false} />
-		<!-- Hover overlay for previewOnly mode -->
+		<!-- Hover overlay for previewMode mode -->
 		{#if effectivePreviewOnly && isHovering}
 			<div
 				class="timeline-hover-overlay"
@@ -1286,7 +1289,8 @@
 			<!-- Actions Bar -->
 			<div
 				bind:this={actionsBarRef}
-				class="timeline-actions-bar {timelineSupportingTextCss} {!mobileActionsBarVisible && $isMobileBreakpoint
+				class="timeline-actions-bar {timelineSupportingTextCss} {!mobileActionsBarVisible &&
+				$isMobileBreakpoint
 					? timelineActionsBarMobileScrollHiddenCss
 					: ''}"
 			>
@@ -1364,7 +1368,7 @@
 						buttonBackgroundColor={jdgColors.activeSecondary}
 					>
 						<div class="timeline-options-controls">
-							{#if !previewOnly && !isInModal}
+							{#if !effectivePreviewOnly && !isInModal}
 								<JDGButton
 									label="Open in full-screen"
 									faIcon="fa-expand"
