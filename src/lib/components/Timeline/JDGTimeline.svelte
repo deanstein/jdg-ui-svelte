@@ -1240,13 +1240,21 @@
 				tabindex="0"
 			>
 				<div class="timeline-preview-fab-group">
-					<button
-						class="timeline-preview-fab"
-						on:click|stopPropagation={openTimelineModal}
-						aria-label="Open timeline"
-					>
-						<i class="fa-solid fa-expand" />
-					</button>
+				<JDGButton
+					onClickFunction={openTimelineModal}
+					label={null}
+					faIcon="fa-expand"
+					doForceSquareAspect={true}
+					backgroundColor="rgba(255, 255, 255, 0.88)"
+					textColor="#3c3c3c"
+					textColorHover="#1a1a1a"
+					backgroundColorHover="rgba(255, 255, 255, 1)"
+					doAdjustBackgroundColorForContrast={false}
+					shadow={true}
+					fontSize="1.2rem"
+					paddingTopBottom="10px"
+					tooltip="Open timeline"
+				/>
 					<span class="timeline-preview-fab-label"
 						>{$isDesktopBreakpoint ? 'Click' : 'Tap'} anywhere to open timeline</span
 					>
@@ -1837,7 +1845,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 8px;
+		gap: 12px;
 	}
 
 	.timeline-preview-fab-label {
@@ -1853,36 +1861,6 @@
 			0 0 28px rgba(255, 255, 255, 0.35);
 	}
 
-	.timeline-preview-fab {
-		width: 52px;
-		height: 52px;
-		border-radius: 50%;
-		border: none;
-		background: rgba(255, 255, 255, 0.88);
-		color: #3c3c3c;
-		font-size: 1.2rem;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		cursor: pointer;
-		box-shadow:
-			0 2px 8px rgba(0, 0, 0, 0.18),
-			0 0 0 1px rgba(0, 0, 0, 0.06);
-		transition:
-			transform 0.15s ease,
-			box-shadow 0.15s ease;
-	}
-
-	.timeline-preview-fab:hover {
-		transform: scale(1.1);
-		box-shadow:
-			0 4px 14px rgba(0, 0, 0, 0.22),
-			0 0 0 1px rgba(0, 0, 0, 0.08);
-	}
-
-	.timeline-preview-fab:active {
-		transform: scale(0.95);
-	}
 
 	.timeline-modal-content {
 		width: 100%;
