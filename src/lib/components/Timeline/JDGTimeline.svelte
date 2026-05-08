@@ -1239,12 +1239,18 @@
 				role="button"
 				tabindex="0"
 			>
-				<JDGButton
-					onClickFunction={openTimelineModal}
-					label="Open timeline"
-					faIcon="fa-expand"
-					shadow={true}
-				/>
+				<div class="timeline-preview-fab-group">
+					<button
+						class="timeline-preview-fab"
+						on:click|stopPropagation={openTimelineModal}
+						aria-label="Open timeline"
+					>
+						<i class="fa-solid fa-expand" />
+					</button>
+					<span class="timeline-preview-fab-label"
+						>{$isDesktopBreakpoint ? 'Click' : 'Tap'} anywhere to open timeline</span
+					>
+				</div>
 			</div>
 		{/if}
 		<!-- Title Bar-->
@@ -1825,6 +1831,57 @@
 		z-index: 20;
 		border-radius: 10px;
 		cursor: pointer;
+	}
+
+	.timeline-preview-fab-group {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.timeline-preview-fab-label {
+		font-size: 0.8rem;
+		font-weight: bold;
+		color: #3c3c3c;
+		white-space: nowrap;
+		pointer-events: none;
+		text-shadow:
+			0 0 4px rgba(255, 255, 255, 0.95),
+			0 0 8px rgba(255, 255, 255, 0.85),
+			0 0 16px rgba(255, 255, 255, 0.6),
+			0 0 28px rgba(255, 255, 255, 0.35);
+	}
+
+	.timeline-preview-fab {
+		width: 52px;
+		height: 52px;
+		border-radius: 50%;
+		border: none;
+		background: rgba(255, 255, 255, 0.88);
+		color: #3c3c3c;
+		font-size: 1.2rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		box-shadow:
+			0 2px 8px rgba(0, 0, 0, 0.18),
+			0 0 0 1px rgba(0, 0, 0, 0.06);
+		transition:
+			transform 0.15s ease,
+			box-shadow 0.15s ease;
+	}
+
+	.timeline-preview-fab:hover {
+		transform: scale(1.1);
+		box-shadow:
+			0 4px 14px rgba(0, 0, 0, 0.22),
+			0 0 0 1px rgba(0, 0, 0, 0.08);
+	}
+
+	.timeline-preview-fab:active {
+		transform: scale(0.95);
 	}
 
 	.timeline-modal-content {
