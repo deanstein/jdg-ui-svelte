@@ -481,12 +481,14 @@ export const jdgLinkStyleBar = css`
 	 * Header desktop nav: higher specificity so slide-up wins over a:hover::before (slide-right)
 	 * and any other equal-weight rules; mirrors sidebar current-route behavior when active is set.
 	 */
-	nav.desktop-nav-container.jdg-letter-spacing-title a.jdg-nav-current.no-initial-highlight::before {
+	nav.desktop-nav-container.jdg-letter-spacing-title
+		a.jdg-nav-current.no-initial-highlight::before {
 		height: 10px;
 		animation: none;
 	}
 
-	nav.desktop-nav-container.jdg-letter-spacing-title a.jdg-nav-current.no-initial-highlight:hover::before,
+	nav.desktop-nav-container.jdg-letter-spacing-title
+		a.jdg-nav-current.no-initial-highlight:hover::before,
 	nav.desktop-nav-container.jdg-letter-spacing-title a.no-initial-highlight:hover::before {
 		animation: slide-up 0.5s forwards;
 	}

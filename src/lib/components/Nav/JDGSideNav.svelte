@@ -49,9 +49,7 @@
 		if (raw == null || raw === '') return false;
 
 		const resolved =
-			raw.startsWith('#') || raw.startsWith('.')
-				? convertStringToAnchorTag(raw)
-				: raw;
+			raw.startsWith('#') || raw.startsWith('.') ? convertStringToAnchorTag(raw) : raw;
 
 		if (resolved.startsWith('#')) {
 			return url.hash === resolved;

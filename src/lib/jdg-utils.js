@@ -858,8 +858,7 @@ export const convertVhToPixels = (value, asCssLength = false) => {
 	}
 
 	const isVhLike =
-		typeof value === 'number' ||
-		(typeof value === 'string' && doesStringContainVh(value));
+		typeof value === 'number' || (typeof value === 'string' && doesStringContainVh(value));
 
 	if (asCssLength && !isVhLike) {
 		return value;
