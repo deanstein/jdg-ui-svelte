@@ -571,5 +571,7 @@ export const setUpdatedHyperlinkStyleSimple = (linkColor) => {
 //
 
 export const jdgBoxShadowStandard = css`
-	box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+	box-shadow:
+		0 2px 8px rgba(0, 0, 0, 0.18),
+		0 0 0 1px rgba(0, 0, 0, 0.06);
 `;
