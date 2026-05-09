@@ -56,11 +56,13 @@
 		}
 
 		let pathToCompare = resolved;
+		let hashToCompare = '';
 		try {
 			if (/^https?:\/\//i.test(resolved)) {
 				const linkUrl = new URL(resolved);
 				if (linkUrl.origin !== url.origin) return false;
 				pathToCompare = linkUrl.pathname;
+				hashToCompare = linkUrl.hash;
 			}
 		} catch {
 			return false;
@@ -71,7 +73,20 @@
 			return s.replace(/\/$/, '') || '/';
 		};
 
-		return norm(url.pathname) === norm(pathToCompare);
+		if (!hashToCompare) {
+			const hashIndex = pathToCompare.indexOf('#');
+			if (hashIndex !== -1) {
+				hashToCompare = pathToCompare.substring(hashIndex);
+			}
+		}
+
+		const pathMatches = norm(url.pathname) === norm(pathToCompare);
+
+		if (hashToCompare) {
+			return pathMatches && url.hash === hashToCompare;
+		}
+
+		return pathMatches;
 	}
 </script>
 
