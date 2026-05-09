@@ -178,14 +178,11 @@
 
 		onPageResize(); // windowWidth + windowHeight before slot mounts
 
-		isAppLoaded = true;
-
-		await tick();
-
 		// Use the text selection prop to set the state initially
 		allowTextSelectionStore.set(allowTextSelection);
 
 		// Set UI state based on props
+		// (must happen before isAppLoaded so children have valid store values at creation time)
 		appFontFamily.set(fontFamily);
 		appAccentColors.set(accentColors);
 		showHeaderStripesStore.set(showHeaderStripes);
@@ -199,6 +196,10 @@
 			stripedColorOpacity
 		);
 		setUpdatedHyperlinkStyleSimple(linkColorSimple);
+
+		isAppLoaded = true;
+
+		await tick();
 
 		// Set the shared url store once by fetching the json
 		const updatedSharedUrlsJson = await fetchJsonFromRepo(
