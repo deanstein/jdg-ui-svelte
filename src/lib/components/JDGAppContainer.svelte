@@ -314,5 +314,6 @@
 	.jdg-app-container {
 		display: flex;
 		flex-direction: column;
+		overflow-x: clip;
 	}
 </style>
