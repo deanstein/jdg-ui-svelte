@@ -3,11 +3,7 @@
 	import { css } from '@emotion/css';
 	import { slide } from 'svelte/transition';
 
-	import {
-		isScrolling,
-		isScrollingToAnchorTag,
-		showNavSidebar
-	} from '$lib/stores/jdg-ui-store.js';
+	import { isScrolling, isScrollingToAnchorTag, showNavSidebar } from '$lib/stores/jdg-ui-store.js';
 
 	import { setRgbaAlpha } from '$lib/index.js';
 	import { convertStringToAnchorTag } from '$lib/jdg-utils.js';
@@ -59,9 +55,7 @@
 	const resolveHref = (navItem) => {
 		const raw = navItem?.href;
 		if (raw == null || raw === '') return '';
-		return raw.startsWith('#') || raw.startsWith('.')
-			? convertStringToAnchorTag(raw)
-			: raw;
+		return raw.startsWith('#') || raw.startsWith('.') ? convertStringToAnchorTag(raw) : raw;
 	};
 
 	const navItemIsCurrent = (navItem, url, activeAnchor) => {
@@ -124,11 +118,11 @@
 					<nav class="jdg-nav-sidebar-item-container">
 						{#each navItems as navItem, i}
 							<div class="jdg-nav-sidebar-item">
-							<JDGNavItem
-								{navItem}
-								active={navItemIsCurrent(navItem, $page.url, clickedAnchorHref)}
-								onClickFunction={() => onNavItemClick(navItem)}
-							/>
+								<JDGNavItem
+									{navItem}
+									active={navItemIsCurrent(navItem, $page.url, clickedAnchorHref)}
+									onClickFunction={() => onNavItemClick(navItem)}
+								/>
 							</div>
 						{/each}
 					</nav>

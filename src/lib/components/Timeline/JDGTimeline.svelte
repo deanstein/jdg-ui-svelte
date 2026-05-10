@@ -1240,21 +1240,21 @@
 				tabindex="0"
 			>
 				<div class="timeline-preview-fab-group">
-				<JDGButton
-					onClickFunction={openTimelineModal}
-					label={null}
-					faIcon="fa-expand"
-					doForceSquareAspect={true}
-					backgroundColor="rgba(255, 255, 255, 0.88)"
-					textColor="#3c3c3c"
-					textColorHover="#1a1a1a"
-					backgroundColorHover="rgba(255, 255, 255, 1)"
-					doAdjustBackgroundColorForContrast={false}
-					shadow={true}
-					fontSize="1.2rem"
-					paddingTopBottom="10px"
-					tooltip="Open timeline"
-				/>
+					<JDGButton
+						onClickFunction={openTimelineModal}
+						label={null}
+						faIcon="fa-expand"
+						doForceSquareAspect={true}
+						backgroundColor="rgba(255, 255, 255, 0.88)"
+						textColor="#3c3c3c"
+						textColorHover="#1a1a1a"
+						backgroundColorHover="rgba(255, 255, 255, 1)"
+						doAdjustBackgroundColorForContrast={false}
+						shadow={true}
+						fontSize="1.2rem"
+						paddingTopBottom="10px"
+						tooltip="Open timeline"
+					/>
 					<span class="timeline-preview-fab-label"
 						>{$isDesktopBreakpoint ? 'Click' : 'Tap'} anywhere to open timeline</span
 					>
@@ -1860,7 +1860,6 @@
 			0 0 16px rgba(255, 255, 255, 0.6),
 			0 0 28px rgba(255, 255, 255, 0.35);
 	}
-
 
 	.timeline-modal-content {
 		width: 100%;
