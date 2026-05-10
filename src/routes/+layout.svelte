@@ -66,6 +66,10 @@
 	navItemTools.label = 'TOOLS';
 	navItemTools.href = '/tools';
 
+	const navItemAnchor = instantiateObject(jdgNavItem);
+	navItemAnchor.label = 'ANCHOR';
+	navItemAnchor.href = '/#packages';
+
 	const navItems = [
 		navItemHome,
 		navItemTools,
@@ -75,7 +79,8 @@
 		navItemTimelineCcp,
 		navItemJdgTest,
 		navItemPmxTest,
-		navItemSimpleTest
+		navItemSimpleTest,
+		navItemAnchor
 	];
 
 	// Get the app version from package.json
