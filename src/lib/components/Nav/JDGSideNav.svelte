@@ -3,7 +3,11 @@
 	import { css } from '@emotion/css';
 	import { slide } from 'svelte/transition';
 
-	import { showNavSidebar } from '$lib/stores/jdg-ui-store.js';
+	import {
+		isScrolling,
+		isScrollingToAnchorTag,
+		showNavSidebar
+	} from '$lib/stores/jdg-ui-store.js';
 
 	import { setRgbaAlpha } from '$lib/index.js';
 	import { convertStringToAnchorTag } from '$lib/jdg-utils.js';
@@ -44,25 +48,40 @@
 		blurCss = css``;
 	}
 
-	function navItemIsCurrent(navItem, url) {
+	// tracks which anchor nav item was last clicked;
+	// cleared on the next user-initiated scroll
+	let clickedAnchorHref = null;
+
+	$: if ($isScrolling && !$isScrollingToAnchorTag && clickedAnchorHref) {
+		clickedAnchorHref = null;
+	}
+
+	const resolveHref = (navItem) => {
 		const raw = navItem?.href;
-		if (raw == null || raw === '') return false;
+		if (raw == null || raw === '') return '';
+		return raw.startsWith('#') || raw.startsWith('.')
+			? convertStringToAnchorTag(raw)
+			: raw;
+	};
 
-		const resolved =
-			raw.startsWith('#') || raw.startsWith('.') ? convertStringToAnchorTag(raw) : raw;
+	const navItemIsCurrent = (navItem, url, activeAnchor) => {
+		const resolved = resolveHref(navItem);
+		if (!resolved) return false;
 
-		if (resolved.startsWith('#')) {
-			return url.hash === resolved;
+		// if an anchor was recently clicked, only highlight that item
+		if (activeAnchor) {
+			return resolved === activeAnchor;
 		}
 
+		// otherwise, skip anchor links entirely
+		if (resolved.includes('#')) return false;
+
 		let pathToCompare = resolved;
-		let hashToCompare = '';
 		try {
 			if (/^https?:\/\//i.test(resolved)) {
 				const linkUrl = new URL(resolved);
 				if (linkUrl.origin !== url.origin) return false;
 				pathToCompare = linkUrl.pathname;
-				hashToCompare = linkUrl.hash;
 			}
 		} catch {
 			return false;
@@ -73,21 +92,14 @@
 			return s.replace(/\/$/, '') || '/';
 		};
 
-		if (!hashToCompare) {
-			const hashIndex = pathToCompare.indexOf('#');
-			if (hashIndex !== -1) {
-				hashToCompare = pathToCompare.substring(hashIndex);
-			}
-		}
+		return norm(url.pathname) === norm(pathToCompare);
+	};
 
-		const pathMatches = norm(url.pathname) === norm(pathToCompare);
-
-		if (hashToCompare) {
-			return pathMatches && url.hash === hashToCompare;
-		}
-
-		return pathMatches;
-	}
+	const onNavItemClick = (navItem) => {
+		const resolved = resolveHref(navItem);
+		clickedAnchorHref = resolved.includes('#') ? resolved : null;
+		showNavSidebar.set(!$showNavSidebar);
+	};
 </script>
 
 {#if $showNavSidebar}
@@ -112,13 +124,11 @@
 					<nav class="jdg-nav-sidebar-item-container">
 						{#each navItems as navItem, i}
 							<div class="jdg-nav-sidebar-item">
-								<JDGNavItem
-									{navItem}
-									active={navItemIsCurrent(navItem, $page.url)}
-									onClickFunction={() => {
-										showNavSidebar.set(!$showNavSidebar);
-									}}
-								/>
+							<JDGNavItem
+								{navItem}
+								active={navItemIsCurrent(navItem, $page.url, clickedAnchorHref)}
+								onClickFunction={() => onNavItemClick(navItem)}
+							/>
 							</div>
 						{/each}
 					</nav>
