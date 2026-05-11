@@ -7,10 +7,7 @@
 
 	import { jdgColors, jdgSizes, jdgBreakpoints } from '$lib/index.js';
 	import { JDGOverlay, JDGRandomGradient } from '$lib/index.js';
-	import { jdgDurations } from '$lib/index.js';
-	import { drawCrossfade } from '$lib/jdg-graphics-factory.js';
 
-	export let showModal = true;
 	export let onClickCloseButton = undefined;
 	export let closeOnOverlayClick = true;
 	export let title = undefined;
@@ -37,8 +34,6 @@
 
 	// Minimum padding around content when it maximizes available space
 	const minPadding = '20px';
-	// Configure crossfade animation
-	const [send, receive] = drawCrossfade(jdgDurations.fadeIn);
 
 	let modalContentContainerCss = css``;
 	$: {
@@ -121,30 +116,41 @@
 		}
 	`;
 
+	const exitDurationMs = 250;
+	let isClosing = false;
+
+	function handleClose() {
+		if (isClosing) return;
+		isClosing = true;
+		setTimeout(() => {
+			if (typeof onClickCloseButton === 'function') {
+				onClickCloseButton();
+			}
+		}, exitDurationMs);
+	}
+
 	function handleBackdropClick() {
 		if (closeOnOverlayClick && typeof onClickCloseButton === 'function') {
-			onClickCloseButton();
+			handleClose();
 		}
 	}
 </script>
 
 {#if contentOnly}
 	<div
-		in:receive={{ key: showModal }}
-		out:send={{ key: showModal }}
 		class="modal-outer-container"
 		on:click|stopPropagation
 		on:keydown={(e) => {
-			if (e.key === 'Escape') {
-				const fn = onClickCloseButton;
-				if (typeof fn === 'function') fn();
-			}
+			if (e.key === 'Escape') handleClose();
 		}}
 		role="presentation"
 		tabindex="-1"
 	>
 		<div class="modal-outer-center">
-			<div class="modal-content-container {modalContentContainerCss}">
+			<div
+				class="modal-content-container {modalContentContainerCss}"
+				class:modal-closing={isClosing}
+			>
 				{#if gradientColor1 && gradientColor2 && gradientColor3}
 					<div class="modal-background-gradient">
 						<JDGRandomGradient
@@ -203,18 +209,19 @@
 		</div>
 	</div>
 {:else}
-	<JDGOverlay onCloseFunction={onClickCloseButton} {closeOnOverlayClick}>
+	<JDGOverlay onCloseFunction={handleClose} {closeOnOverlayClick}>
 		<div
-			in:receive={{ key: showModal }}
-			out:send={{ key: showModal }}
 			class="modal-outer-container"
 			on:click|self={handleBackdropClick}
-			on:keydown={(e) => e.key === 'Escape' && handleBackdropClick()}
+			on:keydown={(e) => e.key === 'Escape' && handleClose()}
 			role="presentation"
 			tabindex="-1"
 		>
 			<div class="modal-outer-center">
-				<div class="modal-content-container {modalContentContainerCss}">
+				<div
+					class="modal-content-container {modalContentContainerCss}"
+					class:modal-closing={isClosing}
+				>
 					{#if gradientColor1 && gradientColor2 && gradientColor3}
 						<div class="modal-background-gradient">
 							<JDGRandomGradient
@@ -304,6 +311,33 @@
 		align-items: center;
 		border-radius: 10px;
 		overflow: hidden;
+		animation: modal-enter 0.35s ease-out;
+	}
+
+	@keyframes modal-enter {
+		from {
+			transform: translateY(20px) scale(0.95);
+			opacity: 0;
+		}
+		to {
+			transform: none;
+			opacity: 1;
+		}
+	}
+
+	.modal-closing {
+		animation: modal-exit 0.25s ease-in forwards;
+	}
+
+	@keyframes modal-exit {
+		from {
+			transform: none;
+			opacity: 1;
+		}
+		to {
+			transform: translateY(20px) scale(0.95);
+			opacity: 0;
+		}
 	}
 
 	.modal-background-gradient {
