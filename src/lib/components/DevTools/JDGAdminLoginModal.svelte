@@ -64,7 +64,7 @@
 </script>
 
 <JDGModal title={'Admin Login'} subtitle={'This feature is admin-only.'} {onClickCloseButton}>
-	<div class="authenticate-tree-modal-content" slot="modal-content-slot">
+	<div class="authenticate-tree-modal-content" slot="modal-content-slot" let:handleClose>
 		<form on:submit|preventDefault={onClickSubmitButton} class="form {formCss}">
 			<!-- only show form and button if not already in admin mode -->
 			{#if !$isAdminMode}
@@ -80,7 +80,7 @@
 					textColor="white"
 				/>
 				<JDGButton
-					onClickFunction={onClickCloseButton}
+					onClickFunction={handleClose}
 					label={'Cancel'}
 					faIcon={null}
 					backgroundColor={jdgColors.activeSecondary}

@@ -147,10 +147,7 @@
 		tabindex="-1"
 	>
 		<div class="modal-outer-center">
-			<div
-				class="modal-content-container {modalContentContainerCss}"
-				class:modal-closing={isClosing}
-			>
+			<div class="modal-content-container {modalContentContainerCss}" class:modal-closing={isClosing}>
 				{#if gradientColor1 && gradientColor2 && gradientColor3}
 					<div class="modal-background-gradient">
 						<JDGRandomGradient
@@ -200,10 +197,10 @@
 					class="modal-content-slot {modalContentSlotCss}"
 					style="position: relative; z-index: 1;"
 				>
-					<slot name="modal-content-slot" />
+					<slot name="modal-content-slot" {handleClose} />
 				</div>
 				<div class="modal-toolbar-slot" style="position: relative; z-index: 1;">
-					<slot name="modal-toolbar-slot" />
+					<slot name="modal-toolbar-slot" {handleClose} />
 				</div>
 			</div>
 		</div>
@@ -218,10 +215,7 @@
 			tabindex="-1"
 		>
 			<div class="modal-outer-center">
-				<div
-					class="modal-content-container {modalContentContainerCss}"
-					class:modal-closing={isClosing}
-				>
+				<div class="modal-content-container {modalContentContainerCss}" class:modal-closing={isClosing}>
 					{#if gradientColor1 && gradientColor2 && gradientColor3}
 						<div class="modal-background-gradient">
 							<JDGRandomGradient
@@ -271,10 +265,10 @@
 						class="modal-content-slot {modalContentSlotCss}"
 						style="position: relative; z-index: 1;"
 					>
-						<slot name="modal-content-slot" />
+						<slot name="modal-content-slot" {handleClose} />
 					</div>
 					<div class="modal-toolbar-slot" style="position: relative; z-index: 1;">
-						<slot name="modal-toolbar-slot" />
+						<slot name="modal-toolbar-slot" {handleClose} />
 					</div>
 				</div>
 			</div>
