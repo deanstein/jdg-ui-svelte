@@ -147,7 +147,10 @@
 		tabindex="-1"
 	>
 		<div class="modal-outer-center">
-			<div class="modal-content-container {modalContentContainerCss}" class:modal-closing={isClosing}>
+			<div
+				class="modal-content-container {modalContentContainerCss}"
+				class:modal-closing={isClosing}
+			>
 				{#if gradientColor1 && gradientColor2 && gradientColor3}
 					<div class="modal-background-gradient">
 						<JDGRandomGradient
@@ -215,7 +218,10 @@
 			tabindex="-1"
 		>
 			<div class="modal-outer-center">
-				<div class="modal-content-container {modalContentContainerCss}" class:modal-closing={isClosing}>
+				<div
+					class="modal-content-container {modalContentContainerCss}"
+					class:modal-closing={isClosing}
+				>
 					{#if gradientColor1 && gradientColor2 && gradientColor3}
 						<div class="modal-background-gradient">
 							<JDGRandomGradient
