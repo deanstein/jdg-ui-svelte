@@ -1150,10 +1150,11 @@
 
 	$: {
 		// Generate a gradient of colors across all timeline events
+		// Use timelineRowItems.length so synthetic registry-image events are included
 		timelineEventColors = generateGradient(
-			(timelineHost?.timelineEvents?.length ?? 0) +
+			timelineRowItems.length +
 				(emptyStateEvent ? 1 : 0) +
-				(todayEvent ? 2 : 0) /* account for birth and death */,
+				(todayEvent ? 2 : 0) /* account for inception and today */,
 			jdgColors.timelineEventColorGradient1,
 			jdgColors.timelineEventColorGradient2,
 			jdgColors.timelineEventColorGradient3
