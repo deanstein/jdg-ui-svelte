@@ -266,15 +266,28 @@
 	/**
 	 * Build synthetic media-wrapper timeline events from registry images
 	 * that have a valid date and showInTimeline !== false.
+	 * Skips any image already referenced by an existing host event.
 	 */
-	function buildRegistryImageEvents(registry) {
+	function buildRegistryImageEvents(registry, hostEvents) {
 		if (!registry || !showRegistryImages) return [];
+
+		// Collect all image keys already used by manual timeline events
+		const usedImageKeys = new Set();
+		for (const evt of hostEvents ?? []) {
+			const imgs = evt.images ?? [];
+			if (Array.isArray(imgs)) {
+				for (const key of imgs) {
+					if (typeof key === 'string') usedImageKeys.add(key);
+				}
+			}
+		}
 
 		const entries = flattenRegistryEntries(registry);
 		const syntheticEvents = [];
 
 		for (const entry of entries) {
 			if (!entry.date || entry.showInTimeline === false) continue;
+			if (usedImageKeys.has(entry.key)) continue;
 
 			const parsed = new Date(entry.date);
 			if (isNaN(parsed.getTime())) continue;
@@ -293,8 +306,11 @@
 		return syntheticEvents;
 	}
 
-	// Synthetic events derived from registry images (reactive on registry and prop)
-	$: registryImageEvents = buildRegistryImageEvents(timelineImageMetaRegistry);
+	// Synthetic events derived from registry images (reactive on registry, prop, and host events)
+	$: registryImageEvents = buildRegistryImageEvents(
+		timelineImageMetaRegistry,
+		timelineHost?.timelineEvents
+	);
 
 	// Resolve avatar image from timelineHost's avatarImage key using the timeline registry
 	$: avatarImageMeta =
