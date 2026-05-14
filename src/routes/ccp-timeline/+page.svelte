@@ -45,6 +45,6 @@
 			>Standalone timeline as it would appear on the Cinderella City Project website.
 			<br /><br />To edit, go to <a href="/timeline">Timeline</a>.
 		</JDGBodyCopy>
-		<JDGTimeline timelineHost={$hostStore} minHeight="70vh" maxHeight="70vh" allowEditing={false} />
+		<JDGTimeline timelineHost={$hostStore} minHeight="70vh" maxHeight="70vh" allowEditing={false} showRegistryImages={true} />
 	</JDGContentBoxFloating>
 </JDGContentContainer>

@@ -113,6 +113,8 @@
 	export let decadeHeadingAccentPalette = 'none';
 	/** @type {'start' | 'center' | 'end'} — text alignment inside the year column (matches event years) */
 	export let decadeHeadingJustify = 'center';
+	// When true, auto-generate media events from registry images that have valid dates
+	export let showRegistryImages = false;
 
 	// Effective preview mode (from parent props; controls overlay and open-in-modal behavior)
 	$: effectivePreviewOnly = previewMode || (previewModeTouch && !$isDesktopBreakpoint);
@@ -246,6 +248,53 @@
 	// Update the context stores when registry loads
 	$: timelineImageRegistryStore.set(timelineImageMetaRegistry);
 	$: timelineImageRegistryRepoStore.set(timelineHost?.imageMetaRegistryRepo);
+
+	/** Flatten a possibly-nested image registry into an array of { key, ...imageMeta } entries. */
+	function flattenRegistryEntries(obj, prefix = '') {
+		let flat = [];
+		for (const [k, value] of Object.entries(obj)) {
+			const fullKey = prefix ? `${prefix}.${k}` : k;
+			if (value?.src) {
+				flat.push({ key: fullKey, ...value });
+			} else if (typeof value === 'object' && value !== null) {
+				flat = flat.concat(flattenRegistryEntries(value, fullKey));
+			}
+		}
+		return flat;
+	}
+
+	/**
+	 * Build synthetic media-wrapper timeline events from registry images
+	 * that have a valid date and showInTimeline !== false.
+	 */
+	function buildRegistryImageEvents(registry) {
+		if (!registry || !showRegistryImages) return [];
+
+		const entries = flattenRegistryEntries(registry);
+		const syntheticEvents = [];
+
+		for (const entry of entries) {
+			if (!entry.date || entry.showInTimeline === false) continue;
+
+			const parsed = new Date(entry.date);
+			if (isNaN(parsed.getTime())) continue;
+
+			const event = instantiateTimelineEvent(jdgTimelineEventKeys.media);
+			event.type = jdgTimelineEventKeys.media;
+			event.date = entry.date;
+			event.isApprxDate = entry.isApprxDate ?? false;
+			event.isMediaWrapper = true;
+			event.images = [entry.key];
+			event.description = entry.caption || '';
+
+			syntheticEvents.push(event);
+		}
+
+		return syntheticEvents;
+	}
+
+	// Synthetic events derived from registry images (reactive on registry and prop)
+	$: registryImageEvents = buildRegistryImageEvents(timelineImageMetaRegistry);
 
 	// Resolve avatar image from timelineHost's avatarImage key using the timeline registry
 	$: avatarImageMeta =
@@ -635,10 +684,11 @@
 	const calculateDefaultZoom = () => {
 		if (!timelineHost) return 0;
 
-		// Count events from the raw timelineHost data
+		// Count events from the raw timelineHost data (including auto-included registry images)
 		const rawEventCount =
 			(timelineHost.timelineEvents?.length || 0) +
-			(timelineHost.timelineEventReferences?.length || 0);
+			(timelineHost.timelineEventReferences?.length || 0) +
+			(registryImageEvents?.length || 0);
 
 		// Account for inception and today events
 		const earliestEvent = getEarliestTimelineEvent(timelineHost.timelineEvents);
@@ -984,39 +1034,48 @@
 			// Use relative spacing if checkbox is checked
 			// Zoom only applies when relative spacing is enabled
 
+			// Merge registry image events into the host's events when showRegistryImages is enabled
+			const effectiveHost =
+				registryImageEvents.length > 0
+					? {
+							...timelineHost,
+							timelineEvents: [...timelineHost.timelineEvents, ...registryImageEvents]
+						}
+					: timelineHost;
+
 			// Use whichever is earlier: the inception date or the earliest event date
 			// This handles cases where events (like planning) occur before the inception date
-			const earliestEvent = getEarliestTimelineEvent(timelineHost.timelineEvents);
+			const earliestEvent = getEarliestTimelineEvent(effectiveHost.timelineEvents);
 			let earliestOrInceptionDate;
-			if (!timelineHost?.inceptionDate || timelineHost.inceptionDate === '') {
+			if (!effectiveHost?.inceptionDate || effectiveHost.inceptionDate === '') {
 				// No inception date, use earliest event
 				earliestOrInceptionDate = earliestEvent?.date;
 			} else if (!earliestEvent?.date) {
 				// No events, use inception date
-				earliestOrInceptionDate = timelineHost.inceptionDate;
+				earliestOrInceptionDate = effectiveHost.inceptionDate;
 			} else {
 				// Both exist - use whichever is earlier
-				const inceptionTime = new Date(timelineHost.inceptionDate).getTime();
+				const inceptionTime = new Date(effectiveHost.inceptionDate).getTime();
 				const earliestEventTime = new Date(earliestEvent.date).getTime();
 				earliestOrInceptionDate =
-					earliestEventTime < inceptionTime ? earliestEvent.date : timelineHost.inceptionDate;
+					earliestEventTime < inceptionTime ? earliestEvent.date : effectiveHost.inceptionDate;
 			}
 
 			// If there are no timeline events,
 			// or if there's no event on the inception date,
 			// show an inception event
 			if (
-				timelineHost.timelineEvents.length === 0 ||
-				getNumDaysBetweenDates(timelineHost.inceptionDate, earliestEvent.date) > 0
+				effectiveHost.timelineEvents.length === 0 ||
+				getNumDaysBetweenDates(effectiveHost.inceptionDate, earliestEvent.date) > 0
 			) {
 				emptyStateEvent = instantiateTimelineEvent(jdgTimelineEventKeys.inception);
-				emptyStateEvent.date = timelineHost.inceptionDate;
+				emptyStateEvent.date = effectiveHost.inceptionDate;
 			} else {
 				emptyStateEvent = undefined;
 			}
 
 			// If there's no cessation date, show a Today event
-			if (timelineHost?.cessationDate === '' || !timelineHost?.cessationDate) {
+			if (effectiveHost?.cessationDate === '' || !effectiveHost?.cessationDate) {
 				todayEvent = instantiateTimelineEvent(jdgTimelineEventKeys.today);
 				todayEvent.type = jdgTimelineEventKeys.today;
 			} else {
@@ -1027,7 +1086,7 @@
 			// When relative spacing is on AND zoom > 0 (and not filtering), keep proportional indices
 			// Otherwise use sequential indices for even distribution
 			let rowItems = updateTimelineRowItems(
-				generateTimelineRowItems(timelineHost, contextEvents, earliestOrInceptionDate),
+				generateTimelineRowItems(effectiveHost, contextEvents, earliestOrInceptionDate),
 				!relativeSpacingLayoutActive // use sequential indices when NOT using relative spacing
 			);
 

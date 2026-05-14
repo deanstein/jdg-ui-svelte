@@ -17,6 +17,8 @@ const jdgImageMeta = {
 	date: undefined,
 	// Whether the date is approximate (e.g. year-only or estimated)
 	isApprxDate: false,
+	// Whether this image should appear in timelines that auto-include registry images
+	showInTimeline: true,
 	// An image can fill the rest of its container
 	// with a blurred copy of itself
 	// Set this to false for plans and diagrams
