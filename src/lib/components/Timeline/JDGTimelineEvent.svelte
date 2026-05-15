@@ -552,7 +552,7 @@
 			<div class="timeline-event-description {eventDescriptionCss} {eventDescriptionDynamicCss}">
 				{displayDescription}
 			</div>
-			{#if timelineEvent?._isSyntheticRegistryImage}
+			{#if timelineEvent?._isSyntheticRegistryImage && !isInteractive}
 				<div class="timeline-event-synthetic-note">
 					<i class="fa-solid fa-wand-magic-sparkles" />
 					From image registry
