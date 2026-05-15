@@ -652,6 +652,7 @@
 		<JDGTimeline
 			timelineHost={$draftTimelineHost ?? $localTimelineHostStore ?? newTimelineHost}
 			allowEditing={$draftTimelineHost !== undefined}
+			showRegistryImages={true}
 			onClickInceptionEvent={() => {
 				showTimelineEventModal.set(true);
 				isTimelineEventModalEditable.set(true);
