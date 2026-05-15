@@ -299,6 +299,7 @@
 			event.isMediaWrapper = true;
 			event.images = [entry.key];
 			event.description = entry.caption || '';
+			event._isSyntheticRegistryImage = true;
 
 			syntheticEvents.push(event);
 		}
@@ -1051,6 +1052,7 @@
 			// Zoom only applies when relative spacing is enabled
 
 			// Merge registry image events into the host's events when showRegistryImages is enabled
+			const syntheticEventIds = new Set(registryImageEvents.map((e) => e.id));
 			const effectiveHost =
 				registryImageEvents.length > 0
 					? {
@@ -1117,6 +1119,15 @@
 					// Scale the index relative to the first index to preserve relative spacing
 					const relativeIndex = rowItems[i].index - firstIndex;
 					rowItems[i].index = firstIndex + Math.round(relativeIndex * spacingMultiplier);
+				}
+			}
+
+			// Re-stamp synthetic flag on row items (the upgrade pipeline strips unknown fields from events)
+			if (syntheticEventIds.size > 0) {
+				for (const item of rowItems) {
+					if (syntheticEventIds.has(item.event?.id)) {
+						item.event._isSyntheticRegistryImage = true;
+					}
 				}
 			}
 
@@ -1607,6 +1618,7 @@
 						{#each visibleTimelineRowItems as timelineRowItem, i}
 							{@const fullIndex = timelineRowItems.indexOf(timelineRowItem)}
 							{@const colorPairIndex = (emptyStateEvent ? 1 : 0) + fullIndex}
+							{@const isSynthetic = timelineRowItem.event._isSyntheticRegistryImage}
 							{@const prevChronoEvent =
 								i > 0
 									? visibleTimelineRowItems[i - 1].event
@@ -1661,6 +1673,7 @@
 										timelineEvent={timelineRowItem.event}
 										scrollId={timelineRowItem.event.id || `idx-${fullIndex}`}
 										onClickTimelineEvent={() => {
+											if (isSynthetic && allowEditing) return;
 											// Only promote the host into the global draft store when this timeline is in an
 											// editing context (allowEditing). Otherwise every event click would set
 											// draftTimelineHost — e.g. /timeline uses allowEditing={$draftTimelineHost}
@@ -1682,14 +1695,16 @@
 												});
 											}
 											showTimelineEventModal.set(true);
-											isTimelineEventModalEditable.set(allowEditing);
+											isTimelineEventModalEditable.set(allowEditing && !isSynthetic);
 											timelineEventModalInceptionDate.set(timelineHost.inceptionDate);
 										}}
 										rowIndex={timelineRowItem.index}
 										gradientColor1={eventColorPairs[colorPairIndex]?.backgroundColor}
 										gradientColor2={eventColorPairs[colorPairIndex]?.gradientMirrorColor}
 										eventReference={timelineRowItem.eventReference}
-										isInteractive={isInteractive || $isAdminMode}
+										isInteractive={isSynthetic && allowEditing
+											? false
+											: isInteractive || $isAdminMode}
 										{gradientPointsCount}
 									/>
 								{/key}
@@ -1817,6 +1832,7 @@
 					{showYearHeadings}
 					{decadeHeadingAccentPalette}
 					{decadeHeadingJustify}
+					{showRegistryImages}
 					width="100%"
 					minHeight="70dvh"
 					maxHeight="75dvh"
