@@ -552,6 +552,12 @@
 			<div class="timeline-event-description {eventDescriptionCss} {eventDescriptionDynamicCss}">
 				{displayDescription}
 			</div>
+			{#if timelineEvent?._isSyntheticRegistryImage}
+				<div class="timeline-event-synthetic-note">
+					<i class="fa-solid fa-wand-magic-sparkles" />
+					From image registry
+				</div>
+			{/if}
 			{#if upgradedEvent?.images?.length > 0}
 				{@const resolvedImages = resolveImageMetaKeys(upgradedEvent.images, imageMetaRegistry)}
 				{#if resolvedImages?.length > 0}
@@ -668,6 +674,16 @@
 	.timeline-event-description {
 		padding: 8px 0px 8px 0px;
 		white-space: pre-line;
+	}
+
+	.timeline-event-synthetic-note {
+		font-size: 0.7rem;
+		font-style: italic;
+		opacity: 0.6;
+		padding: 0 0 6px 0;
+		display: flex;
+		align-items: center;
+		gap: 4px;
 	}
 
 	.timeline-event-image-preview {
