@@ -14,7 +14,6 @@
 	import {
 		jdgBoxShadowStandard,
 		jdgBreakpoints,
-		jdgColors,
 		getThemePalette,
 		jdgSizes,
 		themeColors
@@ -30,7 +29,7 @@
 	export let showNav = true;
 	export let useMobileNav = false; // force use mobile nav at all breakpoints
 	export let navItems = [];
-	export let textColor = jdgColors.text;
+	export let textColor = undefined;
 	export let backgroundColorRgba = undefined;
 
 	$: palette = getThemePalette($colorMode);
@@ -126,10 +125,11 @@
 		color: ${$themeColors.textSecondary};
 	`;
 
-	const headerLogoTitleCss = css`
+	let headerLogoTitleCss = css``;
+	$: headerLogoTitleCss = css`
 		font-size: ${jdgSizes.fontSizeHeaderTitle};
 		text-align: ${logoJustification === 'center' ? 'center' : 'left'};
-		color: ${textColor};
+		color: ${textColor ?? $themeColors.text};
 	`;
 
 	onMount(() => {

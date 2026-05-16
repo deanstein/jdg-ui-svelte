@@ -13,7 +13,6 @@
 		fadeInSettleBeforeLg,
 		fadeInSettleAfter,
 		jdgBreakpoints,
-		jdgColors,
 		jdgDurations,
 		jdgSizes,
 		jdgBoxShadowStandard,
@@ -23,10 +22,10 @@
 
 	export let title = undefined;
 	export let titleFontFamily = $appFontFamily;
-	export let titleColor = jdgColors.title;
+	export let titleColor = undefined;
 	export let subtitle = undefined;
 	export let subtitleFontFamily = $appFontFamily;
-	export let subtitleColor = jdgColors.textSecondary;
+	export let subtitleColor = undefined;
 	export let anchorTag = convertStringToAnchorTag(title, false);
 	export let paddingTop = '2rem';
 	export let paddingBottom = '2rem';
@@ -38,17 +37,19 @@
 	let isVisible = false;
 	let isVisibleRef;
 
-	const floatingBoxTitleCss = css`
+	let floatingBoxTitleCss = css``;
+	$: floatingBoxTitleCss = css`
 		font-family: ${titleFontFamily};
 		font-size: ${jdgSizes.fontSizeFloatingContentBoxTitle};
-		color: ${titleColor};
+		color: ${titleColor ?? $themeColors.title};
 		margin-bottom: ${subtitle ? 0 : 'revert'};
 	`;
 
-	const floatingBoxSubtitleCss = css`
+	let floatingBoxSubtitleCss = css``;
+	$: floatingBoxSubtitleCss = css`
 		font-family: ${subtitleFontFamily};
 		font-size: ${jdgSizes.fontSizeFloatingContentBoxSubtitle};
-		color: ${subtitleColor};
+		color: ${subtitleColor ?? $themeColors.textSecondary};
 	`;
 
 	let floatingBoxContentCss = css``;

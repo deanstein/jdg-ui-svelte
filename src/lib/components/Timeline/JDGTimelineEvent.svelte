@@ -9,7 +9,7 @@
 	} from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 	import timelineEventReference from '$lib/schemas/timeline/jdg-timeline-event-reference.js';
 
-	import { isMobileBreakpoint, isTabletBreakpoint } from '$lib/stores/jdg-ui-store.js';
+	import { colorMode, isMobileBreakpoint, isTabletBreakpoint } from '$lib/stores/jdg-ui-store.js';
 	import {
 		getYearsAndMonthsBetweenDates,
 		formatAgeDisplayWithRounding,
@@ -225,8 +225,9 @@
 		background-color: ${$themeColors.textSecondary};
 	`;
 
-	const eventTitleBarCss = css`
-		background-color: rgb(205, 205, 205);
+	let eventTitleBarCss = css``;
+	$: eventTitleBarCss = css`
+		background-color: ${$colorMode === 'dark' ? 'rgb(65, 65, 65)' : 'rgb(205, 205, 205)'};
 		border-radius: ${eventBorderRadius} ${eventBorderRadius} 0px 0px;
 	`;
 
@@ -375,7 +376,11 @@
 				cursor: ${canClickCalculated ? 'pointer' : 'default'};
 				@media (hover: hover) {
 					&:hover {
-						background-color: ${canClickCalculated ? 'rgba(255, 255, 255, 0.75)' : ''};
+						background-color: ${canClickCalculated
+							? $colorMode === 'dark'
+								? 'rgba(70, 70, 70, 0.75)'
+								: 'rgba(255, 255, 255, 0.75)'
+							: ''};
 					}
 				}
 			`;
@@ -434,7 +439,7 @@
 				: 'Year?'}
 		</div>
 		{#if effectiveIsApprxDate}
-			<div class="timeline-event-date-apprx {eventDateApprxCss}">(apprx.)</div>
+			<div class="timeline-event-date-apprx {eventDateApprxCss}" style="color: {$themeColors.textSecondary}">(apprx.)</div>
 		{/if}
 	</div>
 	<div class="timeline-event-node {eventNodeCss}" />
@@ -612,7 +617,6 @@
 		font-size: 10px;
 		padding-top: 3px;
 		box-sizing: border-box;
-		color: #5d5d5d;
 	}
 
 	.timeline-event-node {
