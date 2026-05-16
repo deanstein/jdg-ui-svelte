@@ -198,7 +198,11 @@
 				{showBlurInUnfilledSpace}
 			/>
 		</div>
-		<div class="slider" style="left: {$sliderPositionStore}%;"></div>
+		<div class="slider" style="left: {$sliderPositionStore}%;">
+			<div class="slider-grip">
+				<i class="fa-solid fa-arrows-left-right"></i>
+			</div>
+		</div>
 		{#if caption}
 			<div style="width: 100%;">
 				<JDGImageCaptionAttribution imageMeta={newImageMeta} {showDate} />
@@ -217,6 +221,7 @@
 	.jdg-image-compare-container {
 		position: relative;
 		height: 100%;
+		cursor: none;
 	}
 
 	.compare-image-absolute {
@@ -232,5 +237,28 @@
 		bottom: 0;
 		width: 2px;
 		background: #fff;
+		pointer-events: none;
+		filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.4));
+	}
+
+	.slider-grip {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: 22px;
+		height: 22px;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.9);
+		border: 2px solid #fff;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: #333;
+	}
+
+	.slider-grip i {
+		font-size: 10px;
 	}
 </style>
