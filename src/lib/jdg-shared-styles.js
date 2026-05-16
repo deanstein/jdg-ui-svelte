@@ -44,9 +44,9 @@ const darkPalette = {
 	imageLabelBackground: 'rgba(30, 30, 30, 0.75)',
 	inputBackground: 'rgba(55, 55, 55, 1)',
 	activeSubtle: '#1a3a52',
-	backgroundFillRange0: 'rgba(38, 38, 38, 1)',
-	backgroundFillRange1: 'rgba(55, 55, 55, 1)',
-	backgroundFillRange2: 'rgba(68, 68, 68, 1)',
+	backgroundFillRange0: 'rgba(18, 18, 18, 1)',
+	backgroundFillRange1: 'rgba(28, 28, 28, 1)',
+	backgroundFillRange2: 'rgba(38, 38, 38, 1)',
 	timelineEventColorGradient1: 'rgba(35, 60, 32, 1)',
 	timelineEventColorGradient2: 'rgba(28, 55, 58, 1)',
 	timelineEventColorGradient3: 'rgba(32, 40, 62, 1)'

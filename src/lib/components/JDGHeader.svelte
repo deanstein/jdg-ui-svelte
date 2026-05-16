@@ -11,6 +11,7 @@
 	import { getRgbaAlpha, setRgbaAlpha } from '$lib/jdg-utils.js';
 
 	import { JDGTopNav, JDGSideNav, JDGStripesHorizontal } from '$lib/index.js';
+	import JDGColorModeToggle from './JDGColorModeToggle.svelte';
 	import {
 		jdgBoxShadowStandard,
 		jdgBreakpoints,
@@ -35,6 +36,7 @@
 	$: palette = getThemePalette($colorMode);
 	$: resolvedBackgroundColor = backgroundColorRgba ?? palette.headerBackground;
 	export let showShadow = true;
+	export let showColorModeToggle = false;
 	export let suppressAlphaOnScroll = false; // disable alpha past some scroll threshold
 
 	let forceHideTitleAtBreakpoint = true; // forces no title below certain breakpoints
@@ -207,10 +209,15 @@
 				</div>
 			</div>
 		{/if}
-		<!-- navigation: in header -->
-		{#if showNav && navItems.length > 0}
-			<JDGTopNav {navItems} useMobileNav={useMobileNav || forceMobileNavOnCenteredTitle} />
-		{/if}
+		<!-- color mode toggle + navigation -->
+		<div class="header-right-controls">
+			{#if showColorModeToggle}
+				<JDGColorModeToggle />
+			{/if}
+			{#if showNav && navItems.length > 0}
+				<JDGTopNav {navItems} useMobileNav={useMobileNav || forceMobileNavOnCenteredTitle} />
+			{/if}
+		</div>
 	</div>
 	<!-- navigation: sidebar -->
 	{#if showNav && navItems.length > 0}
@@ -237,6 +244,24 @@
 		width: -webkit-fill-available;
 		z-index: 1;
 		font-weight: 900;
+	}
+
+	.header-right-controls {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		width: 100%;
+		height: 100%;
+		justify-content: flex-end;
+		z-index: 2;
+	}
+
+	.header-right-controls :global(.desktop-nav-container) {
+		width: auto;
+	}
+
+	.header-right-controls :global(.mobile-nav-button-justification-container) {
+		width: auto;
 	}
 
 	.jdg-header-inner-container {

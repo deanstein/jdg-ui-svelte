@@ -1,6 +1,7 @@
 <script>
 	import { onDestroy, onMount } from 'svelte';
 	import { JDGRandomDelaunay } from '$lib/index.js';
+	import { themeColors } from '$lib/jdg-shared-styles.js';
 
 	export let isParallax = false; // parallax could affect performance, use with caution
 
@@ -24,7 +25,7 @@
 	});
 </script>
 
-<div class="jdg-background-container" bind:this={backgroundContainerDiv}>
+<div class="jdg-background-container" bind:this={backgroundContainerDiv} style="background-color: {$themeColors.headerBackground};">
 	<JDGRandomDelaunay heightMultiplier={isParallax ? 1.5 : 1.0} />
 </div>
 

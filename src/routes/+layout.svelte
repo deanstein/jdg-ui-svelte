@@ -123,6 +123,7 @@
 		{navItems}
 		useMobileNav={true}
 		suppressAlphaOnScroll={false}
+		showColorModeToggle={true}
 	/>
 	<JDGBackground />
 	<!-- all content goes in this slot -->
