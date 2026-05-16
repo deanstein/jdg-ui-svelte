@@ -266,8 +266,9 @@
 	let eventGradientCss = css``;
 	let eventTitleBarGradientCss = css``;
 	$: hasTitleBarRandomGradient = !!(gradientColor1 && gradientColor2);
-	$: titleBarColor1 = gradientColor1 ?? null;
-	$: titleBarColor2 = gradientColor2 ?? null;
+	$: titleBarDarkenAmount = $colorMode === 'dark' ? 0.15 : 0.05;
+	$: titleBarColor1 = gradientColor1 ? darkenColor(gradientColor1, titleBarDarkenAmount) : null;
+	$: titleBarColor2 = gradientColor2 ? darkenColor(gradientColor2, titleBarDarkenAmount) : null;
 	$: {
 		if (gradientColor1 && gradientPointsCount > 0 && gradientColor2) {
 			const seed = upgradedEvent?.id
@@ -447,7 +448,7 @@
 	<div class="timeline-event-content-outer-container {eventRowContainerCss}">
 		<div class="timeline-event-title-bar-container">
 			{#if hasTitleBarRandomGradient}
-				<div class="timeline-event-title-bar-gradient" style="background-color: {titleBarColor1};">
+				<div class="timeline-event-title-bar-gradient" style="background-color: {titleBarColor1 ?? ''};">
 					<JDGRandomGradient
 						numberOfPoints={8}
 						edgeBufferRatio={0.1}
