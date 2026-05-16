@@ -16,6 +16,7 @@
 		appFontFamily,
 		clientWidth,
 		allowTextSelection as allowTextSelectionStore,
+		COLOR_MODE_STORAGE_KEY,
 		colorModeSetting as colorModeSettingStore,
 		colorMode as colorModeStore,
 		showAdminLoginModal,
@@ -119,17 +120,16 @@
 	// (iOS fires resize when action bar shows/hides, but only height changes)
 	let lastKnownWidth = 0;
 
-	let resolvedColorMode = 'light';
 	let darkModeMediaQuery;
 
 	function resolveColorMode() {
-		if (colorMode === 'auto') {
-			resolvedColorMode = darkModeMediaQuery?.matches ? 'dark' : 'light';
+		const setting = get(colorModeSettingStore);
+		if (setting === 'auto') {
+			const isDark = darkModeMediaQuery?.matches ?? false;
+			colorModeStore.set(isDark ? 'dark' : 'light');
 		} else {
-			resolvedColorMode = colorMode;
+			colorModeStore.set(setting);
 		}
-		colorModeSettingStore.set(colorMode);
-		colorModeStore.set(resolvedColorMode);
 	}
 
 	// app sets window and client width in the ui state
@@ -210,13 +210,23 @@
 		appAccentColors.set(accentColors);
 		showHeaderStripesStore.set(showHeaderStripes);
 
-		// Set up color mode detection
+		// Set up color mode: localStorage > prop > default ('auto')
+		let savedSetting;
+		try {
+			savedSetting = localStorage.getItem(COLOR_MODE_STORAGE_KEY);
+		} catch {}
+		const effectiveSetting =
+			savedSetting && ['auto', 'light', 'dark'].includes(savedSetting)
+				? savedSetting
+				: colorMode;
+		colorModeSettingStore.set(effectiveSetting);
+
 		darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 		darkModeMediaQuery.addEventListener('change', resolveColorMode);
 		resolveColorMode();
 
 		// Update shared style states with resolved palette
-		const palette = getThemePalette(resolvedColorMode);
+		const palette = getThemePalette(get(colorModeStore));
 		setUpdatedHyperlinkStyleBar(
 			linkColorDefault,
 			linkColorContrastAdjustment,
