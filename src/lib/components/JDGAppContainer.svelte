@@ -62,13 +62,13 @@
 		JDGSaveStateBanner
 	} from '$lib/index.js';
 	import {
+		setUpdatedHyperlinkStyleBar,
 		setUpdatedHyperlinkStyleSimple,
 		jdgBreakpoints,
 		jdgColors,
 		jdgFonts,
 		getThemePalette,
-		themeColors,
-		setUpdatedHyperlinkStyleBar
+		themeColors
 	} from '$lib/jdg-shared-styles.js';
 
 	// IMAGE META REGISTRY

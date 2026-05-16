@@ -15,6 +15,7 @@
 	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
 
 	import {
+		colorMode,
 		isAdminMode,
 		timelineEventModalInceptionDate,
 		showTimelineEventModal
@@ -789,7 +790,10 @@
 							/>
 						</div>
 						{#if isImageSelectorOpen}
-							<div class="image-selector-container">
+							<div
+								class="image-selector-container"
+								style="background-color: {$colorMode === 'dark' ? 'rgba(55, 55, 55, 0.5)' : 'rgba(255, 255, 255, 0.5)'}; border: 2px solid {$colorMode === 'dark' ? 'rgba(100, 100, 100, 0.5)' : 'rgba(200, 200, 200, 0.5)'};"
+							>
 								<JDGImageSelector
 									selectedImages={$localEventStore[key] || []}
 									isEnabled={isEditing}
@@ -864,9 +868,7 @@
 	.image-selector-container {
 		margin-top: 12px;
 		padding: 16px;
-		background-color: rgba(255, 255, 255, 0.5);
 		border-radius: 8px;
-		border: 2px solid rgba(200, 200, 200, 0.5);
 	}
 
 	.date-with-checkbox {

@@ -173,7 +173,8 @@
 	const rowHeightEmptyPx = 3;
 	const rowHeightFilledPx = 80;
 
-	const timelineBackgroundColor = 'rgba(225, 225, 225, 1)';
+	$: timelineBackgroundColor =
+		$colorMode === 'dark' ? 'rgba(45, 45, 45, 1)' : 'rgba(225, 225, 225, 1)';
 
 	// Calculate gradient colors based on background color
 	// Lighter gray -> current gray -> darker gray
@@ -181,9 +182,9 @@
 	$: timelineGradientColor2 = timelineBackgroundColor; // current (middle)
 	$: timelineGradientColor3 = darkenColor(timelineBackgroundColor, 0.15); // darker
 
-	// Slider track color for options flyout (~30% darker than default #ddd)
 	$: optionsSliderTrackColor = (() => {
-		const c = darkenColor('#dddddd', 0.2);
+		const base = $colorMode === 'dark' ? '#555555' : '#dddddd';
+		const c = $colorMode === 'dark' ? lightenColor(base, 0.2) : darkenColor(base, 0.2);
 		return typeof c === 'string' ? c : `rgb(${c.r}, ${c.g}, ${c.b})`;
 	})();
 
@@ -770,7 +771,8 @@
 		width: ${width};
 	`;
 
-	const timelineContainerCss = css`
+	let timelineContainerCss = css``;
+	$: timelineContainerCss = css`
 		width: ${width};
 		min-height: ${minHeight};
 		max-height: ${maxHeight};
@@ -788,7 +790,8 @@
 		}
 	`;
 
-	const timelineTitleBarCss = css`
+	let timelineTitleBarCss = css``;
+	$: timelineTitleBarCss = css`
 		background-color: ${lightenColor(timelineBackgroundColor, 0.03)};
 	`;
 
@@ -812,6 +815,15 @@
 		pointer-events: none !important;
 	`;
 
+	let timelineActionsBarMobileBgCss = css``;
+	$: timelineActionsBarMobileBgCss = css`
+		@media (max-width: 768px) {
+			background: ${$colorMode === 'dark'
+				? 'rgba(45, 45, 45, 0.92)'
+				: 'rgba(225, 225, 225, 0.92)'};
+		}
+	`;
+
 	const eventTypeFilterRowCss = css`
 		display: flex;
 		align-items: center;
@@ -820,7 +832,8 @@
 		user-select: none;
 	`;
 
-	const eventTypeFilterCheckboxCss = css`
+	let eventTypeFilterCheckboxCss = css``;
+	$: eventTypeFilterCheckboxCss = css`
 		appearance: none;
 		-webkit-appearance: none;
 		width: 1.3em;
@@ -828,7 +841,7 @@
 		margin: 0;
 		border: 2px solid ${jdgColors.activeSecondary};
 		border-radius: 3px;
-		background-color: white;
+		background-color: ${$themeColors.inputBackground};
 		cursor: pointer;
 		position: relative;
 		flex-shrink: 0;
@@ -992,28 +1005,42 @@
 	`;
 
 	// Timeline spine styling
-	let spineContainerCss = css`
-		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			margin-left: ${jdgSizes.nTimelineEventGapSize / 4 +
-			jdgSizes.ntimelineEventYearWidthSm +
-			jdgSizes.nTimelineSpineWidth +
-			jdgSizes.timelineUnit};
-		}
-		@media (min-width: ${jdgBreakpoints.width[0].toString() +
-			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
-			jdgBreakpoints.unit}) {
-			margin-left: ${jdgSizes.nTimelineEventGapSize / 4 +
-			jdgSizes.ntimelineEventYearWidthMd +
-			jdgSizes.nTimelineSpineWidth +
-			jdgSizes.timelineUnit};
-		}
-		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			margin-left: ${jdgSizes.nTimelineEventGapSize / 2 +
-			jdgSizes.ntimelineEventYearWidthLg +
-			jdgSizes.nTimelineSpineWidth * 2 +
-			jdgSizes.timelineUnit};
-		}
-	`;
+	let spineContainerCss = css``;
+	$: {
+		const spineColor =
+			$colorMode === 'dark' ? 'rgba(120, 120, 120, 0.7)' : 'rgba(200, 200, 200, 0.75)';
+		const spineColorEnd =
+			$colorMode === 'dark' ? 'rgba(120, 120, 120, 0.6)' : 'rgba(200, 200, 200, 0.7)';
+		spineContainerCss = css`
+			background: linear-gradient(
+				to bottom,
+				transparent 0%,
+				${spineColor} 20px,
+				${spineColorEnd} calc(100% - 20px),
+				transparent 100%
+			);
+			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
+				margin-left: ${jdgSizes.nTimelineEventGapSize / 4 +
+				jdgSizes.ntimelineEventYearWidthSm +
+				jdgSizes.nTimelineSpineWidth +
+				jdgSizes.timelineUnit};
+			}
+			@media (min-width: ${jdgBreakpoints.width[0].toString() +
+				jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
+				jdgBreakpoints.unit}) {
+				margin-left: ${jdgSizes.nTimelineEventGapSize / 4 +
+				jdgSizes.ntimelineEventYearWidthMd +
+				jdgSizes.nTimelineSpineWidth +
+				jdgSizes.timelineUnit};
+			}
+			@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+				margin-left: ${jdgSizes.nTimelineEventGapSize / 2 +
+				jdgSizes.ntimelineEventYearWidthLg +
+				jdgSizes.nTimelineSpineWidth * 2 +
+				jdgSizes.timelineUnit};
+			}
+		`;
+	}
 
 	let spineColumnCss = css`
 		width: ${jdgSizes.timelineSpineWidth};
@@ -1313,7 +1340,12 @@
 	tabindex={effectivePreviewOnly ? 0 : undefined}
 >
 	{#if showLoadingOverlay}
-		<div class="timeline-loading-overlay" aria-busy="true" aria-label="Loading timeline">
+		<div
+			class="timeline-loading-overlay"
+			aria-busy="true"
+			aria-label="Loading timeline"
+			style="background: {$colorMode === 'dark' ? 'rgba(30, 30, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)'};"
+		>
 			<div class="timeline-loading-content">
 				<JDGLoadingSpinner strokeColor={$themeColors.text} spinnerHeightPx={40} strokeWidthPx={3} />
 				<span class="timeline-loading-text" style="color: {$themeColors.text}">Loading…</span>
@@ -1331,6 +1363,7 @@
 				on:keydown={(e) => e.key === 'Enter' && openTimelineModal()}
 				role="button"
 				tabindex="0"
+				style="background: {$colorMode === 'dark' ? 'rgba(30, 30, 30, 0.5)' : 'rgba(255, 255, 255, 0.5)'};"
 			>
 				<div class="timeline-preview-fab-group">
 					<JDGButton
@@ -1338,17 +1371,25 @@
 						label={null}
 						faIcon="fa-expand"
 						doForceSquareAspect={true}
-						backgroundColor="rgba(255, 255, 255, 0.88)"
-						textColor="#3c3c3c"
-						textColorHover="#1a1a1a"
-						backgroundColorHover="rgba(255, 255, 255, 1)"
+						backgroundColor={$colorMode === 'dark'
+							? 'rgba(55, 55, 55, 0.88)'
+							: 'rgba(255, 255, 255, 0.88)'}
+						textColor={$themeColors.text}
+						textColorHover={$colorMode === 'dark' ? '#ffffff' : '#1a1a1a'}
+						backgroundColorHover={$colorMode === 'dark'
+							? 'rgba(55, 55, 55, 1)'
+							: 'rgba(255, 255, 255, 1)'}
 						doAdjustBackgroundColorForContrast={false}
 						shadow={true}
 						fontSize="1.2rem"
 						paddingTopBottom="10px"
 						tooltip="Open timeline"
 					/>
-					<span class="timeline-preview-fab-label"
+					<span
+						class="timeline-preview-fab-label"
+						style="color: {$themeColors.text}; text-shadow: {$colorMode === 'dark'
+							? '0 0 4px rgba(0,0,0,0.95), 0 0 8px rgba(0,0,0,0.85), 0 0 16px rgba(0,0,0,0.6), 0 0 28px rgba(0,0,0,0.35)'
+							: '0 0 4px rgba(255,255,255,0.95), 0 0 8px rgba(255,255,255,0.85), 0 0 16px rgba(255,255,255,0.6), 0 0 28px rgba(255,255,255,0.35)'};"
 						>{$isDesktopBreakpoint ? 'Click' : 'Tap'} anywhere to open timeline</span
 					>
 				</div>
@@ -1396,7 +1437,7 @@
 			<!-- Actions Bar -->
 			<div
 				bind:this={actionsBarRef}
-				class="timeline-actions-bar {timelineSupportingTextCss} {!mobileActionsBarVisible &&
+				class="timeline-actions-bar {timelineSupportingTextCss} {timelineActionsBarMobileBgCss} {!mobileActionsBarVisible &&
 				$isMobileBreakpoint
 					? timelineActionsBarMobileScrollHiddenCss
 					: ''}"
@@ -1896,7 +1937,6 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: rgba(255, 255, 255, 0.9);
 		backdrop-filter: blur(4px);
 		z-index: 20;
 		border-radius: 10px;
@@ -1930,7 +1970,6 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: rgba(255, 255, 255, 0.5);
 		backdrop-filter: blur(2px);
 		z-index: 20;
 		border-radius: 10px;
@@ -1947,14 +1986,8 @@
 	.timeline-preview-fab-label {
 		font-size: 0.8rem;
 		font-weight: bold;
-		color: #3c3c3c;
 		white-space: nowrap;
 		pointer-events: none;
-		text-shadow:
-			0 0 4px rgba(255, 255, 255, 0.95),
-			0 0 8px rgba(255, 255, 255, 0.85),
-			0 0 16px rgba(255, 255, 255, 0.6),
-			0 0 28px rgba(255, 255, 255, 0.35);
 	}
 
 	.timeline-modal-content {
@@ -2052,7 +2085,6 @@
 			flex-direction: column;
 			align-items: stretch;
 			justify-content: flex-start;
-			background: rgba(225, 225, 225, 0.92);
 			backdrop-filter: blur(6px);
 			-webkit-backdrop-filter: blur(6px);
 			border-radius: 0 0 8px 8px;
@@ -2130,13 +2162,6 @@
 		/* Use top/bottom instead of height: inherit for flex parent compatibility */
 		top: 0;
 		bottom: 0;
-		background: linear-gradient(
-			to bottom,
-			rgba(255, 0, 0, 0) 0%,
-			rgba(200, 200, 200, 0.75) 20px,
-			rgba(200, 200, 200, 0.7) calc(100% - 20px),
-			rgba(255, 0, 0, 0) 100%
-		);
 	}
 
 	.timeline-spine-line-column {

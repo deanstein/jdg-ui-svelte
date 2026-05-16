@@ -48,7 +48,7 @@
 	export let copyrightHref = undefined; // optional href for <a> element around copyright name
 	export let disclaimer = undefined; // optional disclaimer, applicable to some sites
 	export let alignItems = 'left';
-	export let backgroundColorRgba = jdgColors.headerBackground;
+	export let backgroundColorRgba = undefined;
 	export let webAppVersionLabel = 'Website';
 	export let showShadow = true; // subtle shadow to give the illusion of depth
 	export let showJdgUiVersion = true;
@@ -78,8 +78,9 @@
 	// ensure the copyright is always the current year
 	const copyrightYear = new Date().getFullYear();
 
-	const footerOuterContainerCss = css`
-		background-color: ${backgroundColorRgba};
+	let footerOuterContainerCss = css``;
+	$: footerOuterContainerCss = css`
+		background-color: ${backgroundColorRgba ?? $themeColors.headerBackground};
 		backdrop-filter: blur(10px);
 	`;
 
