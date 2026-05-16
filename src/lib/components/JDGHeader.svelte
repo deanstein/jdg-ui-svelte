@@ -11,7 +11,6 @@
 	import { getRgbaAlpha, setRgbaAlpha } from '$lib/jdg-utils.js';
 
 	import { JDGTopNav, JDGSideNav, JDGStripesHorizontal } from '$lib/index.js';
-	import JDGColorModeToggle from './JDGColorModeToggle.svelte';
 	import {
 		jdgBoxShadowStandard,
 		jdgBreakpoints,
@@ -30,6 +29,7 @@
 	export let showNav = true;
 	export let useMobileNav = false; // force use mobile nav at all breakpoints
 	export let navItems = [];
+	export let maxVisibleNavItems = 3;
 	export let textColor = undefined;
 	export let backgroundColorRgba = undefined;
 
@@ -209,19 +209,14 @@
 				</div>
 			</div>
 		{/if}
-		<!-- color mode toggle + navigation -->
-		<div class="header-right-controls">
-			{#if showColorModeToggle}
-				<JDGColorModeToggle />
-			{/if}
-			{#if showNav && navItems.length > 0}
-				<JDGTopNav {navItems} useMobileNav={useMobileNav || forceMobileNavOnCenteredTitle} />
-			{/if}
-		</div>
+		<!-- navigation: in header -->
+		{#if showNav && navItems.length > 0}
+			<JDGTopNav {navItems} {maxVisibleNavItems} useMobileNav={useMobileNav || forceMobileNavOnCenteredTitle} {showColorModeToggle} />
+		{/if}
 	</div>
 	<!-- navigation: sidebar -->
 	{#if showNav && navItems.length > 0}
-		<JDGSideNav {navItems} />
+		<JDGSideNav {navItems} {showColorModeToggle} />
 	{/if}
 	<!-- stripes at bottom of header -->
 	{#if $showHeaderStripes}
@@ -244,24 +239,6 @@
 		width: -webkit-fill-available;
 		z-index: 1;
 		font-weight: 900;
-	}
-
-	.header-right-controls {
-		display: flex;
-		align-items: center;
-		gap: 0.75rem;
-		width: 100%;
-		height: 100%;
-		justify-content: flex-end;
-		z-index: 2;
-	}
-
-	.header-right-controls :global(.desktop-nav-container) {
-		width: auto;
-	}
-
-	.header-right-controls :global(.mobile-nav-button-justification-container) {
-		width: auto;
 	}
 
 	.jdg-header-inner-container {

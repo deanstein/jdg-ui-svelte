@@ -8,12 +8,20 @@
 	import { breakpointHandler } from '$lib/jdg-ui-management.js';
 
 	import { JDGMenuIcon, JDGNavItem } from '$lib/index.js';
+	import JDGColorModeToggle from '../JDGColorModeToggle.svelte';
 	import { jdgSizes, themeColors } from '$lib/jdg-shared-styles.js';
 
 	// nav items are an array of objects
 	export let navItems = [];
 	// mobile nav can be always on, regardless of breakpoint
 	export let useMobileNav = false;
+	// max visible nav items in desktop mode before showing overflow trigger
+	export let maxVisibleNavItems = 3;
+	export let showColorModeToggle = false;
+
+	$: visibleNavItems =
+		navItems.length > maxVisibleNavItems ? navItems.slice(0, maxVisibleNavItems) : navItems;
+	$: hasOverflow = navItems.length > maxVisibleNavItems;
 
 	// set certain flags at certain breakpoints
 	const navBreakpointHandler = () => {
@@ -39,6 +47,10 @@
 		showNavSidebar.set(!isOpen);
 	};
 
+	const onClickOverflow = () => {
+		showNavSidebar.set(true);
+	};
+
 	let useMobileNavResult;
 	let forceUseMobileNavAtBreakpoint = true;
 
@@ -50,6 +62,18 @@
 	$: mobileNavButtonCss = css`
 		color: ${$themeColors.text};
 		background-color: transparent;
+	`;
+
+	const overflowButtonCss = css`
+		font-size: ${jdgSizes.fontSizeHeaderTitle};
+		letter-spacing: 5px;
+		padding-left: 2.5px;
+		margin-bottom: -3px;
+	`;
+
+	let overflowButtonColorCss = css``;
+	$: overflowButtonColorCss = css`
+		color: ${$themeColors.text};
 	`;
 
 	onMount(() => {
@@ -91,9 +115,28 @@
 	<!-- desktop nav -->
 {:else}
 	<nav class="desktop-nav-container jdg-letter-spacing-title">
-		{#each navItems as navItem, i}
+		{#each visibleNavItems as navItem, i}
 			<JDGNavItem {navItem} marginBottom="-3px" />
 		{/each}
+		{#if hasOverflow}
+			<div
+				role="button"
+				tabindex="0"
+				class="overflow-button {overflowButtonCss} {overflowButtonColorCss}"
+				on:click={onClickOverflow}
+				on:keypress={() => {}}
+				title="More pages"
+			>
+				<div class="jdg-highlight-container">
+					<span class="jdg-highlight no-initial-highlight">...</span>
+				</div>
+			</div>
+		{/if}
+		{#if showColorModeToggle}
+			<div class="desktop-nav-color-toggle">
+				<JDGColorModeToggle />
+			</div>
+		{/if}
 	</nav>
 {/if}
 
@@ -122,5 +165,24 @@
 		cursor: pointer;
 		border: none;
 		outline: none;
+	}
+
+	.overflow-button {
+		display: flex;
+		align-items: flex-end;
+		cursor: pointer;
+		font-weight: bold;
+		background: none;
+		border: none;
+		outline: none;
+		padding: 0;
+	}
+
+	.desktop-nav-color-toggle {
+		display: flex;
+		align-items: center;
+		margin-bottom: -3px;
+		position: relative;
+		z-index: 4;
 	}
 </style>

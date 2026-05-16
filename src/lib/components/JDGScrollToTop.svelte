@@ -6,6 +6,7 @@
 	import {
 		appAccentColors,
 		isMobileBreakpoint,
+		showNavSidebar,
 		windowScrollPosition
 	} from '$lib/stores/jdg-ui-store.js';
 	import { JDGButton } from '$lib/index.js';
@@ -66,7 +67,7 @@
 	}
 </script>
 
-{#if typeof window !== 'undefined' && $windowScrollPosition > 0}
+{#if typeof window !== 'undefined' && $windowScrollPosition > 0 && !$showNavSidebar}
 	<div
 		class="jdg-scroll-to-top-absolute-container"
 		in:fade={{ duration: jdgDurations.fade }}
