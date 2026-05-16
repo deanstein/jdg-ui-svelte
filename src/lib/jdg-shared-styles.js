@@ -1,6 +1,7 @@
+import { derived } from 'svelte/store';
 import { css } from '@emotion/css';
 import { adjustColorForContrast, convertHexToRGBA } from './jdg-utils.js';
-import { appCssHyperlinkBar, appCssHyperlinkSimple } from './stores/jdg-ui-store.js';
+import { appCssHyperlinkBar, appCssHyperlinkSimple, colorMode } from './stores/jdg-ui-store.js';
 
 export const jdgBreakpoints = {
 	width: [768, 1024],
@@ -57,48 +58,9 @@ export function getThemePalette(mode) {
 	return mode === 'dark' ? darkPalette : lightPalette;
 }
 
-const cssVarNameMap = {
-	text: '--jdg-color-text',
-	textSecondary: '--jdg-color-text-secondary',
-	title: '--jdg-color-title',
-	headerBackground: '--jdg-color-header-background',
-	contentBoxBackground: '--jdg-color-content-box-background',
-	imageLabelBackground: '--jdg-color-image-label-background',
-	inputBackground: '--jdg-color-input-background',
-	activeSubtle: '--jdg-color-active-subtle',
-	backgroundFillRange0: '--jdg-color-bg-fill-0',
-	backgroundFillRange1: '--jdg-color-bg-fill-1',
-	backgroundFillRange2: '--jdg-color-bg-fill-2',
-	timelineEventColorGradient1: '--jdg-color-timeline-gradient-1',
-	timelineEventColorGradient2: '--jdg-color-timeline-gradient-2',
-	timelineEventColorGradient3: '--jdg-color-timeline-gradient-3'
-};
-
-export const jdgCssVars = {
-	text: 'var(--jdg-color-text)',
-	textSecondary: 'var(--jdg-color-text-secondary)',
-	title: 'var(--jdg-color-title)',
-	headerBackground: 'var(--jdg-color-header-background)',
-	contentBoxBackground: 'var(--jdg-color-content-box-background)',
-	imageLabelBackground: 'var(--jdg-color-image-label-background)',
-	inputBackground: 'var(--jdg-color-input-background)',
-	activeSubtle: 'var(--jdg-color-active-subtle)',
-	backgroundFillRange: [
-		'var(--jdg-color-bg-fill-0)',
-		'var(--jdg-color-bg-fill-1)',
-		'var(--jdg-color-bg-fill-2)'
-	],
-	timelineEventColorGradient1: 'var(--jdg-color-timeline-gradient-1)',
-	timelineEventColorGradient2: 'var(--jdg-color-timeline-gradient-2)',
-	timelineEventColorGradient3: 'var(--jdg-color-timeline-gradient-3)'
-};
-
-export function getThemeCssVarDeclarations(mode) {
-	const palette = mode === 'dark' ? darkPalette : lightPalette;
-	return Object.entries(cssVarNameMap)
-		.map(([key, varName]) => `${varName}: ${palette[key]}`)
-		.join('; ');
-}
+export const themeColors = derived(colorMode, ($mode) =>
+	$mode === 'dark' ? darkPalette : lightPalette
+);
 
 export const jdgColors = {
 	/* Mode-independent colors */
@@ -584,7 +546,7 @@ export const setUpdatedHyperlinkStyleBar = (
 	appCssHyperlinkBar.set(css`
 		${jdgLinkStyleBar}
 		a {
-			color: ${jdgCssVars.text};
+			color: ${resolvedTextColor};
 		}
 
 		a.no-initial-highlight::before,

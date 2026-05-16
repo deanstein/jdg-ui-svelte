@@ -1,6 +1,6 @@
 <script>
 	import { css } from '@emotion/css';
-	import { jdgBreakpoints, jdgColors, jdgCssVars, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgColors, jdgSizes, themeColors } from '$lib/jdg-shared-styles.js';
 
 	export let isEnabled = true;
 	export let inputValue = '';
@@ -103,7 +103,7 @@
 	}
 
 	$: inputCss = css`
-		color: ${fontColorOverride ? fontColorOverride : jdgCssVars.text};
+		color: ${fontColorOverride ? fontColorOverride : $themeColors.text};
 		text-align: ${textAlignOverride ? textAlignOverride : 'left'};
 		${fontSizeOverride
 			? `font-size: ${fontSizeOverride};`
@@ -141,9 +141,15 @@
 		:focus:not(:disabled) {
 			border: 2px solid ${jdgColors.active};
 		}
+		&:disabled {
+			background-color: ${$themeColors.inputBackground};
+			border: 2px solid gainsboro;
+		}
 	`;
 
-	const comboboxDropdownCss = css`
+	let comboboxDropdownCss = css``;
+	$: comboboxDropdownCss = css`
+		background: ${$themeColors.inputBackground};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: ${jdgSizes.inputFontSizeMobile};
 		}
@@ -214,8 +220,6 @@
 	}
 
 	input:disabled {
-		background-color: var(--jdg-color-input-background);
-		border: 2px solid gainsboro;
 		-webkit-text-fill-color: inherit;
 		-webkit-opacity: 1;
 		opacity: 1;
@@ -226,7 +230,6 @@
 		top: 100%;
 		left: 0;
 		right: 0;
-		background: var(--jdg-color-input-background);
 		border: 1px solid #ccc;
 		border-radius: 4px;
 		max-height: 200px;

@@ -2,7 +2,7 @@
 	import { css } from '@emotion/css';
 
 	import JDGInputHint from './JDGInputHint.svelte';
-	import { jdgCssVars, jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgSizes, themeColors } from '$lib/jdg-shared-styles.js';
 
 	// Primary label for input component
 	export let label = 'Some Fact or Field Name';
@@ -38,9 +38,9 @@
 		margin-bottom: ${hint ? '' : '0.5svh'};
 	`;
 
-	/* Label: small/medium/large by breakpoint (matches site strategy) */
-	const labelCss = css`
-		color: ${jdgCssVars.text};
+	let labelCss = css``;
+	$: labelCss = css`
+		color: ${$themeColors.text};
 		font-size: inherit;
 	`;
 </script>

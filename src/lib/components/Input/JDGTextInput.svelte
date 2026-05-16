@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { jdgBreakpoints, jdgColors, jdgCssVars, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgColors, jdgSizes, themeColors } from '$lib/jdg-shared-styles.js';
 
 	export let type = 'text';
 	export let isEnabled = true;
@@ -36,6 +36,7 @@
 	$: fieldShellCss = css`
 		border-radius: ${radius};
 		border: 2px solid ${isEnabled ? jdgColors.activeSecondary : 'gainsboro'};
+		background-color: ${$themeColors.inputBackground};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			padding: ${jdgSizes.inputPaddingMobileTablet};
 			min-height: ${jdgSizes.inputMinHeightMobile};
@@ -63,7 +64,7 @@
 	`;
 
 	$: innerInputCss = css`
-		color: ${fontColorOverride ? fontColorOverride : jdgCssVars.text};
+		color: ${fontColorOverride ? fontColorOverride : $themeColors.text};
 		text-align: ${textAlignOverride ? textAlignOverride : 'left'};
 		${fontSizeOverride
 			? `font-size: ${fontSizeOverride};`
@@ -92,7 +93,7 @@
 
 <div
 	class="text-input-shell input-container {fieldShellCss}"
-	style="--jdg-text-input-adornment: {jdgCssVars.text}; --jdg-text-input-focus: {jdgColors.active};"
+	style="--jdg-text-input-adornment: {$themeColors.text}; --jdg-text-input-focus: {jdgColors.active};"
 >
 	{#if hasLeading}
 		<span class="input-leading-icon" aria-hidden="true">
@@ -127,7 +128,6 @@
 		width: 100%;
 		min-width: 0;
 		gap: 0.35rem;
-		background-color: var(--jdg-color-input-background);
 	}
 
 	.text-input-field {

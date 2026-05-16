@@ -14,9 +14,10 @@
 	import {
 		jdgBoxShadowStandard,
 		jdgBreakpoints,
-		jdgCssVars,
+		jdgColors,
 		getThemePalette,
-		jdgSizes
+		jdgSizes,
+		themeColors
 	} from '$lib/jdg-shared-styles.js';
 	import getJdgImageMetaRegistry from '$lib/jdg-image-meta-registry.js';
 
@@ -29,7 +30,7 @@
 	export let showNav = true;
 	export let useMobileNav = false; // force use mobile nav at all breakpoints
 	export let navItems = [];
-	export let textColor = jdgCssVars.text;
+	export let textColor = jdgColors.text;
 	export let backgroundColorRgba = undefined;
 
 	$: palette = getThemePalette($colorMode);
@@ -83,9 +84,11 @@
 		}
 	};
 
-	let headerContainerOuterCss = css`
-		color: ${jdgCssVars.text};
-		z-index: ${incrementHighestZIndex()};
+	const headerZIndex = incrementHighestZIndex();
+	let headerContainerOuterCss = css``;
+	$: headerContainerOuterCss = css`
+		color: ${$themeColors.text};
+		z-index: ${headerZIndex};
 	`;
 
 	let headerContainerInnerCss;
@@ -116,10 +119,11 @@
 		z-index: 2;
 	`;
 
-	const headerLogoSupertitleCss = css`
+	let headerLogoSupertitleCss = css``;
+	$: headerLogoSupertitleCss = css`
 		font-size: ${jdgSizes.fontSizeHeaderSupertitle};
 		text-align: ${logoJustification === 'center' ? 'center' : 'left'};
-		color: ${jdgCssVars.textSecondary};
+		color: ${$themeColors.textSecondary};
 	`;
 
 	const headerLogoTitleCss = css`

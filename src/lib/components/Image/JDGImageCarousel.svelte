@@ -11,7 +11,7 @@
 	} from '$lib/stores/jdg-ui-store.js';
 
 	import { JDGButton, JDGImage, JDGImageCaptionAttribution, JDGImageTile } from '$lib/index.js';
-	import { jdgCssVars } from '$lib/jdg-shared-styles.js';
+	import { themeColors } from '$lib/jdg-shared-styles.js';
 	import { getImageAspectRatioRecord } from '$lib/jdg-state-management.js';
 	import {
 		getMaxElementHeightPx,
@@ -359,9 +359,9 @@
 				{showCaption}
 				{showAttribution}
 				{showDate}
-				backgroundColorRgba={activeImageMeta.showBackgroundBlur
-					? jdgCssVars.imageLabelBackground
-					: 'rgba(0, 0, 0, 0)'}
+			backgroundColorRgba={activeImageMeta.showBackgroundBlur
+				? $themeColors.imageLabelBackground
+				: 'rgba(0, 0, 0, 0)'}
 				maxTextWidthPx={activeImageFittedWidthPx}
 			/>
 		</div>

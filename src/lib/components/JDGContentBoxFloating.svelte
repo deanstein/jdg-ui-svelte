@@ -13,19 +13,20 @@
 		fadeInSettleBeforeLg,
 		fadeInSettleAfter,
 		jdgBreakpoints,
-		jdgCssVars,
+		jdgColors,
 		jdgDurations,
 		jdgSizes,
-		jdgBoxShadowStandard
+		jdgBoxShadowStandard,
+		themeColors
 	} from '$lib/jdg-shared-styles.js';
 	import { JDGAnchorTag } from '$lib/index.js';
 
 	export let title = undefined;
 	export let titleFontFamily = $appFontFamily;
-	export let titleColor = jdgCssVars.title;
+	export let titleColor = jdgColors.title;
 	export let subtitle = undefined;
 	export let subtitleFontFamily = $appFontFamily;
-	export let subtitleColor = jdgCssVars.textSecondary;
+	export let subtitleColor = jdgColors.textSecondary;
 	export let anchorTag = convertStringToAnchorTag(title, false);
 	export let paddingTop = '2rem';
 	export let paddingBottom = '2rem';
@@ -50,11 +51,12 @@
 		color: ${subtitleColor};
 	`;
 
-	const floatingBoxContentCss = css`
+	let floatingBoxContentCss = css``;
+	$: floatingBoxContentCss = css`
 		gap: ${jdgSizes.contentBoxPaddingLg};
 		margin-left: ${jdgSizes.contentBoxFloatingMarginLg};
 		margin-right: ${jdgSizes.contentBoxFloatingMarginLg};
-		background-color: ${jdgCssVars.contentBoxBackground};
+		background-color: ${$themeColors.contentBoxBackground};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			padding: ${paddingTop} ${jdgSizes.contentBoxPaddingSm} ${paddingBottom}
 				${jdgSizes.contentBoxPaddingSm};

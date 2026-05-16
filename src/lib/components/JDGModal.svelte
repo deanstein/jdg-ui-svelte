@@ -4,7 +4,7 @@
 	import { colorMode, isMobileBreakpoint, carouselHintHeightPx } from '$lib/stores/jdg-ui-store.js';
 	import { setRgbaAlpha } from '$lib/jdg-utils.js';
 
-	import { jdgCssVars, jdgSizes, jdgBreakpoints, getThemePalette } from '$lib/index.js';
+	import { jdgSizes, jdgBreakpoints, getThemePalette, themeColors } from '$lib/index.js';
 	import { JDGOverlay, JDGRandomGradient } from '$lib/index.js';
 
 	export let onClickCloseButton = undefined;
@@ -82,13 +82,14 @@
 		padding: ${padding};
 	`;
 
-	const modalTitleBarContainerCss = css`
-		background-color: ${jdgCssVars.headerBackground};
+	let modalTitleBarContainerCss = css``;
+	$: modalTitleBarContainerCss = css`
+		background-color: ${$themeColors.headerBackground};
 	`;
 
-	/* Title: small/medium/large by breakpoint, slightly bigger than body (site strategy) */
-	const modalTitleCss = css`
-		color: ${jdgCssVars.title};
+	let modalTitleCss = css``;
+	$: modalTitleCss = css`
+		color: ${$themeColors.title};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: 1.1rem;
 		}
@@ -102,9 +103,9 @@
 		}
 	`;
 
-	/* Subtitle: same breakpoint strategy, one step down from title */
-	const modalSubtitleCss = css`
-		color: ${jdgCssVars.text};
+	let modalSubtitleCss = css``;
+	$: modalSubtitleCss = css`
+		color: ${$themeColors.text};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: 0.9rem;
 		}

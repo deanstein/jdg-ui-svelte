@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { jdgColors, jdgCssVars } from '$lib/jdg-shared-styles.js';
+	import { jdgColors, themeColors } from '$lib/jdg-shared-styles.js';
 
 	export let value = 0;
 	export let min = 0;
@@ -21,9 +21,10 @@
 	let uniqueId = `slider-${Math.random().toString(36).substr(2, 9)}`;
 	$: effectiveId = sliderId || uniqueId;
 
-	let sliderLabelCss = css`
+	let sliderLabelCss = css``;
+	$: sliderLabelCss = css`
 		font-size: ${labelFontSize};
-		color: ${jdgCssVars.text};
+		color: ${$themeColors.text};
 		font-weight: 500;
 	`;
 

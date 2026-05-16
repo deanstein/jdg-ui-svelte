@@ -1,6 +1,6 @@
 <script>
 	import { css } from '@emotion/css';
-	import { jdgCssVars } from '$lib/jdg-shared-styles.js';
+	import { themeColors } from '$lib/jdg-shared-styles.js';
 
 	// Optional hint text
 	export let hint = undefined;
@@ -8,8 +8,9 @@
 	// Justification for hint text alignment
 	export let justification = 'left';
 
-	const descriptionCss = css`
-		color: ${jdgCssVars.textSecondary};
+	let descriptionCss = css``;
+	$: descriptionCss = css`
+		color: ${$themeColors.textSecondary};
 		text-align: ${justification};
 	`;
 </script>

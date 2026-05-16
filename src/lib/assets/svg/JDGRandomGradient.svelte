@@ -2,24 +2,24 @@
 	import { onMount } from 'svelte';
 	import * as d3 from 'd3';
 
-	import { jdgCssVars } from '$lib/jdg-shared-styles.js';
+	import { themeColors } from '$lib/jdg-shared-styles.js';
 	import { getAccentColors } from '$lib/jdg-state-management.js';
 
 	export let numberOfPoints = 3;
 	export let edgeBufferRatio = 0.05; // points will be this far away from screen edges (ratio of total width or height)
 	export let drawDebugBorders = false;
 	export let borderColorsHex = ['#C3C3C3FF']; // only used if drawBorders is true
-	// Optional custom colors - if provided, these override the default jdgColors
+	// Optional custom colors - if provided, these override the default themeColors
 	export let color1 = undefined;
 	export let color2 = undefined;
 	export let color3 = undefined;
 
 	let gradientStyle = '';
 	let borderElements = [];
+	let points = [];
 
 	onMount(() => {
-		// generate evenly-distributed random points (as percentages)
-		let points = d3.range(numberOfPoints).map(() => {
+		points = d3.range(numberOfPoints).map(() => {
 			const widthBuffer = edgeBufferRatio * 100;
 			const heightBuffer = edgeBufferRatio * 100;
 			return {
@@ -28,55 +28,41 @@
 			};
 		});
 
-		// Define the three base colors - use custom colors if provided, otherwise use defaults
-		const baseColor1 = color1 || jdgCssVars.backgroundFillRange[0];
-		const baseColor2 = color2 || jdgCssVars.backgroundFillRange[1];
-		const baseColor3 = color3 || jdgCssVars.backgroundFillRange[2];
-		const baseColors = [baseColor1, baseColor2, baseColor3];
-
 		if (drawDebugBorders) {
 			borderColorsHex ?? getAccentColors();
-		}
-
-		// Create CSS gradient layers similar to generateEventGradient
-		const gradientLayers = [];
-
-		points.forEach((point, index) => {
-			// Assign one of the 3 base colors to each point
-			// Distribute evenly: point 0 gets color1, point 1 gets color2, point 2 gets color3, etc.
-			const colorIndex = index % baseColors.length;
-			const color = baseColors[colorIndex];
-
-			// Create radial gradient with varying sizes
-			const minStop = 20;
-			const maxStop = 45;
-			const stopStep = (maxStop - minStop) / Math.max(1, points.length - 1);
-			const centerStop = minStop + index * stopStep;
-			const fadeStop = centerStop + 30;
-
-			// Create gradient that fades from color to transparent
-			gradientLayers.push(
-				`radial-gradient(circle at ${point.x}% ${point.y}%, ${color} 0%, ${color} ${centerStop}%, transparent ${fadeStop}%)`
-			);
-		});
-
-		// Add base color as the bottom layer (background)
-		// Use the middle color (color2) as the base background
-		const baseColor = baseColor2;
-		gradientLayers.push(baseColor);
-
-		// Create the CSS background string
-		gradientStyle = gradientLayers.join(', ');
-
-		// Store border elements if needed
-		if (drawDebugBorders) {
-			borderElements = points.map((point, index) => ({
+			borderElements = points.map((point) => ({
 				x: point.x,
 				y: point.y,
 				color: borderColorsHex[Math.floor(Math.random() * borderColorsHex.length)]
 			}));
 		}
 	});
+
+	$: if (points.length > 0) {
+		const baseColor1 = color1 || $themeColors.backgroundFillRange0;
+		const baseColor2 = color2 || $themeColors.backgroundFillRange1;
+		const baseColor3 = color3 || $themeColors.backgroundFillRange2;
+		const baseColors = [baseColor1, baseColor2, baseColor3];
+
+		const gradientLayers = [];
+		points.forEach((point, index) => {
+			const colorIndex = index % baseColors.length;
+			const c = baseColors[colorIndex];
+
+			const minStop = 20;
+			const maxStop = 45;
+			const stopStep = (maxStop - minStop) / Math.max(1, points.length - 1);
+			const centerStop = minStop + index * stopStep;
+			const fadeStop = centerStop + 30;
+
+			gradientLayers.push(
+				`radial-gradient(circle at ${point.x}% ${point.y}%, ${c} 0%, ${c} ${centerStop}%, transparent ${fadeStop}%)`
+			);
+		});
+
+		gradientLayers.push(baseColor2);
+		gradientStyle = gradientLayers.join(', ');
+	}
 </script>
 
 <div class="jdg-random-gradient" style="background: {gradientStyle};">
