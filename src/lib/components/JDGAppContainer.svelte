@@ -374,8 +374,7 @@
 		overflow-x: clip;
 	}
 
-	.jdg-app-container,
-	.jdg-app-container :global(*) {
+	:global(:where(.jdg-app-container, .jdg-app-container *)) {
 		transition:
 			color 0.3s ease,
 			background-color 0.3s ease,
