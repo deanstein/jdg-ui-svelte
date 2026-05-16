@@ -66,7 +66,10 @@
 	let clipFadeGradientCss;
 	$: {
 		const fadeColor = $themeColors.headerBackground;
-		const hoverFadeColor = lightenColor(hoverColor, $colorMode === 'dark' ? 0.3 : hoverColorLightenFactor);
+		const hoverFadeColor = lightenColor(
+			hoverColor,
+			$colorMode === 'dark' ? 0.3 : hoverColorLightenFactor
+		);
 		clipFadeGradientCss = css`
 			background: linear-gradient(to top, ${fadeColor} ${`${textDivHeight}px`}, transparent 200px);
 			:hover {

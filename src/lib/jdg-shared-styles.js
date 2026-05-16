@@ -570,11 +570,7 @@ export const setUpdatedHyperlinkStyleBar = (
 				: `${adjustColorForContrast(linkColor, resolvedTextColor, barContrastAdjustment)}`};
 		}
 		a:before {
-			background: ${adjustColorForContrast(
-				linkColor,
-				resolvedTextColor,
-				barContrastAdjustment
-			)};
+			background: ${adjustColorForContrast(linkColor, resolvedTextColor, barContrastAdjustment)};
 		}
 	`);
 };
