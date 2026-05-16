@@ -1,5 +1,5 @@
 <script>
-	import { afterUpdate } from 'svelte';
+	import { onMount, afterUpdate } from 'svelte';
 	import { css } from '@emotion/css';
 
 	import { jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
@@ -12,6 +12,7 @@
 	export let forceMaxColumns = false;
 	// if not defined, uses breakpoint definitions below
 	export let gap = undefined;
+	export let shuffleContentOrder = false;
 
 	// used for determining number of children passed into slot
 	let gridLayoutContainer;
@@ -59,6 +60,17 @@
 			(jdgSizes.nContentBoxPaddingLg / 2).toString() + jdgSizes.contentBoxPaddingUnit};
 		}
 	`;
+
+	onMount(() => {
+		if (shuffleContentOrder && gridLayoutContainer) {
+			const children = Array.from(gridLayoutContainer.children);
+			for (let i = children.length - 1; i > 0; i--) {
+				const j = Math.floor(Math.random() * (i + 1));
+				gridLayoutContainer.appendChild(children[j]);
+				children[j] = children[i];
+			}
+		}
+	});
 
 	afterUpdate(() => {
 		const items = gridLayoutContainer.children;

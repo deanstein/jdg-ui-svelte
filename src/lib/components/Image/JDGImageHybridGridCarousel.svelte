@@ -1,5 +1,6 @@
 <script>
 	import { isMobileBreakpoint } from '$lib/stores/jdg-ui-store.js';
+	import { shuffleArray } from '$lib/jdg-utils.js';
 
 	import {
 		JDGFullWidthContainer,
@@ -21,6 +22,9 @@
 	// image + grid layout props
 	export let useAutoHeightOnMobile = true;
 	export let maxColumns = 3;
+	export let shuffleContentOrder = false;
+
+	$: effectiveImageMetaSet = shuffleContentOrder ? shuffleArray(imageMetaSet) : imageMetaSet;
 </script>
 
 <div class="jdg-hybrid-image-grid-carousel-container">
@@ -29,15 +33,25 @@
 		<!-- carousel can be full-width or not -->
 		{#if fullWidthCarouselOnMobile}
 			<JDGFullWidthContainer>
-				<JDGImageCarousel {imageMetaSet} {showCaption} {showAttribution} {showDate} />
+				<JDGImageCarousel
+					imageMetaSet={effectiveImageMetaSet}
+					{showCaption}
+					{showAttribution}
+					{showDate}
+				/>
 			</JDGFullWidthContainer>
 		{:else}
-			<JDGImageCarousel {imageMetaSet} {showCaption} {showAttribution} {showDate} />
+			<JDGImageCarousel
+				imageMetaSet={effectiveImageMetaSet}
+				{showCaption}
+				{showAttribution}
+				{showDate}
+			/>
 		{/if}
 		<!-- all other breakpoints use the grid layout with image tiles -->
 	{:else}
 		<JDGGridLayout {maxColumns}>
-			{#each imageMetaSet as imageMeta, i}
+			{#each effectiveImageMetaSet as imageMeta, i}
 				<JDGImageTile
 					{imageMeta}
 					{objectPosition}

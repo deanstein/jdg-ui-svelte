@@ -659,9 +659,9 @@
 		<JDGBodyCopy paddingBottom="0" textAlign="center">
 			<b>3+ ITEMS</b>
 			<br />
-			compactModeOnMobile false:</JDGBodyCopy
+			compactModeOnMobile false, shuffled:</JDGBodyCopy
 		>
-		<JDGGridLayout>
+		<JDGGridLayout shuffleContentOrder={true}>
 			<JDGImageTile
 				imageMeta={imageMetaRegistry.aerial_60s70s_1}
 				useAutoHeightOnMobile={false}
