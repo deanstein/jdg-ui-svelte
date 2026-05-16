@@ -359,9 +359,9 @@
 				{showCaption}
 				{showAttribution}
 				{showDate}
-			backgroundColorRgba={activeImageMeta.showBackgroundBlur
-				? $themeColors.imageLabelBackground
-				: 'rgba(0, 0, 0, 0)'}
+				backgroundColorRgba={activeImageMeta.showBackgroundBlur
+					? $themeColors.imageLabelBackground
+					: 'rgba(0, 0, 0, 0)'}
 				maxTextWidthPx={activeImageFittedWidthPx}
 			/>
 		</div>
