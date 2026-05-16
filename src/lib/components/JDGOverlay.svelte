@@ -8,9 +8,9 @@
 	import { getHighestZIndex } from '$lib/jdg-state-management.js';
 
 	import { JDGCloseIcon } from '$lib/index.js';
-	import { jdgBreakpoints, jdgColors, jdgDurations, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgCssVars, jdgDurations, jdgSizes } from '$lib/jdg-shared-styles.js';
 
-	export let colorRgba = 'rgba(255, 255, 255, 1.0)';
+	export let colorRgba = jdgCssVars.headerBackground;
 	export let showTitleBar = true;
 	export let onCloseFunction = () => {};
 	export let closeOnOverlayClick = true;
@@ -72,7 +72,7 @@
 		padding-right: ${jdgSizes.headerSidePadding};
 		padding-top: ${jdgSizes.headerTopBottomPadding};
 		padding-bottom: ${jdgSizes.headerTopBottomPadding};
-		background-color: ${jdgColors.headerBackground};
+		background-color: ${jdgCssVars.headerBackground};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			height: ${jdgSizes.headerHeightSm};
 		}

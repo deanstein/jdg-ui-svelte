@@ -57,6 +57,7 @@
 
 <style>
 	.bar {
+		fill: currentColor;
 		transition: all 0.3s ease-in-out;
 		will-change: transform;
 	}

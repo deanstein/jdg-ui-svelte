@@ -8,7 +8,7 @@
 	export let featureTitle = undefined;
 	export let featureDescription;
 	export let titleFontFamily = $appFontFamily;
-	export let descriptionTextColor = jdgColors.textDm;
+	export let descriptionTextColor = jdgColors.textOnDark;
 	export let descriptionTextFontFamily = $appFontFamily;
 	export let nDescriptionTextSizeMultiplier = 1.25; // factor of body copy size
 	export let backgroundColor = $appAccentColors[0];

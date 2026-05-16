@@ -13,7 +13,7 @@
 		fadeInSettleBeforeLg,
 		fadeInSettleAfter,
 		jdgBreakpoints,
-		jdgColors,
+		jdgCssVars,
 		jdgDurations,
 		jdgSizes,
 		jdgBoxShadowStandard
@@ -22,10 +22,10 @@
 
 	export let title = undefined;
 	export let titleFontFamily = $appFontFamily;
-	export let titleColor = jdgColors.title;
+	export let titleColor = jdgCssVars.title;
 	export let subtitle = undefined;
 	export let subtitleFontFamily = $appFontFamily;
-	export let subtitleColor = jdgColors.textLight;
+	export let subtitleColor = jdgCssVars.textSecondary;
 	export let anchorTag = convertStringToAnchorTag(title, false);
 	export let paddingTop = '2rem';
 	export let paddingBottom = '2rem';
@@ -54,7 +54,7 @@
 		gap: ${jdgSizes.contentBoxPaddingLg};
 		margin-left: ${jdgSizes.contentBoxFloatingMarginLg};
 		margin-right: ${jdgSizes.contentBoxFloatingMarginLg};
-		background-color: ${jdgColors.contentBoxBackground};
+		background-color: ${jdgCssVars.contentBoxBackground};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			padding: ${paddingTop} ${jdgSizes.contentBoxPaddingSm} ${paddingBottom}
 				${jdgSizes.contentBoxPaddingSm};

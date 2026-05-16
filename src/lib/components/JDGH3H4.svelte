@@ -5,7 +5,7 @@
 	import { convertStringToAnchorTag } from '$lib/jdg-utils.js';
 
 	import { JDGAnchorTag } from '$lib/index.js';
-	import { jdgColors } from '$lib/jdg-shared-styles.js';
+	import { jdgCssVars } from '$lib/jdg-shared-styles.js';
 
 	export let h3String = undefined;
 	export let h3Id = undefined; // optionally specify a different id than the string
@@ -20,13 +20,13 @@
 	`;
 
 	const h3Css = css`
-		color: ${jdgColors.title};
+		color: ${jdgCssVars.title};
 	`;
 
 	// h4 gets top margin when h3 is present
 	const h4Css = css`
 		margin: ${h3String ? '10px' : '0'} 0 0 0;
-		color: ${jdgColors.textLight};
+		color: ${jdgCssVars.textSecondary};
 	`;
 </script>
 

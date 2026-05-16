@@ -6,7 +6,7 @@
 	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
 
 	import { JDGButton, JDGImageRegistryGallery, JDGNotificationBanner } from '$lib/index.js';
-	import { jdgColors } from '$lib/jdg-shared-styles.js';
+	import { jdgColors, jdgCssVars } from '$lib/jdg-shared-styles.js';
 
 	// The selected images array - bind to this from parent
 	export let selectedImages = [];
@@ -74,7 +74,7 @@
 
 	const infoCss = css`
 		font-size: 14px;
-		color: ${jdgColors.textLight};
+		color: ${jdgCssVars.textSecondary};
 	`;
 </script>
 

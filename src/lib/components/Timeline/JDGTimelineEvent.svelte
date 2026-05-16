@@ -25,7 +25,7 @@
 	import { getTimelineEventDateDisplayMode } from '$lib/jdg-utils.js';
 
 	import { JDGButton, JDGImageThumbnailGroup, JDGRandomGradient } from '$lib/index.js';
-	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgColors, jdgCssVars, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let timelineHost;
 	export let timelineEvent;
@@ -142,7 +142,7 @@
 	`;
 
 	const eventDateCss = css`
-		color: ${jdgColors.text};
+		color: ${jdgCssVars.text};
 		border-radius: ${dateBorderRadius} ${dateBorderRadius} 0 0;
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: 0.8rem;
@@ -161,7 +161,7 @@
 	`;
 
 	const eventYearCss = css`
-		color: ${jdgColors.text};
+		color: ${jdgCssVars.text};
 		border-radius: 0 0 ${dateBorderRadius} ${dateBorderRadius};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: 1.1rem;
@@ -210,7 +210,7 @@
 
 	const eventNodeCss = css`
 		height: ${jdgSizes.timelineEventNodeSize};
-		background-color: ${jdgColors.textLight};
+		background-color: ${jdgCssVars.textSecondary};
 		/* Center node on spine: offset by half the difference between node and spine width */
 		margin-left: ${-((jdgSizes.nTimelineEventNodeSize - jdgSizes.nTimelineSpineWidth) / 2) +
 		jdgSizes.timelineUnit};
@@ -218,7 +218,7 @@
 
 	const eventLineCss = css`
 		height: ${jdgSizes.nTimelineEventNodeSize / 3 + jdgSizes.timelineUnit};
-		background-color: ${jdgColors.textLight};
+		background-color: ${jdgCssVars.textSecondary};
 	`;
 
 	const eventTitleBarCss = css`
@@ -227,7 +227,7 @@
 	`;
 
 	const eventFaIconCss = css`
-		color: ${jdgColors.text};
+		color: ${jdgCssVars.text};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: 0.8rem;
 		}
@@ -242,7 +242,7 @@
 	`;
 
 	const eventAgeCss = css`
-		color: ${jdgColors.text};
+		color: ${jdgCssVars.text};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: 0.7rem;
 		}
@@ -284,7 +284,7 @@
 			eventTitleBarGradientCss = css`
 				background-color: ${gradientColor1
 					? darkenColor(gradientColor1, 0.05)
-					: jdgColors.activeSubtle};
+					: jdgCssVars.activeSubtle};
 				border-radius: ${eventBorderRadius} ${eventBorderRadius} 0px 0px;
 			`;
 		}
@@ -477,13 +477,13 @@
 									onClickEventRefHost();
 								}}
 								faIcon={'fa-circle-arrow-right'}
-								backgroundColor={jdgColors.activeSubtle}
-								paddingLeftRight="8px"
-								paddingTopBottom="2px"
-								fontSize="12px"
-								gap="6px"
-								label={eventReference?.name}
-								tooltip={'Go to ' + eventReference?.name}
+							backgroundColor={jdgCssVars.activeSubtle}
+							paddingLeftRight="8px"
+							paddingTopBottom="2px"
+							fontSize="12px"
+							gap="6px"
+							label={eventReference?.name}
+							tooltip={'Go to ' + eventReference?.name}
 							/>
 						</div>
 					</div>
@@ -519,7 +519,7 @@
 								onClickEventRefHost(timelineHost.id);
 							}}
 							faIcon={timelineEventTypes.childBirth.icon}
-							backgroundColor={jdgColors.activeSubtle}
+							backgroundColor={jdgCssVars.activeSubtle}
 							paddingLeftRight="8px"
 							paddingTopBottom="2px"
 							fontSize="12px"
@@ -536,7 +536,7 @@
 								onClickEventRefHost(timelineHost.id);
 							}}
 							faIcon={timelineEventTypes.parentDeath.icon}
-							backgroundColor={jdgColors.activeSubtle}
+							backgroundColor={jdgCssVars.activeSubtle}
 							paddingLeftRight="8px"
 							paddingTopBottom="2px"
 							fontSize="12px"

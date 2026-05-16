@@ -27,8 +27,8 @@
 	export let isEnabled = true;
 	export let isPrimary = true;
 	export let onClickFunction;
-	export let textColor = jdgColors.textDm;
-	export let textColorHover = jdgColors.textDm;
+	export let textColor = jdgColors.textOnDark;
+	export let textColorHover = jdgColors.textOnDark;
 	export let backgroundColor = undefined;
 	export let doAdjustBackgroundColorForContrast = true;
 	export let contrastRatio = 2;

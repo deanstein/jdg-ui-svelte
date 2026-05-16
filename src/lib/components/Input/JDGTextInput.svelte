@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgColors, jdgCssVars, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let type = 'text';
 	export let isEnabled = true;
@@ -63,7 +63,7 @@
 	`;
 
 	$: innerInputCss = css`
-		color: ${fontColorOverride ? fontColorOverride : jdgColors.text};
+		color: ${fontColorOverride ? fontColorOverride : jdgCssVars.text};
 		text-align: ${textAlignOverride ? textAlignOverride : 'left'};
 		${fontSizeOverride
 			? `font-size: ${fontSizeOverride};`
@@ -92,7 +92,7 @@
 
 <div
 	class="text-input-shell input-container {fieldShellCss}"
-	style="--jdg-text-input-adornment: {jdgColors.text}; --jdg-text-input-focus: {jdgColors.active};"
+	style="--jdg-text-input-adornment: {jdgCssVars.text}; --jdg-text-input-focus: {jdgColors.active};"
 >
 	{#if hasLeading}
 		<span class="input-leading-icon" aria-hidden="true">
@@ -127,7 +127,7 @@
 		width: 100%;
 		min-width: 0;
 		gap: 0.35rem;
-		background-color: white;
+		background-color: var(--jdg-color-input-background);
 	}
 
 	.text-input-field {

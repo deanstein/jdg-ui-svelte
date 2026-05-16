@@ -2,7 +2,7 @@
 	import { css } from '@emotion/css';
 	import { onMount } from 'svelte';
 
-	import { clientWidth } from '$lib/stores/jdg-ui-store.js';
+	import { clientWidth, colorMode } from '$lib/stores/jdg-ui-store.js';
 	import { getFullTextWidth } from '$lib/jdg-ui-management.js';
 	import {
 		getMaxElementWidthPx,
@@ -11,7 +11,15 @@
 	} from '$lib/jdg-utils.js';
 
 	import { JDGButton } from '$lib/index.js';
-	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import {
+		jdgBreakpoints,
+		jdgColors,
+		jdgCssVars,
+		getThemePalette,
+		jdgSizes
+	} from '$lib/jdg-shared-styles.js';
+
+	$: palette = getThemePalette($colorMode);
 
 	export let imageMeta;
 	export let showCaption = true;
@@ -20,7 +28,7 @@
 	export let truncateText = true;
 	export let matchBodyCopyPadding = false; // if true, uses same padding as body copy (for full-width use only)
 	export let maxTextWidthPx = undefined; // useful for cases where caption/attribution is outside image but must match image width
-	export let backgroundColorRgba = jdgColors.imageLabelBackground;
+	export let backgroundColorRgba = jdgCssVars.imageLabelBackground;
 
 	let availableWidthRef; // element to determine available space for caption
 	let availableWidth = 0; // final available width - updated after loading
@@ -78,7 +86,7 @@
 		: '';
 
 	const captionAttributionContainerCss = css`
-		color: ${jdgColors.text};
+		color: ${jdgCssVars.text};
 		backdrop-filter: ${backgroundColorRgba !== 'rgba(0, 0, 0, 0)'
 			? `blur(${jdgSizes.blurSizeSmall})`
 			: ''};
@@ -272,7 +280,7 @@
 							toggleCaptionTruncation();
 						}}
 						textColor={jdgColors.active}
-						backgroundColor={setRgbaAlpha(jdgColors.headerBackground, 0.2)}
+						backgroundColor={setRgbaAlpha(palette.headerBackground, 0.2)}
 						backgroundColorHover={jdgColors.active}
 						paddingLeftRight="5px"
 						paddingTopBottom="3px"

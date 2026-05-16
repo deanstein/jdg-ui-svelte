@@ -1,13 +1,13 @@
 <script>
 	import { css } from '@emotion/css';
-	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgColors, jdgCssVars, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let isEnabled = true;
 	export let inputValue = undefined;
 	export let onInputFunction = undefined;
 
 	$: datePickerCss = css`
-		color: ${jdgColors.text};
+		color: ${jdgCssVars.text};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: ${jdgSizes.inputFontSizeMobile};
 			padding: ${jdgSizes.inputPaddingMobileTablet};
@@ -59,7 +59,7 @@
 	}
 
 	input:disabled {
-		background-color: white;
+		background-color: var(--jdg-color-input-background);
 		border: 2px solid gainsboro;
 	}
 </style>

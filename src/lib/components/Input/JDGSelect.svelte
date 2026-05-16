@@ -87,13 +87,13 @@
 
 	select:disabled {
 		opacity: 1;
-		background-color: white;
+		background-color: var(--jdg-color-input-background);
 		-webkit-appearance: none;
 		-moz-appearance: none;
 		appearance: none;
 	}
 
 	.select {
-		background-color: white;
+		background-color: var(--jdg-color-input-background);
 	}
 </style>

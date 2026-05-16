@@ -21,6 +21,7 @@
 	} from '$lib/stores/jdg-temp-store.js';
 	import { get } from 'svelte/store';
 	import {
+		colorMode,
 		imageViewerMeta,
 		isAdminMode,
 		isDesktopBreakpoint,
@@ -72,9 +73,11 @@
 	import {
 		jdgBreakpoints,
 		jdgColors,
+		jdgCssVars,
 		jdgDurations,
 		jdgQuantities,
-		jdgSizes
+		jdgSizes,
+		getThemePalette
 	} from '$lib/jdg-shared-styles.js';
 
 	// Timeline host contains events and event references.
@@ -115,6 +118,8 @@
 	export let decadeHeadingJustify = 'center';
 	// When true, auto-generate media events from registry images that have valid dates
 	export let showRegistryImages = false;
+
+	$: palette = getThemePalette($colorMode);
 
 	// Effective preview mode (from parent props; controls overlay and open-in-modal behavior)
 	$: effectivePreviewOnly = previewMode || (previewModeTouch && !$isDesktopBreakpoint);
@@ -849,7 +854,7 @@
 	const eventTypeFilterLabelCss = css`
 		font-size: 14px;
 		line-height: normal;
-		color: ${jdgColors.text};
+		color: ${jdgCssVars.text};
 	`;
 
 	const decadeHeadingPaletteKeys = {
@@ -911,7 +916,7 @@
 		Array.isArray(decadeHeadingPaletteTriple) &&
 		decadeHeadingPaletteTriple.length >= 3
 			? lightenColor(decadeHeadingPaletteTriple[2], 0.48)
-			: lightenColor(jdgColors.textLight, 0.35);
+			: lightenColor(palette.textSecondary, 0.35);
 
 	let timelineDecadeLabelCss = css``;
 	$: {
@@ -1182,9 +1187,9 @@
 			timelineRowItems.length +
 				(emptyStateEvent ? 1 : 0) +
 				(todayEvent ? 2 : 0) /* account for inception and today */,
-			jdgColors.timelineEventColorGradient1,
-			jdgColors.timelineEventColorGradient2,
-			jdgColors.timelineEventColorGradient3
+			palette.timelineEventColorGradient1,
+			palette.timelineEventColorGradient2,
+			palette.timelineEventColorGradient3
 		);
 	}
 
@@ -1309,7 +1314,7 @@
 	{#if showLoadingOverlay}
 		<div class="timeline-loading-overlay" aria-busy="true" aria-label="Loading timeline">
 			<div class="timeline-loading-content">
-				<JDGLoadingSpinner strokeColor={jdgColors.text} spinnerHeightPx={40} strokeWidthPx={3} />
+				<JDGLoadingSpinner strokeColor={jdgCssVars.text} spinnerHeightPx={40} strokeWidthPx={3} />
 				<span class="timeline-loading-text">Loading…</span>
 			</div>
 		</div>

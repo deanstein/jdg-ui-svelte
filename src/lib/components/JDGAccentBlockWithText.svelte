@@ -16,7 +16,7 @@
 	export let secondaryText = undefined;
 	export let secondaryTextFontFamily = $appFontFamily;
 	export let secondaryTextBold = false;
-	export let textColor = jdgColors.textDm;
+	export let textColor = jdgColors.textOnDark;
 	// pass-through all the props from accent block
 	export let backgroundColor = $appAccentColors[0];
 </script>

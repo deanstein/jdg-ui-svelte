@@ -16,6 +16,8 @@
 		appFontFamily,
 		clientWidth,
 		allowTextSelection as allowTextSelectionStore,
+		colorModeSetting as colorModeSettingStore,
+		colorMode as colorModeStore,
 		showAdminLoginModal,
 		showDevModal,
 		showDevToolbarSticky,
@@ -63,7 +65,10 @@
 		setUpdatedHyperlinkStyleSimple,
 		jdgBreakpoints,
 		jdgColors,
+		jdgCssVars,
 		jdgFonts,
+		getThemeCssVarDeclarations,
+		getThemePalette,
 		setUpdatedHyperlinkStyleBar
 	} from '$lib/jdg-shared-styles.js';
 
@@ -90,6 +95,8 @@
 	export let allowTextSelection = false;
 	export let showMaintenanceOverlay = false;
 	export let maintenanceMessage = "We're making some updates. Try again shortly.";
+	// 'auto' follows OS preference; 'light'/'dark' forces a specific mode
+	export let colorMode = 'auto';
 
 	// flag to show a loading overlay before app is loaded
 	// to prevent flash of unstyled content
@@ -112,6 +119,19 @@
 	// track last known width to avoid unnecessary updates on iOS
 	// (iOS fires resize when action bar shows/hides, but only height changes)
 	let lastKnownWidth = 0;
+
+	let resolvedColorMode = 'light';
+	let darkModeMediaQuery;
+
+	function resolveColorMode() {
+		if (colorMode === 'auto') {
+			resolvedColorMode = darkModeMediaQuery?.matches ? 'dark' : 'light';
+		} else {
+			resolvedColorMode = colorMode;
+		}
+		colorModeSettingStore.set(colorMode);
+		colorModeStore.set(resolvedColorMode);
+	}
 
 	// app sets window and client width in the ui state
 	// so children don't have to add event handlers
@@ -166,10 +186,10 @@
 			border: none;
 			height: 1px;
 			width: 100%;
-			background-color: ${jdgColors.text};
+			background-color: ${jdgCssVars.text};
 		}
 
-		color: ${jdgColors.text};
+		color: ${jdgCssVars.text};
 		font-family: ${fontFamily};
 	`;
 
@@ -190,15 +210,22 @@
 		appAccentColors.set(accentColors);
 		showHeaderStripesStore.set(showHeaderStripes);
 
-		// Update shared style states
+		// Set up color mode detection
+		darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+		darkModeMediaQuery.addEventListener('change', resolveColorMode);
+		resolveColorMode();
+
+		// Update shared style states with resolved palette
+		const palette = getThemePalette(resolvedColorMode);
 		setUpdatedHyperlinkStyleBar(
 			linkColorDefault,
 			linkColorContrastAdjustment,
 			accentColors,
 			useStripedHyperlinkHoverStyle,
-			stripedColorOpacity
+			stripedColorOpacity,
+			palette.text
 		);
-		setUpdatedHyperlinkStyleSimple(linkColorSimple);
+		setUpdatedHyperlinkStyleSimple(linkColorSimple, palette.contentBoxBackground);
 
 		isAppLoaded = true;
 
@@ -248,6 +275,21 @@
 			`}
 		`;
 	}
+
+	$: themeCssVarStyle = getThemeCssVarDeclarations(resolvedColorMode);
+
+	$: if (isAppLoaded && resolvedColorMode) {
+		const palette = getThemePalette(resolvedColorMode);
+		setUpdatedHyperlinkStyleBar(
+			linkColorDefault,
+			linkColorContrastAdjustment,
+			accentColors,
+			useStripedHyperlinkHoverStyle,
+			stripedColorOpacity,
+			palette.text
+		);
+		setUpdatedHyperlinkStyleSimple(linkColorSimple, palette.contentBoxBackground);
+	}
 </script>
 
 <!-- set up directives for event listeners -->
@@ -255,6 +297,7 @@
 
 <div
 	class="jdg-app-container {appContainerCss} {appContainerCssDynamic} {$appCssHyperlinkBar}"
+	style={themeCssVarStyle}
 	bind:this={appContainerRef}
 >
 	<!-- ALL CONTENT GOES HERE AFTER APP IS LOADED -->

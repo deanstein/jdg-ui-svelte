@@ -288,7 +288,7 @@
 		min-height: 0;
 		width: 100%;
 	}
-	/* hint: color/font/breakpoint match jdgColors.textLight, jdgSizes.fontSizeBodyXSm, jdgBreakpoints.width[0] */
+	/* hint: color/font/breakpoint match jdgCssVars.textSecondary, jdgSizes.fontSizeBodyXSm, jdgBreakpoints.width[0] */
 	.jdg-overlay-carousel-hint {
 		flex-shrink: 0;
 		width: 100%;
