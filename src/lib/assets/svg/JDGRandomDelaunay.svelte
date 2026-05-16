@@ -1,6 +1,5 @@
 <script>
 	import { onMount } from 'svelte';
-	import { get } from 'svelte/store';
 	import * as d3 from 'd3';
 	import { Delaunay } from 'd3-delaunay';
 
@@ -16,15 +15,14 @@
 	export let heightMultiplier = 1;
 
 	let containerRef;
-	let hasMounted = false;
 
-	function drawDelaunay() {
+	function drawDelaunay(mode) {
 		if (!containerRef) return;
 
-		d3.select(containerRef).selectAll('svg').remove();
+		d3.select(containerRef).selectAll('*').remove();
 
-		const palette = getThemePalette(get(colorMode));
-		const isDark = get(colorMode) === 'dark';
+		const palette = getThemePalette(mode);
+		const isDark = mode === 'dark';
 
 		const svg = d3
 			.select(containerRef)
@@ -65,8 +63,7 @@
 			palette.backgroundFillRange2
 		);
 
-		const effectiveBorderColors =
-			borderColorsHex ?? (isDark ? ['#555555FF'] : ['#C3C3C3FF']);
+		const effectiveBorderColors = borderColorsHex ?? (isDark ? ['#333333FF'] : ['#C3C3C3FF']);
 		if (drawBorders) {
 			effectiveBorderColors ?? getAccentColors();
 		}
@@ -95,14 +92,13 @@
 	}
 
 	onMount(() => {
-		hasMounted = true;
-		drawDelaunay();
+		// Subscribe to colorMode; fires immediately with current value for initial draw,
+		// then redraws whenever the mode changes
+		const unsubscribe = colorMode.subscribe((mode) => {
+			drawDelaunay(mode);
+		});
+		return unsubscribe;
 	});
-
-	// Redraw when color mode changes after initial mount
-	$: if (hasMounted && $colorMode) {
-		drawDelaunay();
-	}
 </script>
 
 <div bind:this={containerRef} class="jdg-random-delaunay"></div>

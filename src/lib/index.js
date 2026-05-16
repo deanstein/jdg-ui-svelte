@@ -73,6 +73,9 @@ export { JDGCheckbox };
 import JDGClipFade from './components/JDGClipFade.svelte';
 export { JDGClipFade };
 
+import JDGColorModeToggle from './components/JDGColorModeToggle.svelte';
+export { JDGColorModeToggle };
+
 import JDGCombobox from './components/Input/JDGCombobox.svelte';
 export { JDGCombobox };
 
