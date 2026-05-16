@@ -187,6 +187,9 @@ export { JDGJumpTo };
 import JDGLoadingOverlay from './components/JDGLoadingOverlay.svelte';
 export { JDGLoadingOverlay };
 
+import JDGMaintenanceOverlay from './components/JDGMaintenanceOverlay.svelte';
+export { JDGMaintenanceOverlay };
+
 import JDGModal from './components/JDGModal.svelte';
 export { JDGModal };
 

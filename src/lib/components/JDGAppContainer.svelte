@@ -55,6 +55,7 @@
 		JDGImageMetaModal,
 		JDGImageRegistryGalleryModal,
 		JDGLoadingOverlay,
+		JDGMaintenanceOverlay,
 		JDGScrollToTop,
 		JDGSaveStateBanner
 	} from '$lib/index.js';
@@ -87,6 +88,8 @@
 	export let showHeaderStripes = true;
 	export let showScrollToTopButton = true;
 	export let allowTextSelection = false;
+	export let showMaintenanceOverlay = false;
+	export let maintenanceMessage = "We're making some updates. Try again shortly.";
 
 	// flag to show a loading overlay before app is loaded
 	// to prevent flash of unstyled content
@@ -271,16 +274,22 @@
 	{/if}
 
 	<!-- OVERLAYS -->
+	<!-- Maintenance -->
+	{#if showMaintenanceOverlay}
+		<JDGMaintenanceOverlay iconSrc={appLoadingIconSrc} message={maintenanceMessage} />
+	{/if}
 	<!-- Admin -->
 	{#if $showAdminLoginModal}
 		<JDGAdminLoginModal />
 	{/if}
 	<!-- Loading -->
-	<JDGLoadingOverlay
-		isLoading={!isAppLoaded}
-		loadingIconSrc={appLoadingIconSrc}
-		{loadingSpinnerColor}
-	/>
+	{#if !showMaintenanceOverlay}
+		<JDGLoadingOverlay
+			isLoading={!isAppLoaded}
+			loadingIconSrc={appLoadingIconSrc}
+			{loadingSpinnerColor}
+		/>
+	{/if}
 	<!-- Image -->
 	{#if $showImageViewerModal}
 		<JDGImageViewerModal imageMeta={$imageViewerMeta} />
