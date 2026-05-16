@@ -211,7 +211,12 @@
 		{/if}
 		<!-- navigation: in header -->
 		{#if showNav && navItems.length > 0}
-			<JDGTopNav {navItems} {maxVisibleNavItems} useMobileNav={useMobileNav || forceMobileNavOnCenteredTitle} {showColorModeToggle} />
+			<JDGTopNav
+				{navItems}
+				{maxVisibleNavItems}
+				useMobileNav={useMobileNav || forceMobileNavOnCenteredTitle}
+				{showColorModeToggle}
+			/>
 		{/if}
 	</div>
 	<!-- navigation: sidebar -->

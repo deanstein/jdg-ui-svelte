@@ -216,9 +216,7 @@
 			savedSetting = localStorage.getItem(COLOR_MODE_STORAGE_KEY);
 		} catch {}
 		const effectiveSetting =
-			savedSetting && ['auto', 'light', 'dark'].includes(savedSetting)
-				? savedSetting
-				: colorMode;
+			savedSetting && ['auto', 'light', 'dark'].includes(savedSetting) ? savedSetting : colorMode;
 		colorModeSettingStore.set(effectiveSetting);
 
 		darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');

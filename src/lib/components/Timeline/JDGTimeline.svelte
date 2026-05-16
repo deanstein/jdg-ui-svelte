@@ -818,9 +818,7 @@
 	let timelineActionsBarMobileBgCss = css``;
 	$: timelineActionsBarMobileBgCss = css`
 		@media (max-width: 768px) {
-			background: ${$colorMode === 'dark'
-				? 'rgba(45, 45, 45, 0.92)'
-				: 'rgba(225, 225, 225, 0.92)'};
+			background: ${$colorMode === 'dark' ? 'rgba(45, 45, 45, 0.92)' : 'rgba(225, 225, 225, 0.92)'};
 		}
 	`;
 
@@ -1326,9 +1324,7 @@
 
 	// Update modal gradient to match the current event's color pair when cycling through events
 	$: if ($showTimelineEventModal && $draftTimelineEvent && eventColorPairs.length > 0) {
-		const eventIndex = timelineRowItems.findIndex(
-			(r) => r.event?.id === $draftTimelineEvent?.id
-		);
+		const eventIndex = timelineRowItems.findIndex((r) => r.event?.id === $draftTimelineEvent?.id);
 		if (eventIndex >= 0) {
 			const colorPairIndex = (emptyStateEvent ? 1 : 0) + eventIndex;
 			const colorPair = eventColorPairs[colorPairIndex];
@@ -1362,7 +1358,9 @@
 			class="timeline-loading-overlay"
 			aria-busy="true"
 			aria-label="Loading timeline"
-			style="background: {$colorMode === 'dark' ? 'rgba(30, 30, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)'};"
+			style="background: {$colorMode === 'dark'
+				? 'rgba(30, 30, 30, 0.9)'
+				: 'rgba(255, 255, 255, 0.9)'};"
 		>
 			<div class="timeline-loading-content">
 				<JDGLoadingSpinner strokeColor={$themeColors.text} spinnerHeightPx={40} strokeWidthPx={3} />
@@ -1381,7 +1379,9 @@
 				on:keydown={(e) => e.key === 'Enter' && openTimelineModal()}
 				role="button"
 				tabindex="0"
-				style="background: {$colorMode === 'dark' ? 'rgba(30, 30, 30, 0.5)' : 'rgba(255, 255, 255, 0.5)'};"
+				style="background: {$colorMode === 'dark'
+					? 'rgba(30, 30, 30, 0.5)'
+					: 'rgba(255, 255, 255, 0.5)'};"
 			>
 				<div class="timeline-preview-fab-group">
 					<JDGButton
@@ -1847,7 +1847,9 @@
 			</div>
 		</div>
 	{:else if timelineHost === null}
-		<p class="timeline-empty" style="color: {$themeColors.textSecondary}">No timeline data available.</p>
+		<p class="timeline-empty" style="color: {$themeColors.textSecondary}">
+			No timeline data available.
+		</p>
 	{:else}
 		<!-- timelineHost === undefined: same title bar + container box model as loaded state so total
 		     height is from real CSS (min/max on .timeline-container), not a guessed rem reserve. -->

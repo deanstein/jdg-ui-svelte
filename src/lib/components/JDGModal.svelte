@@ -38,9 +38,15 @@
 	$: resolvedBackgroundColor = backgroundColor ?? palette.contentBoxBackground;
 
 	$: titleBarDarkenAmount = $colorMode === 'dark' ? 0.15 : 0.05;
-	$: titleBarGradient1 = gradientColor1 ? darkenColor(gradientColor1, titleBarDarkenAmount) : gradientColor1;
-	$: titleBarGradient2 = gradientColor2 ? darkenColor(gradientColor2, titleBarDarkenAmount) : gradientColor2;
-	$: titleBarGradient3 = gradientColor3 ? darkenColor(gradientColor3, titleBarDarkenAmount) : gradientColor3;
+	$: titleBarGradient1 = gradientColor1
+		? darkenColor(gradientColor1, titleBarDarkenAmount)
+		: gradientColor1;
+	$: titleBarGradient2 = gradientColor2
+		? darkenColor(gradientColor2, titleBarDarkenAmount)
+		: gradientColor2;
+	$: titleBarGradient3 = gradientColor3
+		? darkenColor(gradientColor3, titleBarDarkenAmount)
+		: gradientColor3;
 
 	let modalContentContainerCss = css``;
 	$: {
@@ -251,7 +257,10 @@
 							style="position: relative; z-index: 1;"
 						>
 							{#if gradientColor1 && gradientColor2 && gradientColor3}
-								<div class="modal-title-bar-gradient" style="background-color: {titleBarGradient2};">
+								<div
+									class="modal-title-bar-gradient"
+									style="background-color: {titleBarGradient2};"
+								>
 									<JDGRandomGradient
 										numberOfPoints={8}
 										edgeBufferRatio={0.1}

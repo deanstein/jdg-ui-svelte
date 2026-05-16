@@ -594,7 +594,10 @@
 									>{formatTimelineEventDateLong(effectiveDate, effectiveIsApprxDate)}</span
 								>
 								{#if effectiveIsApprxDate}
-									<span class="readout-approximate {readoutApproximateCss}" style="color: {$themeColors.textSecondary};">(approximate)</span>
+									<span
+										class="readout-approximate {readoutApproximateCss}"
+										style="color: {$themeColors.textSecondary};">(approximate)</span
+									>
 								{/if}
 							{:else}
 								<span class={readoutTextCss}
@@ -792,7 +795,11 @@
 						{#if isImageSelectorOpen}
 							<div
 								class="image-selector-container"
-								style="background-color: {$colorMode === 'dark' ? 'rgba(55, 55, 55, 0.5)' : 'rgba(255, 255, 255, 0.5)'}; border: 2px solid {$colorMode === 'dark' ? 'rgba(100, 100, 100, 0.5)' : 'rgba(200, 200, 200, 0.5)'};"
+								style="background-color: {$colorMode === 'dark'
+									? 'rgba(55, 55, 55, 0.5)'
+									: 'rgba(255, 255, 255, 0.5)'}; border: 2px solid {$colorMode === 'dark'
+									? 'rgba(100, 100, 100, 0.5)'
+									: 'rgba(200, 200, 200, 0.5)'};"
 							>
 								<JDGImageSelector
 									selectedImages={$localEventStore[key] || []}

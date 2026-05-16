@@ -569,7 +569,11 @@ export const setUpdatedHyperlinkStyleBar = (
 				: `${adjustColorForContrast(linkColor, resolvedTextColor, linkColorContrastAdjustment)}`};
 		}
 		a:before {
-			background: ${adjustColorForContrast(linkColor, resolvedTextColor, linkColorContrastAdjustment)};
+			background: ${adjustColorForContrast(
+				linkColor,
+				resolvedTextColor,
+				linkColorContrastAdjustment
+			)};
 		}
 	`);
 };

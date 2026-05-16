@@ -437,7 +437,12 @@
 				: 'Year?'}
 		</div>
 		{#if effectiveIsApprxDate}
-			<div class="timeline-event-date-apprx {eventDateApprxCss}" style="color: {$themeColors.textSecondary}">(apprx.)</div>
+			<div
+				class="timeline-event-date-apprx {eventDateApprxCss}"
+				style="color: {$themeColors.textSecondary}"
+			>
+				(apprx.)
+			</div>
 		{/if}
 	</div>
 	<div class="timeline-event-node {eventNodeCss}" />
@@ -448,7 +453,10 @@
 	<div class="timeline-event-content-outer-container {eventRowContainerCss}">
 		<div class="timeline-event-title-bar-container">
 			{#if hasTitleBarRandomGradient}
-				<div class="timeline-event-title-bar-gradient" style="background-color: {titleBarColor1 ?? ''};">
+				<div
+					class="timeline-event-title-bar-gradient"
+					style="background-color: {titleBarColor1 ?? ''};"
+				>
 					<JDGRandomGradient
 						numberOfPoints={8}
 						edgeBufferRatio={0.1}
@@ -486,13 +494,13 @@
 									onClickEventRefHost();
 								}}
 								faIcon={'fa-circle-arrow-right'}
-						backgroundColor={$themeColors.activeSubtle}
-						paddingLeftRight="8px"
-						paddingTopBottom="2px"
-						fontSize="12px"
-						gap="6px"
-						label={eventReference?.name}
-						tooltip={'Go to ' + eventReference?.name}
+								backgroundColor={$themeColors.activeSubtle}
+								paddingLeftRight="8px"
+								paddingTopBottom="2px"
+								fontSize="12px"
+								gap="6px"
+								label={eventReference?.name}
+								tooltip={'Go to ' + eventReference?.name}
 							/>
 						</div>
 					</div>

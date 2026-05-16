@@ -25,7 +25,11 @@
 	});
 </script>
 
-<div class="jdg-background-container" bind:this={backgroundContainerDiv} style="background-color: {$themeColors.headerBackground};">
+<div
+	class="jdg-background-container"
+	bind:this={backgroundContainerDiv}
+	style="background-color: {$themeColors.headerBackground};"
+>
 	<JDGRandomDelaunay heightMultiplier={isParallax ? 1.5 : 1.0} />
 </div>
 

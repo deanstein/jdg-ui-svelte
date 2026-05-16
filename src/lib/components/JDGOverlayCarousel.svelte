@@ -12,7 +12,8 @@
 
 	/** Wrapper around JDGOverlay that adds carousel nav (prev/next buttons, wheel/key/touch). Pass-through props match JDGOverlay. */
 	export let colorRgba = undefined;
-	$: resolvedColorRgba = colorRgba ?? ($colorMode === 'dark' ? 'rgba(30, 30, 30, 0.8)' : 'rgba(255, 255, 255, 0.8)');
+	$: resolvedColorRgba =
+		colorRgba ?? ($colorMode === 'dark' ? 'rgba(30, 30, 30, 0.8)' : 'rgba(255, 255, 255, 0.8)');
 	export let showTitleBar = true;
 	export let onCloseFunction = () => {};
 	export let closeOnOverlayClick = true;
@@ -201,7 +202,13 @@
 		$carouselNav && $carouselNav.currentIndex != null && $carouselNav.totalCount != null;
 </script>
 
-<JDGOverlay colorRgba={resolvedColorRgba} {showTitleBar} {onCloseFunction} {closeOnOverlayClick} {useBlur}>
+<JDGOverlay
+	colorRgba={resolvedColorRgba}
+	{showTitleBar}
+	{onCloseFunction}
+	{closeOnOverlayClick}
+	{useBlur}
+>
 	<div
 		class="jdg-overlay-carousel-content"
 		role="button"
