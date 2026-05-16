@@ -14,7 +14,7 @@
 	import {
 		jdgBreakpoints,
 		jdgColors,
-		jdgCssVars,
+		themeColors,
 		getThemePalette,
 		jdgSizes
 	} from '$lib/jdg-shared-styles.js';
@@ -28,7 +28,8 @@
 	export let truncateText = true;
 	export let matchBodyCopyPadding = false; // if true, uses same padding as body copy (for full-width use only)
 	export let maxTextWidthPx = undefined; // useful for cases where caption/attribution is outside image but must match image width
-	export let backgroundColorRgba = jdgCssVars.imageLabelBackground;
+	export let backgroundColorRgba = undefined;
+	$: resolvedBackgroundColorRgba = backgroundColorRgba ?? $themeColors.imageLabelBackground;
 
 	let availableWidthRef; // element to determine available space for caption
 	let availableWidth = 0; // final available width - updated after loading
@@ -85,9 +86,10 @@
 			})
 		: '';
 
-	const captionAttributionContainerCss = css`
-		color: ${jdgCssVars.text};
-		backdrop-filter: ${backgroundColorRgba !== 'rgba(0, 0, 0, 0)'
+	let captionAttributionContainerCss = css``;
+	$: captionAttributionContainerCss = css`
+		color: ${$themeColors.text};
+		backdrop-filter: ${resolvedBackgroundColorRgba !== 'rgba(0, 0, 0, 0)'
 			? `blur(${jdgSizes.blurSizeSmall})`
 			: ''};
 	`;
@@ -146,7 +148,7 @@
 	let captionAttributionContainerDynamicCss = css``;
 	$: {
 		captionAttributionContainerDynamicCss = css`
-			background-color: ${backgroundColorRgba};
+			background-color: ${resolvedBackgroundColorRgba};
 		`;
 	}
 

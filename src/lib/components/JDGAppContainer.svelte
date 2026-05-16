@@ -65,10 +65,9 @@
 		setUpdatedHyperlinkStyleSimple,
 		jdgBreakpoints,
 		jdgColors,
-		jdgCssVars,
 		jdgFonts,
-		getThemeCssVarDeclarations,
 		getThemePalette,
+		themeColors,
 		setUpdatedHyperlinkStyleBar
 	} from '$lib/jdg-shared-styles.js';
 
@@ -176,8 +175,9 @@
 		}, scrollTimeoutDuration);
 	};
 
-	// global styles using emotion css
-	const appContainerCss = css`
+	// global styles using emotion css (reactive for theme changes)
+	let appContainerCss = css``;
+	$: appContainerCss = css`
 		.jdg-letter-spacing-title {
 			letter-spacing: 5px;
 		}
@@ -186,10 +186,10 @@
 			border: none;
 			height: 1px;
 			width: 100%;
-			background-color: ${jdgCssVars.text};
+			background-color: ${$themeColors.text};
 		}
 
-		color: ${jdgCssVars.text};
+		color: ${$themeColors.text};
 		font-family: ${fontFamily};
 	`;
 
@@ -276,8 +276,6 @@
 		`;
 	}
 
-	$: themeCssVarStyle = getThemeCssVarDeclarations(resolvedColorMode);
-
 	$: if (isAppLoaded && resolvedColorMode) {
 		const palette = getThemePalette(resolvedColorMode);
 		setUpdatedHyperlinkStyleBar(
@@ -297,7 +295,6 @@
 
 <div
 	class="jdg-app-container {appContainerCss} {appContainerCssDynamic} {$appCssHyperlinkBar}"
-	style={themeCssVarStyle}
 	bind:this={appContainerRef}
 >
 	<!-- ALL CONTENT GOES HERE AFTER APP IS LOADED -->

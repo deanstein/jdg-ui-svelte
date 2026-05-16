@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { jdgColors, jdgCssVars, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgColors, jdgSizes, themeColors } from '$lib/jdg-shared-styles.js';
 	import JDGInputHint from './JDGInputHint.svelte';
 
 	export let showLabel = true;
@@ -22,20 +22,22 @@
 		justify-content: ${justifyContent};
 	`;
 
-	let checkboxLabelCss = css`
+	let checkboxLabelCss = css``;
+	$: checkboxLabelCss = css`
 		font-size: ${labelFontSize};
 		line-height: normal;
-		color: ${jdgCssVars.text};
+		color: ${$themeColors.text};
 	`;
 
-	const checkboxInputCss = css`
+	let checkboxInputCss = css``;
+	$: checkboxInputCss = css`
 		appearance: none;
 		-webkit-appearance: none;
 		width: ${checkboxSize};
 		height: ${checkboxSize};
 		border: 2px solid ${jdgColors.activeSecondary};
 		border-radius: 3px;
-		background-color: var(--jdg-color-input-background);
+		background-color: ${$themeColors.inputBackground};
 		cursor: pointer;
 		position: relative;
 		flex-shrink: 0;
@@ -58,7 +60,7 @@
 		}
 
 		&:disabled {
-			background-color: var(--jdg-color-input-background);
+			background-color: ${$themeColors.inputBackground};
 			border-color: gainsboro;
 			cursor: default;
 		}
@@ -69,7 +71,7 @@
 		}
 
 		&:disabled:checked::after {
-			border-color: ${jdgCssVars.text};
+			border-color: ${$themeColors.text};
 		}
 	`;
 

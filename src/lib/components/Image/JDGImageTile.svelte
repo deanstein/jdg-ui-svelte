@@ -11,7 +11,7 @@
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGStripesHorizontal } from '$lib/index.js';
 	import {
-		jdgCssVars,
+		themeColors,
 		getThemePalette,
 		jdgSizes,
 		jdgDurations,
@@ -30,8 +30,10 @@
 	export let label = undefined;
 	export let labelFontFamily = $appFontFamily;
 	export let labelJustification = 'left';
-	export let labelColor = jdgCssVars.text;
-	export let labelContainerColor = jdgCssVars.imageLabelBackground;
+	export let labelColor = undefined;
+	export let labelContainerColor = undefined;
+	$: resolvedLabelColor = labelColor ?? $themeColors.text;
+	$: resolvedLabelContainerColor = labelContainerColor ?? $themeColors.imageLabelBackground;
 	export let labelContainerBlurSize = jdgSizes.blurSizeLarge;
 	export let labelContainerVerticalAlign = 'bottom';
 	export let href = undefined;
@@ -64,9 +66,10 @@
 		width: ${showBlurInUnfilledSpace || cropToFillContainer ? '100%' : 'auto'};
 	`;
 
-	const imageTileLabelContainerCss = css`
+	let imageTileLabelContainerCss = css``;
+	$: imageTileLabelContainerCss = css`
 		justify-content: ${labelJustification};
-		background-color: ${labelContainerColor};
+		background-color: ${resolvedLabelContainerColor};
 		backdrop-filter: blur(${labelContainerBlurSize});
 		${labelContainerVerticalAlign === 'center'
 			? `top: 50%;
@@ -74,9 +77,10 @@
 			: `${labelContainerVerticalAlign}: 0;`};
 	`;
 
-	const imageTileLabelCss = css`
+	let imageTileLabelCss = css``;
+	$: imageTileLabelCss = css`
 		font-family: ${labelFontFamily};
-		color: ${labelColor};
+		color: ${resolvedLabelColor};
 		text-align: ${labelJustification};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			padding: 8px;

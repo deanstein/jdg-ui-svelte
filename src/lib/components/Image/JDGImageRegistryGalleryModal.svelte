@@ -12,7 +12,7 @@
 		JDGFlyout,
 		JDGCheckbox
 	} from '$lib/index.js';
-	import { jdgColors, jdgCssVars } from '$lib/jdg-shared-styles.js';
+	import { jdgColors, themeColors } from '$lib/jdg-shared-styles.js';
 
 	// Sort options for JDGSelect (matches gallery's options)
 	const sortOptionsGroup = {
@@ -48,9 +48,10 @@
 		border-bottom: 1px solid ${jdgColors.border};
 	`;
 
-	const selectLabelCss = css`
+	let selectLabelCss = css``;
+	$: selectLabelCss = css`
 		font-size: 14px;
-		color: ${jdgCssVars.text};
+		color: ${$themeColors.text};
 	`;
 
 	const selectWrapperCss = css`

@@ -1,10 +1,10 @@
 <script>
 	import { css } from '@emotion/css';
 	import { JDGGridLayout } from '$lib/index.js';
-	import { jdgCssVars } from '$lib/jdg-shared-styles.js';
+	import { themeColors } from '$lib/jdg-shared-styles.js';
 
 	export let iconSize = '2rem';
-	export let iconColor = jdgCssVars.text;
+	export let iconColor = undefined;
 	export let instagramHref = undefined;
 	export let facebookHref = undefined;
 	export let youtubeHref = undefined;
@@ -18,9 +18,10 @@
 	const linkedinFaIcon = 'fa-linkedin';
 	const githubFaIcon = 'fa-github';
 
-	const fontClass = css`
+	let fontClass = css``;
+	$: fontClass = css`
 		font-size: ${iconSize};
-		color: ${iconColor};
+		color: ${iconColor ?? $themeColors.text};
 	`;
 </script>
 

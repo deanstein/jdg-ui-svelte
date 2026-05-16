@@ -23,7 +23,7 @@
 		JDGCheckbox,
 		JDGSelect
 	} from '$lib/index.js';
-	import { jdgColors, jdgCssVars } from '$lib/jdg-shared-styles.js';
+	import { jdgColors, themeColors } from '$lib/jdg-shared-styles.js';
 
 	// Sort options for JDGSelect
 	const sortOptionsGroup = {
@@ -346,26 +346,29 @@
 		margin-bottom: 12px;
 	`;
 
-	const noResultsCss = css`
+	let noResultsCss = css``;
+	$: noResultsCss = css`
 		text-align: center;
 		padding: 40px 20px;
-		color: ${jdgCssVars.textSecondary};
+		color: ${$themeColors.textSecondary};
 		font-style: italic;
 	`;
 
-	const loadMoreIndicatorCss = css`
+	let loadMoreIndicatorCss = css``;
+	$: loadMoreIndicatorCss = css`
 		text-align: center;
 		padding: 16px;
-		color: ${jdgCssVars.textSecondary};
+		color: ${$themeColors.textSecondary};
 		font-size: 12px;
 	`;
 
-	const showingInfoCss = css`
+	let showingInfoCss = css``;
+	$: showingInfoCss = css`
 		text-align: center;
 		padding: 12px;
 		margin-top: 8px;
 		font-size: 12px;
-		color: ${jdgCssVars.textSecondary};
+		color: ${$themeColors.textSecondary};
 		font-style: italic;
 	`;
 
@@ -481,7 +484,7 @@
 		{#if isFetchingRegistry}
 			<div class="loading-container">
 				<JDGLoadingSpinner spinnerHeightPx={60} />
-				<div style="margin-top: 12px; color: {jdgCssVars.textSecondary};">
+				<div style="margin-top: 12px; color: {$themeColors.textSecondary};">
 					Loading images from {registryRepoName}...
 				</div>
 			</div>

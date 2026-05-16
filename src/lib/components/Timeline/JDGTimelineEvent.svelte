@@ -25,7 +25,7 @@
 	import { getTimelineEventDateDisplayMode } from '$lib/jdg-utils.js';
 
 	import { JDGButton, JDGImageThumbnailGroup, JDGRandomGradient } from '$lib/index.js';
-	import { jdgBreakpoints, jdgColors, jdgCssVars, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgColors, themeColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let timelineHost;
 	export let timelineEvent;
@@ -141,8 +141,9 @@
 		}
 	`;
 
-	const eventDateCss = css`
-		color: ${jdgCssVars.text};
+	let eventDateCss = css``;
+	$: eventDateCss = css`
+		color: ${$themeColors.text};
 		border-radius: ${dateBorderRadius} ${dateBorderRadius} 0 0;
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: 0.8rem;
@@ -160,8 +161,9 @@
 		}
 	`;
 
-	const eventYearCss = css`
-		color: ${jdgCssVars.text};
+	let eventYearCss = css``;
+	$: eventYearCss = css`
+		color: ${$themeColors.text};
 		border-radius: 0 0 ${dateBorderRadius} ${dateBorderRadius};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: 1.1rem;
@@ -208,17 +210,19 @@
 		}
 	`;
 
-	const eventNodeCss = css`
+	let eventNodeCss = css``;
+	$: eventNodeCss = css`
 		height: ${jdgSizes.timelineEventNodeSize};
-		background-color: ${jdgCssVars.textSecondary};
+		background-color: ${$themeColors.textSecondary};
 		/* Center node on spine: offset by half the difference between node and spine width */
 		margin-left: ${-((jdgSizes.nTimelineEventNodeSize - jdgSizes.nTimelineSpineWidth) / 2) +
 		jdgSizes.timelineUnit};
 	`;
 
-	const eventLineCss = css`
+	let eventLineCss = css``;
+	$: eventLineCss = css`
 		height: ${jdgSizes.nTimelineEventNodeSize / 3 + jdgSizes.timelineUnit};
-		background-color: ${jdgCssVars.textSecondary};
+		background-color: ${$themeColors.textSecondary};
 	`;
 
 	const eventTitleBarCss = css`
@@ -226,8 +230,9 @@
 		border-radius: ${eventBorderRadius} ${eventBorderRadius} 0px 0px;
 	`;
 
-	const eventFaIconCss = css`
-		color: ${jdgCssVars.text};
+	let eventFaIconCss = css``;
+	$: eventFaIconCss = css`
+		color: ${$themeColors.text};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: 0.8rem;
 		}
@@ -241,8 +246,9 @@
 		}
 	`;
 
-	const eventAgeCss = css`
-		color: ${jdgCssVars.text};
+	let eventAgeCss = css``;
+	$: eventAgeCss = css`
+		color: ${$themeColors.text};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: 0.7rem;
 		}
@@ -284,7 +290,7 @@
 			eventTitleBarGradientCss = css`
 				background-color: ${gradientColor1
 					? darkenColor(gradientColor1, 0.05)
-					: jdgCssVars.activeSubtle};
+					: $themeColors.activeSubtle};
 				border-radius: ${eventBorderRadius} ${eventBorderRadius} 0px 0px;
 			`;
 		}
@@ -477,13 +483,13 @@
 									onClickEventRefHost();
 								}}
 								faIcon={'fa-circle-arrow-right'}
-							backgroundColor={jdgCssVars.activeSubtle}
-							paddingLeftRight="8px"
-							paddingTopBottom="2px"
-							fontSize="12px"
-							gap="6px"
-							label={eventReference?.name}
-							tooltip={'Go to ' + eventReference?.name}
+						backgroundColor={$themeColors.activeSubtle}
+						paddingLeftRight="8px"
+						paddingTopBottom="2px"
+						fontSize="12px"
+						gap="6px"
+						label={eventReference?.name}
+						tooltip={'Go to ' + eventReference?.name}
 							/>
 						</div>
 					</div>
@@ -519,7 +525,7 @@
 								onClickEventRefHost(timelineHost.id);
 							}}
 							faIcon={timelineEventTypes.childBirth.icon}
-							backgroundColor={jdgCssVars.activeSubtle}
+							backgroundColor={$themeColors.activeSubtle}
 							paddingLeftRight="8px"
 							paddingTopBottom="2px"
 							fontSize="12px"
@@ -536,7 +542,7 @@
 								onClickEventRefHost(timelineHost.id);
 							}}
 							faIcon={timelineEventTypes.parentDeath.icon}
-							backgroundColor={jdgCssVars.activeSubtle}
+							backgroundColor={$themeColors.activeSubtle}
 							paddingLeftRight="8px"
 							paddingTopBottom="2px"
 							fontSize="12px"

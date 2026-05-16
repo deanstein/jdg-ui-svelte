@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgColors, jdgSizes, themeColors } from '$lib/jdg-shared-styles.js';
 
 	// required format: { optionGroup: {option: { value: "someValue", label: "Some Label" } } }
 	export let optionsGroup;
@@ -13,6 +13,7 @@
 
 	$: selectCss = css`
 		text-align: ${textAlignOverride ? textAlignOverride : 'left'};
+		background-color: ${$themeColors.inputBackground};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: ${jdgSizes.inputFontSizeMobile};
 			padding: ${jdgSizes.inputPaddingMobileTablet};
@@ -38,6 +39,7 @@
 			border: 2px solid ${jdgColors.active};
 		}
 		&:disabled {
+			background-color: ${$themeColors.inputBackground};
 			border: 2px solid gainsboro;
 		}
 		&:disabled:hover,
@@ -87,13 +89,8 @@
 
 	select:disabled {
 		opacity: 1;
-		background-color: var(--jdg-color-input-background);
 		-webkit-appearance: none;
 		-moz-appearance: none;
 		appearance: none;
-	}
-
-	.select {
-		background-color: var(--jdg-color-input-background);
 	}
 </style>

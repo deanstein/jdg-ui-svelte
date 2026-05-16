@@ -4,11 +4,11 @@
 
 	import {
 		jdgColors,
-		jdgCssVars,
 		jdgBoxShadowStandard,
 		jdgBreakpoints,
 		jdgSizes,
-		getThemePalette
+		getThemePalette,
+		themeColors
 	} from '$lib/jdg-shared-styles.js';
 
 	import { colorMode } from '$lib/stores/jdg-ui-store.js';
@@ -85,7 +85,7 @@
 
 	// Dynamic flyout styles
 	$: flyoutCss = css`
-		color: ${jdgCssVars.text};
+		color: ${$themeColors.text};
 		background-color: ${effectiveFlyoutBgColor};
 		border-radius: ${flyoutBorderRadius};
 		padding: ${flyoutPadding};
@@ -101,8 +101,9 @@
 		}
 	`;
 
-	const flyoutTitleCss = css`
-		color: ${jdgCssVars.text};
+	let flyoutTitleCss = css``;
+	$: flyoutTitleCss = css`
+		color: ${$themeColors.text};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: 0.65rem;
 		}

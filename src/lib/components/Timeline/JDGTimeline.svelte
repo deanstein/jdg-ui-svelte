@@ -73,7 +73,7 @@
 	import {
 		jdgBreakpoints,
 		jdgColors,
-		jdgCssVars,
+		themeColors,
 		jdgDurations,
 		jdgQuantities,
 		jdgSizes,
@@ -851,10 +851,11 @@
 		}
 	`;
 
-	const eventTypeFilterLabelCss = css`
+	let eventTypeFilterLabelCss = css``;
+	$: eventTypeFilterLabelCss = css`
 		font-size: 14px;
 		line-height: normal;
-		color: ${jdgCssVars.text};
+		color: ${$themeColors.text};
 	`;
 
 	const decadeHeadingPaletteKeys = {
@@ -1314,8 +1315,8 @@
 	{#if showLoadingOverlay}
 		<div class="timeline-loading-overlay" aria-busy="true" aria-label="Loading timeline">
 			<div class="timeline-loading-content">
-				<JDGLoadingSpinner strokeColor={jdgCssVars.text} spinnerHeightPx={40} strokeWidthPx={3} />
-				<span class="timeline-loading-text">Loading…</span>
+				<JDGLoadingSpinner strokeColor={$themeColors.text} spinnerHeightPx={40} strokeWidthPx={3} />
+				<span class="timeline-loading-text" style="color: {$themeColors.text}">Loading…</span>
 			</div>
 		</div>
 	{/if}
@@ -1787,7 +1788,7 @@
 			</div>
 		</div>
 	{:else if timelineHost === null}
-		<p class="timeline-empty">No timeline data available.</p>
+		<p class="timeline-empty" style="color: {$themeColors.textSecondary}">No timeline data available.</p>
 	{:else}
 		<!-- timelineHost === undefined: same title bar + container box model as loaded state so total
 		     height is from real CSS (min/max on .timeline-container), not a guessed rem reserve. -->
@@ -1910,7 +1911,6 @@
 
 	.timeline-loading-text {
 		font-size: 1rem;
-		color: var(--jdg-color-text, #2c2c2c);
 	}
 
 	.timeline-empty {
@@ -1919,7 +1919,6 @@
 		justify-content: center;
 		min-height: 200px;
 		margin: 0;
-		color: var(--jdg-color-text-secondary, #666);
 	}
 
 	.timeline-hover-overlay {

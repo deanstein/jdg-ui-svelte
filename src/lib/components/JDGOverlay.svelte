@@ -8,9 +8,9 @@
 	import { getHighestZIndex } from '$lib/jdg-state-management.js';
 
 	import { JDGCloseIcon } from '$lib/index.js';
-	import { jdgBreakpoints, jdgCssVars, jdgDurations, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgDurations, jdgSizes, themeColors } from '$lib/jdg-shared-styles.js';
 
-	export let colorRgba = jdgCssVars.headerBackground;
+	export let colorRgba = undefined;
 	export let showTitleBar = true;
 	export let onCloseFunction = () => {};
 	export let closeOnOverlayClick = true;
@@ -45,9 +45,11 @@
 		}
 	}
 
-	const overlayCss = css`
-		z-index: ${getHighestZIndex()};
-		background-color: ${colorRgba};
+	const overlayZIndex = getHighestZIndex();
+	let overlayCss = css``;
+	$: overlayCss = css`
+		z-index: ${overlayZIndex};
+		background-color: ${colorRgba ?? $themeColors.headerBackground};
 		backdrop-filter: ${useBlur ? `blur(${jdgSizes.blurSizeMedium})` : ''};
 	`;
 
@@ -67,12 +69,13 @@
 			height: ${jdgSizes.navMobileIconHeightLg};
 	`;
 
-	const overlayTitleBarCss = css`
+	let overlayTitleBarCss = css``;
+	$: overlayTitleBarCss = css`
 		padding-left: ${jdgSizes.headerSidePadding};
 		padding-right: ${jdgSizes.headerSidePadding};
 		padding-top: ${jdgSizes.headerTopBottomPadding};
 		padding-bottom: ${jdgSizes.headerTopBottomPadding};
-		background-color: ${jdgCssVars.headerBackground};
+		background-color: ${$themeColors.headerBackground};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			height: ${jdgSizes.headerHeightSm};
 		}
