@@ -276,8 +276,8 @@
 		`;
 	}
 
-	$: if (isAppLoaded && resolvedColorMode) {
-		const palette = getThemePalette(resolvedColorMode);
+	$: if (isAppLoaded && $colorModeStore) {
+		const palette = getThemePalette($colorModeStore);
 		setUpdatedHyperlinkStyleBar(
 			linkColorDefault,
 			linkColorContrastAdjustment,
