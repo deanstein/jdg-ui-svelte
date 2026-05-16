@@ -7,17 +7,20 @@
 		colorMode,
 		isScrolling,
 		isScrollingToAnchorTag,
-		showNavSidebar
+		showNavSidebar,
+		windowScrollPosition
 	} from '$lib/stores/jdg-ui-store.js';
 
 	import { setRgbaAlpha } from '$lib/index.js';
 	import { convertStringToAnchorTag } from '$lib/jdg-utils.js';
 
 	import { JDGNavItem } from '$lib/index.js';
+	import JDGColorModeToggle from '../JDGColorModeToggle.svelte';
 	import { jdgDurations, jdgSizes, getThemePalette } from '$lib/jdg-shared-styles.js';
 
 	export let navItems;
 	export let sideNavWidth = '250px';
+	export let showColorModeToggle = false;
 
 	$: palette = getThemePalette($colorMode);
 
@@ -38,10 +41,21 @@
 		font-size: ${jdgSizes.fontSizeHeaderTitle};
 	`;
 
+	let containerEl;
+	let toggleBottomPx = parseInt(jdgSizes.headerHeightLg);
+
+	$: toggleBottomCss = css`
+		position: absolute;
+		bottom: calc(${toggleBottomPx}px + 2rem);
+		left: 0;
+		right: 0;
+		display: flex;
+		justify-content: center;
+	`;
+
 	// set dynamically, only after the slide animation is complete
 	let blurCss;
 
-	// only apply the blur after the animation is complete
 	$: if ($showNavSidebar) {
 		setTimeout(() => {
 			blurCss = css`
@@ -50,6 +64,13 @@
 		}, jdgDurations.default);
 	} else {
 		blurCss = css``;
+	}
+
+	// recalculate toggle offset whenever sidebar is open and scroll position changes
+	$: if ($showNavSidebar && containerEl) {
+		// reference $windowScrollPosition to re-run on scroll
+		void $windowScrollPosition;
+		toggleBottomPx = containerEl.getBoundingClientRect().top;
 	}
 
 	// tracks which anchor nav item was last clicked;
@@ -119,6 +140,7 @@
 				tabindex="0"
 			/>
 			<div
+				bind:this={containerEl}
 				class="jdg-nav-sidebar-container {sideNavContainerCss} {blurCss} jdg-letter-spacing-title"
 				transition:slide={{ duration: jdgDurations.default, delay: 0, axis: 'x' }}
 			>
@@ -135,6 +157,11 @@
 						{/each}
 					</nav>
 				</div>
+				{#if showColorModeToggle}
+					<div class={toggleBottomCss}>
+						<JDGColorModeToggle fontSize="1.25rem" />
+					</div>
+				{/if}
 			</div>
 		</div>
 	</div>
@@ -179,4 +206,5 @@
 		flex-grow: 1;
 		height: 100vh;
 	}
+
 </style>
