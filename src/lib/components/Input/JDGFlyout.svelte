@@ -4,11 +4,14 @@
 
 	import {
 		jdgColors,
+		jdgCssVars,
 		jdgBoxShadowStandard,
 		jdgBreakpoints,
-		jdgSizes
+		jdgSizes,
+		getThemePalette
 	} from '$lib/jdg-shared-styles.js';
 
+	import { colorMode } from '$lib/stores/jdg-ui-store.js';
 	import { setRgbaAlpha } from '$lib/jdg-utils.js';
 	import JDGButton from '$lib/components/Input/JDGButton.svelte';
 
@@ -19,16 +22,19 @@
 	export let buttonFontSize = '0.9rem';
 	export let buttonPadding = '0.4rem';
 	export let buttonBackgroundColor = jdgColors.activeSecondary;
-	export let buttonTextColor = jdgColors.textDm;
+	export let buttonTextColor = jdgColors.textOnDark;
 	export let tooltip = '';
 	// Flyout styling
-	export let flyoutBackgroundColor = setRgbaAlpha(jdgColors.headerBackground, 0.7);
+	export let flyoutBackgroundColor = undefined;
 	export let flyoutBorderRadius = '0px';
 	export let flyoutPadding = '0.75rem';
 	// Position: where the flyout appears relative to button
 	export let flyoutPosition = 'bottom-left'; // 'bottom-left', 'bottom-right', 'top-left', 'top-right'
 	// Optional title for the flyout
 	export let flyoutTitle = '';
+
+	$: palette = getThemePalette($colorMode);
+	$: effectiveFlyoutBgColor = flyoutBackgroundColor ?? setRgbaAlpha(palette.headerBackground, 0.7);
 
 	let isOpen = false;
 	let flyoutRef;
@@ -79,8 +85,8 @@
 
 	// Dynamic flyout styles
 	$: flyoutCss = css`
-		color: ${jdgColors.text};
-		background-color: ${flyoutBackgroundColor};
+		color: ${jdgCssVars.text};
+		background-color: ${effectiveFlyoutBgColor};
 		border-radius: ${flyoutBorderRadius};
 		padding: ${flyoutPadding};
 	`;
@@ -96,7 +102,7 @@
 	`;
 
 	const flyoutTitleCss = css`
-		color: ${jdgColors.text};
+		color: ${jdgCssVars.text};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: 0.65rem;
 		}

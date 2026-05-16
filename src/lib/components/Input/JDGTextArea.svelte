@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgColors, jdgCssVars, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let isEnabled = true;
 	export let inputValue = '';
@@ -17,7 +17,7 @@
 	$: textAreaCss = css`
 		resize: ${resizable};
 		min-height: ${minHeight};
-		color: ${jdgColors.text};
+		color: ${jdgCssVars.text};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: ${jdgSizes.inputFontSizeMobile};
 			padding: ${jdgSizes.inputPaddingMobileTablet};
@@ -80,7 +80,7 @@
 	}
 
 	.jdg-textarea-field:disabled {
-		background-color: white;
+		background-color: var(--jdg-color-input-background);
 		border: 2px solid gainsboro;
 		-webkit-opacity: 1;
 		opacity: 1;

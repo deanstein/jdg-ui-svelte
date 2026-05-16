@@ -1,10 +1,10 @@
 <script>
 	import { css } from '@emotion/css';
 	import { JDGGridLayout } from '$lib/index.js';
-	import { jdgColors } from '$lib/jdg-shared-styles.js';
+	import { jdgCssVars } from '$lib/jdg-shared-styles.js';
 
 	export let iconSize = '2rem';
-	export let iconColor = jdgColors.text;
+	export let iconColor = jdgCssVars.text;
 	export let instagramHref = undefined;
 	export let facebookHref = undefined;
 	export let youtubeHref = undefined;

@@ -38,7 +38,7 @@
 		JDGStoreView,
 		JDGGridLayout
 	} from '$lib/index.js';
-	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgColors, jdgCssVars, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { allTempStoreValues } from '$lib/stores/jdg-temp-store.js';
 
 	export let repoName = jdgUiSvelteRepoName;
@@ -48,7 +48,7 @@
 	export let copyrightHref = undefined; // optional href for <a> element around copyright name
 	export let disclaimer = undefined; // optional disclaimer, applicable to some sites
 	export let alignItems = 'left';
-	export let backgroundColorRgba = jdgColors.headerBackground;
+	export let backgroundColorRgba = jdgCssVars.headerBackground;
 	export let webAppVersionLabel = 'Website';
 	export let showShadow = true; // subtle shadow to give the illusion of depth
 	export let showJdgUiVersion = true;
@@ -92,7 +92,7 @@
 	`;
 
 	const footerDisclaimerCss = css`
-		color: ${jdgColors.textLight};
+		color: ${jdgCssVars.textSecondary};
 	`;
 
 	const footerDevToolsCss = css`

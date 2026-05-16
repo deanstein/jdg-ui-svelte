@@ -53,6 +53,12 @@ export let appAccentColors = writable([]);
 export let modalGradientColors = writable(undefined);
 export let appFontFamily = writable('');
 export let allowTextSelection = writable(false);
+
+/*** COLOR MODE ***/
+// 'auto' | 'light' | 'dark' — what the consuming app requested
+export let colorModeSetting = writable('auto');
+// 'light' | 'dark' — resolved mode after factoring in OS preference
+export let colorMode = writable('light');
 // shared dynamic emotion css styles
 export let appCssHyperlinkBar = writable('');
 export let appCssHyperlinkSimple = writable('');
@@ -133,6 +139,9 @@ const storeMap = {
 	appCssHyperlinkBar,
 	appCssHyperlinkSimple,
 	allowTextSelection,
+	// color mode
+	colorModeSetting,
+	colorMode,
 	// scrolling
 	isScrolling,
 	isScrollingToAnchorTag,

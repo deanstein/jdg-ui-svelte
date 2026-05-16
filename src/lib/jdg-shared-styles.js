@@ -13,38 +13,117 @@ export const jdgFonts = {
 	righteous: 'Righteous'
 };
 
+//
+// Theme palettes
+//
+
+const lightPalette = {
+	text: '#323232',
+	textSecondary: '#737373',
+	title: '#4F4F4F',
+	headerBackground: 'rgba(250, 250, 250, 1)',
+	contentBoxBackground: 'rgba(252, 252, 252, 0.7)',
+	imageLabelBackground: 'rgba(255, 255, 255, 0.75)',
+	inputBackground: '#ffffff',
+	activeSubtle: '#e6f3ff',
+	backgroundFillRange0: 'rgba(150, 150, 150, 1)',
+	backgroundFillRange1: 'rgba(175, 175, 175, 1)',
+	backgroundFillRange2: 'rgba(190, 190, 190, 1)',
+	timelineEventColorGradient1: 'rgba(227, 244, 223, 1)',
+	timelineEventColorGradient2: 'rgba(208, 240, 242, 1)',
+	timelineEventColorGradient3: 'rgba(218, 228, 248, 1)'
+};
+
+const darkPalette = {
+	text: '#E0E0E0',
+	textSecondary: '#A0A0A0',
+	title: '#D0D0D0',
+	headerBackground: 'rgba(30, 30, 30, 1)',
+	contentBoxBackground: 'rgba(40, 40, 40, 0.85)',
+	imageLabelBackground: 'rgba(30, 30, 30, 0.75)',
+	inputBackground: 'rgba(55, 55, 55, 1)',
+	activeSubtle: '#1a3a52',
+	backgroundFillRange0: 'rgba(60, 60, 60, 1)',
+	backgroundFillRange1: 'rgba(75, 75, 75, 1)',
+	backgroundFillRange2: 'rgba(85, 85, 85, 1)',
+	timelineEventColorGradient1: 'rgba(35, 60, 32, 1)',
+	timelineEventColorGradient2: 'rgba(28, 55, 58, 1)',
+	timelineEventColorGradient3: 'rgba(32, 40, 62, 1)'
+};
+
+export const jdgThemePalettes = { light: lightPalette, dark: darkPalette };
+
+export function getThemePalette(mode) {
+	return mode === 'dark' ? darkPalette : lightPalette;
+}
+
+const cssVarNameMap = {
+	text: '--jdg-color-text',
+	textSecondary: '--jdg-color-text-secondary',
+	title: '--jdg-color-title',
+	headerBackground: '--jdg-color-header-background',
+	contentBoxBackground: '--jdg-color-content-box-background',
+	imageLabelBackground: '--jdg-color-image-label-background',
+	inputBackground: '--jdg-color-input-background',
+	activeSubtle: '--jdg-color-active-subtle',
+	backgroundFillRange0: '--jdg-color-bg-fill-0',
+	backgroundFillRange1: '--jdg-color-bg-fill-1',
+	backgroundFillRange2: '--jdg-color-bg-fill-2',
+	timelineEventColorGradient1: '--jdg-color-timeline-gradient-1',
+	timelineEventColorGradient2: '--jdg-color-timeline-gradient-2',
+	timelineEventColorGradient3: '--jdg-color-timeline-gradient-3'
+};
+
+export const jdgCssVars = {
+	text: 'var(--jdg-color-text)',
+	textSecondary: 'var(--jdg-color-text-secondary)',
+	title: 'var(--jdg-color-title)',
+	headerBackground: 'var(--jdg-color-header-background)',
+	contentBoxBackground: 'var(--jdg-color-content-box-background)',
+	imageLabelBackground: 'var(--jdg-color-image-label-background)',
+	inputBackground: 'var(--jdg-color-input-background)',
+	activeSubtle: 'var(--jdg-color-active-subtle)',
+	backgroundFillRange: [
+		'var(--jdg-color-bg-fill-0)',
+		'var(--jdg-color-bg-fill-1)',
+		'var(--jdg-color-bg-fill-2)'
+	],
+	timelineEventColorGradient1: 'var(--jdg-color-timeline-gradient-1)',
+	timelineEventColorGradient2: 'var(--jdg-color-timeline-gradient-2)',
+	timelineEventColorGradient3: 'var(--jdg-color-timeline-gradient-3)'
+};
+
+export function getThemeCssVarDeclarations(mode) {
+	const palette = mode === 'dark' ? darkPalette : lightPalette;
+	return Object.entries(cssVarNameMap)
+		.map(([key, varName]) => `${varName}: ${palette[key]}`)
+		.join('; ');
+}
+
 export const jdgColors = {
-	/* These colors define the accent colors for different sites */
-	/* lm = lightmode; dm = darkmode */
+	/* Mode-independent colors */
 	accentColorsCCP: ['#e0d26e', '#e69623', '#ce595e'],
 	accentColorsCCPRose: ['#e9acc1', '#ea9594', '#d47265'],
 	accentColorsJDG: ['#E1D779', '#D98014', '#BF3A0A'],
 	accentColorsPMX: ['#C4C4C4', '#727272FF', '#2A2A2A'],
-	active: '#0B84CB' /* any element that's interactive and isn't already using an accent color */,
+	active: '#0B84CB',
 	activeSecondary: '#88a8b9',
-	activeSubtle: '#e6f3ff',
 	compose: '#bfd0db',
 	delete: '#FF5757',
 	done: '#4dc44d',
 	disabled: '#B5B5B5',
 	cancel: '#8B989DFF',
-	backgroundFillRangeLm: [
-		'rgba(150, 150, 150, 1)',
-		'rgba(175, 175, 175, 1)',
-		'rgba(190, 190, 190, 1)'
-	],
-	text: '#323232',
-	textLight: '#737373',
+	textOnDark: '#ffffff',
+	/* Theme-sensitive colors (light-mode defaults for backward compatibility) */
+	...lightPalette,
+	/* Legacy aliases */
+	textLight: lightPalette.textSecondary,
 	textDm: '#ffffff',
-	title: '#4F4F4F',
-	headerBackground: 'rgba(250, 250, 250, 1)',
-	contentBoxBackground: 'rgba(252, 252, 252, 0.7)',
-	imageLabelBackground: 'rgba(255, 255, 255, 0.75)',
-	/* TIMELINE */
-	/* Timeline events gradiate from colors 1-3 */
-	timelineEventColorGradient1: 'rgba(227, 244, 223, 1)',
-	timelineEventColorGradient2: 'rgba(208, 240, 242, 1)',
-	timelineEventColorGradient3: 'rgba(218, 228, 248, 1)'
+	backgroundFillRangeLm: [
+		lightPalette.backgroundFillRange0,
+		lightPalette.backgroundFillRange1,
+		lightPalette.backgroundFillRange2
+	]
 };
 
 export const jdgSizes = {
@@ -499,12 +578,13 @@ export const setUpdatedHyperlinkStyleBar = (
 	linkColorContrastAdjustment,
 	accentColors,
 	useStripedStyle,
-	stripedColorOpacity
+	stripedColorOpacity,
+	resolvedTextColor = lightPalette.text
 ) => {
 	appCssHyperlinkBar.set(css`
 		${jdgLinkStyleBar}
 		a {
-			color: ${jdgColors.text};
+			color: ${jdgCssVars.text};
 		}
 
 		a.no-initial-highlight::before,
@@ -517,10 +597,10 @@ export const setUpdatedHyperlinkStyleBar = (
 				${convertHexToRGBA(accentColors[1], stripedColorOpacity)} 66%,
 				${convertHexToRGBA(accentColors[2], stripedColorOpacity)} 66%
 			)`
-				: `${adjustColorForContrast(linkColor, jdgColors.text, linkColorContrastAdjustment)}`};
+				: `${adjustColorForContrast(linkColor, resolvedTextColor, linkColorContrastAdjustment)}`};
 		}
 		a:before {
-			background: ${adjustColorForContrast(linkColor, jdgColors.text, linkColorContrastAdjustment)};
+			background: ${adjustColorForContrast(linkColor, resolvedTextColor, linkColorContrastAdjustment)};
 		}
 	`);
 };
@@ -554,14 +634,17 @@ export const jdgLinkStyleSimple = css`
 	}
 `;
 // sets UI state with the updated style given the desired color
-export const setUpdatedHyperlinkStyleSimple = (linkColor) => {
+export const setUpdatedHyperlinkStyleSimple = (
+	linkColor,
+	resolvedContentBgColor = lightPalette.contentBoxBackground
+) => {
 	appCssHyperlinkSimple.set(css`
 		${jdgLinkStyleSimple}
 		a {
-			color: ${adjustColorForContrast(linkColor, jdgColors.contentBoxBackground, 3)};
+			color: ${adjustColorForContrast(linkColor, resolvedContentBgColor, 3)};
 		}
 		a:hover {
-			color: ${adjustColorForContrast(linkColor, jdgColors.contentBoxBackground, 5)};
+			color: ${adjustColorForContrast(linkColor, resolvedContentBgColor, 5)};
 		}
 	`);
 };

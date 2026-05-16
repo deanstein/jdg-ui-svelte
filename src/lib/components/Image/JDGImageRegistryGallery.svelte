@@ -23,7 +23,7 @@
 		JDGCheckbox,
 		JDGSelect
 	} from '$lib/index.js';
-	import { jdgColors } from '$lib/jdg-shared-styles.js';
+	import { jdgColors, jdgCssVars } from '$lib/jdg-shared-styles.js';
 
 	// Sort options for JDGSelect
 	const sortOptionsGroup = {
@@ -349,14 +349,14 @@
 	const noResultsCss = css`
 		text-align: center;
 		padding: 40px 20px;
-		color: ${jdgColors.textLight};
+		color: ${jdgCssVars.textSecondary};
 		font-style: italic;
 	`;
 
 	const loadMoreIndicatorCss = css`
 		text-align: center;
 		padding: 16px;
-		color: ${jdgColors.textLight};
+		color: ${jdgCssVars.textSecondary};
 		font-size: 12px;
 	`;
 
@@ -365,7 +365,7 @@
 		padding: 12px;
 		margin-top: 8px;
 		font-size: 12px;
-		color: ${jdgColors.textLight};
+		color: ${jdgCssVars.textSecondary};
 		font-style: italic;
 	`;
 
@@ -481,7 +481,7 @@
 		{#if isFetchingRegistry}
 			<div class="loading-container">
 				<JDGLoadingSpinner spinnerHeightPx={60} />
-				<div style="margin-top: 12px; color: {jdgColors.textLight};">
+				<div style="margin-top: 12px; color: {jdgCssVars.textSecondary};">
 					Loading images from {registryRepoName}...
 				</div>
 			</div>

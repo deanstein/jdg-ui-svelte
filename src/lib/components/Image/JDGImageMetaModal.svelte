@@ -1181,7 +1181,7 @@
 									paddingTopBottom="5px"
 									isEnabled={false}
 									backgroundColor={jdgColors.activeSecondary}
-									textColor={jdgColors.textDm}
+									textColor={jdgColors.textOnDark}
 								/>
 							{:else}
 								<JDGButton
@@ -1193,7 +1193,7 @@
 									paddingTopBottom="5px"
 									isEnabled={true}
 									backgroundColor={jdgColors.activeSecondary}
-									textColor={jdgColors.textDm}
+									textColor={jdgColors.textOnDark}
 								/>
 							{/if}
 						</div>

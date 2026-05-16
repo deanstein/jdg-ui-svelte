@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { jdgColors } from '$lib/jdg-shared-styles.js';
+	import { jdgColors, jdgCssVars } from '$lib/jdg-shared-styles.js';
 
 	export let value = 0;
 	export let min = 0;
@@ -23,7 +23,7 @@
 
 	let sliderLabelCss = css`
 		font-size: ${labelFontSize};
-		color: #333;
+		color: ${jdgCssVars.text};
 		font-weight: 500;
 	`;
 

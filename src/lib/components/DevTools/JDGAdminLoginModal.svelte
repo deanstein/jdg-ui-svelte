@@ -4,6 +4,7 @@
 
 	import {
 		ADMIN_TOKEN_STORAGE_KEY,
+		colorMode,
 		isAdminMode,
 		showAdminLoginModal,
 		postAdminLoginFunction,
@@ -18,8 +19,11 @@
 		JDGInputContainer,
 		JDGTextInput,
 		lightenColor,
-		jdgColors
+		jdgColors,
+		getThemePalette
 	} from '$lib/index.js';
+
+	$: palette = getThemePalette($colorMode);
 
 	// modal state
 	let showErrorMessage = false;
@@ -58,8 +62,8 @@
 		adminFormPassphrase.set(event.target.value);
 	};
 
-	const formCss = css`
-		background-color: ${lightenColor(jdgColors.headerBackground, 0.45)};
+	$: formCss = css`
+		background-color: ${lightenColor(palette.headerBackground, 0.45)};
 	`;
 </script>
 

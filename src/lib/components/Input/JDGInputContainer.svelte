@@ -2,7 +2,7 @@
 	import { css } from '@emotion/css';
 
 	import JDGInputHint from './JDGInputHint.svelte';
-	import { jdgColors, jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgCssVars, jdgBreakpoints, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	// Primary label for input component
 	export let label = 'Some Fact or Field Name';
@@ -40,7 +40,7 @@
 
 	/* Label: small/medium/large by breakpoint (matches site strategy) */
 	const labelCss = css`
-		color: ${jdgColors.text};
+		color: ${jdgCssVars.text};
 		font-size: inherit;
 	`;
 </script>

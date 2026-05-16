@@ -3,23 +3,31 @@
 	import { css } from '@emotion/css';
 	import { slide } from 'svelte/transition';
 
-	import { isScrolling, isScrollingToAnchorTag, showNavSidebar } from '$lib/stores/jdg-ui-store.js';
+	import {
+		colorMode,
+		isScrolling,
+		isScrollingToAnchorTag,
+		showNavSidebar
+	} from '$lib/stores/jdg-ui-store.js';
 
 	import { setRgbaAlpha } from '$lib/index.js';
 	import { convertStringToAnchorTag } from '$lib/jdg-utils.js';
 
 	import { JDGNavItem } from '$lib/index.js';
-	import { jdgColors, jdgDurations, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgDurations, jdgSizes, getThemePalette } from '$lib/jdg-shared-styles.js';
 
 	export let navItems;
 	export let sideNavWidth = '250px';
 
-	const sideNavContainerCss = css`
+	$: palette = getThemePalette($colorMode);
+
+	let sideNavContainerCss;
+	$: sideNavContainerCss = css`
 		width: ${sideNavWidth};
 		a:before {
 			background-color: transparent;
 		}
-		background-color: ${setRgbaAlpha(jdgColors.headerBackground, 0.7)};
+		background-color: ${setRgbaAlpha(palette.headerBackground, 0.7)};
 	`;
 
 	const sideNavSlideWrapperCss = css`

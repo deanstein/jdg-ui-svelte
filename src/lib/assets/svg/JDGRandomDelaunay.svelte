@@ -3,9 +3,12 @@
 	import * as d3 from 'd3';
 	import { Delaunay } from 'd3-delaunay';
 
-	import { jdgColors } from '$lib/jdg-shared-styles.js';
+	import { getThemePalette } from '$lib/jdg-shared-styles.js';
 	import { generateGradient } from '$lib/jdg-graphics-factory.js';
 	import { getAccentColors } from '$lib/jdg-state-management.js';
+	import { colorMode } from '$lib/stores/jdg-ui-store.js';
+
+	$: palette = getThemePalette($colorMode);
 
 	export let numberOfPoints = 8;
 	export let edgeBufferRatio = 0.25; // points will be this far away from screen edges (ratio of total width or height)
@@ -53,9 +56,9 @@
 		// define fill colors and border colors
 		const fillColors = generateGradient(
 			triangles.length,
-			jdgColors.backgroundFillRangeLm[0],
-			jdgColors.backgroundFillRangeLm[1],
-			jdgColors.backgroundFillRangeLm[2]
+			palette.backgroundFillRange0,
+			palette.backgroundFillRange1,
+			palette.backgroundFillRange2
 		);
 
 		// console.log("created " + triangles.length + " delaunay triangles for background image.")

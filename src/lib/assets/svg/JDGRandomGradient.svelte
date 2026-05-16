@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import * as d3 from 'd3';
 
-	import { jdgColors } from '$lib/jdg-shared-styles.js';
+	import { jdgCssVars } from '$lib/jdg-shared-styles.js';
 	import { getAccentColors } from '$lib/jdg-state-management.js';
 
 	export let numberOfPoints = 3;
@@ -29,9 +29,9 @@
 		});
 
 		// Define the three base colors - use custom colors if provided, otherwise use defaults
-		const baseColor1 = color1 || jdgColors.backgroundFillRangeLm[0];
-		const baseColor2 = color2 || jdgColors.backgroundFillRangeLm[1];
-		const baseColor3 = color3 || jdgColors.backgroundFillRangeLm[2];
+		const baseColor1 = color1 || jdgCssVars.backgroundFillRange[0];
+		const baseColor2 = color2 || jdgCssVars.backgroundFillRange[1];
+		const baseColor3 = color3 || jdgCssVars.backgroundFillRange[2];
 		const baseColors = [baseColor1, baseColor2, baseColor3];
 
 		if (drawDebugBorders) {

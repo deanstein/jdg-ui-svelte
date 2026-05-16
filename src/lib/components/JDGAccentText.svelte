@@ -22,7 +22,7 @@
 	export let secondaryText = undefined; // appears below the main text, like a quote attribution
 	export let secondaryTextFontFamily = $appFontFamily;
 	export let secondaryTextBold = false;
-	export let textColor = jdgColors.textDm;
+	export let textColor = jdgColors.textOnDark;
 
 	const accentTextContainerCss = css`
 		gap: ${isQuote ? '0.7rem' : '0.2rem'};

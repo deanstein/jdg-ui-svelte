@@ -1,11 +1,10 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { isMobileBreakpoint } from '$lib/stores/jdg-ui-store.js';
-	import { carouselHintHeightPx } from '$lib/stores/jdg-ui-store.js';
+	import { colorMode, isMobileBreakpoint, carouselHintHeightPx } from '$lib/stores/jdg-ui-store.js';
 	import { setRgbaAlpha } from '$lib/jdg-utils.js';
 
-	import { jdgColors, jdgSizes, jdgBreakpoints } from '$lib/index.js';
+	import { jdgCssVars, jdgSizes, jdgBreakpoints, getThemePalette } from '$lib/index.js';
 	import { JDGOverlay, JDGRandomGradient } from '$lib/index.js';
 
 	export let onClickCloseButton = undefined;
@@ -23,7 +22,7 @@
 	export let padding = '10px';
 	// Default to auto for proper scrolling
 	export let overflow = 'auto';
-	export let backgroundColor = jdgColors.contentBoxBackground;
+	export let backgroundColor = undefined;
 	export let transparency = undefined;
 	// Optional gradient colors - if provided, use JDGRandomGradient instead of backgroundColor
 	export let gradientColor1 = undefined;
@@ -35,6 +34,9 @@
 	// Minimum padding around content when it maximizes available space
 	const minPadding = '20px';
 
+	$: palette = getThemePalette($colorMode);
+	$: resolvedBackgroundColor = backgroundColor ?? palette.contentBoxBackground;
+
 	let modalContentContainerCss = css``;
 	$: {
 		// Only set background-color if gradient colors are not provided
@@ -42,8 +44,8 @@
 			gradientColor1 && gradientColor2 && gradientColor3
 				? 'transparent'
 				: transparency
-					? setRgbaAlpha(backgroundColor, transparency)
-					: backgroundColor;
+					? setRgbaAlpha(resolvedBackgroundColor, transparency)
+					: resolvedBackgroundColor;
 
 		modalContentContainerCss = css`
 			width: ${$isMobileBreakpoint && maximizeWidthOnMobile
@@ -81,12 +83,12 @@
 	`;
 
 	const modalTitleBarContainerCss = css`
-		background-color: ${jdgColors.headerBackground};
+		background-color: ${jdgCssVars.headerBackground};
 	`;
 
 	/* Title: small/medium/large by breakpoint, slightly bigger than body (site strategy) */
 	const modalTitleCss = css`
-		color: ${jdgColors.title};
+		color: ${jdgCssVars.title};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: 1.1rem;
 		}
@@ -102,7 +104,7 @@
 
 	/* Subtitle: same breakpoint strategy, one step down from title */
 	const modalSubtitleCss = css`
-		color: ${jdgColors.text};
+		color: ${jdgCssVars.text};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: 0.9rem;
 		}

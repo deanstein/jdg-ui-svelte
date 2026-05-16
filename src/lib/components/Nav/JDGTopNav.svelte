@@ -8,7 +8,7 @@
 	import { breakpointHandler } from '$lib/jdg-ui-management.js';
 
 	import { JDGMenuIcon, JDGNavItem } from '$lib/index.js';
-	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgCssVars, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	// nav items are an array of objects
 	export let navItems = [];
@@ -47,7 +47,7 @@
 	`;
 
 	const mobileNavButtonCss = css`
-		color: ${jdgColors.text};
+		color: ${jdgCssVars.text};
 		background-color: transparent;
 	`;
 

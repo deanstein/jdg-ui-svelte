@@ -3,7 +3,7 @@
 	import { fade } from 'svelte/transition';
 	import { css } from '@emotion/css';
 
-	import { showHeaderStripes } from '$lib/stores/jdg-ui-store.js';
+	import { colorMode, showHeaderStripes } from '$lib/stores/jdg-ui-store.js';
 
 	import { incrementHighestZIndex } from '$lib/jdg-state-management.js';
 	import { breakpointHandler } from '$lib/jdg-ui-management.js';
@@ -14,7 +14,8 @@
 	import {
 		jdgBoxShadowStandard,
 		jdgBreakpoints,
-		jdgColors,
+		jdgCssVars,
+		getThemePalette,
 		jdgSizes
 	} from '$lib/jdg-shared-styles.js';
 	import getJdgImageMetaRegistry from '$lib/jdg-image-meta-registry.js';
@@ -28,8 +29,11 @@
 	export let showNav = true;
 	export let useMobileNav = false; // force use mobile nav at all breakpoints
 	export let navItems = [];
-	export let textColor = jdgColors.text;
-	export let backgroundColorRgba = jdgColors.headerBackground;
+	export let textColor = jdgCssVars.text;
+	export let backgroundColorRgba = undefined;
+
+	$: palette = getThemePalette($colorMode);
+	$: resolvedBackgroundColor = backgroundColorRgba ?? palette.headerBackground;
 	export let showShadow = true;
 	export let suppressAlphaOnScroll = false; // disable alpha past some scroll threshold
 
@@ -63,7 +67,7 @@
 		const threshold = 0.1;
 
 		// Get the original alpha value from the rgba string
-		let originalAlpha = getRgbaAlpha(backgroundColorRgba);
+		let originalAlpha = getRgbaAlpha(resolvedBackgroundColor);
 
 		// if the original alpha was 1, force it to something lower
 		// for the requested effect to be visible
@@ -80,7 +84,7 @@
 	};
 
 	let headerContainerOuterCss = css`
-		color: ${jdgColors.text};
+		color: ${jdgCssVars.text};
 		z-index: ${incrementHighestZIndex()};
 	`;
 
@@ -115,7 +119,7 @@
 	const headerLogoSupertitleCss = css`
 		font-size: ${jdgSizes.fontSizeHeaderSupertitle};
 		text-align: ${logoJustification === 'center' ? 'center' : 'left'};
-		color: ${jdgColors.textLight};
+		color: ${jdgCssVars.textSecondary};
 	`;
 
 	const headerLogoTitleCss = css`
@@ -151,8 +155,8 @@
 			padding-top: ${jdgSizes.headerTopBottomPadding};
 			padding-bottom: ${jdgSizes.headerTopBottomPadding};
 			background-color: ${suppressAlphaOnScroll
-				? setRgbaAlpha(backgroundColorRgba, scrollAlpha)
-				: backgroundColorRgba};
+				? setRgbaAlpha(resolvedBackgroundColor, scrollAlpha)
+				: resolvedBackgroundColor};
 			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 				height: ${jdgSizes.headerHeightSm};
 			}

@@ -1,6 +1,6 @@
 <script>
 	import { css } from '@emotion/css';
-	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgColors, jdgCssVars, jdgSizes } from '$lib/jdg-shared-styles.js';
 
 	export let isEnabled = true;
 	export let inputValue = '';
@@ -103,7 +103,7 @@
 	}
 
 	$: inputCss = css`
-		color: ${fontColorOverride ? fontColorOverride : jdgColors.text};
+		color: ${fontColorOverride ? fontColorOverride : jdgCssVars.text};
 		text-align: ${textAlignOverride ? textAlignOverride : 'left'};
 		${fontSizeOverride
 			? `font-size: ${fontSizeOverride};`
@@ -214,7 +214,7 @@
 	}
 
 	input:disabled {
-		background-color: white;
+		background-color: var(--jdg-color-input-background);
 		border: 2px solid gainsboro;
 		-webkit-text-fill-color: inherit;
 		-webkit-opacity: 1;
@@ -226,7 +226,7 @@
 		top: 100%;
 		left: 0;
 		right: 0;
-		background: white;
+		background: var(--jdg-color-input-background);
 		border: 1px solid #ccc;
 		border-radius: 4px;
 		max-height: 200px;
