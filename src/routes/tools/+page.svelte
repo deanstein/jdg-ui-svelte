@@ -1,7 +1,9 @@
 <script>
 	import { onDestroy } from 'svelte';
 	import { listPackageVersions } from '$lib/tools/list-versions/list-package-versions-client.js';
-	import { allowTextSelection } from '$lib/stores/jdg-ui-store.js';
+	import { css } from '@emotion/css';
+	import { allowTextSelection, colorMode } from '$lib/stores/jdg-ui-store.js';
+	import { themeColors } from '$lib/jdg-shared-styles.js';
 	import imageMetaRegistry from '../image-meta-registry.js';
 	import { addCloudinaryUrlWidth, isUrlCloudinary } from '$lib/jdg-utils.js';
 	import {
@@ -15,6 +17,19 @@
 	} from '$lib/index.js';
 
 	allowTextSelection.set(true);
+
+	$: preBlockBg = $colorMode === 'dark' ? 'rgba(55, 55, 55, 1)' : '#f5f5f5';
+	$: toolsThemeCss = css`
+		.cli-block,
+		.sync-output,
+		.sync-step-or code {
+			background: ${preBlockBg};
+			color: ${$themeColors.text};
+		}
+		.sync-step-or {
+			color: ${$themeColors.textSecondary};
+		}
+	`;
 
 	// --- NPM + GitHub Version Sync ---
 	let listOutput = '';
@@ -646,6 +661,7 @@
 </script>
 
 <JDGContentContainer overlapWithHeader={false}>
+	<div class={toolsThemeCss}>
 	<JDGJumpTo />
 
 	<JDGContentBoxFloating title="NPM + GitHub Version Sync">
@@ -1394,6 +1410,7 @@ yarn convert-image-registry-to-json --help</pre>
 			{/if}
 		{/if}
 	</JDGContentBoxFloating>
+	</div>
 </JDGContentContainer>
 
 <style>
@@ -1426,10 +1443,8 @@ yarn convert-image-registry-to-json --help</pre>
 	}
 	.sync-step-or {
 		font-size: 0.9em;
-		color: var(--jdg-text-secondary, #666);
 	}
 	.sync-step-or code {
-		background: var(--jdg-bg-secondary, #f5f5f5);
 		padding: 0.1rem 0.3rem;
 		border-radius: 4px;
 	}
@@ -1440,7 +1455,6 @@ yarn convert-image-registry-to-json --help</pre>
 		max-height: 400px;
 		overflow: auto;
 		font-size: 0.85rem;
-		background: var(--jdg-bg-secondary, #f5f5f5);
 		padding: 1rem;
 		border-radius: 6px;
 		margin: 0.5rem auto 0;
@@ -1451,7 +1465,6 @@ yarn convert-image-registry-to-json --help</pre>
 	}
 	.cli-block {
 		text-align: left;
-		background: var(--jdg-bg-secondary, #f5f5f5);
 		padding: 0.5rem 0.75rem;
 		border-radius: 6px;
 		font-size: 0.9rem;
