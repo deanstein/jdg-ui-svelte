@@ -1323,6 +1323,24 @@
 	) {
 		tick().then(scrollToEventInTimeline);
 	}
+
+	// Update modal gradient to match the current event's color pair when cycling through events
+	$: if ($showTimelineEventModal && $draftTimelineEvent && eventColorPairs.length > 0) {
+		const eventIndex = timelineRowItems.findIndex(
+			(r) => r.event?.id === $draftTimelineEvent?.id
+		);
+		if (eventIndex >= 0) {
+			const colorPairIndex = (emptyStateEvent ? 1 : 0) + eventIndex;
+			const colorPair = eventColorPairs[colorPairIndex];
+			if (colorPair) {
+				modalGradientColors.set({
+					color1: colorPair.backgroundColor,
+					color2: colorPair.gradientMirrorColor,
+					color3: colorPair.backgroundColor
+				});
+			}
+		}
+	}
 </script>
 
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
@@ -1861,7 +1879,7 @@
 			title={null}
 			subtitle={null}
 			onClickCloseButton={() => (showTimelineModal = false)}
-			backgroundColor="rgba(245, 245, 245, 1)"
+			backgroundColor={$colorMode === 'dark' ? 'rgba(45, 45, 45, 1)' : 'rgba(245, 245, 245, 1)'}
 			width="90vw"
 			height="85dvh"
 			maxWidth="none"

@@ -10,7 +10,7 @@
 
 	import { JDGImage, JDGImageCaptionAttribution, JDGOverlay } from '$lib/index.js';
 	import { jdgBreakpoints } from '$lib/jdg-shared-styles.js';
-	import { imageViewerScale, imageViewerWidth } from '$lib/stores/jdg-ui-store.js';
+	import { colorMode, imageViewerScale, imageViewerWidth } from '$lib/stores/jdg-ui-store.js';
 
 	export let imageMeta = instantiateObject(jdgImageMeta);
 
@@ -43,7 +43,7 @@
 		hideImageDetailModal();
 	}}
 	closeOnOverlayClick={$imageViewerScale <= 1}
-	colorRgba="rgba(255, 255, 255, 0.6)"
+	colorRgba={$colorMode === 'dark' ? 'rgba(30, 30, 30, 0.6)' : 'rgba(255, 255, 255, 0.6)'}
 >
 	<div
 		class="image-and-caption-wrapper {imageAndCaptionWrapperCss}"

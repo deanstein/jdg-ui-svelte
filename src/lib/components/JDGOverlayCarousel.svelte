@@ -3,15 +3,16 @@
 	import { get } from 'svelte/store';
 	import { css } from '@emotion/css';
 
-	import { isMobileBreakpoint } from '$lib/stores/jdg-ui-store.js';
+	import { colorMode, isMobileBreakpoint } from '$lib/stores/jdg-ui-store.js';
 	import { carouselNav, carouselHintHeightPx } from '$lib/stores/jdg-ui-store.js';
-	import { jdgBreakpoints } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, themeColors } from '$lib/jdg-shared-styles.js';
 
 	import JDGOverlay from '$lib/components/JDGOverlay.svelte';
 	import JDGButton from '$lib/components/Input/JDGButton.svelte';
 
 	/** Wrapper around JDGOverlay that adds carousel nav (prev/next buttons, wheel/key/touch). Pass-through props match JDGOverlay. */
-	export let colorRgba = 'rgba(255, 255, 255, 0.8)';
+	export let colorRgba = undefined;
+	$: resolvedColorRgba = colorRgba ?? ($colorMode === 'dark' ? 'rgba(30, 30, 30, 0.8)' : 'rgba(255, 255, 255, 0.8)');
 	export let showTitleBar = true;
 	export let onCloseFunction = () => {};
 	export let closeOnOverlayClick = true;
@@ -200,7 +201,7 @@
 		$carouselNav && $carouselNav.currentIndex != null && $carouselNav.totalCount != null;
 </script>
 
-<JDGOverlay {colorRgba} {showTitleBar} {onCloseFunction} {closeOnOverlayClick} {useBlur}>
+<JDGOverlay colorRgba={resolvedColorRgba} {showTitleBar} {onCloseFunction} {closeOnOverlayClick} {useBlur}>
 	<div
 		class="jdg-overlay-carousel-content"
 		role="button"
@@ -239,6 +240,7 @@
 					<div
 						bind:this={hintRef}
 						class="jdg-overlay-carousel-hint jdg-overlay-carousel-hint-above-slot"
+						style="color: {$themeColors.textSecondary};"
 						aria-hidden="true"
 					>
 						{#if $isMobileBreakpoint}
@@ -288,7 +290,6 @@
 		min-height: 0;
 		width: 100%;
 	}
-	/* hint: color/font/breakpoint match $themeColors.textSecondary, jdgSizes.fontSizeBodyXSm, jdgBreakpoints.width[0] */
 	.jdg-overlay-carousel-hint {
 		flex-shrink: 0;
 		width: 100%;
@@ -297,7 +298,7 @@
 		justify-content: center;
 		gap: 6px;
 		padding: 8px;
-		color: #737373;
+		color: inherit;
 		font-size: 0.75rem;
 		box-sizing: border-box;
 	}

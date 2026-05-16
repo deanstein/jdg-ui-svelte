@@ -37,6 +37,7 @@
 	$: palette = getThemePalette($colorMode);
 	$: resolvedBackgroundColor = backgroundColor ?? palette.contentBoxBackground;
 
+
 	let modalContentContainerCss = css``;
 	$: {
 		// Only set background-color if gradient colors are not provided
@@ -155,7 +156,7 @@
 				class:modal-closing={isClosing}
 			>
 				{#if gradientColor1 && gradientColor2 && gradientColor3}
-					<div class="modal-background-gradient">
+					<div class="modal-background-gradient" style="background-color: {gradientColor3};">
 						<JDGRandomGradient
 							numberOfPoints={10}
 							edgeBufferRatio={0.1}
@@ -163,6 +164,7 @@
 							color1={gradientColor1}
 							color2={gradientColor2}
 							color3={gradientColor3}
+							opacity={0.75}
 						/>
 					</div>
 				{/if}
@@ -172,14 +174,15 @@
 						style="position: relative; z-index: 1;"
 					>
 						{#if gradientColor1 && gradientColor2 && gradientColor3}
-							<div class="modal-title-bar-gradient">
+							<div class="modal-title-bar-gradient" style="background-color: {gradientColor2};">
 								<JDGRandomGradient
 									numberOfPoints={8}
 									edgeBufferRatio={0.1}
 									drawDebugBorders={false}
-									color1={gradientColor1}
-									color2={gradientColor2}
-									color3={gradientColor3}
+									color1={gradientColor3}
+									color2={gradientColor1}
+									color3={gradientColor2}
+									opacity={0.75}
 								/>
 							</div>
 						{/if}
@@ -226,7 +229,7 @@
 					class:modal-closing={isClosing}
 				>
 					{#if gradientColor1 && gradientColor2 && gradientColor3}
-						<div class="modal-background-gradient">
+						<div class="modal-background-gradient" style="background-color: {gradientColor3};">
 							<JDGRandomGradient
 								numberOfPoints={10}
 								edgeBufferRatio={0.1}
@@ -234,6 +237,7 @@
 								color1={gradientColor1}
 								color2={gradientColor2}
 								color3={gradientColor3}
+								opacity={0.75}
 							/>
 						</div>
 					{/if}
@@ -243,14 +247,15 @@
 							style="position: relative; z-index: 1;"
 						>
 							{#if gradientColor1 && gradientColor2 && gradientColor3}
-								<div class="modal-title-bar-gradient">
+								<div class="modal-title-bar-gradient" style="background-color: {gradientColor2};">
 									<JDGRandomGradient
 										numberOfPoints={8}
 										edgeBufferRatio={0.1}
 										drawDebugBorders={false}
-										color1={gradientColor1}
-										color2={gradientColor2}
-										color3={gradientColor3}
+										color1={gradientColor3}
+										color2={gradientColor1}
+										color3={gradientColor2}
+										opacity={0.75}
 									/>
 								</div>
 							{/if}
@@ -352,7 +357,6 @@
 		z-index: 0;
 		pointer-events: none;
 		overflow: hidden;
-		background-color: white;
 	}
 
 	.modal-title-bar-container {

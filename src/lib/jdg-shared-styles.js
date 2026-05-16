@@ -1,6 +1,13 @@
 import { derived } from 'svelte/store';
 import { css } from '@emotion/css';
 import { adjustColorForContrast, convertHexToRGBA } from './jdg-utils.js';
+
+const darkenRgba = (rgba, ratio) => {
+	const m = rgba.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+	if (!m) return rgba;
+	const f = 1 - ratio;
+	return `rgba(${Math.round(m[1] * f)}, ${Math.round(m[2] * f)}, ${Math.round(m[3] * f)}, 1)`;
+};
 import { appCssHyperlinkBar, appCssHyperlinkSimple, colorMode } from './stores/jdg-ui-store.js';
 
 export const jdgBreakpoints = {
@@ -47,9 +54,9 @@ const darkPalette = {
 	backgroundFillRange0: 'rgba(99, 99, 99, 1)',
 	backgroundFillRange1: 'rgba(149, 149, 149, 1)',
 	backgroundFillRange2: 'rgba(203, 203, 203, 1)',
-	timelineEventColorGradient1: 'rgba(35, 60, 32, 1)',
-	timelineEventColorGradient2: 'rgba(28, 55, 58, 1)',
-	timelineEventColorGradient3: 'rgba(32, 40, 62, 1)'
+	timelineEventColorGradient1: 'rgba(55, 82, 50, 1)',
+	timelineEventColorGradient2: 'rgba(45, 70, 88, 1)',
+	timelineEventColorGradient3: 'rgba(62, 52, 92, 1)'
 };
 
 export const jdgThemePalettes = { light: lightPalette, dark: darkPalette };
