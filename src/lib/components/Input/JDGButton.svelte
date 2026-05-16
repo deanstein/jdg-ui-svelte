@@ -166,6 +166,7 @@
 					? adjustColorForContrast(effectiveBackgroundColor, textColor, contrastRatio)
 					: effectiveBackgroundColor
 				: jdgColors.disabled};
+			transition: color 0.2s ease, background-color 0.2s ease;
 			:hover {
 				color: ${textColorHover};
 				background-color: ${isEnabled ? effectiveBackgroundHover : jdgColors.disabled};
