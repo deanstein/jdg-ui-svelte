@@ -58,5 +58,5 @@
 	{fontSize}
 	paddingTopBottom="0"
 	paddingLeftRight="0"
-	tooltip="{labels[$colorModeSetting]} mode, click to change"
+	tooltip="{labels[$colorModeSetting]} mode - click to change"
 />
