@@ -662,754 +662,761 @@
 
 <JDGContentContainer overlapWithHeader={false}>
 	<div class={toolsThemeCss}>
-	<JDGJumpTo />
+		<JDGJumpTo />
 
-	<JDGContentBoxFloating title="NPM + GitHub Version Sync">
-		<JDGBodyCopy paddingTop="0" textAlign="center">
-			Backfill GitHub releases and tags to match published npm versions.
-			<br />
-			Run these from the repo root (no env vars needed).
-			<br />
-			<div class="sync-instructions">
-				<div class="sync-step">
-					<p class="sync-step-title"><b>1. List versions</b></p>
-					<p class="sync-step-desc">npm package versions and GitHub tags (read-only):</p>
-					<div class="sync-step-actions">
-						<JDGButton
-							label={listRunning ? 'Running…' : 'List versions'}
-							faIcon="fa-list"
-							onClickFunction={runListVersions}
-							isEnabled={!listRunning}
-							paddingLeftRight="0.65rem"
-							paddingTopBottom="0.35rem"
-						/>
-						<div class="sync-step-or">or:<br /><code>yarn list-versions</code></div>
+		<JDGContentBoxFloating title="NPM + GitHub Version Sync">
+			<JDGBodyCopy paddingTop="0" textAlign="center">
+				Backfill GitHub releases and tags to match published npm versions.
+				<br />
+				Run these from the repo root (no env vars needed).
+				<br />
+				<div class="sync-instructions">
+					<div class="sync-step">
+						<p class="sync-step-title"><b>1. List versions</b></p>
+						<p class="sync-step-desc">npm package versions and GitHub tags (read-only):</p>
+						<div class="sync-step-actions">
+							<JDGButton
+								label={listRunning ? 'Running…' : 'List versions'}
+								faIcon="fa-list"
+								onClickFunction={runListVersions}
+								isEnabled={!listRunning}
+								paddingLeftRight="0.65rem"
+								paddingTopBottom="0.35rem"
+							/>
+							<div class="sync-step-or">or:<br /><code>yarn list-versions</code></div>
+						</div>
+						{#if listOutput}
+							<pre class="sync-output">{listOutput}</pre>
+						{/if}
 					</div>
-					{#if listOutput}
-						<pre class="sync-output">{listOutput}</pre>
-					{/if}
-				</div>
-				<div class="sync-step">
-					<p class="sync-step-title"><b>2. Preview sync</b></p>
-					<p class="sync-step-desc">
-						Dry run, no tags/releases created.
-						<br />
-						<code>--hard-limit 1</code> only considers the newest version (fast when only the latest
-						is missing).
-						<code>--limit 10</code> caps how many would be tagged per run.
-					</p>
-					<pre class="cli-block">yarn backfill
+					<div class="sync-step">
+						<p class="sync-step-title"><b>2. Preview sync</b></p>
+						<p class="sync-step-desc">
+							Dry run, no tags/releases created.
+							<br />
+							<code>--hard-limit 1</code> only considers the newest version (fast when only the
+							latest is missing).
+							<code>--limit 10</code> caps how many would be tagged per run.
+						</p>
+						<pre class="cli-block">yarn backfill
 yarn backfill --hard-limit 1
 yarn backfill --limit 10</pre>
-				</div>
-				<div class="sync-step">
-					<p class="sync-step-title"><b>3. Execute sync</b></p>
-					<p class="sync-step-desc">
-						Create tags and releases for real.
-						<br />
-						<code>--hard-limit 1</code> only considers the newest version.
-						<code>--limit 10</code> tags at most 10 that need it per run; next run continues with the
-						next batch.
-					</p>
-					<pre class="cli-block">yarn backfill --execute
+					</div>
+					<div class="sync-step">
+						<p class="sync-step-title"><b>3. Execute sync</b></p>
+						<p class="sync-step-desc">
+							Create tags and releases for real.
+							<br />
+							<code>--hard-limit 1</code> only considers the newest version.
+							<code>--limit 10</code> tags at most 10 that need it per run; next run continues with the
+							next batch.
+						</p>
+						<pre class="cli-block">yarn backfill --execute
 yarn backfill --execute --hard-limit 1
 yarn backfill --execute --limit 10</pre>
+					</div>
 				</div>
-			</div>
-		</JDGBodyCopy>
-	</JDGContentBoxFloating>
+			</JDGBodyCopy>
+		</JDGContentBoxFloating>
 
-	<JDGContentBoxFloating title="Convert Image Registry to JSON">
-		<JDGBodyCopy paddingTop="0" textAlign="center">
-			One-time migration: reads the imageMetaRegistry object from a JS file and writes it as
-			pretty-printed JSON. Run from repo root. Defaults: <code>src/lib/image-meta-registry.js</code>
-			→
-			<code>src/lib/image-meta-registry.json</code>.
-			<pre class="cli-block">yarn convert-image-registry-to-json
+		<JDGContentBoxFloating title="Convert Image Registry to JSON">
+			<JDGBodyCopy paddingTop="0" textAlign="center">
+				One-time migration: reads the imageMetaRegistry object from a JS file and writes it as
+				pretty-printed JSON. Run from repo root. Defaults: <code
+					>src/lib/image-meta-registry.js</code
+				>
+				→
+				<code>src/lib/image-meta-registry.json</code>.
+				<pre class="cli-block">yarn convert-image-registry-to-json
 yarn convert-image-registry-to-json --input path/to/registry.js --output path/to/registry.json
 yarn convert-image-registry-to-json --help</pre>
-		</JDGBodyCopy>
-	</JDGContentBoxFloating>
+			</JDGBodyCopy>
+		</JDGContentBoxFloating>
 
-	<JDGContentBoxFloating title="Apply Watermark to Images">
-		<JDGBodyCopy paddingTop="0">
-			Drag and drop images or use the drop zone to add files. Set your watermark URL (e.g.
-			Cloudinary), logo/text opacity, blend mode, and placement. Download a single image or all at
-			once.
-		</JDGBodyCopy>
+		<JDGContentBoxFloating title="Apply Watermark to Images">
+			<JDGBodyCopy paddingTop="0">
+				Drag and drop images or use the drop zone to add files. Set your watermark URL (e.g.
+				Cloudinary), logo/text opacity, blend mode, and placement. Download a single image or all at
+				once.
+			</JDGBodyCopy>
 
-		<div class="watermark-options">
-			<JDGInputContainer label="Watermark type">
-				<div class="radio-group">
-					<label class="radio-label">
-						<input type="radio" name="watermarkType" value="image" bind:group={watermarkType} />
-						Image
-					</label>
-					<label class="radio-label">
-						<input type="radio" name="watermarkType" value="text" bind:group={watermarkType} />
-						Text
-					</label>
-					<label class="radio-label">
-						<input
-							type="radio"
-							name="watermarkType"
-							value="image+text"
-							bind:group={watermarkType}
-						/>
-						Image + text
-					</label>
-				</div>
-			</JDGInputContainer>
-
-			{#if watermarkType === 'image'}
-				<JDGInputContainer label="Logo opacity">
-					<input
-						type="range"
-						class="range-input"
-						min="0"
-						max="1"
-						step="0.05"
-						bind:value={logoOpacity}
-					/>
-					<span class="range-value">{Math.round(logoOpacity * 100)}%</span>
+			<div class="watermark-options">
+				<JDGInputContainer label="Watermark type">
+					<div class="radio-group">
+						<label class="radio-label">
+							<input type="radio" name="watermarkType" value="image" bind:group={watermarkType} />
+							Image
+						</label>
+						<label class="radio-label">
+							<input type="radio" name="watermarkType" value="text" bind:group={watermarkType} />
+							Text
+						</label>
+						<label class="radio-label">
+							<input
+								type="radio"
+								name="watermarkType"
+								value="image+text"
+								bind:group={watermarkType}
+							/>
+							Image + text
+						</label>
+					</div>
 				</JDGInputContainer>
-				<JDGInputContainer label="Watermark image URL">
-					<input
-						type="url"
-						class="text-input"
-						bind:value={watermarkUrl}
-						placeholder="https://res.cloudinary.com/..."
-					/>
-				</JDGInputContainer>
-				<JDGInputContainer label="Logo size">
-					<div class="size-row">
+
+				{#if watermarkType === 'image'}
+					<JDGInputContainer label="Logo opacity">
 						<input
-							type="number"
-							class="number-input"
-							min="1"
-							max={watermarkImageSizeUnit === '%' ? 100 : 800}
-							step={watermarkImageSizeUnit === '%' ? 0.01 : 1}
-							bind:value={watermarkImageSize}
+							type="range"
+							class="range-input"
+							min="0"
+							max="1"
+							step="0.05"
+							bind:value={logoOpacity}
 						/>
-						<select class="select-input size-unit" bind:value={watermarkImageSizeUnit}>
-							<option value="%">%</option>
-							<option value="px">px</option>
-						</select>
-						{#if watermarkImageSizeUnit === '%'}
-							<span class="size-suffix">of image height</span>
+						<span class="range-value">{Math.round(logoOpacity * 100)}%</span>
+					</JDGInputContainer>
+					<JDGInputContainer label="Watermark image URL">
+						<input
+							type="url"
+							class="text-input"
+							bind:value={watermarkUrl}
+							placeholder="https://res.cloudinary.com/..."
+						/>
+					</JDGInputContainer>
+					<JDGInputContainer label="Logo size">
+						<div class="size-row">
+							<input
+								type="number"
+								class="number-input"
+								min="1"
+								max={watermarkImageSizeUnit === '%' ? 100 : 800}
+								step={watermarkImageSizeUnit === '%' ? 0.01 : 1}
+								bind:value={watermarkImageSize}
+							/>
+							<select class="select-input size-unit" bind:value={watermarkImageSizeUnit}>
+								<option value="%">%</option>
+								<option value="px">px</option>
+							</select>
+							{#if watermarkImageSizeUnit === '%'}
+								<span class="size-suffix">of image height</span>
+							{/if}
+						</div>
+						{#if watermarkImageSizeUnit === 'px'}
+							<span class="size-hint">Target logo height; width follows aspect ratio</span>
 						{/if}
-					</div>
-					{#if watermarkImageSizeUnit === 'px'}
-						<span class="size-hint">Target logo height; width follows aspect ratio</span>
-					{/if}
-				</JDGInputContainer>
-				<JDGInputContainer label="Blend mode">
-					<select class="select-input" bind:value={blendMode}>
-						{#each BLEND_OPTIONS as opt}
-							<option value={opt.value}>{opt.label}</option>
-						{/each}
-					</select>
-				</JDGInputContainer>
-				<JDGH3H4
-					h3String="Logo shadow"
-					h4String="Drop shadow around the mark"
-					paddingTop="0.5rem"
-					paddingBottom="0.85rem"
-				/>
-				<JDGInputContainer label="Enable logo outline">
-					<label class="radio-label">
-						<input type="checkbox" bind:checked={logoOutline} />
-						Drop shadow (reads as outline on light photos)
-					</label>
-				</JDGInputContainer>
-				{#if logoOutline}
-					<JDGInputContainer label="Blur / spread (ref. 600px edge)">
-						<input
-							type="range"
-							class="range-input"
-							min="0"
-							max="28"
-							step="0.5"
-							bind:value={logoShadowBlur}
-						/>
-						<span class="range-value">{logoShadowBlur}px</span>
 					</JDGInputContainer>
-					<JDGInputContainer label="Shadow opacity">
-						<input
-							type="range"
-							class="range-input"
-							min="0"
-							max="100"
-							step="1"
-							bind:value={logoShadowOpacity}
-						/>
-						<span class="range-value">{logoShadowOpacity}%</span>
-					</JDGInputContainer>
-					<JDGInputContainer label="Shadow layers">
-						<input
-							type="range"
-							class="range-input"
-							min="1"
-							max="3"
-							step="1"
-							bind:value={logoShadowLayers}
-						/>
-						<span class="range-value">{logoShadowLayers}</span>
-						<span class="size-hint"
-							>Stacked halos: stronger on flat / one-color PNGs. 3 = max edge.</span
-						>
-					</JDGInputContainer>
-					<div class="row-inputs">
-						<JDGInputContainer label="Offset X">
-							<input
-								type="range"
-								class="range-input"
-								min="-20"
-								max="20"
-								step="1"
-								bind:value={logoShadowOffsetX}
-							/>
-							<span class="range-value">{logoShadowOffsetX}px</span>
-						</JDGInputContainer>
-						<JDGInputContainer label="Offset Y">
-							<input
-								type="range"
-								class="range-input"
-								min="-20"
-								max="20"
-								step="1"
-								bind:value={logoShadowOffsetY}
-							/>
-							<span class="range-value">{logoShadowOffsetY}px</span>
-						</JDGInputContainer>
-					</div>
-				{/if}
-			{:else if watermarkType === 'image+text'}
-				<JDGH3H4
-					h3String="Logo"
-					h4String="Image URL, size, and blend"
-					paddingTop="0.5rem"
-					paddingBottom="0.85rem"
-				/>
-				<JDGInputContainer label="Logo opacity">
-					<input
-						type="range"
-						class="range-input"
-						min="0"
-						max="1"
-						step="0.05"
-						bind:value={logoOpacity}
-					/>
-					<span class="range-value">{Math.round(logoOpacity * 100)}%</span>
-				</JDGInputContainer>
-				<JDGInputContainer label="Watermark image URL">
-					<input
-						type="url"
-						class="text-input"
-						bind:value={watermarkUrl}
-						placeholder="https://res.cloudinary.com/..."
-					/>
-				</JDGInputContainer>
-				<JDGInputContainer label="Logo size">
-					<div class="size-row">
-						<input
-							type="number"
-							class="number-input"
-							min="1"
-							max={watermarkImageSizeUnit === '%' ? 100 : 800}
-							step={watermarkImageSizeUnit === '%' ? 0.01 : 1}
-							bind:value={watermarkImageSize}
-						/>
-						<select class="select-input size-unit" bind:value={watermarkImageSizeUnit}>
-							<option value="%">%</option>
-							<option value="px">px</option>
+					<JDGInputContainer label="Blend mode">
+						<select class="select-input" bind:value={blendMode}>
+							{#each BLEND_OPTIONS as opt}
+								<option value={opt.value}>{opt.label}</option>
+							{/each}
 						</select>
-						{#if watermarkImageSizeUnit === '%'}
-							<span class="size-suffix">of image height</span>
-						{/if}
-					</div>
-					{#if watermarkImageSizeUnit === 'px'}
-						<span class="size-hint">Target logo height; width follows aspect ratio</span>
+					</JDGInputContainer>
+					<JDGH3H4
+						h3String="Logo shadow"
+						h4String="Drop shadow around the mark"
+						paddingTop="0.5rem"
+						paddingBottom="0.85rem"
+					/>
+					<JDGInputContainer label="Enable logo outline">
+						<label class="radio-label">
+							<input type="checkbox" bind:checked={logoOutline} />
+							Drop shadow (reads as outline on light photos)
+						</label>
+					</JDGInputContainer>
+					{#if logoOutline}
+						<JDGInputContainer label="Blur / spread (ref. 600px edge)">
+							<input
+								type="range"
+								class="range-input"
+								min="0"
+								max="28"
+								step="0.5"
+								bind:value={logoShadowBlur}
+							/>
+							<span class="range-value">{logoShadowBlur}px</span>
+						</JDGInputContainer>
+						<JDGInputContainer label="Shadow opacity">
+							<input
+								type="range"
+								class="range-input"
+								min="0"
+								max="100"
+								step="1"
+								bind:value={logoShadowOpacity}
+							/>
+							<span class="range-value">{logoShadowOpacity}%</span>
+						</JDGInputContainer>
+						<JDGInputContainer label="Shadow layers">
+							<input
+								type="range"
+								class="range-input"
+								min="1"
+								max="3"
+								step="1"
+								bind:value={logoShadowLayers}
+							/>
+							<span class="range-value">{logoShadowLayers}</span>
+							<span class="size-hint"
+								>Stacked halos: stronger on flat / one-color PNGs. 3 = max edge.</span
+							>
+						</JDGInputContainer>
+						<div class="row-inputs">
+							<JDGInputContainer label="Offset X">
+								<input
+									type="range"
+									class="range-input"
+									min="-20"
+									max="20"
+									step="1"
+									bind:value={logoShadowOffsetX}
+								/>
+								<span class="range-value">{logoShadowOffsetX}px</span>
+							</JDGInputContainer>
+							<JDGInputContainer label="Offset Y">
+								<input
+									type="range"
+									class="range-input"
+									min="-20"
+									max="20"
+									step="1"
+									bind:value={logoShadowOffsetY}
+								/>
+								<span class="range-value">{logoShadowOffsetY}px</span>
+							</JDGInputContainer>
+						</div>
 					{/if}
-				</JDGInputContainer>
-				<JDGInputContainer label="Blend mode">
-					<select class="select-input" bind:value={blendMode}>
-						{#each BLEND_OPTIONS as opt}
-							<option value={opt.value}>{opt.label}</option>
-						{/each}
-					</select>
-				</JDGInputContainer>
+				{:else if watermarkType === 'image+text'}
+					<JDGH3H4
+						h3String="Logo"
+						h4String="Image URL, size, and blend"
+						paddingTop="0.5rem"
+						paddingBottom="0.85rem"
+					/>
+					<JDGInputContainer label="Logo opacity">
+						<input
+							type="range"
+							class="range-input"
+							min="0"
+							max="1"
+							step="0.05"
+							bind:value={logoOpacity}
+						/>
+						<span class="range-value">{Math.round(logoOpacity * 100)}%</span>
+					</JDGInputContainer>
+					<JDGInputContainer label="Watermark image URL">
+						<input
+							type="url"
+							class="text-input"
+							bind:value={watermarkUrl}
+							placeholder="https://res.cloudinary.com/..."
+						/>
+					</JDGInputContainer>
+					<JDGInputContainer label="Logo size">
+						<div class="size-row">
+							<input
+								type="number"
+								class="number-input"
+								min="1"
+								max={watermarkImageSizeUnit === '%' ? 100 : 800}
+								step={watermarkImageSizeUnit === '%' ? 0.01 : 1}
+								bind:value={watermarkImageSize}
+							/>
+							<select class="select-input size-unit" bind:value={watermarkImageSizeUnit}>
+								<option value="%">%</option>
+								<option value="px">px</option>
+							</select>
+							{#if watermarkImageSizeUnit === '%'}
+								<span class="size-suffix">of image height</span>
+							{/if}
+						</div>
+						{#if watermarkImageSizeUnit === 'px'}
+							<span class="size-hint">Target logo height; width follows aspect ratio</span>
+						{/if}
+					</JDGInputContainer>
+					<JDGInputContainer label="Blend mode">
+						<select class="select-input" bind:value={blendMode}>
+							{#each BLEND_OPTIONS as opt}
+								<option value={opt.value}>{opt.label}</option>
+							{/each}
+						</select>
+					</JDGInputContainer>
 
-				<JDGH3H4
-					h3String="Logo shadow"
-					h4String="Drop shadow around the logo"
-					paddingTop="0.75rem"
-					paddingBottom="0.85rem"
-				/>
-				<JDGInputContainer label="Enable logo outline">
-					<label class="radio-label">
-						<input type="checkbox" bind:checked={logoOutline} />
-						Drop shadow around the logo
-					</label>
-				</JDGInputContainer>
-				{#if logoOutline}
-					<JDGInputContainer label="Blur / spread (scales with image)">
+					<JDGH3H4
+						h3String="Logo shadow"
+						h4String="Drop shadow around the logo"
+						paddingTop="0.75rem"
+						paddingBottom="0.85rem"
+					/>
+					<JDGInputContainer label="Enable logo outline">
+						<label class="radio-label">
+							<input type="checkbox" bind:checked={logoOutline} />
+							Drop shadow around the logo
+						</label>
+					</JDGInputContainer>
+					{#if logoOutline}
+						<JDGInputContainer label="Blur / spread (scales with image)">
+							<input
+								type="range"
+								class="range-input"
+								min="0"
+								max="28"
+								step="0.5"
+								bind:value={logoShadowBlur}
+							/>
+							<span class="range-value">{logoShadowBlur}px</span>
+						</JDGInputContainer>
+						<JDGInputContainer label="Shadow opacity">
+							<input
+								type="range"
+								class="range-input"
+								min="0"
+								max="100"
+								step="1"
+								bind:value={logoShadowOpacity}
+							/>
+							<span class="range-value">{logoShadowOpacity}%</span>
+						</JDGInputContainer>
+						<JDGInputContainer label="Shadow layers">
+							<input
+								type="range"
+								class="range-input"
+								min="1"
+								max="3"
+								step="1"
+								bind:value={logoShadowLayers}
+							/>
+							<span class="range-value">{logoShadowLayers}</span>
+							<span class="size-hint"
+								>Stacked halos: stronger on flat / one-color PNGs. 3 = max edge.</span
+							>
+						</JDGInputContainer>
+						<div class="row-inputs">
+							<JDGInputContainer label="Offset X">
+								<input
+									type="range"
+									class="range-input"
+									min="-20"
+									max="20"
+									step="1"
+									bind:value={logoShadowOffsetX}
+								/>
+								<span class="range-value">{logoShadowOffsetX}px</span>
+							</JDGInputContainer>
+							<JDGInputContainer label="Offset Y">
+								<input
+									type="range"
+									class="range-input"
+									min="-20"
+									max="20"
+									step="1"
+									bind:value={logoShadowOffsetY}
+								/>
+								<span class="range-value">{logoShadowOffsetY}px</span>
+							</JDGInputContainer>
+						</div>
+					{/if}
+
+					<JDGH3H4
+						h3String="Text & divider"
+						h4String="Copy, typography, spacing"
+						paddingTop="1rem"
+						paddingBottom="0.85rem"
+					/>
+					<JDGInputContainer label="Text opacity">
 						<input
 							type="range"
 							class="range-input"
 							min="0"
-							max="28"
-							step="0.5"
-							bind:value={logoShadowBlur}
+							max="1"
+							step="0.05"
+							bind:value={textOpacity}
 						/>
-						<span class="range-value">{logoShadowBlur}px</span>
+						<span class="range-value">{Math.round(textOpacity * 100)}%</span>
 					</JDGInputContainer>
-					<JDGInputContainer label="Shadow opacity">
+					<JDGInputContainer label="Watermark text">
+						<input
+							type="text"
+							class="text-input"
+							bind:value={watermarkText}
+							placeholder="e.g. The Cinderella City Project"
+						/>
+					</JDGInputContainer>
+					<JDGInputContainer label="Text size">
+						<div class="size-row">
+							<input
+								type="number"
+								class="number-input"
+								min="1"
+								max={watermarkTextSizeUnit === '%' ? 100 : 200}
+								bind:value={watermarkTextSize}
+							/>
+							<select class="select-input size-unit" bind:value={watermarkTextSizeUnit}>
+								<option value="px">px</option>
+								<option value="%">%</option>
+							</select>
+							{#if watermarkTextSizeUnit === '%'}
+								<span class="size-suffix">of image height</span>
+							{/if}
+						</div>
+					</JDGInputContainer>
+					<JDGInputContainer label="Font">
+						<select class="select-input" bind:value={watermarkTextFont}>
+							{#each WATERMARK_FONTS as opt}
+								<option value={opt.value}>{opt.label}</option>
+							{/each}
+						</select>
+					</JDGInputContainer>
+					<JDGInputContainer label="Divider">
+						<input
+							type="text"
+							class="text-input divider-input"
+							bind:value={watermarkDivider}
+							placeholder=" | "
+						/>
+					</JDGInputContainer>
+					<JDGInputContainer label="Gap between logo, divider, and text (px)">
+						<input type="number" class="number-input" min="0" max="60" bind:value={comboGapPx} />
+					</JDGInputContainer>
+
+					<JDGH3H4
+						h3String="Text shadow"
+						h4String="Independent from logo contrast"
+						paddingTop="0.75rem"
+						paddingBottom="0.85rem"
+					/>
+					<JDGInputContainer label="Enable text shadow">
+						<label class="radio-label">
+							<input type="checkbox" bind:checked={textOutline} />
+							Drop shadow behind divider and text
+						</label>
+					</JDGInputContainer>
+					{#if textOutline}
+						<JDGInputContainer label="Blur / spread (scales with image)">
+							<input
+								type="range"
+								class="range-input"
+								min="0"
+								max="28"
+								step="0.5"
+								bind:value={textShadowBlur}
+							/>
+							<span class="range-value">{textShadowBlur}px</span>
+						</JDGInputContainer>
+						<JDGInputContainer label="Shadow opacity">
+							<input
+								type="range"
+								class="range-input"
+								min="0"
+								max="100"
+								step="1"
+								bind:value={textShadowOpacity}
+							/>
+							<span class="range-value">{textShadowOpacity}%</span>
+						</JDGInputContainer>
+						<div class="row-inputs">
+							<JDGInputContainer label="Offset X">
+								<input
+									type="range"
+									class="range-input"
+									min="-20"
+									max="20"
+									step="1"
+									bind:value={textShadowOffsetX}
+								/>
+								<span class="range-value">{textShadowOffsetX}px</span>
+							</JDGInputContainer>
+							<JDGInputContainer label="Offset Y">
+								<input
+									type="range"
+									class="range-input"
+									min="-20"
+									max="20"
+									step="1"
+									bind:value={textShadowOffsetY}
+								/>
+								<span class="range-value">{textShadowOffsetY}px</span>
+							</JDGInputContainer>
+						</div>
+					{/if}
+				{:else}
+					<JDGInputContainer label="Text opacity">
 						<input
 							type="range"
 							class="range-input"
 							min="0"
-							max="100"
-							step="1"
-							bind:value={logoShadowOpacity}
+							max="1"
+							step="0.05"
+							bind:value={textOpacity}
 						/>
-						<span class="range-value">{logoShadowOpacity}%</span>
+						<span class="range-value">{Math.round(textOpacity * 100)}%</span>
 					</JDGInputContainer>
-					<JDGInputContainer label="Shadow layers">
+					<JDGInputContainer label="Watermark text">
 						<input
-							type="range"
-							class="range-input"
-							min="1"
-							max="3"
-							step="1"
-							bind:value={logoShadowLayers}
+							type="text"
+							class="text-input"
+							bind:value={watermarkText}
+							placeholder="e.g. © Your Name"
 						/>
-						<span class="range-value">{logoShadowLayers}</span>
-						<span class="size-hint"
-							>Stacked halos: stronger on flat / one-color PNGs. 3 = max edge.</span
-						>
 					</JDGInputContainer>
-					<div class="row-inputs">
-						<JDGInputContainer label="Offset X">
+					<JDGInputContainer label="Text size">
+						<div class="size-row">
+							<input
+								type="number"
+								class="number-input"
+								min="1"
+								max={watermarkTextSizeUnit === '%' ? 100 : 200}
+								bind:value={watermarkTextSize}
+							/>
+							<select class="select-input size-unit" bind:value={watermarkTextSizeUnit}>
+								<option value="px">px</option>
+								<option value="%">%</option>
+							</select>
+							{#if watermarkTextSizeUnit === '%'}
+								<span class="size-suffix">of image height</span>
+							{/if}
+						</div>
+					</JDGInputContainer>
+					<JDGInputContainer label="Font">
+						<select class="select-input" bind:value={watermarkTextFont}>
+							{#each WATERMARK_FONTS as opt}
+								<option value={opt.value}>{opt.label}</option>
+							{/each}
+						</select>
+					</JDGInputContainer>
+					<JDGH3H4
+						h3String="Text shadow"
+						h4String="Drop shadow behind text"
+						paddingTop="0.5rem"
+						paddingBottom="0.85rem"
+					/>
+					<JDGInputContainer label="Enable text shadow">
+						<label class="radio-label">
+							<input type="checkbox" bind:checked={textOutline} />
+							Soft drop shadow behind text
+						</label>
+					</JDGInputContainer>
+					{#if textOutline}
+						<JDGInputContainer label="Blur / spread (ref. 600px edge)">
 							<input
 								type="range"
 								class="range-input"
-								min="-20"
-								max="20"
-								step="1"
-								bind:value={logoShadowOffsetX}
+								min="0"
+								max="28"
+								step="0.5"
+								bind:value={textShadowBlur}
 							/>
-							<span class="range-value">{logoShadowOffsetX}px</span>
+							<span class="range-value">{textShadowBlur}px</span>
 						</JDGInputContainer>
-						<JDGInputContainer label="Offset Y">
+						<JDGInputContainer label="Shadow opacity">
 							<input
 								type="range"
 								class="range-input"
-								min="-20"
-								max="20"
+								min="0"
+								max="100"
 								step="1"
-								bind:value={logoShadowOffsetY}
+								bind:value={textShadowOpacity}
 							/>
-							<span class="range-value">{logoShadowOffsetY}px</span>
+							<span class="range-value">{textShadowOpacity}%</span>
 						</JDGInputContainer>
-					</div>
+						<div class="row-inputs">
+							<JDGInputContainer label="Offset X">
+								<input
+									type="range"
+									class="range-input"
+									min="-20"
+									max="20"
+									step="1"
+									bind:value={textShadowOffsetX}
+								/>
+								<span class="range-value">{textShadowOffsetX}px</span>
+							</JDGInputContainer>
+							<JDGInputContainer label="Offset Y">
+								<input
+									type="range"
+									class="range-input"
+									min="-20"
+									max="20"
+									step="1"
+									bind:value={textShadowOffsetY}
+								/>
+								<span class="range-value">{textShadowOffsetY}px</span>
+							</JDGInputContainer>
+						</div>
+					{/if}
 				{/if}
 
 				<JDGH3H4
-					h3String="Text & divider"
-					h4String="Copy, typography, spacing"
+					h3String="Placement"
+					h4String="Position on the photo"
 					paddingTop="1rem"
 					paddingBottom="0.85rem"
 				/>
-				<JDGInputContainer label="Text opacity">
-					<input
-						type="range"
-						class="range-input"
-						min="0"
-						max="1"
-						step="0.05"
-						bind:value={textOpacity}
-					/>
-					<span class="range-value">{Math.round(textOpacity * 100)}%</span>
-				</JDGInputContainer>
-				<JDGInputContainer label="Watermark text">
-					<input
-						type="text"
-						class="text-input"
-						bind:value={watermarkText}
-						placeholder="e.g. The Cinderella City Project"
-					/>
-				</JDGInputContainer>
-				<JDGInputContainer label="Text size">
+				<div class="row-inputs">
+					<JDGInputContainer label="Vertical">
+						<select class="select-input" bind:value={verticalPlacement}>
+							{#each VERTICAL_OPTIONS as opt}
+								<option value={opt.value}>{opt.label}</option>
+							{/each}
+						</select>
+					</JDGInputContainer>
+					<JDGInputContainer label="Horizontal">
+						<select class="select-input" bind:value={horizontalPlacement}>
+							{#each HORIZONTAL_OPTIONS as opt}
+								<option value={opt.value}>{opt.label}</option>
+							{/each}
+						</select>
+					</JDGInputContainer>
+				</div>
+				<JDGInputContainer label="Inset from image edge">
 					<div class="size-row">
 						<input
 							type="number"
 							class="number-input"
-							min="1"
-							max={watermarkTextSizeUnit === '%' ? 100 : 200}
-							bind:value={watermarkTextSize}
+							min="0"
+							max={paddingSizeUnit === '%' ? 50 : 400}
+							bind:value={paddingSize}
 						/>
-						<select class="select-input size-unit" bind:value={watermarkTextSizeUnit}>
-							<option value="px">px</option>
+						<select class="select-input size-unit" bind:value={paddingSizeUnit}>
 							<option value="%">%</option>
+							<option value="px">px</option>
 						</select>
-						{#if watermarkTextSizeUnit === '%'}
+						{#if paddingSizeUnit === '%'}
 							<span class="size-suffix">of image height</span>
 						{/if}
 					</div>
-				</JDGInputContainer>
-				<JDGInputContainer label="Font">
-					<select class="select-input" bind:value={watermarkTextFont}>
-						{#each WATERMARK_FONTS as opt}
-							<option value={opt.value}>{opt.label}</option>
-						{/each}
-					</select>
-				</JDGInputContainer>
-				<JDGInputContainer label="Divider">
-					<input
-						type="text"
-						class="text-input divider-input"
-						bind:value={watermarkDivider}
-						placeholder=" | "
-					/>
-				</JDGInputContainer>
-				<JDGInputContainer label="Gap between logo, divider, and text (px)">
-					<input type="number" class="number-input" min="0" max="60" bind:value={comboGapPx} />
-				</JDGInputContainer>
-
-				<JDGH3H4
-					h3String="Text shadow"
-					h4String="Independent from logo contrast"
-					paddingTop="0.75rem"
-					paddingBottom="0.85rem"
-				/>
-				<JDGInputContainer label="Enable text shadow">
-					<label class="radio-label">
-						<input type="checkbox" bind:checked={textOutline} />
-						Drop shadow behind divider and text
-					</label>
-				</JDGInputContainer>
-				{#if textOutline}
-					<JDGInputContainer label="Blur / spread (scales with image)">
-						<input
-							type="range"
-							class="range-input"
-							min="0"
-							max="28"
-							step="0.5"
-							bind:value={textShadowBlur}
-						/>
-						<span class="range-value">{textShadowBlur}px</span>
-					</JDGInputContainer>
-					<JDGInputContainer label="Shadow opacity">
-						<input
-							type="range"
-							class="range-input"
-							min="0"
-							max="100"
-							step="1"
-							bind:value={textShadowOpacity}
-						/>
-						<span class="range-value">{textShadowOpacity}%</span>
-					</JDGInputContainer>
-					<div class="row-inputs">
-						<JDGInputContainer label="Offset X">
-							<input
-								type="range"
-								class="range-input"
-								min="-20"
-								max="20"
-								step="1"
-								bind:value={textShadowOffsetX}
-							/>
-							<span class="range-value">{textShadowOffsetX}px</span>
-						</JDGInputContainer>
-						<JDGInputContainer label="Offset Y">
-							<input
-								type="range"
-								class="range-input"
-								min="-20"
-								max="20"
-								step="1"
-								bind:value={textShadowOffsetY}
-							/>
-							<span class="range-value">{textShadowOffsetY}px</span>
-						</JDGInputContainer>
-					</div>
-				{/if}
-			{:else}
-				<JDGInputContainer label="Text opacity">
-					<input
-						type="range"
-						class="range-input"
-						min="0"
-						max="1"
-						step="0.05"
-						bind:value={textOpacity}
-					/>
-					<span class="range-value">{Math.round(textOpacity * 100)}%</span>
-				</JDGInputContainer>
-				<JDGInputContainer label="Watermark text">
-					<input
-						type="text"
-						class="text-input"
-						bind:value={watermarkText}
-						placeholder="e.g. © Your Name"
-					/>
-				</JDGInputContainer>
-				<JDGInputContainer label="Text size">
-					<div class="size-row">
-						<input
-							type="number"
-							class="number-input"
-							min="1"
-							max={watermarkTextSizeUnit === '%' ? 100 : 200}
-							bind:value={watermarkTextSize}
-						/>
-						<select class="select-input size-unit" bind:value={watermarkTextSizeUnit}>
-							<option value="px">px</option>
-							<option value="%">%</option>
-						</select>
-						{#if watermarkTextSizeUnit === '%'}
-							<span class="size-suffix">of image height</span>
-						{/if}
-					</div>
-				</JDGInputContainer>
-				<JDGInputContainer label="Font">
-					<select class="select-input" bind:value={watermarkTextFont}>
-						{#each WATERMARK_FONTS as opt}
-							<option value={opt.value}>{opt.label}</option>
-						{/each}
-					</select>
-				</JDGInputContainer>
-				<JDGH3H4
-					h3String="Text shadow"
-					h4String="Drop shadow behind text"
-					paddingTop="0.5rem"
-					paddingBottom="0.85rem"
-				/>
-				<JDGInputContainer label="Enable text shadow">
-					<label class="radio-label">
-						<input type="checkbox" bind:checked={textOutline} />
-						Soft drop shadow behind text
-					</label>
-				</JDGInputContainer>
-				{#if textOutline}
-					<JDGInputContainer label="Blur / spread (ref. 600px edge)">
-						<input
-							type="range"
-							class="range-input"
-							min="0"
-							max="28"
-							step="0.5"
-							bind:value={textShadowBlur}
-						/>
-						<span class="range-value">{textShadowBlur}px</span>
-					</JDGInputContainer>
-					<JDGInputContainer label="Shadow opacity">
-						<input
-							type="range"
-							class="range-input"
-							min="0"
-							max="100"
-							step="1"
-							bind:value={textShadowOpacity}
-						/>
-						<span class="range-value">{textShadowOpacity}%</span>
-					</JDGInputContainer>
-					<div class="row-inputs">
-						<JDGInputContainer label="Offset X">
-							<input
-								type="range"
-								class="range-input"
-								min="-20"
-								max="20"
-								step="1"
-								bind:value={textShadowOffsetX}
-							/>
-							<span class="range-value">{textShadowOffsetX}px</span>
-						</JDGInputContainer>
-						<JDGInputContainer label="Offset Y">
-							<input
-								type="range"
-								class="range-input"
-								min="-20"
-								max="20"
-								step="1"
-								bind:value={textShadowOffsetY}
-							/>
-							<span class="range-value">{textShadowOffsetY}px</span>
-						</JDGInputContainer>
-					</div>
-				{/if}
-			{/if}
-
-			<JDGH3H4
-				h3String="Placement"
-				h4String="Position on the photo"
-				paddingTop="1rem"
-				paddingBottom="0.85rem"
-			/>
-			<div class="row-inputs">
-				<JDGInputContainer label="Vertical">
-					<select class="select-input" bind:value={verticalPlacement}>
-						{#each VERTICAL_OPTIONS as opt}
-							<option value={opt.value}>{opt.label}</option>
-						{/each}
-					</select>
-				</JDGInputContainer>
-				<JDGInputContainer label="Horizontal">
-					<select class="select-input" bind:value={horizontalPlacement}>
-						{#each HORIZONTAL_OPTIONS as opt}
-							<option value={opt.value}>{opt.label}</option>
-						{/each}
-					</select>
-				</JDGInputContainer>
-			</div>
-			<JDGInputContainer label="Inset from image edge">
-				<div class="size-row">
-					<input
-						type="number"
-						class="number-input"
-						min="0"
-						max={paddingSizeUnit === '%' ? 50 : 400}
-						bind:value={paddingSize}
-					/>
-					<select class="select-input size-unit" bind:value={paddingSizeUnit}>
-						<option value="%">%</option>
-						<option value="px">px</option>
-					</select>
-					{#if paddingSizeUnit === '%'}
-						<span class="size-suffix">of image height</span>
+					{#if paddingSizeUnit === 'px'}
+						<span class="size-hint">Same pixel distance from the image boundary on both axes</span>
 					{/if}
-				</div>
-				{#if paddingSizeUnit === 'px'}
-					<span class="size-hint">Same pixel distance from the image boundary on both axes</span>
-				{/if}
-			</JDGInputContainer>
-		</div>
-
-		<div
-			class="drop-zone"
-			class:active={dragActive}
-			role="button"
-			tabindex="0"
-			on:click={triggerFileInput}
-			on:keydown={(e) => e.key === 'Enter' && triggerFileInput()}
-			on:drop={handleDrop}
-			on:dragover={handleDragover}
-			on:dragleave={handleDragleave}
-		>
-			<span>Drop images here or click to browse</span>
-		</div>
-		<input
-			type="file"
-			accept="image/*"
-			multiple
-			style="display: none;"
-			bind:this={fileInput}
-			on:change={handleFileChange}
-		/>
-
-		{#if images.length > 0}
-			<div class="actions-bar">
-				<JDGButton
-					label="Download current"
-					faIcon="fa-download"
-					onClickFunction={() => downloadOne(selectedImage)}
-					isEnabled={!!selectedImage && hasWatermark()}
-					isPrimary={false}
-				/>
-				<JDGButton
-					label="Download all"
-					faIcon="fa-download"
-					onClickFunction={downloadAll}
-					isEnabled={hasWatermark()}
-					isPrimary={true}
-				/>
+				</JDGInputContainer>
 			</div>
 
-			<div class="thumb-strip-row">
-				<div class="thumb-strip">
-					{#each images as img (img.id)}
-						<button
-							class="thumb"
-							class:selected={selectedId === img.id}
-							type="button"
-							on:click|stopPropagation={() => (selectedId = img.id)}
-						>
-							<img src={img.objectUrl} alt="" />
+			<div
+				class="drop-zone"
+				class:active={dragActive}
+				role="button"
+				tabindex="0"
+				on:click={triggerFileInput}
+				on:keydown={(e) => e.key === 'Enter' && triggerFileInput()}
+				on:drop={handleDrop}
+				on:dragover={handleDragover}
+				on:dragleave={handleDragleave}
+			>
+				<span>Drop images here or click to browse</span>
+			</div>
+			<input
+				type="file"
+				accept="image/*"
+				multiple
+				style="display: none;"
+				bind:this={fileInput}
+				on:change={handleFileChange}
+			/>
+
+			{#if images.length > 0}
+				<div class="actions-bar">
+					<JDGButton
+						label="Download current"
+						faIcon="fa-download"
+						onClickFunction={() => downloadOne(selectedImage)}
+						isEnabled={!!selectedImage && hasWatermark()}
+						isPrimary={false}
+					/>
+					<JDGButton
+						label="Download all"
+						faIcon="fa-download"
+						onClickFunction={downloadAll}
+						isEnabled={hasWatermark()}
+						isPrimary={true}
+					/>
+				</div>
+
+				<div class="thumb-strip-row">
+					<div class="thumb-strip">
+						{#each images as img (img.id)}
 							<button
-								class="thumb-remove"
+								class="thumb"
+								class:selected={selectedId === img.id}
 								type="button"
-								aria-label="Remove"
-								on:click|stopPropagation={() => removeImage(img.id)}>×</button
+								on:click|stopPropagation={() => (selectedId = img.id)}
 							>
-						</button>
-					{/each}
-				</div>
-				<button type="button" class="thumb-strip-clear-all" on:click={clearAll}> Clear all </button>
-			</div>
-
-			{#if selectedImage}
-				<div class="preview-wrapper">
-					<div class="preview-inner" style="position: relative;">
-						<img
-							class="preview-base"
-							bind:this={previewBaseRef}
-							src={selectedImage.objectUrl}
-							alt="Preview"
-							style={previewBaseDisplayStyle}
-							on:load={handlePreviewImageLoad}
-						/>
-						{#if watermarkType === 'image' && watermarkUrl}
-							<div class="watermark-wrapper" style={watermarkWrapperStyle}>
-								<img
-									bind:this={watermarkImgEl}
-									class="watermark-img"
-									style="opacity: {logoOpacity}; mix-blend-mode: {blendMode}; filter: {watermarkImgFilter}; max-height: {imagePreviewMaxSize}; max-width: none; width: auto; height: auto; object-fit: contain;"
-									src={watermarkUrl}
-									alt="Watermark"
-								/>
-							</div>
-						{:else if watermarkType === 'text' && watermarkText}
-							<div class="watermark-wrapper watermark-text-preview" style={watermarkWrapperStyle}>
-								<span
-									class="watermark-text"
-									style="opacity: {textOpacity}; font-family: {watermarkTextFont}; font-size: {textPreviewFontSize}; color: white; filter: {textWatermarkFilter};"
+								<img src={img.objectUrl} alt="" />
+								<button
+									class="thumb-remove"
+									type="button"
+									aria-label="Remove"
+									on:click|stopPropagation={() => removeImage(img.id)}>×</button
 								>
-									{watermarkText}
-								</span>
-							</div>
-						{:else if watermarkType === 'image+text' && watermarkUrl && watermarkText}
-							<div class="watermark-wrapper watermark-combo-preview" style={watermarkWrapperStyle}>
-								<img
-									class="watermark-combo-logo"
-									style="opacity: {logoOpacity}; mix-blend-mode: {blendMode}; filter: {watermarkImgFilter}; max-height: {imagePreviewMaxSize}; max-width: none; width: auto; height: auto; object-fit: contain;"
-									src={watermarkUrl}
-									alt=""
-								/>
-								<span class="watermark-combo-gap" style="width: {comboGapPx}px;"></span>
-								<span
-									class="watermark-text"
-									style="opacity: {textOpacity}; font-family: {watermarkTextFont}; font-size: {textPreviewFontSize}; color: white; filter: {textWatermarkFilter};"
-								>
-									{watermarkDivider}
-								</span>
-								<span class="watermark-combo-gap" style="width: {comboGapPx}px;"></span>
-								<span
-									class="watermark-text"
-									style="opacity: {textOpacity}; font-family: {watermarkTextFont}; font-size: {textPreviewFontSize}; color: white; filter: {textWatermarkFilter};"
-								>
-									{watermarkText}
-								</span>
-							</div>
-						{/if}
+							</button>
+						{/each}
 					</div>
+					<button type="button" class="thumb-strip-clear-all" on:click={clearAll}>
+						Clear all
+					</button>
 				</div>
+
+				{#if selectedImage}
+					<div class="preview-wrapper">
+						<div class="preview-inner" style="position: relative;">
+							<img
+								class="preview-base"
+								bind:this={previewBaseRef}
+								src={selectedImage.objectUrl}
+								alt="Preview"
+								style={previewBaseDisplayStyle}
+								on:load={handlePreviewImageLoad}
+							/>
+							{#if watermarkType === 'image' && watermarkUrl}
+								<div class="watermark-wrapper" style={watermarkWrapperStyle}>
+									<img
+										bind:this={watermarkImgEl}
+										class="watermark-img"
+										style="opacity: {logoOpacity}; mix-blend-mode: {blendMode}; filter: {watermarkImgFilter}; max-height: {imagePreviewMaxSize}; max-width: none; width: auto; height: auto; object-fit: contain;"
+										src={watermarkUrl}
+										alt="Watermark"
+									/>
+								</div>
+							{:else if watermarkType === 'text' && watermarkText}
+								<div class="watermark-wrapper watermark-text-preview" style={watermarkWrapperStyle}>
+									<span
+										class="watermark-text"
+										style="opacity: {textOpacity}; font-family: {watermarkTextFont}; font-size: {textPreviewFontSize}; color: white; filter: {textWatermarkFilter};"
+									>
+										{watermarkText}
+									</span>
+								</div>
+							{:else if watermarkType === 'image+text' && watermarkUrl && watermarkText}
+								<div
+									class="watermark-wrapper watermark-combo-preview"
+									style={watermarkWrapperStyle}
+								>
+									<img
+										class="watermark-combo-logo"
+										style="opacity: {logoOpacity}; mix-blend-mode: {blendMode}; filter: {watermarkImgFilter}; max-height: {imagePreviewMaxSize}; max-width: none; width: auto; height: auto; object-fit: contain;"
+										src={watermarkUrl}
+										alt=""
+									/>
+									<span class="watermark-combo-gap" style="width: {comboGapPx}px;"></span>
+									<span
+										class="watermark-text"
+										style="opacity: {textOpacity}; font-family: {watermarkTextFont}; font-size: {textPreviewFontSize}; color: white; filter: {textWatermarkFilter};"
+									>
+										{watermarkDivider}
+									</span>
+									<span class="watermark-combo-gap" style="width: {comboGapPx}px;"></span>
+									<span
+										class="watermark-text"
+										style="opacity: {textOpacity}; font-family: {watermarkTextFont}; font-size: {textPreviewFontSize}; color: white; filter: {textWatermarkFilter};"
+									>
+										{watermarkText}
+									</span>
+								</div>
+							{/if}
+						</div>
+					</div>
+				{/if}
 			{/if}
-		{/if}
-	</JDGContentBoxFloating>
+		</JDGContentBoxFloating>
 	</div>
 </JDGContentContainer>
 
