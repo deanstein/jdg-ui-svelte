@@ -375,4 +375,13 @@
 		flex-direction: column;
 		overflow-x: clip;
 	}
+
+	.jdg-app-container,
+	.jdg-app-container :global(*) {
+		transition:
+			color 0.3s ease,
+			background-color 0.3s ease,
+			border-color 0.3s ease,
+			fill 0.3s ease;
+	}
 </style>
