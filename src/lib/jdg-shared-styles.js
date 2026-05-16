@@ -550,6 +550,7 @@ export const setUpdatedHyperlinkStyleBar = (
 	stripedColorOpacity,
 	resolvedTextColor = lightPalette.text
 ) => {
+	const barContrastAdjustment = Math.max(1, linkColorContrastAdjustment * 0.5);
 	appCssHyperlinkBar.set(css`
 		${jdgLinkStyleBar}
 		a {
@@ -566,13 +567,13 @@ export const setUpdatedHyperlinkStyleBar = (
 				${convertHexToRGBA(accentColors[1], stripedColorOpacity)} 66%,
 				${convertHexToRGBA(accentColors[2], stripedColorOpacity)} 66%
 			)`
-				: `${adjustColorForContrast(linkColor, resolvedTextColor, linkColorContrastAdjustment)}`};
+				: `${adjustColorForContrast(linkColor, resolvedTextColor, barContrastAdjustment)}`};
 		}
 		a:before {
 			background: ${adjustColorForContrast(
 				linkColor,
 				resolvedTextColor,
-				linkColorContrastAdjustment
+				barContrastAdjustment
 			)};
 		}
 	`);
