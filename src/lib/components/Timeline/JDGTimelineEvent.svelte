@@ -263,12 +263,11 @@
 		}
 	`;
 
-	// Content uses deterministic gradient; title bar uses JDGRandomGradient (darkened 0.05) when both colors set, else fallback
 	let eventGradientCss = css``;
 	let eventTitleBarGradientCss = css``;
 	$: hasTitleBarRandomGradient = !!(gradientColor1 && gradientColor2);
-	$: titleBarColor1 = gradientColor1 ? darkenColor(gradientColor1, 0.1) : null;
-	$: titleBarColor2 = gradientColor2 ? darkenColor(gradientColor2, 0.1) : null;
+	$: titleBarColor1 = gradientColor1 ?? null;
+	$: titleBarColor2 = gradientColor2 ?? null;
 	$: {
 		if (gradientColor1 && gradientPointsCount > 0 && gradientColor2) {
 			const seed = upgradedEvent?.id
@@ -289,9 +288,7 @@
 				border-radius: 0px 0px ${eventBorderRadius} ${eventBorderRadius};
 			`;
 			eventTitleBarGradientCss = css`
-				background-color: ${gradientColor1
-					? darkenColor(gradientColor1, 0.05)
-					: $themeColors.activeSubtle};
+				background-color: ${gradientColor1 ?? $themeColors.activeSubtle};
 				border-radius: ${eventBorderRadius} ${eventBorderRadius} 0px 0px;
 			`;
 		}
@@ -450,7 +447,7 @@
 	<div class="timeline-event-content-outer-container {eventRowContainerCss}">
 		<div class="timeline-event-title-bar-container">
 			{#if hasTitleBarRandomGradient}
-				<div class="timeline-event-title-bar-gradient">
+				<div class="timeline-event-title-bar-gradient" style="background-color: {titleBarColor1};">
 					<JDGRandomGradient
 						numberOfPoints={8}
 						edgeBufferRatio={0.1}

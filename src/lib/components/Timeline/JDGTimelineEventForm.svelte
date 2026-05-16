@@ -57,7 +57,7 @@
 		JDGTextArea,
 		JDGTextInput
 	} from '$lib/index.js';
-	import { jdgColors, jdgBreakpoints } from '$lib/jdg-shared-styles.js';
+	import { jdgColors, jdgBreakpoints, themeColors } from '$lib/jdg-shared-styles.js';
 
 	// Read from and write to this store
 	export let eventStore = writable(instantiateObject(jdgTimelineEvent));
@@ -494,7 +494,7 @@
 
 	<!-- Event type and age header -->
 	<div class="event-header">
-		<div class="event-header-age {eventHeaderViewCss}">
+		<div class="event-header-age {eventHeaderViewCss}" style="color: {$themeColors.textSecondary};">
 			<i
 				class="fa-solid {currentTypeIcon} {eventHeaderIconCss}"
 				title="{sentenceCaseLabel} event"
@@ -594,7 +594,7 @@
 									>{formatTimelineEventDateLong(effectiveDate, effectiveIsApprxDate)}</span
 								>
 								{#if effectiveIsApprxDate}
-									<span class="readout-approximate {readoutApproximateCss}">(approximate)</span>
+									<span class="readout-approximate {readoutApproximateCss}" style="color: {$themeColors.textSecondary};">(approximate)</span>
 								{/if}
 							{:else}
 								<span class={readoutTextCss}
@@ -839,12 +839,8 @@
 	}
 
 	.event-header-separator {
-		color: #999;
 		font-weight: 300;
-	}
-
-	.event-header-age {
-		color: #666;
+		opacity: 0.5;
 	}
 
 	.form-store-preview {
@@ -878,7 +874,6 @@
 	}
 
 	.readout-approximate {
-		color: #888;
 		display: block;
 		margin-top: -3px;
 	}

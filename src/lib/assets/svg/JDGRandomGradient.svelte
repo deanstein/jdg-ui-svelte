@@ -13,6 +13,7 @@
 	export let color1 = undefined;
 	export let color2 = undefined;
 	export let color3 = undefined;
+	export let opacity = 0.5;
 
 	let gradientStyle = '';
 	let borderElements = [];
@@ -65,7 +66,7 @@
 	}
 </script>
 
-<div class="jdg-random-gradient" style="background: {gradientStyle};">
+<div class="jdg-random-gradient" style="background: {gradientStyle}; opacity: {opacity};">
 	{#if drawDebugBorders}
 		<svg class="jdg-random-gradient-borders" width="100%" height="100%">
 			{#each borderElements as border}
@@ -86,7 +87,6 @@
 	.jdg-random-gradient {
 		height: 100%;
 		width: 100%;
-		opacity: 50%;
 		position: relative;
 	}
 

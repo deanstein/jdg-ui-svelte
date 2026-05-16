@@ -1,7 +1,7 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import { jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgSizes, themeColors } from '$lib/jdg-shared-styles.js';
 
 	const imgCss = css`
 		height: ${jdgSizes.navMobileIconHeightSm};
@@ -17,7 +17,7 @@
 			height="13%"
 			width="100%"
 			transform="rotate(45, 0, 0) translate(25, -25)"
-			fill="black"
+			fill={$themeColors.text}
 		/>
 		<rect
 			class="bar"
@@ -25,7 +25,7 @@
 			height="13%"
 			width="100%"
 			transform="rotate(-45, 50, 50) translate(0, -25)"
-			fill="black"
+			fill={$themeColors.text}
 		/>
 	</svg>
 </div>
