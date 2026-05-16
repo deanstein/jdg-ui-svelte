@@ -2,7 +2,7 @@
 	import { css } from '@emotion/css';
 
 	import { colorMode, isMobileBreakpoint, carouselHintHeightPx } from '$lib/stores/jdg-ui-store.js';
-	import { setRgbaAlpha } from '$lib/jdg-utils.js';
+	import { darkenColor, setRgbaAlpha } from '$lib/jdg-utils.js';
 
 	import { jdgSizes, jdgBreakpoints, getThemePalette, themeColors } from '$lib/index.js';
 	import { JDGOverlay, JDGRandomGradient } from '$lib/index.js';
@@ -37,6 +37,10 @@
 	$: palette = getThemePalette($colorMode);
 	$: resolvedBackgroundColor = backgroundColor ?? palette.contentBoxBackground;
 
+	$: titleBarDarkenAmount = $colorMode === 'dark' ? 0.15 : 0.05;
+	$: titleBarGradient1 = gradientColor1 ? darkenColor(gradientColor1, titleBarDarkenAmount) : gradientColor1;
+	$: titleBarGradient2 = gradientColor2 ? darkenColor(gradientColor2, titleBarDarkenAmount) : gradientColor2;
+	$: titleBarGradient3 = gradientColor3 ? darkenColor(gradientColor3, titleBarDarkenAmount) : gradientColor3;
 
 	let modalContentContainerCss = css``;
 	$: {
@@ -174,14 +178,14 @@
 						style="position: relative; z-index: 1;"
 					>
 						{#if gradientColor1 && gradientColor2 && gradientColor3}
-							<div class="modal-title-bar-gradient" style="background-color: {gradientColor2};">
+							<div class="modal-title-bar-gradient" style="background-color: {titleBarGradient2};">
 								<JDGRandomGradient
 									numberOfPoints={8}
 									edgeBufferRatio={0.1}
 									drawDebugBorders={false}
-									color1={gradientColor3}
-									color2={gradientColor1}
-									color3={gradientColor2}
+									color1={titleBarGradient3}
+									color2={titleBarGradient1}
+									color3={titleBarGradient2}
 									opacity={0.75}
 								/>
 							</div>
@@ -247,14 +251,14 @@
 							style="position: relative; z-index: 1;"
 						>
 							{#if gradientColor1 && gradientColor2 && gradientColor3}
-								<div class="modal-title-bar-gradient" style="background-color: {gradientColor2};">
+								<div class="modal-title-bar-gradient" style="background-color: {titleBarGradient2};">
 									<JDGRandomGradient
 										numberOfPoints={8}
 										edgeBufferRatio={0.1}
 										drawDebugBorders={false}
-										color1={gradientColor3}
-										color2={gradientColor1}
-										color3={gradientColor2}
+										color1={titleBarGradient3}
+										color2={titleBarGradient1}
+										color3={titleBarGradient2}
 										opacity={0.75}
 									/>
 								</div>
