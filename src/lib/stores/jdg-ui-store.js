@@ -55,6 +55,7 @@ export let appFontFamily = writable('');
 export let allowTextSelection = writable(false);
 
 /*** COLOR MODE ***/
+export const COLOR_MODE_STORAGE_KEY = 'jdg-color-mode-preference';
 // 'auto' | 'light' | 'dark' — what the consuming app requested
 export let colorModeSetting = writable('auto');
 // 'light' | 'dark' — resolved mode after factoring in OS preference
