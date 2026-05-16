@@ -8,6 +8,7 @@
 
 	$: datePickerCss = css`
 		color: ${$themeColors.text};
+		background-color: ${$themeColors.inputBackground};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			font-size: ${jdgSizes.inputFontSizeMobile};
 			padding: ${jdgSizes.inputPaddingMobileTablet};
@@ -34,7 +35,7 @@
 		}
 		&:disabled {
 			background-color: ${$themeColors.inputBackground};
-			border: 2px solid gainsboro;
+			border: 2px solid ${$themeColors.textSecondary};
 		}
 	`;
 </script>

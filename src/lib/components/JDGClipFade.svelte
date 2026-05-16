@@ -2,10 +2,15 @@
 	import { afterUpdate } from 'svelte';
 	import { css } from '@emotion/css';
 
-	import { appAccentColors, isMobileBreakpoint, windowWidth } from '$lib/stores/jdg-ui-store.js';
+	import {
+		appAccentColors,
+		colorMode,
+		isMobileBreakpoint,
+		windowWidth
+	} from '$lib/stores/jdg-ui-store.js';
 	import { lightenColor } from '$lib/jdg-utils.js';
 	import { jdgSharedIdentifiers } from '$lib/jdg-shared-strings.js';
-	import { jdgDurations } from '$lib/jdg-shared-styles.js';
+	import { jdgDurations, themeColors } from '$lib/jdg-shared-styles.js';
 
 	export let moduleHeightPx = 350; // if slot is GridLayout, this gets overridden
 	export let moduleCountDesktop = 1.5; // how many rows to show before fading (desktop)
@@ -58,16 +63,21 @@
 		transition: height ${jdgDurations.default}${jdgDurations.unit} ease-in-out;
 	`;
 
-	const clipFadeGradientCss = css`
-		background: linear-gradient(to top, white ${`${textDivHeight}px`}, transparent 200px);
-		:hover {
-			background: linear-gradient(
-				to top,
-				${lightenColor(hoverColor, hoverColorLightenFactor)} ${`${textDivHeight}px`},
-				transparent 200px
-			);
-		}
-	`;
+	let clipFadeGradientCss;
+	$: {
+		const fadeColor = $themeColors.headerBackground;
+		const hoverFadeColor = lightenColor(hoverColor, $colorMode === 'dark' ? 0.3 : hoverColorLightenFactor);
+		clipFadeGradientCss = css`
+			background: linear-gradient(to top, ${fadeColor} ${`${textDivHeight}px`}, transparent 200px);
+			:hover {
+				background: linear-gradient(
+					to top,
+					${hoverFadeColor} ${`${textDivHeight}px`},
+					transparent 200px
+				);
+			}
+		`;
+	}
 
 	// set the max height or no height if no clipping requested
 	let clipFadeContainerCssDynamic = css``;
@@ -151,7 +161,7 @@
 <div class="jdg-clip-fade-container {clipFadeContainerCss} {clipFadeContainerCssDynamic}">
 	{#if isClipped}
 		<div class="clip-fade-absolute">
-			<div class="clip-fade-see-more">
+			<div class="clip-fade-see-more" style="color: {$themeColors.text};">
 				SHOW MORE&nbsp;<i class="fa-solid fa-chevron-down"></i>
 			</div>
 			<div
