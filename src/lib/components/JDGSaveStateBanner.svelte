@@ -1,6 +1,6 @@
 <script>
-	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
-	import jdgSaveStatus from '$lib/schemas/jdg-save-status.js';
+	import JDG_NOTIFICATION_TYPES from '$lib/schemas/jdg-notification-types.js';
+	import JDG_SAVE_STATUS from '$lib/schemas/jdg-save-status.js';
 
 	import { saveFunction, saveStatus } from '$lib/stores/jdg-temp-store.js';
 
@@ -18,8 +18,8 @@
 		}
 
 		// Auto-dismiss success messages after a delay (but not successPersistent)
-		if ($saveStatus?.notificationType !== jdgNotificationTypes.successPersistent) {
-			if ($saveStatus === jdgSaveStatus.loadSucccess || $saveStatus === jdgSaveStatus.saveSuccess) {
+		if ($saveStatus?.notificationType !== JDG_NOTIFICATION_TYPES.successPersistent) {
+			if ($saveStatus === JDG_SAVE_STATUS.loadSucccess || $saveStatus === JDG_SAVE_STATUS.saveSuccess) {
 				setTimeout(() => {
 					saveStatus.set(null);
 				}, 2000);
@@ -36,7 +36,7 @@
 	showCloseButton={false}
 	{scrollOnStatusChange}
 >
-	{#if $saveStatus === jdgSaveStatus.unsavedChanges}
+	{#if $saveStatus === JDG_SAVE_STATUS.unsavedChanges}
 		<JDGButton
 			label={'Save'}
 			faIcon={'fa-floppy-disk'}

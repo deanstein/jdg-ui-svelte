@@ -1,4 +1,4 @@
-const jdgNotificationTypes = {
+const JDG_NOTIFICATION_TYPES = Object.freeze({
 	error: {
 		color: '#ff7777',
 		message: 'An error occurred.',
@@ -29,6 +29,6 @@ const jdgNotificationTypes = {
 		message: 'Operation successful. This message will persist.',
 		faIcon: 'fa-circle-check'
 	}
-};
+});
 
-export default jdgNotificationTypes;
+export default JDG_NOTIFICATION_TYPES;

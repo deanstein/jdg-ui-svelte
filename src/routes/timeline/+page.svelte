@@ -7,8 +7,8 @@
 	import imageMetaRegistry from '.././image-meta-registry.js';
 	import getJdgImageMetaRegistry from '$lib/jdg-image-meta-registry.js';
 
-	import jdgTimelineEventTypes, {
-		jdgTimelineEventKeys
+	import JDG_TIMELINE_EVENT_TYPES, {
+		JDG_TIMELINE_EVENT_KEYS
 	} from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 	import {
 		buildingDataCollectionKey,
@@ -72,7 +72,7 @@
 	} from '$lib/index.js';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
 	import JDGDatePicker from '$lib/components/Input/JDGDatePicker.svelte';
-	import jdgSaveStatus from '$lib/schemas/jdg-save-status.js';
+	import JDG_SAVE_STATUS from '$lib/schemas/jdg-save-status.js';
 
 	// Set the age suffixes for timeline events
 	setContext(JDG_CONTEXTS.EVENT_AGE_SUFFIX_POSITIVE, 'after opening');
@@ -81,29 +81,29 @@
 	/*** TIMELINE EVENT TYPE CONTEXT ***/
 	// Define which event types should be available in the timeline event form
 	// This context will be consumed by JDGTimelineEventForm (via JDGTimelineEventModal)
-	// You can provide either an array of key strings or an object like jdgTimelineEventKeys
+	// You can provide either an array of key strings or an object like JDG_TIMELINE_EVENT_KEYS
 	// Example: Filter to only building-related event types
 	const allowedEventTypeKeys = [
 		// Building-specific events
-		jdgTimelineEventKeys.opening,
-		jdgTimelineEventKeys.closure,
-		jdgTimelineEventKeys.demolition,
-		jdgTimelineEventKeys.construction,
-		jdgTimelineEventKeys.renovation,
-		jdgTimelineEventKeys.planning,
-		jdgTimelineEventKeys.rebrand,
-		jdgTimelineEventKeys.ownershipChange,
-		jdgTimelineEventKeys.ownershipNegotiation,
-		jdgTimelineEventKeys.structural,
+		JDG_TIMELINE_EVENT_KEYS.opening,
+		JDG_TIMELINE_EVENT_KEYS.closure,
+		JDG_TIMELINE_EVENT_KEYS.demolition,
+		JDG_TIMELINE_EVENT_KEYS.construction,
+		JDG_TIMELINE_EVENT_KEYS.renovation,
+		JDG_TIMELINE_EVENT_KEYS.planning,
+		JDG_TIMELINE_EVENT_KEYS.rebrand,
+		JDG_TIMELINE_EVENT_KEYS.ownershipChange,
+		JDG_TIMELINE_EVENT_KEYS.ownershipNegotiation,
+		JDG_TIMELINE_EVENT_KEYS.structural,
 		// Generic events
-		jdgTimelineEventKeys.generic,
-		jdgTimelineEventKeys.article,
-		jdgTimelineEventKeys.celebration,
-		jdgTimelineEventKeys.legal,
-		jdgTimelineEventKeys.media,
-		jdgTimelineEventKeys.memory,
-		jdgTimelineEventKeys.quote,
-		jdgTimelineEventKeys.statistic
+		JDG_TIMELINE_EVENT_KEYS.generic,
+		JDG_TIMELINE_EVENT_KEYS.article,
+		JDG_TIMELINE_EVENT_KEYS.celebration,
+		JDG_TIMELINE_EVENT_KEYS.legal,
+		JDG_TIMELINE_EVENT_KEYS.media,
+		JDG_TIMELINE_EVENT_KEYS.memory,
+		JDG_TIMELINE_EVENT_KEYS.quote,
+		JDG_TIMELINE_EVENT_KEYS.statistic
 	];
 
 	// Set the context for timeline event type keys
@@ -113,7 +113,7 @@
 	// Save the current draft timeline host collection to the GitHub repo
 	const saveToRepo = async () => {
 		// Set the status to saving
-		saveStatus.set(jdgSaveStatus.saving);
+		saveStatus.set(JDG_SAVE_STATUS.saving);
 
 		// Write the collection file draft to the repo
 		const writeResult = await writeJsonFileToRepo(
@@ -125,7 +125,7 @@
 
 		// Successfully wrote the JSON file
 		if (writeResult) {
-			saveStatus.set(jdgSaveStatus.saveSuccess);
+			saveStatus.set(JDG_SAVE_STATUS.saveSuccess);
 			// Set the local timeline host store to the draft one
 			localTimelineHostStore.set($draftTimelineHost);
 			// Clear the drafts
@@ -139,7 +139,7 @@
 			);
 		} else {
 			// Failure: keep draft and set failure status
-			saveStatus.set(jdgSaveStatus.failure);
+			saveStatus.set(JDG_SAVE_STATUS.saveFailed);
 		}
 	};
 
@@ -155,17 +155,17 @@
 		// Set the saveStatus if unsaved changes are detected
 		// Don't overwrite if an operation is in progress or showing success
 		const isInProgressStatus =
-			$saveStatus === jdgSaveStatus.saving ||
-			$saveStatus === jdgSaveStatus.loading ||
-			$saveStatus === jdgSaveStatus.uploading;
+			$saveStatus === JDG_SAVE_STATUS.saving ||
+			$saveStatus === JDG_SAVE_STATUS.loading ||
+			$saveStatus === JDG_SAVE_STATUS.uploading;
 		const isSuccessStatus =
-			$saveStatus === jdgSaveStatus.saveSuccess ||
-			$saveStatus === jdgSaveStatus.loadSucccess ||
-			$saveStatus === jdgSaveStatus.saveSuccessRebuilding;
+			$saveStatus === JDG_SAVE_STATUS.saveSuccess ||
+			$saveStatus === JDG_SAVE_STATUS.loadSucccess ||
+			$saveStatus === JDG_SAVE_STATUS.saveSuccessRebuilding;
 
 		// Only show the unsaved changes status if not saving or success
 		if (hasUnsavedChanges && !isInProgressStatus && !isSuccessStatus) {
-			saveStatus.set(jdgSaveStatus.unsavedChanges);
+			saveStatus.set(JDG_SAVE_STATUS.unsavedChanges);
 		} else if (!hasUnsavedChanges && !isInProgressStatus && !isSuccessStatus) {
 			// Only clear the status if no operation is in progress and no success message is being shown
 			saveStatus.set(null);
@@ -300,7 +300,7 @@
 
 	/*** TIMELINE EVENT ***/
 	// All event types to show
-	const instantiatedEventSchemas = Object.entries(jdgTimelineEventTypes)
+	const instantiatedEventSchemas = Object.entries(JDG_TIMELINE_EVENT_TYPES)
 		.filter(([key, def]) => !def.isContextual) // skip contextual types
 		.map(([key, def]) => ({
 			key,
@@ -316,7 +316,7 @@
 		}
 	};
 	// The selected event type
-	let selectedEventTypeKey = jdgTimelineEventKeys.birth;
+	let selectedEventTypeKey = JDG_TIMELINE_EVENT_KEYS.birth;
 	// Use a temporary store for the form preview to read and write
 	const localTimelineEventStore = writable();
 	$: {
@@ -656,11 +656,11 @@
 			onClickInceptionEvent={() => {
 				showTimelineEventModal.set(true);
 				isTimelineEventModalEditable.set(true);
-				draftTimelineEvent.set(instantiateTimelineEvent(jdgTimelineEventKeys.generic));
+				draftTimelineEvent.set(instantiateTimelineEvent(JDG_TIMELINE_EVENT_KEYS.generic));
 			}}
 			addClickAddEvent={() => {
 				showTimelineEventModal.set(true);
-				draftTimelineEvent.set(instantiateTimelineEvent(jdgTimelineEventKeys.generic));
+				draftTimelineEvent.set(instantiateTimelineEvent(JDG_TIMELINE_EVENT_KEYS.generic));
 			}}
 			onAvatarChange={(newKey) => {
 				// Update the draft store directly

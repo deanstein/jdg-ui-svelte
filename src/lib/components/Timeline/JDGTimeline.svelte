@@ -6,8 +6,8 @@
 
 	import JDG_CONTEXTS from '$lib/jdg-contexts.js';
 
-	import timelineEventTypes, {
-		jdgTimelineEventKeys
+	import JDG_TIMELINE_EVENT_TYPES, {
+		JDG_TIMELINE_EVENT_KEYS
 	} from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 	import getJdgImageMetaRegistry from '$lib/jdg-image-meta-registry.js';
 
@@ -87,7 +87,7 @@
 	//   object → timeline host data → renders the timeline
 	export let timelineHost;
 	// Allowed event type keys for this timeline (fallback when TIMELINE_EVENT_TYPE_KEYS context is unset); mirrors JDGTimelineEventForm
-	export let eventTypeKeys = jdgTimelineEventKeys;
+	export let eventTypeKeys = JDG_TIMELINE_EVENT_KEYS;
 	// Optionally include contextual events
 	export let contextEvents = timelineHost?.contextualEvents;
 	// Whether to show the name of the timeline host at the top
@@ -140,7 +140,7 @@
 
 	/** Same normalization as {@link JDGTimelineEventForm} (array or object of allowed keys). */
 	function normalizeEventTypeKeys(keys) {
-		const k = keys ?? jdgTimelineEventKeys;
+		const k = keys ?? JDG_TIMELINE_EVENT_KEYS;
 		if (Array.isArray(k)) {
 			return Object.fromEntries(k.map((key) => [key, key]));
 		}
@@ -150,8 +150,8 @@
 	/** Selectable (non-contextual) types allowed by context/prop — matches event form type dropdown. */
 	function visibleMapForSelectableKeys(effectiveKeys) {
 		return Object.fromEntries(
-			Object.keys(timelineEventTypes)
-				.filter((key) => effectiveKeys[key] && !timelineEventTypes[key]?.isContextual)
+			Object.keys(JDG_TIMELINE_EVENT_TYPES)
+				.filter((key) => effectiveKeys[key] && !JDG_TIMELINE_EVENT_TYPES[key]?.isContextual)
 				.map((typeKey) => [typeKey, true])
 		);
 	}
@@ -298,8 +298,8 @@
 			const parsed = new Date(entry.date);
 			if (isNaN(parsed.getTime())) continue;
 
-			const event = instantiateTimelineEvent(jdgTimelineEventKeys.media);
-			event.type = jdgTimelineEventKeys.media;
+			const event = instantiateTimelineEvent(JDG_TIMELINE_EVENT_KEYS.media);
+			event.type = JDG_TIMELINE_EVENT_KEYS.media;
 			event.date = entry.date;
 			event.isApprxDate = entry.isApprxDate ?? false;
 			event.isMediaWrapper = true;
@@ -384,9 +384,9 @@
 
 	$: effectiveEventTypeKeys = normalizeEventTypeKeys(contextEventTypeKeys ?? eventTypeKeys);
 
-	$: selectableEventTypeKeysSorted = Object.keys(timelineEventTypes)
-		.filter((key) => effectiveEventTypeKeys[key] && !timelineEventTypes[key]?.isContextual)
-		.sort((a, b) => timelineEventTypes[a].label.localeCompare(timelineEventTypes[b].label));
+	$: selectableEventTypeKeysSorted = Object.keys(JDG_TIMELINE_EVENT_TYPES)
+		.filter((key) => effectiveEventTypeKeys[key] && !JDG_TIMELINE_EVENT_TYPES[key]?.isContextual)
+		.sort((a, b) => JDG_TIMELINE_EVENT_TYPES[a].label.localeCompare(JDG_TIMELINE_EVENT_TYPES[b].label));
 
 	// Which selectable event types are shown (toggled in visibility flyout); contextual row types are not listed and stay visible
 	let visibleTimelineEventTypes = visibleMapForSelectableKeys(
@@ -1117,7 +1117,7 @@
 				effectiveHost.timelineEvents.length === 0 ||
 				getNumDaysBetweenDates(effectiveHost.inceptionDate, earliestEvent.date) > 0
 			) {
-				emptyStateEvent = instantiateTimelineEvent(jdgTimelineEventKeys.inception);
+				emptyStateEvent = instantiateTimelineEvent(JDG_TIMELINE_EVENT_KEYS.inception);
 				emptyStateEvent.date = effectiveHost.inceptionDate;
 			} else {
 				emptyStateEvent = undefined;
@@ -1125,8 +1125,8 @@
 
 			// If there's no cessation date, show a Today event
 			if (effectiveHost?.cessationDate === '' || !effectiveHost?.cessationDate) {
-				todayEvent = instantiateTimelineEvent(jdgTimelineEventKeys.today);
-				todayEvent.type = jdgTimelineEventKeys.today;
+				todayEvent = instantiateTimelineEvent(JDG_TIMELINE_EVENT_KEYS.today);
+				todayEvent.type = JDG_TIMELINE_EVENT_KEYS.today;
 			} else {
 				todayEvent = undefined;
 			}
@@ -1283,9 +1283,9 @@
 		if (!draftEvent || draftHost?.id !== timelineHost.id) return;
 
 		let scrollIdToFind = null;
-		if (draftEvent.type === jdgTimelineEventKeys.inception) {
+		if (draftEvent.type === JDG_TIMELINE_EVENT_KEYS.inception) {
 			scrollIdToFind = 'inception';
-		} else if (draftEvent.type === jdgTimelineEventKeys.today) {
+		} else if (draftEvent.type === JDG_TIMELINE_EVENT_KEYS.today) {
 			scrollIdToFind = 'today';
 		} else {
 			const idx = timelineRowItems.findIndex(
@@ -1519,7 +1519,7 @@
 												setTimelineEventTypeVisible(typeKey, e.currentTarget.checked)}
 										/>
 										<span class={eventTypeFilterLabelCss}>
-											{timelineEventTypes[typeKey].label} ({eventTypeCountsInTimeline[typeKey]})
+											{JDG_TIMELINE_EVENT_TYPES[typeKey].label} ({eventTypeCountsInTimeline[typeKey]})
 										</span>
 									</label>
 								{/each}

@@ -2,7 +2,7 @@
 	import { MetaTags } from 'svelte-meta-tags';
 
 	import jdgNavItem from '$lib/schemas/jdg-nav-item.js';
-	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
+	import JDG_NOTIFICATION_TYPES from '$lib/schemas/jdg-notification-types.js';
 
 	import { repoName, showDevTools } from '$lib/stores/jdg-ui-store.js';
 
@@ -114,7 +114,7 @@
 	{showHeaderStripes}
 	fontFamily="REM"
 >
-	<JDGNotificationBanner notificationType={jdgNotificationTypes.information.id} />
+	<JDGNotificationBanner notificationType={JDG_NOTIFICATION_TYPES.information.id} />
 	<JDGHeader
 		logoJustification="left"
 		logoSupertitle={'INTRODUCING'}

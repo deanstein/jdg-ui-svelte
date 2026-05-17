@@ -1,10 +1,10 @@
 <script>
 	import { css } from '@emotion/css';
 
-	import composeButtonTypes from '$lib/schemas/jdg-compose-button-types.js';
+	import JDG_COMPOSE_BUTTON_TYPES from '$lib/schemas/jdg-compose-button-types.js';
 	import { getNearestScrollingElement } from '$lib/jdg-utils.js';
 
-	import ComposeButton from '$lib/components/Compose/JDGComposeButton.svelte';
+	import JDGComposeButton from '$lib/components/Compose/JDGComposeButton.svelte';
 
 	export let parentRef; // required to determine where to show the compose button
 	export let isEditActive = false; // when active, show done/cancel
@@ -85,11 +85,11 @@
 			class="compose-button-sticky-wrapper {composeStickyContainerCss}"
 		>
 			<div class="compose-button-wrapper {composeButtonWrapperCss}">
-				<ComposeButton
+				<JDGComposeButton
 					onClickFunction={onClickCompose}
 					faIcon={composeButtonFaIcon}
 					tooltip={composeButtonTooltip}
-					buttonType={composeButtonTypes.edit.type}
+					buttonType={JDG_COMPOSE_BUTTON_TYPES.edit.type}
 				/>
 			</div>
 		</div>
@@ -108,24 +108,24 @@
 		{#if isEditActive}
 			<!-- show delete if function is provided -->
 			{#if onClickDelete}
-				<ComposeButton
+				<JDGComposeButton
 					onClickFunction={onClickDelete}
-					buttonType={composeButtonTypes.delete.type}
+					buttonType={JDG_COMPOSE_BUTTON_TYPES.delete.type}
 					label={deleteButtonLabel}
 					tooltip={deleteButtonTooltip}
 				/>
 			{/if}
 			{#if onClickCancel && onClickDone}
 				<!-- show done/cancel buttons if in edit mode -->
-				<ComposeButton
+				<JDGComposeButton
 					onClickFunction={onClickCancel}
-					buttonType={composeButtonTypes.cancel.type}
+					buttonType={JDG_COMPOSE_BUTTON_TYPES.cancel.type}
 					label={cancelButtonLabel}
 					tooltip={cancelButtonTooltip}
 				/>
-				<ComposeButton
+				<JDGComposeButton
 					onClickFunction={onClickDone}
-					buttonType={composeButtonTypes.confirm.type}
+					buttonType={JDG_COMPOSE_BUTTON_TYPES.confirm.type}
 					label={doneButtonLabel}
 					tooltip={doneButtonTooltip}
 					isEnabled={doneButtonEnabled}

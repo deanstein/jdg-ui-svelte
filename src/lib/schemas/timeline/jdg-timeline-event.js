@@ -1,14 +1,14 @@
 import JDG_INPUT_TYPES from '$lib/schemas/jdg-input-types.js';
-import { jdgSchemaVersion } from '$lib/schemas/jdg-schema-versions.js';
+import { JDG_SCHEMA_VERSION } from '$lib/schemas/jdg-schema-versions.js';
 
 import { jdgSharedSources } from '$lib/jdg-shared-strings.js';
-import jdgTimelineEventTypes from '$lib/schemas/timeline/jdg-timeline-event-types.js';
+import JDG_TIMELINE_EVENT_TYPES from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 
 // NOTE: This is a HYBRID SCHEMA - it has both data and UI
 const jdgTimelineEvent = {
 	// meta
 	id: '',
-	type: jdgTimelineEventTypes.generic,
+	type: JDG_TIMELINE_EVENT_TYPES.generic,
 	// content
 	date: {
 		default: '',
@@ -51,7 +51,7 @@ const jdgTimelineEvent = {
 	// Optional; certain event types may have additional data
 	additionalContent: {},
 	// Timeline events are upgraded with new fields on version mismatch
-	version: jdgSchemaVersion
+	version: JDG_SCHEMA_VERSION
 };
 
 export default jdgTimelineEvent;

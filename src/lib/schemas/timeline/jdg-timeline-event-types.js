@@ -4,7 +4,7 @@ import JDG_INPUT_TYPES from '$lib/schemas/jdg-input-types.js';
 // this is used for upgrading timeline events
 // to ensure no errors when new data is supported
 
-const jdgTimelineEventTypes = {
+const JDG_TIMELINE_EVENT_TYPES = Object.freeze({
 	/* ========== GENERIC ========== */
 	/* Base event types applicable to people, buildings, etc. */
 	article: {
@@ -227,11 +227,11 @@ const jdgTimelineEventTypes = {
 		label: 'Structural',
 		icon: 'fa-triangle-exclamation'
 	}
-};
+});
 
 // All top-level keys from the schema above
-export const jdgTimelineEventKeys = Object.fromEntries(
-	Object.keys(jdgTimelineEventTypes).map((key) => [key, key])
+export const JDG_TIMELINE_EVENT_KEYS = Object.freeze(
+	Object.fromEntries(Object.keys(JDG_TIMELINE_EVENT_TYPES).map((key) => [key, key]))
 );
 
-export default jdgTimelineEventTypes;
+export default JDG_TIMELINE_EVENT_TYPES;

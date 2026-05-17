@@ -3,7 +3,7 @@
 
 	import { repoName } from '$lib/stores/jdg-ui-store.js';
 	import { getImageMetaRegistryLabel } from '$lib/jdg-persistence-management.js';
-	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
+	import JDG_NOTIFICATION_TYPES from '$lib/schemas/jdg-notification-types.js';
 
 	import { JDGButton, JDGImageRegistryGallery, JDGNotificationBanner } from '$lib/index.js';
 	import { jdgColors, themeColors } from '$lib/jdg-shared-styles.js';
@@ -83,7 +83,7 @@
 	<!-- Error banner when registry is required but missing -->
 	<JDGNotificationBanner
 		showBanner={isRegistryMissing}
-		notificationType={jdgNotificationTypes.error}
+		notificationType={JDG_NOTIFICATION_TYPES.error}
 		message="No Image Meta Registry assigned to this Timeline Host. Set the registry in the host's settings to enable image selection."
 	/>
 
@@ -91,7 +91,7 @@
 		<!-- Registry indicator -->
 		<JDGNotificationBanner
 			showBanner={!!effectiveRegistry}
-			notificationType={jdgNotificationTypes.information}
+			notificationType={JDG_NOTIFICATION_TYPES.information}
 			message={`Browsing: ${registryLabel}`}
 		/>
 

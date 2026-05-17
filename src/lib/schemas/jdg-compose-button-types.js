@@ -1,6 +1,6 @@
 import { jdgColors } from '$lib/jdg-shared-styles.js';
 
-const jdgComposeButtonTypes = {
+const JDG_COMPOSE_BUTTON_TYPES = Object.freeze({
 	add: {
 		type: 'add',
 		faIcon: 'fa-plus fa-fw',
@@ -43,6 +43,6 @@ const jdgComposeButtonTypes = {
 		color: '#ffffff',
 		backgroundColor: jdgColors.active
 	}
-};
+});
 
-export default jdgComposeButtonTypes;
+export default JDG_COMPOSE_BUTTON_TYPES;

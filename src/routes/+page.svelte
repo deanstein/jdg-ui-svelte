@@ -23,7 +23,7 @@
 		jdgBuildingDataRepoName,
 		readJsonFileFromRepo
 	} from '$lib/jdg-persistence-management.js';
-	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
+	import JDG_NOTIFICATION_TYPES from '$lib/schemas/jdg-notification-types.js';
 
 	import imageMetaRegistry from './image-meta-registry.js';
 
@@ -247,11 +247,11 @@
 		<JDGBodyCopy paddingTop="0" paddingBottom="0" textAlign="center">
 			<b>Standard banners</b>
 		</JDGBodyCopy>
-		<JDGNotificationBanner notificationType={jdgNotificationTypes.information} />
-		<JDGNotificationBanner notificationType={jdgNotificationTypes.inProgress} />
-		<JDGNotificationBanner notificationType={jdgNotificationTypes.warning} />
-		<JDGNotificationBanner notificationType={jdgNotificationTypes.error} />
-		<JDGNotificationBanner notificationType={jdgNotificationTypes.success} />
+		<JDGNotificationBanner notificationType={JDG_NOTIFICATION_TYPES.information} />
+		<JDGNotificationBanner notificationType={JDG_NOTIFICATION_TYPES.inProgress} />
+		<JDGNotificationBanner notificationType={JDG_NOTIFICATION_TYPES.warning} />
+		<JDGNotificationBanner notificationType={JDG_NOTIFICATION_TYPES.error} />
+		<JDGNotificationBanner notificationType={JDG_NOTIFICATION_TYPES.success} />
 		<JDGBodyCopy paddingBottom="0" textAlign="center">
 			<b>Custom banners</b>
 		</JDGBodyCopy>
