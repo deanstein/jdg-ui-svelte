@@ -4,10 +4,10 @@
 
 	import JDG_CONTEXTS from '$lib/jdg-contexts.js';
 
-	import timelineEventTypes, {
-		jdgTimelineEventKeys
+	import JDG_TIMELINE_EVENT_TYPES, {
+		JDG_TIMELINE_EVENT_KEYS
 	} from '$lib/schemas/timeline/jdg-timeline-event-types.js';
-	import timelineEventReference from '$lib/schemas/timeline/jdg-timeline-event-reference.js';
+	import jdgTimelineEventReference from '$lib/schemas/timeline/jdg-timeline-event-reference.js';
 
 	import { colorMode, isMobileBreakpoint, isTabletBreakpoint } from '$lib/stores/jdg-ui-store.js';
 	import {
@@ -31,7 +31,7 @@
 	export let timelineEvent;
 	// If true, this event is a reference to someone else's actual event
 	// so it will display and interact differently
-	export let eventReference = instantiateObject(timelineEventReference);
+	export let eventReference = instantiateObject(jdgTimelineEventReference);
 	// Is this event interactive?
 	export let isInteractive = true;
 	// When clicking on the event - default is to set it active
@@ -98,9 +98,9 @@
 		// Otherwise, we still don't want to do anything on click in some cases
 		if (upgradedEvent) {
 			return (
-				upgradedEvent.type !== jdgTimelineEventKeys.context &&
-				upgradedEvent.type !== jdgTimelineEventKeys.reference &&
-				upgradedEvent.type !== jdgTimelineEventKeys.today
+				upgradedEvent.type !== JDG_TIMELINE_EVENT_KEYS.context &&
+				upgradedEvent.type !== JDG_TIMELINE_EVENT_KEYS.reference &&
+				upgradedEvent.type !== JDG_TIMELINE_EVENT_KEYS.today
 			);
 		}
 	};
@@ -388,8 +388,8 @@
 	let eventDescriptionDynamicCss = css``;
 	$: {
 		if (upgradedEvent) {
-			const isQuote = upgradedEvent?.type === jdgTimelineEventKeys.quote;
-			const isArticle = upgradedEvent?.type === jdgTimelineEventKeys.article;
+			const isQuote = upgradedEvent?.type === JDG_TIMELINE_EVENT_KEYS.quote;
+			const isArticle = upgradedEvent?.type === JDG_TIMELINE_EVENT_KEYS.article;
 			eventDescriptionDynamicCss = css`
 				${isArticle ? 'font-style: italic;' : ''}
 				${isQuote
@@ -410,7 +410,7 @@
 		}
 	}
 
-	$: isQuoteEvent = upgradedEvent?.type === jdgTimelineEventKeys.quote;
+	$: isQuoteEvent = upgradedEvent?.type === JDG_TIMELINE_EVENT_KEYS.quote;
 	$: quoteAttribution = upgradedEvent?.additionalContent?.attribution;
 
 	let eventQuoteAttributionCss = css``;
@@ -430,7 +430,7 @@
 	`;
 
 	// Get event label and convert to sentence case for hover text
-	$: eventLabel = timelineEventTypes[upgradedEvent?.type]?.label ?? upgradedEvent?.type;
+	$: eventLabel = JDG_TIMELINE_EVENT_TYPES[upgradedEvent?.type]?.label ?? upgradedEvent?.type;
 	$: sentenceCaseLabel = eventLabel
 		? eventLabel.charAt(0) + eventLabel.slice(1).toLowerCase()
 		: eventLabel;
@@ -509,18 +509,18 @@
 			>
 				<!-- event icon -->
 				<i
-					class="fa-solid {timelineEventTypes[upgradedEvent?.type]?.icon} {eventFaIconCss}"
+					class="fa-solid {JDG_TIMELINE_EVENT_TYPES[upgradedEvent?.type]?.icon} {eventFaIconCss}"
 					title="{sentenceCaseLabel} event"
 				/>
 				<!-- hide age if this is the birth event or if there's no age to display -->
-				{#if upgradedEvent?.type !== timelineEventTypes.birth.type && eventAgeDisplay}
+				{#if upgradedEvent?.type !== JDG_TIMELINE_EVENT_TYPES.birth.type && eventAgeDisplay}
 					<div class="timeline-event-age {eventAgeCss}">
 						{eventAgeDisplay}
 						{isEventAgePositive ? eventAgeSuffixPositive : eventAgeSuffixNegative}
 					</div>
 				{/if}
 				<!-- if this is a reference event, show the timeline host it's shared from -->
-				{#if upgradedEvent?.type === timelineEventTypes.reference}
+				{#if upgradedEvent?.type === JDG_TIMELINE_EVENT_TYPES.reference}
 					<div>
 						<div class="timeline-event-reference-info">
 							<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event from &nbsp; </i>
@@ -541,7 +541,7 @@
 					</div>
 				{/if}
 				<!-- if this event has associated people, show the first -->
-				{#if upgradedEvent?.associatedPeopleIds?.length > 0 && upgradedEvent?.type !== timelineEventTypes.reference}
+				{#if upgradedEvent?.associatedPeopleIds?.length > 0 && upgradedEvent?.type !== JDG_TIMELINE_EVENT_TYPES.reference}
 					<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event with &nbsp; </i>
 					<JDGButton
 						onClickFunction={() => {
@@ -562,15 +562,15 @@
 					{/if}
 				{/if}
 				<!-- if this is a contextual event, treat it specifically -->
-				{#if upgradedEvent?.originType === timelineEventTypes.context}
+				{#if upgradedEvent?.originType === JDG_TIMELINE_EVENT_TYPES.context}
 					<!-- child birth -->
-					{#if upgradedEvent?.type === timelineEventTypes.childBirth.type}
+					{#if upgradedEvent?.type === JDG_TIMELINE_EVENT_TYPES.childBirth.type}
 						<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event from &nbsp; </i>
 						<JDGButton
 							onClickFunction={() => {
 								onClickEventRefHost(timelineHost.id);
 							}}
-							faIcon={timelineEventTypes.childBirth.icon}
+							faIcon={JDG_TIMELINE_EVENT_TYPES.childBirth.icon}
 							backgroundColor={$themeColors.activeSubtle}
 							paddingLeftRight="8px"
 							paddingTopBottom="2px"
@@ -581,13 +581,13 @@
 						/>
 					{/if}
 					<!-- parent death -->
-					{#if upgradedEvent?.type === timelineEventTypes.parentDeath.type}
+					{#if upgradedEvent?.type === JDG_TIMELINE_EVENT_TYPES.parentDeath.type}
 						<i> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; Shared event from &nbsp; </i>
 						<JDGButton
 							onClickFunction={() => {
 								onClickEventRefHost(timelineHost.id);
 							}}
-							faIcon={timelineEventTypes.parentDeath.icon}
+							faIcon={JDG_TIMELINE_EVENT_TYPES.parentDeath.icon}
 							backgroundColor={$themeColors.activeSubtle}
 							paddingLeftRight="8px"
 							paddingTopBottom="2px"

@@ -11,7 +11,7 @@ import {
 } from './jdg-persistence-management.js';
 import { getDistancePxToBottomOfHeader } from './jdg-ui-management.js';
 import jdgImageMeta from './schemas/jdg-image-meta.js';
-import { jdgSchemaVersion } from './schemas/jdg-schema-versions.js';
+import { JDG_SCHEMA_VERSION } from './schemas/jdg-schema-versions.js';
 
 ///
 /// WINDOW UTILS
@@ -749,12 +749,12 @@ export const upgradeImageMeta = (imageMeta) => {
 
 	// Instantiate and deepmatch if the version isn't matching or is missing
 	// Also upgrade if id is missing (new images)
-	if (!imageMeta?.id || !imageMeta.version || imageMeta.version !== jdgSchemaVersion) {
+	if (!imageMeta?.id || !imageMeta.version || imageMeta.version !== JDG_SCHEMA_VERSION) {
 		const newImageMeta = instantiateObject(jdgImageMeta);
 		upgradedImageMeta = deepMatchObjects(newImageMeta, imageMeta);
 
 		// Ensure the version is up to date
-		upgradedImageMeta.version = jdgSchemaVersion;
+		upgradedImageMeta.version = JDG_SCHEMA_VERSION;
 	}
 
 	/*** FILL IN MISSING FIELDS ***/

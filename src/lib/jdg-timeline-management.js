@@ -1,7 +1,7 @@
 import { get } from 'svelte/store';
 import { v4 as uuidv4 } from 'uuid';
 
-import { jdgSchemaVersion } from '$lib/schemas/jdg-schema-versions.js';
+import { JDG_SCHEMA_VERSION } from '$lib/schemas/jdg-schema-versions.js';
 import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
 import jdgTimelineHost from '$lib/schemas/timeline/jdg-timeline-host.js';
 import {
@@ -13,8 +13,8 @@ import {
 	instantiateObject,
 	orderObjectBySchema
 } from '$lib/jdg-utils.js';
-import jdgTimelineEventTypes, {
-	jdgTimelineEventKeys
+import JDG_TIMELINE_EVENT_TYPES, {
+	JDG_TIMELINE_EVENT_KEYS
 } from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 
 //
@@ -44,7 +44,7 @@ export function upgradeTimelineHost(timelineHost) {
 	}
 
 	// Ensure version is current
-	upgradedHost.version = jdgSchemaVersion;
+	upgradedHost.version = JDG_SCHEMA_VERSION;
 
 	// Clean up invalid formats
 	// avatarImage should be a string (registry key), not an object
@@ -76,13 +76,13 @@ export function upgradeTimelineHost(timelineHost) {
 // from TimelineEvent which is a HYBRID schema
 export const instantiateTimelineEvent = (typeKey) => {
 	const initialTimelineEvent = instantiateObject(jdgTimelineEvent);
-	const typeDef = jdgTimelineEventTypes[typeKey];
+	const typeDef = JDG_TIMELINE_EVENT_TYPES[typeKey];
 
 	if (!typeDef || typeof typeDef !== 'object') {
 		console.error(`No schema found for type "${typeKey}"`);
 		// HYBRID schema has both UI and data
 		const extractedEvent = extractDataFromHybridSchema(initialTimelineEvent);
-		extractedEvent.version = jdgSchemaVersion;
+		extractedEvent.version = JDG_SCHEMA_VERSION;
 		// Reconstruct object in schema order to ensure version appears at the end
 		return orderObjectBySchema(jdgTimelineEvent, extractedEvent);
 	}
@@ -101,12 +101,12 @@ export const instantiateTimelineEvent = (typeKey) => {
 	extractedBaseEvent.id = uuidv4();
 
 	// If this is a Today event, use today's date
-	if (typeKey === jdgTimelineEventKeys.today) {
+	if (typeKey === JDG_TIMELINE_EVENT_KEYS.today) {
 		extractedBaseEvent.date = new Date().toLocaleDateString();
 	}
 
 	// Update the version to the schema version
-	extractedBaseEvent.version = jdgSchemaVersion;
+	extractedBaseEvent.version = JDG_SCHEMA_VERSION;
 
 	// Reconstruct object in schema order to ensure version appears at the end
 	return orderObjectBySchema(jdgTimelineEvent, extractedBaseEvent);
@@ -126,7 +126,7 @@ export function upgradeTimelineEvent(event) {
 	upgradedEvent.id = event.id;
 
 	// Ensure version is current
-	upgradedEvent.version = jdgSchemaVersion;
+	upgradedEvent.version = JDG_SCHEMA_VERSION;
 
 	// Reconstruct object in schema order to ensure version appears at the end
 	return orderObjectBySchema(jdgTimelineEvent, upgradedEvent);

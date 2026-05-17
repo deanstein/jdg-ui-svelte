@@ -8,9 +8,9 @@
 	import JDG_CONTEXTS from '$lib/jdg-contexts.js';
 	import JDG_INPUT_TYPES from '$lib/schemas/jdg-input-types.js';
 
-	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
-	import jdgTimelineEventTypes, {
-		jdgTimelineEventKeys
+	import JDG_NOTIFICATION_TYPES from '$lib/schemas/jdg-notification-types.js';
+	import JDG_TIMELINE_EVENT_TYPES, {
+		JDG_TIMELINE_EVENT_KEYS
 	} from '$lib/schemas/timeline/jdg-timeline-event-types.js';
 	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
 
@@ -62,11 +62,11 @@
 	// Read from and write to this store
 	export let eventStore = writable(instantiateObject(jdgTimelineEvent));
 	// The types of events to show (fallback if context not provided)
-	export let eventTypeKeys = jdgTimelineEventKeys;
+	export let eventTypeKeys = JDG_TIMELINE_EVENT_KEYS;
 
 	// Get event type keys from context (set by parent components like +page.svelte)
 	// Falls back to prop if context not available
-	// Context can be either an array of key strings or an object like jdgTimelineEventKeys
+	// Context can be either an array of key strings or an object like JDG_TIMELINE_EVENT_KEYS
 	const contextEventTypeKeys = getContext(JDG_CONTEXTS.TIMELINE_EVENT_TYPE_KEYS);
 
 	// Get age suffixes from context (set by parent components)
@@ -126,14 +126,14 @@
 		$localEventStore.images.length > 0;
 	// Check if event type supports image wrapper
 	$: supportsImageWrapper =
-		$localEventStore?.type === jdgTimelineEventKeys.media ||
-		$localEventStore?.type === jdgTimelineEventKeys.article ||
+		$localEventStore?.type === JDG_TIMELINE_EVENT_KEYS.media ||
+		$localEventStore?.type === JDG_TIMELINE_EVENT_KEYS.article ||
 		$localEventStore?.isMediaWrapper === true; // If isMediaWrapper is true, we know the type supports it
 	// For media: require exactly 1 image, for article: require at least 1 image (or allow in edit mode to add images)
 	$: canUseImageWrapper =
 		supportsImageWrapper &&
-		(($localEventStore?.type === jdgTimelineEventKeys.media && hasSingleImage) ||
-			($localEventStore?.type === jdgTimelineEventKeys.article && (hasImages || isEditing)));
+		(($localEventStore?.type === JDG_TIMELINE_EVENT_KEYS.media && hasSingleImage) ||
+			($localEventStore?.type === JDG_TIMELINE_EVENT_KEYS.article && (hasImages || isEditing)));
 	// Get the first image metadata (used for both single and multiple images)
 	$: firstImageMeta =
 		hasImages && imageMetaRegistry && $localEventStore.images?.[0]
@@ -183,10 +183,10 @@
 	// Article: show while editing (can enable before images). Media / other types: show once there is media.
 	// Generic (default for new events) previously had no checkbox until type was switched to Media — fixed by
 	// showing for any non-contextual type with at least one image (plus article/media rules above).
-	$: isArticleType = $localEventStore?.type === jdgTimelineEventKeys.article;
-	$: isMediaType = $localEventStore?.type === jdgTimelineEventKeys.media;
+	$: isArticleType = $localEventStore?.type === JDG_TIMELINE_EVENT_KEYS.article;
+	$: isMediaType = $localEventStore?.type === JDG_TIMELINE_EVENT_KEYS.media;
 	$: isTimelineEventTypeContextual =
-		jdgTimelineEventTypes[$localEventStore?.type]?.isContextual === true;
+		JDG_TIMELINE_EVENT_TYPES[$localEventStore?.type]?.isContextual === true;
 	$: shouldShowCheckbox =
 		isEditing &&
 		$localEventStore?.type &&
@@ -249,7 +249,7 @@
 	// Schema prep
 	const baseFieldSchema = extractUiFromDataSchema(jdgTimelineEvent);
 
-	$: typeSchema = jdgTimelineEventTypes[$localEventStore.type];
+	$: typeSchema = JDG_TIMELINE_EVENT_TYPES[$localEventStore.type];
 	$: contentSchema = typeSchema?.additionalContent ?? {};
 	$: mergedSchema = { ...baseFieldSchema, ...contentSchema };
 
@@ -296,7 +296,7 @@
 	const timelineEventOptionsGroup = (eventTypeKeys) => {
 		return {
 			timelineTypes: Object.fromEntries(
-				Object.entries(jdgTimelineEventTypes)
+				Object.entries(JDG_TIMELINE_EVENT_TYPES)
 					.filter(([key, value]) => eventTypeKeys[key] && !value.isContextual)
 					.map(([key, value]) => [
 						key,
@@ -307,7 +307,7 @@
 					])
 			),
 			includedKeys: Object.keys(eventTypeKeys).filter(
-				(key) => !jdgTimelineEventTypes[key]?.isContextual
+				(key) => !JDG_TIMELINE_EVENT_TYPES[key]?.isContextual
 			)
 		};
 	};
@@ -315,7 +315,7 @@
 	// If the event type changes, upgrade the additionalContent schema
 	// Only runs when the type actually changes (not on every store update)
 	$: if ($localEventStore.type && $localEventStore.type !== previousType) {
-		const newAddlContent = jdgTimelineEventTypes[$localEventStore.type]?.additionalContent ?? {};
+		const newAddlContent = JDG_TIMELINE_EVENT_TYPES[$localEventStore.type]?.additionalContent ?? {};
 		const dataOnlyAddlContent = extractDataSchemaFields(newAddlContent);
 		// Merge existing values with new schema defaults (preserves user input)
 		const currentAddl = get(localAdditionalStore);
@@ -368,7 +368,7 @@
 	}
 
 	// Get current event type info for header display
-	$: currentTypeInfo = jdgTimelineEventTypes[$localEventStore.type] ?? {};
+	$: currentTypeInfo = JDG_TIMELINE_EVENT_TYPES[$localEventStore.type] ?? {};
 	$: currentTypeLabel = currentTypeInfo.label ?? $localEventStore.type ?? 'Event';
 	$: currentTypeIcon = currentTypeInfo.icon ?? 'fa-calendar';
 	$: isGenericType = $localEventStore.type === 'generic';
@@ -443,7 +443,7 @@
 	<!-- Image Meta Registry indicator (locked to timeline's registry); admin only -->
 	<JDGNotificationBanner
 		showBanner={!!registryRepoName && $isAdminMode}
-		notificationType={jdgNotificationTypes.information}
+		notificationType={JDG_NOTIFICATION_TYPES.information}
 		message={`Image Meta Registry: ${registryLabel}`}
 	/>
 

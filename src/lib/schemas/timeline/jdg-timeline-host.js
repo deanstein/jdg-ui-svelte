@@ -1,7 +1,7 @@
 // A timeline needs a host
 // like a person or building.
 
-import { jdgSchemaVersion } from '../jdg-schema-versions.js';
+import { JDG_SCHEMA_VERSION } from '../jdg-schema-versions.js';
 
 // Hosts are expected to have at least these fields:
 const jdgTimelineHost = {
@@ -20,7 +20,7 @@ const jdgTimelineHost = {
 	timelineEvents: [],
 	timelineEventReferences: [],
 	contextualEvents: [],
-	version: jdgSchemaVersion
+	version: JDG_SCHEMA_VERSION
 };
 
 export default jdgTimelineHost;

@@ -1,4 +1,4 @@
-import { jdgSchemaVersion } from './jdg-schema-versions.js';
+import { JDG_SCHEMA_VERSION } from './jdg-schema-versions.js';
 import imagePlaceholder from '$lib/assets/raster/jdg-image-placeholder.png';
 
 const jdgImageMeta = {
@@ -28,7 +28,7 @@ const jdgImageMeta = {
 	// depending on the content of the image
 	toolbarJustification: 'right',
 	// Image gets upgraded with new fields on version mismatch
-	version: jdgSchemaVersion
+	version: JDG_SCHEMA_VERSION
 };
 
 export default jdgImageMeta;

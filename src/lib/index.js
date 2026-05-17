@@ -2,16 +2,16 @@
 
 // 🧠 Schemas
 export { default as jdgImageMeta } from './schemas/jdg-image-meta.js';
-export { default as jdgNotificationTypes } from './schemas/jdg-notification-types.js';
+export { default as JDG_NOTIFICATION_TYPES } from './schemas/jdg-notification-types.js';
 export { default as jdgNavItem } from './schemas/jdg-nav-item.js';
 // 🕰️ Timeline Schemas
 export { default as jdgTimelineEvent } from './schemas/timeline/jdg-timeline-event.js';
 export { default as jdgTimelineHost } from './schemas/timeline/jdg-timeline-host.js';
-export { default as timelineEventImage } from './schemas/timeline/jdg-timeline-event-image.js';
-export { default as timelineEventReference } from './schemas/timeline/jdg-timeline-event-reference.js';
+export { default as jdgTimelineEventImage } from './schemas/timeline/jdg-timeline-event-image.js';
+export { default as jdgTimelineEventReference } from './schemas/timeline/jdg-timeline-event-reference.js';
 export {
-	default as jdgTimelineEventTypes,
-	jdgTimelineEventKeys
+	default as JDG_TIMELINE_EVENT_TYPES,
+	JDG_TIMELINE_EVENT_KEYS
 } from './schemas/timeline/jdg-timeline-event-types.js';
 export { default as jdgTimelineRowItem } from './schemas/timeline/jdg-timeline-row-item.js';
 

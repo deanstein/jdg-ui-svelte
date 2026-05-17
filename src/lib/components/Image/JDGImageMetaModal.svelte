@@ -3,8 +3,8 @@
 	import { get } from 'svelte/store';
 
 	import JDG_CONTEXTS from '$lib/jdg-contexts.js';
-	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
-	import jdgSaveStatus from '$lib/schemas/jdg-save-status.js';
+	import JDG_NOTIFICATION_TYPES from '$lib/schemas/jdg-notification-types.js';
+	import JDG_SAVE_STATUS from '$lib/schemas/jdg-save-status.js';
 
 	import { repoName, showImageEditButtons, showImageMetaModal } from '$lib/stores/jdg-ui-store.js';
 	import {
@@ -387,7 +387,7 @@
 		}
 
 		console.log(`📤 Uploading "${file.name}" to "${fullAssetPath}"...`);
-		saveStatus.set(jdgSaveStatus.uploading);
+		saveStatus.set(JDG_SAVE_STATUS.uploading);
 
 		try {
 			// Step 1: Upload new image to Cloudinary
@@ -435,7 +435,7 @@
 			}
 
 			console.log(`💾 Writing image entry "${registryKey}" to ${currentRepoName}...`);
-			saveStatus.set(jdgSaveStatus.saving);
+			saveStatus.set(JDG_SAVE_STATUS.saving);
 
 			const writeResult = await writeImageMetaEntryToRepo(
 				currentRepoName,
@@ -474,7 +474,7 @@
 			}
 
 			// Indicate the save was successful, and the site will be rebuilt
-			saveStatus.set(jdgSaveStatus.saveSuccessRebuilding);
+			saveStatus.set(JDG_SAVE_STATUS.saveSuccessRebuilding);
 
 			// Update the original draft meta to reflect the new saved state
 			originalDraftMeta = instantiateObject(get(draftImageMeta));
@@ -488,7 +488,7 @@
 			}
 		} catch (err) {
 			console.error('❌ Upload/Save error:', err.message);
-			saveStatus.set(jdgSaveStatus.saveFailed);
+			saveStatus.set(JDG_SAVE_STATUS.saveFailed);
 			saveStatus.set(undefined);
 			alert(`Error: ${err.message}`);
 		}
@@ -621,7 +621,7 @@
 		}
 
 		// Set save status BEFORE clearing checking to prevent gap where banners/toolbar flash
-		saveStatus.set(jdgSaveStatus.saving);
+		saveStatus.set(JDG_SAVE_STATUS.saving);
 		isCheckingUsage = false;
 
 		try {
@@ -671,13 +671,13 @@
 				}
 			}
 
-			saveStatus.set(jdgSaveStatus.saveSuccessRebuilding);
+			saveStatus.set(JDG_SAVE_STATUS.saveSuccessRebuilding);
 
 			// Update the original draft meta to reflect the new saved state
 			originalDraftMeta = instantiateObject(get(draftImageMeta));
 		} catch (err) {
 			console.error('❌ Move error:', err.message);
-			saveStatus.set(jdgSaveStatus.saveFailed);
+			saveStatus.set(JDG_SAVE_STATUS.saveFailed);
 			setTimeout(() => saveStatus.set(undefined), 3000);
 			alert(`Error moving image: ${err.message}`);
 		}
@@ -735,7 +735,7 @@
 		}
 
 		// Set save status BEFORE clearing checking to prevent gap where banners/toolbar flash
-		saveStatus.set(jdgSaveStatus.saving);
+		saveStatus.set(JDG_SAVE_STATUS.saving);
 		isCheckingUsage = false;
 
 		try {
@@ -762,7 +762,7 @@
 
 			console.log('✅ Image deleted successfully');
 
-			saveStatus.set(jdgSaveStatus.saveSuccessRebuilding);
+			saveStatus.set(JDG_SAVE_STATUS.saveSuccessRebuilding);
 
 			// Close the modal
 			showImageMetaModal.set(false);
@@ -773,7 +773,7 @@
 			selectedGalleryRegistryRepo.set(undefined);
 		} catch (err) {
 			console.error('❌ Delete error:', err.message);
-			saveStatus.set(jdgSaveStatus.saveFailed);
+			saveStatus.set(JDG_SAVE_STATUS.saveFailed);
 			setTimeout(() => saveStatus.set(undefined), 3000);
 			alert(`Error deleting image: ${err.message}`);
 		}
@@ -825,7 +825,7 @@
 			return;
 		}
 
-		saveStatus.set(jdgSaveStatus.saving);
+		saveStatus.set(JDG_SAVE_STATUS.saving);
 
 		try {
 			console.log(
@@ -839,7 +839,7 @@
 
 			console.log('✅ Registry entry removed (image left in Cloudinary)');
 
-			saveStatus.set(jdgSaveStatus.saveSuccessRebuilding);
+			saveStatus.set(JDG_SAVE_STATUS.saveSuccessRebuilding);
 
 			showImageMetaModal.set(false);
 			draftImageMeta.set(undefined);
@@ -848,7 +848,7 @@
 			selectedGalleryRegistryRepo.set(undefined);
 		} catch (err) {
 			console.error('❌ Remove registry entry error:', err.message);
-			saveStatus.set(jdgSaveStatus.saveFailed);
+			saveStatus.set(JDG_SAVE_STATUS.saveFailed);
 			setTimeout(() => saveStatus.set(undefined), 3000);
 			alert(`Error: ${err.message}`);
 		}
@@ -961,20 +961,20 @@
 			{#if isCheckingUsage}
 				<JDGNotificationBanner
 					showBanner={true}
-					notificationType={jdgNotificationTypes.inProgress}
+					notificationType={JDG_NOTIFICATION_TYPES.inProgress}
 					message={'Checking usage in other repos...'}
 				/>
 			{/if}
 			<!-- Changes detected banner -->
 			<JDGNotificationBanner
 				showBanner={hasUnsavedChanges && !$saveStatus && !isCheckingUsage && !isNewImage}
-				notificationType={jdgNotificationTypes.warning}
+				notificationType={JDG_NOTIFICATION_TYPES.warning}
 				message={'You have unsaved changes.'}
 			/>
 			<!-- No repo name set banner -->
 			<JDGNotificationBanner
 				showBanner={!effectiveRepoName}
-				notificationType={jdgNotificationTypes.error}
+				notificationType={JDG_NOTIFICATION_TYPES.error}
 				message={'No image registry selected! Use the Dev Toolbar to select a registry.'}
 			/>
 
@@ -993,7 +993,7 @@
 							}
 
 							// Set save status
-							saveStatus.set(jdgSaveStatus.saving);
+							saveStatus.set(JDG_SAVE_STATUS.saving);
 
 							// Write only this entry back to GitHub
 							const currentRepoName = effectiveRepoName;
@@ -1016,14 +1016,14 @@
 							}
 
 							console.log('✅ Registry saved successfully');
-							saveStatus.set(jdgSaveStatus.saveSuccessRebuilding);
+							saveStatus.set(JDG_SAVE_STATUS.saveSuccessRebuilding);
 
 							// Update the original draft meta to reflect the new saved state
 							// This prevents "unsaved changes" from showing after successful save
 							originalDraftMeta = instantiateObject($draftImageMeta);
 						} catch (err) {
 							console.error('❌ Save error:', err.message);
-							saveStatus.set(jdgSaveStatus.saveFailed);
+							saveStatus.set(JDG_SAVE_STATUS.saveFailed);
 							alert(`Error: ${err.message}`);
 						}
 					}}
@@ -1097,7 +1097,7 @@
 			<!-- Show a banner when the asset path has changed -->
 			<JDGNotificationBanner
 				showBanner={hasAssetPathChanged && !isNewImage && !$saveStatus && !isCheckingUsage}
-				notificationType={jdgNotificationTypes.warning}
+				notificationType={JDG_NOTIFICATION_TYPES.warning}
 				message={'The asset path has changed. Clicking Done will rename the image in Cloudinary.'}
 			/>
 			<!-- Show a banner when we can't determine other repo impacts due to asset path change -->
@@ -1107,7 +1107,7 @@
 					!effectiveRepoName &&
 					!$saveStatus &&
 					!isCheckingUsage}
-				notificationType={jdgNotificationTypes.error}
+				notificationType={JDG_NOTIFICATION_TYPES.error}
 				message={'No image registry selected. Images in other repos may break as a result of this change.'}
 			/>
 
@@ -1164,7 +1164,7 @@
 					</JDGInputContainer>
 					{#if isPathPrefixMismatch}
 						<JDGNotificationBanner
-							notificationType={jdgNotificationTypes.WARNING}
+							notificationType={JDG_NOTIFICATION_TYPES.WARNING}
 							message={`Path must start with "${selectedRegistryForNewImage}/" to match registry`}
 						/>
 					{/if}

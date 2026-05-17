@@ -1,4 +1,4 @@
-const timelineEventImage = {
+const jdgTimelineEventImage = {
 	id: '',
 	eventId: '',
 	alt: '',
@@ -6,4 +6,4 @@ const timelineEventImage = {
 	url: ''
 };
 
-export default timelineEventImage;
+export default jdgTimelineEventImage;

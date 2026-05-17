@@ -4,7 +4,7 @@
 	import { css } from '@emotion/css';
 	import { v4 as uuidv4 } from 'uuid';
 
-	import jdgNotificationTypes from '$lib/schemas/jdg-notification-types.js';
+	import JDG_NOTIFICATION_TYPES from '$lib/schemas/jdg-notification-types.js';
 
 	import { incrementHighestZIndex } from '$lib/jdg-state-management.js';
 	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
@@ -12,7 +12,7 @@
 	import { JDGButton } from '$lib/index.js';
 
 	export let showBanner = true;
-	export let notificationType = jdgNotificationTypes.information; // Inits color and icon
+	export let notificationType = JDG_NOTIFICATION_TYPES.information; // Inits color and icon
 	export let faIcon = 'fa-solid ' + notificationType.faIcon;
 	export let iconSrc = null; // path to SVG/PNG image (takes priority over faIcon if set)
 	export let message = notificationType.message;
@@ -89,11 +89,11 @@
 	$: if (notificationType !== previousNotificationType) {
 		if (scrollOnStatusChange) {
 			// Scroll when entering inProgress state
-			if (notificationType === jdgNotificationTypes.inProgress) {
+			if (notificationType === JDG_NOTIFICATION_TYPES.inProgress) {
 				scrollContextToTop();
 			}
 			// Scroll when leaving inProgress state (to see the result)
-			else if (previousNotificationType === jdgNotificationTypes.inProgress) {
+			else if (previousNotificationType === JDG_NOTIFICATION_TYPES.inProgress) {
 				scrollContextToTop();
 			}
 		}

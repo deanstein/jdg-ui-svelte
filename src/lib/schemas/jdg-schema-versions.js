@@ -1,5 +1,5 @@
-export const jdgSchemaVersion = '0.7.1';
-export const jdgSchemachanges = {
+export const JDG_SCHEMA_VERSION = '0.7.1';
+export const JDG_SCHEMA_CHANGES = {
 	'v0.7.x': {
 		changes: ["Added 'date' to image-meta schema", "Added 'isApprxDate' to image-meta schema"]
 	},

@@ -1,6 +1,6 @@
 <script>
 	import { css } from '@emotion/css';
-	import composeButtonTypes from '$lib/schemas/jdg-compose-button-types.js';
+	import JDG_COMPOSE_BUTTON_TYPES from '$lib/schemas/jdg-compose-button-types.js';
 
 	import JDGButton from '$lib/components/Input/JDGButton.svelte';
 	import { jdgColors } from '$lib/jdg-shared-styles.js';
@@ -10,10 +10,10 @@
 	export let label = null;
 	export let tooltip = undefined;
 	export let isEnabled = true;
-	export let buttonType = composeButtonTypes.edit.type;
+	export let buttonType = JDG_COMPOSE_BUTTON_TYPES.edit.type;
 
 	let isCircular =
-		buttonType === composeButtonTypes.add.type || buttonType === composeButtonTypes.edit.type
+		buttonType === JDG_COMPOSE_BUTTON_TYPES.add.type || buttonType === JDG_COMPOSE_BUTTON_TYPES.edit.type
 			? true
 			: false;
 
@@ -26,28 +26,28 @@
 	<JDGButton
 		{isEnabled}
 		{onClickFunction}
-		label={buttonType === composeButtonTypes.add.type || buttonType === composeButtonTypes.edit.type
+		label={buttonType === JDG_COMPOSE_BUTTON_TYPES.add.type || buttonType === JDG_COMPOSE_BUTTON_TYPES.edit.type
 			? null
 			: label}
-		faIcon={faIcon ?? composeButtonTypes[buttonType].faIcon}
-		textColor={composeButtonTypes[buttonType].color}
-		backgroundColor={composeButtonTypes[buttonType].backgroundColor}
-		backgroundColorHover={buttonType === composeButtonTypes.add.type ||
-		buttonType === composeButtonTypes.edit.type
+		faIcon={faIcon ?? JDG_COMPOSE_BUTTON_TYPES[buttonType].faIcon}
+		textColor={JDG_COMPOSE_BUTTON_TYPES[buttonType].color}
+		backgroundColor={JDG_COMPOSE_BUTTON_TYPES[buttonType].backgroundColor}
+		backgroundColorHover={buttonType === JDG_COMPOSE_BUTTON_TYPES.add.type ||
+		buttonType === JDG_COMPOSE_BUTTON_TYPES.edit.type
 			? jdgColors.compose
 			: undefined}
 		doForceSquareAspect={isCircular}
-		tooltip={tooltip ?? composeButtonTypes[buttonType].tooltip}
-		fontSize={buttonType === composeButtonTypes.add.type ||
-		buttonType === composeButtonTypes.edit.type
+		tooltip={tooltip ?? JDG_COMPOSE_BUTTON_TYPES[buttonType].tooltip}
+		fontSize={buttonType === JDG_COMPOSE_BUTTON_TYPES.add.type ||
+		buttonType === JDG_COMPOSE_BUTTON_TYPES.edit.type
 			? '1.5rem'
 			: '0.9rem'}
-		paddingLeftRight={buttonType === composeButtonTypes.add.type ||
-		buttonType === composeButtonTypes.edit.type
+		paddingLeftRight={buttonType === JDG_COMPOSE_BUTTON_TYPES.add.type ||
+		buttonType === JDG_COMPOSE_BUTTON_TYPES.edit.type
 			? '1rem'
 			: '0.5rem'}
-		paddingTopBottom={buttonType === composeButtonTypes.add.type ||
-		buttonType === composeButtonTypes.edit.type
+		paddingTopBottom={buttonType === JDG_COMPOSE_BUTTON_TYPES.add.type ||
+		buttonType === JDG_COMPOSE_BUTTON_TYPES.edit.type
 			? '1rem'
 			: '0.25rem'}
 	/>
