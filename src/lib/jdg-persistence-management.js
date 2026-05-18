@@ -774,16 +774,15 @@ export const fetchLatestCommitDate = async (
 	password = null,
 	branch = 'main'
 ) => {
-	const url = isPrivate
-		? `https://api.github.com/repos/${repoOwner}/${repoName}/commits?sha=${branch}`
-		: `https://api.github.com/repos/${repoOwner}/${repoName}/commits/${branch}`;
+	const url = `https://api.github.com/repos/${repoOwner}/${repoName}/commits?sha=${branch}`;
 
 	let latestCommitDate;
 
 	await fetch(url, isPrivate ? { headers: getAuthHeaders(password) } : {})
 		.then((response) => response.json())
 		.then((data) => {
-			latestCommitDate = new Date(data[0]?.commit.committer.date);
+			const commit = Array.isArray(data) ? data[0] : data;
+			latestCommitDate = new Date(commit?.commit?.committer?.date);
 		})
 		.catch((error) => console.error('Failed to get latest commit date. Error:', error));
 
@@ -803,16 +802,15 @@ export const fetchLatestCommitUrl = async (
 	password = null,
 	branch = 'main'
 ) => {
-	const url = isPrivate
-		? `https://api.github.com/repos/${repoOwner}/${repoName}/commits?sha=${branch}`
-		: `https://api.github.com/repos/${repoOwner}/${repoName}/commits/${branch}`;
+	const url = `https://api.github.com/repos/${repoOwner}/${repoName}/commits?sha=${branch}`;
 
 	let latestCommitUrl;
 
 	await fetch(url, isPrivate ? { headers: getAuthHeaders(password) } : {})
 		.then((response) => response.json())
 		.then((data) => {
-			latestCommitUrl = data?.html_url;
+			const commit = Array.isArray(data) ? data[0] : data;
+			latestCommitUrl = commit?.html_url;
 		})
 		.catch((error) => console.error('Failed to get latest commit URL. Error:', error));
 
