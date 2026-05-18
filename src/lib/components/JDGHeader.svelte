@@ -22,6 +22,8 @@
 
 	export let showLogo = true;
 	export let logoSrc = getJdgImageMetaRegistry().jdg_logo_ui.src; // default if not passed in from host app
+	export let logoSrcDark = undefined; // alternate logo file for dark mode (use for multi-color logos)
+	export let invertLogoInDarkMode = true; // auto-invert the logo in dark mode (set false for multi-color logos)
 	export let logoAlt = 'Logo'; // alt text for logo image
 	export let logoSupertitle = undefined; // text above title
 	export let logoTitle = undefined; // title next to logo
@@ -35,6 +37,10 @@
 
 	$: palette = getThemePalette($colorMode);
 	$: resolvedBackgroundColor = backgroundColorRgba ?? palette.headerBackground;
+	$: resolvedLogoSrc = ($colorMode === 'dark' && logoSrcDark) ? logoSrcDark : logoSrc;
+	$: logoImgDarkModeCss = (invertLogoInDarkMode && !logoSrcDark && $colorMode === 'dark')
+		? css`filter: invert(1);`
+		: css``;
 	export let showShadow = true;
 	export let showColorModeToggle = false;
 	export let suppressAlphaOnScroll = false; // disable alpha past some scroll threshold
@@ -191,7 +197,7 @@
 			<div class="logo-justification-container {logoJustificationContainerCss}">
 				<div class="logo-container">
 					<a href="/" class="no-initial-highlight {logoTitleLinkCss}">
-						<img src={logoSrc} class="logo-img {headerLogoImgCss}" alt={logoAlt} />
+						<img src={resolvedLogoSrc} class="logo-img {headerLogoImgCss} {logoImgDarkModeCss}" alt={logoAlt} />
 						<!-- logo title -->
 						{#if showTitleResult}
 							<div class="logo-title-container">
