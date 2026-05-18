@@ -118,8 +118,8 @@
 		jdgUiSvelteVersionHref = getCommitHistoryUrl(jdgRepoOwner, jdgUiSvelteRepoName);
 		packageJsonVersionHref = getCommitHistoryUrl(jdgRepoOwner, repoName);
 
-		// get the build code from the deployment repo
-		buildCode = await getBuildCode(repoName);
+		// prefer build-time value baked in by CI; fall back to runtime API for dev/legacy
+		buildCode = import.meta.env.VITE_BUILD_CODE || (await getBuildCode(repoName));
 		buildCodeHref = await fetchLatestCommitUrl(jdgRepoOwner, repoName);
 	});
 </script>
