@@ -120,6 +120,7 @@
 		logoSupertitle={'INTRODUCING'}
 		logoTitle={'JDG SVELTE UI'}
 		logoAlt="JDG SVELTE UI"
+		invertLogoInDarkMode={false}
 		{navItems}
 		useMobileNav={true}
 		suppressAlphaOnScroll={false}
