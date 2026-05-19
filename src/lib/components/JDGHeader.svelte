@@ -34,6 +34,9 @@
 	export let maxVisibleNavItems = 3;
 	export let textColor = undefined;
 	export let backgroundColorRgba = undefined;
+	export let showShadow = true;
+	export let showColorModeToggle = true;
+	export let suppressAlphaOnScroll = false; // disable alpha past some scroll threshold
 
 	$: palette = getThemePalette($colorMode);
 	$: resolvedBackgroundColor = backgroundColorRgba ?? palette.headerBackground;
@@ -41,9 +44,6 @@
 	$: logoImgDarkModeCss = (invertLogoInDarkMode && !logoSrcDark && $colorMode === 'dark')
 		? css`filter: invert(1);`
 		: css``;
-	export let showShadow = true;
-	export let showColorModeToggle = false;
-	export let suppressAlphaOnScroll = false; // disable alpha past some scroll threshold
 
 	let forceHideTitleAtBreakpoint = true; // forces no title below certain breakpoints
 	let forceMobileNavOnCenteredTitle = false; // forces mobile nav when title is centered
