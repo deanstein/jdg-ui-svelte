@@ -28,7 +28,7 @@ jobs:
         env:
           BASE_PATH: '/${{ github.event.repository.name }}'
         run: |
-          BUILD_DATE=$(date -u +%Y%m%d)
+          BUILD_DATE=$(git log -1 --format=%cd --date=format:%Y%m%d)
           COMMIT_COUNT=$(git rev-list --count HEAD)
           export VITE_BUILD_CODE="${BUILD_DATE}.${COMMIT_COUNT}"
           yarn run build:static
