@@ -20,6 +20,10 @@
 
 	$: preBlockBg = $colorMode === 'dark' ? 'rgba(55, 55, 55, 1)' : '#f5f5f5';
 	$: toolsThemeCss = css`
+		display: flex;
+		flex-direction: column;
+		gap: inherit;
+
 		.cli-block,
 		.sync-output,
 		.sync-step-or code {
