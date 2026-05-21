@@ -12,6 +12,7 @@
 	import jdgSharedUrlsStore from '$lib/stores/jdg-shared-urls-store.js';
 
 	import imageMetaRegistry from './image-meta-registry.js';
+	import getJdgImageMetaRegistry from '$lib/jdg-image-meta-registry.js';
 
 	import {
 		JDGAppContainer,
@@ -113,15 +114,17 @@
 	linkColorContrastAdjustment={6}
 	{showHeaderStripes}
 	fontFamily="REM"
+	appLoadingIconSrc={getJdgImageMetaRegistry().jdg_logo_ui.src}
 	invertLoadingIconInDarkMode={false}
 >
 	<JDGNotificationBanner notificationType={JDG_NOTIFICATION_TYPES.information.id} />
 	<JDGHeader
+		logoSrcDark={getJdgImageMetaRegistry().jdg_logo_ui.src}
+		invertLogoInDarkMode={false}
 		logoJustification="left"
 		logoSupertitle={'INTRODUCING'}
 		logoTitle={'JDG SVELTE UI'}
 		logoAlt="JDG SVELTE UI"
-		invertLogoInDarkMode={false}
 		{navItems}
 		useMobileNav={true}
 		suppressAlphaOnScroll={false}
