@@ -83,6 +83,8 @@
 	// STYLING OPTIONS
 	export let fontFamily = jdgFonts.body;
 	export let appLoadingIconSrc = getJdgImageMetaRegistry().jdg_logo_ui.src;
+	export let appLoadingIconSrcDark = undefined;
+	export let invertLoadingIconInDarkMode = true;
 	export let accentColors = jdgColors.accentColorsJDG;
 	// "Banner under text" hyperlink style
 	export let linkColorDefault = accentColors[0];
@@ -131,6 +133,20 @@
 		} else {
 			colorModeStore.set(setting);
 		}
+	}
+
+	// Resolve color mode synchronously at component creation (before first render)
+	// so the loading overlay and other early UI gets the correct theme immediately.
+	if (typeof window !== 'undefined') {
+		let savedSetting;
+		try {
+			savedSetting = localStorage.getItem(COLOR_MODE_STORAGE_KEY);
+		} catch {}
+		const effectiveSetting =
+			savedSetting && ['auto', 'light', 'dark'].includes(savedSetting) ? savedSetting : colorMode;
+		colorModeSettingStore.set(effectiveSetting);
+		darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+		resolveColorMode();
 	}
 
 	// app sets window and client width in the ui state
@@ -211,18 +227,12 @@
 		appAccentColors.set(accentColors);
 		showHeaderStripesStore.set(showHeaderStripes);
 
-		// Set up color mode: localStorage > prop > default ('auto')
-		let savedSetting;
-		try {
-			savedSetting = localStorage.getItem(COLOR_MODE_STORAGE_KEY);
-		} catch {}
-		const effectiveSetting =
-			savedSetting && ['auto', 'light', 'dark'].includes(savedSetting) ? savedSetting : colorMode;
-		colorModeSettingStore.set(effectiveSetting);
-
-		darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+		// Color mode was already resolved synchronously at script init;
+		// just register the listener for OS-level changes going forward.
+		if (!darkModeMediaQuery) {
+			darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+		}
 		darkModeMediaQuery.addEventListener('change', resolveColorMode);
-		resolveColorMode();
 
 		// Update shared style states with resolved palette
 		const palette = getThemePalette(get(colorModeStore));
@@ -297,13 +307,18 @@
 		);
 		setUpdatedHyperlinkStyleSimple(linkColorSimple, palette.contentBoxBackground);
 
-		// Keep <html> background in sync so SvelteKit navigations never
-		// flash white when the app is in dark mode.
+		// Keep <html> in sync so SvelteKit navigations and pre-hydration
+		// CSS rules (e.g. loading icon inversion) stay correct.
 		const isDark = $colorModeStore === 'dark';
 		document.documentElement.style.backgroundColor = isDark
 			? jdgThemePalettes.dark.headerBackground
 			: '';
 		document.documentElement.style.colorScheme = isDark ? 'dark' : '';
+		if (isDark) {
+			document.documentElement.dataset.theme = 'dark';
+		} else {
+			delete document.documentElement.dataset.theme;
+		}
 	}
 </script>
 
@@ -344,6 +359,8 @@
 		<JDGLoadingOverlay
 			isLoading={!isAppLoaded}
 			loadingIconSrc={appLoadingIconSrc}
+			loadingIconSrcDark={appLoadingIconSrcDark}
+			invertIconInDarkMode={invertLoadingIconInDarkMode}
 			{loadingSpinnerColor}
 		/>
 	{/if}
@@ -375,12 +392,6 @@
 
 	:global(:root) {
 		scroll-behavior: smooth;
-	}
-
-	@media (prefers-color-scheme: dark) {
-		:global(html) {
-			background-color: rgba(30, 30, 30, 1);
-		}
 	}
 
 	.jdg-app-container {

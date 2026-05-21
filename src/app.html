@@ -25,10 +25,11 @@
 				try { saved = localStorage.getItem(STORAGE_KEY); } catch(e) {}
 				var prefersDark = saved === 'dark' ||
 					(saved !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-				if (prefersDark) {
-					document.documentElement.style.backgroundColor = 'rgb(30, 30, 30)';
-					document.documentElement.style.colorScheme = 'dark';
-				}
+			if (prefersDark) {
+				document.documentElement.style.backgroundColor = 'rgb(30, 30, 30)';
+				document.documentElement.style.colorScheme = 'dark';
+				document.documentElement.dataset.theme = 'dark';
+			}
 			})();
 		</script>
 	</head>
