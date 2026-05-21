@@ -69,6 +69,7 @@
 		jdgColors,
 		jdgFonts,
 		getThemePalette,
+		jdgThemePalettes,
 		themeColors
 	} from '$lib/jdg-shared-styles.js';
 
@@ -295,6 +296,14 @@
 			palette.text
 		);
 		setUpdatedHyperlinkStyleSimple(linkColorSimple, palette.contentBoxBackground);
+
+		// Keep <html> background in sync so SvelteKit navigations never
+		// flash white when the app is in dark mode.
+		const isDark = $colorModeStore === 'dark';
+		document.documentElement.style.backgroundColor = isDark
+			? jdgThemePalettes.dark.headerBackground
+			: '';
+		document.documentElement.style.colorScheme = isDark ? 'dark' : '';
 	}
 </script>
 
@@ -366,6 +375,12 @@
 
 	:global(:root) {
 		scroll-behavior: smooth;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:global(html) {
+			background-color: rgba(30, 30, 30, 1);
+		}
 	}
 
 	.jdg-app-container {
