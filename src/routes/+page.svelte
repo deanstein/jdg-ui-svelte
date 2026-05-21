@@ -359,12 +359,12 @@
 			<br />
 			NO CROPPING, no blur in unfilled space, no caption/attr
 			<br />
-			Clicking goes to "./about"
+			Clicking goes to "./tools"
 		</JDGBodyCopy>
 		<JDGImageTile
 			imageMeta={imageMetaRegistry.ecc_existing_north}
 			cropToFillContainer={false}
-			href="./about"
+			href="./tools"
 		/>
 		<JDGBodyCopy textAlign="center" paddingBottom="0">
 			<b>IMAGE TILE</b>
