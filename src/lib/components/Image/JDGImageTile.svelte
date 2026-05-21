@@ -107,9 +107,11 @@
 			on:mouseleave={() => (isHovering = false)}
 			role="button"
 			tabindex="0"
-			on:click={(event) => {
-				// Stop event propagation to prevent parent click handlers from firing
+		on:click={(event) => {
+			// only stop propagation when there's no href, so SvelteKit's router can handle navigation
+			if (!href) {
 				event.stopPropagation();
+			}
 
 				// if provided, use the onclick prop
 				if (onClickFunction) {
