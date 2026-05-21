@@ -19,7 +19,10 @@
 
 		// Auto-dismiss success messages after a delay (but not successPersistent)
 		if ($saveStatus?.notificationType !== JDG_NOTIFICATION_TYPES.successPersistent) {
-			if ($saveStatus === JDG_SAVE_STATUS.loadSucccess || $saveStatus === JDG_SAVE_STATUS.saveSuccess) {
+			if (
+				$saveStatus === JDG_SAVE_STATUS.loadSucccess ||
+				$saveStatus === JDG_SAVE_STATUS.saveSuccess
+			) {
 				setTimeout(() => {
 					saveStatus.set(null);
 				}, 2000);

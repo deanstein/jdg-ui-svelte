@@ -386,7 +386,9 @@
 
 	$: selectableEventTypeKeysSorted = Object.keys(JDG_TIMELINE_EVENT_TYPES)
 		.filter((key) => effectiveEventTypeKeys[key] && !JDG_TIMELINE_EVENT_TYPES[key]?.isContextual)
-		.sort((a, b) => JDG_TIMELINE_EVENT_TYPES[a].label.localeCompare(JDG_TIMELINE_EVENT_TYPES[b].label));
+		.sort((a, b) =>
+			JDG_TIMELINE_EVENT_TYPES[a].label.localeCompare(JDG_TIMELINE_EVENT_TYPES[b].label)
+		);
 
 	// Which selectable event types are shown (toggled in visibility flyout); contextual row types are not listed and stay visible
 	let visibleTimelineEventTypes = visibleMapForSelectableKeys(
@@ -1519,7 +1521,9 @@
 												setTimelineEventTypeVisible(typeKey, e.currentTarget.checked)}
 										/>
 										<span class={eventTypeFilterLabelCss}>
-											{JDG_TIMELINE_EVENT_TYPES[typeKey].label} ({eventTypeCountsInTimeline[typeKey]})
+											{JDG_TIMELINE_EVENT_TYPES[typeKey].label} ({eventTypeCountsInTimeline[
+												typeKey
+											]})
 										</span>
 									</label>
 								{/each}

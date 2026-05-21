@@ -10,10 +10,14 @@
 	export let invertIconInDarkMode = true;
 	export let loadingSpinnerColor = $appAccentColors[0];
 
-	$: resolvedIconSrc = ($colorMode === 'dark' && loadingIconSrcDark) ? loadingIconSrcDark : loadingIconSrc;
-	$: iconDarkModeCss = (invertIconInDarkMode && !loadingIconSrcDark && $colorMode === 'dark')
-		? css`filter: invert(1);`
-		: css``;
+	$: resolvedIconSrc =
+		$colorMode === 'dark' && loadingIconSrcDark ? loadingIconSrcDark : loadingIconSrc;
+	$: iconDarkModeCss =
+		invertIconInDarkMode && !loadingIconSrcDark && $colorMode === 'dark'
+			? css`
+					filter: invert(1);
+				`
+			: css``;
 </script>
 
 {#if isLoading}
@@ -21,11 +25,11 @@
 		<JDGOverlay showTitleBar={false} closeOnOverlayClick={false}>
 			<div class="jdg-loading-overlay-flex">
 				<img
-				src={resolvedIconSrc}
-				class="jdg-loading-overlay-icon {iconDarkModeCss}"
-				class:jdg-auto-invert-dark={invertIconInDarkMode && !loadingIconSrcDark}
-				alt="Loading..."
-			/>
+					src={resolvedIconSrc}
+					class="jdg-loading-overlay-icon {iconDarkModeCss}"
+					class:jdg-auto-invert-dark={invertIconInDarkMode && !loadingIconSrcDark}
+					alt="Loading..."
+				/>
 				<JDGLoadingSpinner
 					strokeColor={loadingSpinnerColor}
 					spinnerHeightPx={25}

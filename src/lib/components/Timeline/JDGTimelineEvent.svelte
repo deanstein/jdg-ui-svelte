@@ -398,7 +398,9 @@
 					@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 						font-size: 1rem;
 					}
-					@media (min-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
+					@media (min-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) and (max-width: ${
+						jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit
+					}) {
 						font-size: 1.15rem;
 					}
 					@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {

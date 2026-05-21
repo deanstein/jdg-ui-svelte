@@ -40,10 +40,13 @@
 
 	$: palette = getThemePalette($colorMode);
 	$: resolvedBackgroundColor = backgroundColorRgba ?? palette.headerBackground;
-	$: resolvedLogoSrc = ($colorMode === 'dark' && logoSrcDark) ? logoSrcDark : logoSrc;
-	$: logoImgDarkModeCss = (invertLogoInDarkMode && !logoSrcDark && $colorMode === 'dark')
-		? css`filter: invert(1);`
-		: css``;
+	$: resolvedLogoSrc = $colorMode === 'dark' && logoSrcDark ? logoSrcDark : logoSrc;
+	$: logoImgDarkModeCss =
+		invertLogoInDarkMode && !logoSrcDark && $colorMode === 'dark'
+			? css`
+					filter: invert(1);
+				`
+			: css``;
 
 	let forceHideTitleAtBreakpoint = true; // forces no title below certain breakpoints
 	let forceMobileNavOnCenteredTitle = false; // forces mobile nav when title is centered
@@ -197,7 +200,11 @@
 			<div class="logo-justification-container {logoJustificationContainerCss}">
 				<div class="logo-container">
 					<a href="/" class="no-initial-highlight {logoTitleLinkCss}">
-						<img src={resolvedLogoSrc} class="logo-img {headerLogoImgCss} {logoImgDarkModeCss}" alt={logoAlt} />
+						<img
+							src={resolvedLogoSrc}
+							class="logo-img {headerLogoImgCss} {logoImgDarkModeCss}"
+							alt={logoAlt}
+						/>
 						<!-- logo title -->
 						{#if showTitleResult}
 							<div class="logo-title-container">

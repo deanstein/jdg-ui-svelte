@@ -13,7 +13,8 @@
 	export let buttonType = JDG_COMPOSE_BUTTON_TYPES.edit.type;
 
 	let isCircular =
-		buttonType === JDG_COMPOSE_BUTTON_TYPES.add.type || buttonType === JDG_COMPOSE_BUTTON_TYPES.edit.type
+		buttonType === JDG_COMPOSE_BUTTON_TYPES.add.type ||
+		buttonType === JDG_COMPOSE_BUTTON_TYPES.edit.type
 			? true
 			: false;
 
@@ -26,7 +27,8 @@
 	<JDGButton
 		{isEnabled}
 		{onClickFunction}
-		label={buttonType === JDG_COMPOSE_BUTTON_TYPES.add.type || buttonType === JDG_COMPOSE_BUTTON_TYPES.edit.type
+		label={buttonType === JDG_COMPOSE_BUTTON_TYPES.add.type ||
+		buttonType === JDG_COMPOSE_BUTTON_TYPES.edit.type
 			? null
 			: label}
 		faIcon={faIcon ?? JDG_COMPOSE_BUTTON_TYPES[buttonType].faIcon}
