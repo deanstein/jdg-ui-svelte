@@ -113,6 +113,7 @@
 	linkColorContrastAdjustment={6}
 	{showHeaderStripes}
 	fontFamily="REM"
+	invertLoadingIconInDarkMode={false}
 >
 	<JDGNotificationBanner notificationType={JDG_NOTIFICATION_TYPES.information.id} />
 	<JDGHeader
