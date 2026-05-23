@@ -64,9 +64,6 @@ function unwrapPostProcess(content) {
 
 function tidyCommas(content) {
 	content = content.replace(/,\s*,+/g, ',');
-	content = content.replace(/\}\)\s*,/g, '},');
-	content = content.replace(/\}\)\s*\)/g, '}}');
-	content = content.replace(/\}\s*\},/g, '},');
 	return content;
 }
 
@@ -228,7 +225,28 @@ if (!match) {
 
 const objSrc = match[1];
 const script = 'result = ' + objSrc;
+
+// Extract referenced identifiers (e.g. jdgSharedStrings) from imports and provide
+// proxy objects in the sandbox so property accesses resolve to descriptive strings.
+const importedNames = [...content.matchAll(/import\s+(?:\{[^}]*\}|\w+)\s+from\s+/g)]
+	.flatMap((m) => {
+		const clause = m[0];
+		const defaultMatch = clause.match(/import\s+(\w+)\s+from/);
+		const namedMatch = clause.match(/\{([^}]*)\}/);
+		const names = [];
+		if (defaultMatch) names.push(defaultMatch[1]);
+		if (namedMatch) names.push(...namedMatch[1].split(',').map((s) => s.trim()));
+		return names;
+	})
+	.filter(Boolean);
+
 const sandbox = { result: null };
+for (const name of importedNames) {
+	sandbox[name] = new Proxy(
+		{},
+		{ get: (_t, prop) => `${name}.${String(prop)}` }
+	);
+}
 vm.createContext(sandbox);
 vm.runInContext(script, sandbox);
 
