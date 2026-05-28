@@ -388,48 +388,12 @@
 	let eventDescriptionDynamicCss = css``;
 	$: {
 		if (upgradedEvent) {
-			const isQuote = upgradedEvent?.type === JDG_TIMELINE_EVENT_KEYS.quote;
 			const isArticle = upgradedEvent?.type === JDG_TIMELINE_EVENT_KEYS.article;
 			eventDescriptionDynamicCss = css`
 				${isArticle ? 'font-style: italic;' : ''}
-				${isQuote
-					? `
-					font-style: italic;
-					@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-						font-size: 1rem;
-					}
-					@media (min-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) and (max-width: ${
-						jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit
-					}) {
-						font-size: 1.15rem;
-					}
-					@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-						font-size: 1.3rem;
-					}
-					`
-					: ''}
 			`;
 		}
 	}
-
-	$: isQuoteEvent = upgradedEvent?.type === JDG_TIMELINE_EVENT_KEYS.quote;
-	$: quoteAttribution = upgradedEvent?.additionalContent?.attribution;
-
-	let eventQuoteAttributionCss = css``;
-	$: eventQuoteAttributionCss = css`
-		color: ${$themeColors.textSecondary};
-		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-			font-size: 0.7rem;
-		}
-		@media (min-width: ${jdgBreakpoints.width[0].toString() +
-			jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
-			jdgBreakpoints.unit}) {
-			font-size: 0.75rem;
-		}
-		@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-			font-size: 0.85rem;
-		}
-	`;
 
 	// Get event label and convert to sentence case for hover text
 	$: eventLabel = JDG_TIMELINE_EVENT_TYPES[upgradedEvent?.type]?.label ?? upgradedEvent?.type;
@@ -604,13 +568,8 @@
 		</div>
 		<div class="timeline-event-content {eventGradientCss}">
 			<div class="timeline-event-description {eventDescriptionCss} {eventDescriptionDynamicCss}">
-				{#if isQuoteEvent}"{displayDescription}"{:else}{displayDescription}{/if}
+				{displayDescription}
 			</div>
-			{#if isQuoteEvent && quoteAttribution}
-				<div class="timeline-event-quote-attribution {eventQuoteAttributionCss}">
-					— {quoteAttribution}
-				</div>
-			{/if}
 			{#if timelineEvent?._isSyntheticRegistryImage && !isInteractive}
 				<div class="timeline-event-synthetic-note">
 					<i class="fa-solid fa-wand-magic-sparkles" />
@@ -732,11 +691,6 @@
 	.timeline-event-description {
 		padding: 8px 0px 8px 0px;
 		white-space: pre-line;
-	}
-
-	.timeline-event-quote-attribution {
-		padding: 0px 0px 8px 8px;
-		text-align: right;
 	}
 
 	.timeline-event-synthetic-note {
