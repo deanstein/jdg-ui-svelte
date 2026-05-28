@@ -1,12 +1,14 @@
 <script>
-	import { onDestroy, onMount } from 'svelte';
+	import { onDestroy, onMount, tick } from 'svelte';
 	import { css } from '@emotion/css';
 
 	import {
 		appAccentColors,
+		clientWidth,
 		showImageViewerModal,
 		imageAspectRatios,
 		imageViewerMeta,
+		windowHeight,
 		windowWidth
 	} from '$lib/stores/jdg-ui-store.js';
 
@@ -43,6 +45,7 @@
 	let activeImageFittedWidthPx; // the fitted width of the active image
 
 	let parentRef;
+	let flexRowRef;
 	let carouselRef; // used for only auto-advancing when carousel is visible
 	let activeImageMeta = imageMetaSet[0]; // start with the first image
 	let kludge = true; // kludge to force a "crossfade" effect by swapping divs via flag
@@ -53,15 +56,59 @@
 	let touchEndX = 0;
 	const minSwipeDistance = 50;
 
-	const getMaxHeightPxFromProp = () => {
-		let maxHeightPx;
-		// only calculate maxHeight if prop is not auto
+	const getMaxHeightLimitPx = () => {
+		// Always read from the prop (never the computed px height passed to JDGImage)
 		if (maxHeight !== 'auto') {
-			maxHeightPx = getPixelValueFromString(maxHeight);
-		} else {
-			maxHeightPx = getMaxElementHeightPx(carouselRef);
+			return getPixelValueFromString(maxHeight);
 		}
-		return maxHeightPx;
+		return carouselRef ? getMaxElementHeightPx(carouselRef) : undefined;
+	};
+
+	const measureAvailableWidthPx = () => {
+		if (flexRowRef) {
+			const rowStyle = window.getComputedStyle(flexRowRef);
+			const isRowLayout =
+				rowStyle.flexDirection === 'row' || rowStyle.flexDirection === 'row-reverse';
+
+			if (isRowLayout) {
+				const rowWidthPx = getMaxElementWidthPx(flexRowRef);
+				let siblingWidthPx = 0;
+				for (const child of flexRowRef.children) {
+					if (child !== parentRef) {
+						siblingWidthPx += child.getBoundingClientRect().width;
+					}
+				}
+				const flexGapPx = parseFloat(rowStyle.columnGap) || parseFloat(rowStyle.gap) || 0;
+				const gapCount = flexRowRef.children.length > 1 ? flexRowRef.children.length - 1 : 0;
+				return rowWidthPx - siblingWidthPx - flexGapPx * gapCount;
+			}
+		}
+
+		return carouselRef ? getMaxElementWidthPx(carouselRef) : 0;
+	};
+
+	const ensureLayoutRefs = () => {
+		if (!carouselRef) {
+			return;
+		}
+		parentRef = carouselRef.parentNode;
+		const parentIsFlex =
+			parentRef && window.getComputedStyle(parentRef).display === 'flex';
+		flexRowRef =
+			parentIsFlex && parentRef.parentElement ? parentRef.parentElement : null;
+	};
+
+	const refreshSizingMetrics = () => {
+		if (!carouselRef) {
+			return;
+		}
+		ensureLayoutRefs();
+
+		maxHeightPxFromProp = getMaxHeightLimitPx();
+		const nextWidthPx = measureAvailableWidthPx();
+		if (nextWidthPx > 0) {
+			availableWidthPx = nextWidthPx;
+		}
 	};
 
 	// gets the largest height from all images provided
@@ -143,12 +190,10 @@
 		}
 	};
 
-	onMount(() => {
-		// get the parent ref so we can check if it's a flexbox later, for width calculations
-		parentRef = carouselRef.parentNode;
-
-		// get the initial max height
-		maxHeightPxFromProp = getMaxHeightPxFromProp();
+	onMount(async () => {
+		ensureLayoutRefs();
+		await tick();
+		refreshSizingMetrics();
 
 		// handle auto-advancing, if requested
 		if (autoAdvance) {
@@ -171,61 +216,21 @@
 			observer.observe(carouselRef);
 		}
 
-		// Shrink-to-fit flex parents reflect the carousel's own width and cause a feedback
-		// loop. Measure the flex row, then subtract sibling columns so we don't treat the
-		// full row width as space for the image.
-		const parentIsFlex =
-			parentRef && window.getComputedStyle(parentRef).display === 'flex';
-		const flexRowRef =
-			parentIsFlex && parentRef.parentElement ? parentRef.parentElement : null;
-
-		const updateAvailableWidthPx = () => {
-			let nextWidthPx;
-
-			if (flexRowRef) {
-				const rowStyle = window.getComputedStyle(flexRowRef);
-				const isRowLayout =
-					rowStyle.flexDirection === 'row' || rowStyle.flexDirection === 'row-reverse';
-
-				if (isRowLayout) {
-					const rowWidthPx = getMaxElementWidthPx(flexRowRef);
-					let siblingWidthPx = 0;
-					for (const child of flexRowRef.children) {
-						if (child !== parentRef) {
-							siblingWidthPx += child.getBoundingClientRect().width;
-						}
-					}
-					const flexGapPx =
-						parseFloat(rowStyle.columnGap) || parseFloat(rowStyle.gap) || 0;
-					const gapCount = flexRowRef.children.length > 1 ? flexRowRef.children.length - 1 : 0;
-					nextWidthPx = rowWidthPx - siblingWidthPx - flexGapPx * gapCount;
-				} else {
-					nextWidthPx = getMaxElementWidthPx(carouselRef);
-				}
-			} else {
-				nextWidthPx = getMaxElementWidthPx(carouselRef);
-			}
-
-			if (nextWidthPx > 0) {
-				availableWidthPx = nextWidthPx;
-			}
-		};
-
-		updateAvailableWidthPx();
-
-		const observer = new ResizeObserver(() => {
-			updateAvailableWidthPx();
-		});
-		const resizeObservedRef = flexRowRef ?? carouselRef;
-		observer.observe(resizeObservedRef);
-		return () => {
-			observer.disconnect();
-		};
 	});
 
 	onDestroy(() => {
 		clearInterval(intervalId);
 	});
+
+	// JDGAppContainer keeps windowWidth/windowHeight/clientWidth in sync on resize
+	$: if (carouselRef && $windowWidth > 0) {
+		$windowWidth;
+		$windowHeight;
+		$clientWidth;
+		$imageAspectRatios;
+		maxHeight;
+		tick().then(refreshSizingMetrics);
+	}
 
 	const justificationCss = css`
 		justify-content: ${justifyContent};
@@ -233,7 +238,7 @@
 	`;
 
 	$: {
-		$imageAspectRatios, $windowWidth, availableWidthPx;
+		$imageAspectRatios, $windowWidth, $windowHeight, availableWidthPx, maxHeightPxFromProp;
 		if (sizingReady()) {
 			const newFittedHeights = getAllFittedHeightsPx();
 			const newFittedWidths = getAllFittedWidthsPx();
@@ -265,8 +270,13 @@
 	let dynamicHeightCss = css`
 		height: ${maxHeight};
 	`;
+	// Passed to JDGImage; keep maxHeight prop unchanged so vh/% limits refresh on resize
+	$: imageMaxHeight =
+		finalMaxFittedHeightPx > 0 ? `${finalMaxFittedHeightPx}px` : maxHeight;
+
 	$: {
 		$windowWidth;
+		$windowHeight;
 		if (sizingReady() && allFittedHeightsPx?.length > 0) {
 			const validHeightsPx = allFittedHeightsPx.filter((height) => isFinite(height) && height > 0);
 			if (validHeightsPx.length === 0) {
@@ -279,7 +289,6 @@
 					isFinite(maxHeightPxFromProp)
 				) {
 					finalMaxFittedHeightPx = Math.min(maxHeightPxFromProp, maxFittedHeightPxFromArray);
-					maxHeight = `${finalMaxFittedHeightPx}px`;
 					dynamicHeightCss = css`
 						height: ${finalMaxFittedHeightPx}px;
 					`;
@@ -364,7 +373,7 @@
 			<div class="carousel-crossfade-wrapper-absolute {justificationCss}">
 				<JDGImage
 					imageMeta={activeImageMeta}
-					{maxHeight}
+					maxHeight={imageMaxHeight}
 					useAutoHeightOnMobile={false}
 					cropToFillContainer={false}
 					{showBlurInUnfilledSpace}
@@ -376,7 +385,7 @@
 			<div class="carousel-crossfade-wrapper-absolute {justificationCss}">
 				<JDGImage
 					imageMeta={activeImageMeta}
-					{maxHeight}
+					maxHeight={imageMaxHeight}
 					useAutoHeightOnMobile={false}
 					cropToFillContainer={false}
 					{showBlurInUnfilledSpace}
