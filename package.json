@@ -1,6 +1,6 @@
 {
 	"name": "jdg-ui-svelte",
-	"version": "3.0.3",
+	"version": "3.0.4",
 	"packageManager": "yarn@4.0.2",
 	"license": "MIT",
 	"repository": "github:deanstein/jdg-ui-svelte",
