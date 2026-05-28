@@ -72,8 +72,9 @@
 		// for each, record the fitted height
 		imageMetaSet.forEach((imageAttributeObject) => {
 			const aspectRatio = getImageAspectRatioRecord(imageAttributeObject.src);
-			const fittedHeight = availableWidthPx / aspectRatio;
-			fittedHeights.push(fittedHeight);
+			if (aspectRatio > 0 && availableWidthPx > 0) {
+				fittedHeights.push(availableWidthPx / aspectRatio);
+			}
 		});
 
 		return fittedHeights;
@@ -88,12 +89,22 @@
 		// for each, record the fitted width
 		imageMetaSet.forEach((imageAttributeObject) => {
 			const aspectRatio = getImageAspectRatioRecord(imageAttributeObject.src);
-			const maxWidth = maxHeightPxFromProp * aspectRatio;
-			fittedWidths.push(maxWidth);
+			if (aspectRatio > 0 && maxHeightPxFromProp > 0) {
+				fittedWidths.push(maxHeightPxFromProp * aspectRatio);
+			}
 		});
 
 		return fittedWidths;
 	};
+
+	const imageMetaSetHasAspectRatios = () =>
+		imageMetaSet.every((image) => getImageAspectRatioRecord(image.src) > 0);
+
+	const sizingReady = () =>
+		carouselRef &&
+		availableWidthPx > 0 &&
+		maxHeightPxFromProp > 0 &&
+		imageMetaSetHasAspectRatios();
 
 	const setActiveImage = (imageAttributesObject, endAutoAdvance = false) => {
 		// only set active image if image is different
@@ -160,19 +171,53 @@
 			observer.observe(carouselRef);
 		}
 
-		// the element ref we use to determine the width depends on
-		// whether the parent is a flex or not
-		// a flex parent will cause width calculations to go wrong
-		const widthRef =
-			window.getComputedStyle(parentRef).display === 'flex' ? parentRef : carouselRef;
+		// Shrink-to-fit flex parents reflect the carousel's own width and cause a feedback
+		// loop. Measure the flex row, then subtract sibling columns so we don't treat the
+		// full row width as space for the image.
+		const parentIsFlex =
+			parentRef && window.getComputedStyle(parentRef).display === 'flex';
+		const flexRowRef =
+			parentIsFlex && parentRef.parentElement ? parentRef.parentElement : null;
 
-		// set up a resize observer to calculate the final available width for the carousel
+		const updateAvailableWidthPx = () => {
+			let nextWidthPx;
+
+			if (flexRowRef) {
+				const rowStyle = window.getComputedStyle(flexRowRef);
+				const isRowLayout =
+					rowStyle.flexDirection === 'row' || rowStyle.flexDirection === 'row-reverse';
+
+				if (isRowLayout) {
+					const rowWidthPx = getMaxElementWidthPx(flexRowRef);
+					let siblingWidthPx = 0;
+					for (const child of flexRowRef.children) {
+						if (child !== parentRef) {
+							siblingWidthPx += child.getBoundingClientRect().width;
+						}
+					}
+					const flexGapPx =
+						parseFloat(rowStyle.columnGap) || parseFloat(rowStyle.gap) || 0;
+					const gapCount = flexRowRef.children.length > 1 ? flexRowRef.children.length - 1 : 0;
+					nextWidthPx = rowWidthPx - siblingWidthPx - flexGapPx * gapCount;
+				} else {
+					nextWidthPx = getMaxElementWidthPx(carouselRef);
+				}
+			} else {
+				nextWidthPx = getMaxElementWidthPx(carouselRef);
+			}
+
+			if (nextWidthPx > 0) {
+				availableWidthPx = nextWidthPx;
+			}
+		};
+
+		updateAvailableWidthPx();
+
 		const observer = new ResizeObserver(() => {
-			setTimeout(() => {
-				availableWidthPx = getMaxElementWidthPx(widthRef);
-			}, 100);
+			updateAvailableWidthPx();
 		});
-		observer.observe(widthRef);
+		const resizeObservedRef = flexRowRef ?? carouselRef;
+		observer.observe(resizeObservedRef);
 		return () => {
 			observer.disconnect();
 		};
@@ -189,7 +234,7 @@
 
 	$: {
 		$imageAspectRatios, $windowWidth, availableWidthPx;
-		if (carouselRef) {
+		if (sizingReady()) {
 			const newFittedHeights = getAllFittedHeightsPx();
 			const newFittedWidths = getAllFittedWidthsPx();
 			if (JSON.stringify(newFittedHeights) !== JSON.stringify(allFittedHeightsPx)) {
@@ -204,15 +249,16 @@
 	// update the active image fitted width for downstream components
 	$: {
 		allFittedHeightsPx;
-		// first, get the fitted width from the aspect ratio records
-		const activeImageFittedWidthPxFromRecord =
-			getImageAspectRatioRecord(activeImageMeta.src) * finalMaxFittedHeightPx;
-		// if the fitted width from record is wider than the available width,
-		// set the fitted width to the available width
-		activeImageFittedWidthPx =
-			activeImageFittedWidthPxFromRecord >= availableWidthPx
-				? availableWidthPx
-				: activeImageFittedWidthPxFromRecord;
+		if (!sizingReady() || !finalMaxFittedHeightPx) {
+			activeImageFittedWidthPx = undefined;
+		} else {
+			const activeAspectRatio = getImageAspectRatioRecord(activeImageMeta.src);
+			const activeImageFittedWidthPxFromRecord = activeAspectRatio * finalMaxFittedHeightPx;
+			activeImageFittedWidthPx =
+				activeImageFittedWidthPxFromRecord >= availableWidthPx
+					? availableWidthPx
+					: activeImageFittedWidthPxFromRecord;
+		}
 	}
 
 	// set the carousel height based on the max height in fitted heights array
@@ -221,22 +267,23 @@
 	`;
 	$: {
 		$windowWidth;
-		if (carouselRef && allFittedHeightsPx?.length > 0) {
-			// ensure we're getting the max from only finite numbers
-			const validHeightsPx = allFittedHeightsPx.filter((height) => isFinite(height));
-			const maxFittedHeightPxFromArray = Math.round(Math.max(...validHeightsPx));
-			if (
-				maxFittedHeightPxFromArray !== 0 &&
-				!isNaN(maxFittedHeightPxFromArray) &&
-				isFinite(maxFittedHeightPxFromArray) &&
-				isFinite(maxHeightPxFromProp) &&
-				maxHeightPxFromProp > 0
-			) {
-				finalMaxFittedHeightPx = Math.min(maxHeightPxFromProp, maxFittedHeightPxFromArray);
-				maxHeight = `${finalMaxFittedHeightPx}px`;
-				dynamicHeightCss = css`
-					height: ${finalMaxFittedHeightPx}px;
-				`;
+		if (sizingReady() && allFittedHeightsPx?.length > 0) {
+			const validHeightsPx = allFittedHeightsPx.filter((height) => isFinite(height) && height > 0);
+			if (validHeightsPx.length === 0) {
+				finalMaxFittedHeightPx = undefined;
+			} else {
+				const maxFittedHeightPxFromArray = Math.round(Math.max(...validHeightsPx));
+				if (
+					maxFittedHeightPxFromArray > 0 &&
+					isFinite(maxFittedHeightPxFromArray) &&
+					isFinite(maxHeightPxFromProp)
+				) {
+					finalMaxFittedHeightPx = Math.min(maxHeightPxFromProp, maxFittedHeightPxFromArray);
+					maxHeight = `${finalMaxFittedHeightPx}px`;
+					dynamicHeightCss = css`
+						height: ${finalMaxFittedHeightPx}px;
+					`;
+				}
 			}
 		}
 	}
@@ -245,28 +292,27 @@
 	// this only applies if showBlurInUnfilledSpace is false
 	let dynamicWidthCss = css``;
 	$: {
-		if (carouselRef && allFittedWidthsPx?.length > 0) {
-			// ensure we're getting the max from only finite numbers
-			const validWidthsPx = allFittedWidthsPx.filter((width) => isFinite(width));
-			const maxFittedWidthPxFromArray = Math.round(Math.max(...validWidthsPx));
-
-			if (
-				maxFittedWidthPxFromArray !== 0 &&
-				!isNaN(maxFittedWidthPxFromArray) &&
-				isFinite(maxFittedWidthPxFromArray)
-			) {
-				// final max fitted width is used only if it can fit within the available width
+		if (
+			sizingReady() &&
+			allFittedWidthsPx?.length > 0 &&
+			activeImageFittedWidthPx > 0
+		) {
+			const validWidthsPx = allFittedWidthsPx.filter((width) => isFinite(width) && width > 0);
+			if (validWidthsPx.length === 0) {
+				dynamicWidthCss = css``;
+			} else {
+				const maxFittedWidthPxFromArray = Math.round(Math.max(...validWidthsPx));
 				finalMaxFittedWidthPx =
 					maxFittedWidthPxFromArray <= availableWidthPx
 						? maxFittedWidthPxFromArray
 						: availableWidthPx;
 				const compositeCarouselWidthPx = matchMaxImageWidth
 					? finalMaxFittedWidthPx
-					: `${activeImageFittedWidthPx}`;
+					: activeImageFittedWidthPx;
 				dynamicWidthCss = css`
 					width: ${showBlurInUnfilledSpace && activeImageMeta.showBackgroundBlur
 						? '100%;'
-						: `${compositeCarouselWidthPx}`}px;
+						: `${compositeCarouselWidthPx}px`};
 				`;
 			}
 		}
@@ -275,7 +321,7 @@
 	// the thumbnail container shouldn't be wider than the image
 	let dynamicThumbnailContainerWidthCss = css``;
 	$: {
-		if (isFinite(finalMaxFittedWidthPx)) {
+		if (sizingReady() && isFinite(finalMaxFittedWidthPx)) {
 			dynamicThumbnailContainerWidthCss = css`
 				width: ${showBlurInUnfilledSpace ? '100%' : `${finalMaxFittedWidthPx}px`};
 			`;
@@ -285,21 +331,23 @@
 	// the expand button overlay should appear in the corner of the active image
 	let dynamicExpandButtonOverlayCss = css``;
 	$: {
-		dynamicExpandButtonOverlayCss = css`
-			width: ${justifyContent === 'center' ? '100%' : activeImageFittedWidthPx + 'px'};
-			justify-content: ${activeImageMeta?.toolbarJustification};
-			right: ${justifyContent !== 'center' ? '0' : ''};
-			padding: 10px
-				${(showBlurInUnfilledSpace && activeImageMeta.showBackgroundBlur) ||
-				(matchMaxImageWidth && justifyContent === 'center')
-					? Math.abs(availableWidthPx - activeImageFittedWidthPx) / 2 + 10 + 'px'
-					: '10px'}
-				10px
-				${(showBlurInUnfilledSpace && activeImageMeta.showBackgroundBlur) ||
-				(matchMaxImageWidth && justifyContent === 'center')
-					? Math.abs(availableWidthPx - activeImageFittedWidthPx) / 2 + 10 + 'px'
-					: '10px'};
-		`;
+		if (sizingReady() && activeImageFittedWidthPx > 0) {
+			dynamicExpandButtonOverlayCss = css`
+				width: ${justifyContent === 'center' ? '100%' : activeImageFittedWidthPx + 'px'};
+				justify-content: ${activeImageMeta?.toolbarJustification};
+				right: ${justifyContent !== 'center' ? '0' : ''};
+				padding: 10px
+					${(showBlurInUnfilledSpace && activeImageMeta.showBackgroundBlur) ||
+					(matchMaxImageWidth && justifyContent === 'center')
+						? Math.abs(availableWidthPx - activeImageFittedWidthPx) / 2 + 10 + 'px'
+						: '10px'}
+					10px
+					${(showBlurInUnfilledSpace && activeImageMeta.showBackgroundBlur) ||
+					(matchMaxImageWidth && justifyContent === 'center')
+						? Math.abs(availableWidthPx - activeImageFittedWidthPx) / 2 + 10 + 'px'
+						: '10px'};
+			`;
+		}
 	}
 </script>
 
