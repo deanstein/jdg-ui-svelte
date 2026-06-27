@@ -15,6 +15,7 @@
 	import jdgTimelineEvent from '$lib/schemas/timeline/jdg-timeline-event.js';
 
 	import {
+		appCssHyperlinkSimple,
 		colorMode,
 		isAdminMode,
 		timelineEventModalInceptionDate,
@@ -390,6 +391,36 @@
 		return option ? option.label : value;
 	}
 
+	// Escape HTML so user-provided text can't inject markup
+	function escapeHtml(text) {
+		return String(text)
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#39;');
+	}
+
+	// Convert any URLs in a string into clickable anchor tags (for read-only display)
+	function linkifyText(text) {
+		const value = text == null ? '' : String(text);
+		const urlRegex = /((?:https?:\/\/|www\.)[^\s<]+[^\s<.,;:!?)\]}'"])/gi;
+		let result = '';
+		let lastIndex = 0;
+		let match;
+		while ((match = urlRegex.exec(value)) !== null) {
+			result += escapeHtml(value.slice(lastIndex, match.index));
+			const rawUrl = match[0];
+			const href = rawUrl.startsWith('http') ? rawUrl : `https://${rawUrl}`;
+			result += `<a href="${escapeHtml(
+				href
+			)}" target="_blank" rel="noopener noreferrer">${escapeHtml(rawUrl)}</a>`;
+			lastIndex = match.index + rawUrl.length;
+		}
+		result += escapeHtml(value.slice(lastIndex));
+		return result;
+	}
+
 	// Responsive styles using jdgBreakpoints (match JDGTimelineEvent eventAgeCss / eventFaIconCss / eventDescriptionCss)
 	const bp0 = jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit;
 	const bp1 = jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit;
@@ -632,7 +663,9 @@
 						{:else if key === 'description'}
 							<div class="readout-description {readoutTextCss}">{displayDescription || ''}</div>
 						{:else if key === 'source'}
-							<div class={readoutTextCss}>{getLabelForValue(displaySource, def.options) || ''}</div>
+							<div class="{readoutTextCss} {$appCssHyperlinkSimple}">
+								{@html linkifyText(getLabelForValue(displaySource, def.options))}
+							</div>
 						{:else}
 							<div class={readoutTextCss}>{$localEventStore[key] || ''}</div>
 						{/if}
@@ -665,7 +698,9 @@
 								{getLabelForValue($localAdditionalStore[key], def.options) || ''}
 							</div>
 						{:else if key === 'source'}
-							<div class={readoutTextCss}>{getLabelForValue(displaySource, def.options) || ''}</div>
+							<div class="{readoutTextCss} {$appCssHyperlinkSimple}">
+								{@html linkifyText(getLabelForValue(displaySource, def.options))}
+							</div>
 						{:else}
 							<div class={readoutTextCss}>
 								{getLabelForValue($localEventStore[key], def.options) || ''}
