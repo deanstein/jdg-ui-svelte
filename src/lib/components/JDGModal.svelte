@@ -22,12 +22,18 @@
 	export let padding = '10px';
 	// Default to auto for proper scrolling
 	export let overflow = 'auto';
+	// Content colors
 	export let backgroundColor = undefined;
 	export let transparency = undefined;
 	// Optional gradient colors - if provided, use JDGRandomGradient instead of backgroundColor
 	export let gradientColor1 = undefined;
 	export let gradientColor2 = undefined;
 	export let gradientColor3 = undefined;
+	// Backdrop colors — only applies in the non-contentOnly path.
+	// overlayColorRgba sets the backdrop base color; overlayTransparency overrides its alpha.
+	// Blur is intentionally left to JDGOverlay's default (always blurs).
+	export let overlayColorRgba = undefined;
+	export let overlayTransparency = 0.5;
 	// When true, only the modal content box is rendered (no JDGOverlay). Use inside JDGOverlay + JDGOverlayCarousel for carousel modals.
 	export let contentOnly = false;
 
@@ -36,6 +42,14 @@
 
 	$: palette = getThemePalette($colorMode);
 	$: resolvedBackgroundColor = backgroundColor ?? palette.contentBoxBackground;
+
+	// Resolve the backdrop color forwarded to JDGOverlay.
+	// When no overlay props are set, pass undefined so JDGOverlay keeps its own default.
+	// Use != null (not truthiness) so an explicit overlayTransparency of 0 is honored.
+	$: resolvedOverlayColorRgba =
+		overlayTransparency != null
+			? setRgbaAlpha(overlayColorRgba ?? palette.headerBackground, overlayTransparency)
+			: overlayColorRgba;
 
 	$: titleBarDarkenAmount = $colorMode === 'dark' ? 0.15 : 0.05;
 	$: titleBarGradient1 = gradientColor1
@@ -225,7 +239,7 @@
 		</div>
 	</div>
 {:else}
-	<JDGOverlay onCloseFunction={handleClose} {closeOnOverlayClick}>
+	<JDGOverlay onCloseFunction={handleClose} {closeOnOverlayClick} colorRgba={resolvedOverlayColorRgba}>
 		<div
 			class="modal-outer-container"
 			on:click|self={handleBackdropClick}
