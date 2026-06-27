@@ -242,10 +242,7 @@ const importedNames = [...content.matchAll(/import\s+(?:\{[^}]*\}|\w+)\s+from\s+
 
 const sandbox = { result: null };
 for (const name of importedNames) {
-	sandbox[name] = new Proxy(
-		{},
-		{ get: (_t, prop) => `${name}.${String(prop)}` }
-	);
+	sandbox[name] = new Proxy({}, { get: (_t, prop) => `${name}.${String(prop)}` });
 }
 vm.createContext(sandbox);
 vm.runInContext(script, sandbox);

@@ -92,10 +92,8 @@
 			return;
 		}
 		parentRef = carouselRef.parentNode;
-		const parentIsFlex =
-			parentRef && window.getComputedStyle(parentRef).display === 'flex';
-		flexRowRef =
-			parentIsFlex && parentRef.parentElement ? parentRef.parentElement : null;
+		const parentIsFlex = parentRef && window.getComputedStyle(parentRef).display === 'flex';
+		flexRowRef = parentIsFlex && parentRef.parentElement ? parentRef.parentElement : null;
 	};
 
 	const refreshSizingMetrics = () => {
@@ -148,10 +146,7 @@
 		imageMetaSet.every((image) => getImageAspectRatioRecord(image.src) > 0);
 
 	const sizingReady = () =>
-		carouselRef &&
-		availableWidthPx > 0 &&
-		maxHeightPxFromProp > 0 &&
-		imageMetaSetHasAspectRatios();
+		carouselRef && availableWidthPx > 0 && maxHeightPxFromProp > 0 && imageMetaSetHasAspectRatios();
 
 	const setActiveImage = (imageAttributesObject, endAutoAdvance = false) => {
 		// only set active image if image is different
@@ -215,7 +210,6 @@
 
 			observer.observe(carouselRef);
 		}
-
 	});
 
 	onDestroy(() => {
@@ -271,8 +265,7 @@
 		height: ${maxHeight};
 	`;
 	// Passed to JDGImage; keep maxHeight prop unchanged so vh/% limits refresh on resize
-	$: imageMaxHeight =
-		finalMaxFittedHeightPx > 0 ? `${finalMaxFittedHeightPx}px` : maxHeight;
+	$: imageMaxHeight = finalMaxFittedHeightPx > 0 ? `${finalMaxFittedHeightPx}px` : maxHeight;
 
 	$: {
 		$windowWidth;
@@ -301,11 +294,7 @@
 	// this only applies if showBlurInUnfilledSpace is false
 	let dynamicWidthCss = css``;
 	$: {
-		if (
-			sizingReady() &&
-			allFittedWidthsPx?.length > 0 &&
-			activeImageFittedWidthPx > 0
-		) {
+		if (sizingReady() && allFittedWidthsPx?.length > 0 && activeImageFittedWidthPx > 0) {
 			const validWidthsPx = allFittedWidthsPx.filter((width) => isFinite(width) && width > 0);
 			if (validWidthsPx.length === 0) {
 				dynamicWidthCss = css``;
