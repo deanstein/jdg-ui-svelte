@@ -1219,6 +1219,16 @@
 					<JDGInputContainer label="Title">
 						<JDGTextInput bind:inputValue={$draftImageMeta.title} />
 					</JDGInputContainer>
+					<JDGInputContainer label="Show in timeline?">
+						<label>
+							<input type="radio" bind:group={$draftImageMeta.showInTimeline} value={true} />
+							Yes
+						</label>
+						<label>
+							<input type="radio" bind:group={$draftImageMeta.showInTimeline} value={false} />
+							No
+						</label>
+					</JDGInputContainer>
 					<JDGInputContainer label="Show background blur?">
 						<label>
 							<input type="radio" bind:group={$draftImageMeta.showBackgroundBlur} value={true} />
