@@ -22,55 +22,48 @@
 	export let padding = '10px';
 	// Default to auto for proper scrolling
 	export let overflow = 'auto';
-	// Content colors
-	export let backgroundColor = undefined;
-	export let opacity = undefined;
-	// Optional gradient colors - if provided, use JDGRandomGradient instead of backgroundColor
-	export let gradientColor1 = undefined;
-	export let gradientColor2 = undefined;
-	export let gradientColor3 = undefined;
-	// Backdrop colors — only applies in the non-contentOnly path.
-	// overlayColorRgba sets the backdrop base color; overlayOpacity overrides its alpha.
+	// Content background — defaults to theme contentBoxBackground at 0.9 alpha; explicit rgba values are used as-is.
+	export let backgroundColorRgba = undefined;
+	// Optional gradient rgba colors — if all three are provided, use JDGRandomGradient instead of backgroundColorRgba.
+	export let gradientColor1Rgba = undefined;
+	export let gradientColor2Rgba = undefined;
+	export let gradientColor3Rgba = undefined;
+	// Backdrop color — only applies in the non-contentOnly path. Defaults to a dimmed header background.
 	// Blur is intentionally left to JDGOverlay's default (always blurs).
 	export let overlayColorRgba = undefined;
-	export let overlayOpacity = 0.5;
 	// When true, only the modal content box is rendered (no JDGOverlay). Use inside JDGOverlay + JDGOverlayCarousel for carousel modals.
 	export let contentOnly = false;
 
 	// Minimum padding around content when it maximizes available space
 	const minPadding = '20px';
 
-	$: palette = getThemePalette($colorMode);
-	$: resolvedBackgroundColor = backgroundColor ?? palette.contentBoxBackground;
+	const modalContentBackgroundAlpha = 0.9;
 
-	// Resolve the backdrop color forwarded to JDGOverlay.
-	// When no overlay props are set, pass undefined so JDGOverlay keeps its own default.
-	// Use != null (not truthiness) so an explicit overlayOpacity of 0 is honored.
-	$: resolvedOverlayColorRgba =
-		overlayOpacity != null
-			? setRgbaAlpha(overlayColorRgba ?? palette.headerBackground, overlayOpacity)
-			: overlayColorRgba;
+	$: palette = getThemePalette($colorMode);
+	$: resolvedBackgroundColorRgba = backgroundColorRgba
+		? backgroundColorRgba
+		: setRgbaAlpha(palette.contentBoxBackground, modalContentBackgroundAlpha);
+
+	$: resolvedOverlayColorRgba = overlayColorRgba ?? setRgbaAlpha(palette.headerBackground, 0.5);
 
 	$: titleBarDarkenAmount = $colorMode === 'dark' ? 0.15 : 0.05;
-	$: titleBarGradient1 = gradientColor1
-		? darkenColor(gradientColor1, titleBarDarkenAmount)
-		: gradientColor1;
-	$: titleBarGradient2 = gradientColor2
-		? darkenColor(gradientColor2, titleBarDarkenAmount)
-		: gradientColor2;
-	$: titleBarGradient3 = gradientColor3
-		? darkenColor(gradientColor3, titleBarDarkenAmount)
-		: gradientColor3;
+	$: titleBarGradient1 = gradientColor1Rgba
+		? darkenColor(gradientColor1Rgba, titleBarDarkenAmount)
+		: gradientColor1Rgba;
+	$: titleBarGradient2 = gradientColor2Rgba
+		? darkenColor(gradientColor2Rgba, titleBarDarkenAmount)
+		: gradientColor2Rgba;
+	$: titleBarGradient3 = gradientColor3Rgba
+		? darkenColor(gradientColor3Rgba, titleBarDarkenAmount)
+		: gradientColor3Rgba;
 
 	let modalContentContainerCss = css``;
 	$: {
 		// Only set background-color if gradient colors are not provided
 		const bgColor =
-			gradientColor1 && gradientColor2 && gradientColor3
+			gradientColor1Rgba && gradientColor2Rgba && gradientColor3Rgba
 				? 'transparent'
-				: opacity
-					? setRgbaAlpha(resolvedBackgroundColor, opacity)
-					: resolvedBackgroundColor;
+				: resolvedBackgroundColorRgba;
 
 		modalContentContainerCss = css`
 			width: ${$isMobileBreakpoint && maximizeWidthOnMobile
@@ -179,15 +172,15 @@
 				class="modal-content-container {modalContentContainerCss}"
 				class:modal-closing={isClosing}
 			>
-				{#if gradientColor1 && gradientColor2 && gradientColor3}
-					<div class="modal-background-gradient" style="background-color: {gradientColor3};">
+				{#if gradientColor1Rgba && gradientColor2Rgba && gradientColor3Rgba}
+					<div class="modal-background-gradient" style="background-color: {gradientColor3Rgba};">
 						<JDGRandomGradient
 							numberOfPoints={10}
 							edgeBufferRatio={0.1}
 							drawDebugBorders={false}
-							color1={gradientColor1}
-							color2={gradientColor2}
-							color3={gradientColor3}
+							color1={gradientColor1Rgba}
+							color2={gradientColor2Rgba}
+							color3={gradientColor3Rgba}
 							opacity={0.75}
 						/>
 					</div>
@@ -197,7 +190,7 @@
 						class="modal-title-bar-container {modalTitleBarContainerCss}"
 						style="position: relative; z-index: 1;"
 					>
-						{#if gradientColor1 && gradientColor2 && gradientColor3}
+						{#if gradientColor1Rgba && gradientColor2Rgba && gradientColor3Rgba}
 							<div class="modal-title-bar-gradient" style="background-color: {titleBarGradient2};">
 								<JDGRandomGradient
 									numberOfPoints={8}
@@ -239,7 +232,11 @@
 		</div>
 	</div>
 {:else}
-	<JDGOverlay onCloseFunction={handleClose} {closeOnOverlayClick} colorRgba={resolvedOverlayColorRgba}>
+	<JDGOverlay
+		onCloseFunction={handleClose}
+		{closeOnOverlayClick}
+		colorRgba={resolvedOverlayColorRgba}
+	>
 		<div
 			class="modal-outer-container"
 			on:click|self={handleBackdropClick}
@@ -252,15 +249,15 @@
 					class="modal-content-container {modalContentContainerCss}"
 					class:modal-closing={isClosing}
 				>
-					{#if gradientColor1 && gradientColor2 && gradientColor3}
-						<div class="modal-background-gradient" style="background-color: {gradientColor3};">
+					{#if gradientColor1Rgba && gradientColor2Rgba && gradientColor3Rgba}
+						<div class="modal-background-gradient" style="background-color: {gradientColor3Rgba};">
 							<JDGRandomGradient
 								numberOfPoints={10}
 								edgeBufferRatio={0.1}
 								drawDebugBorders={false}
-								color1={gradientColor1}
-								color2={gradientColor2}
-								color3={gradientColor3}
+								color1={gradientColor1Rgba}
+								color2={gradientColor2Rgba}
+								color3={gradientColor3Rgba}
 								opacity={0.75}
 							/>
 						</div>
@@ -270,7 +267,7 @@
 							class="modal-title-bar-container {modalTitleBarContainerCss}"
 							style="position: relative; z-index: 1;"
 						>
-							{#if gradientColor1 && gradientColor2 && gradientColor3}
+							{#if gradientColor1Rgba && gradientColor2Rgba && gradientColor3Rgba}
 								<div
 									class="modal-title-bar-gradient"
 									style="background-color: {titleBarGradient2};"
