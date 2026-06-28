@@ -24,16 +24,16 @@
 	export let overflow = 'auto';
 	// Content colors
 	export let backgroundColor = undefined;
-	export let transparency = undefined;
+	export let opacity = undefined;
 	// Optional gradient colors - if provided, use JDGRandomGradient instead of backgroundColor
 	export let gradientColor1 = undefined;
 	export let gradientColor2 = undefined;
 	export let gradientColor3 = undefined;
 	// Backdrop colors — only applies in the non-contentOnly path.
-	// overlayColorRgba sets the backdrop base color; overlayTransparency overrides its alpha.
+	// overlayColorRgba sets the backdrop base color; overlayOpacity overrides its alpha.
 	// Blur is intentionally left to JDGOverlay's default (always blurs).
 	export let overlayColorRgba = undefined;
-	export let overlayTransparency = 0.5;
+	export let overlayOpacity = 0.5;
 	// When true, only the modal content box is rendered (no JDGOverlay). Use inside JDGOverlay + JDGOverlayCarousel for carousel modals.
 	export let contentOnly = false;
 
@@ -45,10 +45,10 @@
 
 	// Resolve the backdrop color forwarded to JDGOverlay.
 	// When no overlay props are set, pass undefined so JDGOverlay keeps its own default.
-	// Use != null (not truthiness) so an explicit overlayTransparency of 0 is honored.
+	// Use != null (not truthiness) so an explicit overlayOpacity of 0 is honored.
 	$: resolvedOverlayColorRgba =
-		overlayTransparency != null
-			? setRgbaAlpha(overlayColorRgba ?? palette.headerBackground, overlayTransparency)
+		overlayOpacity != null
+			? setRgbaAlpha(overlayColorRgba ?? palette.headerBackground, overlayOpacity)
 			: overlayColorRgba;
 
 	$: titleBarDarkenAmount = $colorMode === 'dark' ? 0.15 : 0.05;
@@ -68,8 +68,8 @@
 		const bgColor =
 			gradientColor1 && gradientColor2 && gradientColor3
 				? 'transparent'
-				: transparency
-					? setRgbaAlpha(resolvedBackgroundColor, transparency)
+				: opacity
+					? setRgbaAlpha(resolvedBackgroundColor, opacity)
 					: resolvedBackgroundColor;
 
 		modalContentContainerCss = css`
