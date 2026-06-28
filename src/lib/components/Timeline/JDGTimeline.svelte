@@ -1885,7 +1885,6 @@
 			title={null}
 			subtitle={null}
 			onClickCloseButton={() => (showTimelineModal = false)}
-			backgroundColorRgba={$colorMode === 'dark' ? 'rgba(45, 45, 45, 1)' : 'rgba(245, 245, 245, 1)'}
 			width="90vw"
 			height="85dvh"
 			maxWidth="none"

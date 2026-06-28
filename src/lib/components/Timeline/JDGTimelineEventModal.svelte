@@ -5,7 +5,6 @@
 		timelineEventsOrdered
 	} from '$lib/stores/jdg-temp-store.js';
 	import {
-		colorMode,
 		modalGradientColors,
 		showTimelineEventModal,
 		isTimelineEventModalEditable
@@ -60,7 +59,6 @@
 		onClickCloseButton={() => {
 			$showTimelineEventModal = false;
 		}}
-		backgroundColorRgba={$colorMode === 'dark' ? 'rgba(45, 45, 45, 1)' : 'rgba(235, 235, 235, 1)'}
 		gradientColor1Rgba={$modalGradientColors?.color1}
 		gradientColor2Rgba={$modalGradientColors?.color2}
 		gradientColor3Rgba={$modalGradientColors?.color3}

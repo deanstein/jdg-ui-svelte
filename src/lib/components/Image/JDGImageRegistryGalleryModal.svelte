@@ -90,7 +90,6 @@
 	onClickCloseButton={() => {
 		$showImageGalleryModal = false;
 	}}
-	backgroundColorRgba={'rgba(235, 235, 235, 1)'}
 	width="90vw"
 	height="80dvh"
 	overflow="hidden"
