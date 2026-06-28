@@ -7,7 +7,7 @@
 	import JDG_NOTIFICATION_TYPES from '$lib/schemas/jdg-notification-types.js';
 
 	import { incrementHighestZIndex } from '$lib/jdg-state-management.js';
-	import { jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgColors, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { darkenColor } from '$lib/jdg-utils.js';
 	import { JDGButton } from '$lib/index.js';
 
@@ -26,6 +26,11 @@
 	let bannerId;
 	let bannerElement;
 	let previousNotificationType = notificationType;
+	let notificationContainerCss = css``;
+	let notificationMessageContainerCss = css``;
+	let notificationButtonContainerCss = css``;
+
+	$: hasActions = Boolean($$slots.default);
 
 	const onClickCloseButton = () => {
 		showBanner = false;
@@ -63,16 +68,6 @@
 		}
 	};
 
-	let notificationContainerCss = css`
-		font-size: ${fontSize};
-		z-index: ${forceOnTop ? incrementHighestZIndex() : 1};
-		color: ${jdgColors.text};
-	`;
-
-	const notificationMessageContainerCss = css`
-		margin: 0 ${jdgSizes.headerSidePadding} 0 ${jdgSizes.headerSidePadding};
-	`;
-
 	onMount(() => {
 		if (standalone) {
 			// give this banner a unique id
@@ -102,9 +97,45 @@
 
 	// Dynamic styles
 	$: {
+		const bp0 = jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit;
+
 		notificationContainerCss = css`
-			${notificationContainerCss};
+			font-size: ${fontSize};
+			z-index: ${forceOnTop ? incrementHighestZIndex() : 1};
+			color: ${jdgColors.text};
 			background-color: ${backgroundColor ?? notificationType?.color};
+			${hasActions
+				? `
+				@media (max-width: ${bp0}) {
+					flex-direction: column;
+					gap: 8px;
+				}
+			`
+				: ''}
+		`;
+
+		notificationMessageContainerCss = css`
+			margin: 0 ${hasActions ? '0' : jdgSizes.headerSidePadding} 0
+				${hasActions ? '0' : jdgSizes.headerSidePadding};
+		`;
+
+		notificationButtonContainerCss = css`
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			${hasActions
+				? `
+				position: static;
+				flex-shrink: 0;
+				@media (max-width: ${bp0}) {
+					justify-content: center;
+					width: 100%;
+				}
+			`
+				: `
+				position: absolute;
+				right: 10px;
+			`}
 		`;
 	}
 </script>
@@ -124,7 +155,7 @@
 			{/if}
 			<span class="notification-banner-message">{message}</span>
 		</div>
-		<div class="notification-button-container">
+		<div class="notification-button-container {notificationButtonContainerCss}">
 			<slot />
 			{#if showCloseButton}
 				<JDGButton
@@ -132,8 +163,9 @@
 					faIcon={'fa-circle-xmark'}
 					label={null}
 					backgroundColor="transparent"
-					paddingTopBottom="6px"
-					paddingLeftRight="6px"
+					fontSize={jdgSizes.bannerButtonFontSize}
+					paddingTopBottom={jdgSizes.bannerCloseButtonPadding}
+					paddingLeftRight={jdgSizes.bannerCloseButtonPadding}
 					tooltip="Dismiss"
 					textColor={darkenColor(notificationType.color, 0.4).toString()}
 					textColorHover={darkenColor(notificationType.color, 0.8).toString()}
@@ -174,11 +206,5 @@
 
 	.notification-banner-message {
 		text-wrap: balance;
-	}
-
-	.notification-button-container {
-		position: absolute;
-		display: flex;
-		right: 10px;
 	}
 </style>
