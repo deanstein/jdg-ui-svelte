@@ -9,7 +9,7 @@
 	import { appAccentColors } from '$lib/stores/jdg-ui-store.js';
 	import { scrollToAnchor } from '$lib/jdg-utils.js';
 
-	import { jdgBreakpoints, jdgColors, jdgFonts } from '$lib/jdg-shared-styles.js';
+	import { jdgBreakpoints, jdgColors, jdgFonts, jdgSizes } from '$lib/jdg-shared-styles.js';
 	import { listPackageVersions } from '$lib/tools/list-versions/list-package-versions-client.js';
 	import {
 		ccpWebsiteRepoName,
@@ -261,6 +261,22 @@
 			backgroundColor="#fdb1f5"
 			fontSize="0.7rem"
 		/>
+		<JDGBodyCopy paddingBottom="0" textAlign="center">
+			<b>Banner with button</b>
+		</JDGBodyCopy>
+		<JDGNotificationBanner
+			notificationType={JDG_NOTIFICATION_TYPES.information}
+			message="A new timeline is coming! This is the legacy one."
+			showCloseButton={false}
+		>
+			<JDGButton
+				label="Switch to new"
+				onClickFunction={() => {}}
+				fontSize={jdgSizes.bannerButtonFontSize}
+				paddingTopBottom={jdgSizes.bannerButtonPaddingTopBottom}
+				paddingLeftRight={jdgSizes.bannerButtonPaddingLeftRight}
+			/>
+		</JDGNotificationBanner>
 	</JDGContentBoxFloating>
 	<JDGContentBoxFloating title="IMAGES">
 		<JDGBodyCopy textAlign="center" paddingTop="0">We've got lots of image components!</JDGBodyCopy>

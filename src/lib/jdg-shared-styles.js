@@ -326,6 +326,23 @@ export const jdgSizes = {
 		return this.nInputMinHeightDesktop.toString() + this.fontUnit;
 	},
 
+	/* JDGNotificationBanner button sizing — pass explicitly on JDGButton children */
+	get bannerButtonFontSize() {
+		return this.fontSizeBodyXSm;
+	},
+	nBannerButtonPaddingTopBottom: 3,
+	get bannerButtonPaddingTopBottom() {
+		return this.nBannerButtonPaddingTopBottom.toString() + this.inputPaddingUnit;
+	},
+	nBannerButtonPaddingLeftRight: 8,
+	get bannerButtonPaddingLeftRight() {
+		return this.nBannerButtonPaddingLeftRight.toString() + this.inputPaddingUnit;
+	},
+	nBannerCloseButtonPadding: 6,
+	get bannerCloseButtonPadding() {
+		return this.nBannerCloseButtonPadding.toString() + this.inputPaddingUnit;
+	},
+
 	/* don't update aspect ratio if change is below this threshold */
 	imageAspectRatioUpdateThreshold: 0.01,
 
