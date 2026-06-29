@@ -1986,7 +1986,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		backdrop-filter: blur(2px);
+		backdrop-filter: blur(6px);
 		z-index: 20;
 		border-radius: 10px;
 		cursor: pointer;
