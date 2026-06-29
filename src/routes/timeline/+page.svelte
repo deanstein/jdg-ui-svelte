@@ -225,6 +225,7 @@
 
 	// Show timeline as preview only?
 	let previewMode = true;
+	let previewModeTouch = false;
 
 	// Create Select options,
 	// including the new host and hosts from the selected collection
@@ -639,12 +640,25 @@
 		<JDGBodyCopy textAlign="center" paddingTop="0" paddingBottom="0">
 			<JDGInputContainer
 				label="Preview Mode"
-				hint="On hover or touch, displays an overlay that forces the timeline to launch in a modal"
+				hint="On all devices, displays an overlay that forces the timeline to launch in a modal"
 				justification="center"
 			>
 				<JDGCheckbox
 					label="Enable Preview Mode"
 					bind:isChecked={previewMode}
+					justifyContent="center"
+				/>
+			</JDGInputContainer>
+		</JDGBodyCopy>
+		<JDGBodyCopy textAlign="center" paddingTop="0" paddingBottom="0">
+			<JDGInputContainer
+				label="Preview Mode for Touch Devices"
+				hint="On mobile and tablet devices only, displays an overlay that forces the timeline to launch in a modal"
+				justification="center"
+			>
+				<JDGCheckbox
+					label="Enable Preview Mode for Touch Devices"
+					bind:isChecked={previewModeTouch}
 					justifyContent="center"
 				/>
 			</JDGInputContainer>
@@ -675,7 +689,8 @@
 					draftTimelineHost.set({ ...$draftTimelineHost, avatarImage: newKey });
 				}
 			}}
-			previewModeTouch={previewMode}
+			{previewMode}
+			{previewModeTouch}
 			minHeight={'70svh'}
 		/>
 	</JDGContentBoxFloating>
