@@ -175,7 +175,8 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		flex-grow: 1;
+		flex: 1 1 0%;
+		min-height: 0;
 		box-sizing: border-box;
 		width: 100%;
 	}

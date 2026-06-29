@@ -777,7 +777,8 @@
 	$: timelineContainerCss = css`
 		width: ${width};
 		min-height: ${minHeight};
-		max-height: ${maxHeight};
+		max-height: ${isInModal ? '100%' : maxHeight};
+		${isInModal ? 'flex: 1 1 0%;' : ''}
 		background-color: ${timelineBackgroundColor};
 		@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
 			padding: ${jdgSizes.nTimelineEventGapSize / 2 + jdgSizes.timelineUnit};
@@ -1346,7 +1347,9 @@
 	bind:this={timelineWrapperRef}
 	class="timeline-wrapper {timelineWrapperCss} {effectivePreviewOnly
 		? 'preview-only'
-		: ''} {showLoadingOverlay ? 'loading-overlay-visible' : ''}"
+		: ''} {isInModal ? 'timeline-wrapper--in-modal' : ''} {showLoadingOverlay
+		? 'loading-overlay-visible'
+		: ''}"
 	on:mouseenter={showPreviewOverlay}
 	on:mouseleave={hidePreviewOverlayAfterDelay}
 	on:touchstart={showPreviewOverlay}
@@ -1896,8 +1899,6 @@
 					{decadeHeadingJustify}
 					{showRegistryImages}
 					width="100%"
-					minHeight="70dvh"
-					maxHeight="75dvh"
 					isInModal
 					{onClickInceptionEvent}
 					{addClickAddEvent}
@@ -2006,10 +2007,20 @@
 	}
 
 	.timeline-modal-content {
+		display: flex;
+		flex-direction: column;
 		width: 90vw;
-		height: 85dvh;
+		max-height: 85dvh;
 		max-width: none;
 		box-sizing: border-box;
+		overflow: hidden;
+	}
+
+	.timeline-wrapper--in-modal {
+		display: flex;
+		flex-direction: column;
+		max-height: 85dvh;
+		min-height: 0;
 		overflow: hidden;
 	}
 
