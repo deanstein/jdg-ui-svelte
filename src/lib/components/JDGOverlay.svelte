@@ -6,6 +6,7 @@
 
 	import { highestZIndex } from '$lib/stores/jdg-ui-store.js';
 	import { getHighestZIndex } from '$lib/jdg-state-management.js';
+	import { setRgbaAlpha } from '$lib/jdg-utils.js';
 
 	import { JDGCloseIcon } from '$lib/index.js';
 	import { jdgBreakpoints, jdgDurations, jdgSizes, themeColors } from '$lib/jdg-shared-styles.js';
@@ -45,11 +46,14 @@
 		}
 	}
 
+	const defaultOverlayAlpha = 0.5;
+
 	const overlayZIndex = getHighestZIndex();
 	let overlayCss = css``;
 	$: overlayCss = css`
 		z-index: ${overlayZIndex};
-		background-color: ${colorRgba ?? $themeColors.headerBackground};
+		background-color: ${colorRgba ??
+		setRgbaAlpha($themeColors.headerBackground, defaultOverlayAlpha)};
 		backdrop-filter: ${useBlur ? `blur(${jdgSizes.blurSizeMedium})` : ''};
 	`;
 

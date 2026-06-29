@@ -49,7 +49,7 @@
 	closeOnOverlayClick={!($isTimelineEventModalEditable || isNewEvent)}
 >
 	<JDGModal
-		contentOnly={true}
+		suppressOverlay={true}
 		title={isNewEvent
 			? 'New Timeline Event'
 			: $isTimelineEventModalEditable

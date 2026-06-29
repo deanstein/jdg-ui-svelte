@@ -61,7 +61,7 @@
 		JDGImageAvatar,
 		JDGInputContainer,
 		JDGLoadingSpinner,
-		JDGModal,
+		JDGOverlay,
 		JDGPortal,
 		JDGRandomGradient,
 		JDGSaveStateBanner,
@@ -1881,16 +1881,8 @@
 <!-- Modal for full timeline view - portaled to JDGAppContainer for proper positioning -->
 {#if showTimelineModal}
 	<JDGPortal>
-		<JDGModal
-			title={null}
-			subtitle={null}
-			onClickCloseButton={() => (showTimelineModal = false)}
-			width="90vw"
-			height="85dvh"
-			maxWidth="none"
-			overflow={'hidden'}
-		>
-			<div slot="modal-content-slot" class="timeline-modal-content">
+		<JDGOverlay onCloseFunction={() => (showTimelineModal = false)}>
+			<div class="timeline-modal-content">
 				<svelte:self
 					{timelineHost}
 					{contextEvents}
@@ -1912,7 +1904,7 @@
 					{gradientPointsCount}
 				/>
 			</div>
-		</JDGModal>
+		</JDGOverlay>
 	</JDGPortal>
 {/if}
 
@@ -2014,9 +2006,11 @@
 	}
 
 	.timeline-modal-content {
-		width: 100%;
-		height: 100%;
+		width: 90vw;
+		height: 85dvh;
+		max-width: none;
 		box-sizing: border-box;
+		overflow: hidden;
 	}
 
 	.timeline-title-bar {

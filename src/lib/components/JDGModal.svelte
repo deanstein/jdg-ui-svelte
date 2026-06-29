@@ -2,7 +2,7 @@
 	import { css } from '@emotion/css';
 
 	import { colorMode, isMobileBreakpoint, carouselHintHeightPx } from '$lib/stores/jdg-ui-store.js';
-	import { darkenColor, setRgbaAlpha } from '$lib/jdg-utils.js';
+	import { darkenColor, lightenColor, setRgbaAlpha } from '$lib/jdg-utils.js';
 
 	import { jdgSizes, jdgBreakpoints, getThemePalette, themeColors } from '$lib/index.js';
 	import { JDGOverlay, JDGRandomGradient } from '$lib/index.js';
@@ -22,27 +22,35 @@
 	export let padding = '10px';
 	// Default to auto for proper scrolling
 	export let overflow = 'auto';
-	// Content background — defaults to theme contentBoxBackground at 0.9 alpha; explicit rgba values are used as-is.
+	// Content background — defaults to theme contentBoxBackground, adjusted per mode, at 0.9 alpha; explicit rgba values are used as-is.
 	export let backgroundColorRgba = undefined;
 	// Optional gradient rgba colors — if all three are provided, use JDGRandomGradient instead of backgroundColorRgba.
 	export let gradientColor1Rgba = undefined;
 	export let gradientColor2Rgba = undefined;
 	export let gradientColor3Rgba = undefined;
-	// Backdrop color — only applies in the non-contentOnly path. Defaults to a dimmed header background.
+	// Backdrop color — only applies when this modal renders its own JDGOverlay. Defaults to a dimmed header background.
 	// Blur is intentionally left to JDGOverlay's default (always blurs).
 	export let overlayColorRgba = undefined;
-	// When true, only the modal content box is rendered (no JDGOverlay). Use inside JDGOverlay + JDGOverlayCarousel for carousel modals.
-	export let contentOnly = false;
+	// When true, suppress this modal's JDGOverlay — parent must wrap in JDGOverlay or JDGOverlayCarousel.
+	export let suppressOverlay = false;
 
 	// Minimum padding around content when it maximizes available space
 	const minPadding = '20px';
 
 	const modalContentBackgroundAlpha = 0.9;
+	const modalContentBackgroundDarkenRatio = 0.15;
+	const modalContentBackgroundLightenRatio = 0.25;
 
 	$: palette = getThemePalette($colorMode);
+	$: defaultModalBackgroundColorRgba = setRgbaAlpha(
+		$colorMode === 'dark'
+			? lightenColor(palette.contentBoxBackground, modalContentBackgroundLightenRatio)
+			: darkenColor(palette.contentBoxBackground, modalContentBackgroundDarkenRatio),
+		modalContentBackgroundAlpha
+	);
 	$: resolvedBackgroundColorRgba = backgroundColorRgba
 		? backgroundColorRgba
-		: setRgbaAlpha(palette.contentBoxBackground, modalContentBackgroundAlpha);
+		: defaultModalBackgroundColorRgba;
 
 	$: resolvedOverlayColorRgba = overlayColorRgba ?? setRgbaAlpha(palette.headerBackground, 0.5);
 
@@ -72,22 +80,22 @@
 			height: ${$isMobileBreakpoint && maximizeWidthOnMobile ? '90dvh' : height};
 			min-width: ${!$isMobileBreakpoint && minWidth ? minWidth : 'auto'};
 			max-width: ${!$isMobileBreakpoint && maxWidth ? maxWidth : 'none'};
-			/* Constrain max-height so header stays visible and (when contentOnly + carousel) hint row + bottom visible */
+			/* Constrain max-height so header stays visible and (when suppressOverlay + carousel) hint row + bottom visible */
 			/* Use dvh (dynamic viewport height) to handle iOS browser chrome appearing/disappearing */
 			@media (max-width: ${jdgBreakpoints.width[0].toString() + jdgBreakpoints.unit}) {
-				max-height: ${contentOnly
+				max-height: ${suppressOverlay
 					? `calc(100dvh - ${jdgSizes.headerHeightSm} - ${minPadding} - ${$carouselHintHeightPx}px)`
 					: `calc(100dvh - ${jdgSizes.headerHeightSm} - ${minPadding})`};
 			}
 			@media (min-width: ${jdgBreakpoints.width[0].toString() +
 				jdgBreakpoints.unit}) and (max-width: ${jdgBreakpoints.width[1].toString() +
 				jdgBreakpoints.unit}) {
-				max-height: ${contentOnly
+				max-height: ${suppressOverlay
 					? `calc(100dvh - ${jdgSizes.headerHeightMd} - ${minPadding} - ${$carouselHintHeightPx}px)`
 					: `calc(100dvh - ${jdgSizes.headerHeightMd} - ${minPadding})`};
 			}
 			@media (min-width: ${jdgBreakpoints.width[1].toString() + jdgBreakpoints.unit}) {
-				max-height: ${contentOnly
+				max-height: ${suppressOverlay
 					? `calc(100dvh - ${jdgSizes.headerHeightLg} - ${minPadding} - ${$carouselHintHeightPx}px)`
 					: `calc(100dvh - ${jdgSizes.headerHeightLg} - ${minPadding})`};
 			}
@@ -157,7 +165,7 @@
 	}
 </script>
 
-{#if contentOnly}
+{#if suppressOverlay}
 	<div
 		class="modal-outer-container"
 		on:click|stopPropagation
