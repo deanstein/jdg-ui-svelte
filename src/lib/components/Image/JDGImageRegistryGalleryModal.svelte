@@ -91,7 +91,7 @@
 		$showImageGalleryModal = false;
 	}}
 	width="90vw"
-	height="80dvh"
+	height="85dvh"
 	overflow="hidden"
 >
 	<div slot="modal-content-slot" class="gallery-content-wrapper">
